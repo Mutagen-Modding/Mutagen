@@ -311,19 +311,44 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Hair_Registration.TriggeringRecordType;
-        public Hair(FormKey formKey)
+        public Hair(
+            FormKey formKey,
+            SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
             CustomCtor();
         }
 
-        public Hair(IMod mod)
-            : this(mod.GetNextFormKey())
+        private Hair(
+            FormKey formKey,
+            GameRelease gameRelease)
+        {
+            this.FormKey = formKey;
+            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            CustomCtor();
+        }
+
+        internal Hair(
+            FormKey formKey,
+            ushort formVersion)
+        {
+            this.FormKey = formKey;
+            this.FormVersion = formVersion;
+            CustomCtor();
+        }
+
+        public Hair(ISkyrimMod mod)
+            : this(
+                mod.GetNextFormKey(),
+                mod.SkyrimRelease)
         {
         }
 
-        public Hair(IMod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+        public Hair(ISkyrimMod mod, string editorID)
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.SkyrimRelease)
         {
             this.EditorID = editorID;
         }
@@ -877,7 +902,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
-            var ret = new Hair(getNextFormKey());
+            var ret = new Hair(getNextFormKey(), ((IHairGetter)item).FormVersion);
             ret.DeepCopyIn((Hair)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (Hair)item, getNextFormKey, duplicatedRecords);
@@ -1215,6 +1240,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 finalPos: finalPos,
                 offset: offset);
             ret.FillSubrecordTypes(
+                majorReference: ret,
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,

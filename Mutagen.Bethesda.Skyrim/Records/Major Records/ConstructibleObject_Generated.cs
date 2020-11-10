@@ -660,19 +660,44 @@ namespace Mutagen.Bethesda.Skyrim
         IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ConstructibleObjectCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ConstructibleObjectCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ConstructibleObjectCommon.Instance.RemapLinks(this, mapping);
-        public ConstructibleObject(FormKey formKey)
+        public ConstructibleObject(
+            FormKey formKey,
+            SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
             CustomCtor();
         }
 
-        public ConstructibleObject(IMod mod)
-            : this(mod.GetNextFormKey())
+        private ConstructibleObject(
+            FormKey formKey,
+            GameRelease gameRelease)
+        {
+            this.FormKey = formKey;
+            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            CustomCtor();
+        }
+
+        internal ConstructibleObject(
+            FormKey formKey,
+            ushort formVersion)
+        {
+            this.FormKey = formKey;
+            this.FormVersion = formVersion;
+            CustomCtor();
+        }
+
+        public ConstructibleObject(ISkyrimMod mod)
+            : this(
+                mod.GetNextFormKey(),
+                mod.SkyrimRelease)
         {
         }
 
-        public ConstructibleObject(IMod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+        public ConstructibleObject(ISkyrimMod mod, string editorID)
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.SkyrimRelease)
         {
             this.EditorID = editorID;
         }
@@ -1316,13 +1341,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (obj.Items.TryGet(out var ItemsItem))
             {
-                foreach (var item in ItemsItem.WhereCastable<IContainerEntryGetter, ILinkedFormKeyContainerGetter> ()
+                foreach (var item in ItemsItem.WhereCastable<IContainerEntryGetter, ILinkedFormKeyContainerGetter>()
                     .SelectMany((f) => f.LinkFormKeys))
                 {
                     yield return item;
                 }
             }
-            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter> ()
+            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter>()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
@@ -1343,7 +1368,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
-            var ret = new ConstructibleObject(getNextFormKey());
+            var ret = new ConstructibleObject(getNextFormKey(), ((IConstructibleObjectGetter)item).FormVersion);
             ret.DeepCopyIn((ConstructibleObject)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (ConstructibleObject)item, getNextFormKey, duplicatedRecords);
@@ -1896,6 +1921,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 finalPos: finalPos,
                 offset: offset);
             ret.FillSubrecordTypes(
+                majorReference: ret,
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,

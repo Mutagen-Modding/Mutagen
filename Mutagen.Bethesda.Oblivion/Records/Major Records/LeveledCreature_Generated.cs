@@ -580,12 +580,20 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        public LeveledCreature(IMod mod)
+        private LeveledCreature(
+            FormKey formKey,
+            GameRelease gameRelease)
+        {
+            this.FormKey = formKey;
+            CustomCtor();
+        }
+
+        public LeveledCreature(IOblivionMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public LeveledCreature(IMod mod, string editorID)
+        public LeveledCreature(IOblivionMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
@@ -1820,6 +1828,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 finalPos: finalPos,
                 offset: offset);
             ret.FillSubrecordTypes(
+                majorReference: ret,
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,

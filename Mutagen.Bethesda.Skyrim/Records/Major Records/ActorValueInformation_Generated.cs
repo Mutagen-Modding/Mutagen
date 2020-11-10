@@ -632,19 +632,44 @@ namespace Mutagen.Bethesda.Skyrim
         IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ActorValueInformationCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActorValueInformationCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActorValueInformationCommon.Instance.RemapLinks(this, mapping);
-        public ActorValueInformation(FormKey formKey)
+        public ActorValueInformation(
+            FormKey formKey,
+            SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
             CustomCtor();
         }
 
-        public ActorValueInformation(IMod mod)
-            : this(mod.GetNextFormKey())
+        private ActorValueInformation(
+            FormKey formKey,
+            GameRelease gameRelease)
+        {
+            this.FormKey = formKey;
+            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            CustomCtor();
+        }
+
+        internal ActorValueInformation(
+            FormKey formKey,
+            ushort formVersion)
+        {
+            this.FormKey = formKey;
+            this.FormVersion = formVersion;
+            CustomCtor();
+        }
+
+        public ActorValueInformation(ISkyrimMod mod)
+            : this(
+                mod.GetNextFormKey(),
+                mod.SkyrimRelease)
         {
         }
 
-        public ActorValueInformation(IMod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+        public ActorValueInformation(ISkyrimMod mod, string editorID)
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.SkyrimRelease)
         {
             this.EditorID = editorID;
         }
@@ -1313,7 +1338,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
-            var ret = new ActorValueInformation(getNextFormKey());
+            var ret = new ActorValueInformation(getNextFormKey(), ((IActorValueInformationGetter)item).FormVersion);
             ret.DeepCopyIn((ActorValueInformation)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (ActorValueInformation)item, getNextFormKey, duplicatedRecords);
@@ -1869,6 +1894,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 finalPos: finalPos,
                 offset: offset);
             ret.FillSubrecordTypes(
+                majorReference: ret,
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,

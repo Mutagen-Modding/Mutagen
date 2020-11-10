@@ -509,19 +509,44 @@ namespace Mutagen.Bethesda.Skyrim
         IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => AStoryManagerNodeCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AStoryManagerNodeCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AStoryManagerNodeCommon.Instance.RemapLinks(this, mapping);
-        public AStoryManagerNode(FormKey formKey)
+        public AStoryManagerNode(
+            FormKey formKey,
+            SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
             CustomCtor();
         }
 
-        public AStoryManagerNode(IMod mod)
-            : this(mod.GetNextFormKey())
+        private AStoryManagerNode(
+            FormKey formKey,
+            GameRelease gameRelease)
+        {
+            this.FormKey = formKey;
+            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            CustomCtor();
+        }
+
+        internal AStoryManagerNode(
+            FormKey formKey,
+            ushort formVersion)
+        {
+            this.FormKey = formKey;
+            this.FormVersion = formVersion;
+            CustomCtor();
+        }
+
+        public AStoryManagerNode(ISkyrimMod mod)
+            : this(
+                mod.GetNextFormKey(),
+                mod.SkyrimRelease)
         {
         }
 
-        public AStoryManagerNode(IMod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+        public AStoryManagerNode(ISkyrimMod mod, string editorID)
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.SkyrimRelease)
         {
             this.EditorID = editorID;
         }
@@ -1113,7 +1138,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return PreviousSiblingKey;
             }
-            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter> ()
+            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter>()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;

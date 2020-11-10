@@ -396,19 +396,44 @@ namespace Mutagen.Bethesda.Skyrim
         IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PlacedMissileCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedMissileCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedMissileCommon.Instance.RemapLinks(this, mapping);
-        public PlacedMissile(FormKey formKey)
+        public PlacedMissile(
+            FormKey formKey,
+            SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
             CustomCtor();
         }
 
-        public PlacedMissile(IMod mod)
-            : this(mod.GetNextFormKey())
+        private PlacedMissile(
+            FormKey formKey,
+            GameRelease gameRelease)
+        {
+            this.FormKey = formKey;
+            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            CustomCtor();
+        }
+
+        internal PlacedMissile(
+            FormKey formKey,
+            ushort formVersion)
+        {
+            this.FormKey = formKey;
+            this.FormVersion = formVersion;
+            CustomCtor();
+        }
+
+        public PlacedMissile(ISkyrimMod mod)
+            : this(
+                mod.GetNextFormKey(),
+                mod.SkyrimRelease)
         {
         }
 
-        public PlacedMissile(IMod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+        public PlacedMissile(ISkyrimMod mod, string editorID)
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.SkyrimRelease)
         {
             this.EditorID = editorID;
         }
@@ -1078,7 +1103,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
-            var ret = new PlacedMissile(getNextFormKey());
+            var ret = new PlacedMissile(getNextFormKey(), ((IPlacedMissileGetter)item).FormVersion);
             ret.DeepCopyIn((PlacedMissile)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (PlacedMissile)item, getNextFormKey, duplicatedRecords);
@@ -1474,6 +1499,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 finalPos: finalPos,
                 offset: offset);
             ret.FillSubrecordTypes(
+                majorReference: ret,
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,

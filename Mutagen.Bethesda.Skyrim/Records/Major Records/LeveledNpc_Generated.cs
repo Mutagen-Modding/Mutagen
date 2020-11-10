@@ -627,19 +627,44 @@ namespace Mutagen.Bethesda.Skyrim
         IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LeveledNpcCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledNpcCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledNpcCommon.Instance.RemapLinks(this, mapping);
-        public LeveledNpc(FormKey formKey)
+        public LeveledNpc(
+            FormKey formKey,
+            SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
             CustomCtor();
         }
 
-        public LeveledNpc(IMod mod)
-            : this(mod.GetNextFormKey())
+        private LeveledNpc(
+            FormKey formKey,
+            GameRelease gameRelease)
+        {
+            this.FormKey = formKey;
+            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            CustomCtor();
+        }
+
+        internal LeveledNpc(
+            FormKey formKey,
+            ushort formVersion)
+        {
+            this.FormKey = formKey;
+            this.FormVersion = formVersion;
+            CustomCtor();
+        }
+
+        public LeveledNpc(ISkyrimMod mod)
+            : this(
+                mod.GetNextFormKey(),
+                mod.SkyrimRelease)
         {
         }
 
-        public LeveledNpc(IMod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+        public LeveledNpc(ISkyrimMod mod, string editorID)
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.SkyrimRelease)
         {
             this.EditorID = editorID;
         }
@@ -1287,7 +1312,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (obj.Entries.TryGet(out var EntriesItem))
             {
-                foreach (var item in EntriesItem.WhereCastable<ILeveledNpcEntryGetter, ILinkedFormKeyContainerGetter> ()
+                foreach (var item in EntriesItem.WhereCastable<ILeveledNpcEntryGetter, ILinkedFormKeyContainerGetter>()
                     .SelectMany((f) => f.LinkFormKeys))
                 {
                     yield return item;
@@ -1308,7 +1333,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
-            var ret = new LeveledNpc(getNextFormKey());
+            var ret = new LeveledNpc(getNextFormKey(), ((ILeveledNpcGetter)item).FormVersion);
             ret.DeepCopyIn((LeveledNpc)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (LeveledNpc)item, getNextFormKey, duplicatedRecords);
@@ -1880,6 +1905,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 finalPos: finalPos,
                 offset: offset);
             ret.FillSubrecordTypes(
+                majorReference: ret,
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,

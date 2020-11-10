@@ -3,8 +3,9 @@ using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests
 {
-    public class GameRelease_Tests
+    public class EnumCompleteness_Tests
     {
+        #region GameRelease
         [Fact]
         public void ToCategoryCoverage()
         {
@@ -31,5 +32,26 @@ namespace Mutagen.Bethesda.UnitTests
                 Mutagen.Bethesda.Binary.GameConstants.Get(release);
             }
         }
+
+        [Fact]
+        public void DefaultFormVersion()
+        {
+            foreach (var release in EnumExt.GetValues<GameRelease>())
+            {
+                release.GetDefaultFormVersion();
+            }
+        }
+        #endregion
+
+        #region GameCategory
+        [Fact]
+        public void HasFormVersion()
+        {
+            foreach (var cat in EnumExt.GetValues<GameCategory>())
+            {
+                cat.HasFormVersion();
+            }
+        }
+        #endregion
     }
 }

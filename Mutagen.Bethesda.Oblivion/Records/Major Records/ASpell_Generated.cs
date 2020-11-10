@@ -320,12 +320,20 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        public ASpell(IMod mod)
+        private ASpell(
+            FormKey formKey,
+            GameRelease gameRelease)
+        {
+            this.FormKey = formKey;
+            CustomCtor();
+        }
+
+        public ASpell(IOblivionMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public ASpell(IMod mod, string editorID)
+        public ASpell(IOblivionMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;

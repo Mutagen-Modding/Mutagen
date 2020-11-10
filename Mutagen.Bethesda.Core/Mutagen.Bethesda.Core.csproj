@@ -60,10 +60,11 @@
     <Compile Include="Exceptions\SubrecordException.cs" />
     <Compile Include="Extensions\EnumerableExt.cs" />
     <Compile Include="Extensions\FormLinkListMixIn.cs" />
+    <Compile Include="Extensions\GameCategoryExt.cs" />
     <Compile Include="Extensions\ModKeyExt.cs" />
     <Compile Include="Extensions\RemoveExt.cs" />
     <Compile Include="Extensions\LoadOrderExt.cs" />
-    <Compile Include="Extensions\MutagenEnumExt.cs" />
+    <Compile Include="Extensions\GameReleaseExt.cs" />
     <Compile Include="Interfaces\Aspect\IKeywordCommon.cs" />
     <Compile Include="Interfaces\IDuplicatable.cs" />
     <Compile Include="Interfaces\IGameSettingCommon.cs" />

@@ -708,19 +708,44 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = TextureSet_Registration.TriggeringRecordType;
-        public TextureSet(FormKey formKey)
+        public TextureSet(
+            FormKey formKey,
+            SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
             CustomCtor();
         }
 
-        public TextureSet(IMod mod)
-            : this(mod.GetNextFormKey())
+        private TextureSet(
+            FormKey formKey,
+            GameRelease gameRelease)
+        {
+            this.FormKey = formKey;
+            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            CustomCtor();
+        }
+
+        internal TextureSet(
+            FormKey formKey,
+            ushort formVersion)
+        {
+            this.FormKey = formKey;
+            this.FormVersion = formVersion;
+            CustomCtor();
+        }
+
+        public TextureSet(ISkyrimMod mod)
+            : this(
+                mod.GetNextFormKey(),
+                mod.SkyrimRelease)
         {
         }
 
-        public TextureSet(IMod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+        public TextureSet(ISkyrimMod mod, string editorID)
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.SkyrimRelease)
         {
             this.EditorID = editorID;
         }
@@ -1443,7 +1468,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
-            var ret = new TextureSet(getNextFormKey());
+            var ret = new TextureSet(getNextFormKey(), ((ITextureSetGetter)item).FormVersion);
             ret.DeepCopyIn((TextureSet)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (TextureSet)item, getNextFormKey, duplicatedRecords);
@@ -2081,6 +2106,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 finalPos: finalPos,
                 offset: offset);
             ret.FillSubrecordTypes(
+                majorReference: ret,
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,

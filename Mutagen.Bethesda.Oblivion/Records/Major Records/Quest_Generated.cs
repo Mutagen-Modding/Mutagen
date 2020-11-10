@@ -829,12 +829,20 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        public Quest(IMod mod)
+        private Quest(
+            FormKey formKey,
+            GameRelease gameRelease)
+        {
+            this.FormKey = formKey;
+            CustomCtor();
+        }
+
+        public Quest(IOblivionMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public Quest(IMod mod, string editorID)
+        public Quest(IOblivionMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
@@ -1530,7 +1538,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return ScriptKey;
             }
-            foreach (var item in obj.Stages.WhereCastable<IQuestStageGetter, ILinkedFormKeyContainerGetter> ()
+            foreach (var item in obj.Stages.WhereCastable<IQuestStageGetter, ILinkedFormKeyContainerGetter>()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
@@ -2166,6 +2174,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 finalPos: finalPos,
                 offset: offset);
             ret.FillSubrecordTypes(
+                majorReference: ret,
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,

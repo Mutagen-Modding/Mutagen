@@ -92,6 +92,8 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine($"get => this.ModHeader.Stats.NextFormID;");
                 fg.AppendLine($"set => this.ModHeader.Stats.NextFormID = value;");
             }
+            fg.AppendLine($"[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+            fg.AppendLine($"uint IModGetter.NextFormID => this.ModHeader.Stats.NextFormID;");
 
             using (var args = new FunctionWrapper(fg,
                 $"public {obj.Name}"))

@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda.UnitTests
             var worldspace = mod.Worldspaces.AddNew();
             var block = worldspace.SubCells.AddReturn(new WorldspaceBlock());
             var subBlock = block.Items.AddReturn(new WorldspaceSubBlock());
-            var cell = subBlock.Items.AddReturn(new Cell(mod.GetNextFormKey()));
+            var cell = subBlock.Items.AddReturn(new Cell(mod.GetNextFormKey(), SkyrimRelease.SkyrimSE));
 
             var mod2 = new SkyrimMod(Utility.ModKey2, SkyrimRelease.SkyrimSE);
             var worldspaceOverride = mod2.Worldspaces.GetOrAddAsOverride(worldspace);
@@ -90,10 +90,10 @@ namespace Mutagen.Bethesda.UnitTests
             var worldspace = mod.Worldspaces.AddNew();
             var block = worldspace.SubCells.AddReturn(new WorldspaceBlock());
             var subBlock = block.Items.AddReturn(new WorldspaceSubBlock());
-            var cell = subBlock.Items.AddReturn(new Cell(mod.GetNextFormKey()));
-            var placedObj = cell.Persistent.AddReturn(new PlacedObject(mod.GetNextFormKey()));
-            worldspace.TopCell = new Cell(mod.GetNextFormKey());
-            var placedObj2 = worldspace.TopCell.Persistent.AddReturn(new PlacedObject(mod.GetNextFormKey()));
+            var cell = subBlock.Items.AddReturn(new Cell(mod.GetNextFormKey(), SkyrimRelease.SkyrimSE));
+            var placedObj = cell.Persistent.AddReturn(new PlacedObject(mod.GetNextFormKey(), SkyrimRelease.SkyrimSE));
+            worldspace.TopCell = new Cell(mod.GetNextFormKey(), SkyrimRelease.SkyrimSE);
+            var placedObj2 = worldspace.TopCell.Persistent.AddReturn(new PlacedObject(mod.GetNextFormKey(), SkyrimRelease.SkyrimSE));
             var placedObjs = mod.EnumerateMajorRecordContexts<IPlacedObject, IPlacedObjectGetter>(linkCache: null!).ToList();
             placedObjs.Should().HaveCount(2);
             var placed = mod.EnumerateMajorRecordContexts<IPlaced, IPlacedGetter>(linkCache: null!).ToList();

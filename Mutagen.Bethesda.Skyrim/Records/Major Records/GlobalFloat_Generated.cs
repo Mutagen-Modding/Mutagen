@@ -358,19 +358,44 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = GlobalFloat_Registration.TriggeringRecordType;
-        public GlobalFloat(FormKey formKey)
+        public GlobalFloat(
+            FormKey formKey,
+            SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
             CustomCtor();
         }
 
-        public GlobalFloat(IMod mod)
-            : this(mod.GetNextFormKey())
+        private GlobalFloat(
+            FormKey formKey,
+            GameRelease gameRelease)
+        {
+            this.FormKey = formKey;
+            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            CustomCtor();
+        }
+
+        internal GlobalFloat(
+            FormKey formKey,
+            ushort formVersion)
+        {
+            this.FormKey = formKey;
+            this.FormVersion = formVersion;
+            CustomCtor();
+        }
+
+        public GlobalFloat(ISkyrimMod mod)
+            : this(
+                mod.GetNextFormKey(),
+                mod.SkyrimRelease)
         {
         }
 
-        public GlobalFloat(IMod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+        public GlobalFloat(ISkyrimMod mod, string editorID)
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.SkyrimRelease)
         {
             this.EditorID = editorID;
         }
@@ -990,7 +1015,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
-            var ret = new GlobalFloat(getNextFormKey());
+            var ret = new GlobalFloat(getNextFormKey(), ((IGlobalFloatGetter)item).FormVersion);
             ret.DeepCopyIn((GlobalFloat)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (GlobalFloat)item, getNextFormKey, duplicatedRecords);
@@ -1421,6 +1446,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 finalPos: finalPos,
                 offset: offset);
             ret.FillSubrecordTypes(
+                majorReference: ret,
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,

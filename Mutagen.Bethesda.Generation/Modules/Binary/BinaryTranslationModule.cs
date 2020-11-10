@@ -1824,7 +1824,7 @@ namespace Mutagen.Bethesda.Generation
                             }
                             using (new BraceWrapper(fg, doIt: fieldData.HasVersioning))
                             {
-                                generator.GenerateWrite(
+                                await generator.GenerateWrite(
                                     fg: fg,
                                     objGen: obj,
                                     typeGen: field,
@@ -2190,6 +2190,7 @@ namespace Mutagen.Bethesda.Generation
 
                 if (obj.GetObjectType() == ObjectType.Mod)
                 {
+                    fg.AppendLine($"uint IModGetter.NextFormID => ModHeader.Stats.NextFormID;");
                     fg.AppendLine($"public {nameof(ModKey)} ModKey {{ get; }}");
                     fg.AppendLine($"private readonly {nameof(BinaryOverlayFactoryPackage)} _package;");
                     fg.AppendLine($"private readonly {nameof(IBinaryReadStream)} _data;");
@@ -2773,6 +2774,10 @@ namespace Mutagen.Bethesda.Generation
                             using (var args = new ArgsWrapper(fg,
                                 $"{call}"))
                             {
+                                if (await obj.IsMajorRecord())
+                                {
+                                    args.Add("majorReference: ret");
+                                }
                                 args.Add($"stream: stream");
                                 if (obj.GetObjectType() != ObjectType.Mod)
                                 {

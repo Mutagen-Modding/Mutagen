@@ -524,12 +524,20 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        public AlchemicalApparatus(IMod mod)
+        private AlchemicalApparatus(
+            FormKey formKey,
+            GameRelease gameRelease)
+        {
+            this.FormKey = formKey;
+            CustomCtor();
+        }
+
+        public AlchemicalApparatus(IOblivionMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public AlchemicalApparatus(IMod mod, string editorID)
+        public AlchemicalApparatus(IOblivionMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
@@ -1779,6 +1787,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 finalPos: finalPos,
                 offset: offset);
             ret.FillSubrecordTypes(
+                majorReference: ret,
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,

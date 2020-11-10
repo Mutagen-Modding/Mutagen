@@ -1064,7 +1064,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<FormKey> GetLinkFormKeys(IQuestObjectiveGetter obj)
         {
-            foreach (var item in obj.Targets.WhereCastable<IQuestObjectiveTargetGetter, ILinkedFormKeyContainerGetter> ()
+            foreach (var item in obj.Targets.WhereCastable<IQuestObjectiveTargetGetter, ILinkedFormKeyContainerGetter>()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;

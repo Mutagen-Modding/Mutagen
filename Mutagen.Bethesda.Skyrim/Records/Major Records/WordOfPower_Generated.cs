@@ -390,19 +390,44 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = WordOfPower_Registration.TriggeringRecordType;
-        public WordOfPower(FormKey formKey)
+        public WordOfPower(
+            FormKey formKey,
+            SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
             CustomCtor();
         }
 
-        public WordOfPower(IMod mod)
-            : this(mod.GetNextFormKey())
+        private WordOfPower(
+            FormKey formKey,
+            GameRelease gameRelease)
+        {
+            this.FormKey = formKey;
+            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            CustomCtor();
+        }
+
+        internal WordOfPower(
+            FormKey formKey,
+            ushort formVersion)
+        {
+            this.FormKey = formKey;
+            this.FormVersion = formVersion;
+            CustomCtor();
+        }
+
+        public WordOfPower(ISkyrimMod mod)
+            : this(
+                mod.GetNextFormKey(),
+                mod.SkyrimRelease)
         {
         }
 
-        public WordOfPower(IMod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+        public WordOfPower(ISkyrimMod mod, string editorID)
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.SkyrimRelease)
         {
             this.EditorID = editorID;
         }
@@ -984,7 +1009,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
-            var ret = new WordOfPower(getNextFormKey());
+            var ret = new WordOfPower(getNextFormKey(), ((IWordOfPowerGetter)item).FormVersion);
             ret.DeepCopyIn((WordOfPower)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (WordOfPower)item, getNextFormKey, duplicatedRecords);
@@ -1402,6 +1427,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 finalPos: finalPos,
                 offset: offset);
             ret.FillSubrecordTypes(
+                majorReference: ret,
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,

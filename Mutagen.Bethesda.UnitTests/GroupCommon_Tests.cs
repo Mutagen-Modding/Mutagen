@@ -1,3 +1,4 @@
+using FluentAssertions;
 using Mutagen.Bethesda.Oblivion;
 using System;
 using System.Collections.Generic;
@@ -27,6 +28,16 @@ namespace Mutagen.Bethesda.UnitTests
             var rec2 = mod.Npcs.AddNew();
             Assert.Equal(2, mod.Npcs.Count);
             Assert.NotSame(rec, rec2);
+        }
+
+        [Fact]
+        public void AddWithFormKey()
+        {
+            var mod = new OblivionMod(Utility.ModKey);
+            var rec = mod.Npcs.AddNew(Utility.Form1);
+            Assert.Equal(1, mod.Npcs.Count);
+            Assert.Same(mod.Npcs.Records.First(), rec);
+            rec.FormKey.Should().BeEquivalentTo(Utility.Form1);
         }
     }
 }

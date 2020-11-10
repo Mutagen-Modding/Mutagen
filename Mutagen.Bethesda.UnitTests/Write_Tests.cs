@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.Skyrim;
 using Noggog;
 using Noggog.Utility;
 using System;
@@ -86,7 +86,7 @@ namespace Mutagen.Bethesda.UnitTests
             using var tmp = GetFile();
             var mod = new SkyrimMod(WriteKey, SkyrimRelease.SkyrimLE);
             mod.Weapons.RecordCache.Set(
-                new Weapon(FormKey.Factory("012345:Skyrim.esm")));
+                new Weapon(FormKey.Factory("012345:Skyrim.esm"), SkyrimRelease.SkyrimLE));
             Assert.Throws<AggregateException>(
                 () => mod.WriteToBinaryParallel(
                     tmp.File.Path,
@@ -103,7 +103,7 @@ namespace Mutagen.Bethesda.UnitTests
             using var tmp = GetFile();
             var mod = new SkyrimMod(WriteKey, SkyrimRelease.SkyrimLE);
             mod.Weapons.RecordCache.Set(
-                new Weapon(FormKey.Factory("012345:Skyrim.esm")));
+                new Weapon(FormKey.Factory("012345:Skyrim.esm"), SkyrimRelease.SkyrimLE));
             Assert.Throws<ArgumentException>(
                 () => mod.WriteToBinary(
                     tmp.File.Path,
@@ -120,7 +120,7 @@ namespace Mutagen.Bethesda.UnitTests
             using var tmp = GetFile();
             var mod = new SkyrimMod(WriteKey, SkyrimRelease.SkyrimLE);
             mod.Weapons.RecordCache.Set(
-                new Weapon(FormKey.Factory("012345:Skyrim.esm")));
+                new Weapon(FormKey.Factory("012345:Skyrim.esm"), SkyrimRelease.SkyrimLE));
             mod.WriteToBinaryParallel(
                 tmp.File.Path,
                 new BinaryWriteParameters()
@@ -136,7 +136,7 @@ namespace Mutagen.Bethesda.UnitTests
             using var tmp = GetFile();
             var mod = new SkyrimMod(WriteKey, SkyrimRelease.SkyrimLE);
             mod.Weapons.RecordCache.Set(
-                new Weapon(FormKey.Factory("012345:Skyrim.esm")));
+                new Weapon(FormKey.Factory("012345:Skyrim.esm"), SkyrimRelease.SkyrimLE));
             mod.WriteToBinary(
                 tmp.File.Path,
                 new BinaryWriteParameters()
@@ -152,9 +152,9 @@ namespace Mutagen.Bethesda.UnitTests
             using var tmp = GetFile();
             var mod = new SkyrimMod(WriteKey, SkyrimRelease.SkyrimLE);
             mod.Weapons.RecordCache.Set(
-                new Weapon(FormKey.Factory("012345:Skyrim.esm")));
+                new Weapon(FormKey.Factory("012345:Skyrim.esm"), SkyrimRelease.SkyrimLE));
             mod.Weapons.RecordCache.Set(
-                new Weapon(FormKey.Factory("012345:SomeOtherMod.esp")));
+                new Weapon(FormKey.Factory("012345:SomeOtherMod.esp"), SkyrimRelease.SkyrimLE));
             Assert.Throws<MissingModException>(() =>
             {
                 mod.WriteToBinary(

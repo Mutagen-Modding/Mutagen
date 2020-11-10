@@ -991,19 +991,44 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = CombatStyle_Registration.TriggeringRecordType;
-        public CombatStyle(FormKey formKey)
+        public CombatStyle(
+            FormKey formKey,
+            SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
             CustomCtor();
         }
 
-        public CombatStyle(IMod mod)
-            : this(mod.GetNextFormKey())
+        private CombatStyle(
+            FormKey formKey,
+            GameRelease gameRelease)
+        {
+            this.FormKey = formKey;
+            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            CustomCtor();
+        }
+
+        internal CombatStyle(
+            FormKey formKey,
+            ushort formVersion)
+        {
+            this.FormKey = formKey;
+            this.FormVersion = formVersion;
+            CustomCtor();
+        }
+
+        public CombatStyle(ISkyrimMod mod)
+            : this(
+                mod.GetNextFormKey(),
+                mod.SkyrimRelease)
         {
         }
 
-        public CombatStyle(IMod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+        public CombatStyle(ISkyrimMod mod, string editorID)
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.SkyrimRelease)
         {
             this.EditorID = editorID;
         }
@@ -1799,7 +1824,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
-            var ret = new CombatStyle(getNextFormKey());
+            var ret = new CombatStyle(getNextFormKey(), ((ICombatStyleGetter)item).FormVersion);
             ret.DeepCopyIn((CombatStyle)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (CombatStyle)item, getNextFormKey, duplicatedRecords);
@@ -2530,6 +2555,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 finalPos: finalPos,
                 offset: offset);
             ret.FillSubrecordTypes(
+                majorReference: ret,
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,

@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             bool squashedRepeatedList) => false;
 
-        public override void GenerateWrite(
+        public override async Task GenerateWrite(
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,

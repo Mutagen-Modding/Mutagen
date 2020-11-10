@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        public override void GenerateWrite(
+        public override async Task GenerateWrite(
             FileGeneration fg, 
             ObjectGeneration objGen, 
             TypeGeneration typeGen, 
@@ -85,7 +85,7 @@ namespace Mutagen.Bethesda.Generation
             BoolType b = typeGen as BoolType;
             if (b.BoolAsMarker == null)
             {
-                base.GenerateWrite(
+                await base.GenerateWrite(
                     fg,
                     objGen,
                     typeGen,

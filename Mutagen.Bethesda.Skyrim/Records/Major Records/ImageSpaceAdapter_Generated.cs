@@ -6946,19 +6946,44 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = ImageSpaceAdapter_Registration.TriggeringRecordType;
-        public ImageSpaceAdapter(FormKey formKey)
+        public ImageSpaceAdapter(
+            FormKey formKey,
+            SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
             CustomCtor();
         }
 
-        public ImageSpaceAdapter(IMod mod)
-            : this(mod.GetNextFormKey())
+        private ImageSpaceAdapter(
+            FormKey formKey,
+            GameRelease gameRelease)
+        {
+            this.FormKey = formKey;
+            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            CustomCtor();
+        }
+
+        internal ImageSpaceAdapter(
+            FormKey formKey,
+            ushort formVersion)
+        {
+            this.FormKey = formKey;
+            this.FormVersion = formVersion;
+            CustomCtor();
+        }
+
+        public ImageSpaceAdapter(ISkyrimMod mod)
+            : this(
+                mod.GetNextFormKey(),
+                mod.SkyrimRelease)
         {
         }
 
-        public ImageSpaceAdapter(IMod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+        public ImageSpaceAdapter(ISkyrimMod mod, string editorID)
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.SkyrimRelease)
         {
             this.EditorID = editorID;
         }
@@ -9177,7 +9202,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
-            var ret = new ImageSpaceAdapter(getNextFormKey());
+            var ret = new ImageSpaceAdapter(getNextFormKey(), ((IImageSpaceAdapterGetter)item).FormVersion);
             ret.DeepCopyIn((ImageSpaceAdapter)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (ImageSpaceAdapter)item, getNextFormKey, duplicatedRecords);
@@ -12750,6 +12775,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 finalPos: finalPos,
                 offset: offset);
             ret.FillSubrecordTypes(
+                majorReference: ret,
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,

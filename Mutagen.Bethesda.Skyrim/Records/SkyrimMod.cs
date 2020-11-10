@@ -1,16 +1,12 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Threading;
-using System.Diagnostics;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Noggog;
 using System.IO;
 using System.Buffers.Binary;
-using Loqui.Xml;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -21,13 +17,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void CustomCtor()
         {
-            this.ModHeader.FormVersion = this.SkyrimRelease switch
-            {
-                SkyrimRelease.SkyrimLE => 43,
-                SkyrimRelease.SkyrimSE => 44,
-                SkyrimRelease.SkyrimVR => 44,
-                _ => throw new NotImplementedException()
-            };
+            this.ModHeader.FormVersion = this.SkyrimRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
         }
     }
 

@@ -641,12 +641,20 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        public SigilStone(IMod mod)
+        private SigilStone(
+            FormKey formKey,
+            GameRelease gameRelease)
+        {
+            this.FormKey = formKey;
+            CustomCtor();
+        }
+
+        public SigilStone(IOblivionMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public SigilStone(IMod mod, string editorID)
+        public SigilStone(IOblivionMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
@@ -1975,6 +1983,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 finalPos: finalPos,
                 offset: offset);
             ret.FillSubrecordTypes(
+                majorReference: ret,
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,

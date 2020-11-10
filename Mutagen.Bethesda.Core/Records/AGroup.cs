@@ -53,6 +53,8 @@ namespace Mutagen.Bethesda
         /// <inheritdoc />
         public TMajor this[FormKey key] => InternalCache[key];
 
+        private readonly GameRelease _release;
+
         protected AGroup()
         {
             this.SourceMod = null!;
@@ -60,6 +62,7 @@ namespace Mutagen.Bethesda
 
         protected AGroup(IModGetter getter)
         {
+            this._release = getter.GameRelease;
             this.SourceMod = null!;
         }
 
@@ -68,6 +71,7 @@ namespace Mutagen.Bethesda
         /// </summary>
         public AGroup(IMod mod)
         {
+            this._release = mod.GameRelease;
             this.SourceMod = mod;
         }
 
@@ -83,7 +87,7 @@ namespace Mutagen.Bethesda
         /// <inheritdoc />
         public TMajor AddNew(FormKey formKey)
         {
-            var ret = MajorRecordInstantiator<TMajor>.Activator(SourceMod.GetNextFormKey());
+            var ret = MajorRecordInstantiator<TMajor>.Activator(formKey, _release);
             InternalCache.Set(ret);
             return ret;
         }
@@ -91,7 +95,7 @@ namespace Mutagen.Bethesda
         /// <inheritdoc />
         public TMajor AddNew()
         {
-            var ret = MajorRecordInstantiator<TMajor>.Activator(SourceMod.GetNextFormKey());
+            var ret = MajorRecordInstantiator<TMajor>.Activator(SourceMod.GetNextFormKey(), _release);
             InternalCache.Set(ret);
             return ret;
         }
@@ -99,7 +103,7 @@ namespace Mutagen.Bethesda
         /// <inheritdoc />
         public TMajor AddNew(string editorID)
         {
-            var ret = MajorRecordInstantiator<TMajor>.Activator(SourceMod.GetNextFormKey(editorID));
+            var ret = MajorRecordInstantiator<TMajor>.Activator(SourceMod.GetNextFormKey(editorID), _release);
             ret.EditorID = editorID;
             InternalCache.Set(ret);
             return ret;

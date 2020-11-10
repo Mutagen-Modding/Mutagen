@@ -45,7 +45,8 @@ namespace Mutagen.Bethesda.Skyrim
         public FormLink<ISkyrimMajorRecordGetter> Object { get; set; } = new FormLink<ISkyrimMajorRecordGetter>();
         #endregion
         #region Alias
-        public Int16 Alias { get; set; } = default;
+        public readonly static Int16 _Alias_Default = -1;
+        public Int16 Alias { get; set; } = _Alias_Default;
         #endregion
         #region Unused
         public UInt16 Unused { get; set; } = default;
@@ -726,7 +727,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Object = FormLink<ISkyrimMajorRecordGetter>.Null;
-            item.Alias = default;
+            item.Alias = ScriptObjectProperty._Alias_Default;
             item.Unused = default;
             base.Clear(item);
         }

@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Generation
             this.ModNickname = modNickname;
         }
 
-        public override void GenerateWrite(
+        public override async Task GenerateWrite(
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 
 namespace Mutagen.Bethesda.Internals
@@ -19,7 +20,7 @@ namespace Mutagen.Bethesda.Internals
         /// <summary>
         /// Function to call to retrieve a new Major Record of type T
         /// </summary>
-        public static readonly Func<FormKey, TMajor> Activator;
+        public static readonly Func<FormKey, GameRelease, TMajor> Activator;
 
         static MajorRecordInstantiator()
         {
@@ -28,15 +29,22 @@ namespace Mutagen.Bethesda.Internals
                 throw new ArgumentException();
             }
 
-            var ctorInfo = regis.ClassType.GetConstructors()
-                .Where(c => c.GetParameters().Length == 1)
-                .Where(c => c.GetParameters()[0].ParameterType == typeof(FormKey))
+            var ctorInfo = regis.ClassType.GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic)
+                .Where(c =>
+                {
+                    var param = c.GetParameters();
+                    if (param.Length != 2) return false;
+                    if (param[0].ParameterType != typeof(FormKey)) return false;
+                    if (param[1].ParameterType != typeof(GameRelease)) return false;
+                    return true;
+                })
                 .First();
             var paramInfo = ctorInfo.GetParameters();
-            ParameterExpression param = Expression.Parameter(typeof(FormKey), "formKey");
-            NewExpression newExp = Expression.New(ctorInfo, param);
-            LambdaExpression lambda = Expression.Lambda(typeof(Func<FormKey, TMajor>), newExp, param);
-            Activator = (Func<FormKey, TMajor>)lambda.Compile();
+            ParameterExpression formKey = Expression.Parameter(typeof(FormKey), "formKey");
+            ParameterExpression gameRelease = Expression.Parameter(typeof(GameRelease), "gameRelease");
+            NewExpression newExp = Expression.New(ctorInfo, formKey, gameRelease);
+            LambdaExpression lambda = Expression.Lambda(typeof(Func<FormKey, GameRelease, TMajor>), newExp, formKey, gameRelease);
+            Activator = (Func<FormKey, GameRelease, TMajor>)lambda.Compile();
         }
     }
 }

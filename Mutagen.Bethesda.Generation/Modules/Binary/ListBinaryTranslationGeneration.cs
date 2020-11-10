@@ -116,7 +116,7 @@ namespace Mutagen.Bethesda.Generation
             return itemAccessor.Access;
         }
 
-        public override void GenerateWrite(
+        public override async Task GenerateWrite(
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,
@@ -143,14 +143,14 @@ namespace Mutagen.Bethesda.Generation
             ListBinaryType listBinaryType = GetListType(list, data, subData);
 
             var allowDirectWrite = subTransl.AllowDirectWrite(objGen, list.SubTypeGeneration);
-            var isLoqui = list.SubTypeGeneration is LoquiType;
-            var listOfRecords = !isLoqui
+            var loqui = list.SubTypeGeneration as LoquiType;
+            var listOfRecords = loqui == null
                 && listBinaryType == ListBinaryType.SubTrigger
                 && allowDirectWrite;
             bool needsMasters = list.SubTypeGeneration is FormLinkType || list.SubTypeGeneration is LoquiType;
 
             var typeName = list.SubTypeGeneration.TypeName(getter: true, needsCovariance: true);
-            if (list.SubTypeGeneration is LoquiType loqui)
+            if (loqui != null)
             {
                 typeName = loqui.TypeNameInternal(getter: true, internalInterface: true);
             }
@@ -242,21 +242,37 @@ namespace Mutagen.Bethesda.Generation
                 }
                 else
                 {
-                    args.Add((gen) =>
+                    await args.Add(async (gen) =>
                     {
                         var listTranslMask = this.MaskModule.GetMaskModule(list.SubTypeGeneration.GetType()).GetTranslationMaskTypeStr(list.SubTypeGeneration);
                         gen.AppendLine($"transl: (MutagenWriter subWriter, {typeName} subItem{(needsMasters ? $", {nameof(RecordTypeConverter)}? conv" : null)}) =>");
                         using (new BraceWrapper(gen))
                         {
-                            subTransl.GenerateWrite(
-                                fg: gen,
-                                objGen: objGen,
-                                typeGen: list.SubTypeGeneration,
-                                writerAccessor: "subWriter",
-                                translationAccessor: "listTranslMask",
-                                itemAccessor: new Accessor($"subItem"),
-                                errorMaskAccessor: null,
-                                converterAccessor: needsMasters ? "conv" : null);
+                            var major = loqui != null && await loqui.TargetObjectGeneration.IsMajorRecord();
+                            if (major)
+                            {
+                                gen.AppendLine("try");
+                            }
+                            using (new BraceWrapper(gen, doIt: major))
+                            {
+                                await subTransl.GenerateWrite(
+                                    fg: gen,
+                                    objGen: objGen,
+                                    typeGen: list.SubTypeGeneration,
+                                    writerAccessor: "subWriter",
+                                    translationAccessor: "listTranslMask",
+                                    itemAccessor: new Accessor($"subItem"),
+                                    errorMaskAccessor: null,
+                                    converterAccessor: needsMasters ? "conv" : null);
+                            }
+                            if (major)
+                            {
+                                gen.AppendLine("catch (Exception ex)");
+                                using (new BraceWrapper(gen))
+                                {
+                                    gen.AppendLine("throw RecordException.Factory(ex, subItem);");
+                                }
+                            }
                         }
                     });
                 }

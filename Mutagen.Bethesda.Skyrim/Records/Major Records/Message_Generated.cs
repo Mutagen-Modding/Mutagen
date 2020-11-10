@@ -647,19 +647,44 @@ namespace Mutagen.Bethesda.Skyrim
         IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => MessageCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MessageCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MessageCommon.Instance.RemapLinks(this, mapping);
-        public Message(FormKey formKey)
+        public Message(
+            FormKey formKey,
+            SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
             CustomCtor();
         }
 
-        public Message(IMod mod)
-            : this(mod.GetNextFormKey())
+        private Message(
+            FormKey formKey,
+            GameRelease gameRelease)
+        {
+            this.FormKey = formKey;
+            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            CustomCtor();
+        }
+
+        internal Message(
+            FormKey formKey,
+            ushort formVersion)
+        {
+            this.FormKey = formKey;
+            this.FormVersion = formVersion;
+            CustomCtor();
+        }
+
+        public Message(ISkyrimMod mod)
+            : this(
+                mod.GetNextFormKey(),
+                mod.SkyrimRelease)
         {
         }
 
-        public Message(IMod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+        public Message(ISkyrimMod mod, string editorID)
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.SkyrimRelease)
         {
             this.EditorID = editorID;
         }
@@ -1315,7 +1340,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return QuestKey;
             }
-            foreach (var item in obj.MenuButtons.WhereCastable<IMessageButtonGetter, ILinkedFormKeyContainerGetter> ()
+            foreach (var item in obj.MenuButtons.WhereCastable<IMessageButtonGetter, ILinkedFormKeyContainerGetter>()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
@@ -1328,7 +1353,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
-            var ret = new Message(getNextFormKey());
+            var ret = new Message(getNextFormKey(), ((IMessageGetter)item).FormVersion);
             ret.DeepCopyIn((Message)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (Message)item, getNextFormKey, duplicatedRecords);
@@ -1872,6 +1897,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 finalPos: finalPos,
                 offset: offset);
             ret.FillSubrecordTypes(
+                majorReference: ret,
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,

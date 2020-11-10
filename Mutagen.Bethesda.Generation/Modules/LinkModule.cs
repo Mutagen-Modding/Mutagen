@@ -208,7 +208,7 @@ namespace Mutagen.Bethesda.Generation
                                         subFg.AppendLine($"foreach (var item in {access}{filterNulls}.SelectMany(f => f.{nameof(ILinkedFormKeyContainerGetter.LinkFormKeys)}))");
                                         break;
                                     case LinkCase.Maybe:
-                                        subFg.AppendLine($"foreach (var item in {access}{filterNulls}.WhereCastable<{contLoqui.TypeName(getter: true)}, {nameof(ILinkedFormKeyContainerGetter)}> ()");
+                                        subFg.AppendLine($"foreach (var item in {access}{filterNulls}.WhereCastable<{contLoqui.TypeName(getter: true)}, {nameof(ILinkedFormKeyContainerGetter)}>()");
                                         using (new DepthWrapper(subFg))
                                         {
                                             subFg.AppendLine($".SelectMany((f) => f.{nameof(ILinkedFormKeyContainerGetter.LinkFormKeys)}))");

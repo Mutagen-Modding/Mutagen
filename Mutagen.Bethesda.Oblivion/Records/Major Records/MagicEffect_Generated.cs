@@ -641,12 +641,20 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        public MagicEffect(IMod mod)
+        private MagicEffect(
+            FormKey formKey,
+            GameRelease gameRelease)
+        {
+            this.FormKey = formKey;
+            CustomCtor();
+        }
+
+        public MagicEffect(IOblivionMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public MagicEffect(IMod mod, string editorID)
+        public MagicEffect(IOblivionMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
@@ -1891,6 +1899,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 finalPos: finalPos,
                 offset: offset);
             ret.FillSubrecordTypes(
+                majorReference: ret,
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,

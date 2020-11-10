@@ -436,19 +436,44 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = StoryManagerEventNode_Registration.TriggeringRecordType;
-        public StoryManagerEventNode(FormKey formKey)
+        public StoryManagerEventNode(
+            FormKey formKey,
+            SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
             CustomCtor();
         }
 
-        public StoryManagerEventNode(IMod mod)
-            : this(mod.GetNextFormKey())
+        private StoryManagerEventNode(
+            FormKey formKey,
+            GameRelease gameRelease)
+        {
+            this.FormKey = formKey;
+            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            CustomCtor();
+        }
+
+        internal StoryManagerEventNode(
+            FormKey formKey,
+            ushort formVersion)
+        {
+            this.FormKey = formKey;
+            this.FormVersion = formVersion;
+            CustomCtor();
+        }
+
+        public StoryManagerEventNode(ISkyrimMod mod)
+            : this(
+                mod.GetNextFormKey(),
+                mod.SkyrimRelease)
         {
         }
 
-        public StoryManagerEventNode(IMod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+        public StoryManagerEventNode(ISkyrimMod mod, string editorID)
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.SkyrimRelease)
         {
             this.EditorID = editorID;
         }
@@ -1107,7 +1132,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
-            var ret = new StoryManagerEventNode(getNextFormKey());
+            var ret = new StoryManagerEventNode(getNextFormKey(), ((IStoryManagerEventNodeGetter)item).FormVersion);
             ret.DeepCopyIn((StoryManagerEventNode)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (StoryManagerEventNode)item, getNextFormKey, duplicatedRecords);
@@ -1582,6 +1607,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 finalPos: finalPos,
                 offset: offset);
             ret.FillSubrecordTypes(
+                majorReference: ret,
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,

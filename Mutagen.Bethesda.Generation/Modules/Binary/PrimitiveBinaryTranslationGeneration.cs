@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Generation
 
         public virtual string Typename(TypeGeneration typeGen) => typeName;
 
-        public override void GenerateWrite(
+        public override async Task GenerateWrite(
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,

@@ -500,12 +500,20 @@ namespace Mutagen.Bethesda.Oblivion
             CustomCtor();
         }
 
-        public SpellUnleveled(IMod mod)
+        private SpellUnleveled(
+            FormKey formKey,
+            GameRelease gameRelease)
+        {
+            this.FormKey = formKey;
+            CustomCtor();
+        }
+
+        public SpellUnleveled(IOblivionMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public SpellUnleveled(IMod mod, string editorID)
+        public SpellUnleveled(IOblivionMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
@@ -1758,6 +1766,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 finalPos: finalPos,
                 offset: offset);
             ret.FillSubrecordTypes(
+                majorReference: ret,
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,

@@ -65,7 +65,8 @@ namespace Mutagen.Bethesda.Skyrim
         public Byte Priority { get; set; } = default;
         #endregion
         #region QuestFormVersion
-        public Byte QuestFormVersion { get; set; } = default;
+        public readonly static Byte _QuestFormVersion_Default = byte.MaxValue;
+        public Byte QuestFormVersion { get; set; } = _QuestFormVersion_Default;
         #endregion
         #region Unknown
         public Int32 Unknown { get; set; } = default;
@@ -1395,19 +1396,44 @@ namespace Mutagen.Bethesda.Skyrim
         IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => QuestCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestCommon.Instance.RemapLinks(this, mapping);
-        public Quest(FormKey formKey)
+        public Quest(
+            FormKey formKey,
+            SkyrimRelease gameRelease)
         {
             this.FormKey = formKey;
+            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
             CustomCtor();
         }
 
-        public Quest(IMod mod)
-            : this(mod.GetNextFormKey())
+        private Quest(
+            FormKey formKey,
+            GameRelease gameRelease)
+        {
+            this.FormKey = formKey;
+            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            CustomCtor();
+        }
+
+        internal Quest(
+            FormKey formKey,
+            ushort formVersion)
+        {
+            this.FormKey = formKey;
+            this.FormVersion = formVersion;
+            CustomCtor();
+        }
+
+        public Quest(ISkyrimMod mod)
+            : this(
+                mod.GetNextFormKey(),
+                mod.SkyrimRelease)
         {
         }
 
-        public Quest(IMod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+        public Quest(ISkyrimMod mod, string editorID)
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.SkyrimRelease)
         {
             this.EditorID = editorID;
         }
@@ -1787,7 +1813,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Name = default;
             item.Flags = default;
             item.Priority = default;
-            item.QuestFormVersion = default;
+            item.QuestFormVersion = Quest._QuestFormVersion_Default;
             item.Unknown = default;
             item.Type = default;
             item.Event = default;
@@ -2285,12 +2311,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            foreach (var item in obj.DialogConditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter> ()
+            foreach (var item in obj.DialogConditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter>()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
             }
-            foreach (var item in obj.UnusedConditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter> ()
+            foreach (var item in obj.UnusedConditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter>()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
@@ -2299,7 +2325,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            foreach (var item in obj.Objectives.WhereCastable<IQuestObjectiveGetter, ILinkedFormKeyContainerGetter> ()
+            foreach (var item in obj.Objectives.WhereCastable<IQuestObjectiveGetter, ILinkedFormKeyContainerGetter>()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
@@ -2316,7 +2342,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
-            var ret = new Quest(getNextFormKey());
+            var ret = new Quest(getNextFormKey(), ((IQuestGetter)item).FormVersion);
             ret.DeepCopyIn((Quest)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (Quest)item, getNextFormKey, duplicatedRecords);
@@ -3229,6 +3255,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 finalPos: finalPos,
                 offset: offset);
             ret.FillSubrecordTypes(
+                majorReference: ret,
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,

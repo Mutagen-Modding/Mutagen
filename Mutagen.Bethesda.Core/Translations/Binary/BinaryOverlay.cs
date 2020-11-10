@@ -197,6 +197,29 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
+        public void FillSubrecordTypes(
+            IMajorRecordCommonGetter majorReference,
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordTypeConverter? recordTypeConverter,
+            RecordTypeFillWrapper fill)
+        {
+            try
+            {
+                FillSubrecordTypes(
+                    stream: stream,
+                    finalPos: finalPos,
+                    offset: offset,
+                    recordTypeConverter: recordTypeConverter,
+                    fill: fill);
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Factory(ex, majorReference);
+            }
+        }
+
         public void FillTypelessSubrecordTypes(
             OverlayStream stream,
             int finalPos,
