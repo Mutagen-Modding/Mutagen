@@ -146,34 +146,34 @@ namespace Mutagen.Bethesda.Skyrim
                         {
                             switch (header.TypeInt)
                             {
-                                case 0x52484341: //"ACHR":
+                                case RecordTypeInts.ACHR:
                                     placed = PlacedNpc.CreateFromBinary(r);
                                     return true;
-                                case 0x52464552: // "REFR":
+                                case RecordTypeInts.REFR:
                                     placed = PlacedObject.CreateFromBinary(r);
                                     return true;
-                                case 0x57524150: // "PARW":
+                                case RecordTypeInts.PARW:
                                     placed = PlacedArrow.CreateFromBinary(r);
                                     return true;
-                                case 0x52414250: // "PBAR":
+                                case RecordTypeInts.PBAR:
                                     placed = PlacedBarrier.CreateFromBinary(r);
                                     return true;
-                                case 0x41454250: // "PBEA":
+                                case RecordTypeInts.PBEA:
                                     placed = PlacedBeam.CreateFromBinary(r);
                                     return true;
-                                case 0x4E4F4350: // "PCON":
+                                case RecordTypeInts.PCON:
                                     placed = PlacedCone.CreateFromBinary(r);
                                     return true;
-                                case 0x414C4650: // "PFLA":
+                                case RecordTypeInts.PFLA:
                                     placed = PlacedFlame.CreateFromBinary(r);
                                     return true;
-                                case 0x445A4850: // "PHZD":
+                                case RecordTypeInts.PHZD:
                                     placed = PlacedHazard.CreateFromBinary(r);
                                     return true;
-                                case 0x53494D50: // "PMIS":
+                                case RecordTypeInts.PMIS:
                                     placed = PlacedMissile.CreateFromBinary(r);
                                     return true;
-                                case 0x45524750: // "PGRE":
+                                case RecordTypeInts.PGRE:
                                     placed = PlacedTrap.CreateFromBinary(r);
                                     return true;
                                 default:
@@ -234,34 +234,34 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         switch (header.TypeInt)
                         {
-                            case 0x52484341: //"ACHR":
+                            case RecordTypeInts.ACHR:
                                 placed = PlacedNpc.CreateFromBinary(r);
                                 return true;
-                            case 0x52464552: // "REFR":
+                            case RecordTypeInts.REFR:
                                 placed = PlacedObject.CreateFromBinary(r);
                                 return true;
-                            case 0x57524150: // "PARW":
+                            case RecordTypeInts.PARW:
                                 placed = PlacedArrow.CreateFromBinary(r);
                                 return true;
-                            case 0x52414250: // "PBAR":
+                            case RecordTypeInts.PBAR:
                                 placed = PlacedBarrier.CreateFromBinary(r);
                                 return true;
-                            case 0x41454250: // "PBEA":
+                            case RecordTypeInts.PBEA:
                                 placed = PlacedBeam.CreateFromBinary(r);
                                 return true;
-                            case 0x4E4F4350: // "PCON":
+                            case RecordTypeInts.PCON:
                                 placed = PlacedCone.CreateFromBinary(r);
                                 return true;
-                            case 0x414C4650: // "PFLA":
+                            case RecordTypeInts.PFLA:
                                 placed = PlacedFlame.CreateFromBinary(r);
                                 return true;
-                            case 0x445A4850: // "PHZD":
+                            case RecordTypeInts.PHZD:
                                 placed = PlacedHazard.CreateFromBinary(r);
                                 return true;
-                            case 0x53494D50: // "PMIS":
+                            case RecordTypeInts.PMIS:
                                 placed = PlacedMissile.CreateFromBinary(r);
                                 return true;
-                            case 0x45524750: // "PGRE":
+                            case RecordTypeInts.PGRE:
                                 placed = PlacedTrap.CreateFromBinary(r);
                                 return true;
                             default:
@@ -490,25 +490,25 @@ namespace Mutagen.Bethesda.Skyrim
                         var majorMeta = package.MetaData.Constants.MajorRecord(span);
                         switch (majorMeta.RecordType.TypeInt)
                         {
-                            case 0x52484341: // "ACHR":
+                            case RecordTypeInts.ACHR:
                                 return PlacedNpcBinaryOverlay.PlacedNpcFactory(new OverlayStream(span, package), package);
-                            case 0x52464552: // "REFR":
+                            case RecordTypeInts.REFR:
                                 return PlacedObjectBinaryOverlay.PlacedObjectFactory(new OverlayStream(span, package), package);
-                            case 0x57524150: // "PARW":
+                            case RecordTypeInts.PARW:
                                 return PlacedArrowBinaryOverlay.PlacedArrowFactory(new OverlayStream(span, package), package);
-                            case 0x52414250: // "PBAR":
+                            case RecordTypeInts.PBAR:
                                 return PlacedBarrierBinaryOverlay.PlacedBarrierFactory(new OverlayStream(span, package), package);
-                            case 0x41454250: // "PBEA":
+                            case RecordTypeInts.PBEA:
                                 return PlacedBeamBinaryOverlay.PlacedBeamFactory(new OverlayStream(span, package), package);
-                            case 0x4E4F4350: // "PCON":
+                            case RecordTypeInts.PCON:
                                 return PlacedConeBinaryOverlay.PlacedConeFactory(new OverlayStream(span, package), package);
-                            case 0x414C4650: // "PFLA":
+                            case RecordTypeInts.PFLA:
                                 return PlacedFlameBinaryOverlay.PlacedFlameFactory(new OverlayStream(span, package), package);
-                            case 0x445A4850: // "PHZD":
+                            case RecordTypeInts.PHZD:
                                 return PlacedHazardBinaryOverlay.PlacedHazardFactory(new OverlayStream(span, package), package);
-                            case 0x53494D50: // "PMIS":
+                            case RecordTypeInts.PMIS:
                                 return PlacedMissileBinaryOverlay.PlacedMissileFactory(new OverlayStream(span, package), package);
-                            case 0x45524750: // "PGRE":
+                            case RecordTypeInts.PGRE:
                                 return PlacedTrapBinaryOverlay.PlacedTrapFactory(new OverlayStream(span, package), package);
                             default:
                                 throw new NotImplementedException();
@@ -553,7 +553,7 @@ namespace Mutagen.Bethesda.Skyrim
                                     {
                                         switch (recType.TypeInt)
                                         {
-                                            case 0x4D56414E: // NAVM
+                                            case RecordTypeInts.NAVM:
                                                 if (this.InsideWorldspace)
                                                 {
                                                     this.NavigationMeshes = BinaryOverlayList.FactoryByArray<IWorldspaceNavigationMeshGetter>(
@@ -579,7 +579,7 @@ namespace Mutagen.Bethesda.Skyrim
                                                             skipHeader: false));
                                                 }
                                                 break;
-                                            case 0x444e414c: // LAND
+                                            case RecordTypeInts.LAND:
                                                 if (_landscapeLocation.HasValue)
                                                 {
                                                     throw new ArgumentException("Second landscape parsed.");

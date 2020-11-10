@@ -396,11 +396,11 @@ namespace Mutagen.Bethesda.Oblivion
                         var majorMeta = package.MetaData.Constants.MajorRecord(span);
                         switch (majorMeta.RecordType.TypeInt)
                         {
-                            case 0x45524341: // "ACRE":
+                            case RecordTypeInts.ACRE:
                                 return PlacedCreatureBinaryOverlay.PlacedCreatureFactory(new OverlayStream(span, stream.MetaData), package);
-                            case 0x52484341: // "ACHR":
+                            case RecordTypeInts.ACHR:
                                 return PlacedNpcBinaryOverlay.PlacedNpcFactory(new OverlayStream(span, stream.MetaData), package);
-                            case 0x52464552: // "REFR":
+                            case RecordTypeInts.REFR:
                                 return PlacedObjectBinaryOverlay.PlacedObjectFactory(new OverlayStream(span, stream.MetaData), package);
                             default:
                                 throw new NotImplementedException();
@@ -444,14 +444,14 @@ namespace Mutagen.Bethesda.Oblivion
                                     {
                                         switch (recType.TypeInt)
                                         {
-                                            case 0x44524750: // PGRD
+                                            case RecordTypeInts.PGRD:
                                                 if (_pathgridLocation.HasValue)
                                                 {
                                                     throw new ArgumentException("Second pathgrid parsed.");
                                                 }
                                                 _pathgridLocation = checked((int)stream.Position);
                                                 break;
-                                            case 0x444e414c: // LAND
+                                            case RecordTypeInts.LAND:
                                                 if (_landscapeLocation.HasValue)
                                                 {
                                                     throw new ArgumentException("Second landscape parsed.");
