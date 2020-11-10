@@ -64,6 +64,11 @@ namespace Mutagen.Bethesda
         /// Whether a mod has localization enabled
         /// </summary>
         bool UsingLocalization { get; }
+
+        /// <summary>
+        /// The next FormID to be allocated
+        /// </summary>
+        uint NextFormID { get; }
     }
 
     /// <summary>
@@ -93,7 +98,7 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// The next FormID to be allocated
         /// </summary>
-        uint NextFormID { get; set; }
+        new uint NextFormID { get; set; }
 
         /// <summary>
         /// Whether a mod has localization enabled

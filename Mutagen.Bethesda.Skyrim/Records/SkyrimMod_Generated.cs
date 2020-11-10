@@ -5249,6 +5249,8 @@ namespace Mutagen.Bethesda.Skyrim
             get => this.ModHeader.Stats.NextFormID;
             set => this.ModHeader.Stats.NextFormID = value;
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        uint IModGetter.NextFormID => this.ModHeader.Stats.NextFormID;
         public SkyrimMod(
             ModKey modKey,
             SkyrimRelease release)
@@ -22084,6 +22086,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+        uint IModGetter.NextFormID => ModHeader.Stats.NextFormID;
         public ModKey ModKey { get; }
         private readonly BinaryOverlayFactoryPackage _package;
         private readonly IBinaryReadStream _data;

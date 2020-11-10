@@ -2190,6 +2190,7 @@ namespace Mutagen.Bethesda.Generation
 
                 if (obj.GetObjectType() == ObjectType.Mod)
                 {
+                    fg.AppendLine($"uint IModGetter.NextFormID => ModHeader.Stats.NextFormID;");
                     fg.AppendLine($"public {nameof(ModKey)} ModKey {{ get; }}");
                     fg.AppendLine($"private readonly {nameof(BinaryOverlayFactoryPackage)} _package;");
                     fg.AppendLine($"private readonly {nameof(IBinaryReadStream)} _data;");

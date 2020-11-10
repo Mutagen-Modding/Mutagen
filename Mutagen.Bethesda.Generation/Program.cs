@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "r ret = new VoiceType(getNextFormKey())";
+            string testString = "public ModKey ModKey { get; }";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

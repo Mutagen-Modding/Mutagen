@@ -49,6 +49,7 @@ namespace Mutagen.Bethesda
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => throw new NotImplementedException();
         IList<MasterReference> IMod.MasterReferences => throw new NotImplementedException();
         uint IMod.NextFormID { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        uint IModGetter.NextFormID { get => throw new NotImplementedException(); }
         public abstract bool CanUseLocalization { get; }
         public abstract bool UsingLocalization { get; set; }
         bool IModGetter.UsingLocalization => throw new NotImplementedException();
