@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -192,23 +192,8 @@ namespace Mutagen.Bethesda.Skyrim
                             break;
                         default:
                             frame.Reader.Position -= subHeader.HeaderLength;
-                            goto Finish;
+                            return;
                     }
-                }
-                Finish:
-
-                // Check error conditions
-                if (roomCount != item.LinkedRooms.Count)
-                {
-                    throw new ArgumentException($"Unexpected room count: {item.LinkedRooms.Count} != {roomCount}");
-                }
-                if (EnumExt.HasFlag(flags, HasImageSpaceFlag) != (item.ImageSpace.FormKey != null))
-                {
-                    throw new ArgumentException($"Image space presence did not match flag specification");
-                }
-                if (EnumExt.HasFlag(flags, HasLightingTemplateFlag) != (item.LightingTemplate.FormKey != null))
-                {
-                    throw new ArgumentException($"Lighting template presence did not match flag specification");
                 }
             }
         }
