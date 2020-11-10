@@ -373,7 +373,110 @@ namespace Mutagen.Bethesda.Binary
         /// <returns>A MajorRecordHeader struct</returns>
         public static MajorRecordHeader GetMajorRecord(this IBinaryReadStream stream, GameConstants constants, int offset = 0, bool readSafe = true)
         {
-            return new MajorRecordHeader(constants, stream.GetMemory(constants.MajorConstants.HeaderLength, offset, readSafe: readSafe)); ;
+            return new MajorRecordHeader(constants, stream.GetMemory(constants.MajorConstants.HeaderLength, offset, readSafe: readSafe));
+        }
+
+        /// <summary>
+        /// Attempts to retrieve a MajorRecordHeader struct from the stream, without progressing its position.
+        /// </summary>
+        /// <param name="stream">Source stream</param>
+        /// <param name="constants">Constants to use for alignment and measurements</param>
+        /// <param name="header">MajorRecordHeader struct if successfully retrieved</param>
+        /// <param name="offset">Offset to the current position in the stream to read from</param>
+        /// <param name="readSafe">
+        /// Whether to prepare the underlying bytes to be safe in the case of future reads from the same stream.<br/>
+        /// If false, future stream movement may corrupt and misalign underlying data the header references.<br/>
+        /// If true, extra data copies may occur depending on the underling stream type.
+        /// </param>
+        /// <returns>True if SubrecordHeader was retrieved</returns>
+        public static bool TryGetMajorRecord(this IBinaryReadStream stream, GameConstants constants, out MajorRecordHeader header, int offset = 0, bool readSafe = true)
+        {
+            if (stream.Remaining < constants.MajorConstants.HeaderLength + offset)
+            {
+                header = default;
+                return false;
+            }
+            header = GetMajorRecord(stream, constants, offset: offset, readSafe: readSafe);
+            return true;
+        }
+
+        /// <summary>
+        /// Attempts to retrieve a MajorRecordHeader struct from the stream, without progressing its position.
+        /// </summary>
+        /// <param name="stream">Source stream</param>
+        /// <param name="constants">Constants to use for alignment and measurements</param>
+        /// <param name="targetType">RecordType to require for a successful query</param>
+        /// <param name="header">MajorRecordHeader struct if successfully retrieved</param>
+        /// <param name="offset">Offset to the current position in the stream to read from</param>
+        /// <param name="readSafe">
+        /// Whether to prepare the underlying bytes to be safe in the case of future reads from the same stream.<br/>
+        /// If false, future stream movement may corrupt and misalign underlying data the header references.<br/>
+        /// If true, extra data copies may occur depending on the underling stream type.
+        /// </param>
+        /// <returns>True if SubrecordHeader was retrieved</returns>
+        public static bool TryGetMajorRecord(this IBinaryReadStream stream, GameConstants constants, RecordType targetType, out MajorRecordHeader header, int offset = 0, bool readSafe = true)
+        {
+            if (stream.Remaining < constants.MajorConstants.HeaderLength + offset)
+            {
+                header = default;
+                return false;
+            }
+            header = GetMajorRecord(stream, constants, offset: offset, readSafe: readSafe);
+            return header.RecordType == targetType;
+        }
+
+        /// <summary>
+        /// Attempts to retrieve a MajorRecordHeader struct from the stream progressing its position.
+        /// </summary>
+        /// <param name="stream">Source stream</param>
+        /// <param name="constants">Constants to use for alignment and measurements</param>
+        /// <param name="header">MajorRecordHeader struct if successfully retrieved</param>
+        /// <param name="offset">Offset to the current position in the stream to read from</param>
+        /// <param name="readSafe">
+        /// Whether to prepare the underlying bytes to be safe in the case of future reads from the same stream.<br/>
+        /// If false, future stream movement may corrupt and misalign underlying data the header references.<br/>
+        /// If true, extra data copies may occur depending on the underling stream type.
+        /// </param>
+        /// <returns>True if SubrecordHeader was retrieved</returns>
+        public static bool TryReadMajorRecord(this IBinaryReadStream stream, GameConstants constants, out MajorRecordHeader header, int offset = 0, bool readSafe = true)
+        {
+            if (stream.Remaining < constants.MajorConstants.HeaderLength + offset)
+            {
+                header = default;
+                return false;
+            }
+            header = ReadMajorRecord(stream, constants, offset: offset, readSafe: readSafe);
+            return true;
+        }
+
+        /// <summary>
+        /// Attempts to retrieve a MajorRecordHeader struct from the stream progressing its position.
+        /// </summary>
+        /// <param name="stream">Source stream</param>
+        /// <param name="constants">Constants to use for alignment and measurements</param>
+        /// <param name="targetType">RecordType to require for a successful query</param>
+        /// <param name="header">MajorRecordHeader struct if successfully retrieved</param>
+        /// <param name="offset">Offset to the current position in the stream to read from</param>
+        /// <param name="readSafe">
+        /// Whether to prepare the underlying bytes to be safe in the case of future reads from the same stream.<br/>
+        /// If false, future stream movement may corrupt and misalign underlying data the header references.<br/>
+        /// If true, extra data copies may occur depending on the underling stream type.
+        /// </param>
+        /// <returns>True if SubrecordHeader was retrieved</returns>
+        public static bool TryReadMajorRecord(this IBinaryReadStream stream, GameConstants constants, RecordType targetType, out MajorRecordHeader header, int offset = 0, bool readSafe = true)
+        {
+            if (stream.Remaining < constants.MajorConstants.HeaderLength + offset)
+            {
+                header = default;
+                return false;
+            }
+            header = ReadMajorRecord(stream, constants, offset: offset, readSafe: readSafe);
+            if (header.RecordType != targetType)
+            {
+                stream.Position -= header.HeaderLength;
+                return false;
+            }
+            return true;
         }
 
         /// <summary>
@@ -1075,6 +1178,47 @@ namespace Mutagen.Bethesda.Binary
         }
 
         /// <summary>
+        /// Attempts to retrieve a MajorRecordHeader struct from the stream, without progressing its position.
+        /// </summary>
+        /// <param name="stream">Source stream</param>
+        /// <param name="header">MajorRecordHeader struct if successfully retrieved</param>
+        /// <param name="offset">Offset to the current position in the stream to read from</param>
+        /// <param name="readSafe">
+        /// Whether to prepare the underlying bytes to be safe in the case of future reads from the same stream.<br/>
+        /// If false, future stream movement may corrupt and misalign underlying data the header references.<br/>
+        /// If true, extra data copies may occur depending on the underling stream type.
+        /// </param>
+        /// <returns>True if MajorRecordHeader was retrieved</returns>
+        public static bool TryGetMajorRecord(this IMutagenReadStream stream, out MajorRecordHeader header, int offset = 0, bool readSafe = true)
+        {
+            if (stream.Remaining < stream.MetaData.Constants.MajorConstants.HeaderLength + offset)
+            {
+                header = default;
+                return false;
+            }
+            header = GetMajorRecord(stream, stream.MetaData.Constants, offset: offset, readSafe: readSafe);
+            return true;
+        }
+
+        /// <summary>
+        /// Attempts to retrieve a MajorRecordHeader struct from the stream, without progressing its position.
+        /// </summary>
+        /// <param name="stream">Source stream</param>
+        /// <param name="targetType">RecordType to require for a successful query</param>
+        /// <param name="header">MajorRecordHeader struct if successfully retrieved</param>
+        /// <param name="offset">Offset to the current position in the stream to read from</param>
+        /// <param name="readSafe">
+        /// Whether to prepare the underlying bytes to be safe in the case of future reads from the same stream.<br/>
+        /// If false, future stream movement may corrupt and misalign underlying data the header references.<br/>
+        /// If true, extra data copies may occur depending on the underling stream type.
+        /// </param>
+        /// <returns>True if MajorRecordHeader was retrieved</returns>
+        public static bool TryGetMajorRecord(this IMutagenReadStream stream, RecordType targetType, out MajorRecordHeader header, int offset = 0, bool readSafe = true)
+        {
+            return TryGetMajorRecord(stream, stream.MetaData.Constants, targetType, out header, offset: offset, readSafe: readSafe);
+        }
+
+        /// <summary>
         /// Retrieves a MajorRecordHeader struct from the stream, progressing its position.
         /// </summary>
         /// <param name="stream">Source stream</param>
@@ -1088,6 +1232,39 @@ namespace Mutagen.Bethesda.Binary
         public static MajorRecordHeader ReadMajorRecord(this IMutagenReadStream stream, int offset = 0, bool readSafe = true)
         {
             return ReadMajorRecord(stream, stream.MetaData.Constants, offset: offset, readSafe: readSafe);
+        }
+
+        /// <summary>
+        /// Attempts to retrieve a SubrecordHeader struct, progressing its position if successful.
+        /// </summary>
+        /// <param name="stream">Source stream</param>
+        /// <param name="header">SubrecordHeader struct if successfully retrieved</param>
+        /// <param name="readSafe">
+        /// Whether to prepare the underlying bytes to be safe in the case of future reads from the same stream.<br/>
+        /// If false, future stream movement may corrupt and misalign underlying data the header references.<br/>
+        /// If true, extra data copies may occur depending on the underling stream type.
+        /// </param>
+        /// <returns>True if SubrecordHeader was retrieved</returns>
+        public static bool TryReadMajorRecord(this IMutagenReadStream stream, out MajorRecordHeader header, bool readSafe = true)
+        {
+            return TryReadMajorRecord(stream, stream.MetaData.Constants, out header, readSafe: readSafe);
+        }
+
+        /// <summary>
+        /// Attempts to retrieve a SubrecordHeader struct, progressing its position if successful.
+        /// </summary>
+        /// <param name="stream">Source stream</param>
+        /// <param name="targetType">RecordType to require for a successful query</param>
+        /// <param name="header">SubrecordHeader struct if successfully retrieved</param>
+        /// <param name="readSafe">
+        /// Whether to prepare the underlying bytes to be safe in the case of future reads from the same stream.<br/>
+        /// If false, future stream movement may corrupt and misalign underlying data the header references.<br/>
+        /// If true, extra data copies may occur depending on the underling stream type.
+        /// </param>
+        /// <returns>True if SubrecordHeader was retrieved</returns>
+        public static bool TryReadMajorRecord(this IMutagenReadStream stream, RecordType targetType, out MajorRecordHeader header, bool readSafe = true)
+        {
+            return TryReadMajorRecord(stream, stream.MetaData.Constants, targetType, out header, readSafe: readSafe);
         }
 
         /// <summary>
