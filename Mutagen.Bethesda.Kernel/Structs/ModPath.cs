@@ -26,7 +26,7 @@ namespace Mutagen.Bethesda
 
         public static bool TryFromPath(string path, [MaybeNullWhen(false)] out ModPath modPath)
         {
-            if (!ModKey.TryFactory(System.IO.Path.GetFileName(path), out var modKey))
+            if (!ModKey.TryFromNameAndExtension(System.IO.Path.GetFileName(path), out var modKey))
             {
                 modPath = default;
                 return false;

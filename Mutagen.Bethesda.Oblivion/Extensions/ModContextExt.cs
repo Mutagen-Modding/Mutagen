@@ -55,10 +55,10 @@ namespace Mutagen.Bethesda.Oblivion
                         record: readOnlySubBlock);
                     foreach (var readOnlyCell in readOnlySubBlock.Cells)
                     {
-                        Func<IOblivionMod, ICellGetter, ICell> cellGetter = (m, r) =>
+                        Func<IOblivionMod, ICellGetter, ICell> cellGetter = (mod, copyCell) =>
                         {
-                            var formKey = r.FormKey;
-                            var retrievedBlock = m.Cells.Records.FirstOrDefault(x => x.BlockNumber == blockNum);
+                            var formKey = copyCell.FormKey;
+                            var retrievedBlock = mod.Cells.Records.FirstOrDefault(x => x.BlockNumber == blockNum);
                             if (retrievedBlock == null)
                             {
                                 retrievedBlock = new CellBlock()
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Oblivion
                                     GroupType = GroupTypeEnum.InteriorCellBlock,
                                     LastModified = blockModified,
                                 };
-                                m.Cells.Records.Add(retrievedBlock);
+                                mod.Cells.Records.Add(retrievedBlock);
                             }
                             var subBlock = retrievedBlock.SubBlocks.FirstOrDefault(x => x.BlockNumber == subBlockNum);
                             if (subBlock == null)
@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.Oblivion
                             var cell = subBlock.Cells.FirstOrDefault(cell => cell.FormKey == formKey);
                             if (cell == null)
                             {
-                                cell = readOnlyCell.DeepCopy(CellCopyMask);
+                                cell = copyCell.DeepCopy(CellCopyMask);
                                 subBlock.Cells.Add(cell);
                             }
                             return cell;
@@ -140,10 +140,10 @@ namespace Mutagen.Bethesda.Oblivion
                         record: readOnlySubBlock);
                     foreach (var readOnlyCell in readOnlySubBlock.Items)
                     {
-                        Func<IOblivionMod, ICellGetter, ICell> cellGetter = (m, r) =>
+                        Func<IOblivionMod, ICellGetter, ICell> cellGetter = (mod, copyCell) =>
                         {
-                            var worldspaceCopy = getter(m, worldspace);
-                            var formKey = r.FormKey;
+                            var worldspaceCopy = getter(mod, worldspace);
+                            var formKey = copyCell.FormKey;
                             var retrievedBlock = worldspaceCopy.SubCells.FirstOrDefault(x => x.BlockNumberX == blockNumX && x.BlockNumberY == blockNumY);
                             if (retrievedBlock == null)
                             {
@@ -171,7 +171,7 @@ namespace Mutagen.Bethesda.Oblivion
                             var cell = subBlock.Items.FirstOrDefault(cell => cell.FormKey == formKey);
                             if (cell == null)
                             {
-                                cell = readOnlyCell.DeepCopy(CellCopyMask);
+                                cell = copyCell.DeepCopy(CellCopyMask);
                                 subBlock.Items.Add(cell);
                             }
                             return cell;

@@ -125,7 +125,7 @@ namespace Mutagen.Bethesda
             // Slice past delimiter
             str = str.Slice(7);
 
-            if (!ModKey.TryFactory(str, out var modKey))
+            if (!ModKey.TryFromNameAndExtension(str, out var modKey))
             {
                 formKey = default!;
                 return false;

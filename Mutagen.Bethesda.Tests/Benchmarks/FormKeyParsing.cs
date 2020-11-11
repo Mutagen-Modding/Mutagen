@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         [Benchmark]
         public ModKey ParseModKey()
         {
-            Bethesda.ModKey.TryFactory(OblivionMaster, out var modKey);
+            Bethesda.ModKey.TryFromNameAndExtension(OblivionMaster, out var modKey);
             return modKey;
         }
 
