@@ -24,7 +24,7 @@ namespace Mutagen.Bethesda.Xml
                 return ModKey.Null;
             }
 
-            if (!ModKey.TryFactory(str, out var item))
+            if (!ModKey.TryFromNameAndExtension(str, out var item))
             {
                 return ModKey.Null;
             }
@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Xml
                 return false;
             }
 
-            return ModKey.TryFactory(str, out item!);
+            return ModKey.TryFromNameAndExtension(str, out item!);
         }
 
         public bool Parse(XElement node, [MaybeNullWhen(false)]out ModKey item, ErrorMaskBuilder? errorMask, TranslationCrystal? translationMask)
@@ -50,7 +50,7 @@ namespace Mutagen.Bethesda.Xml
                 return false;
             }
 
-            return ModKey.TryFactory(str, out item!);
+            return ModKey.TryFromNameAndExtension(str, out item!);
         }
 
         public void Write(XElement node, string? name, ModKey item, ErrorMaskBuilder? errorMask, TranslationCrystal? translationMask)

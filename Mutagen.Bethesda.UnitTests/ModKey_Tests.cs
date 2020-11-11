@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void TryFactory_TypicalMaster()
         {
-            Assert.True(ModKey.TryFactory("Oblivion.esm", out var modKey));
+            Assert.True(ModKey.TryFromNameAndExtension("Oblivion.esm", out var modKey));
             Assert.Equal("Oblivion", modKey.Name);
             Assert.Equal("Oblivion.esm", modKey.FileName);
             Assert.Equal(ModType.Master, modKey.Type);
@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void TryFactory_TypicalLightMaster()
         {
-            Assert.True(ModKey.TryFactory("Oblivion.esl", out var modKey));
+            Assert.True(ModKey.TryFromNameAndExtension("Oblivion.esl", out var modKey));
             Assert.Equal("Oblivion", modKey.Name);
             Assert.Equal("Oblivion.esl", modKey.FileName);
             Assert.Equal(ModType.LightMaster, modKey.Type);
@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void TryFactory_TypicalMod()
         {
-            Assert.True(ModKey.TryFactory("Knights.esp", out var modKey));
+            Assert.True(ModKey.TryFromNameAndExtension("Knights.esp", out var modKey));
             Assert.Equal("Knights", modKey.Name);
             Assert.Equal("Knights.esp", modKey.FileName);
             Assert.Equal(ModType.Plugin, modKey.Type);
@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void TryFactory_ExtraPeriod()
         {
-            Assert.True(ModKey.TryFactory("Obliv.ion.esm", out var modKey));
+            Assert.True(ModKey.TryFromNameAndExtension("Obliv.ion.esm", out var modKey));
             Assert.Equal("Obliv.ion", modKey.Name);
             Assert.Equal("Obliv.ion.esm", modKey.FileName);
             Assert.Equal(ModType.Master, modKey.Type);
@@ -49,23 +49,23 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void TryFactory_ImproperlyLengthedSuffix()
         {
-            Assert.False(ModKey.TryFactory("Obliv.ion.esmz", out var modKey));
+            Assert.False(ModKey.TryFromNameAndExtension("Obliv.ion.esmz", out var modKey));
         }
 
         [Fact]
         public void TryFactory_ImproperSuffix()
         {
-            Assert.False(ModKey.TryFactory("Obliv.ion.esn", out var modKey));
+            Assert.False(ModKey.TryFromNameAndExtension("Obliv.ion.esn", out var modKey));
         }
 
         [Fact]
         public void TryFactory_TypicalDuplicate()
         {
-            Assert.True(ModKey.TryFactory("Oblivion.esm", out var modKey));
+            Assert.True(ModKey.TryFromNameAndExtension("Oblivion.esm", out var modKey));
             Assert.Equal("Oblivion", modKey.Name);
             Assert.Equal("Oblivion.esm", modKey.FileName);
             Assert.Equal(ModType.Master, modKey.Type);
-            Assert.True(ModKey.TryFactory("Oblivion.esm", out var modKey2));
+            Assert.True(ModKey.TryFromNameAndExtension("Oblivion.esm", out var modKey2));
             Assert.Equal("Oblivion", modKey2.Name);
             Assert.Equal("Oblivion.esm", modKey2.FileName);
             Assert.Equal(ModType.Master, modKey.Type);
@@ -75,22 +75,22 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void TryFactory_TypicalBothDuplicates()
         {
-            Assert.True(ModKey.TryFactory("Oblivion.esm", out var masterKey));
+            Assert.True(ModKey.TryFromNameAndExtension("Oblivion.esm", out var masterKey));
             Assert.Equal("Oblivion", masterKey.Name);
             Assert.Equal("Oblivion.esm", masterKey.FileName);
             Assert.Equal(ModType.Master, masterKey.Type);
 
-            Assert.True(ModKey.TryFactory("Oblivion.esp", out var modKey));
+            Assert.True(ModKey.TryFromNameAndExtension("Oblivion.esp", out var modKey));
             Assert.Equal("Oblivion", modKey.Name);
             Assert.Equal("Oblivion.esp", modKey.FileName);
             Assert.Equal(ModType.Plugin, modKey.Type);
 
-            Assert.True(ModKey.TryFactory("Oblivion.esm", out var masterKey2));
+            Assert.True(ModKey.TryFromNameAndExtension("Oblivion.esm", out var masterKey2));
             Assert.Equal("Oblivion", masterKey2.Name);
             Assert.Equal("Oblivion.esm", masterKey2.FileName);
             Assert.Equal(ModType.Master, masterKey2.Type);
 
-            Assert.True(ModKey.TryFactory("Oblivion.esp", out var modKey2));
+            Assert.True(ModKey.TryFromNameAndExtension("Oblivion.esp", out var modKey2));
             Assert.Equal("Oblivion", modKey2.Name);
             Assert.Equal("Oblivion.esp", modKey2.FileName);
             Assert.Equal(ModType.Plugin, modKey2.Type);

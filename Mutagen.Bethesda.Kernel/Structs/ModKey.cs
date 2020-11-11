@@ -143,7 +143,7 @@ namespace Mutagen.Bethesda
         /// <param name="str">String to parse</param>
         /// <param name="modKey">ModKey if successfully converted</param>
         /// <returns>True if conversion successful</returns>
-        public static bool TryFactory(ReadOnlySpan<char> str, [MaybeNullWhen(false)]out ModKey modKey)
+        public static bool TryFromNameAndExtension(ReadOnlySpan<char> str, [MaybeNullWhen(false)]out ModKey modKey)
         {
             if (str.Length == 0 || str.IsWhiteSpace())
             {
@@ -192,11 +192,11 @@ namespace Mutagen.Bethesda
         /// <exception cref="ArgumentException">If string malformed</exception>
         public static ModKey FromNameAndExtension(ReadOnlySpan<char> str)
         {
-            if (TryFactory(str, out var key))
+            if (TryFromNameAndExtension(str, out var key))
             {
                 return key;
             }
-            if (TryFactory(Path.GetFileName(str), out key))
+            if (TryFromNameAndExtension(Path.GetFileName(str), out key))
             {
                 return key;
             }

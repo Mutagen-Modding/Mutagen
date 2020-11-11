@@ -21,7 +21,7 @@ namespace Mutagen.Bethesda.Binary
                 return false;
             }
 
-            return ModKey.TryFactory(str, out item!);
+            return ModKey.TryFromNameAndExtension(str, out item!);
         }
 
         public ModKey Parse(MutagenFrame frame)
@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Binary
                 return ModKey.Null;
             }
 
-            if (!ModKey.TryFactory(str, out var item))
+            if (!ModKey.TryFromNameAndExtension(str, out var item))
             {
                 return ModKey.Null;
             }

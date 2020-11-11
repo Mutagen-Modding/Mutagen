@@ -162,7 +162,7 @@ namespace Mutagen.Bethesda
                     enabled = false;
                 }
             }
-            if (!ModKey.TryFactory(str, out var key))
+            if (!ModKey.TryFromNameAndExtension(str, out var key))
             {
                 throw new ArgumentException($"Load order file had malformed line: {str.ToString()}");
             }

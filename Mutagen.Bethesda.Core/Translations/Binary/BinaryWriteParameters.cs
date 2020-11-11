@@ -279,7 +279,7 @@ namespace Mutagen.Bethesda
         public ModKey RunMasterMatch(IModGetter mod, string path)
         {
             if (ModKey == ModKeyOption.NoCheck) return mod.ModKey;
-            if (!Bethesda.ModKey.TryFactory(Path.GetFileName(path), out var pathModKey))
+            if (!Bethesda.ModKey.TryFromNameAndExtension(Path.GetFileName(path), out var pathModKey))
             {
                 throw new ArgumentException($"Could not convert path to a ModKey to compare against: {Path.GetFileName(path)}");
             }
