@@ -193,7 +193,7 @@ namespace Mutagen.Bethesda.UnitTests
             using var file = File.Create(Path.Combine(tmp.Dir.Path, "Skyrim.esm"));
             var missingPath = Path.Combine(tmp.Dir.Path, "Plugins.txt");
             LoadOrder.FromPath(
-                path: missingPath,
+                pluginTextPath: missingPath,
                 game: GameRelease.SkyrimSE,
                 dataPath: tmp.Dir.Path)
                 .Should().Equal(new LoadOrderListing("Skyrim.esm", true));
@@ -206,7 +206,7 @@ namespace Mutagen.Bethesda.UnitTests
             var missingPath = Path.Combine(tmp.Dir.Path, "Plugins.txt");
             Action a = () =>
                 LoadOrder.FromPath(
-                    path: missingPath,
+                    pluginTextPath: missingPath,
                     game: GameRelease.Oblivion,
                     dataPath: default);
             a.Should().Throw<FileNotFoundException>();

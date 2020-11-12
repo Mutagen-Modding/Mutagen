@@ -194,26 +194,48 @@ namespace Mutagen.Bethesda
         }
 
         /// <summary>
-        /// Parses a file to retrieve all ModKeys in expected plugin file format,
+        /// Parses the typical plugins file to retrieve all ModKeys in expected plugin file format,
         /// Will order mods by timestamps if applicable
         /// Will add implicit base mods if applicable
         /// </summary>
         /// <param name="game">Game type</param>
-        /// <param name="path">Path of plugin list</param>
         /// <param name="dataPath">Path to game's data folder</param>
         /// <param name="throwOnMissingMods">Whether to throw and exception if mods are missing</param>
         /// <returns>Enumerable of modkeys representing a load order</returns>
         /// <exception cref="ArgumentException">Line in plugin file is unexpected</exception>
         public static IEnumerable<LoadOrderListing> FromPath(
-            FilePath path,
+            GameRelease game,
+            DirectoryPath dataPath,
+            bool throwOnMissingMods = true)
+        {
+            return FromPath(
+                pluginTextPath: GetPluginsPath(game),
+                game: game,
+                dataPath: dataPath,
+                throwOnMissingMods: throwOnMissingMods);
+        }
+
+        /// <summary>
+        /// Parses a file to retrieve all ModKeys in expected plugin file format,
+        /// Will order mods by timestamps if applicable
+        /// Will add implicit base mods if applicable
+        /// </summary>
+        /// <param name="game">Game type</param>
+        /// <param name="pluginTextPath">Path of plugin list</param>
+        /// <param name="dataPath">Path to game's data folder</param>
+        /// <param name="throwOnMissingMods">Whether to throw and exception if mods are missing</param>
+        /// <returns>Enumerable of modkeys representing a load order</returns>
+        /// <exception cref="ArgumentException">Line in plugin file is unexpected</exception>
+        public static IEnumerable<LoadOrderListing> FromPath(
+            FilePath pluginTextPath,
             GameRelease game,
             DirectoryPath dataPath,
             bool throwOnMissingMods = true)
         {
             List<LoadOrderListing> mods;
-            if (path.Exists)
+            if (pluginTextPath.Exists)
             {
-                using var stream = new FileStream(path.Path, FileMode.Open, FileAccess.Read, FileShare.Read);
+                using var stream = new FileStream(pluginTextPath.Path, FileMode.Open, FileAccess.Read, FileShare.Read);
                 mods = FromStream(stream, game).ToList();
             }
             else
