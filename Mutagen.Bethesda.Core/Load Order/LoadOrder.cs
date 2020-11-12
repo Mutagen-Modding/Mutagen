@@ -257,6 +257,39 @@ namespace Mutagen.Bethesda
             }
         }
 
+        public static FilePath GetCreationClubListingsPath(GameCategory category, DirectoryPath dataPath)
+        {
+            switch (category)
+            {
+                case GameCategory.Oblivion:
+                    throw new ArgumentException();
+                case GameCategory.Skyrim:
+                    return Path.Combine(dataPath.Path, $"{category}.ccc");
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        public static IEnumerable<LoadOrderListing> GetCreationClubListings(GameCategory category, DirectoryPath dataPath)
+        {
+            var path = GetCreationClubListingsPath(category, dataPath);
+            if (!path.Exists) return Enumerable.Empty<LoadOrderListing>();
+            return FromCreationClubPath(
+                path,
+                dataPath);
+        }
+
+        public static IEnumerable<LoadOrderListing> FromCreationClubPath(
+            FilePath cccFilePath,
+            DirectoryPath dataPath)
+        {
+            return File.ReadAllLines(cccFilePath.Path)
+                .Select(x => ModKey.FromNameAndExtension(x))
+                .Where(x => File.Exists(Path.Combine(dataPath.Path, x.FileName)))
+                .Select(x => new LoadOrderListing(x, enabled: true))
+                .ToList();
+        }
+
         public static IObservable<IChangeSet<LoadOrderListing>> GetLiveLoadOrder(
             GameRelease game,
             FilePath loadOrderFilePath,

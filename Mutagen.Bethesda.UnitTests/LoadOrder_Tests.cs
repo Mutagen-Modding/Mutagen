@@ -211,5 +211,39 @@ namespace Mutagen.Bethesda.UnitTests
                     dataPath: default);
             a.Should().Throw<FileNotFoundException>();
         }
+
+        [Fact]
+        public void FromCreationClubPathMissing()
+        {
+            using var tmp = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(FromCreationClubPathMissing)));
+            var missingPath = Path.Combine(tmp.Dir.Path, "Skyrim.ccc");
+            Action a = () =>
+                LoadOrder.FromCreationClubPath(
+                    cccFilePath: missingPath,
+                    dataPath: default);
+            a.Should().Throw<FileNotFoundException>();
+        }
+
+        [Fact]
+        public void FromCreationClubPath()
+        {
+            using var tmp = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(FromCreationClubPath)));
+            var pluginPath = Path.Combine(tmp.Dir.Path, "Skyrim.ccc");
+            var dataPath = Path.Combine(tmp.Dir.Path, "Data");
+            File.WriteAllLines(pluginPath,
+                new string[]
+                {
+                    Utility.ModKey.FileName,
+                    Utility.ModKey2.FileName,
+                });
+            Directory.CreateDirectory(dataPath);
+            File.WriteAllText(Path.Combine(dataPath, Utility.ModKey.FileName), string.Empty);
+            var results = LoadOrder.FromCreationClubPath(
+                    cccFilePath: pluginPath,
+                    dataPath: dataPath)
+                .ToList();
+            results.Should().HaveCount(1);
+            results[0].Should().BeEquivalentTo(new LoadOrderListing(Utility.ModKey, enabled: true));
+        }
     }
 }
