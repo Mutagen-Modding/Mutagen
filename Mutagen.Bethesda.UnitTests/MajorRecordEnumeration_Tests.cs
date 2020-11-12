@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void Empty()
         {
-            var mod = new OblivionMod(Utility.ModKey);
+            var mod = new OblivionMod(Utility.PluginModKey);
             var conv = ConvertMod(mod);
             Assert.Empty(conv.EnumerateMajorRecords());
             Assert.Empty(conv.EnumerateMajorRecords<IMajorRecordCommon>());
@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void EnumerateAll()
         {
-            var mod = new OblivionMod(Utility.ModKey);
+            var mod = new OblivionMod(Utility.PluginModKey);
             mod.Npcs.AddNew();
             mod.Ammunitions.AddNew();
             var conv = ConvertMod(mod);
@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void EnumerateAllViaGeneric()
         {
-            var mod = new OblivionMod(Utility.ModKey);
+            var mod = new OblivionMod(Utility.PluginModKey);
             mod.Npcs.AddNew();
             mod.Ammunitions.AddNew();
             var conv = ConvertMod(mod);
@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void EnumerateSpecificType_Matched()
         {
-            var mod = new OblivionMod(Utility.ModKey);
+            var mod = new OblivionMod(Utility.PluginModKey);
             mod.Npcs.AddNew();
             mod.Ammunitions.AddNew();
             var conv = ConvertMod(mod);
@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void EnumerateSpecificType_Unmatched()
         {
-            var mod = new OblivionMod(Utility.ModKey);
+            var mod = new OblivionMod(Utility.PluginModKey);
             mod.Npcs.AddNew();
             var conv = ConvertMod(mod);
             Assert.Empty(conv.EnumerateMajorRecords<IAmmunition>());
@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void EnumerateLinkInterface()
         {
-            var mod = new OblivionMod(Utility.ModKey);
+            var mod = new OblivionMod(Utility.PluginModKey);
             mod.Factions.AddNew();
             var conv = ConvertMod(mod);
             Assert.NotEmpty(conv.EnumerateMajorRecords<IFactionGetter>());
@@ -87,7 +87,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void EnumerateDeepLinkInterface()
         {
-            var mod = new OblivionMod(Utility.ModKey);
+            var mod = new OblivionMod(Utility.PluginModKey);
             mod.Cells.Records.Add(new CellBlock()
             {
                 BlockNumber = 0,

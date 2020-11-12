@@ -30,17 +30,17 @@ namespace Mutagen.Bethesda.UnitTests
             File.WriteAllLines(cccPath,
                 new string[]
                 {
-                    Utility.ModKey.FileName,
-                    Utility.ModKey2.FileName,
+                    Utility.PluginModKey.FileName,
+                    Utility.PluginModKey2.FileName,
                 });
             Directory.CreateDirectory(dataPath);
-            File.WriteAllText(Path.Combine(dataPath, Utility.ModKey.FileName), string.Empty);
+            File.WriteAllText(Path.Combine(dataPath, Utility.PluginModKey.FileName), string.Empty);
             var results = CreationClubListings.ListingsFromPath(
                     cccFilePath: cccPath,
                     dataPath: dataPath)
                 .ToList();
             results.Should().HaveCount(1);
-            results[0].Should().BeEquivalentTo(new LoadOrderListing(Utility.ModKey, enabled: true));
+            results[0].Should().BeEquivalentTo(new LoadOrderListing(Utility.PluginModKey, enabled: true));
         }
     }
 }

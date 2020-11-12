@@ -71,13 +71,13 @@ namespace Mutagen.Bethesda.UnitTests
         public void Worldspace_GetOrAddAsOverride_Clean()
         {
             WarmupSkyrim.Init();
-            var mod = new SkyrimMod(Utility.ModKey, SkyrimRelease.SkyrimSE);
+            var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimSE);
             var worldspace = mod.Worldspaces.AddNew();
             var block = worldspace.SubCells.AddReturn(new WorldspaceBlock());
             var subBlock = block.Items.AddReturn(new WorldspaceSubBlock());
             var cell = subBlock.Items.AddReturn(new Cell(mod.GetNextFormKey(), SkyrimRelease.SkyrimSE));
 
-            var mod2 = new SkyrimMod(Utility.ModKey2, SkyrimRelease.SkyrimSE);
+            var mod2 = new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimSE);
             var worldspaceOverride = mod2.Worldspaces.GetOrAddAsOverride(worldspace);
             Assert.Empty(worldspaceOverride.SubCells);
         }
@@ -86,7 +86,7 @@ namespace Mutagen.Bethesda.UnitTests
         public void Worldspace_WinningContextOverride_IPlaced()
         {
             WarmupSkyrim.Init();
-            var mod = new SkyrimMod(Utility.ModKey, SkyrimRelease.SkyrimSE);
+            var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimSE);
             var worldspace = mod.Worldspaces.AddNew();
             var block = worldspace.SubCells.AddReturn(new WorldspaceBlock());
             var subBlock = block.Items.AddReturn(new WorldspaceSubBlock());
