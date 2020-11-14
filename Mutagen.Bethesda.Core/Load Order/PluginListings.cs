@@ -145,7 +145,8 @@ namespace Mutagen.Bethesda
             FilePath loadOrderFilePath,
             DirectoryPath dataFolderPath,
             out IObservable<ErrorResponse> state,
-            bool throwOnMissingMods = true)
+            bool throwOnMissingMods = true,
+            bool orderListings = true)
         {
             var results = ObservableExt.WatchFile(loadOrderFilePath.Path)
                 .StartWith(Unit.Default)
@@ -153,8 +154,12 @@ namespace Mutagen.Bethesda
                 {
                     try
                     {
-                        return GetResponse<IObservable<IChangeSet<LoadOrderListing>>>.Succeed(
-                            ListingsFromPath(loadOrderFilePath, game, dataFolderPath, throwOnMissingMods: throwOnMissingMods).AsObservableChangeSet());
+                        var lo = ListingsFromPath(loadOrderFilePath, game, dataFolderPath, throwOnMissingMods: throwOnMissingMods);
+                        if (orderListings)
+                        {
+                            lo = lo.OrderListings();
+                        }
+                        return GetResponse<IObservable<IChangeSet<LoadOrderListing>>>.Succeed(lo.AsObservableChangeSet());
                     }
                     catch (Exception ex)
                     {

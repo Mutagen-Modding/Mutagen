@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda
         /// <exception cref="ArgumentException">Line in plugin file is unexpected</exception>
         /// <exception cref="FileNotFoundException">If plugin file not located</exception>
         /// <exception cref="MissingModException">If throwOnMissingMods true and file is missing</exception>
-        public static IEnumerable<LoadOrderListing> GetTypicalListings(
+        public static IEnumerable<LoadOrderListing> GetListings(
             GameRelease game,
             DirectoryPath dataPath,
             bool throwOnMissingMods = true)
@@ -134,6 +134,81 @@ namespace Mutagen.Bethesda
             }
 
             return PluginListings.ListingsFromPath(path, game, dataPath, throwOnMissingMods);
+        }
+
+        public static IEnumerable<LoadOrderListing> GetListings(
+            GameRelease game,
+            FilePath pluginsFilePath,
+            FilePath? creationClubFilePath,
+            DirectoryPath dataPath,
+            bool throwOnMissingMods = true)
+        {
+            var pluginListings = PluginListings.ListingsFromPath(pluginsFilePath, game, dataPath, throwOnMissingMods);
+            var ccListings = Enumerable.Empty<LoadOrderListing>();
+            if (creationClubFilePath != null && creationClubFilePath.Value.Exists)
+            {
+                ccListings = CreationClubListings.ListingsFromPath(creationClubFilePath.Value, dataPath);
+            }
+
+            return OrderListings(pluginListings.Concat(ccListings));
+        }
+
+        public static IEnumerable<ModKey> OrderListings(this IEnumerable<ModKey> e)
+        {
+            return OrderListings(e, i => i);
+        }
+
+        public static IEnumerable<T> OrderListings<T>(IEnumerable<T> e, Func<T, ModKey> selector)
+        {
+            return e.OrderBy(e => selector(e).Type);
+        }
+
+        public static IEnumerable<LoadOrderListing> OrderListings(this IEnumerable<LoadOrderListing> e)
+        {
+            return OrderListings(e, i => i.ModKey);
+        }
+
+        public static IObservable<IChangeSet<ModKey>> OrderListings(this IObservable<IChangeSet<ModKey>> e)
+        {
+            return e.Sort(ModKey.ByTypeComparer);
+        }
+
+        public static IObservable<IChangeSet<LoadOrderListing>> OrderListings(this IObservable<IChangeSet<LoadOrderListing>> e)
+        {
+            return ObservableListEx.Sort(e, LoadOrderListing.GetComparer(ModKey.ByTypeComparer));
+        }
+
+        public static IObservable<IChangeSet<LoadOrderListing>> GetLiveLoadOrder(
+            GameRelease game,
+            FilePath loadOrderFilePath,
+            DirectoryPath dataFolderPath,
+            out IObservable<ErrorResponse> state,
+            FilePath? cccLoadOrderFilePath = null,
+            bool throwOnMissingMods = true,
+            bool orderListings = true)
+        {
+            var listings = PluginListings.GetLiveLoadOrder(
+                game: game,
+                loadOrderFilePath: loadOrderFilePath,
+                dataFolderPath: dataFolderPath,
+                out state,
+                throwOnMissingMods: throwOnMissingMods,
+                orderListings: false);
+            if (cccLoadOrderFilePath != null)
+            {
+                listings = listings.Or(
+                    CreationClubListings.GetLiveLoadOrder(
+                        cccFilePath: cccLoadOrderFilePath.Value,
+                        dataFolderPath: dataFolderPath,
+                        out var ccErrs,
+                        orderListings: false));
+                state = state.Merge(ccErrs);
+            }
+            if (orderListings)
+            {
+                listings = listings.Sort(Comparer<LoadOrderListing>.Create((l1, l2) => l1.ModKey.Type.CompareTo(l2.ModKey.Type)));
+            }
+            return listings;
         }
 
         /// <summary>

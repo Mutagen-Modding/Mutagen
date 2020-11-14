@@ -60,5 +60,8 @@ namespace Mutagen.Bethesda
             }
             return new LoadOrderListing(key, enabled);
         }
+
+        public static Comparer<LoadOrderListing> GetComparer(Comparer<ModKey> comparer) =>
+            Comparer<LoadOrderListing>.Create((x, y) => comparer.Compare(x.ModKey, y.ModKey));
     }
 }

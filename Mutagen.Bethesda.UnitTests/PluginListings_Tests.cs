@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void AddImplicitMods()
         {
-            using var tmpFolder = new TempFolder(Path.Combine(Utility.TempFolderPath, "AddImplicitMods"));
+            using var tmpFolder = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(PluginListings_Tests), nameof(AddImplicitMods)));
             File.WriteAllText(Path.Combine(tmpFolder.Dir.Path, Utility.Skyrim.FileName), "TEST");
             File.WriteAllText(Path.Combine(tmpFolder.Dir.Path, Utility.Dawnguard.FileName), "TEST");
             File.WriteAllText(Path.Combine(tmpFolder.Dir.Path, Utility.Dragonborn.FileName), "TEST");
@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void WriteExclude()
         {
-            using var tmpFolder = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(WriteExclude)));
+            using var tmpFolder = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(PluginListings_Tests), nameof(WriteExclude)));
             var path = Path.Combine(tmpFolder.Dir.Path, "Plugins.txt");
             PluginListings.Write(
                 path,
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void WriteMarkers()
         {
-            using var tmpFolder = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(WriteMarkers)));
+            using var tmpFolder = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(PluginListings_Tests), nameof(WriteMarkers)));
             var path = Path.Combine(tmpFolder.Dir.Path, "Plugins.txt");
             PluginListings.Write(
                 path,
@@ -91,7 +91,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void WriteImplicit()
         {
-            using var tmpFolder = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(WriteImplicit)));
+            using var tmpFolder = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(PluginListings_Tests), nameof(WriteImplicit)));
             var path = Path.Combine(tmpFolder.Dir.Path, "Plugins.txt");
             PluginListings.Write(
                 path,
@@ -111,7 +111,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public async Task LiveLoadOrder()
         {
-            using var tmpFolder = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(LiveLoadOrder)));
+            using var tmpFolder = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(PluginListings_Tests), nameof(LiveLoadOrder)));
             var path = Path.Combine(tmpFolder.Dir.Path, "Plugins.txt");
             File.WriteAllLines(path,
                 new string[]
@@ -153,7 +153,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void FromPathMissingWithImplicit()
         {
-            using var tmp = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(FromPathMissingWithImplicit)));
+            using var tmp = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(PluginListings_Tests), nameof(FromPathMissingWithImplicit)));
             using var file = File.Create(Path.Combine(tmp.Dir.Path, "Skyrim.esm"));
             var missingPath = Path.Combine(tmp.Dir.Path, "Plugins.txt");
             PluginListings.ListingsFromPath(
@@ -166,7 +166,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void FromPathMissing()
         {
-            using var tmp = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(FromPathMissing)));
+            using var tmp = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(PluginListings_Tests), nameof(FromPathMissing)));
             var missingPath = Path.Combine(tmp.Dir.Path, "Plugins.txt");
             Action a = () =>
                 PluginListings.ListingsFromPath(
