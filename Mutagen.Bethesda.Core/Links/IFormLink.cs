@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// FormKey to link against
         /// </summary>
-        FormKey? FormKey { get; }
+        FormKey? FormKeyNullable { get; }
 
         /// <summary>
         /// True if FormKey points to a null ID
@@ -122,12 +122,12 @@ namespace Mutagen.Bethesda
         public static bool TryResolve<TMajor>(this IFormLinkNullable<TMajor> link, ILinkCache cache, [MaybeNullWhen(false)] out TMajor majorRecord)
             where TMajor : class, IMajorRecordCommonGetter
         {
-            if (link.FormKey == null)
+            if (link.FormKeyNullable == null)
             {
                 majorRecord = default;
                 return false;
             }
-            return cache.TryResolve<TMajor>(link.FormKey.Value, out majorRecord);
+            return cache.TryResolve<TMajor>(link.FormKeyNullable.Value, out majorRecord);
         }
 
         /// <summary>
@@ -141,7 +141,7 @@ namespace Mutagen.Bethesda
         public static TMajor? Resolve<TMajor>(this IFormLinkNullable<TMajor> link, ILinkCache cache)
             where TMajor : class, IMajorRecordCommonGetter
         {
-            if (link.FormKey == null)
+            if (link.FormKeyNullable == null)
             {
                 return null;
             }
@@ -186,13 +186,13 @@ namespace Mutagen.Bethesda
             where TSource : class, IMajorRecordCommonGetter
             where TTarget : class, TSource
         {
-            if (formLink.FormKey == null
-                || formLink.FormKey.Equals(Mutagen.Bethesda.FormKey.Null))
+            if (formLink.FormKeyNullable == null
+                || formLink.FormKeyNullable.Equals(Mutagen.Bethesda.FormKey.Null))
             {
                 major = default!;
                 return false;
             }
-            return cache.TryResolve(formLink.FormKey.Value, out major);
+            return cache.TryResolve(formLink.FormKeyNullable.Value, out major);
         }
     }
 }

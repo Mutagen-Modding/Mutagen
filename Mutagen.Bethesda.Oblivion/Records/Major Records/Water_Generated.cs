@@ -1115,7 +1115,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Sound ?? true)
             {
-                fg.AppendItem(item.Sound.FormKey, "Sound");
+                fg.AppendItem(item.Sound.FormKeyNullable, "Sound");
             }
             if ((printMask?.Data?.Overall ?? true)
                 && item.Data.TryGet(out var DataItem))
@@ -1258,7 +1258,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.Sound.FormKey.TryGet(out var SoundKey))
+            if (obj.Sound.FormKeyNullable.TryGet(out var SoundKey))
             {
                 yield return SoundKey;
             }
@@ -1338,7 +1338,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Sound) ?? true))
             {
-                item.Sound = new FormLinkNullable<ISoundGetter>(rhs.Sound.FormKey);
+                item.Sound = new FormLinkNullable<ISoundGetter>(rhs.Sound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Data) ?? true))
             {

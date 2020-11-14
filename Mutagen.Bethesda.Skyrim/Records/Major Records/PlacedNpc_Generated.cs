@@ -2210,11 +2210,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Base ?? true)
             {
-                fg.AppendItem(item.Base.FormKey, "Base");
+                fg.AppendItem(item.Base.FormKeyNullable, "Base");
             }
             if (printMask?.EncounterZone ?? true)
             {
-                fg.AppendItem(item.EncounterZone.FormKey, "EncounterZone");
+                fg.AppendItem(item.EncounterZone.FormKeyNullable, "EncounterZone");
             }
             if ((printMask?.RagdollData ?? true)
                 && item.RagdollData.TryGet(out var RagdollDataItem))
@@ -2238,7 +2238,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.MerchantContainer ?? true)
             {
-                fg.AppendItem(item.MerchantContainer.FormKey, "MerchantContainer");
+                fg.AppendItem(item.MerchantContainer.FormKeyNullable, "MerchantContainer");
             }
             if ((printMask?.Count ?? true)
                 && item.Count.TryGet(out var CountItem))
@@ -2285,11 +2285,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.PersistentLocation ?? true)
             {
-                fg.AppendItem(item.PersistentLocation.FormKey, "PersistentLocation");
+                fg.AppendItem(item.PersistentLocation.FormKeyNullable, "PersistentLocation");
             }
             if (printMask?.LocationReference ?? true)
             {
-                fg.AppendItem(item.LocationReference.FormKey, "LocationReference");
+                fg.AppendItem(item.LocationReference.FormKeyNullable, "LocationReference");
             }
             if (printMask?.IgnoredBySandbox ?? true)
             {
@@ -2321,7 +2321,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Horse ?? true)
             {
-                fg.AppendItem(item.Horse.FormKey, "Horse");
+                fg.AppendItem(item.Horse.FormKeyNullable, "Horse");
             }
             if ((printMask?.FavorCost ?? true)
                 && item.FavorCost.TryGet(out var FavorCostItem))
@@ -2340,11 +2340,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Emittance ?? true)
             {
-                fg.AppendItem(item.Emittance.FormKey, "Emittance");
+                fg.AppendItem(item.Emittance.FormKeyNullable, "Emittance");
             }
             if (printMask?.MultiboundReference ?? true)
             {
-                fg.AppendItem(item.MultiboundReference.FormKey, "MultiboundReference");
+                fg.AppendItem(item.MultiboundReference.FormKeyNullable, "MultiboundReference");
             }
             if (printMask?.IgnoredBySandbox2 ?? true)
             {
@@ -2607,11 +2607,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.Base.FormKey.TryGet(out var BaseKey))
+            if (obj.Base.FormKeyNullable.TryGet(out var BaseKey))
             {
                 yield return BaseKey;
             }
-            if (obj.EncounterZone.FormKey.TryGet(out var EncounterZoneKey))
+            if (obj.EncounterZone.FormKeyNullable.TryGet(out var EncounterZoneKey))
             {
                 yield return EncounterZoneKey;
             }
@@ -2622,7 +2622,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.MerchantContainer.FormKey.TryGet(out var MerchantContainerKey))
+            if (obj.MerchantContainer.FormKeyNullable.TryGet(out var MerchantContainerKey))
             {
                 yield return MerchantContainerKey;
             }
@@ -2637,11 +2637,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.PersistentLocation.FormKey.TryGet(out var PersistentLocationKey))
+            if (obj.PersistentLocation.FormKeyNullable.TryGet(out var PersistentLocationKey))
             {
                 yield return PersistentLocationKey;
             }
-            if (obj.LocationReference.FormKey.TryGet(out var LocationReferenceKey))
+            if (obj.LocationReference.FormKeyNullable.TryGet(out var LocationReferenceKey))
             {
                 yield return LocationReferenceKey;
             }
@@ -2652,7 +2652,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.Horse.FormKey.TryGet(out var HorseKey))
+            if (obj.Horse.FormKeyNullable.TryGet(out var HorseKey))
             {
                 yield return HorseKey;
             }
@@ -2670,11 +2670,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.Emittance.FormKey.TryGet(out var EmittanceKey))
+            if (obj.Emittance.FormKeyNullable.TryGet(out var EmittanceKey))
             {
                 yield return EmittanceKey;
             }
-            if (obj.MultiboundReference.FormKey.TryGet(out var MultiboundReferenceKey))
+            if (obj.MultiboundReference.FormKeyNullable.TryGet(out var MultiboundReferenceKey))
             {
                 yield return MultiboundReferenceKey;
             }
@@ -2757,11 +2757,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Base) ?? true))
             {
-                item.Base = new FormLinkNullable<INpcGetter>(rhs.Base.FormKey);
+                item.Base = new FormLinkNullable<INpcGetter>(rhs.Base.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.EncounterZone) ?? true))
             {
-                item.EncounterZone = new FormLinkNullable<IEncounterZoneGetter>(rhs.EncounterZone.FormKey);
+                item.EncounterZone = new FormLinkNullable<IEncounterZoneGetter>(rhs.EncounterZone.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.RagdollData) ?? true))
             {
@@ -2817,7 +2817,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.MerchantContainer) ?? true))
             {
-                item.MerchantContainer = new FormLinkNullable<IPlacedObjectGetter>(rhs.MerchantContainer.FormKey);
+                item.MerchantContainer = new FormLinkNullable<IPlacedObjectGetter>(rhs.MerchantContainer.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Count) ?? true))
             {
@@ -2909,11 +2909,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.PersistentLocation) ?? true))
             {
-                item.PersistentLocation = new FormLinkNullable<ILocationGetter>(rhs.PersistentLocation.FormKey);
+                item.PersistentLocation = new FormLinkNullable<ILocationGetter>(rhs.PersistentLocation.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.LocationReference) ?? true))
             {
-                item.LocationReference = new FormLinkNullable<ILocationRecordGetter>(rhs.LocationReference.FormKey);
+                item.LocationReference = new FormLinkNullable<ILocationRecordGetter>(rhs.LocationReference.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.IgnoredBySandbox) ?? true))
             {
@@ -2952,7 +2952,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Horse) ?? true))
             {
-                item.Horse = new FormLinkNullable<IPlacedNpcGetter>(rhs.Horse.FormKey);
+                item.Horse = new FormLinkNullable<IPlacedNpcGetter>(rhs.Horse.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.FavorCost) ?? true))
             {
@@ -3012,11 +3012,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Emittance) ?? true))
             {
-                item.Emittance = new FormLinkNullable<IEmittanceGetter>(rhs.Emittance.FormKey);
+                item.Emittance = new FormLinkNullable<IEmittanceGetter>(rhs.Emittance.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.MultiboundReference) ?? true))
             {
-                item.MultiboundReference = new FormLinkNullable<IPlacedObjectGetter>(rhs.MultiboundReference.FormKey);
+                item.MultiboundReference = new FormLinkNullable<IPlacedObjectGetter>(rhs.MultiboundReference.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.IgnoredBySandbox2) ?? true))
             {

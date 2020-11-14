@@ -1090,7 +1090,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Enchantment ?? true)
             {
-                fg.AppendItem(item.Enchantment.FormKey, "Enchantment");
+                fg.AppendItem(item.Enchantment.FormKeyNullable, "Enchantment");
             }
             if ((printMask?.EnchantmentPoints ?? true)
                 && item.EnchantmentPoints.TryGet(out var EnchantmentPointsItem))
@@ -1261,7 +1261,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.Enchantment.FormKey.TryGet(out var EnchantmentKey))
+            if (obj.Enchantment.FormKeyNullable.TryGet(out var EnchantmentKey))
             {
                 yield return EnchantmentKey;
             }
@@ -1352,7 +1352,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Enchantment) ?? true))
             {
-                item.Enchantment = new FormLinkNullable<IEnchantmentGetter>(rhs.Enchantment.FormKey);
+                item.Enchantment = new FormLinkNullable<IEnchantmentGetter>(rhs.Enchantment.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.EnchantmentPoints) ?? true))
             {

@@ -1166,7 +1166,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.NextQuest ?? true)
             {
-                fg.AppendItem(item.NextQuest.FormKey, "NextQuest");
+                fg.AppendItem(item.NextQuest.FormKeyNullable, "NextQuest");
             }
             if ((printMask?.SCHR ?? true)
                 && item.SCHR.TryGet(out var SCHRItem))
@@ -1246,7 +1246,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.NextQuest.FormKey.TryGet(out var NextQuestKey))
+            if (obj.NextQuest.FormKeyNullable.TryGet(out var NextQuestKey))
             {
                 yield return NextQuestKey;
             }
@@ -1303,7 +1303,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.NextQuest) ?? true))
             {
-                item.NextQuest = new FormLinkNullable<IQuestGetter>(rhs.NextQuest.FormKey);
+                item.NextQuest = new FormLinkNullable<IQuestGetter>(rhs.NextQuest.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.SCHR) ?? true))
             {

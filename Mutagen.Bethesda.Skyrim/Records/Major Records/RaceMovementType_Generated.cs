@@ -855,7 +855,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.MovementType ?? true)
             {
-                fg.AppendItem(item.MovementType.FormKey, "MovementType");
+                fg.AppendItem(item.MovementType.FormKeyNullable, "MovementType");
             }
             if ((printMask?.Overrides?.Overall ?? true)
                 && item.Overrides.TryGet(out var OverridesItem))
@@ -898,7 +898,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<FormKey> GetLinkFormKeys(IRaceMovementTypeGetter obj)
         {
-            if (obj.MovementType.FormKey.TryGet(out var MovementTypeKey))
+            if (obj.MovementType.FormKeyNullable.TryGet(out var MovementTypeKey))
             {
                 yield return MovementTypeKey;
             }
@@ -923,7 +923,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)RaceMovementType_FieldIndex.MovementType) ?? true))
             {
-                item.MovementType = new FormLinkNullable<IMovementTypeGetter>(rhs.MovementType.FormKey);
+                item.MovementType = new FormLinkNullable<IMovementTypeGetter>(rhs.MovementType.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)RaceMovementType_FieldIndex.Overrides) ?? true))
             {

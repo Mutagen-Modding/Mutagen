@@ -1186,7 +1186,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Quest ?? true)
             {
-                fg.AppendItem(item.Quest.FormKey, "Quest");
+                fg.AppendItem(item.Quest.FormKeyNullable, "Quest");
             }
             if (printMask?.Flags ?? true)
             {
@@ -1336,7 +1336,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.Quest.FormKey.TryGet(out var QuestKey))
+            if (obj.Quest.FormKeyNullable.TryGet(out var QuestKey))
             {
                 yield return QuestKey;
             }
@@ -1410,7 +1410,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Message_FieldIndex.Quest) ?? true))
             {
-                item.Quest = new FormLinkNullable<IQuestGetter>(rhs.Quest.FormKey);
+                item.Quest = new FormLinkNullable<IQuestGetter>(rhs.Quest.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Message_FieldIndex.Flags) ?? true))
             {

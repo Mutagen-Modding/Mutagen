@@ -1164,7 +1164,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Global ?? true)
             {
-                fg.AppendItem(item.Global.FormKey, "Global");
+                fg.AppendItem(item.Global.FormKeyNullable, "Global");
             }
             if ((printMask?.Entries?.Overall ?? true)
                 && item.Entries.TryGet(out var EntriesItem))
@@ -1306,7 +1306,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.Global.FormKey.TryGet(out var GlobalKey))
+            if (obj.Global.FormKeyNullable.TryGet(out var GlobalKey))
             {
                 yield return GlobalKey;
             }
@@ -1408,7 +1408,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledNpc_FieldIndex.Global) ?? true))
             {
-                item.Global = new FormLinkNullable<IGlobalGetter>(rhs.Global.FormKey);
+                item.Global = new FormLinkNullable<IGlobalGetter>(rhs.Global.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledNpc_FieldIndex.Entries) ?? true))
             {

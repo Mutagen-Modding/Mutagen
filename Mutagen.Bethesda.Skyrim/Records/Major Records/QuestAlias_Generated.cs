@@ -2320,15 +2320,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.SpecificLocation ?? true)
             {
-                fg.AppendItem(item.SpecificLocation.FormKey, "SpecificLocation");
+                fg.AppendItem(item.SpecificLocation.FormKeyNullable, "SpecificLocation");
             }
             if (printMask?.ForcedReference ?? true)
             {
-                fg.AppendItem(item.ForcedReference.FormKey, "ForcedReference");
+                fg.AppendItem(item.ForcedReference.FormKeyNullable, "ForcedReference");
             }
             if (printMask?.UniqueActor ?? true)
             {
-                fg.AppendItem(item.UniqueActor.FormKey, "UniqueActor");
+                fg.AppendItem(item.UniqueActor.FormKeyNullable, "UniqueActor");
             }
             if ((printMask?.Location?.Overall ?? true)
                 && item.Location.TryGet(out var LocationItem))
@@ -2413,23 +2413,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.SpectatorOverridePackageList ?? true)
             {
-                fg.AppendItem(item.SpectatorOverridePackageList.FormKey, "SpectatorOverridePackageList");
+                fg.AppendItem(item.SpectatorOverridePackageList.FormKeyNullable, "SpectatorOverridePackageList");
             }
             if (printMask?.ObserveDeadBodyOverridePackageList ?? true)
             {
-                fg.AppendItem(item.ObserveDeadBodyOverridePackageList.FormKey, "ObserveDeadBodyOverridePackageList");
+                fg.AppendItem(item.ObserveDeadBodyOverridePackageList.FormKeyNullable, "ObserveDeadBodyOverridePackageList");
             }
             if (printMask?.GuardWarnOverridePackageList ?? true)
             {
-                fg.AppendItem(item.GuardWarnOverridePackageList.FormKey, "GuardWarnOverridePackageList");
+                fg.AppendItem(item.GuardWarnOverridePackageList.FormKeyNullable, "GuardWarnOverridePackageList");
             }
             if (printMask?.CombatOverridePackageList ?? true)
             {
-                fg.AppendItem(item.CombatOverridePackageList.FormKey, "CombatOverridePackageList");
+                fg.AppendItem(item.CombatOverridePackageList.FormKeyNullable, "CombatOverridePackageList");
             }
             if (printMask?.DisplayName ?? true)
             {
-                fg.AppendItem(item.DisplayName.FormKey, "DisplayName");
+                fg.AppendItem(item.DisplayName.FormKeyNullable, "DisplayName");
             }
             if (printMask?.Spells?.Overall ?? true)
             {
@@ -2487,7 +2487,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.VoiceTypes ?? true)
             {
-                fg.AppendItem(item.VoiceTypes.FormKey, "VoiceTypes");
+                fg.AppendItem(item.VoiceTypes.FormKeyNullable, "VoiceTypes");
             }
         }
         
@@ -2592,15 +2592,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<FormKey> GetLinkFormKeys(IQuestAliasGetter obj)
         {
-            if (obj.SpecificLocation.FormKey.TryGet(out var SpecificLocationKey))
+            if (obj.SpecificLocation.FormKeyNullable.TryGet(out var SpecificLocationKey))
             {
                 yield return SpecificLocationKey;
             }
-            if (obj.ForcedReference.FormKey.TryGet(out var ForcedReferenceKey))
+            if (obj.ForcedReference.FormKeyNullable.TryGet(out var ForcedReferenceKey))
             {
                 yield return ForcedReferenceKey;
             }
-            if (obj.UniqueActor.FormKey.TryGet(out var UniqueActorKey))
+            if (obj.UniqueActor.FormKeyNullable.TryGet(out var UniqueActorKey))
             {
                 yield return UniqueActorKey;
             }
@@ -2645,23 +2645,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.SpectatorOverridePackageList.FormKey.TryGet(out var SpectatorOverridePackageListKey))
+            if (obj.SpectatorOverridePackageList.FormKeyNullable.TryGet(out var SpectatorOverridePackageListKey))
             {
                 yield return SpectatorOverridePackageListKey;
             }
-            if (obj.ObserveDeadBodyOverridePackageList.FormKey.TryGet(out var ObserveDeadBodyOverridePackageListKey))
+            if (obj.ObserveDeadBodyOverridePackageList.FormKeyNullable.TryGet(out var ObserveDeadBodyOverridePackageListKey))
             {
                 yield return ObserveDeadBodyOverridePackageListKey;
             }
-            if (obj.GuardWarnOverridePackageList.FormKey.TryGet(out var GuardWarnOverridePackageListKey))
+            if (obj.GuardWarnOverridePackageList.FormKeyNullable.TryGet(out var GuardWarnOverridePackageListKey))
             {
                 yield return GuardWarnOverridePackageListKey;
             }
-            if (obj.CombatOverridePackageList.FormKey.TryGet(out var CombatOverridePackageListKey))
+            if (obj.CombatOverridePackageList.FormKeyNullable.TryGet(out var CombatOverridePackageListKey))
             {
                 yield return CombatOverridePackageListKey;
             }
-            if (obj.DisplayName.FormKey.TryGet(out var DisplayNameKey))
+            if (obj.DisplayName.FormKeyNullable.TryGet(out var DisplayNameKey))
             {
                 yield return DisplayNameKey;
             }
@@ -2677,7 +2677,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.VoiceTypes.FormKey.TryGet(out var VoiceTypesKey))
+            if (obj.VoiceTypes.FormKeyNullable.TryGet(out var VoiceTypesKey))
             {
                 yield return VoiceTypesKey;
             }
@@ -2722,15 +2722,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.SpecificLocation) ?? true))
             {
-                item.SpecificLocation = new FormLinkNullable<ILocationGetter>(rhs.SpecificLocation.FormKey);
+                item.SpecificLocation = new FormLinkNullable<ILocationGetter>(rhs.SpecificLocation.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.ForcedReference) ?? true))
             {
-                item.ForcedReference = new FormLinkNullable<IPlacedGetter>(rhs.ForcedReference.FormKey);
+                item.ForcedReference = new FormLinkNullable<IPlacedGetter>(rhs.ForcedReference.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.UniqueActor) ?? true))
             {
-                item.UniqueActor = new FormLinkNullable<INpcGetter>(rhs.UniqueActor.FormKey);
+                item.UniqueActor = new FormLinkNullable<INpcGetter>(rhs.UniqueActor.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.Location) ?? true))
             {
@@ -2947,23 +2947,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.SpectatorOverridePackageList) ?? true))
             {
-                item.SpectatorOverridePackageList = new FormLinkNullable<IFormListGetter>(rhs.SpectatorOverridePackageList.FormKey);
+                item.SpectatorOverridePackageList = new FormLinkNullable<IFormListGetter>(rhs.SpectatorOverridePackageList.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.ObserveDeadBodyOverridePackageList) ?? true))
             {
-                item.ObserveDeadBodyOverridePackageList = new FormLinkNullable<IFormListGetter>(rhs.ObserveDeadBodyOverridePackageList.FormKey);
+                item.ObserveDeadBodyOverridePackageList = new FormLinkNullable<IFormListGetter>(rhs.ObserveDeadBodyOverridePackageList.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.GuardWarnOverridePackageList) ?? true))
             {
-                item.GuardWarnOverridePackageList = new FormLinkNullable<IFormListGetter>(rhs.GuardWarnOverridePackageList.FormKey);
+                item.GuardWarnOverridePackageList = new FormLinkNullable<IFormListGetter>(rhs.GuardWarnOverridePackageList.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.CombatOverridePackageList) ?? true))
             {
-                item.CombatOverridePackageList = new FormLinkNullable<IFormListGetter>(rhs.CombatOverridePackageList.FormKey);
+                item.CombatOverridePackageList = new FormLinkNullable<IFormListGetter>(rhs.CombatOverridePackageList.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.DisplayName) ?? true))
             {
-                item.DisplayName = new FormLinkNullable<IMessageGetter>(rhs.DisplayName.FormKey);
+                item.DisplayName = new FormLinkNullable<IMessageGetter>(rhs.DisplayName.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.Spells) ?? true))
             {
@@ -3024,7 +3024,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.VoiceTypes) ?? true))
             {
-                item.VoiceTypes = new FormLinkNullable<IAliasVoiceTypeGetter>(rhs.VoiceTypes.FormKey);
+                item.VoiceTypes = new FormLinkNullable<IAliasVoiceTypeGetter>(rhs.VoiceTypes.FormKeyNullable);
             }
         }
         

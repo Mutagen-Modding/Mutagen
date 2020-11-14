@@ -1190,7 +1190,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Script ?? true)
             {
-                fg.AppendItem(item.Script.FormKey, "Script");
+                fg.AppendItem(item.Script.FormKeyNullable, "Script");
             }
             if (printMask?.Items?.Overall ?? true)
             {
@@ -1217,11 +1217,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.OpenSound ?? true)
             {
-                fg.AppendItem(item.OpenSound.FormKey, "OpenSound");
+                fg.AppendItem(item.OpenSound.FormKeyNullable, "OpenSound");
             }
             if (printMask?.CloseSound ?? true)
             {
-                fg.AppendItem(item.CloseSound.FormKey, "CloseSound");
+                fg.AppendItem(item.CloseSound.FormKeyNullable, "CloseSound");
             }
         }
         
@@ -1345,7 +1345,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.Script.FormKey.TryGet(out var ScriptKey))
+            if (obj.Script.FormKeyNullable.TryGet(out var ScriptKey))
             {
                 yield return ScriptKey;
             }
@@ -1353,11 +1353,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.OpenSound.FormKey.TryGet(out var OpenSoundKey))
+            if (obj.OpenSound.FormKeyNullable.TryGet(out var OpenSoundKey))
             {
                 yield return OpenSoundKey;
             }
-            if (obj.CloseSound.FormKey.TryGet(out var CloseSoundKey))
+            if (obj.CloseSound.FormKeyNullable.TryGet(out var CloseSoundKey))
             {
                 yield return CloseSoundKey;
             }
@@ -1444,7 +1444,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.Script) ?? true))
             {
-                item.Script = new FormLinkNullable<IScriptGetter>(rhs.Script.FormKey);
+                item.Script = new FormLinkNullable<IScriptGetter>(rhs.Script.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.Items) ?? true))
             {
@@ -1498,11 +1498,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.OpenSound) ?? true))
             {
-                item.OpenSound = new FormLinkNullable<ISoundGetter>(rhs.OpenSound.FormKey);
+                item.OpenSound = new FormLinkNullable<ISoundGetter>(rhs.OpenSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.CloseSound) ?? true))
             {
-                item.CloseSound = new FormLinkNullable<ISoundGetter>(rhs.CloseSound.FormKey);
+                item.CloseSound = new FormLinkNullable<ISoundGetter>(rhs.CloseSound.FormKeyNullable);
             }
         }
         

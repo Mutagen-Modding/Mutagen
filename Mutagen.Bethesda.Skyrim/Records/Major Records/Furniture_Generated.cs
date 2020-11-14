@@ -1640,7 +1640,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.InteractionKeyword ?? true)
             {
-                fg.AppendItem(item.InteractionKeyword.FormKey, "InteractionKeyword");
+                fg.AppendItem(item.InteractionKeyword.FormKeyNullable, "InteractionKeyword");
             }
             if ((printMask?.WorkbenchData?.Overall ?? true)
                 && item.WorkbenchData.TryGet(out var WorkbenchDataItem))
@@ -1649,7 +1649,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.AssociatedSpell ?? true)
             {
-                fg.AppendItem(item.AssociatedSpell.FormKey, "AssociatedSpell");
+                fg.AppendItem(item.AssociatedSpell.FormKeyNullable, "AssociatedSpell");
             }
             if ((printMask?.Markers?.Overall ?? true)
                 && item.Markers.TryGet(out var MarkersItem))
@@ -1854,11 +1854,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.InteractionKeyword.FormKey.TryGet(out var InteractionKeywordKey))
+            if (obj.InteractionKeyword.FormKeyNullable.TryGet(out var InteractionKeywordKey))
             {
                 yield return InteractionKeywordKey;
             }
-            if (obj.AssociatedSpell.FormKey.TryGet(out var AssociatedSpellKey))
+            if (obj.AssociatedSpell.FormKeyNullable.TryGet(out var AssociatedSpellKey))
             {
                 yield return AssociatedSpellKey;
             }
@@ -2068,7 +2068,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.InteractionKeyword) ?? true))
             {
-                item.InteractionKeyword = new FormLinkNullable<IKeywordGetter>(rhs.InteractionKeyword.FormKey);
+                item.InteractionKeyword = new FormLinkNullable<IKeywordGetter>(rhs.InteractionKeyword.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.WorkbenchData) ?? true))
             {
@@ -2098,7 +2098,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.AssociatedSpell) ?? true))
             {
-                item.AssociatedSpell = new FormLinkNullable<ISpellGetter>(rhs.AssociatedSpell.FormKey);
+                item.AssociatedSpell = new FormLinkNullable<ISpellGetter>(rhs.AssociatedSpell.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.Markers) ?? true))
             {

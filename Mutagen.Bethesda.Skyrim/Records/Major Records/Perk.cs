@@ -465,11 +465,11 @@ namespace Mutagen.Bethesda.Skyrim
                                 }
                                 break;
                             case PerkEntryPointAddActivateChoice activateChoice:
-                                if (activateChoice.Spell.FormKey != null)
+                                if (activateChoice.Spell.FormKeyNullable != null)
                                 {
                                     using (HeaderExport.Subrecord(writer, RecordTypes.EPFD))
                                     {
-                                        FormKeyBinaryTranslation.Instance.Write(writer, activateChoice.Spell.FormKey.Value);
+                                        FormKeyBinaryTranslation.Instance.Write(writer, activateChoice.Spell.FormKeyNullable.Value);
                                     }
                                 }
                                 break;

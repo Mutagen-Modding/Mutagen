@@ -1017,7 +1017,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Parent ?? true)
             {
-                fg.AppendItem(item.Parent.FormKey, "Parent");
+                fg.AppendItem(item.Parent.FormKeyNullable, "Parent");
             }
             if ((printMask?.StaticVolumeMultiplier ?? true)
                 && item.StaticVolumeMultiplier.TryGet(out var StaticVolumeMultiplierItem))
@@ -1152,7 +1152,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.Parent.FormKey.TryGet(out var ParentKey))
+            if (obj.Parent.FormKeyNullable.TryGet(out var ParentKey))
             {
                 yield return ParentKey;
             }
@@ -1217,7 +1217,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SoundCategory_FieldIndex.Parent) ?? true))
             {
-                item.Parent = new FormLinkNullable<ISoundDescriptorGetter>(rhs.Parent.FormKey);
+                item.Parent = new FormLinkNullable<ISoundDescriptorGetter>(rhs.Parent.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)SoundCategory_FieldIndex.StaticVolumeMultiplier) ?? true))
             {

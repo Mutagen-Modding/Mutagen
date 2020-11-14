@@ -1242,7 +1242,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 printMask: printMask);
             if (printMask?.Base ?? true)
             {
-                fg.AppendItem(item.Base.FormKey, "Base");
+                fg.AppendItem(item.Base.FormKeyNullable, "Base");
             }
             if ((printMask?.XPCIFluff ?? true)
                 && item.XPCIFluff.TryGet(out var XPCIFluffItem))
@@ -1266,11 +1266,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.MerchantContainer ?? true)
             {
-                fg.AppendItem(item.MerchantContainer.FormKey, "MerchantContainer");
+                fg.AppendItem(item.MerchantContainer.FormKeyNullable, "MerchantContainer");
             }
             if (printMask?.Horse ?? true)
             {
-                fg.AppendItem(item.Horse.FormKey, "Horse");
+                fg.AppendItem(item.Horse.FormKeyNullable, "Horse");
             }
             if ((printMask?.RagdollData ?? true)
                 && item.RagdollData.TryGet(out var RagdollDataItem))
@@ -1427,7 +1427,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.Base.FormKey.TryGet(out var BaseKey))
+            if (obj.Base.FormKeyNullable.TryGet(out var BaseKey))
             {
                 yield return BaseKey;
             }
@@ -1438,11 +1438,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     yield return item;
                 }
             }
-            if (obj.MerchantContainer.FormKey.TryGet(out var MerchantContainerKey))
+            if (obj.MerchantContainer.FormKeyNullable.TryGet(out var MerchantContainerKey))
             {
                 yield return MerchantContainerKey;
             }
-            if (obj.Horse.FormKey.TryGet(out var HorseKey))
+            if (obj.Horse.FormKeyNullable.TryGet(out var HorseKey))
             {
                 yield return HorseKey;
             }
@@ -1499,7 +1499,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Base) ?? true))
             {
-                item.Base = new FormLinkNullable<INpcGetter>(rhs.Base.FormKey);
+                item.Base = new FormLinkNullable<INpcGetter>(rhs.Base.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.XPCIFluff) ?? true))
             {
@@ -1577,11 +1577,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.MerchantContainer) ?? true))
             {
-                item.MerchantContainer = new FormLinkNullable<IPlacedObjectGetter>(rhs.MerchantContainer.FormKey);
+                item.MerchantContainer = new FormLinkNullable<IPlacedObjectGetter>(rhs.MerchantContainer.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Horse) ?? true))
             {
-                item.Horse = new FormLinkNullable<IPlacedCreatureGetter>(rhs.Horse.FormKey);
+                item.Horse = new FormLinkNullable<IPlacedCreatureGetter>(rhs.Horse.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.RagdollData) ?? true))
             {

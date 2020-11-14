@@ -1322,11 +1322,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.SpeakerIdleAnimation ?? true)
             {
-                fg.AppendItem(item.SpeakerIdleAnimation.FormKey, "SpeakerIdleAnimation");
+                fg.AppendItem(item.SpeakerIdleAnimation.FormKeyNullable, "SpeakerIdleAnimation");
             }
             if (printMask?.ListenerIdleAnimation ?? true)
             {
-                fg.AppendItem(item.ListenerIdleAnimation.FormKey, "ListenerIdleAnimation");
+                fg.AppendItem(item.ListenerIdleAnimation.FormKeyNullable, "ListenerIdleAnimation");
             }
             if (printMask?.TRDTDataTypeState ?? true)
             {
@@ -1390,11 +1390,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IEnumerable<FormKey> GetLinkFormKeys(IDialogResponseGetter obj)
         {
             yield return obj.Sound.FormKey;
-            if (obj.SpeakerIdleAnimation.FormKey.TryGet(out var SpeakerIdleAnimationKey))
+            if (obj.SpeakerIdleAnimation.FormKeyNullable.TryGet(out var SpeakerIdleAnimationKey))
             {
                 yield return SpeakerIdleAnimationKey;
             }
-            if (obj.ListenerIdleAnimation.FormKey.TryGet(out var ListenerIdleAnimationKey))
+            if (obj.ListenerIdleAnimation.FormKeyNullable.TryGet(out var ListenerIdleAnimationKey))
             {
                 yield return ListenerIdleAnimationKey;
             }
@@ -1463,11 +1463,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.SpeakerIdleAnimation) ?? true))
             {
-                item.SpeakerIdleAnimation = new FormLinkNullable<IIdleAnimationGetter>(rhs.SpeakerIdleAnimation.FormKey);
+                item.SpeakerIdleAnimation = new FormLinkNullable<IIdleAnimationGetter>(rhs.SpeakerIdleAnimation.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.ListenerIdleAnimation) ?? true))
             {
-                item.ListenerIdleAnimation = new FormLinkNullable<IIdleAnimationGetter>(rhs.ListenerIdleAnimation.FormKey);
+                item.ListenerIdleAnimation = new FormLinkNullable<IIdleAnimationGetter>(rhs.ListenerIdleAnimation.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.TRDTDataTypeState) ?? true))
             {

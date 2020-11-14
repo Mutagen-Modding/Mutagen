@@ -1409,7 +1409,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.LoopingSound ?? true)
             {
-                fg.AppendItem(item.LoopingSound.FormKey, "LoopingSound");
+                fg.AppendItem(item.LoopingSound.FormKeyNullable, "LoopingSound");
             }
             if ((printMask?.FNAM ?? true)
                 && item.FNAM.TryGet(out var FNAMItem))
@@ -1418,7 +1418,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.VoiceType ?? true)
             {
-                fg.AppendItem(item.VoiceType.FormKey, "VoiceType");
+                fg.AppendItem(item.VoiceType.FormKeyNullable, "VoiceType");
             }
         }
         
@@ -1587,11 +1587,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.LoopingSound.FormKey.TryGet(out var LoopingSoundKey))
+            if (obj.LoopingSound.FormKeyNullable.TryGet(out var LoopingSoundKey))
             {
                 yield return LoopingSoundKey;
             }
-            if (obj.VoiceType.FormKey.TryGet(out var VoiceTypeKey))
+            if (obj.VoiceType.FormKeyNullable.TryGet(out var VoiceTypeKey))
             {
                 yield return VoiceTypeKey;
             }
@@ -1783,7 +1783,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)TalkingActivator_FieldIndex.LoopingSound) ?? true))
             {
-                item.LoopingSound = new FormLinkNullable<ISoundMarkerGetter>(rhs.LoopingSound.FormKey);
+                item.LoopingSound = new FormLinkNullable<ISoundMarkerGetter>(rhs.LoopingSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)TalkingActivator_FieldIndex.FNAM) ?? true))
             {
@@ -1791,7 +1791,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)TalkingActivator_FieldIndex.VoiceType) ?? true))
             {
-                item.VoiceType = new FormLinkNullable<IVoiceTypeGetter>(rhs.VoiceType.FormKey);
+                item.VoiceType = new FormLinkNullable<IVoiceTypeGetter>(rhs.VoiceType.FormKeyNullable);
             }
         }
         

@@ -31,41 +31,41 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// FormKey of the target record.
         /// </summary>
-        public FormKey? FormKey { get; }
+        public FormKey? FormKeyNullable { get; }
         
         Type ILink.TargetType => typeof(TMajor);
 
         /// <summary>
         /// True if unlinked and ID points to Null
         /// </summary>
-        public bool IsNull => this.FormKey?.IsNull ?? true;
+        public bool IsNull => this.FormKeyNullable?.IsNull ?? true;
 
         /// <summary>
         /// Default constructor that creates a link to the target FormKey
         /// </summary>
         public FormLinkNullable(FormKey? formKey)
         {
-            this.FormKey = formKey;
+            this.FormKeyNullable = formKey;
         }
 
         public static bool operator ==(FormLinkNullable<TMajor> lhs, FormLink<TMajor> rhs)
         {
-            return lhs.FormKey?.Equals(rhs.FormKey) ?? false;
+            return lhs.FormKeyNullable?.Equals(rhs.FormKey) ?? false;
         }
 
         public static bool operator !=(FormLinkNullable<TMajor> lhs, FormLink<TMajor> rhs)
         {
-            return !lhs.FormKey?.Equals(rhs.FormKey) ?? true;
+            return !lhs.FormKeyNullable?.Equals(rhs.FormKey) ?? true;
         }
 
         public static bool operator ==(FormLink<TMajor> lhs, FormLinkNullable<TMajor> rhs)
         {
-            return EqualityComparer<FormKey?>.Default.Equals(lhs.FormKey, rhs.FormKey);
+            return EqualityComparer<FormKey?>.Default.Equals(lhs.FormKey, rhs.FormKeyNullable);
         }
 
         public static bool operator !=(FormLink<TMajor> lhs, FormLinkNullable<TMajor> rhs)
         {
-            return !EqualityComparer<FormKey?>.Default.Equals(lhs.FormKey, rhs.FormKey);
+            return !EqualityComparer<FormKey?>.Default.Equals(lhs.FormKey, rhs.FormKeyNullable);
         }
 
         /// <summary>
@@ -84,40 +84,40 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="other">Other link to compare to</param>
         /// <returns>True if FormKey members are equal</returns>
-        public bool Equals(FormLink<TMajor> other) => EqualityComparer<FormKey?>.Default.Equals(this.FormKey, other.FormKey);
+        public bool Equals(FormLink<TMajor> other) => EqualityComparer<FormKey?>.Default.Equals(this.FormKeyNullable, other.FormKey);
 
         /// <summary>
         /// Compares equality of two links, where rhs is a nullable link.
         /// </summary>
         /// <param name="other">Other link to compare to</param>
         /// <returns>True if FormKey members are equal</returns>
-        public bool Equals(FormLinkNullable<TMajor> other) => EqualityComparer<FormKey?>.Default.Equals(this.FormKey, other.FormKey);
+        public bool Equals(FormLinkNullable<TMajor> other) => EqualityComparer<FormKey?>.Default.Equals(this.FormKeyNullable, other.FormKeyNullable);
 
         /// <summary>
         /// Compares equality of two links, where rhs is a non nullable link.
         /// </summary>
         /// <param name="other">Other link to compare to</param>
         /// <returns>True if FormKey members are equal</returns>
-        public bool Equals(IFormLink<TMajor> other) => EqualityComparer<FormKey?>.Default.Equals(this.FormKey, other.FormKey);
+        public bool Equals(IFormLink<TMajor> other) => EqualityComparer<FormKey?>.Default.Equals(this.FormKeyNullable, other.FormKey);
 
         /// <summary>
         /// Compares equality of two links, where rhs is a nullable link.
         /// </summary>
         /// <param name="other">Other link to compare to</param>
         /// <returns>True if FormKey members are equal</returns>
-        public bool Equals(IFormLinkNullable<TMajor> other) => EqualityComparer<FormKey?>.Default.Equals(this.FormKey, other.FormKey);
+        public bool Equals(IFormLinkNullable<TMajor> other) => EqualityComparer<FormKey?>.Default.Equals(this.FormKeyNullable, other.FormKeyNullable);
 
         /// <summary>
         /// Returns hash code
         /// </summary>
         /// <returns>Hash code evaluated from FormKey member</returns>
-        public override int GetHashCode() => this.FormKey?.GetHashCode() ?? 0;
+        public override int GetHashCode() => this.FormKeyNullable?.GetHashCode() ?? 0;
 
         /// <summary>
         /// Returns string representation of link
         /// </summary>
         /// <returns>Returns FormKey string</returns>
-        public override string ToString() => this.FormKey?.ToString() ?? "Null";
+        public override string ToString() => this.FormKeyNullable?.ToString() ?? "Null";
 
         /// <summary>
         /// Attempts to locate link target in given Link Cache.
@@ -127,13 +127,13 @@ namespace Mutagen.Bethesda
         /// <returns>True if link was resolved and a record was retrieved</returns>
         public bool TryResolve(ILinkCache cache, [MaybeNullWhen(false)] out TMajor major)
         {
-            if (this.FormKey == null
-                || this.FormKey.Equals(Mutagen.Bethesda.FormKey.Null))
+            if (this.FormKeyNullable == null
+                || this.FormKeyNullable.Equals(Mutagen.Bethesda.FormKey.Null))
             {
                 major = default!;
                 return false;
             }
-            if (cache.TryResolve<TMajor>(this.FormKey.Value, out var majorRec))
+            if (cache.TryResolve<TMajor>(this.FormKeyNullable.Value, out var majorRec))
             {
                 major = majorRec;
                 return true;
@@ -150,12 +150,12 @@ namespace Mutagen.Bethesda
         /// <returns>True if FormKey is not null</returns>
         public bool TryResolveFormKey(ILinkCache cache, [MaybeNullWhen(false)] out FormKey formKey)
         {
-            if (this.FormKey == null)
+            if (this.FormKeyNullable == null)
             {
                 formKey = default!;
                 return false;
             }
-            formKey = this.FormKey.Value;
+            formKey = this.FormKeyNullable.Value;
             return true;
         }
 
@@ -169,12 +169,12 @@ namespace Mutagen.Bethesda
         public bool TryResolve<TScopedMajor>(ILinkCache cache, [MaybeNullWhen(false)] out TScopedMajor major)
             where TScopedMajor : class, TMajor
         {
-            if (this.FormKey?.Equals(Mutagen.Bethesda.FormKey.Null) ?? true)
+            if (this.FormKeyNullable?.Equals(Mutagen.Bethesda.FormKey.Null) ?? true)
             {
                 major = default!;
                 return false;
             }
-            if (cache.TryResolve<TScopedMajor>(this.FormKey.Value, out var majorRec))
+            if (cache.TryResolve<TScopedMajor>(this.FormKeyNullable.Value, out var majorRec))
             {
                 major = majorRec;
                 return true;
@@ -245,7 +245,7 @@ namespace Mutagen.Bethesda
         /// <returns>True if FormKey is not null</returns>
         public bool TryGetModKey([MaybeNullWhen(false)] out ModKey modKey)
         {
-            if (this.FormKey.TryGet(out var formKey))
+            if (this.FormKeyNullable.TryGet(out var formKey))
             {
                 modKey = formKey.ModKey;
                 return true;

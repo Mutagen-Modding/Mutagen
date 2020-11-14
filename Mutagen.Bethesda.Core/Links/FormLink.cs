@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda
         /// </summary>
         public bool IsNull => this.FormKey.IsNull;
 
-        FormKey? IFormLinkNullable.FormKey => this.FormKey;
+        FormKey? IFormLinkNullable.FormKeyNullable => this.FormKey;
 
         /// <summary>
         /// Default constructor that creates a link to the target FormKey
@@ -70,12 +70,12 @@ namespace Mutagen.Bethesda
 
         public static bool operator ==(FormLink<TMajor> lhs, FormLinkNullable<TMajor> rhs)
         {
-            return EqualityComparer<FormKey?>.Default.Equals(lhs.FormKey, rhs.FormKey);
+            return EqualityComparer<FormKey?>.Default.Equals(lhs.FormKey, rhs.FormKeyNullable);
         }
 
         public static bool operator !=(FormLink<TMajor> lhs, FormLinkNullable<TMajor> rhs)
         {
-            return !EqualityComparer<FormKey?>.Default.Equals(lhs.FormKey, rhs.FormKey);
+            return !EqualityComparer<FormKey?>.Default.Equals(lhs.FormKey, rhs.FormKeyNullable);
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="other">Other link to compare to</param>
         /// <returns>True if FormKey members are equal</returns>
-        public bool Equals(FormLinkNullable<TMajor> other) => EqualityComparer<FormKey?>.Default.Equals(this.FormKey, other.FormKey);
+        public bool Equals(FormLinkNullable<TMajor> other) => EqualityComparer<FormKey?>.Default.Equals(this.FormKey, other.FormKeyNullable);
 
         /// <summary>
         /// Compares equality of two links.
@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="other">Other link to compare to</param>
         /// <returns>True if FormKey members are equal</returns>
-        public bool Equals(IFormLinkNullable<TMajor> other) => EqualityComparer<FormKey?>.Default.Equals(this.FormKey, other.FormKey);
+        public bool Equals(IFormLinkNullable<TMajor> other) => EqualityComparer<FormKey?>.Default.Equals(this.FormKey, other?.FormKeyNullable);
 
         /// <summary>
         /// Returns hash code

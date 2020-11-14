@@ -837,7 +837,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.Sound ?? true)
             {
-                fg.AppendItem(item.Sound.FormKey, "Sound");
+                fg.AppendItem(item.Sound.FormKeyNullable, "Sound");
             }
             if ((printMask?.SoundChance ?? true)
                 && item.SoundChance.TryGet(out var SoundChanceItem))
@@ -880,7 +880,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<FormKey> GetLinkFormKeys(INpcSoundGetter obj)
         {
-            if (obj.Sound.FormKey.TryGet(out var SoundKey))
+            if (obj.Sound.FormKeyNullable.TryGet(out var SoundKey))
             {
                 yield return SoundKey;
             }
@@ -905,7 +905,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)NpcSound_FieldIndex.Sound) ?? true))
             {
-                item.Sound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.Sound.FormKey);
+                item.Sound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.Sound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)NpcSound_FieldIndex.SoundChance) ?? true))
             {

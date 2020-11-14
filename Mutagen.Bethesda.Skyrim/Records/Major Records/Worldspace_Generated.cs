@@ -2866,15 +2866,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.InteriorLighting ?? true)
             {
-                fg.AppendItem(item.InteriorLighting.FormKey, "InteriorLighting");
+                fg.AppendItem(item.InteriorLighting.FormKeyNullable, "InteriorLighting");
             }
             if (printMask?.EncounterZone ?? true)
             {
-                fg.AppendItem(item.EncounterZone.FormKey, "EncounterZone");
+                fg.AppendItem(item.EncounterZone.FormKeyNullable, "EncounterZone");
             }
             if (printMask?.Location ?? true)
             {
-                fg.AppendItem(item.Location.FormKey, "Location");
+                fg.AppendItem(item.Location.FormKeyNullable, "Location");
             }
             if ((printMask?.Parent?.Overall ?? true)
                 && item.Parent.TryGet(out var ParentItem))
@@ -2883,15 +2883,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Climate ?? true)
             {
-                fg.AppendItem(item.Climate.FormKey, "Climate");
+                fg.AppendItem(item.Climate.FormKeyNullable, "Climate");
             }
             if (printMask?.Water ?? true)
             {
-                fg.AppendItem(item.Water.FormKey, "Water");
+                fg.AppendItem(item.Water.FormKeyNullable, "Water");
             }
             if (printMask?.LodWater ?? true)
             {
-                fg.AppendItem(item.LodWater.FormKey, "LodWater");
+                fg.AppendItem(item.LodWater.FormKeyNullable, "LodWater");
             }
             if ((printMask?.LodWaterHeight ?? true)
                 && item.LodWaterHeight.TryGet(out var LodWaterHeightItem))
@@ -2938,7 +2938,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Music ?? true)
             {
-                fg.AppendItem(item.Music.FormKey, "Music");
+                fg.AppendItem(item.Music.FormKeyNullable, "Music");
             }
             if ((printMask?.CanopyShadow ?? true)
                 && item.CanopyShadow.TryGet(out var CanopyShadowItem))
@@ -3222,15 +3222,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.InteriorLighting.FormKey.TryGet(out var InteriorLightingKey))
+            if (obj.InteriorLighting.FormKeyNullable.TryGet(out var InteriorLightingKey))
             {
                 yield return InteriorLightingKey;
             }
-            if (obj.EncounterZone.FormKey.TryGet(out var EncounterZoneKey))
+            if (obj.EncounterZone.FormKeyNullable.TryGet(out var EncounterZoneKey))
             {
                 yield return EncounterZoneKey;
             }
-            if (obj.Location.FormKey.TryGet(out var LocationKey))
+            if (obj.Location.FormKeyNullable.TryGet(out var LocationKey))
             {
                 yield return LocationKey;
             }
@@ -3241,15 +3241,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.Climate.FormKey.TryGet(out var ClimateKey))
+            if (obj.Climate.FormKeyNullable.TryGet(out var ClimateKey))
             {
                 yield return ClimateKey;
             }
-            if (obj.Water.FormKey.TryGet(out var WaterKey))
+            if (obj.Water.FormKeyNullable.TryGet(out var WaterKey))
             {
                 yield return WaterKey;
             }
-            if (obj.LodWater.FormKey.TryGet(out var LodWaterKey))
+            if (obj.LodWater.FormKeyNullable.TryGet(out var LodWaterKey))
             {
                 yield return LodWaterKey;
             }
@@ -3260,7 +3260,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.Music.FormKey.TryGet(out var MusicKey))
+            if (obj.Music.FormKeyNullable.TryGet(out var MusicKey))
             {
                 yield return MusicKey;
             }
@@ -4560,15 +4560,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.InteriorLighting) ?? true))
             {
-                item.InteriorLighting = new FormLinkNullable<ILightingTemplateGetter>(rhs.InteriorLighting.FormKey);
+                item.InteriorLighting = new FormLinkNullable<ILightingTemplateGetter>(rhs.InteriorLighting.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.EncounterZone) ?? true))
             {
-                item.EncounterZone = new FormLinkNullable<IEncounterZoneGetter>(rhs.EncounterZone.FormKey);
+                item.EncounterZone = new FormLinkNullable<IEncounterZoneGetter>(rhs.EncounterZone.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Location) ?? true))
             {
-                item.Location = new FormLinkNullable<ILocationGetter>(rhs.Location.FormKey);
+                item.Location = new FormLinkNullable<ILocationGetter>(rhs.Location.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Parent) ?? true))
             {
@@ -4598,15 +4598,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Climate) ?? true))
             {
-                item.Climate = new FormLinkNullable<IClimateGetter>(rhs.Climate.FormKey);
+                item.Climate = new FormLinkNullable<IClimateGetter>(rhs.Climate.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Water) ?? true))
             {
-                item.Water = new FormLinkNullable<IWaterGetter>(rhs.Water.FormKey);
+                item.Water = new FormLinkNullable<IWaterGetter>(rhs.Water.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.LodWater) ?? true))
             {
-                item.LodWater = new FormLinkNullable<IWaterGetter>(rhs.LodWater.FormKey);
+                item.LodWater = new FormLinkNullable<IWaterGetter>(rhs.LodWater.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.LodWaterHeight) ?? true))
             {
@@ -4752,7 +4752,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Music) ?? true))
             {
-                item.Music = new FormLinkNullable<IMusicTypeGetter>(rhs.Music.FormKey);
+                item.Music = new FormLinkNullable<IMusicTypeGetter>(rhs.Music.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.CanopyShadow) ?? true))
             {

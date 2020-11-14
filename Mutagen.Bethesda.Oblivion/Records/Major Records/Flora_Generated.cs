@@ -1029,11 +1029,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Script ?? true)
             {
-                fg.AppendItem(item.Script.FormKey, "Script");
+                fg.AppendItem(item.Script.FormKeyNullable, "Script");
             }
             if (printMask?.Ingredient ?? true)
             {
-                fg.AppendItem(item.Ingredient.FormKey, "Ingredient");
+                fg.AppendItem(item.Ingredient.FormKeyNullable, "Ingredient");
             }
             if ((printMask?.SeasonalIngredientProduction?.Overall ?? true)
                 && item.SeasonalIngredientProduction.TryGet(out var SeasonalIngredientProductionItem))
@@ -1158,11 +1158,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.Script.FormKey.TryGet(out var ScriptKey))
+            if (obj.Script.FormKeyNullable.TryGet(out var ScriptKey))
             {
                 yield return ScriptKey;
             }
-            if (obj.Ingredient.FormKey.TryGet(out var IngredientKey))
+            if (obj.Ingredient.FormKeyNullable.TryGet(out var IngredientKey))
             {
                 yield return IngredientKey;
             }
@@ -1249,11 +1249,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Script) ?? true))
             {
-                item.Script = new FormLinkNullable<IScriptGetter>(rhs.Script.FormKey);
+                item.Script = new FormLinkNullable<IScriptGetter>(rhs.Script.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Ingredient) ?? true))
             {
-                item.Ingredient = new FormLinkNullable<IIngredientGetter>(rhs.Ingredient.FormKey);
+                item.Ingredient = new FormLinkNullable<IIngredientGetter>(rhs.Ingredient.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.SeasonalIngredientProduction) ?? true))
             {

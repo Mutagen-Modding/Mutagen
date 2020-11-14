@@ -2428,15 +2428,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Climate ?? true)
             {
-                fg.AppendItem(item.Climate.FormKey, "Climate");
+                fg.AppendItem(item.Climate.FormKeyNullable, "Climate");
             }
             if (printMask?.Water ?? true)
             {
-                fg.AppendItem(item.Water.FormKey, "Water");
+                fg.AppendItem(item.Water.FormKeyNullable, "Water");
             }
             if (printMask?.Owner ?? true)
             {
-                fg.AppendItem(item.Owner.FormKey, "Owner");
+                fg.AppendItem(item.Owner.FormKeyNullable, "Owner");
             }
             if ((printMask?.FactionRank ?? true)
                 && item.FactionRank.TryGet(out var FactionRankItem))
@@ -2445,7 +2445,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.GlobalVariable ?? true)
             {
-                fg.AppendItem(item.GlobalVariable.FormKey, "GlobalVariable");
+                fg.AppendItem(item.GlobalVariable.FormKeyNullable, "GlobalVariable");
             }
             if ((printMask?.PathGrid?.Overall ?? true)
                 && item.PathGrid.TryGet(out var PathGridItem))
@@ -2735,19 +2735,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     yield return item;
                 }
             }
-            if (obj.Climate.FormKey.TryGet(out var ClimateKey))
+            if (obj.Climate.FormKeyNullable.TryGet(out var ClimateKey))
             {
                 yield return ClimateKey;
             }
-            if (obj.Water.FormKey.TryGet(out var WaterKey))
+            if (obj.Water.FormKeyNullable.TryGet(out var WaterKey))
             {
                 yield return WaterKey;
             }
-            if (obj.Owner.FormKey.TryGet(out var OwnerKey))
+            if (obj.Owner.FormKeyNullable.TryGet(out var OwnerKey))
             {
                 yield return OwnerKey;
             }
-            if (obj.GlobalVariable.FormKey.TryGet(out var GlobalVariableKey))
+            if (obj.GlobalVariable.FormKeyNullable.TryGet(out var GlobalVariableKey))
             {
                 yield return GlobalVariableKey;
             }
@@ -3465,15 +3465,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Climate) ?? true))
             {
-                item.Climate = new FormLinkNullable<IClimateGetter>(rhs.Climate.FormKey);
+                item.Climate = new FormLinkNullable<IClimateGetter>(rhs.Climate.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Water) ?? true))
             {
-                item.Water = new FormLinkNullable<IWaterGetter>(rhs.Water.FormKey);
+                item.Water = new FormLinkNullable<IWaterGetter>(rhs.Water.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Owner) ?? true))
             {
-                item.Owner = new FormLinkNullable<IFactionGetter>(rhs.Owner.FormKey);
+                item.Owner = new FormLinkNullable<IFactionGetter>(rhs.Owner.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.FactionRank) ?? true))
             {
@@ -3481,7 +3481,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.GlobalVariable) ?? true))
             {
-                item.GlobalVariable = new FormLinkNullable<IGlobalGetter>(rhs.GlobalVariable.FormKey);
+                item.GlobalVariable = new FormLinkNullable<IGlobalGetter>(rhs.GlobalVariable.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.PathGrid) ?? true))
             {

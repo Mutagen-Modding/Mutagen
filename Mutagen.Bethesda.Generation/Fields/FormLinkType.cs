@@ -36,6 +36,7 @@ namespace Mutagen.Bethesda.Generation
 
         public string FormIDTypeString => this.FormIDType switch
         {
+            FormIDTypeEnum.Normal when Nullable => "FormKeyNullable",
             FormIDTypeEnum.Normal => "FormKey",
             FormIDTypeEnum.EDIDChars => "EDID",
             _ => throw new NotImplementedException(),

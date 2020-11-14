@@ -1537,11 +1537,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Category ?? true)
             {
-                fg.AppendItem(item.Category.FormKey, "Category");
+                fg.AppendItem(item.Category.FormKeyNullable, "Category");
             }
             if (printMask?.AlternateSoundFor ?? true)
             {
-                fg.AppendItem(item.AlternateSoundFor.FormKey, "AlternateSoundFor");
+                fg.AppendItem(item.AlternateSoundFor.FormKeyNullable, "AlternateSoundFor");
             }
             if (printMask?.SoundFiles?.Overall ?? true)
             {
@@ -1563,7 +1563,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.OutputModel ?? true)
             {
-                fg.AppendItem(item.OutputModel.FormKey, "OutputModel");
+                fg.AppendItem(item.OutputModel.FormKeyNullable, "OutputModel");
             }
             if ((printMask?.String ?? true)
                 && item.String.TryGet(out var StringItem))
@@ -1755,15 +1755,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.Category.FormKey.TryGet(out var CategoryKey))
+            if (obj.Category.FormKeyNullable.TryGet(out var CategoryKey))
             {
                 yield return CategoryKey;
             }
-            if (obj.AlternateSoundFor.FormKey.TryGet(out var AlternateSoundForKey))
+            if (obj.AlternateSoundFor.FormKeyNullable.TryGet(out var AlternateSoundForKey))
             {
                 yield return AlternateSoundForKey;
             }
-            if (obj.OutputModel.FormKey.TryGet(out var OutputModelKey))
+            if (obj.OutputModel.FormKeyNullable.TryGet(out var OutputModelKey))
             {
                 yield return OutputModelKey;
             }
@@ -1836,11 +1836,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.Category) ?? true))
             {
-                item.Category = new FormLinkNullable<ISoundCategoryGetter>(rhs.Category.FormKey);
+                item.Category = new FormLinkNullable<ISoundCategoryGetter>(rhs.Category.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.AlternateSoundFor) ?? true))
             {
-                item.AlternateSoundFor = new FormLinkNullable<ISoundDescriptorGetter>(rhs.AlternateSoundFor.FormKey);
+                item.AlternateSoundFor = new FormLinkNullable<ISoundDescriptorGetter>(rhs.AlternateSoundFor.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.SoundFiles) ?? true))
             {
@@ -1861,7 +1861,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.OutputModel) ?? true))
             {
-                item.OutputModel = new FormLinkNullable<ISoundOutputModelGetter>(rhs.OutputModel.FormKey);
+                item.OutputModel = new FormLinkNullable<ISoundOutputModelGetter>(rhs.OutputModel.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.String) ?? true))
             {

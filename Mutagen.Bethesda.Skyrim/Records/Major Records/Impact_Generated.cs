@@ -1479,23 +1479,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.TextureSet ?? true)
             {
-                fg.AppendItem(item.TextureSet.FormKey, "TextureSet");
+                fg.AppendItem(item.TextureSet.FormKeyNullable, "TextureSet");
             }
             if (printMask?.SecondaryTextureSet ?? true)
             {
-                fg.AppendItem(item.SecondaryTextureSet.FormKey, "SecondaryTextureSet");
+                fg.AppendItem(item.SecondaryTextureSet.FormKeyNullable, "SecondaryTextureSet");
             }
             if (printMask?.Sound1 ?? true)
             {
-                fg.AppendItem(item.Sound1.FormKey, "Sound1");
+                fg.AppendItem(item.Sound1.FormKeyNullable, "Sound1");
             }
             if (printMask?.Sound2 ?? true)
             {
-                fg.AppendItem(item.Sound2.FormKey, "Sound2");
+                fg.AppendItem(item.Sound2.FormKeyNullable, "Sound2");
             }
             if (printMask?.Hazard ?? true)
             {
-                fg.AppendItem(item.Hazard.FormKey, "Hazard");
+                fg.AppendItem(item.Hazard.FormKeyNullable, "Hazard");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
@@ -1647,23 +1647,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.TextureSet.FormKey.TryGet(out var TextureSetKey))
+            if (obj.TextureSet.FormKeyNullable.TryGet(out var TextureSetKey))
             {
                 yield return TextureSetKey;
             }
-            if (obj.SecondaryTextureSet.FormKey.TryGet(out var SecondaryTextureSetKey))
+            if (obj.SecondaryTextureSet.FormKeyNullable.TryGet(out var SecondaryTextureSetKey))
             {
                 yield return SecondaryTextureSetKey;
             }
-            if (obj.Sound1.FormKey.TryGet(out var Sound1Key))
+            if (obj.Sound1.FormKeyNullable.TryGet(out var Sound1Key))
             {
                 yield return Sound1Key;
             }
-            if (obj.Sound2.FormKey.TryGet(out var Sound2Key))
+            if (obj.Sound2.FormKeyNullable.TryGet(out var Sound2Key))
             {
                 yield return Sound2Key;
             }
-            if (obj.Hazard.FormKey.TryGet(out var HazardKey))
+            if (obj.Hazard.FormKeyNullable.TryGet(out var HazardKey))
             {
                 yield return HazardKey;
             }
@@ -1804,23 +1804,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.TextureSet) ?? true))
             {
-                item.TextureSet = new FormLinkNullable<ITextureSetGetter>(rhs.TextureSet.FormKey);
+                item.TextureSet = new FormLinkNullable<ITextureSetGetter>(rhs.TextureSet.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.SecondaryTextureSet) ?? true))
             {
-                item.SecondaryTextureSet = new FormLinkNullable<ITextureSetGetter>(rhs.SecondaryTextureSet.FormKey);
+                item.SecondaryTextureSet = new FormLinkNullable<ITextureSetGetter>(rhs.SecondaryTextureSet.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.Sound1) ?? true))
             {
-                item.Sound1 = new FormLinkNullable<ISoundGetter>(rhs.Sound1.FormKey);
+                item.Sound1 = new FormLinkNullable<ISoundGetter>(rhs.Sound1.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.Sound2) ?? true))
             {
-                item.Sound2 = new FormLinkNullable<ISoundGetter>(rhs.Sound2.FormKey);
+                item.Sound2 = new FormLinkNullable<ISoundGetter>(rhs.Sound2.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.Hazard) ?? true))
             {
-                item.Hazard = new FormLinkNullable<IHazardGetter>(rhs.Hazard.FormKey);
+                item.Hazard = new FormLinkNullable<IHazardGetter>(rhs.Hazard.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.DATADataTypeState) ?? true))
             {

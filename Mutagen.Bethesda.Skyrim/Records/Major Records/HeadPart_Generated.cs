@@ -1412,15 +1412,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.TextureSet ?? true)
             {
-                fg.AppendItem(item.TextureSet.FormKey, "TextureSet");
+                fg.AppendItem(item.TextureSet.FormKeyNullable, "TextureSet");
             }
             if (printMask?.Color ?? true)
             {
-                fg.AppendItem(item.Color.FormKey, "Color");
+                fg.AppendItem(item.Color.FormKeyNullable, "Color");
             }
             if (printMask?.ValidRaces ?? true)
             {
-                fg.AppendItem(item.ValidRaces.FormKey, "ValidRaces");
+                fg.AppendItem(item.ValidRaces.FormKeyNullable, "ValidRaces");
             }
         }
         
@@ -1561,15 +1561,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.TextureSet.FormKey.TryGet(out var TextureSetKey))
+            if (obj.TextureSet.FormKeyNullable.TryGet(out var TextureSetKey))
             {
                 yield return TextureSetKey;
             }
-            if (obj.Color.FormKey.TryGet(out var ColorKey))
+            if (obj.Color.FormKeyNullable.TryGet(out var ColorKey))
             {
                 yield return ColorKey;
             }
-            if (obj.ValidRaces.FormKey.TryGet(out var ValidRacesKey))
+            if (obj.ValidRaces.FormKeyNullable.TryGet(out var ValidRacesKey))
             {
                 yield return ValidRacesKey;
             }
@@ -1707,15 +1707,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)HeadPart_FieldIndex.TextureSet) ?? true))
             {
-                item.TextureSet = new FormLinkNullable<ITextureSetGetter>(rhs.TextureSet.FormKey);
+                item.TextureSet = new FormLinkNullable<ITextureSetGetter>(rhs.TextureSet.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)HeadPart_FieldIndex.Color) ?? true))
             {
-                item.Color = new FormLinkNullable<IColorRecordGetter>(rhs.Color.FormKey);
+                item.Color = new FormLinkNullable<IColorRecordGetter>(rhs.Color.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)HeadPart_FieldIndex.ValidRaces) ?? true))
             {
-                item.ValidRaces = new FormLinkNullable<IFormListGetter>(rhs.ValidRaces.FormKey);
+                item.ValidRaces = new FormLinkNullable<IFormListGetter>(rhs.ValidRaces.FormKeyNullable);
             }
         }
         

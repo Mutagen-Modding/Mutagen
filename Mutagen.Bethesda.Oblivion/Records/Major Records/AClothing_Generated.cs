@@ -1340,11 +1340,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Script ?? true)
             {
-                fg.AppendItem(item.Script.FormKey, "Script");
+                fg.AppendItem(item.Script.FormKeyNullable, "Script");
             }
             if (printMask?.Enchantment ?? true)
             {
-                fg.AppendItem(item.Enchantment.FormKey, "Enchantment");
+                fg.AppendItem(item.Enchantment.FormKeyNullable, "Enchantment");
             }
             if ((printMask?.EnchantmentPoints ?? true)
                 && item.EnchantmentPoints.TryGet(out var EnchantmentPointsItem))
@@ -1567,11 +1567,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.Script.FormKey.TryGet(out var ScriptKey))
+            if (obj.Script.FormKeyNullable.TryGet(out var ScriptKey))
             {
                 yield return ScriptKey;
             }
-            if (obj.Enchantment.FormKey.TryGet(out var EnchantmentKey))
+            if (obj.Enchantment.FormKeyNullable.TryGet(out var EnchantmentKey))
             {
                 yield return EnchantmentKey;
             }
@@ -1628,11 +1628,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AClothing_FieldIndex.Script) ?? true))
             {
-                item.Script = new FormLinkNullable<IScriptGetter>(rhs.Script.FormKey);
+                item.Script = new FormLinkNullable<IScriptGetter>(rhs.Script.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)AClothing_FieldIndex.Enchantment) ?? true))
             {
-                item.Enchantment = new FormLinkNullable<IEnchantmentGetter>(rhs.Enchantment.FormKey);
+                item.Enchantment = new FormLinkNullable<IEnchantmentGetter>(rhs.Enchantment.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)AClothing_FieldIndex.EnchantmentPoints) ?? true))
             {

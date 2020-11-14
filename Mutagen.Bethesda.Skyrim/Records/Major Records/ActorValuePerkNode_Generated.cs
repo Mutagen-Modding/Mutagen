@@ -1211,7 +1211,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.AssociatedSkill ?? true)
             {
-                fg.AppendItem(item.AssociatedSkill.FormKey, "AssociatedSkill");
+                fg.AppendItem(item.AssociatedSkill.FormKeyNullable, "AssociatedSkill");
             }
             if (printMask?.ConnectionLineToIndices?.Overall ?? true)
             {
@@ -1302,7 +1302,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IEnumerable<FormKey> GetLinkFormKeys(IActorValuePerkNodeGetter obj)
         {
             yield return obj.Perk.FormKey;
-            if (obj.AssociatedSkill.FormKey.TryGet(out var AssociatedSkillKey))
+            if (obj.AssociatedSkill.FormKeyNullable.TryGet(out var AssociatedSkillKey))
             {
                 yield return AssociatedSkillKey;
             }
@@ -1358,7 +1358,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)ActorValuePerkNode_FieldIndex.AssociatedSkill) ?? true))
             {
-                item.AssociatedSkill = new FormLinkNullable<IActorValueInformationGetter>(rhs.AssociatedSkill.FormKey);
+                item.AssociatedSkill = new FormLinkNullable<IActorValueInformationGetter>(rhs.AssociatedSkill.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)ActorValuePerkNode_FieldIndex.ConnectionLineToIndices) ?? true))
             {

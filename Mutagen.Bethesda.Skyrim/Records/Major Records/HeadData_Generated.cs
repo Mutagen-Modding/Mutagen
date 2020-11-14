@@ -1621,7 +1621,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.DefaultFaceTexture ?? true)
             {
-                fg.AppendItem(item.DefaultFaceTexture.FormKey, "DefaultFaceTexture");
+                fg.AppendItem(item.DefaultFaceTexture.FormKeyNullable, "DefaultFaceTexture");
             }
             if (printMask?.TintMasks?.Overall ?? true)
             {
@@ -1713,7 +1713,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.DefaultFaceTexture.FormKey.TryGet(out var DefaultFaceTextureKey))
+            if (obj.DefaultFaceTexture.FormKeyNullable.TryGet(out var DefaultFaceTextureKey))
             {
                 yield return DefaultFaceTextureKey;
             }
@@ -1856,7 +1856,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)HeadData_FieldIndex.DefaultFaceTexture) ?? true))
             {
-                item.DefaultFaceTexture = new FormLinkNullable<ITextureSetGetter>(rhs.DefaultFaceTexture.FormKey);
+                item.DefaultFaceTexture = new FormLinkNullable<ITextureSetGetter>(rhs.DefaultFaceTexture.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)HeadData_FieldIndex.TintMasks) ?? true))
             {

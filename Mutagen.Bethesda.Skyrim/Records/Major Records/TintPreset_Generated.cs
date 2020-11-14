@@ -876,7 +876,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.Color ?? true)
             {
-                fg.AppendItem(item.Color.FormKey, "Color");
+                fg.AppendItem(item.Color.FormKeyNullable, "Color");
             }
             if ((printMask?.DefaultValue ?? true)
                 && item.DefaultValue.TryGet(out var DefaultValueItem))
@@ -929,7 +929,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<FormKey> GetLinkFormKeys(ITintPresetGetter obj)
         {
-            if (obj.Color.FormKey.TryGet(out var ColorKey))
+            if (obj.Color.FormKeyNullable.TryGet(out var ColorKey))
             {
                 yield return ColorKey;
             }
@@ -954,7 +954,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)TintPreset_FieldIndex.Color) ?? true))
             {
-                item.Color = new FormLinkNullable<IColorRecordGetter>(rhs.Color.FormKey);
+                item.Color = new FormLinkNullable<IColorRecordGetter>(rhs.Color.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)TintPreset_FieldIndex.DefaultValue) ?? true))
             {

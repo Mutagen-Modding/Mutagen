@@ -1042,7 +1042,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
             if (printMask?.Parent ?? true)
             {
-                fg.AppendItem(item.Parent.FormKey, "Parent");
+                fg.AppendItem(item.Parent.FormKeyNullable, "Parent");
             }
             if ((printMask?.Name ?? true)
                 && item.Name.TryGet(out var NameItem))
@@ -1066,7 +1066,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.HavokImpactDataSet ?? true)
             {
-                fg.AppendItem(item.HavokImpactDataSet.FormKey, "HavokImpactDataSet");
+                fg.AppendItem(item.HavokImpactDataSet.FormKeyNullable, "HavokImpactDataSet");
             }
         }
         
@@ -1193,11 +1193,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.Parent.FormKey.TryGet(out var ParentKey))
+            if (obj.Parent.FormKeyNullable.TryGet(out var ParentKey))
             {
                 yield return ParentKey;
             }
-            if (obj.HavokImpactDataSet.FormKey.TryGet(out var HavokImpactDataSetKey))
+            if (obj.HavokImpactDataSet.FormKeyNullable.TryGet(out var HavokImpactDataSetKey))
             {
                 yield return HavokImpactDataSetKey;
             }
@@ -1254,7 +1254,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)MaterialType_FieldIndex.Parent) ?? true))
             {
-                item.Parent = new FormLinkNullable<IMaterialTypeGetter>(rhs.Parent.FormKey);
+                item.Parent = new FormLinkNullable<IMaterialTypeGetter>(rhs.Parent.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)MaterialType_FieldIndex.Name) ?? true))
             {
@@ -1274,7 +1274,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MaterialType_FieldIndex.HavokImpactDataSet) ?? true))
             {
-                item.HavokImpactDataSet = new FormLinkNullable<IImpactDataSetGetter>(rhs.HavokImpactDataSet.FormKey);
+                item.HavokImpactDataSet = new FormLinkNullable<IImpactDataSetGetter>(rhs.HavokImpactDataSet.FormKeyNullable);
             }
         }
         

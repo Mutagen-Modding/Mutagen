@@ -1256,15 +1256,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.OpenSound ?? true)
             {
-                fg.AppendItem(item.OpenSound.FormKey, "OpenSound");
+                fg.AppendItem(item.OpenSound.FormKeyNullable, "OpenSound");
             }
             if (printMask?.CloseSound ?? true)
             {
-                fg.AppendItem(item.CloseSound.FormKey, "CloseSound");
+                fg.AppendItem(item.CloseSound.FormKeyNullable, "CloseSound");
             }
             if (printMask?.LoopSound ?? true)
             {
-                fg.AppendItem(item.LoopSound.FormKey, "LoopSound");
+                fg.AppendItem(item.LoopSound.FormKeyNullable, "LoopSound");
             }
             if (printMask?.Flags ?? true)
             {
@@ -1422,15 +1422,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.OpenSound.FormKey.TryGet(out var OpenSoundKey))
+            if (obj.OpenSound.FormKeyNullable.TryGet(out var OpenSoundKey))
             {
                 yield return OpenSoundKey;
             }
-            if (obj.CloseSound.FormKey.TryGet(out var CloseSoundKey))
+            if (obj.CloseSound.FormKeyNullable.TryGet(out var CloseSoundKey))
             {
                 yield return CloseSoundKey;
             }
-            if (obj.LoopSound.FormKey.TryGet(out var LoopSoundKey))
+            if (obj.LoopSound.FormKeyNullable.TryGet(out var LoopSoundKey))
             {
                 yield return LoopSoundKey;
             }
@@ -1591,15 +1591,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.OpenSound) ?? true))
             {
-                item.OpenSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.OpenSound.FormKey);
+                item.OpenSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.OpenSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.CloseSound) ?? true))
             {
-                item.CloseSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.CloseSound.FormKey);
+                item.CloseSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.CloseSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.LoopSound) ?? true))
             {
-                item.LoopSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.LoopSound.FormKey);
+                item.LoopSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.LoopSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.Flags) ?? true))
             {

@@ -1791,11 +1791,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Topic ?? true)
             {
-                fg.AppendItem(item.Topic.FormKey, "Topic");
+                fg.AppendItem(item.Topic.FormKeyNullable, "Topic");
             }
             if (printMask?.PreviousDialog ?? true)
             {
-                fg.AppendItem(item.PreviousDialog.FormKey, "PreviousDialog");
+                fg.AppendItem(item.PreviousDialog.FormKeyNullable, "PreviousDialog");
             }
             if ((printMask?.FavorLevel ?? true)
                 && item.FavorLevel.TryGet(out var FavorLevelItem))
@@ -1822,7 +1822,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.ResponseData ?? true)
             {
-                fg.AppendItem(item.ResponseData.FormKey, "ResponseData");
+                fg.AppendItem(item.ResponseData.FormKeyNullable, "ResponseData");
             }
             if (printMask?.Responses?.Overall ?? true)
             {
@@ -1885,15 +1885,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Speaker ?? true)
             {
-                fg.AppendItem(item.Speaker.FormKey, "Speaker");
+                fg.AppendItem(item.Speaker.FormKeyNullable, "Speaker");
             }
             if (printMask?.WalkAwayTopic ?? true)
             {
-                fg.AppendItem(item.WalkAwayTopic.FormKey, "WalkAwayTopic");
+                fg.AppendItem(item.WalkAwayTopic.FormKeyNullable, "WalkAwayTopic");
             }
             if (printMask?.AudioOutputOverride ?? true)
             {
-                fg.AppendItem(item.AudioOutputOverride.FormKey, "AudioOutputOverride");
+                fg.AppendItem(item.AudioOutputOverride.FormKeyNullable, "AudioOutputOverride");
             }
         }
         
@@ -2048,11 +2048,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.Topic.FormKey.TryGet(out var TopicKey))
+            if (obj.Topic.FormKeyNullable.TryGet(out var TopicKey))
             {
                 yield return TopicKey;
             }
-            if (obj.PreviousDialog.FormKey.TryGet(out var PreviousDialogKey))
+            if (obj.PreviousDialog.FormKeyNullable.TryGet(out var PreviousDialogKey))
             {
                 yield return PreviousDialogKey;
             }
@@ -2060,7 +2060,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.ResponseData.FormKey.TryGet(out var ResponseDataKey))
+            if (obj.ResponseData.FormKeyNullable.TryGet(out var ResponseDataKey))
             {
                 yield return ResponseDataKey;
             }
@@ -2077,15 +2077,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.Speaker.FormKey.TryGet(out var SpeakerKey))
+            if (obj.Speaker.FormKeyNullable.TryGet(out var SpeakerKey))
             {
                 yield return SpeakerKey;
             }
-            if (obj.WalkAwayTopic.FormKey.TryGet(out var WalkAwayTopicKey))
+            if (obj.WalkAwayTopic.FormKeyNullable.TryGet(out var WalkAwayTopicKey))
             {
                 yield return WalkAwayTopicKey;
             }
-            if (obj.AudioOutputOverride.FormKey.TryGet(out var AudioOutputOverrideKey))
+            if (obj.AudioOutputOverride.FormKeyNullable.TryGet(out var AudioOutputOverrideKey))
             {
                 yield return AudioOutputOverrideKey;
             }
@@ -2205,11 +2205,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Topic) ?? true))
             {
-                item.Topic = new FormLinkNullable<IDialogTopicGetter>(rhs.Topic.FormKey);
+                item.Topic = new FormLinkNullable<IDialogTopicGetter>(rhs.Topic.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.PreviousDialog) ?? true))
             {
-                item.PreviousDialog = new FormLinkNullable<IDialogResponsesGetter>(rhs.PreviousDialog.FormKey);
+                item.PreviousDialog = new FormLinkNullable<IDialogResponsesGetter>(rhs.PreviousDialog.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.FavorLevel) ?? true))
             {
@@ -2236,7 +2236,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.ResponseData) ?? true))
             {
-                item.ResponseData = new FormLinkNullable<IDialogResponsesGetter>(rhs.ResponseData.FormKey);
+                item.ResponseData = new FormLinkNullable<IDialogResponsesGetter>(rhs.ResponseData.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Responses) ?? true))
             {
@@ -2316,15 +2316,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Speaker) ?? true))
             {
-                item.Speaker = new FormLinkNullable<INpcGetter>(rhs.Speaker.FormKey);
+                item.Speaker = new FormLinkNullable<INpcGetter>(rhs.Speaker.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.WalkAwayTopic) ?? true))
             {
-                item.WalkAwayTopic = new FormLinkNullable<IDialogTopicGetter>(rhs.WalkAwayTopic.FormKey);
+                item.WalkAwayTopic = new FormLinkNullable<IDialogTopicGetter>(rhs.WalkAwayTopic.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.AudioOutputOverride) ?? true))
             {
-                item.AudioOutputOverride = new FormLinkNullable<ISoundOutputModelGetter>(rhs.AudioOutputOverride.FormKey);
+                item.AudioOutputOverride = new FormLinkNullable<ISoundOutputModelGetter>(rhs.AudioOutputOverride.FormKeyNullable);
             }
         }
         

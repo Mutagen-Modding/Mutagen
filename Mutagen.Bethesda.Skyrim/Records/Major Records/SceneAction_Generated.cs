@@ -1566,7 +1566,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Topic ?? true)
             {
-                fg.AppendItem(item.Topic.FormKey, "Topic");
+                fg.AppendItem(item.Topic.FormKeyNullable, "Topic");
             }
             if ((printMask?.HeadtrackActorID ?? true)
                 && item.HeadtrackActorID.TryGet(out var HeadtrackActorIDItem))
@@ -1707,7 +1707,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.Topic.FormKey.TryGet(out var TopicKey))
+            if (obj.Topic.FormKeyNullable.TryGet(out var TopicKey))
             {
                 yield return TopicKey;
             }
@@ -1794,7 +1794,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SceneAction_FieldIndex.Topic) ?? true))
             {
-                item.Topic = new FormLinkNullable<IDialogTopicGetter>(rhs.Topic.FormKey);
+                item.Topic = new FormLinkNullable<IDialogTopicGetter>(rhs.Topic.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)SceneAction_FieldIndex.HeadtrackActorID) ?? true))
             {

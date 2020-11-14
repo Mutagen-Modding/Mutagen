@@ -979,7 +979,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.StartingTopic ?? true)
             {
-                fg.AppendItem(item.StartingTopic.FormKey, "StartingTopic");
+                fg.AppendItem(item.StartingTopic.FormKeyNullable, "StartingTopic");
             }
         }
         
@@ -1097,7 +1097,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
             yield return obj.Quest.FormKey;
-            if (obj.StartingTopic.FormKey.TryGet(out var StartingTopicKey))
+            if (obj.StartingTopic.FormKeyNullable.TryGet(out var StartingTopicKey))
             {
                 yield return StartingTopicKey;
             }
@@ -1166,7 +1166,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogBranch_FieldIndex.StartingTopic) ?? true))
             {
-                item.StartingTopic = new FormLinkNullable<IDialogTopicGetter>(rhs.StartingTopic.FormKey);
+                item.StartingTopic = new FormLinkNullable<IDialogTopicGetter>(rhs.StartingTopic.FormKeyNullable);
             }
         }
         

@@ -1200,7 +1200,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
             if (printMask?.TextureSet ?? true)
             {
-                fg.AppendItem(item.TextureSet.FormKey, "TextureSet");
+                fg.AppendItem(item.TextureSet.FormKeyNullable, "TextureSet");
             }
             if (printMask?.MaterialType ?? true)
             {
@@ -1365,7 +1365,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.TextureSet.FormKey.TryGet(out var TextureSetKey))
+            if (obj.TextureSet.FormKeyNullable.TryGet(out var TextureSetKey))
             {
                 yield return TextureSetKey;
             }
@@ -1427,7 +1427,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.TextureSet) ?? true))
             {
-                item.TextureSet = new FormLinkNullable<ITextureSetGetter>(rhs.TextureSet.FormKey);
+                item.TextureSet = new FormLinkNullable<ITextureSetGetter>(rhs.TextureSet.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.MaterialType) ?? true))
             {

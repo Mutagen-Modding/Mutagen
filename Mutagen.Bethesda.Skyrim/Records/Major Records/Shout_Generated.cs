@@ -1092,7 +1092,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.MenuDisplayObject ?? true)
             {
-                fg.AppendItem(item.MenuDisplayObject.FormKey, "MenuDisplayObject");
+                fg.AppendItem(item.MenuDisplayObject.FormKeyNullable, "MenuDisplayObject");
             }
             if ((printMask?.Description ?? true)
                 && item.Description.TryGet(out var DescriptionItem))
@@ -1267,7 +1267,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.MenuDisplayObject.FormKey.TryGet(out var MenuDisplayObjectKey))
+            if (obj.MenuDisplayObject.FormKeyNullable.TryGet(out var MenuDisplayObjectKey))
             {
                 yield return MenuDisplayObjectKey;
             }
@@ -1332,7 +1332,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Shout_FieldIndex.MenuDisplayObject) ?? true))
             {
-                item.MenuDisplayObject = new FormLinkNullable<IStaticGetter>(rhs.MenuDisplayObject.FormKey);
+                item.MenuDisplayObject = new FormLinkNullable<IStaticGetter>(rhs.MenuDisplayObject.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Shout_FieldIndex.Description) ?? true))
             {

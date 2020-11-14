@@ -1214,11 +1214,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.CreatedObject ?? true)
             {
-                fg.AppendItem(item.CreatedObject.FormKey, "CreatedObject");
+                fg.AppendItem(item.CreatedObject.FormKeyNullable, "CreatedObject");
             }
             if (printMask?.WorkbenchKeyword ?? true)
             {
-                fg.AppendItem(item.WorkbenchKeyword.FormKey, "WorkbenchKeyword");
+                fg.AppendItem(item.WorkbenchKeyword.FormKeyNullable, "WorkbenchKeyword");
             }
             if ((printMask?.CreatedObjectCount ?? true)
                 && item.CreatedObjectCount.TryGet(out var CreatedObjectCountItem))
@@ -1352,11 +1352,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.CreatedObject.FormKey.TryGet(out var CreatedObjectKey))
+            if (obj.CreatedObject.FormKeyNullable.TryGet(out var CreatedObjectKey))
             {
                 yield return CreatedObjectKey;
             }
-            if (obj.WorkbenchKeyword.FormKey.TryGet(out var WorkbenchKeywordKey))
+            if (obj.WorkbenchKeyword.FormKeyNullable.TryGet(out var WorkbenchKeywordKey))
             {
                 yield return WorkbenchKeywordKey;
             }
@@ -1469,11 +1469,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.CreatedObject) ?? true))
             {
-                item.CreatedObject = new FormLinkNullable<ISkyrimMajorRecordGetter>(rhs.CreatedObject.FormKey);
+                item.CreatedObject = new FormLinkNullable<ISkyrimMajorRecordGetter>(rhs.CreatedObject.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.WorkbenchKeyword) ?? true))
             {
-                item.WorkbenchKeyword = new FormLinkNullable<IKeywordGetter>(rhs.WorkbenchKeyword.FormKey);
+                item.WorkbenchKeyword = new FormLinkNullable<IKeywordGetter>(rhs.WorkbenchKeyword.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.CreatedObjectCount) ?? true))
             {

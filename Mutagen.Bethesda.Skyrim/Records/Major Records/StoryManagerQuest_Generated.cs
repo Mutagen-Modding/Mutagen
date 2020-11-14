@@ -882,7 +882,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.Quest ?? true)
             {
-                fg.AppendItem(item.Quest.FormKey, "Quest");
+                fg.AppendItem(item.Quest.FormKeyNullable, "Quest");
             }
             if ((printMask?.FNAM ?? true)
                 && item.FNAM.TryGet(out var FNAMItem))
@@ -935,7 +935,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<FormKey> GetLinkFormKeys(IStoryManagerQuestGetter obj)
         {
-            if (obj.Quest.FormKey.TryGet(out var QuestKey))
+            if (obj.Quest.FormKeyNullable.TryGet(out var QuestKey))
             {
                 yield return QuestKey;
             }
@@ -960,7 +960,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)StoryManagerQuest_FieldIndex.Quest) ?? true))
             {
-                item.Quest = new FormLinkNullable<IQuestGetter>(rhs.Quest.FormKey);
+                item.Quest = new FormLinkNullable<IQuestGetter>(rhs.Quest.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)StoryManagerQuest_FieldIndex.FNAM) ?? true))
             {

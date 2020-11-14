@@ -879,11 +879,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Keyword ?? true)
             {
-                fg.AppendItem(item.Keyword.FormKey, "Keyword");
+                fg.AppendItem(item.Keyword.FormKeyNullable, "Keyword");
             }
             if (printMask?.RefType ?? true)
             {
-                fg.AppendItem(item.RefType.FormKey, "RefType");
+                fg.AppendItem(item.RefType.FormKeyNullable, "RefType");
             }
         }
         
@@ -923,11 +923,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<FormKey> GetLinkFormKeys(ILocationAliasReferenceGetter obj)
         {
-            if (obj.Keyword.FormKey.TryGet(out var KeywordKey))
+            if (obj.Keyword.FormKeyNullable.TryGet(out var KeywordKey))
             {
                 yield return KeywordKey;
             }
-            if (obj.RefType.FormKey.TryGet(out var RefTypeKey))
+            if (obj.RefType.FormKeyNullable.TryGet(out var RefTypeKey))
             {
                 yield return RefTypeKey;
             }
@@ -956,11 +956,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LocationAliasReference_FieldIndex.Keyword) ?? true))
             {
-                item.Keyword = new FormLinkNullable<IKeywordGetter>(rhs.Keyword.FormKey);
+                item.Keyword = new FormLinkNullable<IKeywordGetter>(rhs.Keyword.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)LocationAliasReference_FieldIndex.RefType) ?? true))
             {
-                item.RefType = new FormLinkNullable<ILocationReferenceTypeGetter>(rhs.RefType.FormKey);
+                item.RefType = new FormLinkNullable<ILocationReferenceTypeGetter>(rhs.RefType.FormKeyNullable);
             }
         }
         

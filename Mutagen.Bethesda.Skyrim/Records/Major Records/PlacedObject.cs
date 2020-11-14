@@ -204,8 +204,8 @@ namespace Mutagen.Bethesda.Skyrim
                 var imageSpace = item.ImageSpace;
                 var linkedRooms = item.LinkedRooms;
                 var unknown2 = item.Unknown;
-                if (lightingTemplate.FormKey == null
-                    && imageSpace.FormKey == null
+                if (lightingTemplate.FormKeyNullable == null
+                    && imageSpace.FormKeyNullable == null
                     && linkedRooms.Count == 0
                     && unknown2 == 0)
                 {
@@ -215,24 +215,24 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     writer.Write((byte)item.LinkedRooms.Count);
                     byte flags = 0;
-                    if (lightingTemplate.FormKey != null)
+                    if (lightingTemplate.FormKeyNullable != null)
                     {
                         flags = EnumExt.SetFlag(flags, PlacedObjectBinaryCreateTranslation.HasLightingTemplateFlag, true);
                     }
-                    if (imageSpace.FormKey != null)
+                    if (imageSpace.FormKeyNullable != null)
                     {
                         flags = EnumExt.SetFlag(flags, PlacedObjectBinaryCreateTranslation.HasImageSpaceFlag, true);
                     }
                     writer.Write(flags);
                     writer.Write(unknown2);
                 }
-                if (lightingTemplate.FormKey != null)
+                if (lightingTemplate.FormKeyNullable != null)
                 {
-                    FormKeyBinaryTranslation.Instance.Write(writer, lightingTemplate.FormKey.Value, RecordTypes.LNAM);
+                    FormKeyBinaryTranslation.Instance.Write(writer, lightingTemplate.FormKeyNullable.Value, RecordTypes.LNAM);
                 }
-                if (imageSpace.FormKey != null)
+                if (imageSpace.FormKeyNullable != null)
                 {
-                    FormKeyBinaryTranslation.Instance.Write(writer, imageSpace.FormKey.Value, RecordTypes.INAM);
+                    FormKeyBinaryTranslation.Instance.Write(writer, imageSpace.FormKeyNullable.Value, RecordTypes.INAM);
                 }
                 foreach (var room in linkedRooms)
                 {

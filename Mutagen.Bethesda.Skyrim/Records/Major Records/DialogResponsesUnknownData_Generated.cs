@@ -885,7 +885,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.QNAM ?? true)
             {
-                fg.AppendItem(item.QNAM.FormKey, "QNAM");
+                fg.AppendItem(item.QNAM.FormKeyNullable, "QNAM");
             }
             if (printMask?.NEXT ?? true)
             {
@@ -929,7 +929,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<FormKey> GetLinkFormKeys(IDialogResponsesUnknownDataGetter obj)
         {
-            if (obj.QNAM.FormKey.TryGet(out var QNAMKey))
+            if (obj.QNAM.FormKeyNullable.TryGet(out var QNAMKey))
             {
                 yield return QNAMKey;
             }
@@ -965,7 +965,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponsesUnknownData_FieldIndex.QNAM) ?? true))
             {
-                item.QNAM = new FormLinkNullable<ISkyrimMajorRecordGetter>(rhs.QNAM.FormKey);
+                item.QNAM = new FormLinkNullable<ISkyrimMajorRecordGetter>(rhs.QNAM.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponsesUnknownData_FieldIndex.NEXT) ?? true))
             {
