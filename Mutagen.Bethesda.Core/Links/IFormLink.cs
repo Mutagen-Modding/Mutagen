@@ -92,6 +92,26 @@ namespace Mutagen.Bethesda
         }
 
         /// <summary>
+        /// Locates link target in given Link Cache.
+        /// </summary>
+        /// <param name="link">Link to resolve</param>
+        /// <param name="cache">Link Cache to resolve against</param>
+        /// <returns>Located Major Record</returns>
+        /// <exception cref="NullReferenceException">If link was not succesful</exception>
+        /// <typeparam name="TMajor">Major Record type of the FormLink</typeparam>
+        /// <typeparam name="TScopedMajor">Major Record type to resolve to</typeparam>
+        public static TScopedMajor? Resolve<TMajor, TScopedMajor>(this IFormLink<TMajor> link, ILinkCache cache)
+            where TMajor : class, IMajorRecordCommonGetter
+            where TScopedMajor : class, TMajor
+        {
+            if (link.TryResolve<TMajor, TScopedMajor>(cache, out var majorRecord))
+            {
+                return majorRecord;
+            }
+            return null;
+        }
+
+        /// <summary>
         /// Attempts to locate link target in given Link Cache.
         /// </summary>
         /// <param name="link">Link to resolve</param>
@@ -139,11 +159,11 @@ namespace Mutagen.Bethesda
         /// <param name="cache">Link Cache to resolve against</param>
         /// <param name="major">Located record if successful</param>
         /// <returns>True if link was resolved and a record was retrieved</returns>
-        /// <typeparam name="TSource">Major Record type that the FormLink specifies explicitly</typeparam>
-        /// <typeparam name="TTarget">Inheriting Major Record type to scope to</typeparam>
-        public static bool TryResolve<TSource, TTarget>(this IFormLink<TSource> formLink, ILinkCache cache, [MaybeNullWhen(false)] out TTarget major)
-            where TSource : class, IMajorRecordCommonGetter
-            where TTarget : class, TSource
+        /// <typeparam name="TMajor">Major Record type that the FormLink specifies explicitly</typeparam>
+        /// <typeparam name="TScopedMajor">Inheriting Major Record type to scope to</typeparam>
+        public static bool TryResolve<TMajor, TScopedMajor>(this IFormLink<TMajor> formLink, ILinkCache cache, [MaybeNullWhen(false)] out TScopedMajor major)
+            where TMajor : class, IMajorRecordCommonGetter
+            where TScopedMajor : class, TMajor
         {
             if (formLink.FormKey.Equals(FormKey.Null))
             {

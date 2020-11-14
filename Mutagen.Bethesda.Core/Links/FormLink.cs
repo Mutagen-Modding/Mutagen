@@ -137,18 +137,61 @@ namespace Mutagen.Bethesda
         /// <returns>True if link was resolved and a record was retrieved</returns>
         public bool TryResolve(ILinkCache cache, [MaybeNullWhen(false)] out TMajor major)
         {
+            return TryResolve<TMajor>(cache, out major);
+        }
+
+        /// <summary>
+        /// Attempts to locate link target in given Link Cache.
+        /// </summary>
+        /// <param name="cache">Link Cache to resolve against</param>
+        /// <param name="major">Located record if successful</param>
+        /// <returns>True if link was resolved and a record was retrieved</returns>
+        /// <typeparam name="TScopedMajor">Major Record type to resolve to</typeparam>
+        public bool TryResolve<TScopedMajor>(ILinkCache cache, [MaybeNullWhen(false)] out TScopedMajor major)
+            where TScopedMajor : class, TMajor
+        {
             if (this.FormKey.Equals(FormKey.Null))
             {
                 major = default!;
                 return false;
             }
-            if (cache.TryResolve<TMajor>(this.FormKey, out var majorRec))
+            if (cache.TryResolve<TScopedMajor>(this.FormKey, out var majorRec))
             {
                 major = majorRec;
                 return true;
             }
             major = default!;
             return false;
+        }
+
+        /// <summary>
+        /// Attempts to locate link target in given Link Cache.
+        /// </summary>
+        /// <param name="cache">Link Cache to resolve against</param>
+        /// <returns>TLocated record if successful, or null</returns>
+        public TMajor? Resolve(ILinkCache cache)
+        {
+            if (TryResolve(cache, out var major))
+            {
+                return major;
+            }
+            return default;
+        }
+
+        /// <summary>
+        /// Attempts to locate link target in given Link Cache.
+        /// </summary>
+        /// <param name="cache">Link Cache to resolve against</param>
+        /// <returns>TLocated record if successful, or null</returns>
+        /// <typeparam name="TScopedMajor">Major Record type to resolve to</typeparam>
+        public TMajor? Resolve<TScopedMajor>(ILinkCache cache)
+            where TScopedMajor : class, TMajor
+        {
+            if (TryResolve<TScopedMajor>(cache, out var major))
+            {
+                return major;
+            }
+            return default;
         }
 
         bool ILink.TryResolveFormKey(ILinkCache cache, [MaybeNullWhen(false)] out FormKey formKey)

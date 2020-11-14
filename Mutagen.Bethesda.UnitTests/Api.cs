@@ -140,5 +140,22 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.True(EnumExt.HasFlag(armor.MajorRecordFlagsRaw, Constants.InitiallyDisabled));
         }
 
+
+        [Fact]
+        public static void FormLinkScoping()
+        {
+            var mod = new SkyrimMod(Utility.LightMasterModKey, SkyrimRelease.SkyrimLE);
+            var light = mod.Lights.AddNew();
+            ILinkCache cache = mod.ToImmutableLinkCache();
+            var link = new FormLink<ISkyrimMajorRecordGetter>(light.FormKey);
+            link.TryResolve<ILightGetter>(cache, out var _);
+            link.Resolve<ILightGetter>(cache);
+            var nullableLink = new FormLinkNullable<ISkyrimMajorRecordGetter>(light.FormKey);
+            nullableLink.TryResolve<ILightGetter>(cache, out var _);
+            nullableLink.Resolve<ILightGetter>(cache);
+            IFormLink<ISkyrimMajorRecordGetter> iLink = link;
+            iLink.TryResolve<ISkyrimMajorRecordGetter, ILightGetter>(cache, out var _);
+            iLink.Resolve<ISkyrimMajorRecordGetter, ILightGetter>(cache);
+        }
     }
 }
