@@ -3810,8 +3810,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 parent: curContext,
                                 getter: (m, r) =>
                                 {
+                                    var baseRec = getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey));
+                                    if (baseRec.Landscape != null) return baseRec.Landscape;
                                     var copy = (Landscape)((ILandscapeGetter)r).DeepCopy(ModContextExt.LandscapeCopyMask);
-                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).Landscape = copy;
+                                    baseRec.Landscape = copy;
                                     return copy;
                                 });
                         }
