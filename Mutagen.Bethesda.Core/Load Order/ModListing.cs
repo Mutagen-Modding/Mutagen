@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -78,5 +79,22 @@ namespace Mutagen.Bethesda
         /// Whether the listing is enabled in the load order
         /// </summary>
         bool Enabled { get; }
+    }
+
+    public static class IModListingExt
+    {
+        public static bool TryGetIfEnabled<TMod>(this LoadOrder<IModListing<TMod>> loadOrder, ModKey modKey, [MaybeNullWhen(false)] out IModListing<TMod> item)
+            where TMod : class, IModGetter
+        {
+            if (loadOrder.TryGetValue(modKey, out var listing)
+                && listing.Enabled)
+            {
+                item = listing;
+                return true;
+            }
+
+            item = default;
+            return false;
+        }
     }
 }

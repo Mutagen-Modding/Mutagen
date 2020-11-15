@@ -524,23 +524,6 @@ namespace Mutagen.Bethesda
         /// Attempts to retrive an item given a ModKey
         /// </summary>
         /// <param name="key">ModKey to query for</param>
-        /// <param name="value">Result containing located index, and a reference to the item</param>
-        /// <returns>True if matching key located</returns>
-        public bool TryGetValue(ModKey key, [MaybeNullWhen(false)] out (int Index, TItem Item) value)
-        {
-            if (_byModKey.TryGetValue(key, out var container))
-            {
-                value = (container.Index, container.Item);
-                return true;
-            }
-            value = default;
-            return false;
-        }
-
-        /// <summary>
-        /// Attempts to retrive an item given a ModKey
-        /// </summary>
-        /// <param name="key">ModKey to query for</param>
         /// <param name="value">Result reference to the item</param>
         /// <returns>True if matching key located</returns>
         public bool TryGetValue(ModKey key, [MaybeNullWhen(false)] out TItem value)

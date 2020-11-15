@@ -9,6 +9,10 @@ using Constants = Mutagen.Bethesda.Internals.Constants;
 
 namespace Mutagen.Bethesda.UnitTests
 {
+    /// <summary>
+    /// Some tests that are less about testing correct functionality, and more confirming
+    /// that a specific API call is able to compile.
+    /// </summary>
     public class Api
     {
         private readonly ITestOutputHelper _testOutputHelper;
@@ -156,6 +160,13 @@ namespace Mutagen.Bethesda.UnitTests
             IFormLink<ISkyrimMajorRecordGetter> iLink = link;
             iLink.TryResolve<ISkyrimMajorRecordGetter, ILightGetter>(cache, out var _);
             iLink.Resolve<ISkyrimMajorRecordGetter, ILightGetter>(cache);
+        }
+
+        [Fact]
+        public static void LoadOrderTryGetValue()
+        {
+            var lo = new LoadOrder<ISkyrimModGetter>();
+            lo.TryGetValue(Utility.LightMasterModKey, out var item);
         }
     }
 }
