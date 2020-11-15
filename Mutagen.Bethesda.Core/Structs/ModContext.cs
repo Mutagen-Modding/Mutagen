@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda
         /// <param name="getter">Logic for how to navigate a mod and insert a copy of the wrapped record</param>
         /// <param name="parent">Optional parent context</param>
         public ModContext(
-            ModKey modKey, 
-            TMajorGetter record, 
+            ModKey modKey,
+            TMajorGetter record,
             Func<TModSetter, TMajorGetter, TMajorSetter> getter,
             IModContext? parent = null)
         {
@@ -121,6 +121,24 @@ namespace Mutagen.Bethesda
                 (RMajorGetter)Record,
                 (mod, rec) => (RMajorSetter)this.GetOrAddAsOverride(mod),
                 Parent);
+        }
+
+        public bool TryGetParentContext<TTargetMajorSetter, TTargetMajorGetter>([MaybeNullWhen(false)] out ModContext<TModSetter, TTargetMajorSetter, TTargetMajorGetter> parent)
+            where TTargetMajorSetter : IMajorRecordCommon, TTargetMajorGetter
+            where TTargetMajorGetter : IMajorRecordCommonGetter
+        {
+            var targetContext = this.Parent;
+            while (targetContext != null)
+            {
+                if (targetContext.Record is TTargetMajorGetter)
+                {
+                    parent = (ModContext<TModSetter, TTargetMajorSetter, TTargetMajorGetter>)targetContext;
+                    return true;
+                }
+                targetContext = targetContext.Parent;
+            }
+            parent = default;
+            return false;
         }
     }
 
