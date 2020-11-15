@@ -1,11 +1,7 @@
-using Loqui;
 using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
@@ -15,13 +11,13 @@ namespace Mutagen.Bethesda
     /// FormKey allowed to be null to communicate the absence of the field.
     /// </summary>
     /// <typeparam name="TMajor">The type of Major Record the Link is allowed to connect with</typeparam>
-    public struct FormLinkNullable<TMajor> : 
-        IFormLinkNullable<TMajor>,
+    public struct FormLinkNullable<TMajor> :
+        IFormLink<TMajor>,
         IEquatable<FormLink<TMajor>>,
         IEquatable<FormLinkNullable<TMajor>>,
         IEquatable<IFormLink<TMajor>>,
         IEquatable<IFormLinkNullable<TMajor>>
-       where TMajor : class, IMajorRecordCommonGetter
+        where TMajor : class, IMajorRecordCommonGetter
     {
         /// <summary>
         /// A readonly singleton representing an unlinked and null FormLinkNullable
@@ -32,6 +28,11 @@ namespace Mutagen.Bethesda
         /// FormKey of the target record.
         /// </summary>
         public FormKey? FormKeyNullable { get; }
+
+        /// <summary>
+        /// Non null FormKey of the target record.  If null, it will instead return FormKey.Null.
+        /// </summary>
+        public FormKey FormKey => FormKeyNullable ?? FormKey.Null;
         
         Type ILink.TargetType => typeof(TMajor);
 

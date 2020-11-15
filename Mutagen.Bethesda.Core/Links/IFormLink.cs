@@ -1,23 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
-    /// <summary>
-    /// An interface for a FormLink
-    /// </summary>
-    public interface IFormLink : IFormLinkNullable
-    {
-        /// <summary>
-        /// FormKey to link against
-        /// </summary>
-        new FormKey FormKey { get; }
-    }
-
     /// <summary>
     /// An interface for a FormLink, with a Major Record type constraint
     /// </summary>
@@ -31,7 +16,7 @@ namespace Mutagen.Bethesda
     /// An interface for a FormLink.
     /// FormKey is allowed to be null to communicate absence of a record.
     /// </summary>
-    public interface IFormLinkNullable : ILink
+    public interface IFormLink : ILink
     {
         /// <summary>
         /// FormKey to link against
@@ -42,6 +27,11 @@ namespace Mutagen.Bethesda
         /// True if FormKey points to a null ID
         /// </summary>
         bool IsNull { get; }
+
+        /// <summary>
+        /// FormKey to link against
+        /// </summary>
+        FormKey FormKey { get; }
     }
 
     /// <summary>
@@ -49,7 +39,7 @@ namespace Mutagen.Bethesda
     /// FormKey is allowed to be null to communicate absence of a record.
     /// </summary>
     /// <typeparam name="TMajor">The type of Major Record the Link is allowed to connect with</typeparam>
-    public interface IFormLinkNullable<out TMajor> : ILink<TMajor>, IFormLinkNullable
+    public interface IFormLinkNullable<out TMajor> : ILink<TMajor>, IFormLink
        where TMajor : IMajorRecordCommonGetter
     {
     }

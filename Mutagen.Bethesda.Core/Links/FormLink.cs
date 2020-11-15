@@ -1,11 +1,7 @@
-using Loqui;
 using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
@@ -39,7 +35,7 @@ namespace Mutagen.Bethesda
         /// </summary>
         public bool IsNull => this.FormKey.IsNull;
 
-        FormKey? IFormLinkNullable.FormKeyNullable => this.FormKey;
+        FormKey? IFormLink.FormKeyNullable => this.FormKey;
 
         /// <summary>
         /// Default constructor that creates a link to the target FormKey
