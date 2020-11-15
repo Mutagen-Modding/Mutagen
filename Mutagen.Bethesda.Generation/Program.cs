@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "public ModKey ModKey { get; }";
+            string testString = "var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

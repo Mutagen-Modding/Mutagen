@@ -3959,10 +3959,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
-                                    var cacheWorldspace = getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey));
-                                    if (cacheWorldspace.TopCell != null) return cacheWorldspace.TopCell;
                                     var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
-                                    cacheWorldspace.TopCell = copy;
+                                    getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).TopCell = copy;
                                     return copy;
                                 }))
                             {
