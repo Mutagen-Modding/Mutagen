@@ -11,11 +11,11 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void SimpleGroup()
         {
-            var mod = new SkyrimMod(Utility.ModKey, SkyrimRelease.SkyrimSE);
+            var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimSE);
             var npc1 = mod.Npcs.AddNew();
             var npc2 = mod.Npcs.AddNew();
 
-            var mod2 = new SkyrimMod(Utility.ModKey2, SkyrimRelease.SkyrimSE);
+            var mod2 = new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimSE);
             var contexts = mod.EnumerateMajorRecordContexts<INpc, INpcGetter>(linkCache: null!).ToArray();
             contexts.Should().HaveCount(2);
             contexts[0].Record.Should().Be(npc1);
@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void Cell()
         {
-            var mod = new SkyrimMod(Utility.ModKey, SkyrimRelease.SkyrimSE);
+            var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimSE);
             var block = new CellBlock()
             {
                 BlockNumber = 2,
@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.UnitTests
             var cell3 = new Cell(mod.GetNextFormKey(), SkyrimRelease.SkyrimSE);
             subBlock2.Cells.Add(cell3);
 
-            var mod2 = new SkyrimMod(Utility.ModKey2, SkyrimRelease.SkyrimSE);
+            var mod2 = new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimSE);
             var contexts = mod.EnumerateMajorRecordContexts<ICell, ICellGetter>(linkCache: null!).ToArray();
             contexts.Should().HaveCount(3);
             Assert.Same(contexts[0].Record, cell1);
@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void PlacedObjectInCell()
         {
-            var mod = new SkyrimMod(Utility.ModKey, SkyrimRelease.SkyrimSE);
+            var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimSE);
             var block = new CellBlock()
             {
                 BlockNumber = 2,
@@ -118,7 +118,7 @@ namespace Mutagen.Bethesda.UnitTests
             var contexts = mod.EnumerateMajorRecordContexts<IPlacedObject, IPlacedObjectGetter>(linkCache: cache).ToArray();
             contexts.Should().HaveCount(1);
 
-            var mod2 = new SkyrimMod(Utility.ModKey2, SkyrimRelease.SkyrimSE);
+            var mod2 = new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimSE);
             var placedObjOverride = contexts[0].GetOrAddAsOverride(mod2);
             Assert.Equal(placedObj.FormKey, placedObjOverride.FormKey);
             mod2.Cells.Records.Should().HaveCount(1);
@@ -131,7 +131,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void IPlacedInCell()
         {
-            var mod = new SkyrimMod(Utility.ModKey, SkyrimRelease.SkyrimSE);
+            var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimSE);
             var block = new CellBlock()
             {
                 BlockNumber = 2,
@@ -172,7 +172,7 @@ namespace Mutagen.Bethesda.UnitTests
             var contexts = mod.EnumerateMajorRecordContexts<IPlaced, IPlacedGetter>(linkCache: cache).ToArray();
             Assert.Equal(2, contexts.Length);
 
-            var mod2 = new SkyrimMod(Utility.ModKey2, SkyrimRelease.SkyrimSE);
+            var mod2 = new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimSE);
             var placedNpcOverride = contexts[0].GetOrAddAsOverride(mod2);
             var placedObjOverride = contexts[1].GetOrAddAsOverride(mod2);
             Assert.Equal(placedNpc.FormKey, placedNpcOverride.FormKey);
@@ -188,7 +188,7 @@ namespace Mutagen.Bethesda.UnitTests
         public void CellInWorldspace()
         {
             WarmupSkyrim.Init();
-            var mod = new SkyrimMod(Utility.ModKey, SkyrimRelease.SkyrimSE);
+            var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimSE);
             var worldspace = mod.Worldspaces.AddNew();
             var block = new WorldspaceBlock()
             {
@@ -232,7 +232,7 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.Same(contexts[1].Record, cell2);
             Assert.Same(contexts[2].Record, cell3);
 
-            var mod2 = new SkyrimMod(Utility.ModKey2, SkyrimRelease.SkyrimSE);
+            var mod2 = new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimSE);
             var cell2Override = contexts[1].GetOrAddAsOverride(mod2);
             Assert.Equal(cell2.FormKey, cell2Override.FormKey);
             mod2.Worldspaces.Should().HaveCount(1);
@@ -246,7 +246,7 @@ namespace Mutagen.Bethesda.UnitTests
         public void PlacedInWorldspace()
         {
             WarmupSkyrim.Init();
-            var mod = new SkyrimMod(Utility.ModKey, SkyrimRelease.SkyrimSE);
+            var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimSE);
             var worldspace = mod.Worldspaces.AddNew();
             var block = new WorldspaceBlock()
             {
@@ -292,7 +292,7 @@ namespace Mutagen.Bethesda.UnitTests
             var contexts = mod.EnumerateMajorRecordContexts<IPlacedObject, IPlacedObjectGetter>(linkCache: cache).ToArray();
             contexts.Should().HaveCount(1);
 
-            var mod2 = new SkyrimMod(Utility.ModKey2, SkyrimRelease.SkyrimSE);
+            var mod2 = new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimSE);
             var placedObjOverride = contexts[0].GetOrAddAsOverride(mod2);
             Assert.Equal(placedObj.FormKey, placedObjOverride.FormKey);
             mod2.Worldspaces.Should().HaveCount(1);
@@ -307,7 +307,7 @@ namespace Mutagen.Bethesda.UnitTests
         public void IPlacedInWorldspace()
         {
             WarmupSkyrim.Init();
-            var mod = new SkyrimMod(Utility.ModKey, SkyrimRelease.SkyrimSE);
+            var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimSE);
             var worldspace = mod.Worldspaces.AddNew();
             var block = new WorldspaceBlock()
             {
@@ -353,7 +353,7 @@ namespace Mutagen.Bethesda.UnitTests
             var contexts = mod.EnumerateMajorRecordContexts<IPlaced, IPlacedGetter>(linkCache: cache).ToArray();
             Assert.Equal(2, contexts.Length);
 
-            var mod2 = new SkyrimMod(Utility.ModKey2, SkyrimRelease.SkyrimSE);
+            var mod2 = new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimSE);
             var placedNpcOverride = contexts[0].GetOrAddAsOverride(mod2);
             var placedObjOverride = contexts[1].GetOrAddAsOverride(mod2);
             Assert.Equal(placedNpc.FormKey, placedNpcOverride.FormKey);
@@ -373,7 +373,7 @@ namespace Mutagen.Bethesda.UnitTests
 
             // Construct base mod
             const string Mod1Name = "Mod1";
-            var mod = new SkyrimMod(Utility.ModKey, SkyrimRelease.SkyrimSE);
+            var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimSE);
             var worldspace = mod.Worldspaces.AddNew();
             worldspace.EditorID = Mod1Name;
             var block = new WorldspaceBlock()
@@ -400,7 +400,7 @@ namespace Mutagen.Bethesda.UnitTests
 
             // Override cell in 2nd mod
             const string Mod2Name = "Mod2";
-            var mod2 = new SkyrimMod(Utility.ModKey2, SkyrimRelease.SkyrimSE);
+            var mod2 = new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimSE);
             var worldspace2 = new Worldspace(worldspace.FormKey, SkyrimRelease.SkyrimSE);
             worldspace2.EditorID = Mod2Name;
             mod2.Worldspaces.Add(worldspace2);
@@ -424,7 +424,7 @@ namespace Mutagen.Bethesda.UnitTests
 
             // Override worldspace in 3rd mod
             const string Mod3Name = "Mod3";
-            var mod3 = new SkyrimMod(Utility.ModKey3, SkyrimRelease.SkyrimSE);
+            var mod3 = new SkyrimMod(Utility.PluginModKey3, SkyrimRelease.SkyrimSE);
             var worldspace3 = new Worldspace(worldspace.FormKey, SkyrimRelease.SkyrimSE);
             worldspace3.EditorID = Mod3Name;
             mod3.Worldspaces.Add(worldspace3);
@@ -436,7 +436,7 @@ namespace Mutagen.Bethesda.UnitTests
             var contexts = mod.EnumerateMajorRecordContexts<IPlaced, IPlacedGetter>(linkCache: cache).ToArray();
             contexts.Should().HaveCount(1);
 
-            var mod4 = new SkyrimMod(Utility.ModKey4, SkyrimRelease.SkyrimSE);
+            var mod4 = new SkyrimMod(Utility.PluginModKey4, SkyrimRelease.SkyrimSE);
             var placedObjOverride = contexts[0].GetOrAddAsOverride(mod4);
             placedObjOverride.EditorID.Should().BeEquivalentTo(Mod1Name);
             var cellOverride = mod4.Worldspaces.First().SubCells.First().Items.First().Items.First();
@@ -449,7 +449,7 @@ namespace Mutagen.Bethesda.UnitTests
         public void SetModKeys()
         {
             WarmupSkyrim.Init();
-            var mod = new SkyrimMod(Utility.ModKey, SkyrimRelease.SkyrimSE);
+            var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimSE);
             var worldspace = mod.Worldspaces.AddNew();
             var block = new WorldspaceBlock()
             {
@@ -476,14 +476,14 @@ namespace Mutagen.Bethesda.UnitTests
             var cache = mod.ToImmutableLinkCache();
             var contexts = mod.EnumerateMajorRecordContexts<IPlacedObject, IPlacedObjectGetter>(linkCache: cache).ToArray();
             contexts.Should().HaveCount(1);
-            contexts[0].ModKey.Should().BeEquivalentTo(Utility.ModKey);
+            contexts[0].ModKey.Should().BeEquivalentTo(Utility.PluginModKey);
         }
 
         [Fact]
         public void ParentRefs()
         {
             WarmupSkyrim.Init();
-            var mod = new SkyrimMod(Utility.ModKey, SkyrimRelease.SkyrimSE);
+            var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimSE);
             var worldspace = mod.Worldspaces.AddNew();
             var block = new WorldspaceBlock()
             {

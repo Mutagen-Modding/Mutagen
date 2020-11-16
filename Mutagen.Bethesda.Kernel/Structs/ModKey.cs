@@ -292,6 +292,9 @@ namespace Mutagen.Bethesda
             }
             return -1;
         }
+
+        private static readonly Comparer<ModKey> _byTypeComparer = Comparer<ModKey>.Create((x, y) => x.Type.CompareTo(y.Type));
+        public static Comparer<ModKey> ByTypeComparer => _byTypeComparer;
         #endregion
     }
 }

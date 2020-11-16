@@ -20,7 +20,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             foreach (var release in EnumExt.GetValues<GameRelease>())
             {
-                LoadOrder.HasEnabledMarkers(release);
+                PluginListings.HasEnabledMarkers(release);
             }
         }
 

@@ -25,8 +25,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Loqui" Version="1.5.12" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.6.3" />
+    <PackageReference Include="Loqui" Version="1.5.13" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.6.5" />
     <PackageReference Include="NuGetizer" Version="0.4.10">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -89,10 +89,12 @@
     <Compile Include="Links\ImmutableLoadOrderLinkCache.cs" />
     <Compile Include="Links\MutableModLinkCache.cs" />
     <Compile Include="Links\MutableLoadOrderLinkCache.cs" />
+    <Compile Include="Load Order\CreationClubListings.cs" />
     <Compile Include="Load Order\LoadOrder.cs" />
     <Compile Include="Extensions\OverrideMixIns.cs" />
     <Compile Include="Load Order\LoadOrderListing.cs" />
     <Compile Include="Load Order\LoadOrderTimestampComparer.cs" />
+    <Compile Include="Load Order\PluginListings.cs" />
     <Compile Include="Records\RecordTypeInts.cs" />
     <Compile Include="Records\RecordTypes.cs" />
     <Compile Include="Streams\WritingBundle.cs" />

@@ -52,11 +52,11 @@ namespace Mutagen.Bethesda.UnitTests
                     Utility.Edid2,
                     Utility.Form2.ToString(),
                 });
-            var mod = new OblivionMod(Utility.ModKey);
+            var mod = new OblivionMod(Utility.PluginModKey);
             var allocator = TextFileFormKeyAllocator.FromFile(mod, file.File.Path);
             var formID = allocator.GetNextFormKey();
             Assert.Equal(nextID, formID.ID);
-            Assert.Equal(Utility.ModKey, formID.ModKey);
+            Assert.Equal(Utility.PluginModKey, formID.ModKey);
             formID = allocator.GetNextFormKey(Utility.Edid1);
             Assert.Equal(formID, Utility.Form1);
             formID = allocator.GetNextFormKey(Utility.Edid2);
@@ -77,11 +77,11 @@ namespace Mutagen.Bethesda.UnitTests
                 file.File.Path,
                 nextID,
                 list);
-            var mod = new OblivionMod(Utility.ModKey);
+            var mod = new OblivionMod(Utility.PluginModKey);
             var allocator = TextFileFormKeyAllocator.FromFile(mod, file.File.Path);
             var formID = allocator.GetNextFormKey();
             Assert.Equal(nextID, formID.ID);
-            Assert.Equal(Utility.ModKey, formID.ModKey);
+            Assert.Equal(Utility.PluginModKey, formID.ModKey);
             formID = allocator.GetNextFormKey(Utility.Edid1);
             Assert.Equal(formID, Utility.Form1);
             formID = allocator.GetNextFormKey(Utility.Edid2);

@@ -17,11 +17,11 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public static void TypicalLinksLocate()
         {
-            SkyrimMod sourceMod = new SkyrimMod(Utility.ModKey, SkyrimRelease.SkyrimSE);
+            SkyrimMod sourceMod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimSE);
             var race = sourceMod.Races.AddNew();
             using var cleanup = Linking_ImmutableOverlay_Tests.ConvertModToOverlay(sourceMod, out var sourceModGetter);
             var cache = sourceModGetter.ToImmutableLinkCache();
-            var otherMod = new SkyrimMod(Utility.ModKey2, SkyrimRelease.SkyrimSE);
+            var otherMod = new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimSE);
             var npc = otherMod.Npcs.AddNew();
             npc.Race = race;
             Assert.True(npc.Race.TryResolve(cache, out var _));
@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public static void FormLinkListCovariance()
         {
-            SkyrimMod sourceMod = new SkyrimMod(Utility.ModKey, SkyrimRelease.SkyrimSE);
+            SkyrimMod sourceMod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimSE);
             Armor armor = sourceMod.Armors.AddNew();
 
             void Tester(IReadOnlyList<IFormLink<IKeywordGetter>> tester)
@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public static void CleanFormLinkListAPI()
         {
-            SkyrimMod sourceMod = new SkyrimMod(Utility.ModKey, SkyrimRelease.SkyrimSE);
+            SkyrimMod sourceMod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimSE);
             FormKey key = sourceMod.GetNextFormKey();
             Keyword keyword = sourceMod.Keywords.AddNew();
             Armor armor = sourceMod.Armors.AddNew();

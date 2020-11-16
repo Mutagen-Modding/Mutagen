@@ -1,19 +1,9 @@
-using Loqui;
-using Loqui.Xml;
-using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
-using Mutagen.Bethesda.Oblivion;
-using Mutagen.Bethesda.Tests;
 using Newtonsoft.Json;
 using Noggog;
-using Noggog.Utility;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reactive.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Tests
