@@ -233,14 +233,13 @@ namespace Mutagen.Bethesda.Skyrim
                                         if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointModifyValue)} had EPF2 unexpectedly");
                                         if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointModifyValue)} had EPF3 unexpectedly");
                                         if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointAddLeveledItem)} did not have expected EPFT record");
-                                        if (!epfd.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointAddLeveledItem)} did not have expected EPFD record");
                                         if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.LeveledItem)
                                         {
                                             throw new ArgumentException($"{nameof(PerkEntryPointAddLeveledItem)} did not have expected parameter type flag: {epft.Value[0]}");
                                         }
                                         entryPointEffect = new PerkEntryPointAddLeveledItem()
                                         {
-                                            Item = FormKeyBinaryTranslation.Instance.Parse(epfd.Value, stream.MetaData.MasterReferences!)
+                                            Item = epfd.HasValue ? FormKeyBinaryTranslation.Instance.Parse(epfd.Value, stream.MetaData.MasterReferences!) : FormKey.Null
                                         };
                                         break;
                                     case APerkEntryPointEffect.FunctionType.AddActivateChoice:
@@ -265,42 +264,39 @@ namespace Mutagen.Bethesda.Skyrim
                                         if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointModifyValue)} had EPF2 unexpectedly");
                                         if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointModifyValue)} had EPF3 unexpectedly");
                                         if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointSelectSpell)} did not have expected EPFT record");
-                                        if (!epfd.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointSelectSpell)} did not have expected EPFD record");
                                         if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.Spell)
                                         {
                                             throw new ArgumentException($"{nameof(PerkEntryPointSelectSpell)} did not have expected parameter type flag: {epft.Value[0]}");
                                         }
                                         entryPointEffect = new PerkEntryPointSelectSpell()
                                         {
-                                            Spell = FormKeyBinaryTranslation.Instance.Parse(epfd.Value, stream.MetaData.MasterReferences!),
+                                            Spell = epfd.HasValue ? FormKeyBinaryTranslation.Instance.Parse(epfd.Value, stream.MetaData.MasterReferences!) : FormKey.Null,
                                         };
                                         break;
                                     case APerkEntryPointEffect.FunctionType.SelectText:
                                         if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointModifyValue)} had EPF2 unexpectedly");
                                         if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointModifyValue)} had EPF3 unexpectedly");
                                         if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointSelectText)} did not have expected EPFT record");
-                                        if (!epfd.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointSelectText)} did not have expected EPFD record");
                                         if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.String)
                                         {
                                             throw new ArgumentException($"{nameof(PerkEntryPointSelectText)} did not have expected parameter type flag: {epft.Value[0]}");
                                         }
                                         entryPointEffect = new PerkEntryPointSelectText()
                                         {
-                                            Text = BinaryStringUtility.ProcessWholeToZString(epfd.Value)
+                                            Text = epfd.HasValue ? BinaryStringUtility.ProcessWholeToZString(epfd.Value) : string.Empty
                                         };
                                         break;
                                     case APerkEntryPointEffect.FunctionType.SetText:
                                         if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointModifyValue)} had EPF2 unexpectedly");
                                         if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointModifyValue)} had EPF3 unexpectedly");
                                         if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointSetText)} did not have expected EPFT record");
-                                        if (!epfd.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointSetText)} did not have expected EPFD record");
                                         if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.LString)
                                         {
                                             throw new ArgumentException($"{nameof(PerkEntryPointSetText)} did not have expected parameter type flag: {epft.Value[0]}");
                                         }
                                         entryPointEffect = new PerkEntryPointSetText()
                                         {
-                                            Text = StringBinaryTranslation.Instance.Parse(epfd.Value, StringsSource.Normal, stream.MetaData.StringsLookup!),
+                                            Text = epfd.HasValue ? StringBinaryTranslation.Instance.Parse(epfd.Value, StringsSource.Normal, stream.MetaData.StringsLookup!) : (TranslatedString)string.Empty,
                                         };
                                         break;
                                     default:
