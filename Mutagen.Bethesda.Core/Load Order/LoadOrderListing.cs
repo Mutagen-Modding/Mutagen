@@ -38,5 +38,27 @@ namespace Mutagen.Bethesda
         {
             return new LoadOrderListing(modKey, enabled: true);
         }
+
+        public static LoadOrderListing FromString(ReadOnlySpan<char> str, bool enabledMarkerProcessing)
+        {
+            str = str.Trim();
+            bool enabled = true;
+            if (enabledMarkerProcessing)
+            {
+                if (str[0] == '*')
+                {
+                    str = str[1..];
+                }
+                else
+                {
+                    enabled = false;
+                }
+            }
+            if (!ModKey.TryFromNameAndExtension(str, out var key))
+            {
+                throw new ArgumentException($"Load order file had malformed line: {str.ToString()}");
+            }
+            return new LoadOrderListing(key, enabled);
+        }
     }
 }
