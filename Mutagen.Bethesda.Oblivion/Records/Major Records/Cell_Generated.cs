@@ -3053,8 +3053,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 parent: curContext,
                                 getter: (m, r) =>
                                 {
+                                    var baseRec = getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey));
+                                    if (baseRec.PathGrid != null) return baseRec.PathGrid;
                                     var copy = (PathGrid)((IPathGridGetter)r).DeepCopy(ModContextExt.PathGridCopyMask);
-                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).PathGrid = copy;
+                                    baseRec.PathGrid = copy;
                                     return copy;
                                 });
                         }
@@ -3073,8 +3075,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 parent: curContext,
                                 getter: (m, r) =>
                                 {
+                                    var baseRec = getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey));
+                                    if (baseRec.Landscape != null) return baseRec.Landscape;
                                     var copy = (Landscape)((ILandscapeGetter)r).DeepCopy(ModContextExt.LandscapeCopyMask);
-                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).Landscape = copy;
+                                    baseRec.Landscape = copy;
                                     return copy;
                                 });
                         }

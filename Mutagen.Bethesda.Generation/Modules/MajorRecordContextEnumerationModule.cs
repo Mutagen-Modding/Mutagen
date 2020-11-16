@@ -519,8 +519,10 @@ namespace Mutagen.Bethesda.Generation
                             subFg.AppendLine($"getter: (m, r) =>");
                             using (new BraceWrapper(subFg))
                             {
+                                subFg.AppendLine($"var baseRec = getter(m, linkCache.Lookup<{obj.Interface(getter: true)}>(obj.FormKey));");
+                                subFg.AppendLine($"if (baseRec.{loqui.Name} != null) return baseRec.{loqui.Name};");
                                 subFg.AppendLine($"var copy = ({loqui.TypeName()})(({loqui.Interface(getter: true)})r).DeepCopy(ModContextExt.{loqui.TargetObjectGeneration.Name}CopyMask);");
-                                subFg.AppendLine($"getter(m, linkCache.Lookup<{obj.Interface(getter: true)}>(obj.FormKey)).{loqui.Name} = copy;");
+                                subFg.AppendLine($"baseRec.{loqui.Name} = copy;");
                                 subFg.AppendLine($"return copy;");
                             }
                         });

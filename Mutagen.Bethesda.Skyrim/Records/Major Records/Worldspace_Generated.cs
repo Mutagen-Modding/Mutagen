@@ -3783,8 +3783,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 parent: curContext,
                                 getter: (m, r) =>
                                 {
+                                    var baseRec = getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey));
+                                    if (baseRec.TopCell != null) return baseRec.TopCell;
                                     var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
-                                    getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).TopCell = copy;
+                                    baseRec.TopCell = copy;
                                     return copy;
                                 });
                             foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
@@ -3796,8 +3798,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
+                                    var baseRec = getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey));
+                                    if (baseRec.TopCell != null) return baseRec.TopCell;
                                     var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
-                                    getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).TopCell = copy;
+                                    baseRec.TopCell = copy;
                                     return copy;
                                 }))
                             {
@@ -3848,8 +3852,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
+                                    var baseRec = getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey));
+                                    if (baseRec.TopCell != null) return baseRec.TopCell;
                                     var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
-                                    getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).TopCell = copy;
+                                    baseRec.TopCell = copy;
                                     return copy;
                                 }))
                             {
@@ -3885,8 +3891,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
+                                    var baseRec = getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey));
+                                    if (baseRec.TopCell != null) return baseRec.TopCell;
                                     var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
-                                    getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).TopCell = copy;
+                                    baseRec.TopCell = copy;
                                     return copy;
                                 }))
                             {
@@ -3922,8 +3930,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
+                                    var baseRec = getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey));
+                                    if (baseRec.TopCell != null) return baseRec.TopCell;
                                     var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
-                                    getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).TopCell = copy;
+                                    baseRec.TopCell = copy;
                                     return copy;
                                 }))
                             {
@@ -3959,8 +3969,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
+                                    var baseRec = getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey));
+                                    if (baseRec.TopCell != null) return baseRec.TopCell;
                                     var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
-                                    getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).TopCell = copy;
+                                    baseRec.TopCell = copy;
                                     return copy;
                                 }))
                             {
@@ -3996,8 +4008,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
+                                    var baseRec = getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey));
+                                    if (baseRec.TopCell != null) return baseRec.TopCell;
                                     var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
-                                    getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).TopCell = copy;
+                                    baseRec.TopCell = copy;
                                     return copy;
                                 }))
                             {
@@ -4048,8 +4062,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
+                                    var baseRec = getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey));
+                                    if (baseRec.TopCell != null) return baseRec.TopCell;
                                     var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
-                                    getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).TopCell = copy;
+                                    baseRec.TopCell = copy;
                                     return copy;
                                 }))
                             {
@@ -4085,8 +4101,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
+                                    var baseRec = getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey));
+                                    if (baseRec.TopCell != null) return baseRec.TopCell;
                                     var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
-                                    getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).TopCell = copy;
+                                    baseRec.TopCell = copy;
                                     return copy;
                                 }))
                             {
@@ -4122,8 +4140,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
+                                    var baseRec = getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey));
+                                    if (baseRec.TopCell != null) return baseRec.TopCell;
                                     var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
-                                    getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).TopCell = copy;
+                                    baseRec.TopCell = copy;
                                     return copy;
                                 }))
                             {
@@ -4159,8 +4179,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
+                                    var baseRec = getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey));
+                                    if (baseRec.TopCell != null) return baseRec.TopCell;
                                     var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
-                                    getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).TopCell = copy;
+                                    baseRec.TopCell = copy;
                                     return copy;
                                 }))
                             {
@@ -4196,8 +4218,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
+                                    var baseRec = getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey));
+                                    if (baseRec.TopCell != null) return baseRec.TopCell;
                                     var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
-                                    getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).TopCell = copy;
+                                    baseRec.TopCell = copy;
                                     return copy;
                                 }))
                             {
@@ -4233,8 +4257,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 throwIfUnknown: false,
                                 getter: (m, r) =>
                                 {
+                                    var baseRec = getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey));
+                                    if (baseRec.TopCell != null) return baseRec.TopCell;
                                     var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
-                                    getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey)).TopCell = copy;
+                                    baseRec.TopCell = copy;
                                     return copy;
                                 }))
                             {
