@@ -142,7 +142,7 @@ namespace Mutagen.Bethesda
                 major = default!;
                 return false;
             }
-            if (cache.TryLookup<TMajor>(this.FormKey, out var majorRec))
+            if (cache.TryResolve<TMajor>(this.FormKey, out var majorRec))
             {
                 major = majorRec;
                 return true;

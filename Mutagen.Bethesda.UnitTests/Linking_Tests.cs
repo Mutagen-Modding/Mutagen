@@ -54,22 +54,22 @@ namespace Mutagen.Bethesda.UnitTests
             var package = GetLinkCache(mod);
 
             // Test query fails
-            Assert.False(package.TryLookup(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup(FormKey.Null, out var _));
-            Assert.False(package.TryLookup<IMajorRecordCommonGetter>(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup<IMajorRecordCommonGetter>(FormKey.Null, out var _));
-            Assert.False(package.TryLookup<ISkyrimMajorRecordGetter>(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup<ISkyrimMajorRecordGetter>(FormKey.Null, out var _));
-            Assert.False(package.TryLookup<IObjectEffectGetter>(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup<IObjectEffectGetter>(FormKey.Null, out var _));
-            Assert.False(package.TryLookup<IObjectEffect>(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup<IObjectEffect>(FormKey.Null, out var _));
-            Assert.False(package.TryLookup<ObjectEffect>(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup<ObjectEffect>(FormKey.Null, out var _));
-            Assert.False(package.TryLookup<IEffectRecord>(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup<IEffectRecord>(FormKey.Null, out var _));
-            Assert.False(package.TryLookup<IEffectRecordGetter>(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup<IEffectRecordGetter>(FormKey.Null, out var _));
+            Assert.False(package.TryResolve(UnusedFormKey, out var _));
+            Assert.False(package.TryResolve(FormKey.Null, out var _));
+            Assert.False(package.TryResolve<IMajorRecordCommonGetter>(UnusedFormKey, out var _));
+            Assert.False(package.TryResolve<IMajorRecordCommonGetter>(FormKey.Null, out var _));
+            Assert.False(package.TryResolve<ISkyrimMajorRecordGetter>(UnusedFormKey, out var _));
+            Assert.False(package.TryResolve<ISkyrimMajorRecordGetter>(FormKey.Null, out var _));
+            Assert.False(package.TryResolve<IObjectEffectGetter>(UnusedFormKey, out var _));
+            Assert.False(package.TryResolve<IObjectEffectGetter>(FormKey.Null, out var _));
+            Assert.False(package.TryResolve<IObjectEffect>(UnusedFormKey, out var _));
+            Assert.False(package.TryResolve<IObjectEffect>(FormKey.Null, out var _));
+            Assert.False(package.TryResolve<ObjectEffect>(UnusedFormKey, out var _));
+            Assert.False(package.TryResolve<ObjectEffect>(FormKey.Null, out var _));
+            Assert.False(package.TryResolve<IEffectRecord>(UnusedFormKey, out var _));
+            Assert.False(package.TryResolve<IEffectRecord>(FormKey.Null, out var _));
+            Assert.False(package.TryResolve<IEffectRecordGetter>(UnusedFormKey, out var _));
+            Assert.False(package.TryResolve<IEffectRecordGetter>(FormKey.Null, out var _));
         }
 
         [Fact]
@@ -81,22 +81,22 @@ namespace Mutagen.Bethesda.UnitTests
             var package = GetLinkCache(mod);
 
             // Test query fails
-            Assert.False(package.TryLookup(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup(FormKey.Null, out var _));
-            Assert.False(package.TryLookup<IMajorRecordCommonGetter>(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup<IMajorRecordCommonGetter>(FormKey.Null, out var _));
-            Assert.False(package.TryLookup<ISkyrimMajorRecordGetter>(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup<ISkyrimMajorRecordGetter>(FormKey.Null, out var _));
-            Assert.False(package.TryLookup<IObjectEffectGetter>(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup<IObjectEffectGetter>(FormKey.Null, out var _));
-            Assert.False(package.TryLookup<IObjectEffect>(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup<IObjectEffect>(FormKey.Null, out var _));
-            Assert.False(package.TryLookup<ObjectEffect>(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup<ObjectEffect>(FormKey.Null, out var _));
-            Assert.False(package.TryLookup<IEffectRecord>(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup<IEffectRecord>(FormKey.Null, out var _));
-            Assert.False(package.TryLookup<IEffectRecordGetter>(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup<IEffectRecordGetter>(FormKey.Null, out var _));
+            Assert.False(package.TryResolve(UnusedFormKey, out var _));
+            Assert.False(package.TryResolve(FormKey.Null, out var _));
+            Assert.False(package.TryResolve<IMajorRecordCommonGetter>(UnusedFormKey, out var _));
+            Assert.False(package.TryResolve<IMajorRecordCommonGetter>(FormKey.Null, out var _));
+            Assert.False(package.TryResolve<ISkyrimMajorRecordGetter>(UnusedFormKey, out var _));
+            Assert.False(package.TryResolve<ISkyrimMajorRecordGetter>(FormKey.Null, out var _));
+            Assert.False(package.TryResolve<IObjectEffectGetter>(UnusedFormKey, out var _));
+            Assert.False(package.TryResolve<IObjectEffectGetter>(FormKey.Null, out var _));
+            Assert.False(package.TryResolve<IObjectEffect>(UnusedFormKey, out var _));
+            Assert.False(package.TryResolve<IObjectEffect>(FormKey.Null, out var _));
+            Assert.False(package.TryResolve<ObjectEffect>(UnusedFormKey, out var _));
+            Assert.False(package.TryResolve<ObjectEffect>(FormKey.Null, out var _));
+            Assert.False(package.TryResolve<IEffectRecord>(UnusedFormKey, out var _));
+            Assert.False(package.TryResolve<IEffectRecord>(FormKey.Null, out var _));
+            Assert.False(package.TryResolve<IEffectRecordGetter>(UnusedFormKey, out var _));
+            Assert.False(package.TryResolve<IEffectRecordGetter>(FormKey.Null, out var _));
         }
 
         [Fact]
@@ -110,79 +110,79 @@ namespace Mutagen.Bethesda.UnitTests
 
             // Do linked interfaces first, as this tests a specific edge case
             {
-                Assert.True(package.TryLookup<IEffectRecordGetter>(objEffect1.FormKey, out var rec));
+                Assert.True(package.TryResolve<IEffectRecordGetter>(objEffect1.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             }
             {
-                Assert.True(package.TryLookup<IEffectRecordGetter>(objEffect2.FormKey, out var rec));
+                Assert.True(package.TryResolve<IEffectRecordGetter>(objEffect2.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             }
 
             {
-                Assert.True(package.TryLookup(objEffect1.FormKey, out var rec));
+                Assert.True(package.TryResolve(objEffect1.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             }
             {
-                Assert.True(package.TryLookup(objEffect2.FormKey, out var rec));
+                Assert.True(package.TryResolve(objEffect2.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             }
             {
-                Assert.True(package.TryLookup<IMajorRecordCommonGetter>(objEffect1.FormKey, out var rec));
+                Assert.True(package.TryResolve<IMajorRecordCommonGetter>(objEffect1.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             }
             {
-                Assert.True(package.TryLookup<IMajorRecordCommonGetter>(objEffect2.FormKey, out var rec));
+                Assert.True(package.TryResolve<IMajorRecordCommonGetter>(objEffect2.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             }
             {
-                Assert.True(package.TryLookup<ISkyrimMajorRecordGetter>(objEffect1.FormKey, out var rec));
+                Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(objEffect1.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             }
             {
-                Assert.True(package.TryLookup<ISkyrimMajorRecordGetter>(objEffect2.FormKey, out var rec));
+                Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(objEffect2.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             }
             {
-                Assert.True(package.TryLookup<IObjectEffectGetter>(objEffect1.FormKey, out var rec));
+                Assert.True(package.TryResolve<IObjectEffectGetter>(objEffect1.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             }
             {
-                Assert.True(package.TryLookup<IObjectEffectGetter>(objEffect2.FormKey, out var rec));
+                Assert.True(package.TryResolve<IObjectEffectGetter>(objEffect2.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             }
             if (ReadOnly)
             {
-                Assert.False(package.TryLookup<ObjectEffect>(objEffect1.FormKey, out var _));
-                Assert.False(package.TryLookup<ObjectEffect>(objEffect2.FormKey, out var _));
-                Assert.False(package.TryLookup<IObjectEffect>(objEffect1.FormKey, out var _));
-                Assert.False(package.TryLookup<IObjectEffect>(objEffect2.FormKey, out var _));
-                Assert.False(package.TryLookup<IEffectRecord>(objEffect1.FormKey, out var _));
-                Assert.False(package.TryLookup<IEffectRecord>(objEffect2.FormKey, out var _));
+                Assert.False(package.TryResolve<ObjectEffect>(objEffect1.FormKey, out var _));
+                Assert.False(package.TryResolve<ObjectEffect>(objEffect2.FormKey, out var _));
+                Assert.False(package.TryResolve<IObjectEffect>(objEffect1.FormKey, out var _));
+                Assert.False(package.TryResolve<IObjectEffect>(objEffect2.FormKey, out var _));
+                Assert.False(package.TryResolve<IEffectRecord>(objEffect1.FormKey, out var _));
+                Assert.False(package.TryResolve<IEffectRecord>(objEffect2.FormKey, out var _));
             }
             else
             {
                 {
-                    Assert.True(package.TryLookup<ObjectEffect>(objEffect1.FormKey, out var rec));
+                    Assert.True(package.TryResolve<ObjectEffect>(objEffect1.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, objEffect1.FormKey);
                 }
                 {
-                    Assert.True(package.TryLookup<ObjectEffect>(objEffect2.FormKey, out var rec));
+                    Assert.True(package.TryResolve<ObjectEffect>(objEffect2.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, objEffect2.FormKey);
                 }
                 {
-                    Assert.True(package.TryLookup<IObjectEffect>(objEffect1.FormKey, out var rec));
+                    Assert.True(package.TryResolve<IObjectEffect>(objEffect1.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, objEffect1.FormKey);
                 }
                 {
-                    Assert.True(package.TryLookup<IObjectEffect>(objEffect2.FormKey, out var rec));
+                    Assert.True(package.TryResolve<IObjectEffect>(objEffect2.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, objEffect2.FormKey);
                 }
                 {
-                    Assert.True(package.TryLookup<IEffectRecord>(objEffect1.FormKey, out var rec));
+                    Assert.True(package.TryResolve<IEffectRecord>(objEffect1.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, objEffect1.FormKey);
                 }
                 {
-                    Assert.True(package.TryLookup<IEffectRecord>(objEffect2.FormKey, out var rec));
+                    Assert.True(package.TryResolve<IEffectRecord>(objEffect2.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, objEffect2.FormKey);
                 }
             }
@@ -194,13 +194,13 @@ namespace Mutagen.Bethesda.UnitTests
             var wrapper = Oblivion.OblivionMod.CreateFromBinaryOverlay(Utility.OblivionTestMod);
             var package = GetLinkCache(wrapper);
             {
-                Assert.True(package.TryLookup<Oblivion.INpcGetter>(TestFileFormKey, out var rec));
+                Assert.True(package.TryResolve<Oblivion.INpcGetter>(TestFileFormKey, out var rec));
             }
             {
-                Assert.False(package.TryLookup<Oblivion.INpc>(TestFileFormKey, out var rec));
+                Assert.False(package.TryResolve<Oblivion.INpc>(TestFileFormKey, out var rec));
             }
             {
-                Assert.False(package.TryLookup<Oblivion.Npc>(TestFileFormKey, out var rec));
+                Assert.False(package.TryResolve<Oblivion.Npc>(TestFileFormKey, out var rec));
             }
         }
         #endregion
@@ -212,12 +212,12 @@ namespace Mutagen.Bethesda.UnitTests
             var package = new LoadOrder<ISkyrimModGetter>().ToImmutableLinkCache();
 
             // Test query fails
-            Assert.False(package.TryLookup(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup(FormKey.Null, out var _));
-            Assert.False(package.TryLookup<IMajorRecordCommonGetter>(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup<IMajorRecordCommonGetter>(FormKey.Null, out var _));
-            Assert.False(package.TryLookup<ISkyrimMajorRecordGetter>(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup<ISkyrimMajorRecordGetter>(FormKey.Null, out var _));
+            Assert.False(package.TryResolve(UnusedFormKey, out var _));
+            Assert.False(package.TryResolve(FormKey.Null, out var _));
+            Assert.False(package.TryResolve<IMajorRecordCommonGetter>(UnusedFormKey, out var _));
+            Assert.False(package.TryResolve<IMajorRecordCommonGetter>(FormKey.Null, out var _));
+            Assert.False(package.TryResolve<ISkyrimMajorRecordGetter>(UnusedFormKey, out var _));
+            Assert.False(package.TryResolve<ISkyrimMajorRecordGetter>(FormKey.Null, out var _));
         }
 
         [Fact]
@@ -231,12 +231,12 @@ namespace Mutagen.Bethesda.UnitTests
             var package = GetLinkCache<ISkyrimMod, ISkyrimModGetter>(loadOrder);
 
             // Test query fails
-            Assert.False(package.TryLookup(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup(FormKey.Null, out var _));
-            Assert.False(package.TryLookup<IMajorRecordCommonGetter>(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup<IMajorRecordCommonGetter>(FormKey.Null, out var _));
-            Assert.False(package.TryLookup<ISkyrimMajorRecordGetter>(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup<ISkyrimMajorRecordGetter>(FormKey.Null, out var _));
+            Assert.False(package.TryResolve(UnusedFormKey, out var _));
+            Assert.False(package.TryResolve(FormKey.Null, out var _));
+            Assert.False(package.TryResolve<IMajorRecordCommonGetter>(UnusedFormKey, out var _));
+            Assert.False(package.TryResolve<IMajorRecordCommonGetter>(FormKey.Null, out var _));
+            Assert.False(package.TryResolve<ISkyrimMajorRecordGetter>(UnusedFormKey, out var _));
+            Assert.False(package.TryResolve<ISkyrimMajorRecordGetter>(FormKey.Null, out var _));
         }
 
         [Fact]
@@ -254,79 +254,79 @@ namespace Mutagen.Bethesda.UnitTests
 
             // Do linked interfaces first, as this tests a specific edge case
             {
-                Assert.True(package.TryLookup<IEffectRecordGetter>(objEffect1.FormKey, out var rec));
+                Assert.True(package.TryResolve<IEffectRecordGetter>(objEffect1.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             }
             {
-                Assert.True(package.TryLookup<IEffectRecordGetter>(objEffect2.FormKey, out var rec));
+                Assert.True(package.TryResolve<IEffectRecordGetter>(objEffect2.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             }
 
             {
-                Assert.True(package.TryLookup(objEffect1.FormKey, out var rec));
+                Assert.True(package.TryResolve(objEffect1.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             }
             {
-                Assert.True(package.TryLookup(objEffect2.FormKey, out var rec));
+                Assert.True(package.TryResolve(objEffect2.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             }
             {
-                Assert.True(package.TryLookup<IMajorRecordCommonGetter>(objEffect1.FormKey, out var rec));
+                Assert.True(package.TryResolve<IMajorRecordCommonGetter>(objEffect1.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             }
             {
-                Assert.True(package.TryLookup<IMajorRecordCommonGetter>(objEffect2.FormKey, out var rec));
+                Assert.True(package.TryResolve<IMajorRecordCommonGetter>(objEffect2.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             }
             {
-                Assert.True(package.TryLookup<ISkyrimMajorRecordGetter>(objEffect1.FormKey, out var rec));
+                Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(objEffect1.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             }
             {
-                Assert.True(package.TryLookup<ISkyrimMajorRecordGetter>(objEffect2.FormKey, out var rec));
+                Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(objEffect2.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             }
             {
-                Assert.True(package.TryLookup<IObjectEffectGetter>(objEffect1.FormKey, out var rec));
+                Assert.True(package.TryResolve<IObjectEffectGetter>(objEffect1.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             }
             {
-                Assert.True(package.TryLookup<IObjectEffectGetter>(objEffect2.FormKey, out var rec));
+                Assert.True(package.TryResolve<IObjectEffectGetter>(objEffect2.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             }
             if (ReadOnly)
             {
-                Assert.False(package.TryLookup<IEffectRecord>(objEffect1.FormKey, out var _));
-                Assert.False(package.TryLookup<IEffectRecord>(objEffect2.FormKey, out var _));
-                Assert.False(package.TryLookup<IObjectEffect>(objEffect1.FormKey, out var _));
-                Assert.False(package.TryLookup<IObjectEffect>(objEffect2.FormKey, out var _));
-                Assert.False(package.TryLookup<ObjectEffect>(objEffect1.FormKey, out var _));
-                Assert.False(package.TryLookup<ObjectEffect>(objEffect2.FormKey, out var _));
+                Assert.False(package.TryResolve<IEffectRecord>(objEffect1.FormKey, out var _));
+                Assert.False(package.TryResolve<IEffectRecord>(objEffect2.FormKey, out var _));
+                Assert.False(package.TryResolve<IObjectEffect>(objEffect1.FormKey, out var _));
+                Assert.False(package.TryResolve<IObjectEffect>(objEffect2.FormKey, out var _));
+                Assert.False(package.TryResolve<ObjectEffect>(objEffect1.FormKey, out var _));
+                Assert.False(package.TryResolve<ObjectEffect>(objEffect2.FormKey, out var _));
             }
             else
             {
                 {
-                    Assert.True(package.TryLookup<IEffectRecord>(objEffect1.FormKey, out var rec));
+                    Assert.True(package.TryResolve<IEffectRecord>(objEffect1.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, objEffect1.FormKey);
                 }
                 {
-                    Assert.True(package.TryLookup<IEffectRecord>(objEffect2.FormKey, out var rec));
+                    Assert.True(package.TryResolve<IEffectRecord>(objEffect2.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, objEffect2.FormKey);
                 }
                 {
-                    Assert.True(package.TryLookup<IObjectEffect>(objEffect1.FormKey, out var rec));
+                    Assert.True(package.TryResolve<IObjectEffect>(objEffect1.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, objEffect1.FormKey);
                 }
                 {
-                    Assert.True(package.TryLookup<IObjectEffect>(objEffect2.FormKey, out var rec));
+                    Assert.True(package.TryResolve<IObjectEffect>(objEffect2.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, objEffect2.FormKey);
                 }
                 {
-                    Assert.True(package.TryLookup<ObjectEffect>(objEffect1.FormKey, out var rec));
+                    Assert.True(package.TryResolve<ObjectEffect>(objEffect1.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, objEffect1.FormKey);
                 }
                 {
-                    Assert.True(package.TryLookup<ObjectEffect>(objEffect2.FormKey, out var rec));
+                    Assert.True(package.TryResolve<ObjectEffect>(objEffect2.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, objEffect2.FormKey);
                 }
             }
@@ -350,79 +350,79 @@ namespace Mutagen.Bethesda.UnitTests
 
             // Do linked interfaces first, as this tests a specific edge case
             {
-                Assert.True(package.TryLookup<IEffectRecordGetter>(objEffect1.FormKey, out var rec));
+                Assert.True(package.TryResolve<IEffectRecordGetter>(objEffect1.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             }
             {
-                Assert.True(package.TryLookup<IEffectRecordGetter>(objEffect2.FormKey, out var rec));
+                Assert.True(package.TryResolve<IEffectRecordGetter>(objEffect2.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             }
 
             {
-                Assert.True(package.TryLookup(objEffect1.FormKey, out var rec));
+                Assert.True(package.TryResolve(objEffect1.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             }
             {
-                Assert.True(package.TryLookup(objEffect2.FormKey, out var rec));
+                Assert.True(package.TryResolve(objEffect2.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             }
             {
-                Assert.True(package.TryLookup<IMajorRecordCommonGetter>(objEffect1.FormKey, out var rec));
+                Assert.True(package.TryResolve<IMajorRecordCommonGetter>(objEffect1.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             }
             {
-                Assert.True(package.TryLookup<IMajorRecordCommonGetter>(objEffect2.FormKey, out var rec));
+                Assert.True(package.TryResolve<IMajorRecordCommonGetter>(objEffect2.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             }
             {
-                Assert.True(package.TryLookup<ISkyrimMajorRecordGetter>(objEffect1.FormKey, out var rec));
+                Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(objEffect1.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             }
             {
-                Assert.True(package.TryLookup<ISkyrimMajorRecordGetter>(objEffect2.FormKey, out var rec));
+                Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(objEffect2.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             }
             {
-                Assert.True(package.TryLookup<IObjectEffectGetter>(objEffect1.FormKey, out var rec));
+                Assert.True(package.TryResolve<IObjectEffectGetter>(objEffect1.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             }
             {
-                Assert.True(package.TryLookup<IObjectEffectGetter>(objEffect2.FormKey, out var rec));
+                Assert.True(package.TryResolve<IObjectEffectGetter>(objEffect2.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             }
             if (ReadOnly)
             {
-                Assert.False(package.TryLookup<ObjectEffect>(objEffect1.FormKey, out var _));
-                Assert.False(package.TryLookup<ObjectEffect>(objEffect2.FormKey, out var _));
-                Assert.False(package.TryLookup<IObjectEffect>(objEffect1.FormKey, out var _));
-                Assert.False(package.TryLookup<IObjectEffect>(objEffect2.FormKey, out var _));
-                Assert.False(package.TryLookup<IEffectRecord>(objEffect1.FormKey, out var _));
-                Assert.False(package.TryLookup<IEffectRecord>(objEffect2.FormKey, out var _));
+                Assert.False(package.TryResolve<ObjectEffect>(objEffect1.FormKey, out var _));
+                Assert.False(package.TryResolve<ObjectEffect>(objEffect2.FormKey, out var _));
+                Assert.False(package.TryResolve<IObjectEffect>(objEffect1.FormKey, out var _));
+                Assert.False(package.TryResolve<IObjectEffect>(objEffect2.FormKey, out var _));
+                Assert.False(package.TryResolve<IEffectRecord>(objEffect1.FormKey, out var _));
+                Assert.False(package.TryResolve<IEffectRecord>(objEffect2.FormKey, out var _));
             }
             else
             {
                 {
-                    Assert.True(package.TryLookup<ObjectEffect>(objEffect1.FormKey, out var rec));
+                    Assert.True(package.TryResolve<ObjectEffect>(objEffect1.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, objEffect1.FormKey);
                 }
                 {
-                    Assert.True(package.TryLookup<ObjectEffect>(objEffect2.FormKey, out var rec));
+                    Assert.True(package.TryResolve<ObjectEffect>(objEffect2.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, objEffect2.FormKey);
                 }
                 {
-                    Assert.True(package.TryLookup<IObjectEffect>(objEffect1.FormKey, out var rec));
+                    Assert.True(package.TryResolve<IObjectEffect>(objEffect1.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, objEffect1.FormKey);
                 }
                 {
-                    Assert.True(package.TryLookup<IObjectEffect>(objEffect2.FormKey, out var rec));
+                    Assert.True(package.TryResolve<IObjectEffect>(objEffect2.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, objEffect2.FormKey);
                 }
                 {
-                    Assert.True(package.TryLookup<IEffectRecord>(objEffect1.FormKey, out var rec));
+                    Assert.True(package.TryResolve<IEffectRecord>(objEffect1.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, objEffect1.FormKey);
                 }
                 {
-                    Assert.True(package.TryLookup<IEffectRecord>(objEffect2.FormKey, out var rec));
+                    Assert.True(package.TryResolve<IEffectRecord>(objEffect2.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, objEffect2.FormKey);
                 }
             }
@@ -451,82 +451,82 @@ namespace Mutagen.Bethesda.UnitTests
 
             // Do linked interfaces first, as this tests a specific edge case
             {
-                Assert.True(package.TryLookup<IEffectRecordGetter>(overriddenRec.FormKey, out var rec));
+                Assert.True(package.TryResolve<IEffectRecordGetter>(overriddenRec.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, overrideRec.FormKey);
-                Assert.True(package.TryLookup<IEffectRecordGetter>(unoverriddenRec.FormKey, out rec));
+                Assert.True(package.TryResolve<IEffectRecordGetter>(unoverriddenRec.FormKey, out rec));
                 Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
-                Assert.True(package.TryLookup<IEffectRecordGetter>(topModRec.FormKey, out rec));
+                Assert.True(package.TryResolve<IEffectRecordGetter>(topModRec.FormKey, out rec));
                 Assert.Equal(rec.FormKey, topModRec.FormKey);
             }
 
             {
-                Assert.True(package.TryLookup(overriddenRec.FormKey, out var rec));
+                Assert.True(package.TryResolve(overriddenRec.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, overrideRec.FormKey);
-                Assert.True(package.TryLookup(unoverriddenRec.FormKey, out rec));
+                Assert.True(package.TryResolve(unoverriddenRec.FormKey, out rec));
                 Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
-                Assert.True(package.TryLookup(topModRec.FormKey, out rec));
+                Assert.True(package.TryResolve(topModRec.FormKey, out rec));
                 Assert.Equal(rec.FormKey, topModRec.FormKey);
             }
             {
-                Assert.True(package.TryLookup<IMajorRecordCommonGetter>(overriddenRec.FormKey, out var rec));
+                Assert.True(package.TryResolve<IMajorRecordCommonGetter>(overriddenRec.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, overrideRec.FormKey);
-                Assert.True(package.TryLookup<IMajorRecordCommonGetter>(unoverriddenRec.FormKey, out rec));
+                Assert.True(package.TryResolve<IMajorRecordCommonGetter>(unoverriddenRec.FormKey, out rec));
                 Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
-                Assert.True(package.TryLookup<IMajorRecordCommonGetter>(topModRec.FormKey, out rec));
+                Assert.True(package.TryResolve<IMajorRecordCommonGetter>(topModRec.FormKey, out rec));
                 Assert.Equal(rec.FormKey, topModRec.FormKey);
             }
             {
-                Assert.True(package.TryLookup<ISkyrimMajorRecordGetter>(overriddenRec.FormKey, out var rec));
+                Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(overriddenRec.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, overrideRec.FormKey);
-                Assert.True(package.TryLookup<ISkyrimMajorRecordGetter>(unoverriddenRec.FormKey, out rec));
+                Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(unoverriddenRec.FormKey, out rec));
                 Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
-                Assert.True(package.TryLookup<ISkyrimMajorRecordGetter>(topModRec.FormKey, out rec));
+                Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(topModRec.FormKey, out rec));
                 Assert.Equal(rec.FormKey, topModRec.FormKey);
             }
             {
-                Assert.True(package.TryLookup<IObjectEffectGetter>(overriddenRec.FormKey, out var rec));
+                Assert.True(package.TryResolve<IObjectEffectGetter>(overriddenRec.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, overrideRec.FormKey);
-                Assert.True(package.TryLookup<IObjectEffectGetter>(unoverriddenRec.FormKey, out rec));
+                Assert.True(package.TryResolve<IObjectEffectGetter>(unoverriddenRec.FormKey, out rec));
                 Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
-                Assert.True(package.TryLookup<IObjectEffectGetter>(topModRec.FormKey, out rec));
+                Assert.True(package.TryResolve<IObjectEffectGetter>(topModRec.FormKey, out rec));
                 Assert.Equal(rec.FormKey, topModRec.FormKey);
             }
             if (ReadOnly)
             {
-                Assert.False(package.TryLookup<IObjectEffect>(overriddenRec.FormKey, out var _));
-                Assert.False(package.TryLookup<IObjectEffect>(unoverriddenRec.FormKey, out _));
-                Assert.False(package.TryLookup<IObjectEffect>(topModRec.FormKey, out _));
-                Assert.False(package.TryLookup<ObjectEffect>(overriddenRec.FormKey, out var _));
-                Assert.False(package.TryLookup<ObjectEffect>(unoverriddenRec.FormKey, out _));
-                Assert.False(package.TryLookup<ObjectEffect>(topModRec.FormKey, out _));
-                Assert.False(package.TryLookup<IEffectRecord>(overriddenRec.FormKey, out var _));
-                Assert.False(package.TryLookup<IEffectRecord>(unoverriddenRec.FormKey, out _));
-                Assert.False(package.TryLookup<IEffectRecord>(topModRec.FormKey, out _));
+                Assert.False(package.TryResolve<IObjectEffect>(overriddenRec.FormKey, out var _));
+                Assert.False(package.TryResolve<IObjectEffect>(unoverriddenRec.FormKey, out _));
+                Assert.False(package.TryResolve<IObjectEffect>(topModRec.FormKey, out _));
+                Assert.False(package.TryResolve<ObjectEffect>(overriddenRec.FormKey, out var _));
+                Assert.False(package.TryResolve<ObjectEffect>(unoverriddenRec.FormKey, out _));
+                Assert.False(package.TryResolve<ObjectEffect>(topModRec.FormKey, out _));
+                Assert.False(package.TryResolve<IEffectRecord>(overriddenRec.FormKey, out var _));
+                Assert.False(package.TryResolve<IEffectRecord>(unoverriddenRec.FormKey, out _));
+                Assert.False(package.TryResolve<IEffectRecord>(topModRec.FormKey, out _));
             }
             else
             {
                 {
-                    Assert.True(package.TryLookup<IObjectEffect>(overriddenRec.FormKey, out var rec));
+                    Assert.True(package.TryResolve<IObjectEffect>(overriddenRec.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, overrideRec.FormKey);
-                    Assert.True(package.TryLookup<IObjectEffect>(unoverriddenRec.FormKey, out rec));
+                    Assert.True(package.TryResolve<IObjectEffect>(unoverriddenRec.FormKey, out rec));
                     Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
-                    Assert.True(package.TryLookup<IObjectEffect>(topModRec.FormKey, out rec));
+                    Assert.True(package.TryResolve<IObjectEffect>(topModRec.FormKey, out rec));
                     Assert.Equal(rec.FormKey, topModRec.FormKey);
                 }
                 {
-                    Assert.True(package.TryLookup<ObjectEffect>(overriddenRec.FormKey, out var rec));
+                    Assert.True(package.TryResolve<ObjectEffect>(overriddenRec.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, overrideRec.FormKey);
-                    Assert.True(package.TryLookup<ObjectEffect>(unoverriddenRec.FormKey, out rec));
+                    Assert.True(package.TryResolve<ObjectEffect>(unoverriddenRec.FormKey, out rec));
                     Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
-                    Assert.True(package.TryLookup<ObjectEffect>(topModRec.FormKey, out rec));
+                    Assert.True(package.TryResolve<ObjectEffect>(topModRec.FormKey, out rec));
                     Assert.Equal(rec.FormKey, topModRec.FormKey);
                 }
                 {
-                    Assert.True(package.TryLookup<IEffectRecord>(overriddenRec.FormKey, out var rec));
+                    Assert.True(package.TryResolve<IEffectRecord>(overriddenRec.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, overrideRec.FormKey);
-                    Assert.True(package.TryLookup<IEffectRecord>(unoverriddenRec.FormKey, out rec));
+                    Assert.True(package.TryResolve<IEffectRecord>(unoverriddenRec.FormKey, out rec));
                     Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
-                    Assert.True(package.TryLookup<IEffectRecord>(topModRec.FormKey, out rec));
+                    Assert.True(package.TryResolve<IEffectRecord>(topModRec.FormKey, out rec));
                     Assert.Equal(rec.FormKey, topModRec.FormKey);
                 }
             }
@@ -542,18 +542,18 @@ namespace Mutagen.Bethesda.UnitTests
             loadOrder.Add(overrideWrapper);
             var package = GetLinkCache<Oblivion.IOblivionMod, Oblivion.IOblivionModGetter>(loadOrder);
             {
-                Assert.True(package.TryLookup<Oblivion.INpcGetter>(TestFileFormKey, out var rec));
-                Assert.True(package.TryLookup<Oblivion.INpcGetter>(TestFileFormKey2, out rec));
+                Assert.True(package.TryResolve<Oblivion.INpcGetter>(TestFileFormKey, out var rec));
+                Assert.True(package.TryResolve<Oblivion.INpcGetter>(TestFileFormKey2, out rec));
                 Assert.True(rec.Name.TryGet(out var name));
                 Assert.Equal("A Name", name);
             }
             {
-                Assert.False(package.TryLookup<Oblivion.INpc>(TestFileFormKey, out var rec));
-                Assert.False(package.TryLookup<Oblivion.INpc>(TestFileFormKey2, out rec));
+                Assert.False(package.TryResolve<Oblivion.INpc>(TestFileFormKey, out var rec));
+                Assert.False(package.TryResolve<Oblivion.INpc>(TestFileFormKey2, out rec));
             }
             {
-                Assert.False(package.TryLookup<Oblivion.Npc>(TestFileFormKey, out var rec));
-                Assert.False(package.TryLookup<Oblivion.Npc>(TestFileFormKey2, out rec));
+                Assert.False(package.TryResolve<Oblivion.Npc>(TestFileFormKey, out var rec));
+                Assert.False(package.TryResolve<Oblivion.Npc>(TestFileFormKey2, out rec));
             }
         }
         #endregion

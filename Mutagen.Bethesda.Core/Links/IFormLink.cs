@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda
         public static bool TryResolve<TMajor>(this IFormLink<TMajor> link, ILinkCache cache, [MaybeNullWhen(false)] out TMajor majorRecord)
             where TMajor : class, IMajorRecordCommonGetter
         {
-            return cache.TryLookup<TMajor>(link.FormKey, out majorRecord);
+            return cache.TryResolve<TMajor>(link.FormKey, out majorRecord);
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace Mutagen.Bethesda
                 majorRecord = default;
                 return false;
             }
-            return cache.TryLookup<TMajor>(link.FormKey.Value, out majorRecord);
+            return cache.TryResolve<TMajor>(link.FormKey.Value, out majorRecord);
         }
 
         /// <summary>
@@ -150,7 +150,7 @@ namespace Mutagen.Bethesda
                 major = default;
                 return false;
             }
-            return cache.TryLookup(formLink.FormKey, out major);
+            return cache.TryResolve(formLink.FormKey, out major);
         }
 
         /// <summary>
@@ -172,7 +172,7 @@ namespace Mutagen.Bethesda
                 major = default!;
                 return false;
             }
-            return cache.TryLookup(formLink.FormKey.Value, out major);
+            return cache.TryResolve(formLink.FormKey.Value, out major);
         }
     }
 }

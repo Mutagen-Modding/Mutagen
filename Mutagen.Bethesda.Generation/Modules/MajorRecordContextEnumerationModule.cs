@@ -481,7 +481,7 @@ namespace Mutagen.Bethesda.Generation
                     fieldGen.AppendLine($"foreach (var groupItem in obj.{field.Name})");
                     using (new BraceWrapper(fieldGen))
                     {
-                        fieldGen.AppendLine($"foreach (var item in {group.GetGroupTarget().CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, {(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}, {(obj.GetObjectType() == ObjectType.Mod ? "parent: null" : "curContext")}, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.{field.Name}.GetOrAddAsOverride(linkCache.Lookup<{group.GetGroupTarget().Interface(getter: true, internalInterface: true)}>(r.FormKey))))");
+                        fieldGen.AppendLine($"foreach (var item in {group.GetGroupTarget().CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, {(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}, {(obj.GetObjectType() == ObjectType.Mod ? "parent: null" : "curContext")}, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.{field.Name}.GetOrAddAsOverride(linkCache.Resolve<{group.GetGroupTarget().Interface(getter: true, internalInterface: true)}>(r.FormKey))))");
 
                         using (new BraceWrapper(fieldGen))
                         {
@@ -519,7 +519,7 @@ namespace Mutagen.Bethesda.Generation
                             subFg.AppendLine($"getter: (m, r) =>");
                             using (new BraceWrapper(subFg))
                             {
-                                subFg.AppendLine($"var baseRec = getter(m, linkCache.Lookup<{obj.Interface(getter: true)}>(obj.FormKey));");
+                                subFg.AppendLine($"var baseRec = getter(m, linkCache.Resolve<{obj.Interface(getter: true)}>(obj.FormKey));");
                                 subFg.AppendLine($"if (baseRec.{loqui.Name} != null) return baseRec.{loqui.Name};");
                                 subFg.AppendLine($"var copy = ({loqui.TypeName()})(({loqui.Interface(getter: true)})r).DeepCopy(ModContextExt.{loqui.TargetObjectGeneration.Name}CopyMask);");
                                 subFg.AppendLine($"baseRec.{loqui.Name} = copy;");
@@ -617,7 +617,7 @@ namespace Mutagen.Bethesda.Generation
                                                 using (new BraceWrapper(subFg))
                                                 {
                                                     subFg.AppendLine($"var copy = ({contLoqui.TypeName()})(({contLoqui.Interface(getter: true)})r).DeepCopy();");
-                                                    subFg.AppendLine($"getter(m, linkCache.Lookup<{obj.Interface(getter: true)}>(obj.FormKey)).{cont.Name}.Add(copy);");
+                                                    subFg.AppendLine($"getter(m, linkCache.Resolve<{obj.Interface(getter: true)}>(obj.FormKey)).{cont.Name}.Add(copy);");
                                                     subFg.AppendLine($"return copy;");
                                                 }
                                             });

@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda
         /// <param name="majorRec">Out parameter containing the record if successful</param>
         /// <returns>True if a matching record was found</returns>
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        bool TryLookup(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec);
+        bool TryResolve(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec);
 
         /// <summary>
         /// Retrieves the record that matches the FormKey relative to the source the package was attached to.<br/>
@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda
         ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
         ///   - A setter type is requested from a getter only object.
         /// </exception>
-        bool TryLookup<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out TMajor majorRec)
+        bool TryResolve<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out TMajor majorRec)
             where TMajor : class, IMajorRecordCommonGetter;
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda
         ///   - A setter type is requested from a getter only object.
         /// </exception>
         /// <returns>True if a matching record was found</returns>
-        bool TryLookup(FormKey formKey, Type type, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec);
+        bool TryResolve(FormKey formKey, Type type, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec);
 
         /// <summary>
         /// Retrieves the record that matches the FormKey relative to the source the cache was attached to.<br/>
@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda
         /// When the FormKey cannot be found under the attached cache.<br/>
         /// </exception>
         /// <returns>True if a matching record was found</returns>
-        IMajorRecordCommonGetter Lookup(FormKey formKey);
+        IMajorRecordCommonGetter Resolve(FormKey formKey);
 
         /// <summary>
         /// Retrieves the record that matches the FormKey relative to the source the package was attached to.<br/>
@@ -97,7 +97,7 @@ namespace Mutagen.Bethesda
         /// <exception cref="KeyNotFoundException">
         /// When the FormKey having the specified Major Record type cannot be found under the attached cache.<br/>
         /// </exception>
-        IMajorRecordCommonGetter Lookup(FormKey formKey, Type type);
+        IMajorRecordCommonGetter Resolve(FormKey formKey, Type type);
 
         /// <summary>
         /// Retrieves the record that matches the FormKey relative to the source the package was attached to.
@@ -116,7 +116,7 @@ namespace Mutagen.Bethesda
         /// <exception cref="KeyNotFoundException">
         /// When the FormKey having the specified Major Record type cannot be found under the attached cache.<br/>
         /// </exception>
-        TMajor Lookup<TMajor>(FormKey formKey)
+        TMajor Resolve<TMajor>(FormKey formKey)
             where TMajor : class, IMajorRecordCommonGetter;
 
         /// <summary>

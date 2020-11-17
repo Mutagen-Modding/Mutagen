@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda
 
         /// <inheritdoc />
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        public bool TryLookup(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
+        public bool TryResolve(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
         {
             if (!_hasAny)
             {
@@ -100,10 +100,10 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public bool TryLookup<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out TMajor majorRec)
+        public bool TryResolve<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out TMajor majorRec)
             where TMajor : class, IMajorRecordCommonGetter
         {
-            if (!TryLookup(formKey, typeof(TMajor), out var commonRec))
+            if (!TryResolve(formKey, typeof(TMajor), out var commonRec))
             {
                 majorRec = default;
                 return false;
@@ -114,7 +114,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public bool TryLookup(FormKey formKey, Type type, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
+        public bool TryResolve(FormKey formKey, Type type, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
         {
             if (!_hasAny)
             {
@@ -213,24 +213,24 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public IMajorRecordCommonGetter Lookup(FormKey formKey)
+        public IMajorRecordCommonGetter Resolve(FormKey formKey)
         {
-            if (TryLookup<IMajorRecordCommonGetter>(formKey, out var commonRec)) return commonRec;
+            if (TryResolve<IMajorRecordCommonGetter>(formKey, out var commonRec)) return commonRec;
             throw new KeyNotFoundException($"Form ID {formKey.ID} could not be found.");
         }
 
         /// <inheritdoc />
-        public IMajorRecordCommonGetter Lookup(FormKey formKey, Type type)
+        public IMajorRecordCommonGetter Resolve(FormKey formKey, Type type)
         {
-            if (TryLookup(formKey, type, out var commonRec)) return commonRec;
+            if (TryResolve(formKey, type, out var commonRec)) return commonRec;
             throw new KeyNotFoundException($"Form ID {formKey.ID} could not be found.");
         }
 
         /// <inheritdoc />
-        public TMajor Lookup<TMajor>(FormKey formKey)
+        public TMajor Resolve<TMajor>(FormKey formKey)
             where TMajor : class, IMajorRecordCommonGetter
         {
-            if (TryLookup<TMajor>(formKey, out var commonRec)) return commonRec;
+            if (TryResolve<TMajor>(formKey, out var commonRec)) return commonRec;
             throw new KeyNotFoundException($"Form ID {formKey.ID} could not be found.");
         }
     }

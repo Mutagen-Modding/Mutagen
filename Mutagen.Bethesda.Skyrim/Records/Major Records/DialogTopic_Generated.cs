@@ -1981,7 +1981,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 getter: (m, r) =>
                                 {
                                     var copy = (DialogResponses)((IDialogResponsesGetter)r).DeepCopy();
-                                    getter(m, linkCache.Lookup<IDialogTopicGetter>(obj.FormKey)).Responses.Add(copy);
+                                    getter(m, linkCache.Resolve<IDialogTopicGetter>(obj.FormKey)).Responses.Add(copy);
                                     return copy;
                                 });
                         }
