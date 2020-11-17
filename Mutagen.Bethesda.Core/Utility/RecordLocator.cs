@@ -184,7 +184,7 @@ namespace Mutagen.Bethesda
             };
             SkipHeader(reader);
 
-            HashSet<RecordType>? remainingTypes = ((interest?.InterestingTypes?.Count ?? 0) <= 0) ? null : new HashSet<RecordType>(interest!.InterestingTypes);
+            HashSet<RecordType>? remainingTypes = ((interest?.InterestingTypes?.Count ?? 0) <= 0) ? null : new HashSet<RecordType>(interest!.InterestingTypes!);
             Stack<long> grupPositions = new Stack<long>();
             while (!reader.Complete
                 && (remainingTypes?.Count ?? 1) > 0)

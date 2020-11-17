@@ -118,7 +118,7 @@ namespace Mutagen.Bethesda.Binary
 
         #region Header Forwarding
         /// <inheritdoc/>
-        public override string ToString() => this._header.ToString();
+        public override string? ToString() => this._header.ToString();
 
         /// <inheritdoc/>
         public IEnumerator<SubrecordPinFrame> GetEnumerator() => HeaderExt.EnumerateSubrecords(this).GetEnumerator();

@@ -74,9 +74,9 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="obj">Object to compare to</param>
         /// <returns>True if object is ILinkGetter and FormKeys match</returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            if (!(obj is IFormLink<TMajor> rhs)) return false;
+            if (obj is not IFormLink<TMajor> rhs) return false;
             return this.Equals(rhs);
         }
 
@@ -99,14 +99,14 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="other">Other link to compare to</param>
         /// <returns>True if FormKey members are equal</returns>
-        public bool Equals(IFormLink<TMajor> other) => EqualityComparer<FormKey?>.Default.Equals(this.FormKeyNullable, other.FormKey);
+        public bool Equals(IFormLink<TMajor>? other) => EqualityComparer<FormKey?>.Default.Equals(this.FormKeyNullable, other?.FormKey);
 
         /// <summary>
         /// Compares equality of two links, where rhs is a nullable link.
         /// </summary>
         /// <param name="other">Other link to compare to</param>
         /// <returns>True if FormKey members are equal</returns>
-        public bool Equals(IFormLinkNullable<TMajor> other) => EqualityComparer<FormKey?>.Default.Equals(this.FormKeyNullable, other.FormKeyNullable);
+        public bool Equals(IFormLinkNullable<TMajor>? other) => EqualityComparer<FormKey?>.Default.Equals(this.FormKeyNullable, other?.FormKeyNullable);
 
         /// <summary>
         /// Returns hash code

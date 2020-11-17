@@ -42,9 +42,9 @@ namespace Mutagen.Bethesda
             this.EDID = edid;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            if (!(obj is IEDIDLink<TMajor> rhs)) return false;
+            if (obj is not IEDIDLink<TMajor> rhs) return false;
             return this.Equals(rhs);
         }
 
@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="other">Other link to compare to</param>
         /// <returns>True if EDID members are equal</returns>
-        public bool Equals(IEDIDLink<TMajor> other) => this.EDID.Equals(other.EDID);
+        public bool Equals(IEDIDLink<TMajor>? other) => this.EDID.Equals(other?.EDID);
 
         /// <summary>
         /// Returns hash code

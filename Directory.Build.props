@@ -3,6 +3,7 @@
     <Nullable>enable</Nullable>
     <WarningsAsErrors>nullable</WarningsAsErrors>
     <GitInfoReportImportance Condition="$(Configuration) == 'Release'">high</GitInfoReportImportance>
+    <LangVersion>preview</LangVersion>
   </PropertyGroup>
 
   <!-- To be redefined by GitInfo after restore. -->

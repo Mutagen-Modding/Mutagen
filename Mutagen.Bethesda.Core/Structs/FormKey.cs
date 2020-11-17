@@ -176,9 +176,9 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="other">object to compare to</param>
         /// <returns>True if FormKey with equal ModKey and ID values</returns>
-        public override bool Equals(object other)
+        public override bool Equals(object? other)
         {
-            if (!(other is FormKey key)) return false;
+            if (other is not FormKey key) return false;
             return Equals(key);
         }
 

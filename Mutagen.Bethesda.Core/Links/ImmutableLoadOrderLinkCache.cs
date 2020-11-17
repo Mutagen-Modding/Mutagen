@@ -125,7 +125,7 @@ namespace Mutagen.Bethesda
             lock (this._loadOrderMajorRecords)
             {
                 // Get cache object by type
-                if (!this._loadOrderMajorRecords.TryGetValue(type, out InternalTypedCache cache))
+                if (!this._loadOrderMajorRecords.TryGetValue(type, out var cache))
                 {
                     cache = new InternalTypedCache();
                     if (type.Equals(typeof(IMajorRecordCommon))

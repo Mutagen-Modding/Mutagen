@@ -81,9 +81,9 @@ namespace Mutagen.Bethesda
 
         class MajorRecordFormKeyComparer : IEqualityComparer<IMajorRecordCommonGetter>
         {
-            public bool Equals(IMajorRecordCommonGetter x, IMajorRecordCommonGetter y)
+            public bool Equals(IMajorRecordCommonGetter? x, IMajorRecordCommonGetter? y)
             {
-                return x.FormKey == y.FormKey;
+                return x?.FormKey == y?.FormKey;
             }
 
             public int GetHashCode(IMajorRecordCommonGetter obj)

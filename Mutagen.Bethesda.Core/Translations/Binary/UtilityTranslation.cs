@@ -753,7 +753,7 @@ namespace Mutagen.Bethesda
 
         public static RecordType GetRecordType<T>()
         {
-            return (RecordType)LoquiRegistration.GetRegister(typeof(T))!.GetType().GetField(Mutagen.Bethesda.Internals.Constants.TriggeringRecordTypeMember).GetValue(null);
+            return (RecordType)LoquiRegistration.GetRegister(typeof(T))!.GetType().GetField(Mutagen.Bethesda.Internals.Constants.TriggeringRecordTypeMember)!.GetValue(null)!;
         }
 
         public static ReadOnlyMemorySlice<byte>? ReadByteArrayWithOverflow(

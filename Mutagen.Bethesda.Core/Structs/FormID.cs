@@ -173,9 +173,9 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="obj">object to compare to</param>
         /// <returns>True if FormID with equal raw value</returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            if (!(obj is FormID formID)) return false;
+            if (obj is not FormID formID) return false;
             return Equals(formID);
         }
 

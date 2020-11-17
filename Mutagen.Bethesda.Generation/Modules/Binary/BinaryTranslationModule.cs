@@ -1322,7 +1322,7 @@ namespace Mutagen.Bethesda.Generation
             if (objData.UsesStringFiles)
             {
                 fg.AppendLine("bool disposeStrings = param.StringsWriter == null;");
-                fg.AppendLine($"var stringsWriter = param.StringsWriter ?? (EnumExt.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter(modKey, Path.Combine(Path.GetDirectoryName(path), \"Strings\")) : null);");
+                fg.AppendLine($"var stringsWriter = param.StringsWriter ?? (EnumExt.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter(modKey, Path.Combine(Path.GetDirectoryName(path)!, \"Strings\")) : null);");
             }
             string gameReleaseStr;
             if (objData.GameReleaseOptions == null)
@@ -1403,7 +1403,7 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine($"if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))");
                     using (new BraceWrapper(fg))
                     {
-                        fg.AppendLine($"frame.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.StringsLookup)} = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path.{nameof(ModPath.Path)}), stringsParam, path.{nameof(ModPath.ModKey)});");
+                        fg.AppendLine($"frame.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.StringsLookup)} = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path.{nameof(ModPath.Path)})!, stringsParam, path.{nameof(ModPath.ModKey)});");
                     }
                 }
                 internalToDo(this.MainAPI.PublicMembers(obj, TranslationDirection.Reader).ToArray());
@@ -2487,7 +2487,7 @@ namespace Mutagen.Bethesda.Generation
                                     fg.AppendLine($"if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))");
                                     using (new BraceWrapper(fg))
                                     {
-                                        fg.AppendLine($"meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path.{nameof(ModPath.Path)}), stringsParam, path.{nameof(ModPath.ModKey)});");
+                                        fg.AppendLine($"meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path.{nameof(ModPath.Path)})!, stringsParam, path.{nameof(ModPath.ModKey)});");
                                     }
                                 }
 
