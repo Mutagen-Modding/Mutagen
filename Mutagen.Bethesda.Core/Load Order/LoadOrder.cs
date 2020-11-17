@@ -180,6 +180,23 @@ namespace Mutagen.Bethesda
 
         public static IObservable<IChangeSet<LoadOrderListing>> GetLiveLoadOrder(
             GameRelease game,
+            DirectoryPath dataFolderPath,
+            out IObservable<ErrorResponse> state,
+            bool throwOnMissingMods = true,
+            bool orderListings = true)
+        {
+            return GetLiveLoadOrder(
+                game: game,
+                dataFolderPath: dataFolderPath,
+                loadOrderFilePath: PluginListings.GetListingsPath(game),
+                cccLoadOrderFilePath: CreationClubListings.GetListingsPath(game.ToCategory(), dataFolderPath),
+                state: out state,
+                throwOnMissingMods: throwOnMissingMods,
+                orderListings: orderListings);
+        }
+
+        public static IObservable<IChangeSet<LoadOrderListing>> GetLiveLoadOrder(
+            GameRelease game,
             FilePath loadOrderFilePath,
             DirectoryPath dataFolderPath,
             out IObservable<ErrorResponse> state,
