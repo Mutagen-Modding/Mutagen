@@ -2,12 +2,12 @@
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial interface IPlaced
+    public partial interface IPlaced : IPlacedThing, IPlacedSimple
     {
         public Placement? Placement { get; set; }
-        
+
         public EnableParent? EnableParent { get; set; }
-        
+
         public int MajorRecordFlagsRaw { get; set; }
 
         public bool Disable()
@@ -25,5 +25,9 @@ namespace Mutagen.Bethesda.Skyrim
             MajorRecordFlagsRaw = (int) SkyrimMajorRecord.SkyrimMajorRecordFlag.InitiallyDisabled;
             return true;
         }
+    }
+
+    public partial interface IPlacedGetter : IPlacedThingGetter, IPlacedSimpleGetter
+    {
     }
 }
