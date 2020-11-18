@@ -1342,6 +1342,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
+                case "IKeywordLinkedReference":
+                case "IKeywordLinkedReferenceGetter":
+                    foreach (var subItem in obj.Items)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
                 case "ILinkedReference":
                 case "ILinkedReferenceGetter":
                     foreach (var subItem in obj.Items)
@@ -1747,6 +1754,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield break;
                 }
                 case "IOwnerGetter":
+                {
+                    foreach (var subItem in obj.Items)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                }
+                case "IKeywordLinkedReference":
+                {
+                    if (!WorldspaceBlock_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var subItem in obj.Items)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                }
+                case "IKeywordLinkedReferenceGetter":
                 {
                     foreach (var subItem in obj.Items)
                     {

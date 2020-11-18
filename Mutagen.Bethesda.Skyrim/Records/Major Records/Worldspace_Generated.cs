@@ -2554,6 +2554,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
+                case "IKeywordLinkedReference":
+                case "IKeywordLinkedReferenceGetter":
+                    {
+                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        {
+                            TopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
                 case "ILinkedReference":
                 case "ILinkedReferenceGetter":
                     {
@@ -3566,6 +3579,49 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     yield break;
                 }
+                case "IKeywordLinkedReference":
+                {
+                    if (!Worldspace_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    {
+                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        {
+                            yield return TopCellitem;
+                            foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                }
+                case "IKeywordLinkedReferenceGetter":
+                {
+                    {
+                        if (obj.TopCell.TryGet(out var TopCellitem))
+                        {
+                            yield return TopCellitem;
+                            foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                }
                 case "ILinkedReference":
                 {
                     if (!Worldspace_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
@@ -4088,6 +4144,45 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case "IOwner":
                 case "IOwnerGetter":
+                {
+                    {
+                        if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
+                        {
+                            foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
+                                obj: WorldspaceTopCellitem,
+                                linkCache: linkCache,
+                                type: type,
+                                modKey: modKey,
+                                parent: curContext,
+                                throwIfUnknown: false,
+                                getter: (m, r) =>
+                                {
+                                    var baseRec = getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey));
+                                    if (baseRec.TopCell != null) return baseRec.TopCell;
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
+                                    baseRec.TopCell = copy;
+                                    return copy;
+                                }))
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
+                    foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
+                        type: type,
+                        modKey: modKey,
+                        parent: curContext,
+                        linkCache: linkCache,
+                        throwIfUnknown: false,
+                        worldspace: obj,
+                        getter: getter))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
+                case "IKeywordLinkedReference":
+                case "IKeywordLinkedReferenceGetter":
                 {
                     {
                         if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
