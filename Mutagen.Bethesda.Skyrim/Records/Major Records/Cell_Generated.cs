@@ -4111,7 +4111,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
+                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
                                     return copy;
                                 });
                         }
@@ -4127,7 +4127,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
+                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
                                     return copy;
                                 });
                         }
