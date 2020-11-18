@@ -111,6 +111,21 @@ namespace Mutagen.Bethesda
                 throw RecordException.Factory(ex, ModKey, Record);
             }
         }
+        
+        /// <summary>
+        /// Searches a mod for an existing override of the record wrapped by this context. <br/>
+        /// If one is found, it is disabled and then returned. <br/>
+        /// Otherwise, this contexts knowledge is used to insert a copy into the target mod, which is then disabled
+        /// and returned.
+        /// </summary>
+        /// <param name="mod">Mod to search/insert into</param>
+        /// <returns>A disabled override of the wrapped record, which is sourced from the target mod</returns>
+        public TMajorSetter OverrideAndDisable(TModSetter mod)
+        {
+            var overridenMajor = GetOrAddAsOverride(mod);
+            overridenMajor.Disable();
+            return overridenMajor;
+        }
 
         public ModContext<TModSetter, RMajorSetter, RMajorGetter> AsType<RMajorSetter, RMajorGetter>()
             where RMajorSetter : TMajorSetter, RMajorGetter

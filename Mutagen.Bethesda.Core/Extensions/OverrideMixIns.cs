@@ -401,7 +401,7 @@ namespace Mutagen.Bethesda
         /// from the Group, or copies the given record, inserts it, and then returns it as an override.
         /// </summary>
         /// <param name="group">Group to retrieve and/or insert from</param>
-        /// <param name="major">Major record to query and potententially copy</param>
+        /// <param name="major">Major record to query and potentially copy</param>
         /// <returns>Existing override record, or a copy of the given record that has already been inserted into the group</returns>
         public static TMajor GetOrAddAsOverride<TMajor, TMajorGetter>(this IGroupCommon<TMajor> group, TMajorGetter major)
             where TMajor : class, IMajorRecordInternal, TMajorGetter
@@ -455,6 +455,24 @@ namespace Mutagen.Bethesda
             {
                 throw RecordException.Factory(ex, link.FormKey, edid: null);
             }
+        }
+
+        /// <summary>
+        /// Takes in an existing record definition, and either finds the existing override definition
+        /// from the Group, or copies the given record and inserts it. This overriden record is disabled if
+        /// possible and returned to the user if any further operations are required.
+        /// </summary>
+        /// <param name="group">Group to retrieve and/or insert from</param>
+        /// <param name="major">Major record to query and potentially copy</param>
+        /// <returns>Corresponding record that has been overridden and disabled in the provided group.</returns>
+        public static TMajor OverrideAndDisable<TMajor, TMajorGetter>(this IGroupCommon<TMajor> group,
+            TMajorGetter major)
+            where TMajor : class, IMajorRecordInternal, TMajorGetter
+            where TMajorGetter : class, IMajorRecordGetter, IBinaryItem
+        {
+            var overridenMajor = GetOrAddAsOverride(group, major);
+            overridenMajor.Disable();
+            return overridenMajor;
         }
     }
 }
