@@ -18,6 +18,17 @@ namespace Mutagen.Bethesda
     public partial interface IMajorRecord : IMajorRecordCommon
     {
         new FormKey FormKey { get; }
+
+        /// <summary>
+        /// Disables the record by setting the RecordFlag to Initially Disabled.
+        /// <returns>Returns true if the disable was successful.</returns>
+        /// </summary>
+        public bool Disable()
+        {
+            if (this.IsDeleted) return false;
+            EnumExt.SetFlag(MajorRecordFlagsRaw, (int) Internals.Constants.InitiallyDisabled, true);
+            return true;
+        }
     }
 
     public partial interface IMajorRecordGetter : IMajorRecordCommonGetter, IDuplicatable

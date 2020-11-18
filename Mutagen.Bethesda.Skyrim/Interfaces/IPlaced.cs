@@ -1,4 +1,5 @@
 ﻿using Noggog;
+using static Mutagen.Bethesda.Skyrim.SkyrimMajorRecord;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -48,13 +49,14 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 Placement.Position = new P3Float(Placement.Position.X, Placement.Position.Y, -30000);
             }
+
             if (EnableParent != null && disableType != DisableType.JustInitiallyDisabled)
             {
                 EnableParent.Flags = EnableParent.Flag.SetEnableStateToOppositeOfParent;
                 EnableParent.Reference = new FormLink<ILinkedReferenceGetter>(Constants.Player);
             }
 
-            MajorRecordFlagsRaw = (int) SkyrimMajorRecord.SkyrimMajorRecordFlag.InitiallyDisabled;
+            EnumExt.SetFlag(MajorRecordFlagsRaw, (int) SkyrimMajorRecordFlag.InitiallyDisabled, true);
             return true;
         }
     }
