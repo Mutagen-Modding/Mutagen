@@ -39,6 +39,7 @@
     </Fields>
     <LinkInterface>IOwner</LinkInterface>
     <LinkInterface>ILinkedReference</LinkInterface>
+    <LinkInterface>IKeywordLinkedReference</LinkInterface>
     <LinkInterface>IPlaced</LinkInterface>
     <LinkInterface>IPlacedSimple</LinkInterface>
     <LinkInterface>ILocationTargetable</LinkInterface>

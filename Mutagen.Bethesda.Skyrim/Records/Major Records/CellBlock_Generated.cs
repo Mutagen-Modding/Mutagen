@@ -1307,6 +1307,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
+                case "IKeywordLinkedReference":
+                case "IKeywordLinkedReferenceGetter":
+                    foreach (var subItem in obj.SubBlocks)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
                 case "ILinkedReference":
                 case "ILinkedReferenceGetter":
                     foreach (var subItem in obj.SubBlocks)
@@ -1705,6 +1712,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield break;
                 }
                 case "IOwnerGetter":
+                {
+                    foreach (var subItem in obj.SubBlocks)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                }
+                case "IKeywordLinkedReference":
+                {
+                    if (!CellBlock_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var subItem in obj.SubBlocks)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                }
+                case "IKeywordLinkedReferenceGetter":
                 {
                     foreach (var subItem in obj.SubBlocks)
                     {

@@ -3065,6 +3065,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPlacedObjectGetter,
         ISkyrimMajorRecord,
         ILinkedReference,
+        IKeywordLinkedReference,
         IPlaced,
         IPlacedSimple,
         IPlacedThing,
@@ -3142,6 +3143,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPlacedObjectGetter :
         ISkyrimMajorRecordGetter,
         ILinkedReferenceGetter,
+        IKeywordLinkedReferenceGetter,
         IPlacedGetter,
         IPlacedSimpleGetter,
         IPlacedThingGetter,

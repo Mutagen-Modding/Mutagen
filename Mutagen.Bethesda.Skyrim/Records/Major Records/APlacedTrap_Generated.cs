@@ -1371,6 +1371,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPlaced,
         IPlacedThing,
         ILinkedReference,
+        IKeywordLinkedReference,
         ILoquiObjectSetter<IAPlacedTrapInternal>,
         ILinkedFormKeyContainer
     {
@@ -1409,6 +1410,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPlacedGetter,
         IPlacedThingGetter,
         ILinkedReferenceGetter,
+        IKeywordLinkedReferenceGetter,
         ILoquiObject<IAPlacedTrapGetter>,
         ILinkedFormKeyContainerGetter,
         IBinaryItem

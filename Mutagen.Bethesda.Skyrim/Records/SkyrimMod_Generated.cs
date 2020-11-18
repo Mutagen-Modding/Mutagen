@@ -9349,6 +9349,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IKeywordLinkedReference":
                 case "IKeywordLinkedReferenceGetter":
                     Remove(obj, keys, typeof(IKeywordGetter), throwIfUnknown: throwIfUnknown);
+                    obj.Cells.Remove(
+                        type: type,
+                        keys: keys);
+                    obj.Worldspaces.Remove(
+                        type: type,
+                        keys: keys);
                     break;
                 case "INpcSpawn":
                 case "INpcSpawnGetter":
@@ -14142,11 +14148,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         yield return item;
                     }
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
                     yield break;
                 }
                 case "IKeywordLinkedReferenceGetter":
                 {
                     foreach (var item in EnumerateMajorRecords(obj, typeof(IKeywordGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -16224,6 +16246,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IKeywordGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
+                    }
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var groupItem in obj.Worldspaces)
+                    {
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                        {
+                            yield return item;
+                        }
                     }
                     yield break;
                 }

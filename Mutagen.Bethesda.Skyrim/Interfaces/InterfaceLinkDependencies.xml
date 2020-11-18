@@ -1,8 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <MutagenInterfaceDependencies>
-  <LinkInterface name="IKeywordLinkedReference" >
-    <Implements>ILinkedReference</Implements>
-  </LinkInterface>
   <LinkInterface name="ILinkedReference" >
     <Implements>IPlaced</Implements>
   </LinkInterface>

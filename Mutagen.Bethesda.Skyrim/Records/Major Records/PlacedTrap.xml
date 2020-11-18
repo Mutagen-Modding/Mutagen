@@ -32,6 +32,7 @@
     <LinkInterface>IPlaced</LinkInterface>
     <LinkInterface>IPlacedThing</LinkInterface>
     <LinkInterface>ILinkedReference</LinkInterface>
+    <LinkInterface>IKeywordLinkedReference</LinkInterface>
   </Object>
   <Object name="PlacedArrow" recordType="PARW" baseClass="APlacedTrap" objType="Record" GUID="0262d5fe-f5c8-4fcb-97ed-f717b2f6eb23" ID="327">
     <Fields>
