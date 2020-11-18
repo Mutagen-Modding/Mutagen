@@ -12,19 +12,14 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public partial interface IPlaced :
         ISkyrimMajorRecordInternal,
-        IPlacedGetter,
-        IPlacedThing,
-        IPlacedSimple
+        IPlacedGetter
     {
     }
 
     /// <summary>
     /// Implemented by: [PlacedNpc, PlacedObject, APlacedTrap]
     /// </summary>
-    public partial interface IPlacedGetter :
-        ISkyrimMajorRecordGetter,
-        IPlacedThingGetter,
-        IPlacedSimpleGetter
+    public partial interface IPlacedGetter : ISkyrimMajorRecordGetter
     {
     }
 }
