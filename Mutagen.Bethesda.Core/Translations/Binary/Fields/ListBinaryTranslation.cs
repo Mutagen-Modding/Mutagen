@@ -719,12 +719,21 @@ namespace Mutagen.Bethesda.Binary
             if (items == null) return;
             try
             {
-                using (HeaderExport.Subrecord(writer, recordType))
+                try
                 {
-                    foreach (var item in items)
+                    using (HeaderExport.Subrecord(writer, recordType))
                     {
-                        transl(writer, item);
+                        foreach (var item in items)
+                        {
+                            transl(writer, item);
+                        }
                     }
+                }
+                catch (OverflowException overflow)
+                {
+                    throw new OverflowException(
+                        $"{recordType} List<{typeof(T)}> had an overflow with {items?.Count} items.",
+                        overflow);
                 }
             }
             catch (Exception ex)
@@ -744,12 +753,21 @@ namespace Mutagen.Bethesda.Binary
             if (items == null) return;
             try
             {
-                using (var header = HeaderExport.Subrecord(writer, recordType, overflowRecord: overflowRecord))
+                try
                 {
-                    foreach (var item in items)
+                    using (var header = HeaderExport.Subrecord(writer, recordType, overflowRecord: overflowRecord))
                     {
-                        transl(header.PrepWriter, item, recordTypeConverter);
+                        foreach (var item in items)
+                        {
+                            transl(header.PrepWriter, item, recordTypeConverter);
+                        }
                     }
+                }
+                catch (OverflowException overflow)
+                {
+                    throw new OverflowException(
+                        $"{recordType} List<{typeof(T)}> had an overflow with {items?.Count} items.",
+                        overflow);
                 }
             }
             catch (Exception ex)
@@ -768,12 +786,21 @@ namespace Mutagen.Bethesda.Binary
             if (items == null) return;
             try
             {
-                using (HeaderExport.Subrecord(writer, recordType))
+                try
                 {
-                    foreach (var item in items)
+                    using (HeaderExport.Subrecord(writer, recordType))
                     {
-                        transl(writer, item, recordTypeConverter);
+                        foreach (var item in items)
+                        {
+                            transl(writer, item, recordTypeConverter);
+                        }
                     }
+                }
+                catch (OverflowException overflow)
+                {
+                    throw new OverflowException(
+                        $"{recordType} List<{typeof(T)}> had an overflow with {items?.Count} items.",
+                        overflow);
                 }
             }
             catch (Exception ex)
@@ -793,23 +820,32 @@ namespace Mutagen.Bethesda.Binary
             if (items == null) return;
             try
             {
-                using (HeaderExport.Subrecord(writer, recordType))
+                try
                 {
-                    switch (countLengthLength)
+                    using (HeaderExport.Subrecord(writer, recordType))
                     {
-                        case 2:
-                            writer.Write(checked((ushort)items.Count));
-                            break;
-                        case 4:
-                            writer.Write(items.Count);
-                            break;
-                        default:
-                            throw new NotImplementedException();
+                        switch (countLengthLength)
+                        {
+                            case 2:
+                                writer.Write(checked((ushort)items.Count));
+                                break;
+                            case 4:
+                                writer.Write(items.Count);
+                                break;
+                            default:
+                                throw new NotImplementedException();
+                        }
+                        foreach (var item in items)
+                        {
+                            transl(writer, item, recordTypeConverter);
+                        }
                     }
-                    foreach (var item in items)
-                    {
-                        transl(writer, item, recordTypeConverter);
-                    }
+                }
+                catch (OverflowException overflow)
+                {
+                    throw new OverflowException(
+                        $"{recordType} List<{typeof(T)}> had an overflow with {items?.Count} items.",
+                        overflow);
                 }
             }
             catch (Exception ex)
@@ -826,16 +862,25 @@ namespace Mutagen.Bethesda.Binary
             RecordTypeConverter? recordTypeConverter = null)
         {
             if (items == null) return;
-            switch (countLengthLength)
+            try
             {
-                case 2:
-                    writer.Write(checked((ushort)items.Count));
-                    break;
-                case 4:
-                    writer.Write(items.Count);
-                    break;
-                default:
-                    throw new NotImplementedException();
+                switch (countLengthLength)
+                {
+                    case 2:
+                        writer.Write(checked((ushort)items.Count));
+                        break;
+                    case 4:
+                        writer.Write(items.Count);
+                        break;
+                    default:
+                        throw new NotImplementedException();
+                }
+            }
+            catch (OverflowException overflow)
+            {
+                throw new OverflowException(
+                    $"List<{typeof(T)}> had an overflow with {items?.Count} items.",
+                    overflow);
             }
             foreach (var item in items)
             {
@@ -850,16 +895,25 @@ namespace Mutagen.Bethesda.Binary
             BinarySubWriteDelegate<T> transl)
         {
             if (items == null) return;
-            switch (countLengthLength)
+            try
             {
-                case 2:
-                    writer.Write(checked((ushort)items.Count));
-                    break;
-                case 4:
-                    writer.Write(items.Count);
-                    break;
-                default:
-                    throw new NotImplementedException();
+                switch (countLengthLength)
+                {
+                    case 2:
+                        writer.Write(checked((ushort)items.Count));
+                        break;
+                    case 4:
+                        writer.Write(items.Count);
+                        break;
+                    default:
+                        throw new NotImplementedException();
+                }
+            }
+            catch (OverflowException overflow)
+            {
+                throw new OverflowException(
+                    $"List<{typeof(T)}> had an overflow with {items?.Count} items.",
+                    overflow);
             }
             foreach (var item in items)
             {
@@ -923,12 +977,21 @@ namespace Mutagen.Bethesda.Binary
             }
             try
             {
-                using (HeaderExport.Subrecord(writer, recordType))
+                try
                 {
-                    foreach (var item in items)
+                    using (HeaderExport.Subrecord(writer, recordType))
                     {
-                        transl(writer, item);
+                        foreach (var item in items)
+                        {
+                            transl(writer, item);
+                        }
                     }
+                }
+                catch (OverflowException overflow)
+                {
+                    throw new OverflowException(
+                        $"{recordType} List<{typeof(T)}> had an overflow with {items?.Count} items.",
+                        overflow);
                 }
             }
             catch (Exception ex)
@@ -984,12 +1047,21 @@ namespace Mutagen.Bethesda.Binary
                 }
                 else
                 {
-                    using (HeaderExport.Subrecord(writer, recordType))
+                    try
                     {
-                        foreach (var item in items)
+                        using (HeaderExport.Subrecord(writer, recordType))
                         {
-                            transl(writer, item, recordTypeConverter);
+                            foreach (var item in items)
+                            {
+                                transl(writer, item, recordTypeConverter);
+                            }
                         }
+                    }
+                    catch (OverflowException overflow)
+                    {
+                        throw new OverflowException(
+                            $"{recordType} List<{typeof(T)}> had an overflow with {items?.Count} items.",
+                            overflow);
                     }
                 }
             }
