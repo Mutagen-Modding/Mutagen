@@ -104,14 +104,25 @@ namespace Mutagen.Bethesda.UnitTests
             var mod = new SkyrimMod(WriteKey, SkyrimRelease.SkyrimLE);
             mod.Weapons.RecordCache.Set(
                 new Weapon(FormKey.Factory("012345:Skyrim.esm"), SkyrimRelease.SkyrimLE));
-            Assert.Throws<ArgumentException>(
-                () => mod.WriteToBinary(
-                    tmp.File.Path,
-                    new BinaryWriteParameters()
+            Assert.Throws<RecordException>(
+                () =>
+                {
+                    try
                     {
-                        ModKey = BinaryWriteParameters.ModKeyOption.NoCheck,
-                        MastersListContent = BinaryWriteParameters.MastersListContentOption.NoCheck,
-                    }));
+                        mod.WriteToBinary(
+                            tmp.File.Path,
+                            new BinaryWriteParameters()
+                            {
+                                ModKey = BinaryWriteParameters.ModKeyOption.NoCheck,
+                                MastersListContent = BinaryWriteParameters.MastersListContentOption.NoCheck,
+                            });
+                    }
+                    catch (RecordException ex)
+                    {
+                        Assert.IsType<ArgumentException>(ex.InnerException);
+                        throw;
+                    }
+                });
         }
 
         [Fact]

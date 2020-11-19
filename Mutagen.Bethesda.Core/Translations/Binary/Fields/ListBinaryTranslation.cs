@@ -862,7 +862,8 @@ namespace Mutagen.Bethesda.Binary
             RecordType recordType,
             BinarySubWriteDelegate<T> transl,
             byte counterLength,
-            bool writeCounterIfNull = false)        {
+            bool writeCounterIfNull = false)
+        {
             if (items == null)
             {
                 if (writeCounterIfNull)
