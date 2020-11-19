@@ -152,6 +152,14 @@ namespace Mutagen.Bethesda
             {
                 _modKeys = modKeys.ToList();
             }
+
+            public static MastersListOrderingByLoadOrder Factory(IEnumerable<ModKey> modKeys) => new MastersListOrderingByLoadOrder(modKeys);
+            
+            public static MastersListOrderingByLoadOrder Factory<T>(LoadOrder<T> loadOrder)
+                where T : IModKeyed
+            {
+                return Factory(loadOrder.Select(listing => listing.Key));
+            }
         }
 
         public class MastersListOrderingEnumOption : AMastersListOrderingOption
