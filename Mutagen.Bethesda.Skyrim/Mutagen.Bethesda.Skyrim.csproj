@@ -45,6 +45,7 @@
     <Compile Include="Enums\SpellType.cs" />
     <Compile Include="Enums\TargetObjectType.cs" />
     <Compile Include="Enums\TargetType.cs" />
+    <Compile Include="Enums\TimeOfDay.cs" />
     <Compile Include="Enums\WeaponAnimationType.cs" />
     <Compile Include="Enums\Emotion.cs" />
     <Compile Include="Extensions\ModContextExt.cs" />
@@ -735,9 +736,13 @@
     <Compile Include="Records\Major Records\Weather.cs">
       <DependentUpon>Weather.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\WeatherVolumetricLighting.cs" />
+    <Compile Include="Records\Major Records\WeatherImageSpaces.cs" />
     <Compile Include="Records\Major Records\WeatherAmbientColorSet.cs">
       <DependentUpon>Weather.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\WeatherAlpha.cs" />
+    <Compile Include="Records\Major Records\WeatherColor.cs" />
     <Compile Include="Records\Major Records\WeatherSound.cs">
       <DependentUpon>Weather.xml</DependentUpon>
     </Compile>

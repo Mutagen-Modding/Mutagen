@@ -1,21 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class WeatherAmbientColorSet
+    public partial class WeatherAlpha
     {
-        IAmbientColorsGetter IWeatherAmbientColorSetGetter.this[TimeOfDay time] => time switch
-        {
-            TimeOfDay.Sunrise => this.Sunrise,
-            TimeOfDay.Day => this.Day,
-            TimeOfDay.Night => this.Night,
-            TimeOfDay.Sunset => this.Sunset,
-            _ => throw new NotImplementedException(),
-        };
-
-        public AmbientColors this[TimeOfDay time]
+        public float this[TimeOfDay time]
         {
             get => time switch
             {
@@ -49,29 +41,21 @@ namespace Mutagen.Bethesda.Skyrim
         }
     }
 
-    public partial interface IWeatherAmbientColorSet
+    public partial interface IWeatherAlpha
     {
-        new AmbientColors this[TimeOfDay time] { get; set; }
+        new float this[TimeOfDay time] { get; set; }
     }
 
-    public partial interface IWeatherAmbientColorSetGetter
+    public partial interface IWeatherAlphaGetter
     {
-        IAmbientColorsGetter this[TimeOfDay time] { get; }
+        float this[TimeOfDay time] { get; }
     }
 
     namespace Internals
     {
-        public partial class WeatherAmbientColorSetBinaryOverlay
+        public partial class WeatherAlphaBinaryOverlay
         {
-            public IAmbientColorsGetter Sunrise => throw new NotImplementedException();
-
-            public IAmbientColorsGetter Day => throw new NotImplementedException();
-
-            public IAmbientColorsGetter Sunset => throw new NotImplementedException();
-
-            public IAmbientColorsGetter Night => throw new NotImplementedException();
-
-            public IAmbientColorsGetter this[TimeOfDay time] => time switch
+            public float this[TimeOfDay time] => time switch
             {
                 TimeOfDay.Sunrise => this.Sunrise,
                 TimeOfDay.Day => this.Day,
