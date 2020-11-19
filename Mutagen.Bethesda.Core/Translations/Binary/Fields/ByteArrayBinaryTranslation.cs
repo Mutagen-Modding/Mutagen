@@ -42,10 +42,17 @@ namespace Mutagen.Bethesda.Binary
             ReadOnlyMemorySlice<byte>? item,
             RecordType header)
         {
-            if (!item.HasValue) return;
-            using (HeaderExport.Subrecord(writer, header))
+            try
             {
-                Write(writer, item.Value.Span);
+                if (!item.HasValue) return;
+                using (HeaderExport.Subrecord(writer, header))
+                {
+                    Write(writer, item.Value.Span);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw SubrecordException.Factory(ex, header);
             }
         }
 
@@ -55,24 +62,31 @@ namespace Mutagen.Bethesda.Binary
             RecordType header,
             RecordType overflowRecord)
         {
-            if (!item.HasValue) return;
-            if (item.Value.Length > ushort.MaxValue)
+            try
             {
-                using (HeaderExport.Subrecord(writer, overflowRecord))
+                if (!item.HasValue) return;
+                if (item.Value.Length > ushort.MaxValue)
                 {
-                    writer.Write(item.Value.Length);
-                }
-                using (HeaderExport.Subrecord(writer, header))
-                {
-                }
-                Write(writer, item.Value.Span);
-            }
-            else
-            {
-                using (HeaderExport.Subrecord(writer, header))
-                {
+                    using (HeaderExport.Subrecord(writer, overflowRecord))
+                    {
+                        writer.Write(item.Value.Length);
+                    }
+                    using (HeaderExport.Subrecord(writer, header))
+                    {
+                    }
                     Write(writer, item.Value.Span);
                 }
+                else
+                {
+                    using (HeaderExport.Subrecord(writer, header))
+                    {
+                        Write(writer, item.Value.Span);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw SubrecordException.Factory(ex, header);
             }
         }
     }

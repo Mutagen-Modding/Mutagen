@@ -114,10 +114,17 @@ namespace Mutagen.Bethesda.Binary
             RecordType header)
             where T : class, IMajorRecordCommonGetter
         {
-            FormKeyBinaryTranslation.Instance.Write(
-                writer,
-                item.FormKey,
-                header);
+            try
+            {
+                FormKeyBinaryTranslation.Instance.Write(
+                    writer,
+                    item.FormKey,
+                    header);
+            }
+            catch (Exception ex)
+            {
+                throw SubrecordException.Factory(ex, header);
+            }
         }
 
         public void Write<T>(

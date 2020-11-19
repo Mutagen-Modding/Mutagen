@@ -26,7 +26,7 @@ namespace Mutagen.Bethesda.Binary
             return defaultVal;
         }
 
-        public bool Parse(MutagenFrame frame, [MaybeNullWhen(false)]out T item)
+        public bool Parse(MutagenFrame frame, [MaybeNullWhen(false)] out T item)
         {
             item = ParseValue(frame.SpawnWithLength(this.ExpectedLength));
             return true;
@@ -47,9 +47,16 @@ namespace Mutagen.Bethesda.Binary
             Action<MutagenWriter, T>? write = null)
         {
             write ??= this.Write;
-            using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
+            try
             {
-                write(writer, item);
+                using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
+                {
+                    write(writer, item);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw SubrecordException.Factory(ex, header);
             }
         }
 
@@ -70,9 +77,16 @@ namespace Mutagen.Bethesda.Binary
         {
             if (!item.HasValue) return;
             write ??= this.Write;
-            using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
+            try
             {
-                write(writer, item.Value);
+                using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
+                {
+                    write(writer, item.Value);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw SubrecordException.Factory(ex, header);
             }
         }
 

@@ -344,21 +344,35 @@ namespace Mutagen.Bethesda.Binary
             UtilityTranslation.BinarySubWriteDelegate<T> transl)
         {
             if (item == null) return;
-            var male = item.Male;
-            if (male != null)
+            try
             {
-                using (HeaderExport.Subrecord(writer, maleMarker))
+                var male = item.Male;
+                if (male != null)
                 {
-                    transl(writer, male);
+                    using (HeaderExport.Subrecord(writer, maleMarker))
+                    {
+                        transl(writer, male);
+                    }
                 }
             }
-            var female = item.Female;
-            if (female != null)
+            catch (Exception ex)
             {
-                using (HeaderExport.Subrecord(writer, femaleMarker))
+                throw SubrecordException.FactoryPassthroughExisting(ex, maleMarker);
+            }
+            try
+            {
+                var female = item.Female;
+                if (female != null)
                 {
-                    transl(writer, female);
+                    using (HeaderExport.Subrecord(writer, femaleMarker))
+                    {
+                        transl(writer, female);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                throw SubrecordException.FactoryPassthroughExisting(ex, femaleMarker);
             }
         }
 
@@ -372,29 +386,43 @@ namespace Mutagen.Bethesda.Binary
             RecordTypeConverter? recordTypeConverter = null)
         {
             if (item == null) return;
-            var male = item.Male;
-            using (HeaderExport.Subrecord(writer, maleMarker))
+            try
             {
-                if (markerWrap)
+                var male = item.Male;
+                using (HeaderExport.Subrecord(writer, maleMarker))
+                {
+                    if (markerWrap)
+                    {
+                        transl(writer, male, recordTypeConverter);
+                    }
+                }
+                if (!markerWrap)
                 {
                     transl(writer, male, recordTypeConverter);
                 }
             }
-            if (!markerWrap)
+            catch (Exception ex)
             {
-                transl(writer, male, recordTypeConverter);
+                throw SubrecordException.FactoryPassthroughExisting(ex, maleMarker);
             }
-            var female = item.Female;
-            using (HeaderExport.Subrecord(writer, femaleMarker))
+            try
             {
-                if (markerWrap)
+                var female = item.Female;
+                using (HeaderExport.Subrecord(writer, femaleMarker))
+                {
+                    if (markerWrap)
+                    {
+                        transl(writer, female, recordTypeConverter);
+                    }
+                }
+                if (!markerWrap)
                 {
                     transl(writer, female, recordTypeConverter);
                 }
             }
-            if (!markerWrap)
+            catch (Exception ex)
             {
-                transl(writer, female, recordTypeConverter);
+                throw SubrecordException.FactoryPassthroughExisting(ex, femaleMarker);
             }
         }
 
@@ -409,35 +437,49 @@ namespace Mutagen.Bethesda.Binary
             where TMajor : class, IMajorRecordCommonGetter
         {
             if (item == null) return;
-            var male = item.Male;
-            if (male.FormKey != null)
+            try
             {
-                using (HeaderExport.Subrecord(writer, maleMarker))
+                var male = item.Male;
+                if (male.FormKey != null)
                 {
-                    if (markerWrap)
+                    using (HeaderExport.Subrecord(writer, maleMarker))
+                    {
+                        if (markerWrap)
+                        {
+                            transl(writer, male, recordTypeConverter);
+                        }
+                    }
+                    if (!markerWrap)
                     {
                         transl(writer, male, recordTypeConverter);
                     }
                 }
-                if (!markerWrap)
-                {
-                    transl(writer, male, recordTypeConverter);
-                }
             }
-            var female = item.Female;
-            if (female.FormKey != null)
+            catch (Exception ex)
             {
-                using (HeaderExport.Subrecord(writer, femaleMarker))
+                throw SubrecordException.FactoryPassthroughExisting(ex, maleMarker);
+            }
+            try
+            {
+                var female = item.Female;
+                if (female.FormKey != null)
                 {
-                    if (markerWrap)
+                    using (HeaderExport.Subrecord(writer, femaleMarker))
+                    {
+                        if (markerWrap)
+                        {
+                            transl(writer, female, recordTypeConverter);
+                        }
+                    }
+                    if (!markerWrap)
                     {
                         transl(writer, female, recordTypeConverter);
                     }
                 }
-                if (!markerWrap)
-                {
-                    transl(writer, female, recordTypeConverter);
-                }
+            }
+            catch (Exception ex)
+            {
+                throw SubrecordException.FactoryPassthroughExisting(ex, femaleMarker);
             }
         }
 
@@ -453,21 +495,35 @@ namespace Mutagen.Bethesda.Binary
             using (HeaderExport.Subrecord(writer, markerType))
             {
             }
-            var male = item.Male;
-            if (male != null)
+            try
             {
-                using (HeaderExport.Subrecord(writer, maleMarker))
+                var male = item.Male;
+                if (male != null)
                 {
-                    transl(writer, male);
+                    using (HeaderExport.Subrecord(writer, maleMarker))
+                    {
+                        transl(writer, male);
+                    }
                 }
             }
-            var female = item.Female;
-            if (female != null)
+            catch (Exception ex)
             {
-                using (HeaderExport.Subrecord(writer, femaleMarker))
+                throw SubrecordException.FactoryPassthroughExisting(ex, maleMarker);
+            }
+            try
+            {
+                var female = item.Female;
+                if (female != null)
                 {
-                    transl(writer, female);
+                    using (HeaderExport.Subrecord(writer, femaleMarker))
+                    {
+                        transl(writer, female);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                throw SubrecordException.FactoryPassthroughExisting(ex, femaleMarker);
             }
         }
 
@@ -485,35 +541,49 @@ namespace Mutagen.Bethesda.Binary
             using (HeaderExport.Subrecord(writer, markerType))
             {
             }
-            var male = item.Male;
-            if (male != null)
+            try
             {
-                using (HeaderExport.Subrecord(writer, maleMarker))
+                var male = item.Male;
+                if (male != null)
                 {
-                    if (markerWrap)
+                    using (HeaderExport.Subrecord(writer, maleMarker))
+                    {
+                        if (markerWrap)
+                        {
+                            transl(writer, male, recordTypeConverter);
+                        }
+                    }
+                    if (!markerWrap)
                     {
                         transl(writer, male, recordTypeConverter);
                     }
                 }
-                if (!markerWrap)
-                {
-                    transl(writer, male, recordTypeConverter);
-                }
             }
-            var female = item.Female;
-            if (female != null)
+            catch (Exception ex)
             {
-                using (HeaderExport.Subrecord(writer, femaleMarker))
+                throw SubrecordException.FactoryPassthroughExisting(ex, maleMarker);
+            }
+            try
+            {
+                var female = item.Female;
+                if (female != null)
                 {
-                    if (markerWrap)
+                    using (HeaderExport.Subrecord(writer, femaleMarker))
+                    {
+                        if (markerWrap)
+                        {
+                            transl(writer, female, recordTypeConverter);
+                        }
+                    }
+                    if (!markerWrap)
                     {
                         transl(writer, female, recordTypeConverter);
                     }
                 }
-                if (!markerWrap)
-                {
-                    transl(writer, female, recordTypeConverter);
-                }
+            }
+            catch (Exception ex)
+            {
+                throw SubrecordException.FactoryPassthroughExisting(ex, femaleMarker);
             }
         }
 
@@ -528,41 +598,55 @@ namespace Mutagen.Bethesda.Binary
             RecordTypeConverter? femaleRecordConverter = null)
         {
             if (item == null) return;
-            var male = item.Male;
-            if (male != null)
+            try
             {
-                using (HeaderExport.Subrecord(writer, markerType))
+                var male = item.Male;
+                if (male != null)
                 {
-                }
-                using (HeaderExport.Subrecord(writer, maleMarker))
-                {
-                    if (markerWrap)
+                    using (HeaderExport.Subrecord(writer, markerType))
+                    {
+                    }
+                    using (HeaderExport.Subrecord(writer, maleMarker))
+                    {
+                        if (markerWrap)
+                        {
+                            transl(writer, male, recordTypeConverter: null);
+                        }
+                    }
+                    if (!markerWrap)
                     {
                         transl(writer, male, recordTypeConverter: null);
                     }
                 }
-                if (!markerWrap)
-                {
-                    transl(writer, male, recordTypeConverter: null);
-                }
             }
-            var female = item.Female;
-            if (female != null)
+            catch (Exception ex)
             {
-                using (HeaderExport.Subrecord(writer, markerType))
+                throw SubrecordException.FactoryPassthroughExisting(ex, maleMarker);
+            }
+            try
+            {
+                var female = item.Female;
+                if (female != null)
                 {
-                }
-                using (HeaderExport.Subrecord(writer, femaleMarker))
-                {
-                    if (markerWrap)
+                    using (HeaderExport.Subrecord(writer, markerType))
+                    {
+                    }
+                    using (HeaderExport.Subrecord(writer, femaleMarker))
+                    {
+                        if (markerWrap)
+                        {
+                            transl(writer, female, femaleRecordConverter);
+                        }
+                    }
+                    if (!markerWrap)
                     {
                         transl(writer, female, femaleRecordConverter);
                     }
                 }
-                if (!markerWrap)
-                {
-                    transl(writer, female, femaleRecordConverter);
-                }
+            }
+            catch (Exception ex)
+            {
+                throw SubrecordException.FactoryPassthroughExisting(ex, femaleMarker);
             }
         }
 

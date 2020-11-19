@@ -24,10 +24,17 @@ namespace Mutagen.Bethesda.Binary
             bool item,
             RecordType header)
         {
-            if (!item) return;
-            using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
+            try
             {
-                // Presence of marker signifies true
+                if (!item) return;
+                using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
+                {
+                    // Presence of marker signifies true
+                }
+            }
+            catch (Exception ex)
+            {
+                throw SubrecordException.Factory(ex, header);
             }
         }
 
@@ -50,9 +57,16 @@ namespace Mutagen.Bethesda.Binary
             RecordType header,
             byte byteLength)
         {
-            using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
+            try
             {
-                writer.Write(item ? 1 : 0, byteLength);
+                using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
+                {
+                    writer.Write(item ? 1 : 0, byteLength);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw SubrecordException.Factory(ex, header);
             }
         }
 
@@ -62,10 +76,17 @@ namespace Mutagen.Bethesda.Binary
             RecordType header,
             byte byteLength)
         {
-            if (!item.HasValue) return;
-            using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
+            try
             {
-                writer.Write(item.Value ? 1 : 0, byteLength);
+                if (!item.HasValue) return;
+                using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
+                {
+                    writer.Write(item.Value ? 1 : 0, byteLength);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw SubrecordException.Factory(ex, header);
             }
         }
     }
