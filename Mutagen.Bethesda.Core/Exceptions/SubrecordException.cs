@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,7 +6,7 @@ namespace Mutagen.Bethesda
 {
     public class SubrecordException : RecordException
     {
-        public RecordType Subrecord;
+        public RecordType Subrecord { get; internal set; }
 
         public SubrecordException(RecordType record, FormKey? formKey, ModKey? modKey, string? edid)
             : base(formKey, modKey, edid: edid)

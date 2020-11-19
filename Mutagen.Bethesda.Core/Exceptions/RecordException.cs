@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,9 +6,9 @@ namespace Mutagen.Bethesda
 {
     public class RecordException : AggregateException
     {
-        public ModKey? ModKey { get; }
-        public FormKey? FormKey { get; }
-        public string? EditorID { get; }
+        public ModKey? ModKey { get; internal set; }
+        public FormKey? FormKey { get; internal set; }
+        public string? EditorID { get; internal set; }
 
         public RecordException(FormKey? formKey, ModKey? modKey, string? edid)
         {
@@ -55,11 +55,19 @@ namespace Mutagen.Bethesda
         {
             if (ex is RecordException rec)
             {
-                return new RecordException(
-                    formKey: formKey,
-                    modKey: modKey ?? rec.ModKey,
-                    edid: edid,
-                    innerException: rec.InnerException);
+                if (modKey != null)
+                {
+                    rec.ModKey = modKey;
+                }
+                if (edid != null)
+                {
+                    rec.EditorID = edid;
+                }
+                if (formKey != null)
+                {
+                    rec.FormKey = formKey;
+                }
+                return rec;
             }
             return new RecordException(
                 formKey: formKey,
@@ -72,11 +80,8 @@ namespace Mutagen.Bethesda
         {
             if (ex is RecordException rec)
             {
-                return new RecordException(
-                    formKey: rec.FormKey,
-                    modKey: modKey,
-                    edid: rec.EditorID,
-                    innerException: rec.InnerException);
+                rec.ModKey = modKey;
+                return rec;
             }
             return new RecordException(
                 formKey: null,
