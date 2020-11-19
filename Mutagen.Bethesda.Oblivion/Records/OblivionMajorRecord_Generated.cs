@@ -1384,13 +1384,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IOblivionMajorRecordGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            WriteEmbedded(
-                item: item,
-                writer: writer);
-            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
-                item: item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
+            try
+            {
+                WriteEmbedded(
+                    item: item,
+                    writer: writer);
+                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                    item: item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Factory(ex, item.FormKey, item.EditorID);
+            }
         }
 
         public override void Write(

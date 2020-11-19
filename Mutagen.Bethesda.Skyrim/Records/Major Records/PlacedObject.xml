@@ -78,6 +78,7 @@
       <RefDirect name="Placement" refName="Placement" />
     </Fields>
     <LinkInterface>ILinkedReference</LinkInterface>
+    <LinkInterface>IKeywordLinkedReference</LinkInterface>
     <LinkInterface>IPlaced</LinkInterface>
     <LinkInterface>IPlacedSimple</LinkInterface>
     <LinkInterface>IPlacedThing</LinkInterface>

@@ -1612,6 +1612,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         IOwner,
         ILinkedReference,
+        IKeywordLinkedReference,
         IPlaced,
         IPlacedSimple,
         ILocationTargetable,
@@ -1663,6 +1664,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IOwnerGetter,
         ILinkedReferenceGetter,
+        IKeywordLinkedReferenceGetter,
         IPlacedGetter,
         IPlacedSimpleGetter,
         ILocationTargetableGetter,
@@ -3315,15 +3317,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.ACHR),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
-                SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                    item: item,
-                    writer: writer);
-                writer.MetaData.FormVersion = item.FormVersion;
-                WriteRecordTypes(
-                    item: item,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter);
-                writer.MetaData.FormVersion = null;
+                try
+                {
+                    SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                        item: item,
+                        writer: writer);
+                    writer.MetaData.FormVersion = item.FormVersion;
+                    WriteRecordTypes(
+                        item: item,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                    writer.MetaData.FormVersion = null;
+                }
+                catch (Exception ex)
+                {
+                    throw RecordException.Factory(ex, item.FormKey, item.EditorID);
+                }
             }
         }
 

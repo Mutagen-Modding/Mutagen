@@ -1103,13 +1103,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.LENS),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
-                SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                    item: item,
-                    writer: writer);
-                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
-                    item: item,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                try
+                {
+                    SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                        item: item,
+                        writer: writer);
+                    MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        item: item,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+                catch (Exception ex)
+                {
+                    throw RecordException.Factory(ex, item.FormKey, item.EditorID);
+                }
             }
         }
 

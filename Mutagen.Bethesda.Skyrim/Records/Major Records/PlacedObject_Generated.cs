@@ -3065,6 +3065,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPlacedObjectGetter,
         ISkyrimMajorRecord,
         ILinkedReference,
+        IKeywordLinkedReference,
         IPlaced,
         IPlacedSimple,
         IPlacedThing,
@@ -3142,6 +3143,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPlacedObjectGetter :
         ISkyrimMajorRecordGetter,
         ILinkedReferenceGetter,
+        IKeywordLinkedReferenceGetter,
         IPlacedGetter,
         IPlacedSimpleGetter,
         IPlacedThingGetter,
@@ -5955,15 +5957,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.REFR),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
-                WriteEmbedded(
-                    item: item,
-                    writer: writer);
-                writer.MetaData.FormVersion = item.FormVersion;
-                WriteRecordTypes(
-                    item: item,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter);
-                writer.MetaData.FormVersion = null;
+                try
+                {
+                    WriteEmbedded(
+                        item: item,
+                        writer: writer);
+                    writer.MetaData.FormVersion = item.FormVersion;
+                    WriteRecordTypes(
+                        item: item,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                    writer.MetaData.FormVersion = null;
+                }
+                catch (Exception ex)
+                {
+                    throw RecordException.Factory(ex, item.FormKey, item.EditorID);
+                }
             }
         }
 

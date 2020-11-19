@@ -144,6 +144,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             dict[typeof(IKeywordLinkedReference)] = new Type[]
             {
                 typeof(Keyword),
+                typeof(PlacedNpc),
+                typeof(PlacedObject),
+                typeof(APlacedTrap),
             };
             dict[typeof(IKeywordLinkedReferenceGetter)] = dict[typeof(IKeywordLinkedReference)];
             dict[typeof(INpcSpawn)] = new Type[]

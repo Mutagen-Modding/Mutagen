@@ -29,19 +29,6 @@ namespace Mutagen.Bethesda.Generation
 
             // Compile interfaces implementing interfaces mapping data
             var interfaceInheritenceMappings = new Dictionary<string, HashSet<string>>();
-            var interfMappingFile = Path.Combine(proto.DefFileLocation.FullName, $"../Interfaces/InterfaceLinkDependencies.xml");
-            if (File.Exists(interfMappingFile))
-            {
-                var root = XElement.Load(interfMappingFile);
-                foreach (var node in root.Elements(XName.Get("LinkInterface")))
-                {
-                    var name = node.GetAttribute("name", throwException: true);
-                    foreach (var impl in node.Elements(XName.Get("Implements")))
-                    {
-                        interfaceInheritenceMappings.GetOrAdd(name).Add(impl.Value);
-                    }
-                }
-            }
 
             foreach (var obj in proto.ObjectGenerationsByID.Values)
             {

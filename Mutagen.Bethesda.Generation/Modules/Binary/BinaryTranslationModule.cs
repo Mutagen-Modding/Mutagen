@@ -1649,6 +1649,7 @@ namespace Mutagen.Bethesda.Generation
         protected override async Task GenerateWriteSnippet(ObjectGeneration obj, FileGeneration fg)
         {
             var data = obj.GetObjectData();
+            var isMajor = await obj.IsMajorRecord();
             var hasRecType = obj.TryGetRecordType(out var recType);
             if (hasRecType)
             {
@@ -1664,6 +1665,10 @@ namespace Mutagen.Bethesda.Generation
             }
             using (new BraceWrapper(fg, doIt: hasRecType))
             {
+                if (isMajor)
+                {
+                    fg.AppendLine("try");
+                }
                 if (obj.GetObjectType() == ObjectType.Mod)
                 {
                     using (var args = new ArgsWrapper(fg,
@@ -1676,65 +1681,76 @@ namespace Mutagen.Bethesda.Generation
                         args.AddPassArg("modKey");
                     }
                 }
-                if (HasEmbeddedFields(obj))
+                using (new BraceWrapper(fg, doIt: isMajor))
                 {
-                    using (var args = new ArgsWrapper(fg,
-                        $"WriteEmbedded"))
-                    {
-                        args.AddPassArg($"item");
-                        args.AddPassArg($"writer");
-                    }
-                }
-                else
-                {
-                    var firstBase = obj.BaseClassTrail().FirstOrDefault((b) => HasEmbeddedFields(b));
-                    if (firstBase != null)
+                    if (HasEmbeddedFields(obj))
                     {
                         using (var args = new ArgsWrapper(fg,
-                            $"{this.TranslationWriteClass(firstBase)}.WriteEmbedded"))
+                            $"WriteEmbedded"))
                         {
                             args.AddPassArg($"item");
                             args.AddPassArg($"writer");
                         }
                     }
-                }
-                if (HasRecordTypeFields(obj))
-                {
-                    if (await obj.IsMajorRecord())
+                    else
                     {
-                        fg.AppendLine($"writer.{nameof(MutagenWriter.MetaData)}.{nameof(WritingBundle.FormVersion)} = item.FormVersion;");
-                    }
-                    using (var args = new ArgsWrapper(fg,
-                        $"WriteRecordTypes"))
-                    {
-                        args.AddPassArg($"item");
-                        args.AddPassArg($"writer");
-                        if (obj.GetObjectType() == ObjectType.Mod)
+                        var firstBase = obj.BaseClassTrail().FirstOrDefault((b) => HasEmbeddedFields(b));
+                        if (firstBase != null)
                         {
-                            args.AddPassArg($"importMask");
-                        }
-                        else
-                        {
-                            args.AddPassArg($"recordTypeConverter");
+                            using (var args = new ArgsWrapper(fg,
+                                $"{this.TranslationWriteClass(firstBase)}.WriteEmbedded"))
+                            {
+                                args.AddPassArg($"item");
+                                args.AddPassArg($"writer");
+                            }
                         }
                     }
-                    if (await obj.IsMajorRecord())
+                    if (HasRecordTypeFields(obj))
                     {
-                        fg.AppendLine($"writer.{nameof(MutagenWriter.MetaData)}.{nameof(WritingBundle.FormVersion)} = null;");
-                    }
-                }
-                else
-                {
-                    var firstBase = obj.BaseClassTrail().FirstOrDefault((b) => HasRecordTypeFields(b));
-                    if (firstBase != null)
-                    {
+                        if (await obj.IsMajorRecord())
+                        {
+                            fg.AppendLine($"writer.{nameof(MutagenWriter.MetaData)}.{nameof(WritingBundle.FormVersion)} = item.FormVersion;");
+                        }
                         using (var args = new ArgsWrapper(fg,
-                        $"{this.TranslationWriteClass(firstBase)}.WriteRecordTypes"))
+                            $"WriteRecordTypes"))
                         {
                             args.AddPassArg($"item");
                             args.AddPassArg($"writer");
-                            args.AddPassArg($"recordTypeConverter");
+                            if (obj.GetObjectType() == ObjectType.Mod)
+                            {
+                                args.AddPassArg($"importMask");
+                            }
+                            else
+                            {
+                                args.AddPassArg($"recordTypeConverter");
+                            }
                         }
+                        if (await obj.IsMajorRecord())
+                        {
+                            fg.AppendLine($"writer.{nameof(MutagenWriter.MetaData)}.{nameof(WritingBundle.FormVersion)} = null;");
+                        }
+                    }
+                    else
+                    {
+                        var firstBase = obj.BaseClassTrail().FirstOrDefault((b) => HasRecordTypeFields(b));
+                        if (firstBase != null)
+                        {
+                            using (var args = new ArgsWrapper(fg,
+                            $"{this.TranslationWriteClass(firstBase)}.WriteRecordTypes"))
+                            {
+                                args.AddPassArg($"item");
+                                args.AddPassArg($"writer");
+                                args.AddPassArg($"recordTypeConverter");
+                            }
+                        }
+                    }
+                }
+                if (isMajor)
+                {
+                    fg.AppendLine("catch (Exception ex)");
+                    using (new BraceWrapper(fg))
+                    {
+                        fg.AppendLine($"throw RecordException.Factory(ex, item.FormKey, item.EditorID);");
                     }
                 }
             }

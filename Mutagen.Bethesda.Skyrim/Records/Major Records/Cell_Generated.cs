@@ -3658,6 +3658,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     yield break;
                 }
+                case "IKeywordLinkedReference":
+                {
+                    if (!Cell_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    yield break;
+                }
+                case "IKeywordLinkedReferenceGetter":
+                {
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    yield break;
+                }
                 case "ILinkedReference":
                 {
                     if (!Cell_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
@@ -4025,6 +4062,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case "IOwner":
                 case "IOwnerGetter":
+                {
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                modKey: modKey,
+                                record: subItem,
+                                parent: curContext,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
+                                    return copy;
+                                });
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                                modKey: modKey,
+                                record: subItem,
+                                parent: curContext,
+                                getter: (m, r) =>
+                                {
+                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
+                                    return copy;
+                                });
+                        }
+                    }
+                    yield break;
+                }
+                case "IKeywordLinkedReference":
+                case "IKeywordLinkedReferenceGetter":
                 {
                     foreach (var subItem in obj.Persistent)
                     {
@@ -4887,15 +4961,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.CELL),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
-                WriteEmbedded(
-                    item: item,
-                    writer: writer);
-                writer.MetaData.FormVersion = item.FormVersion;
-                WriteRecordTypes(
-                    item: item,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter);
-                writer.MetaData.FormVersion = null;
+                try
+                {
+                    WriteEmbedded(
+                        item: item,
+                        writer: writer);
+                    writer.MetaData.FormVersion = item.FormVersion;
+                    WriteRecordTypes(
+                        item: item,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                    writer.MetaData.FormVersion = null;
+                }
+                catch (Exception ex)
+                {
+                    throw RecordException.Factory(ex, item.FormKey, item.EditorID);
+                }
             }
             CustomBinaryEndExportInternal(
                 writer: writer,

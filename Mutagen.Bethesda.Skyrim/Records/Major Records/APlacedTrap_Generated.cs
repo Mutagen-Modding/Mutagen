@@ -1371,6 +1371,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPlaced,
         IPlacedThing,
         ILinkedReference,
+        IKeywordLinkedReference,
         ILoquiObjectSetter<IAPlacedTrapInternal>,
         ILinkedFormKeyContainer
     {
@@ -1409,6 +1410,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPlacedGetter,
         IPlacedThingGetter,
         ILinkedReferenceGetter,
+        IKeywordLinkedReferenceGetter,
         ILoquiObject<IAPlacedTrapGetter>,
         ILinkedFormKeyContainerGetter,
         IBinaryItem
@@ -2869,15 +2871,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAPlacedTrapGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-            writer.MetaData.FormVersion = item.FormVersion;
-            WriteRecordTypes(
-                item: item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
-            writer.MetaData.FormVersion = null;
+            try
+            {
+                SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                    item: item,
+                    writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
+                WriteRecordTypes(
+                    item: item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Factory(ex, item.FormKey, item.EditorID);
+            }
         }
 
         public override void Write(

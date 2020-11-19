@@ -1328,13 +1328,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.NAVM),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
-                WriteEmbedded(
-                    item: item,
-                    writer: writer);
-                ANavigationMeshBinaryWriteTranslation.WriteRecordTypes(
-                    item: item,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                try
+                {
+                    WriteEmbedded(
+                        item: item,
+                        writer: writer);
+                    ANavigationMeshBinaryWriteTranslation.WriteRecordTypes(
+                        item: item,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+                catch (Exception ex)
+                {
+                    throw RecordException.Factory(ex, item.FormKey, item.EditorID);
+                }
             }
         }
 

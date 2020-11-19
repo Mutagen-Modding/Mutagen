@@ -99,7 +99,7 @@ namespace Mutagen.Bethesda.Binary
         {
             var endPos = this.Writer.Position;
             this.Writer.Position = this.SizePosition;
-            var diff = endPos - this.Writer.Position;
+            var diff = endPos - this.SizePosition;
             if (this.RecordConstants.HeaderIncludedInLength)
             {
                 diff += Constants.HeaderLength;
@@ -116,21 +116,29 @@ namespace Mutagen.Bethesda.Binary
                 return;
             }
 
-            switch (this.RecordConstants.ObjectType)
+            try
             {
-                case ObjectType.Subrecord:
-                    {
-                        this.Writer.Write(checked((ushort)diff));
-                    }
-                    break;
-                case ObjectType.Record:
-                case ObjectType.Group:
-                    {
-                        this.Writer.Write(checked((uint)diff));
-                    }
-                    break;
-                default:
-                    throw new NotImplementedException();
+                switch (this.RecordConstants.ObjectType)
+                {
+                    case ObjectType.Subrecord:
+                        {
+                            this.Writer.Write(checked((ushort)diff));
+                        }
+                        break;
+                    case ObjectType.Record:
+                    case ObjectType.Group:
+                        {
+                            this.Writer.Write(checked((uint)diff));
+                        }
+                        break;
+                    default:
+                        throw new NotImplementedException();
+                }
+            }
+            catch (OverflowException)
+            {
+                throw new OverflowException(
+                    $"{this.RecordConstants.ObjectType} header export resulted in an overflow. Diff: 0x{diff:X}");
             }
             this.Writer.Position = endPos;
         }
