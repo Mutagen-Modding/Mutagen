@@ -736,13 +736,21 @@
     <Compile Include="Records\Major Records\Weather.cs">
       <DependentUpon>Weather.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\WeatherVolumetricLighting.cs" />
-    <Compile Include="Records\Major Records\WeatherImageSpaces.cs" />
+    <Compile Include="Records\Major Records\WeatherVolumetricLighting.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WeatherImageSpaces.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\WeatherAmbientColorSet.cs">
       <DependentUpon>Weather.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\WeatherAlpha.cs" />
-    <Compile Include="Records\Major Records\WeatherColor.cs" />
+    <Compile Include="Records\Major Records\WeatherAlpha.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WeatherColor.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\WeatherSound.cs">
       <DependentUpon>Weather.xml</DependentUpon>
     </Compile>
@@ -2110,6 +2118,9 @@
       <DependentUpon>Perk.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\TypeSolidifier_Generated.cs" />
+    <Compile Include="Records\Major Records\APlaced_Generated.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.1.2">

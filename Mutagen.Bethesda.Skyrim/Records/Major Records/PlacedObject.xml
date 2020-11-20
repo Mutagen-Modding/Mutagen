@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="us-ascii"?>
-
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="PlacedObject" recordType="REFR" baseClass="APlaced" objType="Record" GUID="15cab6c0-7390-410a-b2a8-7ee0e58569a6" ID="30">
     <Fields>
@@ -38,7 +37,7 @@
       <ByteArray name="XWCS" recordType="XWCS" />
       <RefDirect name="WaterVelocity" refName="WaterVelocity" />
       <ByteArray name="XCVL" recordType="XCVL" />
-      <FormLink name="XCZR" recordType="XCZR" >
+      <FormLink name="XCZR" recordType="XCZR">
         <Interface>ILinkedReference</Interface>
       </FormLink>
       <ByteArray name="XCZA" recordType="XCZA" />
@@ -72,7 +71,7 @@
       <Float name="FavorCost" recordType="XFVC" />
       <Bool name="OpenByDefault" boolAsMarker="ONAM" />
       <RefDirect name="MapMarker" refName="MapMarker" markerType="XMRK" />
-      <FormLink name="AttachRef" recordType="XATR" >
+      <FormLink name="AttachRef" recordType="XATR">
         <Interface>IPlacedThing</Interface>
       </FormLink>
       <ByteArray name="DistantLodData" recordType="XLOD" />
@@ -85,7 +84,8 @@
     <LinkInterface>IPlacedThing</LinkInterface>
     <LinkInterface>ILocationTargetable</LinkInterface>
   </Object>
-  <Object name="APlaced" objType="Record" abstract="yes" baseClass="SkyrimMajorRecord"></Object>
+  <Object name="APlaced" objType="Record" abstract="yes" baseClass="SkyrimMajorRecord" GUID="88bd66fe-1c46-4bbd-8873-bdf8f1ba22f0" ID="480">
+  </Object>
   <Object name="PlacedPrimitive" objType="Subrecord" recordType="XPRM" GUID="0714886f-0394-47a5-9d24-61178136903e" ID="300">
     <Fields>
       <P3Float name="Bounds" binary="Custom" byteLength="12" />
