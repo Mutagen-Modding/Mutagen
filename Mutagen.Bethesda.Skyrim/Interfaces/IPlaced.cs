@@ -1,4 +1,4 @@
-﻿using Noggog;
+using Noggog;
 using static Mutagen.Bethesda.Skyrim.SkyrimMajorRecord;
 
 namespace Mutagen.Bethesda.Skyrim
@@ -28,37 +28,15 @@ namespace Mutagen.Bethesda.Skyrim
             JustInitiallyDisabled
         }
 
-        public Placement? Placement { get; set; }
-
-        public EnableParent? EnableParent { get; set; }
-
         public int MajorRecordFlagsRaw { get; set; }
 
         /// <summary>
-        /// Allows to easily disable placed records. The <paramref name="disableType"/> can be specified optionally
-        /// to further specify how the record should be disabled.
+        /// Allows to easily disable placed records. Specify <paramref name="disableType"/> to further designate
+        /// how the record should be disabled.
         /// </summary>
         /// <param name="disableType">How the record should be disabled</param>
         /// <returns>Returns true if the disable operation has succeeded, false otherwise.</returns>
-        public bool Disable(DisableType disableType = DisableType.SafeDisable)
-        {
-            // Perform standard procedure used for undelete and disable placed type records.
-            if (this.IsDeleted) return false;
-
-            if (Placement != null && disableType == DisableType.SafeDisable)
-            {
-                Placement.Position = new P3Float(Placement.Position.X, Placement.Position.Y, -30000);
-            }
-
-            if (EnableParent != null && disableType != DisableType.JustInitiallyDisabled)
-            {
-                EnableParent.Flags = EnableParent.Flag.SetEnableStateToOppositeOfParent;
-                EnableParent.Reference = new FormLink<ILinkedReferenceGetter>(Constants.Player);
-            }
-
-            EnumExt.SetFlag(MajorRecordFlagsRaw, (int) SkyrimMajorRecordFlag.InitiallyDisabled, true);
-            return true;
-        }
+        public bool Disable(DisableType disableType);
     }
 
     public partial interface IPlacedGetter : IPlacedThingGetter, IPlacedSimpleGetter

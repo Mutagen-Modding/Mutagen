@@ -25,17 +25,12 @@ namespace Mutagen.Bethesda
         /// Raw integer flag data
         /// </summary>
         new int MajorRecordFlagsRaw { get; set; }
-        
+
         /// <summary>
         /// Disables the record by setting the RecordFlag to Initially Disabled.
         /// <returns>Returns true if the disable was successful.</returns>
         /// </summary>
-        public bool Disable()
-        {
-            if (this.IsDeleted) return false;
-            EnumExt.SetFlag(MajorRecordFlagsRaw, (int) Internals.Constants.InitiallyDisabled, true);
-            return true;
-        }
+        bool Disable();
     }
 
     /// <summary>

@@ -67,6 +67,13 @@ namespace Mutagen.Bethesda
             return this.Duplicate(getNextFormKey, duplicatedRecordTracker);
         }
 
+        public virtual bool Disable()
+        {
+            if (this.IsDeleted) return false;
+            EnumExt.SetFlag(MajorRecordFlagsRaw, (int)Internals.Constants.InitiallyDisabled, true);
+            return true;
+        }
+
         #region Comparers
         public static IEqualityComparer<IMajorRecordCommonGetter> FormKeyEqualityComparer => _formKeyEqualityComparer;
 
