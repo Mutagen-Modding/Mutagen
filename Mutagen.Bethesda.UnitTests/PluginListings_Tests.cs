@@ -27,7 +27,7 @@ namespace Mutagen.Bethesda.UnitTests
                 new LoadOrderListing(Utility.Dawnguard, true),
                 new LoadOrderListing(Utility.PluginModKey2, true),
             };
-            PluginListings.AddImplicitMods(GameRelease.SkyrimSE, tmpFolder.Dir, loadOrder);
+            ImplicitListings.AddImplicitMods(GameRelease.SkyrimSE, tmpFolder.Dir, loadOrder);
             Assert.Equal(6, loadOrder.Count);
             Assert.Equal(new LoadOrderListing(Utility.Skyrim, true), loadOrder[0]);
             Assert.Equal(new LoadOrderListing(Utility.Update, true), loadOrder[1]);
@@ -156,8 +156,9 @@ namespace Mutagen.Bethesda.UnitTests
             using var tmp = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(PluginListings_Tests), nameof(FromPathMissingWithImplicit)));
             using var file = File.Create(Path.Combine(tmp.Dir.Path, "Skyrim.esm"));
             var missingPath = Path.Combine(tmp.Dir.Path, "Plugins.txt");
-            PluginListings.ListingsFromPath(
-                pluginTextPath: missingPath,
+            LoadOrder.GetListings(
+                pluginsFilePath: missingPath,
+                creationClubFilePath: null,
                 game: GameRelease.SkyrimSE,
                 dataPath: tmp.Dir.Path)
                 .Should().Equal(new LoadOrderListing("Skyrim.esm", true));

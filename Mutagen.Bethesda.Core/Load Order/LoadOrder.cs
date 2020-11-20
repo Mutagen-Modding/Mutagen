@@ -147,14 +147,19 @@ namespace Mutagen.Bethesda
             DirectoryPath dataPath,
             bool throwOnMissingMods = true)
         {
-            var pluginListings = PluginListings.ListingsFromPath(pluginsFilePath, game, dataPath, throwOnMissingMods);
+            List<LoadOrderListing> listings = new List<LoadOrderListing>();
+            if (pluginsFilePath.Exists)
+            {
+                listings.AddRange(PluginListings.ListingsFromPath(pluginsFilePath, game, dataPath, throwOnMissingMods));
+            }
+            ImplicitListings.AddImplicitMods(game, dataPath, listings);
             var ccListings = Enumerable.Empty<LoadOrderListing>();
             if (creationClubFilePath != null && creationClubFilePath.Value.Exists)
             {
                 ccListings = CreationClubListings.ListingsFromPath(creationClubFilePath.Value, dataPath);
             }
 
-            return OrderListings(pluginListings.Concat(ccListings));
+            return OrderListings(listings.Concat(ccListings));
         }
 
         public static IEnumerable<ModKey> OrderListings(this IEnumerable<ModKey> e)
