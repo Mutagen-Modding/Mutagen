@@ -255,6 +255,19 @@ namespace Mutagen.Bethesda.UnitTests
                 Skyrim.Constants.Dragonborn,
                 Utility.PluginModKey,
             });
+
+            // Does not respect just data folder modification
+            // Since LoadOrderListing doesn't specify whether data folder is present
+            // Data folder is just used for Timestamp alignment for Oblivion
+            File.Delete(Path.Combine(dataFolderPath, Skyrim.Constants.Dawnguard.FileName));
+            await Task.Delay(1000);
+            list.Items.Select(x => x.ModKey).Should().BeEquivalentTo(new ModKey[]
+            {
+                Skyrim.Constants.Skyrim,
+                Skyrim.Constants.Dawnguard,
+                Skyrim.Constants.Dragonborn,
+                Utility.PluginModKey,
+            });
         }
     }
 }
