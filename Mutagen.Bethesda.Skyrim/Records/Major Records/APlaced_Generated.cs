@@ -417,6 +417,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IAPlaced :
         IAPlacedGetter,
         ISkyrimMajorRecord,
+        IPlaced,
         ILoquiObjectSetter<IAPlacedInternal>,
         ILinkedFormKeyContainer
     {
@@ -431,6 +432,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IAPlacedGetter :
         ISkyrimMajorRecordGetter,
+        IPlacedGetter,
         ILoquiObject<IAPlacedGetter>,
         ILinkedFormKeyContainerGetter,
         IBinaryItem

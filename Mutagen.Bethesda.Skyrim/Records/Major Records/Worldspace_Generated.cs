@@ -2506,6 +2506,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
+                case "APlaced":
+                case "IAPlacedGetter":
+                case "IAPlaced":
+                case "IAPlacedInternal":
+                    {
+                        if (obj.TopCell.TryGet(out var APlacedTopCellitem))
+                        {
+                            APlacedTopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
                 case "APlacedTrap":
                 case "IAPlacedTrapGetter":
                 case "IAPlacedTrap":
@@ -3448,6 +3463,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         }
                     }
                     yield break;
+                case "APlaced":
+                case "IAPlacedGetter":
+                case "IAPlaced":
+                case "IAPlacedInternal":
+                    {
+                        if (obj.TopCell.TryGet(out var APlacedTopCellitem))
+                        {
+                            yield return APlacedTopCellitem;
+                            foreach (var item in APlacedTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
                 case "APlacedTrap":
                 case "IAPlacedTrapGetter":
                 case "IAPlacedTrap":
@@ -4013,6 +4050,45 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlacedObjectGetter":
                 case "IPlacedObject":
                 case "IPlacedObjectInternal":
+                    {
+                        if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
+                        {
+                            foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
+                                obj: WorldspaceTopCellitem,
+                                linkCache: linkCache,
+                                type: type,
+                                modKey: modKey,
+                                parent: curContext,
+                                throwIfUnknown: false,
+                                getter: (m, r) =>
+                                {
+                                    var baseRec = getter(m, linkCache.Lookup<IWorldspaceGetter>(obj.FormKey));
+                                    if (baseRec.TopCell != null) return baseRec.TopCell;
+                                    var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
+                                    baseRec.TopCell = copy;
+                                    return copy;
+                                }))
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
+                    foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
+                        type: type,
+                        modKey: modKey,
+                        parent: curContext,
+                        linkCache: linkCache,
+                        throwIfUnknown: false,
+                        worldspace: obj,
+                        getter: getter))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "APlaced":
+                case "IAPlacedGetter":
+                case "IAPlaced":
+                case "IAPlacedInternal":
                     {
                         if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
                         {
