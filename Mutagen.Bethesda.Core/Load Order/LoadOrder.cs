@@ -132,8 +132,12 @@ namespace Mutagen.Bethesda
             {
                 throw new FileNotFoundException("Could not locate plugins file");
             }
-
-            return PluginListings.ListingsFromPath(path, game, dataPath, throwOnMissingMods);
+            return GetListings(
+                game: game,
+                pluginsFilePath: path,
+                creationClubFilePath: CreationClubListings.GetListingsPath(game.ToCategory(), dataPath),
+                dataPath: dataPath,
+                throwOnMissingMods: throwOnMissingMods);
         }
 
         public static IEnumerable<LoadOrderListing> GetListings(
