@@ -85,6 +85,7 @@
     <LinkInterface>ILocationTargetable</LinkInterface>
   </Object>
   <Object name="APlaced" objType="Record" abstract="yes" baseClass="SkyrimMajorRecord" GUID="88bd66fe-1c46-4bbd-8873-bdf8f1ba22f0" ID="480">
+    <LinkInterface>IPlaced</LinkInterface>
   </Object>
   <Object name="PlacedPrimitive" objType="Subrecord" recordType="XPRM" GUID="0714886f-0394-47a5-9d24-61178136903e" ID="300">
     <Fields>
