@@ -147,11 +147,18 @@ namespace Mutagen.Bethesda.Binary
             RecordType header,
             StringBinaryType binaryType = StringBinaryType.NullTerminate)
         {
-            using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
+            try
             {
-                writer.Write(
-                    item,
-                    binaryType: binaryType);
+                using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
+                {
+                    writer.Write(
+                        item,
+                        binaryType: binaryType);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw SubrecordException.Factory(ex, header);
             }
         }
 
@@ -162,11 +169,18 @@ namespace Mutagen.Bethesda.Binary
             StringBinaryType binaryType = StringBinaryType.NullTerminate)
         {
             if (item == null) return;
-            using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
+            try
             {
-                writer.Write(
-                    item,
-                    binaryType: binaryType);
+                using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
+                {
+                    writer.Write(
+                        item,
+                        binaryType: binaryType);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw SubrecordException.Factory(ex, header);
             }
         }
 
@@ -177,13 +191,20 @@ namespace Mutagen.Bethesda.Binary
             StringBinaryType binaryType,
             StringsSource source)
         {
-            using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
+            try
             {
-                Write(
-                    writer,
-                    item,
-                    binaryType,
-                    source);
+                using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
+                {
+                    Write(
+                        writer,
+                        item,
+                        binaryType,
+                        source);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw SubrecordException.Factory(ex, header);
             }
         }
 
@@ -213,18 +234,25 @@ namespace Mutagen.Bethesda.Binary
             StringsSource source)
         {
             if (item == null) return;
-            using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
+            try
             {
-                if (writer.MetaData.StringsWriter == null)
+                using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
                 {
-                    writer.Write(
-                        item.String ?? string.Empty,
-                        binaryType: binaryType);
+                    if (writer.MetaData.StringsWriter == null)
+                    {
+                        writer.Write(
+                            item.String ?? string.Empty,
+                            binaryType: binaryType);
+                    }
+                    else
+                    {
+                        writer.Write(writer.MetaData.StringsWriter.Register(item, source));
+                    }
                 }
-                else
-                {
-                    writer.Write(writer.MetaData.StringsWriter.Register(item, source));
-                }
+            }
+            catch (Exception ex)
+            {
+                throw SubrecordException.Factory(ex, header);
             }
         }
 

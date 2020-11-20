@@ -1241,15 +1241,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.GMST),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
-                OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                    item: item,
-                    writer: writer);
-                writer.MetaData.FormVersion = item.FormVersion;
-                WriteRecordTypes(
-                    item: item,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter);
-                writer.MetaData.FormVersion = null;
+                try
+                {
+                    OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                        item: item,
+                        writer: writer);
+                    writer.MetaData.FormVersion = item.FormVersion;
+                    WriteRecordTypes(
+                        item: item,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                    writer.MetaData.FormVersion = null;
+                }
+                catch (Exception ex)
+                {
+                    throw RecordException.Factory(ex, item.FormKey, item.EditorID);
+                }
             }
         }
 

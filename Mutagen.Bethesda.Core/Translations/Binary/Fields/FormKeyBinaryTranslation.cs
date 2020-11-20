@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Binary
         public FormKey Parse(MutagenFrame frame)
         {
             return Parse(
-                frame.ReadSpan(4), 
+                frame.ReadSpan(4),
                 frame.MetaData.MasterReferences!);
         }
 
@@ -63,11 +63,18 @@ namespace Mutagen.Bethesda.Binary
             RecordType header,
             bool nullable = false)
         {
-            using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
+            try
             {
-                this.Write(
-                    writer,
-                    item);
+                using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
+                {
+                    this.Write(
+                        writer,
+                        item);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw SubrecordException.Factory(ex, header);
             }
         }
     }

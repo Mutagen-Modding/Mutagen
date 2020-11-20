@@ -104,14 +104,25 @@ namespace Mutagen.Bethesda.UnitTests
             var mod = new SkyrimMod(WriteKey, SkyrimRelease.SkyrimLE);
             mod.Weapons.RecordCache.Set(
                 new Weapon(FormKey.Factory("012345:Skyrim.esm"), SkyrimRelease.SkyrimLE));
-            Assert.Throws<ArgumentException>(
-                () => mod.WriteToBinary(
-                    tmp.File.Path,
-                    new BinaryWriteParameters()
+            Assert.Throws<RecordException>(
+                () =>
+                {
+                    try
                     {
-                        ModKey = BinaryWriteParameters.ModKeyOption.NoCheck,
-                        MastersListContent = BinaryWriteParameters.MastersListContentOption.NoCheck,
-                    }));
+                        mod.WriteToBinary(
+                            tmp.File.Path,
+                            new BinaryWriteParameters()
+                            {
+                                ModKey = BinaryWriteParameters.ModKeyOption.NoCheck,
+                                MastersListContent = BinaryWriteParameters.MastersListContentOption.NoCheck,
+                            });
+                    }
+                    catch (RecordException ex)
+                    {
+                        Assert.IsType<ArgumentException>(ex.InnerException);
+                        throw;
+                    }
+                });
         }
 
         [Fact]
@@ -166,6 +177,32 @@ namespace Mutagen.Bethesda.UnitTests
                        MastersListOrdering = new BinaryWriteParameters.MastersListOrderingByLoadOrder(
                            Constants.Skyrim.AsEnumerable())
                    });
+            });
+        }
+
+        [Fact]
+        public void WriteWithCounterLists()
+        {
+            var param = new BinaryWriteParameters()
+            {
+                ModKey = BinaryWriteParameters.ModKeyOption.NoCheck,
+                MastersListContent = BinaryWriteParameters.MastersListContentOption.Iterate,
+            };
+            using var tmp = GetFile();
+            var mod = new SkyrimMod(WriteKey, SkyrimRelease.SkyrimLE);
+            var armor = mod.Armors.AddNew();
+            mod.WriteToBinaryParallel(tmp.File.Path, param);
+            armor.Keywords = new ExtendedList<IFormLink<IKeywordGetter>>();
+            mod.WriteToBinaryParallel(tmp.File.Path, param);
+            armor.Keywords.Add(FormKey.Null);
+            mod.WriteToBinaryParallel(tmp.File.Path, param);
+            for (int i = 0; i < 20000; i++)
+            {
+                armor.Keywords.Add(FormKey.Null);
+            }
+            Assert.Throws<AggregateException>(() =>
+            {
+                mod.WriteToBinaryParallel(tmp.File.Path, param);
             });
         }
     }
