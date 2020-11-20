@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda
         public virtual bool Disable()
         {
             if (this.IsDeleted) return false;
-            EnumExt.SetFlag(MajorRecordFlagsRaw, (int)Internals.Constants.InitiallyDisabled, true);
+            MajorRecordFlagsRaw = EnumExt.SetFlag(MajorRecordFlagsRaw, (int)Internals.Constants.InitiallyDisabled, true);
             return true;
         }
 

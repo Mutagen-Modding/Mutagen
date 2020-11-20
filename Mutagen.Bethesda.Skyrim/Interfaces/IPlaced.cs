@@ -27,6 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
             /// </summary>
             JustInitiallyDisabled
         }
+        public Placement? Placement { get; set; }
+
+        public EnableParent? EnableParent { get; set; }
 
         public int MajorRecordFlagsRaw { get; set; }
 

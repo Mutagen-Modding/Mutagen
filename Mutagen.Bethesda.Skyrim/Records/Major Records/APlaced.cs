@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.Skyrim
                 EnableParent.Reference = new FormLink<ILinkedReferenceGetter>(Constants.Player);
             }
 
-            EnumExt.SetFlag(MajorRecordFlagsRaw, (int) SkyrimMajorRecordFlag.InitiallyDisabled, true);
+            MajorRecordFlagsRaw = EnumExt.SetFlag(MajorRecordFlagsRaw, (int) SkyrimMajorRecordFlag.InitiallyDisabled, true);
             return true;
         }
     }
