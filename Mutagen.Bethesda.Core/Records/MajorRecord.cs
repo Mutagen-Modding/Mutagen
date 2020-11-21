@@ -18,6 +18,7 @@ namespace Mutagen.Bethesda
     public partial interface IMajorRecord : IMajorRecordCommon
     {
         new FormKey FormKey { get; }
+        
     }
 
     public partial interface IMajorRecordGetter : IMajorRecordCommonGetter, IDuplicatable
@@ -64,6 +65,13 @@ namespace Mutagen.Bethesda
         object IDuplicatable.Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecordTracker)
         {
             return this.Duplicate(getNextFormKey, duplicatedRecordTracker);
+        }
+
+        public virtual bool Disable()
+        {
+            if (this.IsDeleted) return false;
+            MajorRecordFlagsRaw = EnumExt.SetFlag(MajorRecordFlagsRaw, (int)Internals.Constants.InitiallyDisabled, true);
+            return true;
         }
 
         #region Comparers

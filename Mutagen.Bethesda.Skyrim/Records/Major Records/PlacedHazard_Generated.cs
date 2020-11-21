@@ -389,7 +389,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = PlacedHazard_Registration.TriggeringRecordType;
+        public new static readonly RecordType GrupRecordType = PlacedHazard_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => PlacedHazardCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -781,6 +781,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IPlacedHazardInternal)item);
         }
         
+        public override void Clear(IAPlacedInternal item)
+        {
+            Clear(item: (IPlacedHazardInternal)item);
+        }
+        
         public override void Clear(ISkyrimMajorRecordInternal item)
         {
             Clear(item: (IPlacedHazardInternal)item);
@@ -807,6 +812,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override void CopyInFromBinary(
             IAPlacedTrapInternal item,
+            MutagenFrame frame,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            CopyInFromBinary(
+                item: (PlacedHazard)item,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
+        }
+        
+        public override void CopyInFromBinary(
+            IAPlacedInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -979,6 +995,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
+        public static new PlacedHazard_FieldIndex ConvertFieldIndex(APlaced_FieldIndex index)
+        {
+            switch (index)
+            {
+                case APlaced_FieldIndex.MajorRecordFlagsRaw:
+                    return (PlacedHazard_FieldIndex)((int)index);
+                case APlaced_FieldIndex.FormKey:
+                    return (PlacedHazard_FieldIndex)((int)index);
+                case APlaced_FieldIndex.VersionControl:
+                    return (PlacedHazard_FieldIndex)((int)index);
+                case APlaced_FieldIndex.EditorID:
+                    return (PlacedHazard_FieldIndex)((int)index);
+                case APlaced_FieldIndex.FormVersion:
+                    return (PlacedHazard_FieldIndex)((int)index);
+                case APlaced_FieldIndex.Version2:
+                    return (PlacedHazard_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
         public static new PlacedHazard_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -1039,6 +1076,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public override bool Equals(
+            IAPlacedGetter? lhs,
+            IAPlacedGetter? rhs)
+        {
+            return Equals(
+                lhs: (IPlacedHazardGetter?)lhs,
+                rhs: rhs as IPlacedHazardGetter);
+        }
+        
+        public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs)
         {
@@ -1065,6 +1111,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public override int GetHashCode(IAPlacedTrapGetter item)
+        {
+            return GetHashCode(item: (IPlacedHazardGetter)item);
+        }
+        
+        public override int GetHashCode(IAPlacedGetter item)
         {
             return GetHashCode(item: (IPlacedHazardGetter)item);
         }
@@ -1170,6 +1221,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void DeepCopyIn(
             IAPlacedTrap item,
             IAPlacedTrapGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy)
+        {
+            this.DeepCopyIn(
+                item: (IPlacedHazard)item,
+                rhs: (IPlacedHazardGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
+        }
+        
+        public override void DeepCopyIn(
+            IAPlacedInternal item,
+            IAPlacedGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy)
+        {
+            this.DeepCopyIn(
+                item: (IPlacedHazardInternal)item,
+                rhs: (IPlacedHazardGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
+        }
+        
+        public override void DeepCopyIn(
+            IAPlaced item,
+            IAPlacedGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1378,6 +1459,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IAPlacedTrapGetter item,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            Write(
+                item: (IPlacedHazardGetter)item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            IAPlacedGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(

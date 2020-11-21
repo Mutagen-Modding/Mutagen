@@ -223,6 +223,30 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         /// <summary>
+        /// Scope a load order query to APlaced
+        /// </summary>
+        /// <param name="listings">ModListings to query</param>
+        /// <returns>A typed object to do further queries on APlaced</returns>
+        public static TypedLoadOrderAccess<ISkyrimMod, IAPlaced, IAPlacedGetter> APlaced(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        {
+            return new TypedLoadOrderAccess<ISkyrimMod, IAPlaced, IAPlacedGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<IAPlacedGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<ISkyrimMod, ISkyrimModGetter, IAPlaced, IAPlacedGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to APlaced
+        /// </summary>
+        /// <param name="mods">Mods to query</param>
+        /// <returns>A typed object to do further queries on APlaced</returns>
+        public static TypedLoadOrderAccess<ISkyrimMod, IAPlaced, IAPlacedGetter> APlaced(this IEnumerable<ISkyrimModGetter> mods)
+        {
+            return new TypedLoadOrderAccess<ISkyrimMod, IAPlaced, IAPlacedGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<IAPlacedGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<ISkyrimMod, ISkyrimModGetter, IAPlaced, IAPlacedGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
         /// Scope a load order query to APlacedTrap
         /// </summary>
         /// <param name="listings">ModListings to query</param>

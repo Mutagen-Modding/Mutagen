@@ -389,7 +389,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = PlacedArrow_Registration.TriggeringRecordType;
+        public new static readonly RecordType GrupRecordType = PlacedArrow_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => PlacedArrowCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -781,6 +781,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IPlacedArrowInternal)item);
         }
         
+        public override void Clear(IAPlacedInternal item)
+        {
+            Clear(item: (IPlacedArrowInternal)item);
+        }
+        
         public override void Clear(ISkyrimMajorRecordInternal item)
         {
             Clear(item: (IPlacedArrowInternal)item);
@@ -807,6 +812,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override void CopyInFromBinary(
             IAPlacedTrapInternal item,
+            MutagenFrame frame,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            CopyInFromBinary(
+                item: (PlacedArrow)item,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
+        }
+        
+        public override void CopyInFromBinary(
+            IAPlacedInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -979,6 +995,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
+        public static new PlacedArrow_FieldIndex ConvertFieldIndex(APlaced_FieldIndex index)
+        {
+            switch (index)
+            {
+                case APlaced_FieldIndex.MajorRecordFlagsRaw:
+                    return (PlacedArrow_FieldIndex)((int)index);
+                case APlaced_FieldIndex.FormKey:
+                    return (PlacedArrow_FieldIndex)((int)index);
+                case APlaced_FieldIndex.VersionControl:
+                    return (PlacedArrow_FieldIndex)((int)index);
+                case APlaced_FieldIndex.EditorID:
+                    return (PlacedArrow_FieldIndex)((int)index);
+                case APlaced_FieldIndex.FormVersion:
+                    return (PlacedArrow_FieldIndex)((int)index);
+                case APlaced_FieldIndex.Version2:
+                    return (PlacedArrow_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
         public static new PlacedArrow_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -1039,6 +1076,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public override bool Equals(
+            IAPlacedGetter? lhs,
+            IAPlacedGetter? rhs)
+        {
+            return Equals(
+                lhs: (IPlacedArrowGetter?)lhs,
+                rhs: rhs as IPlacedArrowGetter);
+        }
+        
+        public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs)
         {
@@ -1065,6 +1111,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public override int GetHashCode(IAPlacedTrapGetter item)
+        {
+            return GetHashCode(item: (IPlacedArrowGetter)item);
+        }
+        
+        public override int GetHashCode(IAPlacedGetter item)
         {
             return GetHashCode(item: (IPlacedArrowGetter)item);
         }
@@ -1170,6 +1221,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void DeepCopyIn(
             IAPlacedTrap item,
             IAPlacedTrapGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy)
+        {
+            this.DeepCopyIn(
+                item: (IPlacedArrow)item,
+                rhs: (IPlacedArrowGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
+        }
+        
+        public override void DeepCopyIn(
+            IAPlacedInternal item,
+            IAPlacedGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy)
+        {
+            this.DeepCopyIn(
+                item: (IPlacedArrowInternal)item,
+                rhs: (IPlacedArrowGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
+        }
+        
+        public override void DeepCopyIn(
+            IAPlaced item,
+            IAPlacedGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1378,6 +1459,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IAPlacedTrapGetter item,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            Write(
+                item: (IPlacedArrowGetter)item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            IAPlacedGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(

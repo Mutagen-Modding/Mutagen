@@ -190,6 +190,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 typeof(PlacedNpc),
                 typeof(PlacedObject),
+                typeof(APlaced),
                 typeof(APlacedTrap),
             };
             dict[typeof(IPlacedGetter)] = dict[typeof(IPlaced)];

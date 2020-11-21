@@ -1,15 +1,23 @@
-using Mutagen.Bethesda.Skyrim;
-using Noggog;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using Microsoft.Diagnostics.Tracing.Parsers.FrameworkEventSource;
+using Mutagen.Bethesda.Skyrim;
+using Noggog;
 using Xunit;
+using Xunit.Abstractions;
+using Constants = Mutagen.Bethesda.Internals.Constants;
 
 namespace Mutagen.Bethesda.UnitTests
 {
     public class Api
     {
+        private readonly ITestOutputHelper _testOutputHelper;
+
+        public Api(ITestOutputHelper testOutputHelper)
+        {
+            _testOutputHelper = testOutputHelper;
+        }
+
         /// <summary>
         /// This API test is related to #106 on github
         /// Want to confirm that typical given FormLinks can resolve even if backing mod isn't a setter mod.
@@ -70,7 +78,7 @@ namespace Mutagen.Bethesda.UnitTests
         public static void IKeyworded()
         {
             void TestFunction<T>()
-                where T : IKeywordedGetter<Mutagen.Bethesda.Skyrim.IKeywordGetter>
+                where T : IKeywordedGetter<IKeywordGetter>
             {
             }
             void TestFunction2<T>()
@@ -93,5 +101,44 @@ namespace Mutagen.Bethesda.UnitTests
             placed = mods.IPlaced().WinningOverrides();
             cells = mods.Cell().WinningContextOverrides(linkCache: null!);
         }
+
+        [Fact]
+        public void DisableAPI()
+        {
+            // Some calls assuring the Disable() API is accessible and working.
+            SkyrimMod sourceMod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimSE);
+            FormKey key = sourceMod.GetNextFormKey();
+            PlacedObject placedObject = new PlacedObject(key, SkyrimRelease.SkyrimSE);
+
+            // Simplistic Disable access and verification.
+            PlacedObject disabledObj = placedObject;
+            disabledObj.Disable();
+            //_testOutputHelper.WriteLine($"{disabledPlacedObject.MajorRecordFlagsRaw}");
+            Assert.True(EnumExt.HasFlag(disabledObj.MajorRecordFlagsRaw,Constants.InitiallyDisabled));
+            MajorRecord majorRecord = placedObject;
+            majorRecord.Disable();
+            Assert.True(EnumExt.HasFlag(majorRecord.MajorRecordFlagsRaw, Constants.InitiallyDisabled));
+            IMajorRecordCommon interfaceRecord = placedObject;
+            interfaceRecord.Disable();
+            Assert.True(EnumExt.HasFlag(interfaceRecord.MajorRecordFlagsRaw, Constants.InitiallyDisabled));
+            IPlaced interfacePlaced = placedObject;
+            interfacePlaced.Disable();
+            Assert.True(EnumExt.HasFlag(interfacePlaced.MajorRecordFlagsRaw, Constants.InitiallyDisabled));
+
+            // Sanity test both API are invokable under Placed context.
+            PlacedTrap placedTrap = new PlacedTrap(key, SkyrimRelease.SkyrimSE);
+            placedTrap.Disable(IPlaced.DisableType.DisableWithoutZOffset);
+            interfacePlaced = placedTrap;
+            interfacePlaced.Disable(IPlaced.DisableType.JustInitiallyDisabled);
+            APlaced abstractPlaced = placedTrap;
+            abstractPlaced.Disable();
+            abstractPlaced.Disable(IPlaced.DisableType.SafeDisable);
+
+            //Try any other object other than Placed (invoke MajorRecord.Disable() and see if it works)
+            var armor = new Armor(key, SkyrimRelease.SkyrimSE);
+            armor.Disable();
+            Assert.True(EnumExt.HasFlag(armor.MajorRecordFlagsRaw, Constants.InitiallyDisabled));
+        }
+
     }
 }

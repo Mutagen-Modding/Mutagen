@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class PlacedObject :
-        SkyrimMajorRecord,
+        APlaced,
         IPlacedObjectInternal,
         ILoquiObjectSetter<PlacedObject>,
         IEquatable<IPlacedObjectGetter>
@@ -526,7 +526,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public new class Mask<TItem> :
-            SkyrimMajorRecord.Mask<TItem>,
+            APlaced.Mask<TItem>,
             IMask<TItem>,
             IEquatable<Mask<TItem>>
         {
@@ -1846,7 +1846,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public new class ErrorMask :
-            SkyrimMajorRecord.ErrorMask,
+            APlaced.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
@@ -2771,7 +2771,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         }
         public new class TranslationMask :
-            SkyrimMajorRecord.TranslationMask,
+            APlaced.TranslationMask,
             ITranslationMask
         {
             #region Members
@@ -2956,7 +2956,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = PlacedObject_Registration.TriggeringRecordType;
+        public new static readonly RecordType GrupRecordType = PlacedObject_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => PlacedObjectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -3063,7 +3063,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IPlacedObject :
         IPlacedObjectGetter,
-        ISkyrimMajorRecord,
+        IAPlaced,
         ILinkedReference,
         IKeywordLinkedReference,
         IPlaced,
@@ -3134,14 +3134,14 @@ namespace Mutagen.Bethesda.Skyrim
     }
 
     public partial interface IPlacedObjectInternal :
-        ISkyrimMajorRecordInternal,
+        IAPlacedInternal,
         IPlacedObject,
         IPlacedObjectGetter
     {
     }
 
     public partial interface IPlacedObjectGetter :
-        ISkyrimMajorRecordGetter,
+        IAPlacedGetter,
         ILinkedReferenceGetter,
         IKeywordLinkedReferenceGetter,
         IPlacedGetter,
@@ -3496,7 +3496,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PlacedObjectSetterCommon : SkyrimMajorRecordSetterCommon
+    public partial class PlacedObjectSetterCommon : APlacedSetterCommon
     {
         public new static readonly PlacedObjectSetterCommon Instance = new PlacedObjectSetterCommon();
 
@@ -3566,6 +3566,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.Clear(item);
         }
         
+        public override void Clear(IAPlacedInternal item)
+        {
+            Clear(item: (IPlacedObjectInternal)item);
+        }
+        
         public override void Clear(ISkyrimMajorRecordInternal item)
         {
             Clear(item: (IPlacedObjectInternal)item);
@@ -3588,6 +3593,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: PlacedObjectBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: PlacedObjectBinaryCreateTranslation.FillBinaryRecordTypes);
+        }
+        
+        public override void CopyInFromBinary(
+            IAPlacedInternal item,
+            MutagenFrame frame,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            CopyInFromBinary(
+                item: (PlacedObject)item,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
         }
         
         public override void CopyInFromBinary(
@@ -3615,7 +3631,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PlacedObjectCommon : SkyrimMajorRecordCommon
+    public partial class PlacedObjectCommon : APlacedCommon
     {
         public new static readonly PlacedObjectCommon Instance = new PlacedObjectCommon();
 
@@ -3827,7 +3843,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             PlacedObject.Mask<bool>? printMask = null)
         {
-            SkyrimMajorRecordCommon.ToStringFields(
+            APlacedCommon.ToStringFields(
                 item: item,
                 fg: fg,
                 printMask: printMask);
@@ -4185,7 +4201,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public static PlacedObject_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
+        public static PlacedObject_FieldIndex ConvertFieldIndex(APlaced_FieldIndex index)
+        {
+            switch (index)
+            {
+                case APlaced_FieldIndex.MajorRecordFlagsRaw:
+                    return (PlacedObject_FieldIndex)((int)index);
+                case APlaced_FieldIndex.FormKey:
+                    return (PlacedObject_FieldIndex)((int)index);
+                case APlaced_FieldIndex.VersionControl:
+                    return (PlacedObject_FieldIndex)((int)index);
+                case APlaced_FieldIndex.EditorID:
+                    return (PlacedObject_FieldIndex)((int)index);
+                case APlaced_FieldIndex.FormVersion:
+                    return (PlacedObject_FieldIndex)((int)index);
+                case APlaced_FieldIndex.Version2:
+                    return (PlacedObject_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static new PlacedObject_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -4230,7 +4267,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
+            if (!base.Equals((IAPlacedGetter)lhs, (IAPlacedGetter)rhs)) return false;
             if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
             if (!lhs.Base.Equals(rhs.Base)) return false;
             if (!lhs.BoundHalfExtents.Equals(rhs.BoundHalfExtents)) return false;
@@ -4290,6 +4327,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!MemorySliceExt.Equal(lhs.DistantLodData, rhs.DistantLodData)) return false;
             if (!object.Equals(lhs.Placement, rhs.Placement)) return false;
             return true;
+        }
+        
+        public override bool Equals(
+            IAPlacedGetter? lhs,
+            IAPlacedGetter? rhs)
+        {
+            return Equals(
+                lhs: (IPlacedObjectGetter?)lhs,
+                rhs: rhs as IPlacedObjectGetter);
         }
         
         public override bool Equals(
@@ -4477,6 +4523,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return hash.ToHashCode();
         }
         
+        public override int GetHashCode(IAPlacedGetter item)
+        {
+            return GetHashCode(item: (IPlacedObjectGetter)item);
+        }
+        
         public override int GetHashCode(ISkyrimMajorRecordGetter item)
         {
             return GetHashCode(item: (IPlacedObjectGetter)item);
@@ -4662,7 +4713,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PlacedObjectSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    public partial class PlacedObjectSetterTranslationCommon : APlacedSetterTranslationCommon
     {
         public new static readonly PlacedObjectSetterTranslationCommon Instance = new PlacedObjectSetterTranslationCommon();
 
@@ -4690,8 +4741,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             bool deepCopy)
         {
             base.DeepCopyIn(
-                (ISkyrimMajorRecord)item,
-                (ISkyrimMajorRecordGetter)rhs,
+                (IAPlaced)item,
+                (IAPlacedGetter)rhs,
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
@@ -5459,6 +5510,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public override void DeepCopyIn(
+            IAPlacedInternal item,
+            IAPlacedGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy)
+        {
+            this.DeepCopyIn(
+                item: (IPlacedObjectInternal)item,
+                rhs: (IPlacedObjectGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
+        }
+        
+        public override void DeepCopyIn(
+            IAPlaced item,
+            IAPlacedGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy)
+        {
+            this.DeepCopyIn(
+                item: (IPlacedObject)item,
+                rhs: (IPlacedObjectGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
+        }
+        
+        public override void DeepCopyIn(
             ISkyrimMajorRecordInternal item,
             ISkyrimMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -5599,7 +5680,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class PlacedObjectBinaryWriteTranslation :
-        SkyrimMajorRecordBinaryWriteTranslation,
+        APlacedBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
         public new readonly static PlacedObjectBinaryWriteTranslation Instance = new PlacedObjectBinaryWriteTranslation();
@@ -5989,6 +6070,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public override void Write(
             MutagenWriter writer,
+            IAPlacedGetter item,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            Write(
+                item: (IPlacedObjectGetter)item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -6011,7 +6103,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PlacedObjectBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    public partial class PlacedObjectBinaryCreateTranslation : APlacedBinaryCreateTranslation
     {
         public new readonly static PlacedObjectBinaryCreateTranslation Instance = new PlacedObjectBinaryCreateTranslation();
 
@@ -6020,7 +6112,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPlacedObjectInternal item,
             MutagenFrame frame)
         {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
+            APlacedBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
         }
@@ -6404,7 +6496,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (int)PlacedObject_FieldIndex.Placement;
                 }
                 default:
-                    return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                    return APlacedBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         recordParseCount: recordParseCount,
@@ -6433,7 +6525,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class PlacedObjectBinaryOverlay :
-        SkyrimMajorRecordBinaryOverlay,
+        APlacedBinaryOverlay,
         IPlacedObjectGetter
     {
         #region Common Routing
