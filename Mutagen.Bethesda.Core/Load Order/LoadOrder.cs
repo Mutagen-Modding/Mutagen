@@ -7,7 +7,10 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Reactive;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
@@ -132,8 +135,12 @@ namespace Mutagen.Bethesda
             {
                 throw new FileNotFoundException("Could not locate plugins file");
             }
-
-            return PluginListings.ListingsFromPath(path, game, dataPath, throwOnMissingMods);
+            return GetListings(
+                game: game,
+                pluginsFilePath: path,
+                creationClubFilePath: CreationClubListings.GetListingsPath(game.ToCategory(), dataPath),
+                dataPath: dataPath,
+                throwOnMissingMods: throwOnMissingMods);
         }
 
         public static IEnumerable<LoadOrderListing> GetListings(
@@ -143,19 +150,24 @@ namespace Mutagen.Bethesda
             DirectoryPath dataPath,
             bool throwOnMissingMods = true)
         {
-            var pluginListings = PluginListings.ListingsFromPath(pluginsFilePath, game, dataPath, throwOnMissingMods);
+            var listings = Enumerable.Empty<LoadOrderListing>();
+            if (pluginsFilePath.Exists)
+            {
+                listings = PluginListings.ListingsFromPath(pluginsFilePath, game, dataPath, throwOnMissingMods);
+            }
+            var implicitListings = ImplicitListings.GetListings(game, dataPath)
+                .Select(x => new LoadOrderListing(x, enabled: true));
             var ccListings = Enumerable.Empty<LoadOrderListing>();
             if (creationClubFilePath != null && creationClubFilePath.Value.Exists)
             {
                 ccListings = CreationClubListings.ListingsFromPath(creationClubFilePath.Value, dataPath);
             }
 
-            return OrderListings(pluginListings.Concat(ccListings));
-        }
-
-        public static IEnumerable<ModKey> OrderListings(this IEnumerable<ModKey> e)
-        {
-            return OrderListings(e, i => i);
+            return OrderListings(
+                implicitListings: implicitListings,
+                pluginsListings: listings.Except(implicitListings),
+                creationClubListings: ccListings,
+                selector: x => x.ModKey);
         }
 
         public static IEnumerable<T> OrderListings<T>(IEnumerable<T> e, Func<T, ModKey> selector)
@@ -163,9 +175,44 @@ namespace Mutagen.Bethesda
             return e.OrderBy(e => selector(e).Type);
         }
 
+        public static IEnumerable<ModKey> OrderListings(this IEnumerable<ModKey> e)
+        {
+            return OrderListings(e, i => i);
+        }
+
         public static IEnumerable<LoadOrderListing> OrderListings(this IEnumerable<LoadOrderListing> e)
         {
             return OrderListings(e, i => i.ModKey);
+        }
+
+        public static IEnumerable<T> OrderListings<T>(
+            IEnumerable<T> implicitListings,
+            IEnumerable<T> pluginsListings,
+            IEnumerable<T> creationClubListings,
+            Func<T, ModKey> selector)
+        {
+            var plugins = pluginsListings.ToList();
+            return implicitListings
+                .Concat(
+                    OrderListings(creationClubListings
+                        .Select(x =>
+                        {
+                            if (selector(x).Type == ModType.Plugin)
+                            {
+                                throw new NotImplementedException("Creation Club does not support esp plugins.");
+                            }
+                            return x;
+                        })
+                        // If CC mod is on plugins list, refer to its ordering
+                        .OrderBy(selector, Comparer<ModKey>.Create((x, y) =>
+                        {
+                            var xIndex = plugins.IndexOf(x, (a, b) => selector(a) == b);
+                            var yIndex = plugins.IndexOf(y, (a, b) => selector(a) == b);
+                            if (xIndex == yIndex) return 0;
+                            return xIndex - yIndex;
+                        })), selector))
+                .Concat(OrderListings(pluginsListings, selector))
+                .Distinct(selector);
         }
 
         public static IObservable<IChangeSet<ModKey>> OrderListings(this IObservable<IChangeSet<ModKey>> e)
@@ -182,8 +229,7 @@ namespace Mutagen.Bethesda
             GameRelease game,
             DirectoryPath dataFolderPath,
             out IObservable<ErrorResponse> state,
-            bool throwOnMissingMods = true,
-            bool orderListings = true)
+            bool throwOnMissingMods = true)
         {
             return GetLiveLoadOrder(
                 game: game,
@@ -191,8 +237,7 @@ namespace Mutagen.Bethesda
                 loadOrderFilePath: PluginListings.GetListingsPath(game),
                 cccLoadOrderFilePath: CreationClubListings.GetListingsPath(game.ToCategory(), dataFolderPath),
                 state: out state,
-                throwOnMissingMods: throwOnMissingMods,
-                orderListings: orderListings);
+                throwOnMissingMods: throwOnMissingMods);
         }
 
         public static IObservable<IChangeSet<LoadOrderListing>> GetLiveLoadOrder(
@@ -202,30 +247,50 @@ namespace Mutagen.Bethesda
             out IObservable<ErrorResponse> state,
             FilePath? cccLoadOrderFilePath = null,
             bool throwOnMissingMods = true,
-            bool orderListings = true)
+            System.Reactive.Concurrency.IScheduler? scheduler = null)
         {
-            var listings = PluginListings.GetLiveLoadOrder(
-                game: game,
-                loadOrderFilePath: loadOrderFilePath,
-                dataFolderPath: dataFolderPath,
-                out state,
-                throwOnMissingMods: throwOnMissingMods,
-                orderListings: false);
+            var listings = ImplicitListings.GetListings(game)
+                .Select(x => new LoadOrderListing(x, enabled: true))
+                .ToArray();
+            var listingsChanged = PluginListings.GetLoadOrderChanged(loadOrderFilePath);
             if (cccLoadOrderFilePath != null)
             {
-                listings = listings.Or(
-                    CreationClubListings.GetLiveLoadOrder(
-                        cccFilePath: cccLoadOrderFilePath.Value,
-                        dataFolderPath: dataFolderPath,
-                        out var ccErrs,
-                        orderListings: false));
-                state = state.Merge(ccErrs);
+                listingsChanged = listingsChanged.Merge(
+                    CreationClubListings.GetLoadOrderChanged(cccFilePath: cccLoadOrderFilePath.Value, dataFolderPath));
             }
-            if (orderListings)
+            listingsChanged = listingsChanged.PublishRefCount();
+            var stateSubj = new BehaviorSubject<Exception?>(null);
+            state = stateSubj
+                .Distinct()
+                .Select(x => x == null ? ErrorResponse.Success : ErrorResponse.Fail(x));
+            return Observable.Create<IChangeSet<LoadOrderListing>>((observer) =>
             {
-                listings = listings.Sort(Comparer<LoadOrderListing>.Create((l1, l2) => l1.ModKey.Type.CompareTo(l2.ModKey.Type)));
-            }
-            return listings;
+                CompositeDisposable disp = new CompositeDisposable();
+                SourceList<LoadOrderListing> list = new SourceList<LoadOrderListing>();
+                disp.Add(listingsChanged
+                    .StartWith(Unit.Default)
+                    .Subscribe(_ =>
+                    {
+                        try
+                        {
+                            var refreshedListings = GetListings(
+                                game,
+                                loadOrderFilePath,
+                                cccLoadOrderFilePath,
+                                dataFolderPath,
+                                throwOnMissingMods).ToArray();
+                            list.EditDiff(refreshedListings, EqualityComparer<LoadOrderListing>.Default);
+                            stateSubj.OnNext(null);
+                        }
+                        catch (Exception ex)
+                        {
+                            stateSubj.OnNext(ex);
+                        }
+                    }));
+                list.Connect()
+                    .Subscribe(observer);
+                return disp;
+            });
         }
 
         /// <summary>

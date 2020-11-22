@@ -90,6 +90,7 @@
     <Compile Include="Links\MutableModLinkCache.cs" />
     <Compile Include="Links\MutableLoadOrderLinkCache.cs" />
     <Compile Include="Load Order\CreationClubListings.cs" />
+    <Compile Include="Load Order\ImplicitListings.cs" />
     <Compile Include="Load Order\LoadOrder.cs" />
     <Compile Include="Extensions\OverrideMixIns.cs" />
     <Compile Include="Load Order\LoadOrderListing.cs" />
