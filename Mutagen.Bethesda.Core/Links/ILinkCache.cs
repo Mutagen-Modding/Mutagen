@@ -194,6 +194,24 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// Creates a new linking package relative to a load order.<br/>
         /// Will resolve links to the highest overriding mod containing the record being sought. <br/>
+        /// Modification of the target LoadOrder, or Mods on the LoadOrder is not safe.  Internal caches can become
+        /// incorrect if modifications occur on content already cached.
+        /// </summary>
+        /// <param name="loadOrder">LoadOrder to construct the package relative to</param>
+        /// <returns>LinkPackage attached to given LoadOrder</returns>
+        public static ImmutableLoadOrderLinkCache<TModGetter> ToImmutableLinkCache<TModGetter>(
+            this IEnumerable<IModListing<TModGetter>> loadOrder)
+            where TModGetter : class, IModGetter
+        {
+            return new ImmutableLoadOrderLinkCache<TModGetter>(
+                loadOrder
+                    .Select(listing => listing.Mod)
+                    .NotNull());
+        }
+
+        /// <summary>
+        /// Creates a new linking package relative to a load order.<br/>
+        /// Will resolve links to the highest overriding mod containing the record being sought. <br/>
         /// Modification of mods on the load order is not safe.  Internal caches can become
         /// incorrect if modifications occur on content already cached.
         /// </summary>
