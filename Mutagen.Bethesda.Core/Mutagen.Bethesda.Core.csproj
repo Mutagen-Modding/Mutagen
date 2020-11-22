@@ -19,15 +19,15 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Compression.BSA" Version="2.2.1.1" />
-    <PackageReference Include="DotNetZip" Version="1.14.0" />
+    <PackageReference Include="DotNetZip" Version="1.15.0" />
     <PackageReference Include="DynamicData" Version="6.17.14" />
     <PackageReference Include="GitInfo" Version="2.1.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Loqui" Version="1.5.13" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.6.5" />
-    <PackageReference Include="NuGetizer" Version="0.4.10">
+    <PackageReference Include="Loqui" Version="1.5.14" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.6.6" />
+    <PackageReference Include="NuGetizer" Version="0.4.11">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -90,6 +90,7 @@
     <Compile Include="Links\MutableModLinkCache.cs" />
     <Compile Include="Links\MutableLoadOrderLinkCache.cs" />
     <Compile Include="Load Order\CreationClubListings.cs" />
+    <Compile Include="Load Order\ImplicitListings.cs" />
     <Compile Include="Load Order\LoadOrder.cs" />
     <Compile Include="Extensions\OverrideMixIns.cs" />
     <Compile Include="Load Order\LoadOrderListing.cs" />

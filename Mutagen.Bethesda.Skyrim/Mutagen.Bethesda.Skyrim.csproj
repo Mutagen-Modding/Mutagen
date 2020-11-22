@@ -169,6 +169,9 @@
     <Compile Include="Records\Major Records\APerkEntryPointEffect.cs">
       <DependentUpon>Perk.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\APlaced.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\APlacedTrap.cs">
       <DependentUpon>PlacedTrap.xml</DependentUpon>
     </Compile>
@@ -736,13 +739,21 @@
     <Compile Include="Records\Major Records\Weather.cs">
       <DependentUpon>Weather.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\WeatherVolumetricLighting.cs" />
-    <Compile Include="Records\Major Records\WeatherImageSpaces.cs" />
+    <Compile Include="Records\Major Records\WeatherVolumetricLighting.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WeatherImageSpaces.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\WeatherAmbientColorSet.cs">
       <DependentUpon>Weather.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\WeatherAlpha.cs" />
-    <Compile Include="Records\Major Records\WeatherColor.cs" />
+    <Compile Include="Records\Major Records\WeatherAlpha.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WeatherColor.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\WeatherSound.cs">
       <DependentUpon>Weather.xml</DependentUpon>
     </Compile>
@@ -2110,15 +2121,18 @@
       <DependentUpon>Perk.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\TypeSolidifier_Generated.cs" />
+    <Compile Include="Records\Major Records\APlaced_Generated.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.1.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Loqui" Version="1.5.13" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.6.5" />
-    <PackageReference Include="NuGetizer" Version="0.4.10">
+    <PackageReference Include="Loqui" Version="1.5.14" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.6.6" />
+    <PackageReference Include="NuGetizer" Version="0.4.11">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

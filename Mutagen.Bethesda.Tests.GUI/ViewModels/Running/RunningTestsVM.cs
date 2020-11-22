@@ -1,4 +1,4 @@
-﻿using DynamicData.Binding;
+using DynamicData.Binding;
 using Noggog.WPF;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -26,7 +26,7 @@ namespace Mutagen.Bethesda.Tests.GUI
         public RunningTestsVM()
         {
             _SelectedTest = this.WhenAnyValue(x => x.SelectedPassthrough!.SelectedTest)
-                .ToGuiProperty(this, nameof(SelectedTest));
+                .ToGuiProperty(this, nameof(SelectedTest), default);
         }
 
         public async Task Run(MainVM mvm)

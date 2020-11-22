@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Tests.GUI
                     ReadInSettings(p.Current.Settings ?? new TestingSettings());
                     return p.Current.Settings;
                 })
-                .ToGuiProperty(this, nameof(SelectedSettings));
+                .ToGuiProperty(this, nameof(SelectedSettings), default);
 
             // Set up additional file picker error to fire if settings couldn't parse
             SelectedConfigPath.AdditionalError = this.WhenAnyValue(x => x.SelectedSettings)

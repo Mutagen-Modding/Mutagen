@@ -2,6 +2,7 @@ using Loqui;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Noggog;
 
 namespace Mutagen.Bethesda
 {
@@ -24,6 +25,12 @@ namespace Mutagen.Bethesda
         /// Raw integer flag data
         /// </summary>
         new int MajorRecordFlagsRaw { get; set; }
+
+        /// <summary>
+        /// Disables the record by setting the RecordFlag to Initially Disabled.
+        /// <returns>Returns true if the disable was successful.</returns>
+        /// </summary>
+        bool Disable();
     }
 
     /// <summary>

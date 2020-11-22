@@ -11,15 +11,6 @@ namespace Mutagen.Bethesda
 {
     public static class PluginListings
     {
-        private readonly static ModKey[] _sseImplicitMods = new ModKey[]
-        {
-            "Skyrim.esm",
-            "Update.esm",
-            "Dawnguard.esm",
-            "HearthFires.esm",
-            "Dragonborn.esm",
-        };
-
         private static string GetRelativePluginsPath(GameRelease game)
         {
             return game switch
@@ -115,21 +106,12 @@ namespace Mutagen.Bethesda
             DirectoryPath dataPath,
             bool throwOnMissingMods = true)
         {
-            List<LoadOrderListing> mods;
-            if (pluginTextPath.Exists)
-            {
-                using var stream = new FileStream(pluginTextPath.Path, FileMode.Open, FileAccess.Read, FileShare.Read);
-                mods = ListingsFromStream(stream, game).ToList();
-            }
-            else
-            {
-                mods = new List<LoadOrderListing>();
-            }
-            AddImplicitMods(game, dataPath, mods);
-            if (mods.Count == 0)
+            if (!pluginTextPath.Exists)
             {
                 throw new FileNotFoundException("Could not locate plugins file");
             }
+            using var stream = new FileStream(pluginTextPath.Path, FileMode.Open, FileAccess.Read, FileShare.Read);
+            var mods = ListingsFromStream(stream, game).ToList();
             if (LoadOrder.NeedsTimestampAlignment(game.ToCategory()))
             {
                 return LoadOrder.AlignToTimestamps(mods, dataPath, throwOnMissingMods: throwOnMissingMods);
@@ -178,28 +160,12 @@ namespace Mutagen.Bethesda
                 .Switch();
         }
 
-        internal static IEnumerable<ModKey> GetImplicitMods(GameRelease release)
+        public static IObservable<Unit> GetLoadOrderChanged(FilePath loadOrderFilePath)
         {
-            return release switch
-            {
-                GameRelease.SkyrimSE => _sseImplicitMods,
-                GameRelease.SkyrimVR => _sseImplicitMods,
-                _ => Enumerable.Empty<ModKey>(),
-            };
+            return ObservableExt.WatchFile(loadOrderFilePath.Path);
         }
 
-        internal static void AddImplicitMods(
-            GameRelease release,
-            DirectoryPath dataPath,
-            IList<LoadOrderListing> loadOrder)
-        {
-            foreach (var implicitMod in GetImplicitMods(release).Reverse())
-            {
-                if (loadOrder.Any(x => x.ModKey == implicitMod)) continue;
-                if (!File.Exists(Path.Combine(dataPath.Path, implicitMod.FileName))) continue;
-                loadOrder.Insert(0, new LoadOrderListing(implicitMod, true));
-            }
-        }
+        public static IObservable<Unit> GetLoadOrderChanged(GameRelease game) => GetLoadOrderChanged(GetListingsPath(game));
 
         public static bool HasEnabledMarkers(GameRelease game)
         {
@@ -217,7 +183,7 @@ namespace Mutagen.Bethesda
         {
             bool markers = HasEnabledMarkers(release);
             var loadOrderList = loadOrder.ToList();
-            foreach (var implicitMod in GetImplicitMods(release))
+            foreach (var implicitMod in ImplicitListings.GetListings(release))
             {
                 if (loadOrderList.Count > 0
                     && loadOrderList[0].ModKey == implicitMod

@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class PlacedNpc :
-        SkyrimMajorRecord,
+        APlaced,
         IPlacedNpcInternal,
         ILoquiObjectSetter<PlacedNpc>,
         IEquatable<IPlacedNpcGetter>
@@ -266,7 +266,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public new class Mask<TItem> :
-            SkyrimMajorRecord.Mask<TItem>,
+            APlaced.Mask<TItem>,
             IMask<TItem>,
             IEquatable<Mask<TItem>>
         {
@@ -910,7 +910,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public new class ErrorMask :
-            SkyrimMajorRecord.ErrorMask,
+            APlaced.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
@@ -1391,7 +1391,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         }
         public new class TranslationMask :
-            SkyrimMajorRecord.TranslationMask,
+            APlaced.TranslationMask,
             ITranslationMask
         {
             #region Members
@@ -1497,7 +1497,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = PlacedNpc_Registration.TriggeringRecordType;
+        public new static readonly RecordType GrupRecordType = PlacedNpc_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => PlacedNpcCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1609,7 +1609,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IPlacedNpc :
         IPlacedNpcGetter,
-        ISkyrimMajorRecord,
+        IAPlaced,
         IOwner,
         ILinkedReference,
         IKeywordLinkedReference,
@@ -1654,14 +1654,14 @@ namespace Mutagen.Bethesda.Skyrim
     }
 
     public partial interface IPlacedNpcInternal :
-        ISkyrimMajorRecordInternal,
+        IAPlacedInternal,
         IPlacedNpc,
         IPlacedNpcGetter
     {
     }
 
     public partial interface IPlacedNpcGetter :
-        ISkyrimMajorRecordGetter,
+        IAPlacedGetter,
         IOwnerGetter,
         ILinkedReferenceGetter,
         IKeywordLinkedReferenceGetter,
@@ -1960,7 +1960,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PlacedNpcSetterCommon : SkyrimMajorRecordSetterCommon
+    public partial class PlacedNpcSetterCommon : APlacedSetterCommon
     {
         public new static readonly PlacedNpcSetterCommon Instance = new PlacedNpcSetterCommon();
 
@@ -2000,6 +2000,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.Clear(item);
         }
         
+        public override void Clear(IAPlacedInternal item)
+        {
+            Clear(item: (IPlacedNpcInternal)item);
+        }
+        
         public override void Clear(ISkyrimMajorRecordInternal item)
         {
             Clear(item: (IPlacedNpcInternal)item);
@@ -2022,6 +2027,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: PlacedNpcBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: PlacedNpcBinaryCreateTranslation.FillBinaryRecordTypes);
+        }
+        
+        public override void CopyInFromBinary(
+            IAPlacedInternal item,
+            MutagenFrame frame,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            CopyInFromBinary(
+                item: (PlacedNpc)item,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
         }
         
         public override void CopyInFromBinary(
@@ -2049,7 +2065,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PlacedNpcCommon : SkyrimMajorRecordCommon
+    public partial class PlacedNpcCommon : APlacedCommon
     {
         public new static readonly PlacedNpcCommon Instance = new PlacedNpcCommon();
 
@@ -2183,7 +2199,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             PlacedNpc.Mask<bool>? printMask = null)
         {
-            SkyrimMajorRecordCommon.ToStringFields(
+            APlacedCommon.ToStringFields(
                 item: item,
                 fg: fg,
                 printMask: printMask);
@@ -2346,7 +2362,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public static PlacedNpc_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
+        public static PlacedNpc_FieldIndex ConvertFieldIndex(APlaced_FieldIndex index)
+        {
+            switch (index)
+            {
+                case APlaced_FieldIndex.MajorRecordFlagsRaw:
+                    return (PlacedNpc_FieldIndex)((int)index);
+                case APlaced_FieldIndex.FormKey:
+                    return (PlacedNpc_FieldIndex)((int)index);
+                case APlaced_FieldIndex.VersionControl:
+                    return (PlacedNpc_FieldIndex)((int)index);
+                case APlaced_FieldIndex.EditorID:
+                    return (PlacedNpc_FieldIndex)((int)index);
+                case APlaced_FieldIndex.FormVersion:
+                    return (PlacedNpc_FieldIndex)((int)index);
+                case APlaced_FieldIndex.Version2:
+                    return (PlacedNpc_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static new PlacedNpc_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -2391,7 +2428,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
+            if (!base.Equals((IAPlacedGetter)lhs, (IAPlacedGetter)rhs)) return false;
             if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
             if (!lhs.Base.Equals(rhs.Base)) return false;
             if (!lhs.EncounterZone.Equals(rhs.EncounterZone)) return false;
@@ -2421,6 +2458,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.Scale.EqualsWithin(rhs.Scale)) return false;
             if (!object.Equals(lhs.Placement, rhs.Placement)) return false;
             return true;
+        }
+        
+        public override bool Equals(
+            IAPlacedGetter? lhs,
+            IAPlacedGetter? rhs)
+        {
+            return Equals(
+                lhs: (IPlacedNpcGetter?)lhs,
+                rhs: rhs as IPlacedNpcGetter);
         }
         
         public override bool Equals(
@@ -2522,6 +2568,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
+        }
+        
+        public override int GetHashCode(IAPlacedGetter item)
+        {
+            return GetHashCode(item: (IPlacedNpcGetter)item);
         }
         
         public override int GetHashCode(ISkyrimMajorRecordGetter item)
@@ -2645,7 +2696,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PlacedNpcSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    public partial class PlacedNpcSetterTranslationCommon : APlacedSetterTranslationCommon
     {
         public new static readonly PlacedNpcSetterTranslationCommon Instance = new PlacedNpcSetterTranslationCommon();
 
@@ -2673,8 +2724,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             bool deepCopy)
         {
             base.DeepCopyIn(
-                (ISkyrimMajorRecord)item,
-                (ISkyrimMajorRecordGetter)rhs,
+                (IAPlaced)item,
+                (IAPlacedGetter)rhs,
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
@@ -3004,6 +3055,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public override void DeepCopyIn(
+            IAPlacedInternal item,
+            IAPlacedGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy)
+        {
+            this.DeepCopyIn(
+                item: (IPlacedNpcInternal)item,
+                rhs: (IPlacedNpcGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
+        }
+        
+        public override void DeepCopyIn(
+            IAPlaced item,
+            IAPlacedGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy)
+        {
+            this.DeepCopyIn(
+                item: (IPlacedNpc)item,
+                rhs: (IPlacedNpcGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
+        }
+        
+        public override void DeepCopyIn(
             ISkyrimMajorRecordInternal item,
             ISkyrimMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -3144,7 +3225,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class PlacedNpcBinaryWriteTranslation :
-        SkyrimMajorRecordBinaryWriteTranslation,
+        APlacedBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
         public new readonly static PlacedNpcBinaryWriteTranslation Instance = new PlacedNpcBinaryWriteTranslation();
@@ -3349,6 +3430,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public override void Write(
             MutagenWriter writer,
+            IAPlacedGetter item,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            Write(
+                item: (IPlacedNpcGetter)item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -3371,20 +3463,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PlacedNpcBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    public partial class PlacedNpcBinaryCreateTranslation : APlacedBinaryCreateTranslation
     {
         public new readonly static PlacedNpcBinaryCreateTranslation Instance = new PlacedNpcBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.ACHR;
-        public static void FillBinaryStructs(
-            IPlacedNpcInternal item,
-            MutagenFrame frame)
-        {
-            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IPlacedNpcInternal item,
             MutagenFrame frame,
@@ -3587,7 +3670,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (int)PlacedNpc_FieldIndex.Placement;
                 }
                 default:
-                    return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                    return APlacedBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         recordParseCount: recordParseCount,
@@ -3612,7 +3695,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class PlacedNpcBinaryOverlay :
-        SkyrimMajorRecordBinaryOverlay,
+        APlacedBinaryOverlay,
         IPlacedNpcGetter
     {
         #region Common Routing

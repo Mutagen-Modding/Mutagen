@@ -14,30 +14,6 @@ namespace Mutagen.Bethesda.UnitTests
     public class PluginListings_Tests
     {
         [Fact]
-        public void AddImplicitMods()
-        {
-            using var tmpFolder = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(PluginListings_Tests), nameof(AddImplicitMods)));
-            File.WriteAllText(Path.Combine(tmpFolder.Dir.Path, Utility.Skyrim.FileName), "TEST");
-            File.WriteAllText(Path.Combine(tmpFolder.Dir.Path, Utility.Dawnguard.FileName), "TEST");
-            File.WriteAllText(Path.Combine(tmpFolder.Dir.Path, Utility.Dragonborn.FileName), "TEST");
-            File.WriteAllText(Path.Combine(tmpFolder.Dir.Path, Utility.Update.FileName), "TEST");
-            var loadOrder = new List<LoadOrderListing>()
-            {
-                new LoadOrderListing(Utility.PluginModKey, true),
-                new LoadOrderListing(Utility.Dawnguard, true),
-                new LoadOrderListing(Utility.PluginModKey2, true),
-            };
-            PluginListings.AddImplicitMods(GameRelease.SkyrimSE, tmpFolder.Dir, loadOrder);
-            Assert.Equal(6, loadOrder.Count);
-            Assert.Equal(new LoadOrderListing(Utility.Skyrim, true), loadOrder[0]);
-            Assert.Equal(new LoadOrderListing(Utility.Update, true), loadOrder[1]);
-            Assert.Equal(new LoadOrderListing(Utility.Dragonborn, true), loadOrder[2]);
-            Assert.Equal(new LoadOrderListing(Utility.PluginModKey, true), loadOrder[3]);
-            Assert.Equal(new LoadOrderListing(Utility.Dawnguard, true), loadOrder[4]);
-            Assert.Equal(new LoadOrderListing(Utility.PluginModKey2, true), loadOrder[5]);
-        }
-
-        [Fact]
         public void EnabledMarkerProcessing()
         {
             var item = LoadOrderListing.FromString(Utility.PluginModKey.FileName, enabledMarkerProcessing: true);
@@ -156,8 +132,9 @@ namespace Mutagen.Bethesda.UnitTests
             using var tmp = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(PluginListings_Tests), nameof(FromPathMissingWithImplicit)));
             using var file = File.Create(Path.Combine(tmp.Dir.Path, "Skyrim.esm"));
             var missingPath = Path.Combine(tmp.Dir.Path, "Plugins.txt");
-            PluginListings.ListingsFromPath(
-                pluginTextPath: missingPath,
+            LoadOrder.GetListings(
+                pluginsFilePath: missingPath,
+                creationClubFilePath: null,
                 game: GameRelease.SkyrimSE,
                 dataPath: tmp.Dir.Path)
                 .Should().Equal(new LoadOrderListing("Skyrim.esm", true));

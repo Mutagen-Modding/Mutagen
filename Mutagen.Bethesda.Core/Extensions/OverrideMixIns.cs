@@ -401,7 +401,7 @@ namespace Mutagen.Bethesda
         /// from the Group, or copies the given record, inserts it, and then returns it as an override.
         /// </summary>
         /// <param name="group">Group to retrieve and/or insert from</param>
-        /// <param name="major">Major record to query and potententially copy</param>
+        /// <param name="major">Major record to query and potentially copy</param>
         /// <returns>Existing override record, or a copy of the given record that has already been inserted into the group</returns>
         public static TMajor GetOrAddAsOverride<TMajor, TMajorGetter>(this IGroupCommon<TMajor> group, TMajorGetter major)
             where TMajor : class, IMajorRecordInternal, TMajorGetter

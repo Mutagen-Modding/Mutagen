@@ -1,4 +1,4 @@
-﻿using Alphaleonis.Win32.Filesystem;
+using Alphaleonis.Win32.Filesystem;
 using DynamicData;
 using DynamicData.Binding;
 using Noggog.WPF;
@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Tests.GUI
                         return path;
                     }
                 })
-                .ToGuiProperty<string>(this, nameof(Name));
+                .ToGuiProperty<string>(this, nameof(Name), string.Empty);
             Tests.Connect()
                 .Bind(out _testsDisplay)
                 .Subscribe()

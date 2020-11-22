@@ -96,5 +96,13 @@ namespace Mutagen.Bethesda
             }
             return ret;
         }
+
+        public static IObservable<Unit> GetLoadOrderChanged(
+            FilePath cccFilePath,
+            DirectoryPath dataFolderPath)
+        {
+            return GetLiveLoadOrder(cccFilePath, dataFolderPath, out _, orderListings: false)
+                .QueryWhenChanged(q => Unit.Default);
+        }
     }
 }
