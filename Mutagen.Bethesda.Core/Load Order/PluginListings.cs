@@ -160,6 +160,13 @@ namespace Mutagen.Bethesda
                 .Switch();
         }
 
+        public static IObservable<Unit> GetLoadOrderChanged(FilePath loadOrderFilePath)
+        {
+            return ObservableExt.WatchFile(loadOrderFilePath.Path);
+        }
+
+        public static IObservable<Unit> GetLoadOrderChanged(GameRelease game) => GetLoadOrderChanged(GetListingsPath(game));
+
         public static bool HasEnabledMarkers(GameRelease game)
         {
             return game switch

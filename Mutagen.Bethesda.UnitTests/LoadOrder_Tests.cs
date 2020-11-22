@@ -426,5 +426,158 @@ namespace Mutagen.Bethesda.UnitTests
                     esm2,
                 });
         }
+
+        [Fact]
+        public async Task LiveLoadOrder_EnsureReaddRetainsOrder()
+        {
+            using var tmpFolder = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(LoadOrder_Tests), nameof(LiveLoadOrder_EnsureReaddRetainsOrder)));
+            var pluginPath = Path.Combine(tmpFolder.Dir.Path, "Plugins.txt");
+            var cccPath = Path.Combine(tmpFolder.Dir.Path, "Skyrim.ccc");
+            var dataFolderPath = Path.Combine(tmpFolder.Dir.Path, "Data");
+            Directory.CreateDirectory(dataFolderPath);
+            File.WriteAllText(Path.Combine(dataFolderPath, Utility.LightMasterModKey.FileName), string.Empty);
+            File.WriteAllLines(pluginPath,
+                new string[]
+                {
+                    Skyrim.Constants.Skyrim.ToString(),
+                    Skyrim.Constants.Update.ToString(),
+                    Skyrim.Constants.Dawnguard.ToString(),
+                    Utility.PluginModKey.ToString(),
+                });
+            File.WriteAllLines(cccPath,
+                new string[]
+                {
+                    Utility.LightMasterModKey.ToString(),
+                    Utility.LightMasterModKey2.ToString(),
+                });
+            var live = LoadOrder.GetLiveLoadOrder(GameRelease.SkyrimLE, pluginPath, dataFolderPath, out var state, cccLoadOrderFilePath: cccPath);
+            var list = live.AsObservableList();
+            await Task.Delay(1000);
+            list.Items.Select(x => x.ModKey).Should().BeEquivalentTo(new ModKey[]
+            {
+                Skyrim.Constants.Skyrim,
+                Skyrim.Constants.Update,
+                Skyrim.Constants.Dawnguard,
+                Utility.LightMasterModKey,
+                Utility.PluginModKey,
+            });
+
+            // Remove
+            File.WriteAllLines(pluginPath,
+                new string[]
+                {
+                    Skyrim.Constants.Skyrim.ToString(),
+                    Skyrim.Constants.Dawnguard.ToString(),
+                    Utility.PluginModKey.ToString(),
+                });
+            await Task.Delay(1000);
+            list.Items.Select(x => x.ModKey).Should().BeEquivalentTo(new ModKey[]
+            {
+                Skyrim.Constants.Skyrim,
+                Skyrim.Constants.Dawnguard,
+                Utility.LightMasterModKey,
+                Utility.PluginModKey,
+            });
+
+            // Then readd
+            File.WriteAllLines(pluginPath,
+                new string[]
+                {
+                    Skyrim.Constants.Skyrim.ToString(),
+                    Skyrim.Constants.Update.ToString(),
+                    Skyrim.Constants.Dawnguard.ToString(),
+                    Utility.PluginModKey.ToString(),
+                });
+            await Task.Delay(1000);
+            list.Items.Select(x => x.ModKey).Should().BeEquivalentTo(new ModKey[]
+            {
+                Skyrim.Constants.Skyrim,
+                Skyrim.Constants.Update,
+                Skyrim.Constants.Dawnguard,
+                Utility.LightMasterModKey,
+                Utility.PluginModKey,
+            });
+        }
+
+        // Vortex puts CC mods on the plugins file, as unactivated.  Seemingly to drive load order?
+        // This ensures that is respected
+        [Fact]
+        public async Task LiveLoadOrder_PluginsCCListingReorders()
+        {
+            using var tmpFolder = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(LoadOrder_Tests), nameof(LiveLoadOrder_PluginsCCListingReorders)));
+            var pluginPath = Path.Combine(tmpFolder.Dir.Path, "Plugins.txt");
+            var cccPath = Path.Combine(tmpFolder.Dir.Path, "Skyrim.ccc");
+            var dataFolderPath = Path.Combine(tmpFolder.Dir.Path, "Data");
+            Directory.CreateDirectory(dataFolderPath);
+            File.WriteAllText(Path.Combine(dataFolderPath, Skyrim.Constants.Skyrim.FileName), string.Empty);
+            File.WriteAllText(Path.Combine(dataFolderPath, Skyrim.Constants.Update.FileName), string.Empty);
+            File.WriteAllText(Path.Combine(dataFolderPath, Skyrim.Constants.Dawnguard.FileName), string.Empty);
+            File.WriteAllText(Path.Combine(dataFolderPath, Utility.LightMasterModKey.FileName), string.Empty);
+            File.WriteAllText(Path.Combine(dataFolderPath, Utility.LightMasterModKey2.FileName), string.Empty);
+            File.WriteAllLines(pluginPath,
+                new string[]
+                {
+                    $"*{Utility.MasterModKey}",
+                    $"*{Utility.PluginModKey}",
+                });
+            File.WriteAllLines(cccPath,
+                new string[]
+                {
+                    Utility.LightMasterModKey.ToString(),
+                    Utility.LightMasterModKey2.ToString(),
+                });
+            var live = LoadOrder.GetLiveLoadOrder(GameRelease.SkyrimSE, pluginPath, dataFolderPath, out var state, cccLoadOrderFilePath: cccPath);
+            var list = live.AsObservableList();
+            await Task.Delay(1000);
+            list.Items.Select(x => x.ModKey).Should().BeEquivalentTo(new ModKey[]
+            {
+                Skyrim.Constants.Skyrim,
+                Skyrim.Constants.Update,
+                Skyrim.Constants.Dawnguard,
+                Utility.LightMasterModKey,
+                Utility.LightMasterModKey2,
+                Utility.MasterModKey,
+                Utility.PluginModKey,
+            });
+
+            File.WriteAllLines(pluginPath,
+                new string[]
+                {
+                    $"*{Utility.MasterModKey}",
+                    $"*{Utility.PluginModKey}",
+                    $"{Utility.LightMasterModKey}",
+                });
+            await Task.Delay(1000);
+            list.Items.Select(x => x.ModKey).Should().BeEquivalentTo(new ModKey[]
+            {
+                Skyrim.Constants.Skyrim,
+                Skyrim.Constants.Update,
+                Skyrim.Constants.Dawnguard,
+                Utility.LightMasterModKey2,
+                Utility.LightMasterModKey,
+                Utility.MasterModKey,
+                Utility.PluginModKey,
+            });
+
+            File.WriteAllLines(pluginPath,
+                new string[]
+                {
+                    $"*{Utility.MasterModKey}",
+                    $"*{Utility.PluginModKey}",
+                    $"{Utility.LightMasterModKey}",
+                    $"{Utility.LightMasterModKey2}",
+                });
+            await Task.Delay(1000);
+            list.Items.Select(x => x.ModKey).Should().BeEquivalentTo(new ModKey[]
+            {
+                Skyrim.Constants.Skyrim,
+                Skyrim.Constants.Update,
+                Skyrim.Constants.Dawnguard,
+                Utility.LightMasterModKey,
+                Utility.LightMasterModKey2,
+                Utility.MasterModKey,
+                Utility.PluginModKey,
+            });
+        }
     }
 }
