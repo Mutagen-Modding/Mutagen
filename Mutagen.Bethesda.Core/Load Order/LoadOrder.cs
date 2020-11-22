@@ -147,24 +147,24 @@ namespace Mutagen.Bethesda
             DirectoryPath dataPath,
             bool throwOnMissingMods = true)
         {
-            List<LoadOrderListing> listings = new List<LoadOrderListing>();
+            var listings = Enumerable.Empty<LoadOrderListing>();
             if (pluginsFilePath.Exists)
             {
-                listings.AddRange(PluginListings.ListingsFromPath(pluginsFilePath, game, dataPath, throwOnMissingMods));
+                listings = PluginListings.ListingsFromPath(pluginsFilePath, game, dataPath, throwOnMissingMods);
             }
-            ImplicitListings.AddImplicitMods(game, dataPath, listings);
+            var implicitListings = ImplicitListings.GetListings(game, dataPath)
+                .Select(x => new LoadOrderListing(x, enabled: true));
             var ccListings = Enumerable.Empty<LoadOrderListing>();
             if (creationClubFilePath != null && creationClubFilePath.Value.Exists)
             {
                 ccListings = CreationClubListings.ListingsFromPath(creationClubFilePath.Value, dataPath);
             }
 
-            return OrderListings(listings.Concat(ccListings));
-        }
-
-        public static IEnumerable<ModKey> OrderListings(this IEnumerable<ModKey> e)
-        {
-            return OrderListings(e, i => i);
+            return OrderListings(
+                implicitListings: implicitListings,
+                pluginsListings: listings.Except(implicitListings),
+                creationClubListings: ccListings,
+                selector: x => x.ModKey);
         }
 
         public static IEnumerable<T> OrderListings<T>(IEnumerable<T> e, Func<T, ModKey> selector)
@@ -172,9 +172,44 @@ namespace Mutagen.Bethesda
             return e.OrderBy(e => selector(e).Type);
         }
 
+        public static IEnumerable<ModKey> OrderListings(this IEnumerable<ModKey> e)
+        {
+            return OrderListings(e, i => i);
+        }
+
         public static IEnumerable<LoadOrderListing> OrderListings(this IEnumerable<LoadOrderListing> e)
         {
             return OrderListings(e, i => i.ModKey);
+        }
+
+        public static IEnumerable<T> OrderListings<T>(
+            IEnumerable<T> implicitListings,
+            IEnumerable<T> pluginsListings,
+            IEnumerable<T> creationClubListings,
+            Func<T, ModKey> selector)
+        {
+            var plugins = pluginsListings.ToList();
+            return implicitListings
+                .Concat(
+                    OrderListings(creationClubListings
+                        .Select(x =>
+                        {
+                            if (selector(x).Type == ModType.Plugin)
+                            {
+                                throw new NotImplementedException("Creation Club does not support esp plugins.");
+                            }
+                            return x;
+                        })
+                        // If CC mod is on plugins list, refer to its ordering
+                        .OrderBy(selector, Comparer<ModKey>.Create((x, y) =>
+                        {
+                            var xIndex = plugins.IndexOf(x, (a, b) => selector(a) == b);
+                            var yIndex = plugins.IndexOf(y, (a, b) => selector(a) == b);
+                            if (xIndex == yIndex) return 0;
+                            return xIndex - yIndex;
+                        })), selector))
+                .Concat(OrderListings(pluginsListings, selector))
+                .Distinct(selector);
         }
 
         public static IObservable<IChangeSet<ModKey>> OrderListings(this IObservable<IChangeSet<ModKey>> e)

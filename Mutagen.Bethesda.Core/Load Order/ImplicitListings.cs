@@ -18,7 +18,7 @@ namespace Mutagen.Bethesda
             "Dragonborn.esm",
         };
 
-        internal static IEnumerable<ModKey> GetImplicitMods(GameRelease release)
+        internal static IEnumerable<ModKey> GetListings(GameRelease release)
         {
             return release switch
             {
@@ -28,17 +28,11 @@ namespace Mutagen.Bethesda
             };
         }
 
-        internal static void AddImplicitMods(
-            GameRelease release,
-            DirectoryPath dataPath,
-            IList<LoadOrderListing> loadOrder)
+        internal static IEnumerable<ModKey> GetListings(GameRelease release, DirectoryPath dataPath)
         {
-            foreach (var implicitMod in GetImplicitMods(release).Reverse())
-            {
-                if (loadOrder.Any(x => x.ModKey == implicitMod)) continue;
-                if (!File.Exists(Path.Combine(dataPath.Path, implicitMod.FileName))) continue;
-                loadOrder.Insert(0, new LoadOrderListing(implicitMod, true));
-            }
+            return GetListings(release)
+                .Where(x => File.Exists(Path.Combine(dataPath.Path, x.FileName)))
+                .ToList();
         }
     }
 }

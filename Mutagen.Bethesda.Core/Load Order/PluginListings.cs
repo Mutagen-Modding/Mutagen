@@ -176,7 +176,7 @@ namespace Mutagen.Bethesda
         {
             bool markers = HasEnabledMarkers(release);
             var loadOrderList = loadOrder.ToList();
-            foreach (var implicitMod in ImplicitListings.GetImplicitMods(release))
+            foreach (var implicitMod in ImplicitListings.GetListings(release))
             {
                 if (loadOrderList.Count > 0
                     && loadOrderList[0].ModKey == implicitMod
