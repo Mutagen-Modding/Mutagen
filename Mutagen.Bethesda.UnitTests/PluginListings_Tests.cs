@@ -25,66 +25,6 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Fact]
-        public void WriteExclude()
-        {
-            using var tmpFolder = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(PluginListings_Tests), nameof(WriteExclude)));
-            var path = Path.Combine(tmpFolder.Dir.Path, "Plugins.txt");
-            PluginListings.Write(
-                path,
-                GameRelease.Oblivion,
-                new LoadOrderListing[]
-                {
-                    new LoadOrderListing(Utility.PluginModKey, false),
-                    new LoadOrderListing(Utility.PluginModKey2, true),
-                    new LoadOrderListing(Utility.PluginModKey3, false),
-                });
-            var lines = File.ReadAllLines(path).ToList();
-            Assert.Single(lines);
-            Assert.Equal(Utility.PluginModKey2.FileName, lines[0]);
-        }
-
-        [Fact]
-        public void WriteMarkers()
-        {
-            using var tmpFolder = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(PluginListings_Tests), nameof(WriteMarkers)));
-            var path = Path.Combine(tmpFolder.Dir.Path, "Plugins.txt");
-            PluginListings.Write(
-                path,
-                GameRelease.SkyrimSE,
-                new LoadOrderListing[]
-                {
-                    new LoadOrderListing(Utility.PluginModKey, false),
-                    new LoadOrderListing(Utility.PluginModKey2, true),
-                    new LoadOrderListing(Utility.PluginModKey3, false),
-                });
-            var lines = File.ReadAllLines(path).ToList();
-            Assert.Equal(3, lines.Count);
-            Assert.Equal($"{Utility.PluginModKey.FileName}", lines[0]);
-            Assert.Equal($"*{Utility.PluginModKey2.FileName}", lines[1]);
-            Assert.Equal($"{Utility.PluginModKey3.FileName}", lines[2]);
-        }
-
-        [Fact]
-        public void WriteImplicit()
-        {
-            using var tmpFolder = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(PluginListings_Tests), nameof(WriteImplicit)));
-            var path = Path.Combine(tmpFolder.Dir.Path, "Plugins.txt");
-            PluginListings.Write(
-                path,
-                GameRelease.SkyrimSE,
-                new LoadOrderListing[]
-                {
-                    new LoadOrderListing(Utility.Skyrim, true),
-                    new LoadOrderListing(Utility.PluginModKey2, true),
-                    new LoadOrderListing(Utility.Dawnguard, false),
-                });
-            var lines = File.ReadAllLines(path).ToList();
-            Assert.Equal(2, lines.Count);
-            Assert.Equal($"*{Utility.PluginModKey2.FileName}", lines[0]);
-            Assert.Equal($"{Utility.Dawnguard.FileName}", lines[1]);
-        }
-
-        [Fact]
         public async Task LiveLoadOrder()
         {
             using var tmpFolder = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(PluginListings_Tests), nameof(LiveLoadOrder)));
