@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda.Generation
                 elem.Add(new XAttribute(Loqui.Generation.Constants.NULLABLE, "false"));
                 await obj.LoadField(elem, requireName: true, add: true);
             }
-            obj.GetObjectData().DataTypeModuleComplete.Complete();
+            obj.GetObjectData().DataTypeModuleComplete.SetResult();
         }
 
         public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)

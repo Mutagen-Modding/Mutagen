@@ -103,7 +103,7 @@ namespace Mutagen.Bethesda.Generation
                     await SetRecordTrigger(obj, field, field.GetFieldData());
                 }
                 await SetObjectTrigger(obj);
-                obj.GetObjectData().WiringComplete.Complete();
+                obj.GetObjectData().WiringComplete.SetResult();
                 await base.LoadWrapup(obj);
             }
             catch (Exception ex)
