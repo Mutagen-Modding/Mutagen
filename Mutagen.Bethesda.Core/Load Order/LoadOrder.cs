@@ -273,6 +273,9 @@ namespace Mutagen.Bethesda
                     {
                         try
                         {
+                            // Short circuit if not subscribed anymore
+                            if (disp.IsDisposed) return;
+
                             var refreshedListings = GetListings(
                                 game,
                                 loadOrderFilePath,
@@ -284,6 +287,9 @@ namespace Mutagen.Bethesda
                         }
                         catch (Exception ex)
                         {
+                            // Short circuit if not subscribed anymore
+                            if (disp.IsDisposed) return;
+
                             stateSubj.OnNext(ex);
                         }
                     }));
