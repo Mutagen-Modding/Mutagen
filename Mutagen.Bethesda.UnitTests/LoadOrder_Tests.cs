@@ -251,6 +251,7 @@ namespace Mutagen.Bethesda.UnitTests
                     Utility.LightMasterModKey.ToString(),
                     Utility.LightMasterModKey2.ToString(),
                 });
+            await Task.Delay(1000);
             var live = LoadOrder.GetLiveLoadOrder(GameRelease.SkyrimLE, pluginPath, dataFolderPath, out var state, cccLoadOrderFilePath: cccPath);
             state.Subscribe(x =>
             {
@@ -450,6 +451,7 @@ namespace Mutagen.Bethesda.UnitTests
                     Utility.LightMasterModKey.ToString(),
                     Utility.LightMasterModKey2.ToString(),
                 });
+            await Task.Delay(1000);
             var live = LoadOrder.GetLiveLoadOrder(GameRelease.SkyrimLE, pluginPath, dataFolderPath, out var state, cccLoadOrderFilePath: cccPath);
             var list = live.AsObservableList();
             await Task.Delay(1000);
