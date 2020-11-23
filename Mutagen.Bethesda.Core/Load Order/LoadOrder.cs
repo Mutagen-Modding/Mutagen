@@ -288,7 +288,11 @@ namespace Mutagen.Bethesda
                                     cccLoadOrderFilePath,
                                     dataFolderPath,
                                     throwOnMissingMods).ToArray();
-                                list.EditDiff(refreshedListings, EqualityComparer<LoadOrderListing>.Default);
+                                // ToDo
+                                // Upgrade to SetTo mechanics.
+                                // SourceLists' EditDiff seems weird
+                                list.Clear();
+                                list.AddRange(refreshedListings);
                                 stateSubj.OnNext(null);
                             }
                             catch (Exception ex)
