@@ -246,8 +246,7 @@ namespace Mutagen.Bethesda
             DirectoryPath dataFolderPath,
             out IObservable<ErrorResponse> state,
             FilePath? cccLoadOrderFilePath = null,
-            bool throwOnMissingMods = true,
-            System.Reactive.Concurrency.IScheduler? scheduler = null)
+            bool throwOnMissingMods = true)
         {
             var listings = ImplicitListings.GetListings(game)
                 .Select(x => new LoadOrderListing(x, enabled: true))

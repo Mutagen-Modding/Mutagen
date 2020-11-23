@@ -106,12 +106,7 @@ namespace Mutagen.Bethesda
             DirectoryPath dataPath,
             bool throwOnMissingMods = true)
         {
-            if (!pluginTextPath.Exists)
-            {
-                throw new FileNotFoundException("Could not locate plugins file");
-            }
-            using var stream = new FileStream(pluginTextPath.Path, FileMode.Open, FileAccess.Read, FileShare.Read);
-            var mods = ListingsFromStream(stream, game).ToList();
+            var mods = RawListingsFromPath(pluginTextPath, game);
             if (LoadOrder.NeedsTimestampAlignment(game.ToCategory()))
             {
                 return LoadOrder.AlignToTimestamps(mods, dataPath, throwOnMissingMods: throwOnMissingMods);
@@ -120,6 +115,18 @@ namespace Mutagen.Bethesda
             {
                 return mods;
             }
+        }
+
+        public static IEnumerable<LoadOrderListing> RawListingsFromPath(
+            FilePath pluginTextPath,
+            GameRelease game)
+        {
+            if (!pluginTextPath.Exists)
+            {
+                throw new FileNotFoundException("Could not locate plugins file");
+            }
+            using var stream = new FileStream(pluginTextPath.Path, FileMode.Open, FileAccess.Read, FileShare.Read);
+            return ListingsFromStream(stream, game).ToList();
         }
 
         public static IObservable<IChangeSet<LoadOrderListing>> GetLiveLoadOrder(

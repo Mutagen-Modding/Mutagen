@@ -18,7 +18,7 @@ namespace Mutagen.Bethesda
             "Dragonborn.esm",
         };
 
-        internal static IEnumerable<ModKey> GetListings(GameRelease release)
+        public static IEnumerable<ModKey> GetListings(GameRelease release)
         {
             return release switch
             {
@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda
             };
         }
 
-        internal static IEnumerable<ModKey> GetListings(GameRelease release, DirectoryPath dataPath)
+        public static IEnumerable<ModKey> GetListings(GameRelease release, DirectoryPath dataPath)
         {
             return GetListings(release)
                 .Where(x => File.Exists(Path.Combine(dataPath.Path, x.FileName)))
