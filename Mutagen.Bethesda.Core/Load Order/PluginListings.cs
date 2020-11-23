@@ -178,36 +178,5 @@ namespace Mutagen.Bethesda
                 _ => throw new NotImplementedException(),
             };
         }
-
-        public static void Write(string path, GameRelease release, IEnumerable<LoadOrderListing> loadOrder)
-        {
-            bool markers = HasEnabledMarkers(release);
-            var loadOrderList = loadOrder.ToList();
-            foreach (var implicitMod in ImplicitListings.GetListings(release))
-            {
-                if (loadOrderList.Count > 0
-                    && loadOrderList[0].ModKey == implicitMod
-                    && loadOrderList[0].Enabled)
-                {
-                    loadOrderList.RemoveAt(0);
-                }
-            }
-            File.WriteAllLines(path,
-                loadOrderList.Where(x =>
-                {
-                    return (markers || x.Enabled);
-                })
-                .Select(x =>
-                {
-                    if (x.Enabled && markers)
-                    {
-                        return $"*{x.ModKey.FileName}";
-                    }
-                    else
-                    {
-                        return x.ModKey.FileName;
-                    }
-                }));
-        }
     }
 }
