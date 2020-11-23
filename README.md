@@ -41,4 +41,4 @@ Another option is the [Mutagen Bootcamp](https://github.com/Noggog/MutagenBootca
 ## Installing Mutagen
 Mutagen can be added to your C# project via NuGet, under the package name `Mutagen.Bethesda`.  Search for it in Visual Studio, or find it [here](https://www.nuget.org/packages/Mutagen.Bethesda/).
 
-If you're unfamiliar with setting up C# projects in general, a good place to start might be creating a simple [Synthesis patcher](https://github.com/Noggog/Synthesis/wiki/Create-a-Mutagen-Patcher), and be sure to ask questions on our [Discord](https://discord.gg/53KMEsW).
+If you're unfamiliar with setting up C# projects in general, a good place to start might be creating a simple [Synthesis patcher](https://github.com/Noggog/Synthesis/wiki/Create-a-Patcher), and be sure to ask questions on our [Discord](https://discord.gg/53KMEsW).
