@@ -62,6 +62,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             public MaterialObject.Flag GetFlagsCustom()
             {
+                if (_data.Length < (_FlagsLocation + 4)) return default;
                 var slice = _data.Slice(_FlagsLocation);
                 if (this.FormVersion >= 44 || (slice.Length >= 8 && this.FormVersion == 43 && this._package.MetaData.Constants.Release == GameRelease.SkyrimVR))
                 {

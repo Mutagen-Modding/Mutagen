@@ -1226,11 +1226,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public BipedObjectFlag FirstPersonFlags => (BipedObjectFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
         #region Flags
-        public BodyTemplate.Flag Flags => (BodyTemplate.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
+        private bool _Flags_IsSet => _package.FormVersion!.FormVersion!.Value < 44;
+        public BodyTemplate.Flag Flags => _Flags_IsSet ? (BodyTemplate.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4)) : default;
         int FlagsVersioningOffset => _package.FormVersion!.FormVersion!.Value >= 44 ? -4 : 0;
         #endregion
         #region ArmorType
-        public ArmorType ArmorType => (ArmorType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(FlagsVersioningOffset + 0x8, 0x4));
+        private bool _ArmorType_IsSet => _package.FormVersion!.FormVersion!.Value >= 22;
+        public ArmorType ArmorType => _ArmorType_IsSet ? (ArmorType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(FlagsVersioningOffset + 0x8, 0x4)) : default;
         int ArmorTypeVersioningOffset => FlagsVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 22 ? -4 : 0);
         #endregion
         partial void CustomFactoryEnd(

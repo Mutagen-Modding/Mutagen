@@ -169,6 +169,10 @@ namespace Mutagen.Bethesda.Generation
                     throw new NotImplementedException();
             }
 
+            if (dataType == null && data.HasVersioning && !typeGen.Nullable)
+            {
+                fg.AppendLine($"private bool _{typeGen.Name}_IsSet => {VersioningModule.GetVersionIfCheck(data, "_package.FormVersion!.FormVersion!.Value")};");
+            }
             if (data.HasTrigger)
             {
                 fg.AppendLine($"private int? _{typeGen.Name}Location;");
@@ -189,6 +193,9 @@ namespace Mutagen.Bethesda.Generation
             {
                 DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, passedLengthAccessor);
             }
+
+            bool isSetCheck = dataType != null || data.HasVersioning;
+
             if (eType.NullableFallbackInt != null)
             {
                 fg.AppendLine($"public {eType.TypeName(getter: true)}? {eType.Name}");
@@ -216,7 +223,7 @@ namespace Mutagen.Bethesda.Generation
             }
             else
             {
-                if (dataType == null)
+                if (!isSetCheck)
                 {
                     fg.AppendLine($"public {eType.TypeName(getter: true)} {eType.Name} => {getType};");
                 }

@@ -4114,7 +4114,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.CloudTextures.Span, rhs.CloudTextures.Span)) return false;
+            if (!MemoryExtensions.SequenceEqual<string>(lhs.CloudTextures.Span!, rhs.CloudTextures.Span!)) return false;
             if (!MemorySliceExt.Equal(lhs.DNAM, rhs.DNAM)) return false;
             if (!MemorySliceExt.Equal(lhs.CNAM, rhs.CNAM)) return false;
             if (!MemorySliceExt.Equal(lhs.ANAM, rhs.ANAM)) return false;
