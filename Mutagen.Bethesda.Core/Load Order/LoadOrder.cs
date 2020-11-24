@@ -8,6 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reactive;
+using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -240,14 +241,15 @@ namespace Mutagen.Bethesda
                 throwOnMissingMods: throwOnMissingMods);
         }
 
+        // ToDo
+        // Add scheduler for throttle
         public static IObservable<IChangeSet<LoadOrderListing>> GetLiveLoadOrder(
             GameRelease game,
             FilePath loadOrderFilePath,
             DirectoryPath dataFolderPath,
             out IObservable<ErrorResponse> state,
             FilePath? cccLoadOrderFilePath = null,
-            bool throwOnMissingMods = true,
-            System.Reactive.Concurrency.IScheduler? scheduler = null)
+            bool throwOnMissingMods = true)
         {
             var listings = ImplicitListings.GetListings(game)
                 .Select(x => new LoadOrderListing(x, enabled: true))
@@ -269,28 +271,37 @@ namespace Mutagen.Bethesda
                 SourceList<LoadOrderListing> list = new SourceList<LoadOrderListing>();
                 disp.Add(listingsChanged
                     .StartWith(Unit.Default)
+                    .Throttle(TimeSpan.FromMilliseconds(150))
                     .Subscribe(_ =>
                     {
-                        try
+                        // Try three times, in case things locked
+                        for (int i = 0; i < 3; i++)
                         {
-                            // Short circuit if not subscribed anymore
-                            if (disp.IsDisposed) return;
+                            try
+                            {
+                                // Short circuit if not subscribed anymore
+                                if (disp.IsDisposed) return;
 
-                            var refreshedListings = GetListings(
-                                game,
-                                loadOrderFilePath,
-                                cccLoadOrderFilePath,
-                                dataFolderPath,
-                                throwOnMissingMods).ToArray();
-                            list.EditDiff(refreshedListings, EqualityComparer<LoadOrderListing>.Default);
-                            stateSubj.OnNext(null);
-                        }
-                        catch (Exception ex)
-                        {
-                            // Short circuit if not subscribed anymore
-                            if (disp.IsDisposed) return;
+                                var refreshedListings = GetListings(
+                                    game,
+                                    loadOrderFilePath,
+                                    cccLoadOrderFilePath,
+                                    dataFolderPath,
+                                    throwOnMissingMods).ToArray();
+                                // ToDo
+                                // Upgrade to SetTo mechanics.
+                                // SourceLists' EditDiff seems weird
+                                list.Clear();
+                                list.AddRange(refreshedListings);
+                                stateSubj.OnNext(null);
+                            }
+                            catch (Exception ex)
+                            {
+                                // Short circuit if not subscribed anymore
+                                if (disp.IsDisposed) return;
 
-                            stateSubj.OnNext(ex);
+                                stateSubj.OnNext(ex);
+                            }
                         }
                     }));
                 list.Connect()
