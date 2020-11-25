@@ -46,14 +46,14 @@ namespace Mutagen.Bethesda.Skyrim
             foreach (var readOnlyBlock in cellBlocks.Records)
             {
                 var blockNum = readOnlyBlock.BlockNumber;
-                var blockContext = new ModContext(
+                var blockContext = new ModContext<ICellBlockGetter>(
                     modKey: modKey,
                     parent: parent,
                     record: readOnlyBlock);
                 foreach (var readOnlySubBlock in readOnlyBlock.SubBlocks)
                 {
                     var subBlockNum = readOnlySubBlock.BlockNumber;
-                    var subBlockContext = new ModContext(
+                    var subBlockContext = new ModContext<ICellSubBlockGetter>(
                         modKey: modKey,
                         parent: blockContext,
                         record: readOnlySubBlock);
@@ -126,7 +126,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 var blockNumX = readOnlyBlock.BlockNumberX;
                 var blockNumY = readOnlyBlock.BlockNumberY;
-                var blockContext = new ModContext(
+                var blockContext = new ModContext<IWorldspaceBlockGetter>(
                     modKey: modKey,
                     parent: parent,
                     record: readOnlyBlock);
@@ -134,7 +134,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     var subBlockNumY = readOnlySubBlock.BlockNumberY;
                     var subBlockNumX = readOnlySubBlock.BlockNumberX;
-                    var subBlockContext = new ModContext(
+                    var subBlockContext = new ModContext<IWorldspaceSubBlockGetter>(
                         modKey: modKey,
                         parent: blockContext,
                         record: readOnlySubBlock);

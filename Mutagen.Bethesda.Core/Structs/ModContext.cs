@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
 
 namespace Mutagen.Bethesda
 {
@@ -9,7 +7,7 @@ namespace Mutagen.Bethesda
     {
         ModKey ModKey { get; }
         public IModContext? Parent { get; }
-        public object Record { get; }
+        public object? Record { get; }
     }
 
     public interface IModContext<TModSetter, TMajorSetter, TMajorGetter> : IModContext
@@ -20,15 +18,16 @@ namespace Mutagen.Bethesda
         new TMajorGetter Record { get; }
     }
 
-    public class ModContext : IModContext
+    public class ModContext<T> : IModContext
     {
         public ModKey ModKey { get; set; }
 
         public IModContext? Parent { get; set; }
 
-        public object Record { get; set; }
+        public T Record { get; set; }
+        object? IModContext.Record => Record;
 
-        public ModContext(ModKey modKey, IModContext? parent, object record)
+        public ModContext(ModKey modKey, IModContext? parent, T record)
         {
             ModKey = modKey;
             Parent = parent;
