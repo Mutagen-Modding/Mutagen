@@ -65,19 +65,17 @@ namespace Mutagen.Bethesda
         /// Retrieves the record that matches the FormKey relative to the source the cache was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
-        /// the function will throw a KeyNotFoundException.
+        /// the function will throw a KeyNotFoundException.<br />
+        /// <br/>
+        /// NOTE:  This call is much slower than the alternative that uses generics, as all records in the entire mod must be
+        /// processed, rather than being able to scope the search to a specific area.
         /// </summary>
         /// <param name="formKey">FormKey to look for</param>
-        /// <exception cref="ArgumentException">
-        /// An unexpected TMajor type will throw an exception.<br/>
-        /// Unexpected types include:<br/>
-        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
-        ///   - A setter type is requested from a getter only object.
-        /// </exception>
         /// <exception cref="KeyNotFoundException">
         /// When the FormKey cannot be found under the attached cache.<br/>
         /// </exception>
         /// <returns>True if a matching record was found</returns>
+        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
         IMajorRecordCommonGetter Resolve(FormKey formKey);
 
         /// <summary>
@@ -122,12 +120,12 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// Iterates through the contained mods in the order they were listed, with the least prioritized mod first.
         /// </summary>
-        public IReadOnlyList<IModGetter> ListedOrder { get; }
+        IReadOnlyList<IModGetter> ListedOrder { get; }
 
         /// <summary>
         /// Iterates through the contained mods in priority order (reversed), with the most prioritized mod first.
         /// </summary>
-        public IReadOnlyList<IModGetter> PriorityOrder { get; }
+        IReadOnlyList<IModGetter> PriorityOrder { get; }
     }
 
     public static class ILinkCacheExt
