@@ -35,7 +35,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static readonly Landscape.TranslationMask? LandscapeCopyMask = null;
 
-        internal static IEnumerable<ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        internal static IEnumerable<IModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             this IListGroupGetter<ICellBlockGetter> cellBlocks, 
             ILinkCache linkCache, 
             Type type,
@@ -112,7 +112,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
 
-        internal static IEnumerable<ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        internal static IEnumerable<IModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             this IReadOnlyList<IWorldspaceBlockGetter> worldspaceBlocks,
             IWorldspaceGetter worldspace,
             ILinkCache linkCache,

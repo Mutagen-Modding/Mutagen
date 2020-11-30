@@ -1731,7 +1731,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public IEnumerable<ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        public IEnumerable<IModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             IDialogTopicGetter obj,
             ILinkCache linkCache,
             Type type,

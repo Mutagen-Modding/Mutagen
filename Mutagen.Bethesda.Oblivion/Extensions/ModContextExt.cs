@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly Road.TranslationMask? RoadCopyMask = null;
         public static readonly PathGrid.TranslationMask? PathGridCopyMask = null;
 
-        internal static IEnumerable<ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        internal static IEnumerable<IModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             this IListGroupGetter<ICellBlockGetter> cellBlocks,
             ILinkCache linkCache,
             Type type,
@@ -110,7 +110,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        internal static IEnumerable<ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        internal static IEnumerable<IModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             this IReadOnlyList<IWorldspaceBlockGetter> worldspaceBlocks,
             IWorldspaceGetter worldspace,
             ILinkCache linkCache,
