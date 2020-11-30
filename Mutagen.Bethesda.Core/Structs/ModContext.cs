@@ -6,19 +6,23 @@ namespace Mutagen.Bethesda
     public interface IModContext
     {
         ModKey ModKey { get; }
-        public IModContext? Parent { get; }
-        public object? Record { get; }
+        IModContext? Parent { get; }
+        object? Record { get; }
     }
 
-    public interface IModContext<TModSetter, TMajorSetter, TMajorGetter> : IModContext
+    public interface IModContext<T> : IModContext
+    {
+        new T Record { get; }
+    }
+
+    public interface IModContext<TModSetter, TMajorSetter, TMajorGetter> : IModContext<TMajorGetter>
         where TModSetter : IModGetter
         where TMajorSetter : IMajorRecordCommon, TMajorGetter
         where TMajorGetter : IMajorRecordCommonGetter
     {
-        new TMajorGetter Record { get; }
     }
 
-    public class ModContext<T> : IModContext
+    public class ModContext<T> : IModContext<T>
     {
         public ModKey ModKey { get; set; }
 
@@ -45,7 +49,7 @@ namespace Mutagen.Bethesda
     /// <typeparam name="TModSetter">The setter interface of the mod type to target</typeparam>
     /// <typeparam name="TMajorSetter">The setter interface of the contained record</typeparam>
     /// <typeparam name="TMajorGetter">The getter interface of the contained record</typeparam>
-    public class ModContext<TModSetter, TMajorSetter, TMajorGetter> : IModContext
+    public class ModContext<TModSetter, TMajorSetter, TMajorGetter> : IModContext<TMajorGetter>
         where TModSetter : IModGetter
         where TMajorSetter : IMajorRecordCommon, TMajorGetter
         where TMajorGetter : IMajorRecordCommonGetter
