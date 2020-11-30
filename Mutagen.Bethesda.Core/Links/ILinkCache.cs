@@ -137,10 +137,11 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="mod">Mod to construct the package relative to</param>
         /// <returns>LinkPackage attached to given mod</returns>
-        public static ImmutableModLinkCache<TMod> ToImmutableLinkCache<TMod>(this TMod mod)
-            where TMod : class, IModGetter
+        public static ImmutableModLinkCache<TMod, TModGetter> ToImmutableLinkCache<TMod, TModGetter>(this TModGetter mod)
+            where TMod : class, IMod, TModGetter
+            where TModGetter : class, IModGetter
         {
-            return new ImmutableModLinkCache<TMod>(mod);
+            return new ImmutableModLinkCache<TMod, TModGetter>(mod);
         }
 
         /// <summary>
@@ -150,10 +151,11 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="mod">Mod to construct the package relative to</param>
         /// <returns>LinkPackage attached to given mod</returns>
-        public static MutableModLinkCache<TMod> ToMutableLinkCache<TMod>(this TMod mod)
-            where TMod : class, IModGetter
+        public static MutableModLinkCache<TMod, TModGetter> ToMutableLinkCache<TMod, TModGetter>(this TModGetter mod)
+            where TMod : class, IMod, TModGetter
+            where TModGetter : class, IModGetter
         {
-            return new MutableModLinkCache<TMod>(mod);
+            return new MutableModLinkCache<TMod, TModGetter>(mod);
         }
 
         /// <summary>
@@ -164,11 +166,12 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="loadOrder">LoadOrder to construct the package relative to</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
-        public static ImmutableLoadOrderLinkCache<TModGetter> ToImmutableLinkCache<TModGetter>(
+        public static ImmutableLoadOrderLinkCache<TMod, TModGetter> ToImmutableLinkCache<TMod, TModGetter>(
             this LoadOrder<TModGetter> loadOrder)
+            where TMod : class, IMod, TModGetter
             where TModGetter : class, IModGetter
         {
-            return new ImmutableLoadOrderLinkCache<TModGetter>(loadOrder.ListedOrder);
+            return new ImmutableLoadOrderLinkCache<TMod, TModGetter>(loadOrder.ListedOrder);
         }
 
         /// <summary>
@@ -179,11 +182,12 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="loadOrder">LoadOrder to construct the package relative to</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
-        public static ImmutableLoadOrderLinkCache<TModGetter> ToImmutableLinkCache<TModGetter>(
+        public static ImmutableLoadOrderLinkCache<TMod, TModGetter> ToImmutableLinkCache<TMod, TModGetter>(
             this LoadOrder<IModListing<TModGetter>> loadOrder)
+            where TMod : class, IMod, TModGetter
             where TModGetter : class, IModGetter
         {
-            return new ImmutableLoadOrderLinkCache<TModGetter>(
+            return new ImmutableLoadOrderLinkCache<TMod, TModGetter>(
                 loadOrder
                     .Select(listing => listing.Value.Mod)
                     .NotNull());
@@ -197,11 +201,12 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="loadOrder">LoadOrder to construct the package relative to</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
-        public static ImmutableLoadOrderLinkCache<TModGetter> ToImmutableLinkCache<TModGetter>(
+        public static ImmutableLoadOrderLinkCache<TMod, TModGetter> ToImmutableLinkCache<TMod, TModGetter>(
             this IEnumerable<IModListing<TModGetter>> loadOrder)
+            where TMod : class, IMod, TModGetter
             where TModGetter : class, IModGetter
         {
-            return new ImmutableLoadOrderLinkCache<TModGetter>(
+            return new ImmutableLoadOrderLinkCache<TMod, TModGetter>(
                 loadOrder
                     .Select(listing => listing.Mod)
                     .NotNull());
@@ -215,11 +220,12 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="loadOrder">Enumerable of mods to construct the package relative to</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
-        public static ImmutableLoadOrderLinkCache<TModGetter> ToImmutableLinkCache<TModGetter>(
+        public static ImmutableLoadOrderLinkCache<TMod, TModGetter> ToImmutableLinkCache<TMod, TModGetter>(
             this IEnumerable<TModGetter> loadOrder)
+            where TMod : class, IMod, TModGetter
             where TModGetter : class, IModGetter
         {
-            return new ImmutableLoadOrderLinkCache<TModGetter>(loadOrder);
+            return new ImmutableLoadOrderLinkCache<TMod, TModGetter>(loadOrder);
         }
 
         /// <summary>
@@ -236,7 +242,7 @@ namespace Mutagen.Bethesda
             where TModGetter : class, IModGetter
         {
             return new MutableLoadOrderLinkCache<TMod, TModGetter>(
-                immutableBaseCache.ToImmutableLinkCache(),
+                immutableBaseCache.ToImmutableLinkCache<TMod, TModGetter>(),
                 mutableMods);
         }
 
@@ -254,7 +260,7 @@ namespace Mutagen.Bethesda
             where TModGetter : class, IModGetter
         {
             return new MutableLoadOrderLinkCache<TMod, TModGetter>(
-                immutableBaseCache.ToImmutableLinkCache(),
+                immutableBaseCache.ToImmutableLinkCache<TMod, TModGetter>(),
                 mutableMods);
         }
 
@@ -272,7 +278,7 @@ namespace Mutagen.Bethesda
             where TModGetter : class, IModGetter
         {
             return new MutableLoadOrderLinkCache<TMod, TModGetter>(
-                immutableBaseCache.ToImmutableLinkCache(),
+                immutableBaseCache.ToImmutableLinkCache<TMod, TModGetter>(),
                 mutableMods);
         }
     }

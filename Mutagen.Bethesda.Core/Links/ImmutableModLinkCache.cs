@@ -19,11 +19,11 @@ namespace Mutagen.Bethesda
     /// Modification of the target Mod is not safe.  Internal caches can become incorrect if 
     /// modifications occur on content already cached.
     /// </summary>
-    /// <typeparam name="TMod">Mod type</typeparam>
-    public class ImmutableModLinkCache<TMod> : ILinkCache
-        where TMod : IModGetter
+    public class ImmutableModLinkCache<TMod, TModGetter> : ILinkCache
+        where TMod : class, IMod, TModGetter
+        where TModGetter : class, IModGetter
     {
-        private readonly TMod _sourceMod;
+        private readonly TModGetter _sourceMod;
 
         private readonly Lazy<IReadOnlyCache<IMajorRecordCommonGetter, FormKey>> _untypedMajorRecords;
         private readonly Dictionary<Type, IReadOnlyCache<IMajorRecordCommonGetter, FormKey>> _majorRecords = new Dictionary<Type, IReadOnlyCache<IMajorRecordCommonGetter, FormKey>>();
@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda
         /// Constructs a link cache around a target mod
         /// </summary>
         /// <param name="sourceMod">Mod to resolve against when linking</param>
-        public ImmutableModLinkCache(TMod sourceMod)
+        public ImmutableModLinkCache(TModGetter sourceMod)
         {
             this._sourceMod = sourceMod;
             this._untypedMajorRecords = new Lazy<IReadOnlyCache<IMajorRecordCommonGetter, FormKey>>(

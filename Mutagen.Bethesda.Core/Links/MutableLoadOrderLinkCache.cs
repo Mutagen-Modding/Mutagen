@@ -11,11 +11,11 @@ namespace Mutagen.Bethesda
     /// for every request.
     /// </summary>
     public class MutableLoadOrderLinkCache<TMod, TModGetter> : ILinkCache
-        where TMod : class, IMod
+        where TMod : class, IMod, TModGetter
         where TModGetter : class, IModGetter
     {
-        public ImmutableLoadOrderLinkCache<TModGetter> WrappedImmutableCache { get; }
-        private readonly List<MutableModLinkCache<TMod>> _mutableMods;
+        public ImmutableLoadOrderLinkCache<TMod, TModGetter> WrappedImmutableCache { get; }
+        private readonly List<MutableModLinkCache<TMod, TModGetter>> _mutableMods;
 
         /// <summary>
         /// Constructs a mutable load order link cache by combining an existing immutable load order cache,
@@ -23,10 +23,10 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="immutableBaseCache">LoadOrderCache to use as the immutable base</param>
         /// <param name="mutableMods">Set of mods to place at the end of the load order, which are allowed to be modified afterwards</param>
-        public MutableLoadOrderLinkCache(ImmutableLoadOrderLinkCache<TModGetter> immutableBaseCache, params TMod[] mutableMods)
+        public MutableLoadOrderLinkCache(ImmutableLoadOrderLinkCache<TMod, TModGetter> immutableBaseCache, params TMod[] mutableMods)
         {
             WrappedImmutableCache = immutableBaseCache;
-            _mutableMods = mutableMods.Select(m => m.ToMutableLinkCache()).ToList();
+            _mutableMods = mutableMods.Select(m => m.ToMutableLinkCache<TMod, TModGetter>()).ToList();
         }
 
         /// <inheritdoc />
@@ -95,7 +95,7 @@ namespace Mutagen.Bethesda
         /// <param name="mod">Mod that is safe to mutate to add to end of load order</param>
         public void Add(TMod mod)
         {
-            _mutableMods.Add(mod.ToMutableLinkCache());
+            _mutableMods.Add(mod.ToMutableLinkCache<TMod, TModGetter>());
         }
     }
 }

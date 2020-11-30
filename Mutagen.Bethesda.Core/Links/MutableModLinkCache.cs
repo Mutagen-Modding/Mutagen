@@ -14,11 +14,11 @@ namespace Mutagen.Bethesda
     /// If being used in a multithreaded scenario,<br/>
     /// this cache must be locked alongside any mutations to the mod the cache wraps
     /// </summary>
-    /// <typeparam name="TMod">Mod type</typeparam>
-    public class MutableModLinkCache<TMod> : ILinkCache
-        where TMod : IModGetter
+    public class MutableModLinkCache<TMod, TModGetter> : ILinkCache
+        where TMod : class, IMod, TModGetter
+        where TModGetter : class, IModGetter
     {
-        private readonly TMod _sourceMod;
+        private readonly TModGetter _sourceMod;
 
         /// <inheritdoc />
         public IReadOnlyList<IModGetter> ListedOrder { get; }
@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda
         /// Constructs a link cache around a target mod
         /// </summary>
         /// <param name="sourceMod">Mod to resolve against when linking</param>
-        public MutableModLinkCache(TMod sourceMod)
+        public MutableModLinkCache(TModGetter sourceMod)
         {
             this._sourceMod = sourceMod;
             this.ListedOrder = new List<IModGetter>()

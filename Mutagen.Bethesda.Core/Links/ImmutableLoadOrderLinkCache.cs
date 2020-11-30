@@ -22,9 +22,11 @@ namespace Mutagen.Bethesda
     /// Modification of the target LoadOrder, or Mods on the LoadOrder is not safe.  Internal caches can become
     /// incorrect if modifications occur on content already cached.
     /// </summary>
-    /// <typeparam name="TMod">Mod type</typeparam>
-    public class ImmutableLoadOrderLinkCache<TMod> : ILinkCache
-        where TMod : class, IModGetter
+    /// <typeparam name="TMod">Mod setter type</typeparam>
+    /// <typeparam name="TModGetter">Mod getter type</typeparam>
+    public class ImmutableLoadOrderLinkCache<TMod, TModGetter> : ILinkCache
+        where TMod : class, IMod, TModGetter
+        where TModGetter : class, IModGetter
     {
         class InternalTypedCache
         {
@@ -34,8 +36,8 @@ namespace Mutagen.Bethesda
         private readonly bool _hasAny;
         private readonly GameCategory _gameCategory;
 
-        private readonly IReadOnlyList<TMod> _listedOrder;
-        private readonly IReadOnlyList<TMod> _priorityOrder;
+        private readonly IReadOnlyList<TModGetter> _listedOrder;
+        private readonly IReadOnlyList<TModGetter> _priorityOrder;
         private int _processedUntypedDepth = 0;
         private readonly Cache<IMajorRecordCommonGetter, FormKey> _loadOrderUntypedMajorRecords;
         private readonly Dictionary<Type, InternalTypedCache> _loadOrderMajorRecords;
@@ -50,7 +52,7 @@ namespace Mutagen.Bethesda
         /// Constructs a LoadOrderLinkCache around a target load order
         /// </summary>
         /// <param name="loadOrder">LoadOrder to resolve against when linking</param>
-        public ImmutableLoadOrderLinkCache(IEnumerable<TMod> loadOrder)
+        public ImmutableLoadOrderLinkCache(IEnumerable<TModGetter> loadOrder)
         {
             this._listedOrder = loadOrder.ToList();
             this._priorityOrder = _listedOrder.Reverse().ToList();
@@ -177,7 +179,7 @@ namespace Mutagen.Bethesda
                     var targetMod = this._listedOrder[targetIndex];
                     cache.Depth++;
 
-                    void AddRecords(TMod mod, Type type)
+                    void AddRecords(TModGetter mod, Type type)
                     {
                         foreach (var record in mod.EnumerateMajorRecords(type))
                         {

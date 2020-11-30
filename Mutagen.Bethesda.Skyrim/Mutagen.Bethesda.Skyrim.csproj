@@ -2124,6 +2124,7 @@
     <Compile Include="Records\Major Records\APlaced_Generated.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\LinkCacheMixIns_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.1.2">

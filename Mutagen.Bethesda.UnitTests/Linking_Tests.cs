@@ -1094,12 +1094,12 @@ namespace Mutagen.Bethesda.UnitTests
 
         protected override ILinkCache GetLinkCache(IModGetter modGetter)
         {
-            return new ImmutableModLinkCache<IModGetter>(modGetter);
+            return new ImmutableModLinkCache<IMod, IModGetter>(modGetter);
         }
 
         protected override ILinkCache GetLinkCache<TMod, TModGetter>(LoadOrder<TModGetter> loadOrder)
         {
-            return loadOrder.ToImmutableLinkCache();
+            return loadOrder.ToImmutableLinkCache<TMod, TModGetter>();
         }
     }
 
@@ -1133,12 +1133,12 @@ namespace Mutagen.Bethesda.UnitTests
 
         protected override ILinkCache GetLinkCache(IModGetter modGetter)
         {
-            return new ImmutableModLinkCache<IModGetter>(modGetter);
+            return new ImmutableModLinkCache<IMod, IModGetter>(modGetter);
         }
 
         protected override ILinkCache GetLinkCache<TMod, TModGetter>(LoadOrder<TModGetter> loadOrder)
         {
-            return loadOrder.ToImmutableLinkCache();
+            return loadOrder.ToImmutableLinkCache<TMod, TModGetter>();
         }
     }
 
@@ -1154,12 +1154,12 @@ namespace Mutagen.Bethesda.UnitTests
 
         protected override ILinkCache GetLinkCache(IModGetter modGetter)
         {
-            return new MutableModLinkCache<IModGetter>(modGetter);
+            return new MutableModLinkCache<IMod, IModGetter>(modGetter);
         }
 
         protected override ILinkCache GetLinkCache<TMod, TModGetter>(LoadOrder<TModGetter> loadOrder)
         {
-            return new MutableLoadOrderLinkCache<TMod, TModGetter>(loadOrder.ToImmutableLinkCache());
+            return new MutableLoadOrderLinkCache<TMod, TModGetter>(loadOrder.ToImmutableLinkCache<TMod, TModGetter>());
         }
     }
 
@@ -1188,12 +1188,12 @@ namespace Mutagen.Bethesda.UnitTests
 
         protected override ILinkCache GetLinkCache(IModGetter modGetter)
         {
-            return new MutableModLinkCache<IModGetter>(modGetter);
+            return new MutableModLinkCache<IMod, IModGetter>(modGetter);
         }
 
         protected override ILinkCache GetLinkCache<TMod, TModGetter>(LoadOrder<TModGetter> loadOrder)
         {
-            return new MutableLoadOrderLinkCache<TMod, TModGetter>(loadOrder.ToImmutableLinkCache());
+            return new MutableLoadOrderLinkCache<TMod, TModGetter>(loadOrder.ToImmutableLinkCache<TMod, TModGetter>());
         }
     }
 }

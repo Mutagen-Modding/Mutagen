@@ -921,6 +921,7 @@
       <DependentUpon>OblivionModHeader.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\TypeSolidifier_Generated.cs" />
+    <Compile Include="Records\LinkCacheMixIns_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.1.2">
