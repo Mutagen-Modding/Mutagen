@@ -168,5 +168,14 @@ namespace Mutagen.Bethesda.UnitTests
             var lo = new LoadOrder<ISkyrimModGetter>();
             lo.TryGetValue(Utility.LightMasterModKey, out var item);
         }
+
+        [Fact]
+        public static void GroupAccessors()
+        {
+            var group = new Group<Npc>(null!);
+            if (group.TryGetValue(Utility.Form1, out var npc))
+            {
+            }
+        }
     }
 }
