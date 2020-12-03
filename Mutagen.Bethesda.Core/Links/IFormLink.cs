@@ -6,9 +6,9 @@ namespace Mutagen.Bethesda
     /// <summary>
     /// An interface for a FormLink, with a Major Record type constraint
     /// </summary>
-    /// <typeparam name="TMajor">The type of Major Record the Link is allowed to connect with</typeparam>
-    public interface IFormLink<out TMajor> : ILink<TMajor>, IFormLink, IFormLinkNullable<TMajor>
-       where TMajor : IMajorRecordCommonGetter
+    /// <typeparam name="TMajorGetter">The type of Major Record the Link is allowed to connect with</typeparam>
+    public interface IFormLink<out TMajorGetter> : ILink<TMajorGetter>, IFormLink, IFormLinkNullable<TMajorGetter>
+       where TMajorGetter : IMajorRecordCommonGetter
     {
     }
 
