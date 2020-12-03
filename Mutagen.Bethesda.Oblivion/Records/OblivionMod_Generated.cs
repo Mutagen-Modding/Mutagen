@@ -3764,6 +3764,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMajorRecordEnumerable,
         ILoquiObjectSetter<IOblivionMod>,
         IMod,
+        IContextMod<IOblivionMod>,
         ILinkedFormKeyContainer
     {
         new OblivionModHeader ModHeader { get; }
@@ -3831,6 +3832,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMajorRecordContextEnumerable<IOblivionMod>,
         ILoquiObject<IOblivionModGetter>,
         IModGetter,
+        IContextGetterMod<IOblivionMod>,
         ILinkedFormKeyContainerGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

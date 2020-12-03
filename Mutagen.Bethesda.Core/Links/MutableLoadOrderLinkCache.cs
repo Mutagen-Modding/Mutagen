@@ -10,9 +10,9 @@ namespace Mutagen.Bethesda
     /// invalidating the cache.  This comes at a performance cost of needing to query those mods
     /// for every request.
     /// </summary>
-    public class MutableLoadOrderLinkCache<TMod, TModGetter> : ILinkCache
-        where TMod : class, IMod, TModGetter
-        where TModGetter : class, IModGetter
+    public class MutableLoadOrderLinkCache<TMod, TModGetter> : ILinkCache<TMod, TModGetter>
+        where TMod : class, IContextMod<TMod>, TModGetter
+        where TModGetter : class, IContextGetterMod<TMod>
     {
         public ImmutableLoadOrderLinkCache<TMod, TModGetter> WrappedImmutableCache { get; }
         private readonly List<MutableModLinkCache<TMod, TModGetter>> _mutableMods;
@@ -96,6 +96,63 @@ namespace Mutagen.Bethesda
         public void Add(TMod mod)
         {
             _mutableMods.Add(mod.ToMutableLinkCache<TMod, TModGetter>());
+        }
+
+        /// <inheritdoc />
+        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
+        public bool TryResolveContext(FormKey formKey, [MaybeNullWhen(false)] out IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec)
+        {
+            for (int i = _mutableMods.Count - 1; i >= 0; i--)
+            {
+                if (_mutableMods[i].TryResolveContext(formKey, out majorRec)) return true;
+            }
+            return WrappedImmutableCache.TryResolveContext(formKey, out majorRec);
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveContext<TMajorSetter, TMajorGetter>(FormKey formKey, [MaybeNullWhen(false)] out IModContext<TMod, TMajorSetter, TMajorGetter> majorRec)
+            where TMajorSetter : class, IMajorRecordCommon, TMajorGetter
+            where TMajorGetter : class, IMajorRecordCommonGetter
+        {
+            for (int i = _mutableMods.Count - 1; i >= 0; i--)
+            {
+                if (_mutableMods[i].TryResolveContext<TMajorSetter, TMajorGetter>(formKey, out majorRec)) return true;
+            }
+            return WrappedImmutableCache.TryResolveContext<TMajorSetter, TMajorGetter>(formKey, out majorRec);
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveContext(FormKey formKey, Type type, [MaybeNullWhen(false)] out IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec)
+        {
+            for (int i = _mutableMods.Count - 1; i >= 0; i--)
+            {
+                if (_mutableMods[i].TryResolveContext(formKey, type, out majorRec)) return true;
+            }
+            return WrappedImmutableCache.TryResolveContext(formKey, type, out majorRec);
+        }
+
+        /// <inheritdoc />
+        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
+        public IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(FormKey formKey)
+        {
+            if (TryResolveContext(formKey, out var majorRec)) return majorRec;
+            throw new KeyNotFoundException($"Form ID {formKey.ID} could not be found.");
+        }
+
+        /// <inheritdoc />
+        public IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(FormKey formKey, Type type)
+        {
+            if (TryResolveContext(formKey, type, out var commonRec)) return commonRec;
+            throw new KeyNotFoundException($"Form ID {formKey.ID} could not be found.");
+        }
+
+        /// <inheritdoc />
+        public IModContext<TMod, TMajorSetter, TMajorGetter> ResolveContext<TMajorSetter, TMajorGetter>(FormKey formKey)
+            where TMajorSetter : class, IMajorRecordCommon, TMajorGetter
+            where TMajorGetter : class, IMajorRecordCommonGetter
+        {
+            if (TryResolveContext<TMajorSetter, TMajorGetter>(formKey, out var commonRec)) return commonRec;
+            throw new KeyNotFoundException($"Form ID {formKey.ID} could not be found.");
         }
     }
 }

@@ -7006,6 +7006,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMajorRecordEnumerable,
         ILoquiObjectSetter<ISkyrimMod>,
         IMod,
+        IContextMod<ISkyrimMod>,
         ILinkedFormKeyContainer
     {
         new SkyrimModHeader ModHeader { get; }
@@ -7130,6 +7131,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMajorRecordGetterEnumerable,
         ILoquiObject<ISkyrimModGetter>,
         IModGetter,
+        IContextGetterMod<ISkyrimMod>,
         ILinkedFormKeyContainerGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

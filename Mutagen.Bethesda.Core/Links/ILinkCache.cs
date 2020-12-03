@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda
         /// <exception cref="KeyNotFoundException">
         /// When the FormKey cannot be found under the attached cache.<br/>
         /// </exception>
-        /// <returns>True if a matching record was found</returns>
+        /// <returns>Matching record</returns>
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
         IMajorRecordCommonGetter Resolve(FormKey formKey);
 
@@ -91,7 +91,7 @@ namespace Mutagen.Bethesda
         ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
         ///   - A setter type is requested from a getter only object.
         /// </exception>
-        /// <returns>record if successful</returns>
+        /// <returns>Matching record</returns>
         /// <exception cref="KeyNotFoundException">
         /// When the FormKey having the specified Major Record type cannot be found under the attached cache.<br/>
         /// </exception>
@@ -104,7 +104,7 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="formKey">FormKey to look for</param>
         /// <typeparam name="TMajor">The type of Major Record to look up</typeparam>
-        /// <returns>record if successful</returns>
+        /// <returns>Matching record</returns>
         /// <exception cref="ArgumentException">
         /// An unexpected TMajor type will throw an exception.<br/>
         /// Unexpected types include:<br/>
@@ -128,6 +128,118 @@ namespace Mutagen.Bethesda
         IReadOnlyList<IModGetter> PriorityOrder { get; }
     }
 
+    public interface ILinkCache<TModSetter, TModGetter> : ILinkCache
+        where TModSetter : class, IMod, TModGetter
+        where TModGetter : class, IModGetter
+    {
+        /// <summary>
+        /// Retrieves the record that matches the FormKey relative to the source the package was attached to.<br/>
+        /// <br/>
+        /// NOTE:  This call is much slower than the alternative that uses generics, as all records in the entire mod must be
+        /// processed, rather than being able to scope the search to a specific area.
+        /// </summary>
+        /// <param name="formKey">FormKey to look for</param>
+        /// <param name="majorRec">Out parameter containing the record with context if successful</param>
+        /// <returns>True if a matching record was found</returns>
+        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
+        bool TryResolveContext(FormKey formKey, [MaybeNullWhen(false)] out IModContext<TModSetter, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec);
+
+        /// <summary>
+        /// Retrieves the record that matches the FormKey relative to the source the package was attached to.<br/>
+        /// <br/>
+        /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
+        /// the function will return false.
+        /// </summary>
+        /// <param name="formKey">FormKey to look for</param>
+        /// <param name="majorRec">Out parameter containing the record with context if successful</param>
+        /// <returns>True if a matching record was found</returns>
+        /// <exception cref="ArgumentException">
+        /// An unexpected TMajor type will throw an exception.<br/>
+        /// Unexpected types include:<br/>
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
+        bool TryResolveContext<TMajorSetter, TMajorGetter>(FormKey formKey, [MaybeNullWhen(false)] out IModContext<TModSetter, TMajorSetter, TMajorGetter> majorRec)
+            where TMajorSetter : class, IMajorRecordCommon, TMajorGetter
+            where TMajorGetter : class, IMajorRecordCommonGetter;
+
+        /// <summary>
+        /// Retrieves the record that matches the FormKey relative to the source the package was attached to.<br/>
+        /// <br/>
+        /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
+        /// the function will return false.
+        /// </summary>
+        /// <param name="formKey">FormKey to look for</param>
+        /// <param name="type">The type of Major Record to look up</param>
+        /// <param name="majorRec">Out parameter containing the record with context if successful</param>
+        /// <exception cref="ArgumentException">
+        /// An unexpected TMajor type will throw an exception.<br/>
+        /// Unexpected types include:<br/>
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
+        /// <returns>True if a matching record was found</returns>
+        bool TryResolveContext(FormKey formKey, Type type, [MaybeNullWhen(false)] out IModContext<TModSetter, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec);
+
+        /// <summary>
+        /// Retrieves the record that matches the FormKey relative to the source the cache was attached to.<br/>
+        /// <br/>
+        /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
+        /// the function will throw a KeyNotFoundException.<br />
+        /// <br/>
+        /// NOTE:  This call is much slower than the alternative that uses generics, as all records in the entire mod must be
+        /// processed, rather than being able to scope the search to a specific area.
+        /// </summary>
+        /// <param name="formKey">FormKey to look for</param>
+        /// <exception cref="KeyNotFoundException">
+        /// When the FormKey cannot be found under the attached cache.<br/>
+        /// </exception>
+        /// <returns>Matching record with context</returns>
+        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
+        IModContext<TModSetter, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(FormKey formKey);
+
+        /// <summary>
+        /// Retrieves the record that matches the FormKey relative to the source the package was attached to.<br/>
+        /// <br/>
+        /// If a record exists that matches the FormKey, but does not inherit from the given type, it will be seen as not a match.
+        /// </summary>
+        /// <param name="formKey">FormKey to look for</param>
+        /// <param name="type">The type of Major Record to look up</param>
+        /// <exception cref="ArgumentException">
+        /// An unexpected TMajor type will throw an exception.<br/>
+        /// Unexpected types include:<br/>
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
+        /// <returns>Matching record with context</returns>
+        /// <exception cref="KeyNotFoundException">
+        /// When the FormKey having the specified Major Record type cannot be found under the attached cache.<br/>
+        /// </exception>
+        IModContext<TModSetter, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(FormKey formKey, Type type);
+
+        /// <summary>
+        /// Retrieves the record that matches the FormKey relative to the source the package was attached to.
+        /// <br/>
+        /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will be seen as not a match.
+        /// </summary>
+        /// <param name="formKey">FormKey to look for</param>
+        /// <typeparam name="TMajorSetter">The setter type of Major Record to look up</typeparam>
+        /// <typeparam name="TMajorGetter">The getter type of Major Record to look up</typeparam>
+        /// <returns>Matching record with context</returns>
+        /// <exception cref="ArgumentException">
+        /// An unexpected TMajor type will throw an exception.<br/>
+        /// Unexpected types include:<br/>
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
+        /// <exception cref="KeyNotFoundException">
+        /// When the FormKey having the specified Major Record type cannot be found under the attached cache.<br/>
+        /// </exception>
+        IModContext<TModSetter, TMajorSetter, TMajorGetter> ResolveContext<TMajorSetter, TMajorGetter>(FormKey formKey)
+            where TMajorSetter : class, IMajorRecordCommon, TMajorGetter
+            where TMajorGetter : class, IMajorRecordCommonGetter;
+    }
+
     public static class ILinkCacheExt
     {
         /// <summary>
@@ -138,8 +250,8 @@ namespace Mutagen.Bethesda
         /// <param name="mod">Mod to construct the package relative to</param>
         /// <returns>LinkPackage attached to given mod</returns>
         public static ImmutableModLinkCache<TMod, TModGetter> ToImmutableLinkCache<TMod, TModGetter>(this TModGetter mod)
-            where TMod : class, IMod, TModGetter
-            where TModGetter : class, IModGetter
+            where TMod : class, IContextMod<TMod>, TModGetter
+            where TModGetter : class,  IContextGetterMod<TMod>
         {
             return new ImmutableModLinkCache<TMod, TModGetter>(mod);
         }
@@ -152,8 +264,8 @@ namespace Mutagen.Bethesda
         /// <param name="mod">Mod to construct the package relative to</param>
         /// <returns>LinkPackage attached to given mod</returns>
         public static MutableModLinkCache<TMod, TModGetter> ToMutableLinkCache<TMod, TModGetter>(this TModGetter mod)
-            where TMod : class, IMod, TModGetter
-            where TModGetter : class, IModGetter
+            where TMod : class, IContextMod<TMod>, TModGetter
+            where TModGetter : class,  IContextGetterMod<TMod>
         {
             return new MutableModLinkCache<TMod, TModGetter>(mod);
         }
@@ -168,8 +280,8 @@ namespace Mutagen.Bethesda
         /// <returns>LinkPackage attached to given LoadOrder</returns>
         public static ImmutableLoadOrderLinkCache<TMod, TModGetter> ToImmutableLinkCache<TMod, TModGetter>(
             this LoadOrder<TModGetter> loadOrder)
-            where TMod : class, IMod, TModGetter
-            where TModGetter : class, IModGetter
+            where TMod : class, IContextMod<TMod>, TModGetter
+            where TModGetter : class,  IContextGetterMod<TMod>
         {
             return new ImmutableLoadOrderLinkCache<TMod, TModGetter>(loadOrder.ListedOrder);
         }
@@ -184,8 +296,8 @@ namespace Mutagen.Bethesda
         /// <returns>LinkPackage attached to given LoadOrder</returns>
         public static ImmutableLoadOrderLinkCache<TMod, TModGetter> ToImmutableLinkCache<TMod, TModGetter>(
             this LoadOrder<IModListing<TModGetter>> loadOrder)
-            where TMod : class, IMod, TModGetter
-            where TModGetter : class, IModGetter
+            where TMod : class, IContextMod<TMod>, TModGetter
+            where TModGetter : class,  IContextGetterMod<TMod>
         {
             return new ImmutableLoadOrderLinkCache<TMod, TModGetter>(
                 loadOrder
@@ -203,8 +315,8 @@ namespace Mutagen.Bethesda
         /// <returns>LinkPackage attached to given LoadOrder</returns>
         public static ImmutableLoadOrderLinkCache<TMod, TModGetter> ToImmutableLinkCache<TMod, TModGetter>(
             this IEnumerable<IModListing<TModGetter>> loadOrder)
-            where TMod : class, IMod, TModGetter
-            where TModGetter : class, IModGetter
+            where TMod : class, IContextMod<TMod>, TModGetter
+            where TModGetter : class,  IContextGetterMod<TMod>
         {
             return new ImmutableLoadOrderLinkCache<TMod, TModGetter>(
                 loadOrder
@@ -222,8 +334,8 @@ namespace Mutagen.Bethesda
         /// <returns>LinkPackage attached to given LoadOrder</returns>
         public static ImmutableLoadOrderLinkCache<TMod, TModGetter> ToImmutableLinkCache<TMod, TModGetter>(
             this IEnumerable<TModGetter> loadOrder)
-            where TMod : class, IMod, TModGetter
-            where TModGetter : class, IModGetter
+            where TMod : class, IContextMod<TMod>, TModGetter
+            where TModGetter : class,  IContextGetterMod<TMod>
         {
             return new ImmutableLoadOrderLinkCache<TMod, TModGetter>(loadOrder);
         }
@@ -238,8 +350,8 @@ namespace Mutagen.Bethesda
         public static MutableLoadOrderLinkCache<TMod, TModGetter> ToMutableLinkCache<TMod, TModGetter>(
             this LoadOrder<TModGetter> immutableBaseCache,
             params TMod[] mutableMods)
-            where TMod : class, IMod, TModGetter
-            where TModGetter : class, IModGetter
+            where TMod : class, IContextMod<TMod>, TModGetter
+            where TModGetter : class,  IContextGetterMod<TMod>
         {
             return new MutableLoadOrderLinkCache<TMod, TModGetter>(
                 immutableBaseCache.ToImmutableLinkCache<TMod, TModGetter>(),
@@ -256,8 +368,8 @@ namespace Mutagen.Bethesda
         public static MutableLoadOrderLinkCache<TMod, TModGetter> ToMutableLinkCache<TMod, TModGetter>(
             this LoadOrder<IModListing<TModGetter>> immutableBaseCache,
             params TMod[] mutableMods)
-            where TMod : class, IMod, TModGetter
-            where TModGetter : class, IModGetter
+            where TMod : class, IContextMod<TMod>, TModGetter
+            where TModGetter : class,  IContextGetterMod<TMod>
         {
             return new MutableLoadOrderLinkCache<TMod, TModGetter>(
                 immutableBaseCache.ToImmutableLinkCache<TMod, TModGetter>(),
@@ -274,8 +386,8 @@ namespace Mutagen.Bethesda
         public static MutableLoadOrderLinkCache<TMod, TModGetter> ToMutableLinkCache<TMod, TModGetter>(
             this IEnumerable<TModGetter> immutableBaseCache,
             params TMod[] mutableMods)
-            where TMod : class, IMod, TModGetter
-            where TModGetter : class, IModGetter
+            where TMod : class, IContextMod<TMod>, TModGetter
+            where TModGetter : class, IContextGetterMod<TMod>
         {
             return new MutableLoadOrderLinkCache<TMod, TModGetter>(
                 immutableBaseCache.ToImmutableLinkCache<TMod, TModGetter>(),

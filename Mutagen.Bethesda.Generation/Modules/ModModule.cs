@@ -31,6 +31,8 @@ namespace Mutagen.Bethesda.Generation
             if (obj.GetObjectType() != ObjectType.Mod) yield break;
             yield return (LoquiInterfaceType.IGetter, nameof(IModGetter));
             yield return (LoquiInterfaceType.ISetter, nameof(IMod));
+            yield return (LoquiInterfaceType.IGetter, $"IContextGetterMod<{obj.Interface(getter: false)}>");
+            yield return (LoquiInterfaceType.ISetter, $"IContextMod<{obj.Interface(getter: false)}>");
         }
 
         public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
