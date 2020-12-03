@@ -1,18 +1,10 @@
-using Loqui;
-using Loqui.Internal;
 using Mutagen.Bethesda;
-using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Skyrim;
 using Noggog;
 using Noggog.Utility;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reactive.Disposables;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 using Xunit;
 #nullable disable
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -34,17 +26,15 @@ namespace Mutagen.Bethesda.UnitTests
     public abstract class Linking_Abstract_Tests : IClassFixture<LinkingInit>
     {
         public static FormKey UnusedFormKey = new FormKey(Utility.PluginModKey, 123456);
-        public static FormKey TestFileFormKey = new FormKey(Utility.OblivionTestMod.ModKey, 0xD62);
-        public static FormKey TestFileFormKey2 = new FormKey(Utility.OblivionTestMod.ModKey, 0xD63);
+        public static FormKey TestFileFormKey = new FormKey(Utility.SkyrimTestMod.ModKey, 0x800);
+        public static FormKey TestFileFormKey2 = new FormKey(Utility.SkyrimTestMod.ModKey, 0x801);
 
         public abstract IDisposable ConvertMod(SkyrimMod mod, out ISkyrimModGetter getter);
         public abstract bool ReadOnly { get; }
 
-        protected abstract ILinkCache GetLinkCache(IModGetter modGetter);
+        protected abstract ILinkCache GetLinkCache(ISkyrimModGetter modGetter);
 
-        protected abstract ILinkCache GetLinkCache<TMod, TModGetter>(LoadOrder<TModGetter> loadOrder)
-            where TMod : class, IMod, TModGetter
-            where TModGetter : class, IModGetter;
+        protected abstract ILinkCache GetLinkCache(LoadOrder<ISkyrimModGetter> loadOrder);
 
         #region Direct Mod
         [Fact]
@@ -191,16 +181,16 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void Direct_ReadOnlyMechanics()
         {
-            var wrapper = Oblivion.OblivionMod.CreateFromBinaryOverlay(Utility.OblivionTestMod);
+            var wrapper = SkyrimMod.CreateFromBinaryOverlay(Utility.SkyrimTestMod, SkyrimRelease.SkyrimSE);
             var package = GetLinkCache(wrapper);
             {
-                Assert.True(package.TryResolve<Oblivion.INpcGetter>(TestFileFormKey, out var rec));
+                Assert.True(package.TryResolve<INpcGetter>(TestFileFormKey, out var rec));
             }
             {
-                Assert.False(package.TryResolve<Oblivion.INpc>(TestFileFormKey, out var rec));
+                Assert.False(package.TryResolve<INpc>(TestFileFormKey, out var rec));
             }
             {
-                Assert.False(package.TryResolve<Oblivion.Npc>(TestFileFormKey, out var rec));
+                Assert.False(package.TryResolve<Npc>(TestFileFormKey, out var rec));
             }
         }
         #endregion
@@ -228,7 +218,7 @@ namespace Mutagen.Bethesda.UnitTests
             using var disp = ConvertMod(prototype, out var mod);
             var loadOrder = new LoadOrder<ISkyrimModGetter>();
             loadOrder.Add(mod);
-            var package = GetLinkCache<ISkyrimMod, ISkyrimModGetter>(loadOrder);
+            var package = GetLinkCache(loadOrder);
 
             // Test query fails
             Assert.False(package.TryResolve(UnusedFormKey, out var _));
@@ -248,7 +238,7 @@ namespace Mutagen.Bethesda.UnitTests
             using var disp = ConvertMod(prototype, out var mod);
             var loadOrder = new LoadOrder<ISkyrimModGetter>();
             loadOrder.Add(mod);
-            var package = GetLinkCache<ISkyrimMod, ISkyrimModGetter>(loadOrder);
+            var package = GetLinkCache(loadOrder);
 
             // Test query successes
 
@@ -344,7 +334,7 @@ namespace Mutagen.Bethesda.UnitTests
             var loadOrder = new LoadOrder<ISkyrimModGetter>();
             loadOrder.Add(mod1);
             loadOrder.Add(mod2);
-            var package = GetLinkCache<ISkyrimMod, ISkyrimModGetter>(loadOrder);
+            var package = GetLinkCache(loadOrder);
 
             // Test query successes
 
@@ -445,7 +435,7 @@ namespace Mutagen.Bethesda.UnitTests
                 mod1,
                 mod2
             };
-            var package = GetLinkCache<ISkyrimMod, ISkyrimModGetter>(loadOrder);
+            var package = GetLinkCache(loadOrder);
 
             // Test query successes
 
@@ -535,25 +525,25 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void LoadOrder_ReadOnlyMechanics()
         {
-            var wrapper = Oblivion.OblivionMod.CreateFromBinaryOverlay(Utility.OblivionTestMod);
-            var overrideWrapper = Oblivion.OblivionMod.CreateFromBinaryOverlay(Utility.OblivionOverrideMod);
-            var loadOrder = new LoadOrder<Oblivion.IOblivionModGetter>();
+            var wrapper = SkyrimMod.CreateFromBinaryOverlay(Utility.SkyrimTestMod, SkyrimRelease.SkyrimSE);
+            var overrideWrapper = SkyrimMod.CreateFromBinaryOverlay(Utility.SkyrimOverrideMod, SkyrimRelease.SkyrimSE);
+            var loadOrder = new LoadOrder<ISkyrimModGetter>();
             loadOrder.Add(wrapper);
             loadOrder.Add(overrideWrapper);
-            var package = GetLinkCache<Oblivion.IOblivionMod, Oblivion.IOblivionModGetter>(loadOrder);
+            var package = GetLinkCache(loadOrder);
             {
-                Assert.True(package.TryResolve<Oblivion.INpcGetter>(TestFileFormKey, out var rec));
-                Assert.True(package.TryResolve<Oblivion.INpcGetter>(TestFileFormKey2, out rec));
+                Assert.True(package.TryResolve<INpcGetter>(TestFileFormKey, out var rec));
+                Assert.True(package.TryResolve<INpcGetter>(TestFileFormKey2, out rec));
                 Assert.True(rec.Name.TryGet(out var name));
-                Assert.Equal("A Name", name);
+                Assert.Equal("A Name", name.String);
             }
             {
-                Assert.False(package.TryResolve<Oblivion.INpc>(TestFileFormKey, out var rec));
-                Assert.False(package.TryResolve<Oblivion.INpc>(TestFileFormKey2, out rec));
+                Assert.False(package.TryResolve<INpc>(TestFileFormKey, out var rec));
+                Assert.False(package.TryResolve<INpc>(TestFileFormKey2, out rec));
             }
             {
-                Assert.False(package.TryResolve<Oblivion.Npc>(TestFileFormKey, out var rec));
-                Assert.False(package.TryResolve<Oblivion.Npc>(TestFileFormKey2, out rec));
+                Assert.False(package.TryResolve<Npc>(TestFileFormKey, out var rec));
+                Assert.False(package.TryResolve<Npc>(TestFileFormKey2, out rec));
             }
         }
         #endregion
@@ -788,7 +778,7 @@ namespace Mutagen.Bethesda.UnitTests
                 mod,
                 new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimLE),
             };
-            var package = GetLinkCache<ISkyrimMod, ISkyrimModGetter>(loadOrder);
+            var package = GetLinkCache(loadOrder);
             FormLink<INpc> formLink = new FormLink<INpc>(npc.FormKey);
             Assert.True(formLink.TryResolve(package, out var linkedRec));
             Assert.Same(npc, linkedRec);
@@ -820,7 +810,7 @@ namespace Mutagen.Bethesda.UnitTests
                 mod,
                 new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimLE),
             };
-            var package = GetLinkCache<ISkyrimMod, ISkyrimModGetter>(loadOrder);
+            var package = GetLinkCache(loadOrder);
             FormLink<IPlacedNpc> placedFormLink = new FormLink<IPlacedNpc>(placedNpc.FormKey);
             Assert.True(placedFormLink.TryResolve(package, out var linkedPlacedNpc));
             Assert.Same(placedNpc, linkedPlacedNpc);
@@ -850,7 +840,7 @@ namespace Mutagen.Bethesda.UnitTests
                 mod,
                 new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimLE),
             };
-            var package = GetLinkCache<ISkyrimMod, ISkyrimModGetter>(loadOrder);
+            var package = GetLinkCache(loadOrder);
             FormLink<INpc> formLink = new FormLink<INpc>(npc.FormKey);
             Assert.Same(npc, formLink.Resolve(package));
         }
@@ -881,7 +871,7 @@ namespace Mutagen.Bethesda.UnitTests
                 mod,
                 new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimLE),
             };
-            var package = GetLinkCache<ISkyrimMod, ISkyrimModGetter>(loadOrder);
+            var package = GetLinkCache(loadOrder);
             FormLink<IPlacedNpc> placedFormLink = new FormLink<IPlacedNpc>(placedNpc.FormKey);
             Assert.Same(placedNpc, placedFormLink.Resolve(package));
             FormLink<ICell> cellFormLink = new FormLink<ICell>(cell.FormKey);
@@ -900,7 +890,7 @@ namespace Mutagen.Bethesda.UnitTests
                 mod,
                 new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimLE),
             };
-            var package = GetLinkCache<ISkyrimMod, ISkyrimModGetter>(loadOrder);
+            var package = GetLinkCache(loadOrder);
             FormLink<IEffectRecord> formLink = new FormLink<IEffectRecord>(spell.FormKey);
             Assert.True(formLink.TryResolve(package, out var linkedRec));
             Assert.Same(spell, linkedRec);
@@ -940,7 +930,7 @@ namespace Mutagen.Bethesda.UnitTests
                 mod,
                 new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimLE),
             };
-            var package = GetLinkCache<ISkyrimMod, ISkyrimModGetter>(loadOrder);
+            var package = GetLinkCache(loadOrder);
             FormLink<IPlaced> placedFormLink = new FormLink<IPlaced>(placedNpc.FormKey);
             Assert.True(placedFormLink.TryResolve(package, out var linkedPlacedNpc));
             Assert.Same(placedNpc, linkedPlacedNpc);
@@ -962,7 +952,7 @@ namespace Mutagen.Bethesda.UnitTests
                 mod,
                 new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimLE),
             };
-            var package = GetLinkCache<ISkyrimMod, ISkyrimModGetter>(loadOrder);
+            var package = GetLinkCache(loadOrder);
             FormLink<IEffectRecord> formLink = new FormLink<IEffectRecord>(spell.FormKey);
             Assert.Same(spell, formLink.Resolve(package));
         }
@@ -1001,7 +991,7 @@ namespace Mutagen.Bethesda.UnitTests
                 mod,
                 new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimLE),
             };
-            var package = GetLinkCache<ISkyrimMod, ISkyrimModGetter>(loadOrder);
+            var package = GetLinkCache(loadOrder);
             FormLink<IPlaced> placedFormLink = new FormLink<IPlaced>(placedNpc.FormKey);
             Assert.Same(placedNpc, placedFormLink.Resolve(package));
             FormLink<ICell> cellFormLink = new FormLink<ICell>(cell.FormKey);
@@ -1092,14 +1082,14 @@ namespace Mutagen.Bethesda.UnitTests
             return Disposable.Empty;
         }
 
-        protected override ILinkCache GetLinkCache(IModGetter modGetter)
+        protected override ILinkCache GetLinkCache(ISkyrimModGetter modGetter)
         {
-            return new ImmutableModLinkCache<IMod, IModGetter>(modGetter);
+            return new ImmutableModLinkCache<ISkyrimMod, ISkyrimModGetter>(modGetter);
         }
 
-        protected override ILinkCache GetLinkCache<TMod, TModGetter>(LoadOrder<TModGetter> loadOrder)
+        protected override ILinkCache GetLinkCache(LoadOrder<ISkyrimModGetter> loadOrder)
         {
-            return loadOrder.ToImmutableLinkCache<TMod, TModGetter>();
+            return loadOrder.ToImmutableLinkCache<ISkyrimMod, ISkyrimModGetter>();
         }
     }
 
@@ -1131,14 +1121,14 @@ namespace Mutagen.Bethesda.UnitTests
             });
         }
 
-        protected override ILinkCache GetLinkCache(IModGetter modGetter)
+        protected override ILinkCache GetLinkCache(ISkyrimModGetter modGetter)
         {
-            return new ImmutableModLinkCache<IMod, IModGetter>(modGetter);
+            return new ImmutableModLinkCache<ISkyrimMod, ISkyrimModGetter>(modGetter);
         }
 
-        protected override ILinkCache GetLinkCache<TMod, TModGetter>(LoadOrder<TModGetter> loadOrder)
+        protected override ILinkCache GetLinkCache(LoadOrder<ISkyrimModGetter> loadOrder)
         {
-            return loadOrder.ToImmutableLinkCache<TMod, TModGetter>();
+            return loadOrder.ToImmutableLinkCache<ISkyrimMod, ISkyrimModGetter>();
         }
     }
 
@@ -1152,14 +1142,14 @@ namespace Mutagen.Bethesda.UnitTests
             return Disposable.Empty;
         }
 
-        protected override ILinkCache GetLinkCache(IModGetter modGetter)
+        protected override ILinkCache GetLinkCache(ISkyrimModGetter modGetter)
         {
-            return new MutableModLinkCache<IMod, IModGetter>(modGetter);
+            return new MutableModLinkCache<ISkyrimMod, ISkyrimModGetter>(modGetter);
         }
 
-        protected override ILinkCache GetLinkCache<TMod, TModGetter>(LoadOrder<TModGetter> loadOrder)
+        protected override ILinkCache GetLinkCache(LoadOrder<ISkyrimModGetter> loadOrder)
         {
-            return new MutableLoadOrderLinkCache<TMod, TModGetter>(loadOrder.ToImmutableLinkCache<TMod, TModGetter>());
+            return new MutableLoadOrderLinkCache<ISkyrimMod, ISkyrimModGetter>(loadOrder.ToImmutableLinkCache<ISkyrimMod, ISkyrimModGetter>());
         }
     }
 
@@ -1186,14 +1176,14 @@ namespace Mutagen.Bethesda.UnitTests
             });
         }
 
-        protected override ILinkCache GetLinkCache(IModGetter modGetter)
+        protected override ILinkCache GetLinkCache(ISkyrimModGetter modGetter)
         {
-            return new MutableModLinkCache<IMod, IModGetter>(modGetter);
+            return new MutableModLinkCache<ISkyrimMod, ISkyrimModGetter>(modGetter);
         }
 
-        protected override ILinkCache GetLinkCache<TMod, TModGetter>(LoadOrder<TModGetter> loadOrder)
+        protected override ILinkCache GetLinkCache(LoadOrder<ISkyrimModGetter> loadOrder)
         {
-            return new MutableLoadOrderLinkCache<TMod, TModGetter>(loadOrder.ToImmutableLinkCache<TMod, TModGetter>());
+            return new MutableLoadOrderLinkCache<ISkyrimMod, ISkyrimModGetter>(loadOrder.ToImmutableLinkCache<ISkyrimMod, ISkyrimModGetter>());
         }
     }
 }
