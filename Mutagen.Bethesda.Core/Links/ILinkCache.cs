@@ -128,9 +128,8 @@ namespace Mutagen.Bethesda
         IReadOnlyList<IModGetter> PriorityOrder { get; }
     }
 
-    public interface ILinkCache<TModSetter, TModGetter> : ILinkCache
-        where TModSetter : class, IMod, TModGetter
-        where TModGetter : class, IModGetter
+    public interface ILinkCache<TModSetter> : ILinkCache
+        where TModSetter : class, IMod
     {
         /// <summary>
         /// Retrieves the record that matches the FormKey relative to the source the package was attached to.<br/>
@@ -240,6 +239,12 @@ namespace Mutagen.Bethesda
             where TMajorGetter : class, IMajorRecordCommonGetter;
     }
 
+    public interface ILinkCache<TModSetter, TModGetter> : ILinkCache<TModSetter>
+        where TModSetter : class, IMod, TModGetter
+        where TModGetter : class, IModGetter
+    {
+    }
+
     public static class ILinkCacheExt
     {
         /// <summary>
@@ -251,7 +256,7 @@ namespace Mutagen.Bethesda
         /// <returns>LinkPackage attached to given mod</returns>
         public static ImmutableModLinkCache<TMod, TModGetter> ToImmutableLinkCache<TMod, TModGetter>(this TModGetter mod)
             where TMod : class, IContextMod<TMod>, TModGetter
-            where TModGetter : class,  IContextGetterMod<TMod>
+            where TModGetter : class, IContextGetterMod<TMod>
         {
             return new ImmutableModLinkCache<TMod, TModGetter>(mod);
         }
@@ -265,7 +270,7 @@ namespace Mutagen.Bethesda
         /// <returns>LinkPackage attached to given mod</returns>
         public static MutableModLinkCache<TMod, TModGetter> ToMutableLinkCache<TMod, TModGetter>(this TModGetter mod)
             where TMod : class, IContextMod<TMod>, TModGetter
-            where TModGetter : class,  IContextGetterMod<TMod>
+            where TModGetter : class, IContextGetterMod<TMod>
         {
             return new MutableModLinkCache<TMod, TModGetter>(mod);
         }
@@ -281,7 +286,7 @@ namespace Mutagen.Bethesda
         public static ImmutableLoadOrderLinkCache<TMod, TModGetter> ToImmutableLinkCache<TMod, TModGetter>(
             this LoadOrder<TModGetter> loadOrder)
             where TMod : class, IContextMod<TMod>, TModGetter
-            where TModGetter : class,  IContextGetterMod<TMod>
+            where TModGetter : class, IContextGetterMod<TMod>
         {
             return new ImmutableLoadOrderLinkCache<TMod, TModGetter>(loadOrder.ListedOrder);
         }
@@ -297,7 +302,7 @@ namespace Mutagen.Bethesda
         public static ImmutableLoadOrderLinkCache<TMod, TModGetter> ToImmutableLinkCache<TMod, TModGetter>(
             this LoadOrder<IModListing<TModGetter>> loadOrder)
             where TMod : class, IContextMod<TMod>, TModGetter
-            where TModGetter : class,  IContextGetterMod<TMod>
+            where TModGetter : class, IContextGetterMod<TMod>
         {
             return new ImmutableLoadOrderLinkCache<TMod, TModGetter>(
                 loadOrder
@@ -316,7 +321,7 @@ namespace Mutagen.Bethesda
         public static ImmutableLoadOrderLinkCache<TMod, TModGetter> ToImmutableLinkCache<TMod, TModGetter>(
             this IEnumerable<IModListing<TModGetter>> loadOrder)
             where TMod : class, IContextMod<TMod>, TModGetter
-            where TModGetter : class,  IContextGetterMod<TMod>
+            where TModGetter : class, IContextGetterMod<TMod>
         {
             return new ImmutableLoadOrderLinkCache<TMod, TModGetter>(
                 loadOrder
@@ -335,7 +340,7 @@ namespace Mutagen.Bethesda
         public static ImmutableLoadOrderLinkCache<TMod, TModGetter> ToImmutableLinkCache<TMod, TModGetter>(
             this IEnumerable<TModGetter> loadOrder)
             where TMod : class, IContextMod<TMod>, TModGetter
-            where TModGetter : class,  IContextGetterMod<TMod>
+            where TModGetter : class, IContextGetterMod<TMod>
         {
             return new ImmutableLoadOrderLinkCache<TMod, TModGetter>(loadOrder);
         }
@@ -351,7 +356,7 @@ namespace Mutagen.Bethesda
             this LoadOrder<TModGetter> immutableBaseCache,
             params TMod[] mutableMods)
             where TMod : class, IContextMod<TMod>, TModGetter
-            where TModGetter : class,  IContextGetterMod<TMod>
+            where TModGetter : class, IContextGetterMod<TMod>
         {
             return new MutableLoadOrderLinkCache<TMod, TModGetter>(
                 immutableBaseCache.ToImmutableLinkCache<TMod, TModGetter>(),
@@ -369,7 +374,7 @@ namespace Mutagen.Bethesda
             this LoadOrder<IModListing<TModGetter>> immutableBaseCache,
             params TMod[] mutableMods)
             where TMod : class, IContextMod<TMod>, TModGetter
-            where TModGetter : class,  IContextGetterMod<TMod>
+            where TModGetter : class, IContextGetterMod<TMod>
         {
             return new MutableLoadOrderLinkCache<TMod, TModGetter>(
                 immutableBaseCache.ToImmutableLinkCache<TMod, TModGetter>(),

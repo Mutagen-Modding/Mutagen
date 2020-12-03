@@ -50,7 +50,7 @@ namespace Mutagen.Bethesda
     public static class IFormLinkExt
     {
         /// <summary>
-        /// Attempts to locate link target in given Link Cache.
+        /// Attempts to locate link's target record in given Link Cache. 
         /// </summary>
         /// <param name="link">Link to resolve</param>
         /// <param name="cache">Link Cache to resolve against</param>
@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <summary> 
-        /// Locates link target in given Link Cache. 
+        /// Locates link target record in given Link Cache. 
         /// </summary> 
         /// <param name="link">Link to resolve</param> 
         /// <param name="cache">Link Cache to resolve against</param> 
@@ -89,7 +89,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <summary>
-        /// Locates link target in given Link Cache.
+        /// Locates link target record in given Link Cache.
         /// </summary>
         /// <param name="link">Link to resolve</param>
         /// <param name="cache">Link Cache to resolve against</param>
@@ -111,7 +111,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <summary>
-        /// Attempts to locate link target in given Link Cache.
+        /// Attempts to locate link target record in given Link Cache.
         /// </summary>
         /// <param name="formLink">FormLink to resolve</param>
         /// <param name="cache">Link Cache to resolve against</param>
