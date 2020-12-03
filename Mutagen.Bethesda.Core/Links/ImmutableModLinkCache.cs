@@ -59,6 +59,11 @@ namespace Mutagen.Bethesda
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
         public bool TryResolve(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
         {
+            if (formKey == null)
+            {
+                majorRec = default;
+                return false;
+            }
             return _untypedMajorRecords.Value.TryGetValue(formKey, out majorRec);
         }
 
@@ -66,6 +71,11 @@ namespace Mutagen.Bethesda
         public bool TryResolve<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out TMajor majorRec)
             where TMajor : class, IMajorRecordCommonGetter
         {
+            if (formKey == null)
+            {
+                majorRec = default;
+                return false;
+            }
             IReadOnlyCache<IMajorRecordCommonGetter, FormKey> cache;
             lock (_majorRecords)
             {
@@ -83,6 +93,11 @@ namespace Mutagen.Bethesda
         /// <inheritdoc />
         public bool TryResolve(FormKey formKey, Type type, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
         {
+            if (formKey == null)
+            {
+                majorRec = default;
+                return false;
+            }
             IReadOnlyCache<IMajorRecordCommonGetter, FormKey> cache;
             lock (_majorRecords)
             {
@@ -190,6 +205,11 @@ namespace Mutagen.Bethesda
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
         public bool TryResolveContext(FormKey formKey, [MaybeNullWhen(false)] out IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec)
         {
+            if (formKey == null)
+            {
+                majorRec = default;
+                return false;
+            }
             return _untypedContexts.Value.TryGetValue(formKey, out majorRec);
         }
 
@@ -198,6 +218,11 @@ namespace Mutagen.Bethesda
             where TMajorSetter : class, IMajorRecordCommon, TMajorGetter
             where TMajorGetter : class, IMajorRecordCommonGetter
         {
+            if (formKey == null)
+            {
+                majorRec = default;
+                return false;
+            }
             IReadOnlyCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>, FormKey> cache;
             lock (_contexts)
             {
@@ -216,6 +241,11 @@ namespace Mutagen.Bethesda
         /// <inheritdoc />
         public bool TryResolveContext(FormKey formKey, Type type, [MaybeNullWhen(false)] out IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec)
         {
+            if (formKey == null)
+            {
+                majorRec = default;
+                return false;
+            }
             IReadOnlyCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>, FormKey> cache;
             lock (_contexts)
             {

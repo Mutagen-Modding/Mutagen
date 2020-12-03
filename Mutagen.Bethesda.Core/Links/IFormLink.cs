@@ -60,12 +60,12 @@ namespace Mutagen.Bethesda
         public static bool TryResolve<TMajor>(this IFormLink<TMajor> link, ILinkCache cache, [MaybeNullWhen(false)] out TMajor majorRecord)
             where TMajor : class, IMajorRecordCommonGetter
         {
-            if (link.FormKeyNullable == null)
+            if (!link.FormKeyNullable.TryGet(out var formKey))
             {
                 majorRecord = default;
                 return false;
             }
-            return cache.TryResolve<TMajor>(link.FormKeyNullable.Value, out majorRecord);
+            return cache.TryResolve<TMajor>(formKey, out majorRecord);
         }
 
         /// <summary> 
@@ -113,23 +113,22 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// Attempts to locate link target record in given Link Cache.
         /// </summary>
-        /// <param name="formLink">FormLink to resolve</param>
+        /// <param name="link">FormLink to resolve</param>
         /// <param name="cache">Link Cache to resolve against</param>
-        /// <param name="major">Located record if successful</param>
+        /// <param name="majorRecord">Located record if successful</param>
         /// <returns>True if link was resolved and a record was retrieved</returns>
         /// <typeparam name="TSource">Major Record type that the FormLink specifies explicitly</typeparam>
         /// <typeparam name="TScopedMajor">Inheriting Major Record type to scope to</typeparam>
-        public static bool TryResolve<TSource, TScopedMajor>(this IFormLink<TSource> formLink, ILinkCache cache, [MaybeNullWhen(false)] out TScopedMajor major)
+        public static bool TryResolve<TSource, TScopedMajor>(this IFormLink<TSource> link, ILinkCache cache, [MaybeNullWhen(false)] out TScopedMajor majorRecord)
             where TSource : class, IMajorRecordCommonGetter
             where TScopedMajor : class, TSource
         {
-            if (!formLink.FormKeyNullable.TryGet(out var formKey)
-                || formKey.Equals(Mutagen.Bethesda.FormKey.Null))
+            if (!link.FormKeyNullable.TryGet(out var formKey))
             {
-                major = default!;
+                majorRecord = default;
                 return false;
             }
-            return cache.TryResolve(formKey, out major);
+            return cache.TryResolve(formKey, out majorRecord);
         }
     }
 }

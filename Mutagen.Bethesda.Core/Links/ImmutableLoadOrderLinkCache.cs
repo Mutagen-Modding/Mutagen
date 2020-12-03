@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
         public bool TryResolve(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
         {
-            if (!_hasAny)
+            if (!_hasAny || formKey.IsNull)
             {
                 majorRec = default;
                 return false;
@@ -128,7 +128,7 @@ namespace Mutagen.Bethesda
         /// <inheritdoc />
         public bool TryResolve(FormKey formKey, Type type, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
         {
-            if (!_hasAny)
+            if (!_hasAny || formKey.IsNull)
             {
                 majorRec = default;
                 return false;
@@ -251,7 +251,7 @@ namespace Mutagen.Bethesda
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
         public bool TryResolveContext(FormKey formKey, [MaybeNullWhen(false)] out IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec)
         {
-            if (!_hasAny)
+            if (!_hasAny || formKey.IsNull)
             {
                 majorRec = default;
                 return false;
@@ -302,7 +302,7 @@ namespace Mutagen.Bethesda
         /// <inheritdoc />
         public bool TryResolveContext(FormKey formKey, Type type, [MaybeNullWhen(false)] out IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec)
         {
-            if (!_hasAny)
+            if (!_hasAny || formKey.IsNull)
             {
                 majorRec = default;
                 return false;

@@ -43,6 +43,11 @@ namespace Mutagen.Bethesda
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
         public bool TryResolve(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
         {
+            if (formKey == null)
+            {
+                majorRec = default;
+                return false;
+            }
             // ToDo
             // Upgrade to call EnumerateGroups(), which will perform much better
             foreach (var item in this._sourceMod.EnumerateMajorRecords())
@@ -61,6 +66,11 @@ namespace Mutagen.Bethesda
         public bool TryResolve<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out TMajor majorRec)
             where TMajor : class, IMajorRecordCommonGetter
         {
+            if (formKey == null)
+            {
+                majorRec = default;
+                return false;
+            }
             // ToDo
             // Upgrade to EnumerateGroups<TMajor>()
             foreach (var major in this._sourceMod.EnumerateMajorRecords<TMajor>())
@@ -79,6 +89,11 @@ namespace Mutagen.Bethesda
         /// <inheritdoc />
         public bool TryResolve(FormKey formKey, Type type, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
         {
+            if (formKey == null)
+            {
+                majorRec = default;
+                return false;
+            }
             // ToDo
             // Upgrade to EnumerateGroups<TMajor>()
             foreach (var major in this._sourceMod.EnumerateMajorRecords(type))
@@ -120,6 +135,11 @@ namespace Mutagen.Bethesda
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
         public bool TryResolveContext(FormKey formKey, [MaybeNullWhen(false)] out IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec)
         {
+            if (formKey == null)
+            {
+                majorRec = default;
+                return false;
+            }
             // ToDo
             // Upgrade to call EnumerateGroups(), which will perform much better
             foreach (var item in this._sourceMod.EnumerateMajorRecordContexts<IMajorRecordCommon, IMajorRecordCommonGetter>(this))
@@ -139,6 +159,11 @@ namespace Mutagen.Bethesda
             where TMajorSetter : class, IMajorRecordCommon, TMajorGetter
             where TMajorGetter : class, IMajorRecordCommonGetter
         {
+            if (formKey == null)
+            {
+                majorRec = default;
+                return false;
+            }
             // ToDo
             // Upgrade to EnumerateGroups<TMajor>()
             foreach (var major in this._sourceMod.EnumerateMajorRecordContexts<TMajorSetter, TMajorGetter>(this))
@@ -157,6 +182,11 @@ namespace Mutagen.Bethesda
         /// <inheritdoc />
         public bool TryResolveContext(FormKey formKey, Type type, [MaybeNullWhen(false)] out IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec)
         {
+            if (formKey == null)
+            {
+                majorRec = default;
+                return false;
+            }
             // ToDo
             // Upgrade to EnumerateGroups<TMajor>()
             foreach (var major in this._sourceMod.EnumerateMajorRecordContexts(this, type))

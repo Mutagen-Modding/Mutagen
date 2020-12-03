@@ -39,6 +39,11 @@ namespace Mutagen.Bethesda
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
         public bool TryResolve(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
         {
+            if (formKey == null)
+            {
+                majorRec = default;
+                return false;
+            }
             for (int i = _mutableMods.Count - 1; i >= 0; i--)
             {
                 if (_mutableMods[i].TryResolve(formKey, out majorRec)) return true;
@@ -50,6 +55,11 @@ namespace Mutagen.Bethesda
         public bool TryResolve<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out TMajor majorRec)
             where TMajor : class, IMajorRecordCommonGetter
         {
+            if (formKey == null)
+            {
+                majorRec = default;
+                return false;
+            }
             for (int i = _mutableMods.Count - 1; i >= 0; i--)
             {
                 if (_mutableMods[i].TryResolve<TMajor>(formKey, out majorRec)) return true;
@@ -60,6 +70,11 @@ namespace Mutagen.Bethesda
         /// <inheritdoc />
         public bool TryResolve(FormKey formKey, Type type, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
         {
+            if (formKey == null)
+            {
+                majorRec = default;
+                return false;
+            }
             for (int i = _mutableMods.Count - 1; i >= 0; i--)
             {
                 if (_mutableMods[i].TryResolve(formKey, type, out majorRec)) return true;
@@ -102,6 +117,11 @@ namespace Mutagen.Bethesda
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
         public bool TryResolveContext(FormKey formKey, [MaybeNullWhen(false)] out IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec)
         {
+            if (formKey == null)
+            {
+                majorRec = default;
+                return false;
+            }
             for (int i = _mutableMods.Count - 1; i >= 0; i--)
             {
                 if (_mutableMods[i].TryResolveContext(formKey, out majorRec)) return true;
@@ -114,6 +134,11 @@ namespace Mutagen.Bethesda
             where TMajorSetter : class, IMajorRecordCommon, TMajorGetter
             where TMajorGetter : class, IMajorRecordCommonGetter
         {
+            if (formKey == null)
+            {
+                majorRec = default;
+                return false;
+            }
             for (int i = _mutableMods.Count - 1; i >= 0; i--)
             {
                 if (_mutableMods[i].TryResolveContext<TMajorSetter, TMajorGetter>(formKey, out majorRec)) return true;
@@ -124,6 +149,11 @@ namespace Mutagen.Bethesda
         /// <inheritdoc />
         public bool TryResolveContext(FormKey formKey, Type type, [MaybeNullWhen(false)] out IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec)
         {
+            if (formKey == null)
+            {
+                majorRec = default;
+                return false;
+            }
             for (int i = _mutableMods.Count - 1; i >= 0; i--)
             {
                 if (_mutableMods[i].TryResolveContext(formKey, type, out majorRec)) return true;
