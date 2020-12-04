@@ -221,6 +221,82 @@ namespace Mutagen.Bethesda
             return TryGet<TMajorGetter>.Failure;
         }
 
+        /// <summary>
+        /// Attempts to locate link's target record in given Link Cache. 
+        /// </summary>
+        /// <param name="cache">Link Cache to resolve against</param>
+        /// <param name="majorRecord">Major Record if located</param>
+        /// <returns>True if successful in linking to record</returns>
+        /// <typeparam name="TMod">Mod setter type that can be overridden into</typeparam>
+        /// <typeparam name="TMajorSetter">Major Record setter type to resolve to</typeparam>
+        public bool TryResolveContext<TMod, TMajorSetter>(
+            ILinkCache<TMod> cache,
+            [MaybeNullWhen(false)] out IModContext<TMod, TMajorSetter, TMajorGetter> majorRecord)
+            where TMod : class, IContextMod<TMod>
+            where TMajorSetter : class, IMajorRecordCommon, TMajorGetter
+        {
+            return cache.TryResolveContext<TMajorSetter, TMajorGetter>(this.FormKey, out majorRecord);
+        }
+
+        /// <summary>
+        /// Locates link target record in given Link Cache.
+        /// </summary>
+        /// <param name="cache">Link Cache to resolve against</param>
+        /// <returns>Located Major Record</returns>
+        /// <exception cref="NullReferenceException">If link was not succesful</exception>
+        /// <typeparam name="TMod">Mod setter type that can be overridden into</typeparam>
+        /// <typeparam name="TMajorSetter">Major Record setter type to resolve to</typeparam>
+        public IModContext<TMod, TMajorSetter, TMajorGetter>? ResolveContext<TMod, TMajorSetter>(ILinkCache<TMod> cache)
+            where TMod : class, IContextMod<TMod>
+            where TMajorSetter : class, IMajorRecordCommon, TMajorGetter
+        {
+            if (this.TryResolveContext<TMod, TMajorSetter, TMajorGetter>(cache, out var majorRecord))
+            {
+                return majorRecord;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Attempts to locate link target record in given Link Cache.
+        /// </summary>
+        /// <param name="cache">Link Cache to resolve against</param>
+        /// <param name="majorRecord">Located record if successful</param>
+        /// <returns>True if link was resolved and a record was retrieved</returns>
+        /// <typeparam name="TMod">Mod setter type that can be overridden into</typeparam>   
+        /// <typeparam name="TScopedSetter">Inheriting Major Record setter type to scope to</typeparam>
+        /// <typeparam name="TScopedGetter">Inheriting Major Record getter type to scope to</typeparam>
+        public bool TryResolveContext<TMod, TScopedSetter, TScopedGetter>(
+            ILinkCache<TMod> cache,
+            [MaybeNullWhen(false)] out IModContext<TMod, TScopedSetter, TScopedGetter> majorRecord)
+            where TMod : class, IContextMod<TMod>
+            where TScopedSetter : class, TScopedGetter, IMajorRecordCommon
+            where TScopedGetter : class, TMajorGetter
+        {
+            return cache.TryResolveContext<TScopedSetter, TScopedGetter>(this.FormKey, out majorRecord);
+        }
+
+        /// <summary>
+        /// Locates link target record in given Link Cache.
+        /// </summary>
+        /// <param name="cache">Link Cache to resolve against</param>
+        /// <returns>Located Major Record</returns>
+        /// <exception cref="NullReferenceException">If link was not succesful</exception>
+        /// <typeparam name="TMod">Mod setter type that can be overridden into</typeparam>
+        /// <typeparam name="TScopedSetter">Inheriting Major Record setter type to scope to</typeparam>
+        /// <typeparam name="TScopedGetter">Inheriting Major Record getter type to scope to</typeparam>
+        public IModContext<TMod, TScopedSetter, TScopedGetter>? ResolveContext<TMod, TScopedSetter, TScopedGetter>(ILinkCache<TMod> cache)
+            where TMod : class, IContextMod<TMod>
+            where TScopedSetter : class, TScopedGetter, IMajorRecordCommon
+            where TScopedGetter : class, TMajorGetter
+        {
+            if (this.TryResolveContext<TMod, TMajorGetter, TScopedSetter, TScopedGetter>(cache, out var majorRecord))
+            {
+                return majorRecord;
+            }
+            return null;
+        }
+
         bool ILink.TryGetModKey([MaybeNullWhen(false)] out ModKey modKey)
         {
             modKey = this.FormKey.ModKey;
