@@ -33,10 +33,8 @@ namespace Mutagen.Bethesda
 
         private readonly IReadOnlyList<TModGetter> _listedOrder;
         private readonly IReadOnlyList<TModGetter> _priorityOrder;
-        private int _processedUntypedDepth = 0;
-        private int _processedContextUntypedDepth = 0;
-        private readonly Cache<IMajorRecordCommonGetter, FormKey> _loadOrderUntypedMajorRecords;
-        private readonly Cache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>, FormKey> _loadOrderUntypedContexts;
+        private readonly DepthCache<IMajorRecordCommonGetter> _loadOrderUntypedMajorRecords;
+        private readonly DepthCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>> _loadOrderUntypedContexts;
         private readonly Dictionary<Type, DepthCache<IMajorRecordCommonGetter>> _loadOrderMajorRecords;
         private readonly Dictionary<Type, DepthCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>> _loadOrderContexts;
 
@@ -54,8 +52,8 @@ namespace Mutagen.Bethesda
         {
             this._listedOrder = loadOrder.ToList();
             this._priorityOrder = _listedOrder.Reverse().ToList();
-            this._loadOrderUntypedMajorRecords = new Cache<IMajorRecordCommonGetter, FormKey>(m => m.FormKey);
-            this._loadOrderUntypedContexts = new Cache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>, FormKey>(m => m.Record.FormKey);
+            this._loadOrderUntypedMajorRecords = new DepthCache<IMajorRecordCommonGetter>();
+            this._loadOrderUntypedContexts = new DepthCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>();
             this._loadOrderMajorRecords = new Dictionary<Type, DepthCache<IMajorRecordCommonGetter>>();
             this._loadOrderContexts = new Dictionary<Type, DepthCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>>();
             var firstMod = _listedOrder.FirstOrDefault();
@@ -78,20 +76,17 @@ namespace Mutagen.Bethesda
             lock (this._loadOrderUntypedMajorRecords)
             {
                 if (this._loadOrderUntypedMajorRecords.TryGetValue(formKey, out majorRec)) return true;
-                if (this._processedUntypedDepth >= this._listedOrder.Count) return false;
-                while (this._processedUntypedDepth < this._listedOrder.Count)
+                if (this._loadOrderUntypedMajorRecords.Depth >= this._listedOrder.Count) return false;
+                while (this._loadOrderUntypedMajorRecords.Depth < this._listedOrder.Count)
                 {
                     // Get next unprocessed mod
-                    var targetIndex = this._listedOrder.Count - _processedUntypedDepth - 1;
+                    var targetIndex = this._listedOrder.Count - _loadOrderUntypedMajorRecords.Depth - 1;
                     var targetMod = this._listedOrder[targetIndex];
-                    this._processedUntypedDepth++;
+                    this._loadOrderUntypedMajorRecords.Depth++;
                     // Add records from that mod that aren't already cached
                     foreach (var record in targetMod.EnumerateMajorRecords())
                     {
-                        if (!_loadOrderUntypedMajorRecords.ContainsKey(record.FormKey))
-                        {
-                            _loadOrderUntypedMajorRecords.Set(record);
-                        }
+                        _loadOrderUntypedMajorRecords.AddIfMissing(record.FormKey, record);
                     }
                     // Check again
                     if (this._loadOrderUntypedMajorRecords.TryGetValue(formKey, out majorRec)) return true;
@@ -247,20 +242,17 @@ namespace Mutagen.Bethesda
             lock (this._loadOrderUntypedContexts)
             {
                 if (this._loadOrderUntypedContexts.TryGetValue(formKey, out majorRec)) return true;
-                if (this._processedContextUntypedDepth >= this._listedOrder.Count) return false;
-                while (this._processedContextUntypedDepth < this._listedOrder.Count)
+                if (this._loadOrderUntypedContexts.Depth >= this._listedOrder.Count) return false;
+                while (this._loadOrderUntypedContexts.Depth < this._listedOrder.Count)
                 {
                     // Get next unprocessed mod
-                    var targetIndex = this._listedOrder.Count - _processedContextUntypedDepth - 1;
+                    var targetIndex = this._listedOrder.Count - _loadOrderUntypedContexts.Depth - 1;
                     var targetMod = this._listedOrder[targetIndex];
-                    this._processedContextUntypedDepth++;
+                    this._loadOrderUntypedContexts.Depth++;
                     // Add records from that mod that aren't already cached
                     foreach (var record in targetMod.EnumerateMajorRecordContexts<IMajorRecordCommon, IMajorRecordCommonGetter>(this))
                     {
-                        if (!_loadOrderUntypedContexts.ContainsKey(record.Record.FormKey))
-                        {
-                            _loadOrderUntypedContexts.Set(record);
-                        }
+                        _loadOrderUntypedContexts.AddIfMissing(record.Record.FormKey, record);
                     }
                     // Check again
                     if (this._loadOrderUntypedContexts.TryGetValue(formKey, out majorRec)) return true;
