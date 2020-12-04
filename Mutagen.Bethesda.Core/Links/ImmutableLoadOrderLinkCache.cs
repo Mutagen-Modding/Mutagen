@@ -28,16 +28,6 @@ namespace Mutagen.Bethesda
         where TMod : class, IContextMod<TMod>, TModGetter
         where TModGetter : class, IContextGetterMod<TMod>
     {
-        class InternalTypedCache
-        {
-            public Dictionary<FormKey, IMajorRecordCommonGetter> Dictionary { get; } = new Dictionary<FormKey, IMajorRecordCommonGetter>();
-            public int Depth;
-        }
-        class InternalTypedContextCache
-        {
-            public Dictionary<FormKey, IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>> Dictionary { get; } = new Dictionary<FormKey, IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>();
-            public int Depth;
-        }
         private readonly bool _hasAny;
         private readonly GameCategory _gameCategory;
 
@@ -47,8 +37,8 @@ namespace Mutagen.Bethesda
         private int _processedContextUntypedDepth = 0;
         private readonly Cache<IMajorRecordCommonGetter, FormKey> _loadOrderUntypedMajorRecords;
         private readonly Cache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>, FormKey> _loadOrderUntypedContexts;
-        private readonly Dictionary<Type, InternalTypedCache> _loadOrderMajorRecords;
-        private readonly Dictionary<Type, InternalTypedContextCache> _loadOrderContexts;
+        private readonly Dictionary<Type, DepthCache<IMajorRecordCommonGetter>> _loadOrderMajorRecords;
+        private readonly Dictionary<Type, DepthCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>> _loadOrderContexts;
 
         /// <inheritdoc />
         public IReadOnlyList<IModGetter> ListedOrder => _listedOrder;
@@ -66,8 +56,8 @@ namespace Mutagen.Bethesda
             this._priorityOrder = _listedOrder.Reverse().ToList();
             this._loadOrderUntypedMajorRecords = new Cache<IMajorRecordCommonGetter, FormKey>(m => m.FormKey);
             this._loadOrderUntypedContexts = new Cache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>, FormKey>(m => m.Record.FormKey);
-            this._loadOrderMajorRecords = new Dictionary<Type, InternalTypedCache>();
-            this._loadOrderContexts = new Dictionary<Type, InternalTypedContextCache>();
+            this._loadOrderMajorRecords = new Dictionary<Type, DepthCache<IMajorRecordCommonGetter>>();
+            this._loadOrderContexts = new Dictionary<Type, DepthCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>>();
             var firstMod = _listedOrder.FirstOrDefault();
             this._hasAny = firstMod != null;
             // ToDo
@@ -139,7 +129,7 @@ namespace Mutagen.Bethesda
                 // Get cache object by type
                 if (!this._loadOrderMajorRecords.TryGetValue(type, out var cache))
                 {
-                    cache = new InternalTypedCache();
+                    cache = new DepthCache<IMajorRecordCommonGetter>();
                     if (type.Equals(typeof(IMajorRecordCommon))
                         || type.Equals(typeof(IMajorRecordCommonGetter)))
                     {
@@ -172,7 +162,7 @@ namespace Mutagen.Bethesda
                 }
 
                 // Check for record
-                if (cache.Dictionary.TryGetValue(formKey, out majorRec))
+                if (cache.TryGetValue(formKey, out majorRec))
                 {
                     return true;
                 }
@@ -193,10 +183,7 @@ namespace Mutagen.Bethesda
                     {
                         foreach (var record in mod.EnumerateMajorRecords(type))
                         {
-                            if (!cache.Dictionary.ContainsKey(record.FormKey))
-                            {
-                                cache.Dictionary[record.FormKey] = record;
-                            }
+                            cache.AddIfMissing(record.FormKey, record);
                         }
                     }
 
@@ -213,7 +200,7 @@ namespace Mutagen.Bethesda
                         AddRecords(targetMod, type);
                     }
                     // Check again
-                    if (cache.Dictionary.TryGetValue(formKey, out majorRec))
+                    if (cache.TryGetValue(formKey, out majorRec))
                     {
                         return true;
                     }
@@ -313,7 +300,7 @@ namespace Mutagen.Bethesda
                 // Get cache object by type
                 if (!this._loadOrderContexts.TryGetValue(type, out var cache))
                 {
-                    cache = new InternalTypedContextCache();
+                    cache = new DepthCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>();
                     if (type.Equals(typeof(IMajorRecordCommon))
                         || type.Equals(typeof(IMajorRecordCommonGetter)))
                     {
@@ -346,7 +333,7 @@ namespace Mutagen.Bethesda
                 }
 
                 // Check for record
-                if (cache.Dictionary.TryGetValue(formKey, out majorRec))
+                if (cache.TryGetValue(formKey, out majorRec))
                 {
                     return true;
                 }
@@ -367,10 +354,7 @@ namespace Mutagen.Bethesda
                     {
                         foreach (var record in mod.EnumerateMajorRecordContexts(this, type))
                         {
-                            if (!cache.Dictionary.ContainsKey(record.Record.FormKey))
-                            {
-                                cache.Dictionary[record.Record.FormKey] = record;
-                            }
+                            cache.AddIfMissing(record.Record.FormKey, record);
                         }
                     }
 
@@ -387,7 +371,7 @@ namespace Mutagen.Bethesda
                         AddRecords(targetMod, type);
                     }
                     // Check again
-                    if (cache.Dictionary.TryGetValue(formKey, out majorRec))
+                    if (cache.TryGetValue(formKey, out majorRec))
                     {
                         return true;
                     }
@@ -419,6 +403,25 @@ namespace Mutagen.Bethesda
         {
             if (TryResolveContext<TMajorSetter, TMajorGetter>(formKey, out var commonRec)) return commonRec;
             throw new KeyNotFoundException($"Form ID {formKey.ID} could not be found.");
+        }
+    }
+
+    internal class DepthCache<T>
+    {
+        private readonly Dictionary<FormKey, T> _dictionary = new Dictionary<FormKey, T>();
+        public int Depth;
+
+        public bool TryGetValue(FormKey key, [MaybeNullWhen(false)] out T value)
+        {
+            return _dictionary.TryGetValue(key, out value);
+        }
+
+        public void AddIfMissing(FormKey key, T item)
+        {
+            if (!_dictionary.ContainsKey(key))
+            {
+                _dictionary[key] = item;
+            }
         }
     }
 }
