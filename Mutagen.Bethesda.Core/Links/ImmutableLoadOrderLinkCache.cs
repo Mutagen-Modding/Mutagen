@@ -120,10 +120,11 @@ namespace Mutagen.Bethesda
                 return false;
             }
 
+            DepthCache<IMajorRecordCommonGetter> cache;
             lock (this._winningRecords)
             {
                 // Get cache object by type
-                if (!this._winningRecords.TryGetValue(type, out var cache))
+                if (!this._winningRecords.TryGetValue(type, out cache))
                 {
                     cache = new DepthCache<IMajorRecordCommonGetter>();
                     if (type.Equals(typeof(IMajorRecordCommon))
@@ -155,7 +156,10 @@ namespace Mutagen.Bethesda
                         this._winningRecords[type] = cache;
                     }
                 }
-
+            }
+            
+            lock (cache)
+            {
                 // Check for record
                 if (cache.TryGetValue(formKey, out majorRec))
                 {
@@ -287,10 +291,11 @@ namespace Mutagen.Bethesda
                 return false;
             }
 
+            DepthCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>> cache;
             lock (this._winningContexts)
             {
                 // Get cache object by type
-                if (!this._winningContexts.TryGetValue(type, out var cache))
+                if (!this._winningContexts.TryGetValue(type, out cache))
                 {
                     cache = new DepthCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>();
                     if (type.Equals(typeof(IMajorRecordCommon))
@@ -322,7 +327,10 @@ namespace Mutagen.Bethesda
                         this._winningContexts[type] = cache;
                     }
                 }
+            }
 
+            lock (cache)
+            {
                 // Check for record
                 if (cache.TryGetValue(formKey, out majorRec))
                 {
