@@ -33,10 +33,10 @@ namespace Mutagen.Bethesda
 
         private readonly IReadOnlyList<TModGetter> _listedOrder;
         private readonly IReadOnlyList<TModGetter> _priorityOrder;
-        private readonly DepthCache<IMajorRecordCommonGetter> _loadOrderUntypedMajorRecords;
-        private readonly DepthCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>> _loadOrderUntypedContexts;
-        private readonly Dictionary<Type, DepthCache<IMajorRecordCommonGetter>> _loadOrderMajorRecords;
-        private readonly Dictionary<Type, DepthCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>> _loadOrderContexts;
+        private readonly DepthCache<IMajorRecordCommonGetter> _untypedWinningRecords = new DepthCache<IMajorRecordCommonGetter>();
+        private readonly DepthCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>> _untypedWinningContexts = new DepthCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>();
+        private readonly Dictionary<Type, DepthCache<IMajorRecordCommonGetter>> _winningRecords = new Dictionary<Type, DepthCache<IMajorRecordCommonGetter>>();
+        private readonly Dictionary<Type, DepthCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>> _winningContexts = new Dictionary<Type, DepthCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>>();
 
         /// <inheritdoc />
         public IReadOnlyList<IModGetter> ListedOrder => _listedOrder;
@@ -52,10 +52,6 @@ namespace Mutagen.Bethesda
         {
             this._listedOrder = loadOrder.ToList();
             this._priorityOrder = _listedOrder.Reverse().ToList();
-            this._loadOrderUntypedMajorRecords = new DepthCache<IMajorRecordCommonGetter>();
-            this._loadOrderUntypedContexts = new DepthCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>();
-            this._loadOrderMajorRecords = new Dictionary<Type, DepthCache<IMajorRecordCommonGetter>>();
-            this._loadOrderContexts = new Dictionary<Type, DepthCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>>();
             var firstMod = _listedOrder.FirstOrDefault();
             this._hasAny = firstMod != null;
             // ToDo
@@ -73,23 +69,23 @@ namespace Mutagen.Bethesda
                 return false;
             }
 
-            lock (this._loadOrderUntypedMajorRecords)
+            lock (this._untypedWinningRecords)
             {
-                if (this._loadOrderUntypedMajorRecords.TryGetValue(formKey, out majorRec)) return true;
-                if (this._loadOrderUntypedMajorRecords.Depth >= this._listedOrder.Count) return false;
-                while (this._loadOrderUntypedMajorRecords.Depth < this._listedOrder.Count)
+                if (this._untypedWinningRecords.TryGetValue(formKey, out majorRec)) return true;
+                if (this._untypedWinningRecords.Depth >= this._listedOrder.Count) return false;
+                while (this._untypedWinningRecords.Depth < this._listedOrder.Count)
                 {
                     // Get next unprocessed mod
-                    var targetIndex = this._listedOrder.Count - _loadOrderUntypedMajorRecords.Depth - 1;
+                    var targetIndex = this._listedOrder.Count - _untypedWinningRecords.Depth - 1;
                     var targetMod = this._listedOrder[targetIndex];
-                    this._loadOrderUntypedMajorRecords.Depth++;
+                    this._untypedWinningRecords.Depth++;
                     // Add records from that mod that aren't already cached
                     foreach (var record in targetMod.EnumerateMajorRecords())
                     {
-                        _loadOrderUntypedMajorRecords.AddIfMissing(record.FormKey, record);
+                        _untypedWinningRecords.AddIfMissing(record.FormKey, record);
                     }
                     // Check again
-                    if (this._loadOrderUntypedMajorRecords.TryGetValue(formKey, out majorRec)) return true;
+                    if (this._untypedWinningRecords.TryGetValue(formKey, out majorRec)) return true;
                 }
                 // Record doesn't exist
                 return false;
@@ -119,30 +115,30 @@ namespace Mutagen.Bethesda
                 return false;
             }
 
-            lock (this._loadOrderMajorRecords)
+            lock (this._winningRecords)
             {
                 // Get cache object by type
-                if (!this._loadOrderMajorRecords.TryGetValue(type, out var cache))
+                if (!this._winningRecords.TryGetValue(type, out var cache))
                 {
                     cache = new DepthCache<IMajorRecordCommonGetter>();
                     if (type.Equals(typeof(IMajorRecordCommon))
                         || type.Equals(typeof(IMajorRecordCommonGetter)))
                     {
-                        this._loadOrderMajorRecords[typeof(IMajorRecordCommon)] = cache;
-                        this._loadOrderMajorRecords[typeof(IMajorRecordCommonGetter)] = cache;
+                        this._winningRecords[typeof(IMajorRecordCommon)] = cache;
+                        this._winningRecords[typeof(IMajorRecordCommonGetter)] = cache;
                     }
                     else if (LoquiRegistration.TryGetRegister(type, out var registration))
                     {
-                        this._loadOrderMajorRecords[registration.ClassType] = cache;
-                        this._loadOrderMajorRecords[registration.GetterType] = cache;
-                        this._loadOrderMajorRecords[registration.SetterType] = cache;
+                        this._winningRecords[registration.ClassType] = cache;
+                        this._winningRecords[registration.GetterType] = cache;
+                        this._winningRecords[registration.SetterType] = cache;
                         if (registration.InternalGetterType != null)
                         {
-                            this._loadOrderMajorRecords[registration.InternalGetterType] = cache;
+                            this._winningRecords[registration.InternalGetterType] = cache;
                         }
                         if (registration.InternalSetterType != null)
                         {
-                            this._loadOrderMajorRecords[registration.InternalSetterType] = cache;
+                            this._winningRecords[registration.InternalSetterType] = cache;
                         }
                     }
                     else
@@ -152,7 +148,7 @@ namespace Mutagen.Bethesda
                         {
                             throw new ArgumentException($"A lookup was queried for an unregistered type: {type.Name}");
                         }
-                        this._loadOrderMajorRecords[type] = cache;
+                        this._winningRecords[type] = cache;
                     }
                 }
 
@@ -239,23 +235,23 @@ namespace Mutagen.Bethesda
                 return false;
             }
 
-            lock (this._loadOrderUntypedContexts)
+            lock (this._untypedWinningContexts)
             {
-                if (this._loadOrderUntypedContexts.TryGetValue(formKey, out majorRec)) return true;
-                if (this._loadOrderUntypedContexts.Depth >= this._listedOrder.Count) return false;
-                while (this._loadOrderUntypedContexts.Depth < this._listedOrder.Count)
+                if (this._untypedWinningContexts.TryGetValue(formKey, out majorRec)) return true;
+                if (this._untypedWinningContexts.Depth >= this._listedOrder.Count) return false;
+                while (this._untypedWinningContexts.Depth < this._listedOrder.Count)
                 {
                     // Get next unprocessed mod
-                    var targetIndex = this._listedOrder.Count - _loadOrderUntypedContexts.Depth - 1;
+                    var targetIndex = this._listedOrder.Count - _untypedWinningContexts.Depth - 1;
                     var targetMod = this._listedOrder[targetIndex];
-                    this._loadOrderUntypedContexts.Depth++;
+                    this._untypedWinningContexts.Depth++;
                     // Add records from that mod that aren't already cached
                     foreach (var record in targetMod.EnumerateMajorRecordContexts<IMajorRecordCommon, IMajorRecordCommonGetter>(this))
                     {
-                        _loadOrderUntypedContexts.AddIfMissing(record.Record.FormKey, record);
+                        _untypedWinningContexts.AddIfMissing(record.Record.FormKey, record);
                     }
                     // Check again
-                    if (this._loadOrderUntypedContexts.TryGetValue(formKey, out majorRec)) return true;
+                    if (this._untypedWinningContexts.TryGetValue(formKey, out majorRec)) return true;
                 }
                 // Record doesn't exist
                 return false;
@@ -287,30 +283,30 @@ namespace Mutagen.Bethesda
                 return false;
             }
 
-            lock (this._loadOrderContexts)
+            lock (this._winningContexts)
             {
                 // Get cache object by type
-                if (!this._loadOrderContexts.TryGetValue(type, out var cache))
+                if (!this._winningContexts.TryGetValue(type, out var cache))
                 {
                     cache = new DepthCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>();
                     if (type.Equals(typeof(IMajorRecordCommon))
                         || type.Equals(typeof(IMajorRecordCommonGetter)))
                     {
-                        this._loadOrderContexts[typeof(IMajorRecordCommon)] = cache;
-                        this._loadOrderContexts[typeof(IMajorRecordCommonGetter)] = cache;
+                        this._winningContexts[typeof(IMajorRecordCommon)] = cache;
+                        this._winningContexts[typeof(IMajorRecordCommonGetter)] = cache;
                     }
                     else if (LoquiRegistration.TryGetRegister(type, out var registration))
                     {
-                        this._loadOrderContexts[registration.ClassType] = cache;
-                        this._loadOrderContexts[registration.GetterType] = cache;
-                        this._loadOrderContexts[registration.SetterType] = cache;
+                        this._winningContexts[registration.ClassType] = cache;
+                        this._winningContexts[registration.GetterType] = cache;
+                        this._winningContexts[registration.SetterType] = cache;
                         if (registration.InternalGetterType != null)
                         {
-                            this._loadOrderContexts[registration.InternalGetterType] = cache;
+                            this._winningContexts[registration.InternalGetterType] = cache;
                         }
                         if (registration.InternalSetterType != null)
                         {
-                            this._loadOrderContexts[registration.InternalSetterType] = cache;
+                            this._winningContexts[registration.InternalSetterType] = cache;
                         }
                     }
                     else
@@ -320,7 +316,7 @@ namespace Mutagen.Bethesda
                         {
                             throw new ArgumentException($"A lookup was queried for an unregistered type: {type.Name}");
                         }
-                        this._loadOrderContexts[type] = cache;
+                        this._winningContexts[type] = cache;
                     }
                 }
 
