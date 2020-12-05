@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda
     public interface IKeyworded<TKeyword> : IKeywordedGetter<TKeyword>
         where TKeyword : IKeywordCommonGetter
     {
-        new ExtendedList<IFormLink<TKeyword>>? Keywords { get; }
+        new ExtendedList<IFormLink<TKeyword>>? Keywords { get; set; }
     }
 
     /// <summary>
