@@ -59,6 +59,9 @@ namespace Mutagen.Bethesda
             this._gameCategory = firstMod?.GameRelease.ToCategory() ?? GameCategory.Oblivion;
         }
 
+        private bool IsPastDepth(int depth) => depth >= this._listedOrder.Count;
+        private int PastDepth => this._listedOrder.Count + 1;
+
         /// <inheritdoc />
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
         public bool TryResolve(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
@@ -72,8 +75,8 @@ namespace Mutagen.Bethesda
             lock (this._untypedWinningRecords)
             {
                 if (this._untypedWinningRecords.TryGetValue(formKey, out majorRec)) return true;
-                if (this._untypedWinningRecords.Depth >= this._listedOrder.Count) return false;
-                while (this._untypedWinningRecords.Depth < this._listedOrder.Count)
+                if (IsPastDepth(this._untypedWinningRecords.Depth)) return false;
+                while (!IsPastDepth(this._untypedWinningRecords.Depth))
                 {
                     // Get next unprocessed mod
                     var targetIndex = this._listedOrder.Count - _untypedWinningRecords.Depth - 1;
@@ -157,13 +160,13 @@ namespace Mutagen.Bethesda
                 {
                     return true;
                 }
-                if (cache.Depth >= this._listedOrder.Count)
+                if (IsPastDepth(cache.Depth))
                 {
                     majorRec = default!;
                     return false;
                 }
 
-                while (cache.Depth < this._listedOrder.Count)
+                while (!IsPastDepth(cache.Depth))
                 {
                     // Get next unprocessed mod
                     var targetIndex = this._listedOrder.Count - cache.Depth - 1;
@@ -238,8 +241,8 @@ namespace Mutagen.Bethesda
             lock (this._untypedWinningContexts)
             {
                 if (this._untypedWinningContexts.TryGetValue(formKey, out majorRec)) return true;
-                if (this._untypedWinningContexts.Depth >= this._listedOrder.Count) return false;
-                while (this._untypedWinningContexts.Depth < this._listedOrder.Count)
+                if (IsPastDepth(_untypedWinningContexts.Depth)) return false;
+                while (!IsPastDepth(_untypedWinningContexts.Depth))
                 {
                     // Get next unprocessed mod
                     var targetIndex = this._listedOrder.Count - _untypedWinningContexts.Depth - 1;
@@ -325,13 +328,13 @@ namespace Mutagen.Bethesda
                 {
                     return true;
                 }
-                if (cache.Depth >= this._listedOrder.Count)
+                if (IsPastDepth(cache.Depth))
                 {
                     majorRec = default!;
                     return false;
                 }
 
-                while (cache.Depth < this._listedOrder.Count)
+                while (!IsPastDepth(cache.Depth))
                 {
                     // Get next unprocessed mod
                     var targetIndex = this._listedOrder.Count - cache.Depth - 1;
