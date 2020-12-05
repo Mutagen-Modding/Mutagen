@@ -37,6 +37,7 @@ namespace Mutagen.Bethesda
         private readonly DepthCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>> _untypedWinningContexts = new DepthCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>();
         private readonly Dictionary<Type, DepthCache<IMajorRecordCommonGetter>> _winningRecords = new Dictionary<Type, DepthCache<IMajorRecordCommonGetter>>();
         private readonly Dictionary<Type, DepthCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>> _winningContexts = new Dictionary<Type, DepthCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>>();
+        private readonly IReadOnlyDictionary<Type, Type[]> _linkInterfaces;
 
         /// <inheritdoc />
         public IReadOnlyList<IModGetter> ListedOrder => _listedOrder;
@@ -57,6 +58,7 @@ namespace Mutagen.Bethesda
             // ToDo
             // Upgrade to bounce off ModInstantiator systems
             this._gameCategory = firstMod?.GameRelease.ToCategory() ?? GameCategory.Oblivion;
+            this._linkInterfaces = LinkInterfaceMapping.InterfaceToObjectTypes(_gameCategory);
         }
 
         private bool IsPastDepth(int depth) => depth >= this._listedOrder.Count;
@@ -146,8 +148,7 @@ namespace Mutagen.Bethesda
                     }
                     else
                     {
-                        var interfaceMappings = LinkInterfaceMapping.InterfaceToObjectTypes(_gameCategory);
-                        if (!interfaceMappings.TryGetValue(type, out var objs))
+                        if (!_linkInterfaces.TryGetValue(type, out var objs))
                         {
                             throw new ArgumentException($"A lookup was queried for an unregistered type: {type.Name}");
                         }
@@ -182,7 +183,7 @@ namespace Mutagen.Bethesda
                     }
 
                     // Add records from that mod that aren't already cached
-                    if (LinkInterfaceMapping.InterfaceToObjectTypes(_gameCategory).TryGetValue(type, out var objs))
+                    if (_linkInterfaces.TryGetValue(type, out var objs))
                     {
                         foreach (var objType in objs)
                         {
@@ -314,8 +315,7 @@ namespace Mutagen.Bethesda
                     }
                     else
                     {
-                        var interfaceMappings = LinkInterfaceMapping.InterfaceToObjectTypes(_gameCategory);
-                        if (!interfaceMappings.TryGetValue(type, out var objs))
+                        if (!_linkInterfaces.TryGetValue(type, out var objs))
                         {
                             throw new ArgumentException($"A lookup was queried for an unregistered type: {type.Name}");
                         }
@@ -350,7 +350,7 @@ namespace Mutagen.Bethesda
                     }
 
                     // Add records from that mod that aren't already cached
-                    if (LinkInterfaceMapping.InterfaceToObjectTypes(_gameCategory).TryGetValue(type, out var objs))
+                    if (_linkInterfaces.TryGetValue(type, out var objs))
                     {
                         foreach (var objType in objs)
                         {
