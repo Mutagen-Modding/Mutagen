@@ -184,5 +184,55 @@ namespace Mutagen.Bethesda
             if (TryResolveContext<TMajorSetter, TMajorGetter>(formKey, out var commonRec)) return commonRec;
             throw new KeyNotFoundException($"Form ID {formKey.ID} could not be found.");
         }
+
+        /// <inheritdoc />
+        public IEnumerable<TMajor> ResolveAll<TMajor>(FormKey formKey)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            for (int i = _mutableMods.Count - 1; i >= 0; i--)
+            {
+                if (_mutableMods[i].TryResolve<TMajor>(formKey, out var majorRec))
+                {
+                    yield return majorRec;
+                }
+            }
+            foreach (var rec in WrappedImmutableCache.ResolveAll<TMajor>(formKey))
+            {
+                yield return rec;
+            }
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<IMajorRecordCommonGetter> ResolveAll(FormKey formKey, Type type)
+        {
+            for (int i = _mutableMods.Count - 1; i >= 0; i--)
+            {
+                if (_mutableMods[i].TryResolve(formKey, type, out var majorRec))
+                {
+                    yield return majorRec;
+                }
+            }
+            foreach (var rec in WrappedImmutableCache.ResolveAll(formKey, type))
+            {
+                yield return rec;
+            }
+        }
+
+        /// <inheritdoc />
+        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
+        public IEnumerable<IMajorRecordCommonGetter> ResolveAll(FormKey formKey)
+        {
+            for (int i = _mutableMods.Count - 1; i >= 0; i--)
+            {
+                if (_mutableMods[i].TryResolve(formKey, out var majorRec))
+                {
+                    yield return majorRec;
+                }
+            }
+            foreach (var rec in WrappedImmutableCache.ResolveAll(formKey))
+            {
+                yield return rec;
+            }
+        }
     }
 }

@@ -225,5 +225,34 @@ namespace Mutagen.Bethesda
             if (TryResolveContext<TMajorSetter, TMajorGetter>(formKey, out var commonRec)) return commonRec;
             throw new KeyNotFoundException($"Form ID {formKey.ID} could not be found.");
         }
+
+        /// <inheritdoc />
+        public IEnumerable<TMajor> ResolveAll<TMajor>(FormKey formKey)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            if (TryResolve<TMajor>(formKey, out var rec))
+            {
+                yield return rec;
+            }
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<IMajorRecordCommonGetter> ResolveAll(FormKey formKey, Type type)
+        {
+            if (TryResolve(formKey, type, out var rec))
+            {
+                yield return rec;
+            }
+        }
+
+        /// <inheritdoc />
+        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
+        public IEnumerable<IMajorRecordCommonGetter> ResolveAll(FormKey formKey)
+        {
+            if (TryResolve(formKey, out var rec))
+            {
+                yield return rec;
+            }
+        }
     }
 }

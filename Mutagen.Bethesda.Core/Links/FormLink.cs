@@ -297,6 +297,30 @@ namespace Mutagen.Bethesda
             return null;
         }
 
+        /// <summary>
+        /// Locate all of a link's target records in given Link Cache.<br /> 
+        /// The winning override will be returned first, and finished by the original defining definition.
+        /// </summary>
+        /// <param name="cache">Link Cache to resolve against</param>
+        /// <returns>Enumerable of the linked records</returns>
+        public IEnumerable<TMajorGetter> ResolveAll(ILinkCache cache)
+        {
+            return cache.ResolveAll<TMajorGetter>(this.FormKey);
+        }
+
+        /// <summary>
+        /// Locate all of a link's target records in given Link Cache.<br /> 
+        /// The winning override will be returned first, and finished by the original defining definition.
+        /// </summary>
+        /// <param name="cache">Link Cache to resolve against</param>
+        /// <returns>Enumerable of the linked records</returns>
+        /// <typeparam name="TScopedMajor">Inheriting Major Record type to scope to</typeparam>
+        public IEnumerable<TScopedMajor> ResolveAll<TScopedMajor>(ILinkCache cache)
+            where TScopedMajor : class, TMajorGetter
+        {
+            return cache.ResolveAll<TScopedMajor>(this.FormKey);
+        }
+
         bool ILink.TryGetModKey([MaybeNullWhen(false)] out ModKey modKey)
         {
             modKey = this.FormKey.ModKey;

@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace Mutagen.Bethesda
 {
@@ -49,8 +51,9 @@ namespace Mutagen.Bethesda
     /// </summary>
     public static class IFormLinkExt
     {
+        #region Resolve
         /// <summary>
-        /// Attempts to locate link's target record in given Link Cache. 
+        /// Attempts to locate link's winning target record in given Link Cache. 
         /// </summary>
         /// <param name="link">Link to resolve</param>
         /// <param name="cache">Link Cache to resolve against</param>
@@ -69,7 +72,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <summary> 
-        /// Locates link target record in given Link Cache. 
+        /// Locates link winning target record in given Link Cache. 
         /// </summary> 
         /// <param name="link">Link to resolve</param> 
         /// <param name="cache">Link Cache to resolve against</param> 
@@ -89,7 +92,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <summary>
-        /// Attempts to locate link target record in given Link Cache.
+        /// Attempts to locate link winning target record in given Link Cache.
         /// </summary>
         /// <param name="link">FormLink to resolve</param>
         /// <param name="cache">Link Cache to resolve against</param>
@@ -110,7 +113,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <summary>
-        /// Locates link target record in given Link Cache.
+        /// Locates link winning target record in given Link Cache.
         /// </summary>
         /// <param name="link">Link to resolve</param>
         /// <param name="cache">Link Cache to resolve against</param>
@@ -130,9 +133,51 @@ namespace Mutagen.Bethesda
             }
             return null;
         }
+        #endregion
+
+        #region ResolveAll
+        /// <summary>
+        /// Locate all of a link's target records in given Link Cache.<br /> 
+        /// The winning override will be returned first, and finished by the original defining definition.
+        /// </summary>
+        /// <param name="link">Link to resolve</param>
+        /// <param name="cache">Link Cache to resolve against</param>
+        /// <returns>Enumerable of the linked records</returns>
+        /// <typeparam name="TMajor">Major Record type to resolve to</typeparam>
+        public static IEnumerable<TMajor> ResolveAll<TMajor>(this IFormLink<TMajor> link, ILinkCache cache)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            if (!link.FormKeyNullable.TryGet(out var formKey))
+            {
+                return Enumerable.Empty<TMajor>();
+            }
+            return cache.ResolveAll<TMajor>(formKey);
+        }
 
         /// <summary>
-        /// Attempts to locate link's target record in given Link Cache. 
+        /// Locate all of a link's target records in given Link Cache.<br /> 
+        /// The winning override will be returned first, and finished by the original defining definition.
+        /// </summary>
+        /// <param name="link">FormLink to resolve</param>
+        /// <param name="cache">Link Cache to resolve against</param>
+        /// <returns>Enumerable of the linked records</returns>
+        /// <typeparam name="TSource">Major Record type that the FormLink specifies explicitly</typeparam>
+        /// <typeparam name="TScopedMajor">Inheriting Major Record type to scope to</typeparam>
+        public static IEnumerable<TScopedMajor> ResolveAll<TSource, TScopedMajor>(this IFormLink<TSource> link, ILinkCache cache)
+            where TSource : class, IMajorRecordCommonGetter
+            where TScopedMajor : class, TSource
+        {
+            if (!link.FormKeyNullable.TryGet(out var formKey))
+            {
+                return Enumerable.Empty<TScopedMajor>();
+            }
+            return cache.ResolveAll<TScopedMajor>(formKey);
+        }
+        #endregion
+
+        #region Resolve Context
+        /// <summary>
+        /// Attempts to locate link's winning target record in given Link Cache. 
         /// </summary>
         /// <param name="link">Link to resolve</param>
         /// <param name="cache">Link Cache to resolve against</param>
@@ -158,7 +203,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <summary>
-        /// Locates link target record in given Link Cache.
+        /// Locates link winning target record in given Link Cache.
         /// </summary>
         /// <param name="link">Link to resolve</param>
         /// <param name="cache">Link Cache to resolve against</param>
@@ -182,7 +227,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <summary>
-        /// Attempts to locate link target record in given Link Cache.
+        /// Attempts to winning locate link target record in given Link Cache.
         /// </summary>
         /// <param name="link">FormLink to resolve</param>
         /// <param name="cache">Link Cache to resolve against</param>
@@ -210,7 +255,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <summary> 
-        /// Locates link target record in given Link Cache. 
+        /// Locates link winning target record in given Link Cache. 
         /// </summary> 
         /// <param name="link">Link to resolve</param> 
         /// <param name="cache">Link Cache to resolve against</param> 
@@ -234,5 +279,6 @@ namespace Mutagen.Bethesda
             }
             return null;
         }
+        #endregion
     }
 }

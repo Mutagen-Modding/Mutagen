@@ -2,6 +2,7 @@ using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace Mutagen.Bethesda
 {
@@ -339,6 +340,38 @@ namespace Mutagen.Bethesda
             }
             modKey = default!;
             return false;
+        }
+
+        /// <summary>
+        /// Locate all of a link's target records in given Link Cache.<br /> 
+        /// The winning override will be returned first, and finished by the original defining definition.
+        /// </summary>
+        /// <param name="cache">Link Cache to resolve against</param>
+        /// <returns>Enumerable of the linked records</returns>
+        public IEnumerable<TMajorGetter> ResolveAll(ILinkCache cache)
+        {
+            if (!this.FormKeyNullable.TryGet(out var formKey))
+            {
+                return Enumerable.Empty<TMajorGetter>();
+            }
+            return cache.ResolveAll<TMajorGetter>(formKey);
+        }
+
+        /// <summary>
+        /// Locate all of a link's target records in given Link Cache.<br /> 
+        /// The winning override will be returned first, and finished by the original defining definition.
+        /// </summary>
+        /// <param name="cache">Link Cache to resolve against</param>
+        /// <returns>Enumerable of the linked records</returns>
+        /// <typeparam name="TScopedMajor">Inheriting Major Record type to scope to</typeparam>
+        public IEnumerable<TScopedMajor> ResolveAll<TScopedMajor>(ILinkCache cache)
+            where TScopedMajor : class, TMajorGetter
+        {
+            if (!this.FormKeyNullable.TryGet(out var formKey))
+            {
+                return Enumerable.Empty<TScopedMajor>();
+            }
+            return cache.ResolveAll<TScopedMajor>(formKey);
         }
 
         public static implicit operator FormLinkNullable<TMajorGetter>(TMajorGetter? major)

@@ -349,5 +349,34 @@ namespace Mutagen.Bethesda
             }
             return majorRecords;
         }
+
+        /// <inheritdoc />
+        public IEnumerable<TMajor> ResolveAll<TMajor>(FormKey formKey)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            if (TryResolve<TMajor>(formKey, out var rec))
+            {
+                yield return rec;
+            }
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<IMajorRecordCommonGetter> ResolveAll(FormKey formKey, Type type)
+        {
+            if (TryResolve(formKey, type, out var rec))
+            {
+                yield return rec;
+            }
+        }
+
+        /// <inheritdoc />
+        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
+        public IEnumerable<IMajorRecordCommonGetter> ResolveAll(FormKey formKey)
+        {
+            if (TryResolve(formKey, out var rec))
+            {
+                yield return rec;
+            }
+        }
     }
 }

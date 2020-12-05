@@ -126,6 +126,52 @@ namespace Mutagen.Bethesda
         /// Iterates through the contained mods in priority order (reversed), with the most prioritized mod first.
         /// </summary>
         IReadOnlyList<IModGetter> PriorityOrder { get; }
+
+        /// <summary>
+        /// Iterates all records that match the FormKey relative to the source the package was attached to.<br />
+        /// If attached to a single mod, at most a single record can be found.<br />
+        /// If attached to a load order, many records may be returned, depending on how many mods overrode the FormKey.
+        /// </summary>
+        /// <param name="formKey">FormKey to look for</param>
+        /// <typeparam name="TMajor">The type of Major Record to look up</typeparam>
+        /// <exception cref="ArgumentException">
+        /// An unexpected TMajor type will throw an exception.<br/>
+        /// Unexpected types include:<br/>
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
+        /// <returns>Enumerable of all located records that match the FormKey in the cache</returns>
+        IEnumerable<TMajor> ResolveAll<TMajor>(FormKey formKey)
+            where TMajor : class, IMajorRecordCommonGetter;
+
+        /// <summary>
+        /// Iterates all records that match the FormKey relative to the source the package was attached to.<br />
+        /// If attached to a single mod, at most a single record can be found.<br />
+        /// If attached to a load order, many records may be returned, depending on how many mods overrode the FormKey.
+        /// </summary>
+        /// <param name="formKey">FormKey to look for</param>
+        /// <param name="type">The type of Major Record to look up</param>
+        /// <exception cref="ArgumentException">
+        /// An unexpected TMajor type will throw an exception.<br/>
+        /// Unexpected types include:<br/>
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
+        /// <returns>Enumerable of all located records that match the FormKey in the cache</returns>
+        IEnumerable<IMajorRecordCommonGetter> ResolveAll(FormKey formKey, Type type);
+
+        /// <summary>
+        /// Iterates all records that match the FormKey relative to the source the package was attached to.<br />
+        /// If attached to a single mod, at most a single record can be found.<br />
+        /// If attached to a load order, many records may be returned, depending on how many mods overrode the FormKey.<br />
+        /// <br/>
+        /// NOTE:  This call is much slower than the alternative that uses generics, as all records in the entire mod must be
+        /// processed, rather than being able to scope the search to a specific area.
+        /// </summary>
+        /// <param name="formKey">FormKey to look for</param>
+        /// <returns>Enumerable of all located records that match the FormKey in the cache</returns>
+        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
+        IEnumerable<IMajorRecordCommonGetter> ResolveAll(FormKey formKey);
     }
 
     public interface ILinkCache<TModSetter> : ILinkCache

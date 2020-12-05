@@ -1246,6 +1246,85 @@ namespace Mutagen.Bethesda.UnitTests
         }
         #endregion
 
+        #region FormLink Direct ResolveAll
+        [Fact]
+        public void FormLink_Direct_ResolveAll_Empty()
+        {
+            var formLink = new FormLink<IEffectRecordGetter>(UnusedFormKey);
+            var package = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE));
+            formLink.ResolveAll(package).Should().BeEmpty();
+        }
+
+        [Fact]
+        public void FormLink_Direct_ResolveAll_Typed_Empty()
+        {
+            var formLink = new FormLink<IPlacedGetter>(UnusedFormKey);
+            var package = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE));
+            formLink.ResolveAll<IPlacedNpcGetter>(package).Should().BeEmpty();
+        }
+
+        [Fact]
+        public void FormLink_Direct_ResolveAll_Linked()
+        {
+            var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
+            var npc = mod.Npcs.AddNew();
+            var package = GetLinkCache(mod);
+            FormLink<INpc> formLink = new FormLink<INpc>(npc.FormKey);
+            var resolved = formLink.ResolveAll(package).ToArray();
+            resolved.Should().HaveCount(1);
+            resolved.First().Should().BeSameAs(npc);
+        }
+        #endregion
+
+        #region FormLink LoadOrder ResolveAll
+        [Fact]
+        public void FormLink_LoadOrder_ResolveAll_Empty()
+        {
+            var package = TypicalLoadOrder().ToImmutableLinkCache();
+            FormLink<INpcGetter> formLink = new FormLink<INpcGetter>(UnusedFormKey);
+            formLink.ResolveAll(package).Should().BeEmpty();
+        }
+
+        [Fact]
+        public void FormLink_LoadOrder_ResolveAll_Linked()
+        {
+            var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
+            var npc = mod.Npcs.AddNew();
+            var loadOrder = new LoadOrder<ISkyrimModGetter>()
+            {
+                mod,
+                new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimLE),
+            };
+            var package = GetLinkCache(loadOrder);
+            FormLink<INpc> formLink = new FormLink<INpc>(npc.FormKey);
+            var resolved = formLink.ResolveAll(package).ToArray();
+            resolved.Should().HaveCount(1);
+            resolved.First().Should().BeSameAs(npc);
+        }
+
+        [Fact]
+        public void FormLink_LoadOrder_ResolveAll_MultipleLinks()
+        {
+            var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
+            var npc = mod.Npcs.AddNew();
+            var mod2 = new SkyrimMod(Utility.PluginModKey3, SkyrimRelease.SkyrimLE);
+            var npcOverride = mod2.Npcs.GetOrAddAsOverride(npc);
+            npcOverride.FaceParts = new NpcFaceParts();
+            var loadOrder = new LoadOrder<ISkyrimModGetter>()
+            {
+                mod,
+                new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimLE),
+                mod2
+            };
+            var package = GetLinkCache(loadOrder);
+            FormLink<INpc> formLink = new FormLink<INpc>(npc.FormKey);
+            var resolved = formLink.ResolveAll(package).ToArray();
+            resolved.Should().HaveCount(2);
+            resolved.First().Should().BeSameAs(npcOverride);
+            resolved.Last().Should().BeSameAs(npc);
+        }
+        #endregion
+
         #region EDIDLink Resolves
         [Fact]
         public void EDIDLink_TryResolve_NoLink()
