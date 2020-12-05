@@ -33,8 +33,6 @@ namespace Mutagen.Bethesda
 
         private readonly IReadOnlyList<TModGetter> _listedOrder;
         private readonly IReadOnlyList<TModGetter> _priorityOrder;
-        private readonly DepthCache<IMajorRecordCommonGetter> _untypedWinningRecords = new DepthCache<IMajorRecordCommonGetter>();
-        private readonly DepthCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>> _untypedWinningContexts = new DepthCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>();
         private readonly Dictionary<Type, DepthCache<IMajorRecordCommonGetter>> _winningRecords = new Dictionary<Type, DepthCache<IMajorRecordCommonGetter>>();
         private readonly Dictionary<Type, DepthCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>> _winningContexts = new Dictionary<Type, DepthCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>>();
         private readonly IReadOnlyDictionary<Type, Type[]> _linkInterfaces;
@@ -68,33 +66,7 @@ namespace Mutagen.Bethesda
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
         public bool TryResolve(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
         {
-            if (!_hasAny || formKey.IsNull)
-            {
-                majorRec = default;
-                return false;
-            }
-
-            lock (this._untypedWinningRecords)
-            {
-                if (this._untypedWinningRecords.TryGetValue(formKey, out majorRec)) return true;
-                if (IsPastDepth(this._untypedWinningRecords.Depth)) return false;
-                while (!IsPastDepth(this._untypedWinningRecords.Depth))
-                {
-                    // Get next unprocessed mod
-                    var targetIndex = this._listedOrder.Count - _untypedWinningRecords.Depth - 1;
-                    var targetMod = this._listedOrder[targetIndex];
-                    this._untypedWinningRecords.Depth++;
-                    // Add records from that mod that aren't already cached
-                    foreach (var record in targetMod.EnumerateMajorRecords())
-                    {
-                        _untypedWinningRecords.AddIfMissing(record.FormKey, record);
-                    }
-                    // Check again
-                    if (this._untypedWinningRecords.TryGetValue(formKey, out majorRec)) return true;
-                }
-                // Record doesn't exist
-                return false;
-            }
+            return TryResolve<IMajorRecordCommonGetter>(formKey, out majorRec);
         }
 
         /// <inheritdoc />
@@ -237,33 +209,7 @@ namespace Mutagen.Bethesda
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
         public bool TryResolveContext(FormKey formKey, [MaybeNullWhen(false)] out IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec)
         {
-            if (!_hasAny || formKey.IsNull)
-            {
-                majorRec = default;
-                return false;
-            }
-
-            lock (this._untypedWinningContexts)
-            {
-                if (this._untypedWinningContexts.TryGetValue(formKey, out majorRec)) return true;
-                if (IsPastDepth(_untypedWinningContexts.Depth)) return false;
-                while (!IsPastDepth(_untypedWinningContexts.Depth))
-                {
-                    // Get next unprocessed mod
-                    var targetIndex = this._listedOrder.Count - _untypedWinningContexts.Depth - 1;
-                    var targetMod = this._listedOrder[targetIndex];
-                    this._untypedWinningContexts.Depth++;
-                    // Add records from that mod that aren't already cached
-                    foreach (var record in targetMod.EnumerateMajorRecordContexts<IMajorRecordCommon, IMajorRecordCommonGetter>(this))
-                    {
-                        _untypedWinningContexts.AddIfMissing(record.Record.FormKey, record);
-                    }
-                    // Check again
-                    if (this._untypedWinningContexts.TryGetValue(formKey, out majorRec)) return true;
-                }
-                // Record doesn't exist
-                return false;
-            }
+            return TryResolveContext<IMajorRecordCommon, IMajorRecordCommonGetter>(formKey, out majorRec);
         }
 
         /// <inheritdoc />
