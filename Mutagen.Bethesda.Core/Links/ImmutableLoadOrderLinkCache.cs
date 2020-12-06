@@ -37,6 +37,7 @@ namespace Mutagen.Bethesda
         private readonly Dictionary<Type, DepthCache<IMajorRecordCommonGetter>> _winningRecords = new Dictionary<Type, DepthCache<IMajorRecordCommonGetter>>();
         private readonly Dictionary<Type, DepthCache<ImmutableList<IMajorRecordCommonGetter>>> _allRecords = new Dictionary<Type, DepthCache<ImmutableList<IMajorRecordCommonGetter>>>();
         private readonly Dictionary<Type, DepthCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>> _winningContexts = new Dictionary<Type, DepthCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>>();
+        private readonly Dictionary<Type, DepthCache<ImmutableList<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>>> _allContexts = new Dictionary<Type, DepthCache<ImmutableList<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>>>();
         private readonly IReadOnlyDictionary<Type, Type[]> _linkInterfaces;
 
         /// <inheritdoc />
@@ -446,7 +447,106 @@ namespace Mutagen.Bethesda
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
         public IEnumerable<IMajorRecordCommonGetter> ResolveAll(FormKey formKey)
         {
-            return ResolveAll<IMajorRecordCommonGetter>(formKey);
+            return ResolveAll(formKey, typeof(IMajorRecordCommonGetter));
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<IModContext<TMod, TMajorSetter, TMajorGetter>> ResolveAllContexts<TMajorSetter, TMajorGetter>(FormKey formKey)
+            where TMajorSetter : class, IMajorRecordCommon, TMajorGetter
+            where TMajorGetter : class, IMajorRecordCommonGetter
+        {
+            return ResolveAllContexts(formKey, typeof(TMajorGetter))
+                .Select(c => c.AsType<TMod, IMajorRecordCommon, IMajorRecordCommonGetter, TMajorSetter, TMajorGetter>());
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(FormKey formKey, Type type)
+        {
+            // Break early if no content
+            if (!_hasAny || formKey.IsNull)
+            {
+                yield break;
+            }
+
+            // Grab the type cache
+            DepthCache<ImmutableList<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>> cache;
+            lock (_allContexts)
+            {
+                cache = _allContexts.GetOrAdd(type);
+            }
+
+            // Grab the formkey's list
+            ImmutableList<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>? list;
+            int consideredDepth;
+            lock (cache)
+            {
+                if (!cache.TryGetValue(formKey, out list))
+                {
+                    list = ImmutableList<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>.Empty;
+                    cache.Add(formKey, list);
+                }
+                consideredDepth = cache.Depth;
+            }
+
+            // Return everyhing we have already
+            foreach (var item in list)
+            {
+                yield return item;
+            }
+
+            int iteratedCount = list.Count;
+            bool more = !IsPastDepth(cache.Depth);
+
+            // While there's more depth to consider
+            while (more)
+            {
+                // Process one more mod
+                lock (cache)
+                {
+                    // Only process if no one else has done some work
+                    if (consideredDepth == cache.Depth)
+                    {
+                        // Get next unprocessed mod
+                        var targetIndex = this._listedOrder.Count - cache.Depth - 1;
+                        var targetMod = this._listedOrder[targetIndex];
+                        cache.Depth++;
+
+                        void AddRecords(TModGetter mod, Type type)
+                        {
+                            list = list.AddRange(mod.EnumerateMajorRecordContexts(this, type));
+                        }
+
+                        // Add records from that mod that aren't already cached
+                        if (_linkInterfaces.TryGetValue(type, out var objs))
+                        {
+                            foreach (var objType in objs)
+                            {
+                                AddRecords(targetMod, LoquiRegistration.GetRegister(objType).GetterType);
+                            }
+                        }
+                        else
+                        {
+                            AddRecords(targetMod, type);
+                        }
+                    }
+                    consideredDepth = cache.Depth;
+                    more = !IsPastDepth(cache.Depth);
+                }
+
+                // Return any new data
+                for (int i = iteratedCount; i < list.Count; i++)
+                {
+                    yield return list[i];
+                }
+                iteratedCount = list.Count;
+            }
+        }
+
+        /// <inheritdoc />
+        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
+        public IEnumerable<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(FormKey formKey)
+        {
+            return ResolveAllContexts(formKey, typeof(IMajorRecordCommonGetter));
         }
     }
 

@@ -280,5 +280,53 @@ namespace Mutagen.Bethesda
             return null;
         }
         #endregion
+
+        #region ResolveAll Context
+        /// <summary>
+        /// Locate all of a link's target record contexts in given Link Cache.<br /> 
+        /// The winning override will be returned first, and finished by the original defining definition.
+        /// </summary>
+        /// <param name="link">Link to resolve</param>
+        /// <param name="cache">Link Cache to resolve against</param>
+        /// <returns>Enumerable of the linked records</returns>
+        /// <typeparam name="TMod">Mod setter type that can be overridden into</typeparam>
+        /// <typeparam name="TMajorSetter">Major Record setter type to resolve to</typeparam>
+        /// <typeparam name="TMajorGetter">Major Record getter type to resolve to</typeparam>
+        public static IEnumerable<IModContext<TMod, TMajorSetter, TMajorGetter>> ResolveAllContexts<TMod, TMajorSetter, TMajorGetter>(this IFormLink<TMajorGetter> link, ILinkCache<TMod> cache)
+            where TMod : class, IContextMod<TMod>
+            where TMajorSetter : class, IMajorRecordCommon, TMajorGetter
+            where TMajorGetter : class, IMajorRecordCommonGetter
+        {
+            if (!link.FormKeyNullable.TryGet(out var formKey))
+            {
+                return Enumerable.Empty<IModContext<TMod, TMajorSetter, TMajorGetter>>();
+            }
+            return cache.ResolveAllContexts<TMajorSetter, TMajorGetter>(formKey);
+        }
+
+        /// <summary>
+        /// Locate all of a link's target record contexts in given Link Cache.<br /> 
+        /// The winning override will be returned first, and finished by the original defining definition.
+        /// </summary>
+        /// <param name="link">FormLink to resolve</param>
+        /// <param name="cache">Link Cache to resolve against</param>
+        /// <returns>Enumerable of the linked records</returns>
+        /// <typeparam name="TMod">Mod setter type that can be overridden into</typeparam>
+        /// <typeparam name="TMajorGetter">Original links Major Record type</typeparam>
+        /// <typeparam name="TScopedSetter">Inheriting Major Record setter type to scope to</typeparam>
+        /// <typeparam name="TScopedGetter">Inheriting Major Record getter type to scope to</typeparam>
+        public static IEnumerable<IModContext<TMod, TScopedSetter, TScopedGetter>> ResolveAllContexts<TMod, TMajorGetter, TScopedSetter, TScopedGetter>(this IFormLink<TMajorGetter> link, ILinkCache<TMod> cache)
+            where TMod : class, IContextMod<TMod>
+            where TMajorGetter : class, IMajorRecordCommonGetter
+            where TScopedSetter : class, TScopedGetter, IMajorRecordCommon
+            where TScopedGetter : class, TMajorGetter
+        {
+            if (!link.FormKeyNullable.TryGet(out var formKey))
+            {
+                return Enumerable.Empty<IModContext<TMod, TScopedSetter, TScopedGetter>>();
+            }
+            return cache.ResolveAllContexts<TScopedSetter, TScopedGetter>(formKey);
+        }
+        #endregion
     }
 }

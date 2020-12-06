@@ -374,6 +374,44 @@ namespace Mutagen.Bethesda
             return cache.ResolveAll<TScopedMajor>(formKey);
         }
 
+        /// <summary>
+        /// Locate all of a link's target record contexts in given Link Cache.<br /> 
+        /// The winning override will be returned first, and finished by the original defining definition.
+        /// </summary>
+        /// <param name="cache">Link Cache to resolve against</param>
+        /// <returns>Enumerable of the linked records</returns>
+        public IEnumerable<IModContext<TMod, TMajorSetter, TMajorGetter>> ResolveAllContexts<TMod, TMajorSetter>(ILinkCache<TMod> cache)
+            where TMod : class, IContextMod<TMod>
+            where TMajorSetter : class, IMajorRecordCommon, TMajorGetter
+        {
+            if (!this.FormKeyNullable.TryGet(out var formKey))
+            {
+                return Enumerable.Empty<IModContext<TMod, TMajorSetter, TMajorGetter>>();
+            }
+            return cache.ResolveAllContexts<TMajorSetter, TMajorGetter>(this.FormKey);
+        }
+
+        /// <summary>
+        /// Locate all of a link's target record contexts in given Link Cache.<br /> 
+        /// The winning override will be returned first, and finished by the original defining definition.
+        /// </summary>
+        /// <param name="cache">Link Cache to resolve against</param>
+        /// <returns>Enumerable of the linked records</returns>
+        /// <typeparam name="TMod">Mod setter type that can be overridden into</typeparam>
+        /// <typeparam name="TScopedSetter">Inheriting Major Record setter type to scope to</typeparam>
+        /// <typeparam name="TScopedGetter">Inheriting Major Record getter type to scope to</typeparam>
+        public IEnumerable<IModContext<TMod, TScopedSetter, TScopedGetter>> ResolveAllContexts<TMod, TScopedSetter, TScopedGetter>(ILinkCache<TMod> cache)
+            where TMod : class, IContextMod<TMod>
+            where TScopedSetter : class, TScopedGetter, IMajorRecordCommon
+            where TScopedGetter : class, TMajorGetter
+        {
+            if (!this.FormKeyNullable.TryGet(out var formKey))
+            {
+                return Enumerable.Empty<IModContext<TMod, TScopedSetter, TScopedGetter>>();
+            }
+            return cache.ResolveAllContexts<TScopedSetter, TScopedGetter>(this.FormKey);
+        }
+
         public static implicit operator FormLinkNullable<TMajorGetter>(TMajorGetter? major)
         {
             return new FormLinkNullable<TMajorGetter>(major?.FormKey);

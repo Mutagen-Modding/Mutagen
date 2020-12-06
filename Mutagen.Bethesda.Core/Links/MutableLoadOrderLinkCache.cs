@@ -234,5 +234,56 @@ namespace Mutagen.Bethesda
                 yield return rec;
             }
         }
+
+        /// <inheritdoc />
+        public IEnumerable<IModContext<TMod, TMajorSetter, TMajorGetter>> ResolveAllContexts<TMajorSetter, TMajorGetter>(FormKey formKey)
+            where TMajorSetter : class, IMajorRecordCommon, TMajorGetter
+            where TMajorGetter : class, IMajorRecordCommonGetter
+        {
+            for (int i = _mutableMods.Count - 1; i >= 0; i--)
+            {
+                if (_mutableMods[i].TryResolveContext<TMajorSetter, TMajorGetter>(formKey, out var majorRec))
+                {
+                    yield return majorRec;
+                }
+            }
+            foreach (var rec in WrappedImmutableCache.ResolveAllContexts<TMajorSetter, TMajorGetter>(formKey))
+            {
+                yield return rec;
+            }
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(FormKey formKey, Type type)
+        {
+            for (int i = _mutableMods.Count - 1; i >= 0; i--)
+            {
+                if (_mutableMods[i].TryResolveContext(formKey, type, out var majorRec))
+                {
+                    yield return majorRec;
+                }
+            }
+            foreach (var rec in WrappedImmutableCache.ResolveAllContexts(formKey, type))
+            {
+                yield return rec;
+            }
+        }
+
+        /// <inheritdoc />
+        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
+        public IEnumerable<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(FormKey formKey)
+        {
+            for (int i = _mutableMods.Count - 1; i >= 0; i--)
+            {
+                if (_mutableMods[i].TryResolveContext(formKey, out var majorRec))
+                {
+                    yield return majorRec;
+                }
+            }
+            foreach (var rec in WrappedImmutableCache.ResolveAllContexts(formKey))
+            {
+                yield return rec;
+            }
+        }
     }
 }
