@@ -34,8 +34,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Loqui" Version="1.5.15" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.6.7" />
+    <PackageReference Include="Loqui" Version="1.5.15.1-dev" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.6.7.1-dev" />
     <PackageReference Include="NuGetizer" Version="0.4.11">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
