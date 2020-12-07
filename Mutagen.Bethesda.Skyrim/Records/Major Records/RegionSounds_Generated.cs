@@ -910,7 +910,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
             if (printMask?.Music ?? true)
             {
-                fg.AppendItem(item.Music.FormKey, "Music");
+                fg.AppendItem(item.Music.FormKeyNullable, "Music");
             }
             if ((printMask?.Sounds?.Overall ?? true)
                 && item.Sounds.TryGet(out var SoundsItem))
@@ -997,7 +997,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.Music.FormKey.TryGet(out var MusicKey))
+            if (obj.Music.FormKeyNullable.TryGet(out var MusicKey))
             {
                 yield return MusicKey;
             }
@@ -1035,7 +1035,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)RegionSounds_FieldIndex.Music) ?? true))
             {
-                item.Music = new FormLinkNullable<IMusicTypeGetter>(rhs.Music.FormKey);
+                item.Music = new FormLinkNullable<IMusicTypeGetter>(rhs.Music.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)RegionSounds_FieldIndex.Sounds) ?? true))
             {

@@ -14,11 +14,11 @@ namespace Mutagen.Bethesda
     /// If being used in a multithreaded scenario,<br/>
     /// this cache must be locked alongside any mutations to the mod the cache wraps
     /// </summary>
-    /// <typeparam name="TMod">Mod type</typeparam>
-    public class MutableModLinkCache<TMod> : ILinkCache
-        where TMod : IModGetter
+    public class MutableModLinkCache<TMod, TModGetter> : ILinkCache<TMod, TModGetter>
+        where TMod : class, IContextMod<TMod>, TModGetter
+        where TModGetter : class, IContextGetterMod<TMod>
     {
-        private readonly TMod _sourceMod;
+        private readonly TModGetter _sourceMod;
 
         /// <inheritdoc />
         public IReadOnlyList<IModGetter> ListedOrder { get; }
@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda
         /// Constructs a link cache around a target mod
         /// </summary>
         /// <param name="sourceMod">Mod to resolve against when linking</param>
-        public MutableModLinkCache(TMod sourceMod)
+        public MutableModLinkCache(TModGetter sourceMod)
         {
             this._sourceMod = sourceMod;
             this.ListedOrder = new List<IModGetter>()
@@ -41,8 +41,13 @@ namespace Mutagen.Bethesda
 
         /// <inheritdoc />
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        public bool TryLookup(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
+        public bool TryResolve(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
         {
+            if (formKey == null)
+            {
+                majorRec = default;
+                return false;
+            }
             // ToDo
             // Upgrade to call EnumerateGroups(), which will perform much better
             foreach (var item in this._sourceMod.EnumerateMajorRecords())
@@ -58,9 +63,14 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public bool TryLookup<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out TMajor majorRec)
+        public bool TryResolve<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out TMajor majorRec)
             where TMajor : class, IMajorRecordCommonGetter
         {
+            if (formKey == null)
+            {
+                majorRec = default;
+                return false;
+            }
             // ToDo
             // Upgrade to EnumerateGroups<TMajor>()
             foreach (var major in this._sourceMod.EnumerateMajorRecords<TMajor>())
@@ -77,8 +87,13 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public bool TryLookup(FormKey formKey, Type type, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
+        public bool TryResolve(FormKey formKey, Type type, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
         {
+            if (formKey == null)
+            {
+                majorRec = default;
+                return false;
+            }
             // ToDo
             // Upgrade to EnumerateGroups<TMajor>()
             foreach (var major in this._sourceMod.EnumerateMajorRecords(type))
@@ -95,25 +110,179 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public IMajorRecordCommonGetter Lookup(FormKey formKey)
+        public IMajorRecordCommonGetter Resolve(FormKey formKey)
         {
-            if (TryLookup<IMajorRecordCommonGetter>(formKey, out var majorRec)) return majorRec;
+            if (TryResolve<IMajorRecordCommonGetter>(formKey, out var majorRec)) return majorRec;
             throw new KeyNotFoundException($"Form ID {formKey.ID} could not be found.");
         }
 
         /// <inheritdoc />
-        public IMajorRecordCommonGetter Lookup(FormKey formKey, Type type)
+        public IMajorRecordCommonGetter Resolve(FormKey formKey, Type type)
         {
-            if (TryLookup(formKey, type, out var commonRec)) return commonRec;
+            if (TryResolve(formKey, type, out var commonRec)) return commonRec;
             throw new KeyNotFoundException($"Form ID {formKey.ID} could not be found.");
         }
 
         /// <inheritdoc />
-        public TMajor Lookup<TMajor>(FormKey formKey)
+        public TMajor Resolve<TMajor>(FormKey formKey)
             where TMajor : class, IMajorRecordCommonGetter
         {
-            if (TryLookup<TMajor>(formKey, out var commonRec)) return commonRec;
+            if (TryResolve<TMajor>(formKey, out var commonRec)) return commonRec;
             throw new KeyNotFoundException($"Form ID {formKey.ID} could not be found.");
+        }
+
+        /// <inheritdoc />
+        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
+        public bool TryResolveContext(FormKey formKey, [MaybeNullWhen(false)] out IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec)
+        {
+            if (formKey == null)
+            {
+                majorRec = default;
+                return false;
+            }
+            // ToDo
+            // Upgrade to call EnumerateGroups(), which will perform much better
+            foreach (var item in this._sourceMod.EnumerateMajorRecordContexts<IMajorRecordCommon, IMajorRecordCommonGetter>(this))
+            {
+                if (item.Record.FormKey == formKey)
+                {
+                    majorRec = item;
+                    return true;
+                }
+            }
+            majorRec = default;
+            return false;
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveContext<TMajorSetter, TMajorGetter>(FormKey formKey, [MaybeNullWhen(false)] out IModContext<TMod, TMajorSetter, TMajorGetter> majorRec)
+            where TMajorSetter : class, IMajorRecordCommon, TMajorGetter
+            where TMajorGetter : class, IMajorRecordCommonGetter
+        {
+            if (formKey == null)
+            {
+                majorRec = default;
+                return false;
+            }
+            // ToDo
+            // Upgrade to EnumerateGroups<TMajor>()
+            foreach (var major in this._sourceMod.EnumerateMajorRecordContexts<TMajorSetter, TMajorGetter>(this))
+            {
+                if (major.Record.FormKey == formKey)
+                {
+                    majorRec = major;
+                    return true;
+                }
+            }
+
+            majorRec = default;
+            return false;
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveContext(FormKey formKey, Type type, [MaybeNullWhen(false)] out IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec)
+        {
+            if (formKey == null)
+            {
+                majorRec = default;
+                return false;
+            }
+            // ToDo
+            // Upgrade to EnumerateGroups<TMajor>()
+            foreach (var major in this._sourceMod.EnumerateMajorRecordContexts(this, type))
+            {
+                if (major.Record.FormKey == formKey)
+                {
+                    majorRec = major;
+                    return true;
+                }
+            }
+
+            majorRec = default;
+            return false;
+        }
+
+        /// <inheritdoc />
+        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
+        public IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(FormKey formKey)
+        {
+            if (TryResolveContext<IMajorRecordCommon, IMajorRecordCommonGetter>(formKey, out var majorRec)) return majorRec;
+            throw new KeyNotFoundException($"Form ID {formKey.ID} could not be found.");
+        }
+
+        /// <inheritdoc />
+        public IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(FormKey formKey, Type type)
+        {
+            if (TryResolveContext(formKey, type, out var commonRec)) return commonRec;
+            throw new KeyNotFoundException($"Form ID {formKey.ID} could not be found.");
+        }
+
+        /// <inheritdoc />
+        public IModContext<TMod, TMajorSetter, TMajorGetter> ResolveContext<TMajorSetter, TMajorGetter>(FormKey formKey)
+            where TMajorSetter : class, IMajorRecordCommon, TMajorGetter
+            where TMajorGetter : class, IMajorRecordCommonGetter
+        {
+            if (TryResolveContext<TMajorSetter, TMajorGetter>(formKey, out var commonRec)) return commonRec;
+            throw new KeyNotFoundException($"Form ID {formKey.ID} could not be found.");
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<TMajor> ResolveAll<TMajor>(FormKey formKey)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            if (TryResolve<TMajor>(formKey, out var rec))
+            {
+                yield return rec;
+            }
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<IMajorRecordCommonGetter> ResolveAll(FormKey formKey, Type type)
+        {
+            if (TryResolve(formKey, type, out var rec))
+            {
+                yield return rec;
+            }
+        }
+
+        /// <inheritdoc />
+        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
+        public IEnumerable<IMajorRecordCommonGetter> ResolveAll(FormKey formKey)
+        {
+            if (TryResolve(formKey, out var rec))
+            {
+                yield return rec;
+            }
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<IModContext<TMod, TMajorSetter, TMajorGetter>> ResolveAllContexts<TMajorSetter, TMajorGetter>(FormKey formKey)
+            where TMajorSetter : class, IMajorRecordCommon, TMajorGetter
+            where TMajorGetter : class, IMajorRecordCommonGetter
+        {
+            if (TryResolveContext<TMajorSetter, TMajorGetter>(formKey, out var rec))
+            {
+                yield return rec;
+            }
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(FormKey formKey, Type type)
+        {
+            if (TryResolveContext(formKey, type, out var rec))
+            {
+                yield return rec;
+            }
+        }
+
+        /// <inheritdoc />
+        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
+        public IEnumerable<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(FormKey formKey)
+        {
+            if (TryResolveContext(formKey, out var rec))
+            {
+                yield return rec;
+            }
         }
     }
 }

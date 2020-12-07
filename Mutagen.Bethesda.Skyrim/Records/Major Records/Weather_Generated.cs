@@ -3791,7 +3791,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Precipitation ?? true)
             {
-                fg.AppendItem(item.Precipitation.FormKey, "Precipitation");
+                fg.AppendItem(item.Precipitation.FormKeyNullable, "Precipitation");
             }
             if (printMask?.VisualEffect ?? true)
             {
@@ -4052,7 +4052,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.SunGlareLensFlare ?? true)
             {
-                fg.AppendItem(item.SunGlareLensFlare.FormKey, "SunGlareLensFlare");
+                fg.AppendItem(item.SunGlareLensFlare.FormKeyNullable, "SunGlareLensFlare");
             }
             if (printMask?.NAM0DataTypeState ?? true)
             {
@@ -4329,7 +4329,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.Precipitation.FormKey.TryGet(out var PrecipitationKey))
+            if (obj.Precipitation.FormKeyNullable.TryGet(out var PrecipitationKey))
             {
                 yield return PrecipitationKey;
             }
@@ -4363,7 +4363,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.SunGlareLensFlare.FormKey.TryGet(out var SunGlareLensFlareKey))
+            if (obj.SunGlareLensFlare.FormKeyNullable.TryGet(out var SunGlareLensFlareKey))
             {
                 yield return SunGlareLensFlareKey;
             }
@@ -4479,7 +4479,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.Precipitation) ?? true))
             {
-                item.Precipitation = new FormLinkNullable<IShaderParticleGeometryGetter>(rhs.Precipitation.FormKey);
+                item.Precipitation = new FormLinkNullable<IShaderParticleGeometryGetter>(rhs.Precipitation.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.VisualEffect) ?? true))
             {
@@ -5148,7 +5148,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.SunGlareLensFlare) ?? true))
             {
-                item.SunGlareLensFlare = new FormLinkNullable<ILensFlareGetter>(rhs.SunGlareLensFlare.FormKey);
+                item.SunGlareLensFlare = new FormLinkNullable<ILensFlareGetter>(rhs.SunGlareLensFlare.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.NAM0DataTypeState) ?? true))
             {

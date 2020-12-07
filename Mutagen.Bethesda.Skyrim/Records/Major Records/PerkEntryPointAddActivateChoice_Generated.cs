@@ -886,7 +886,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
             if (printMask?.Spell ?? true)
             {
-                fg.AppendItem(item.Spell.FormKey, "Spell");
+                fg.AppendItem(item.Spell.FormKeyNullable, "Spell");
             }
             if ((printMask?.ButtonLabel ?? true)
                 && item.ButtonLabel.TryGet(out var ButtonLabelItem))
@@ -1007,7 +1007,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.Spell.FormKey.TryGet(out var SpellKey))
+            if (obj.Spell.FormKeyNullable.TryGet(out var SpellKey))
             {
                 yield return SpellKey;
             }
@@ -1038,7 +1038,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PerkEntryPointAddActivateChoice_FieldIndex.Spell) ?? true))
             {
-                item.Spell = new FormLinkNullable<ISpellGetter>(rhs.Spell.FormKey);
+                item.Spell = new FormLinkNullable<ISpellGetter>(rhs.Spell.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PerkEntryPointAddActivateChoice_FieldIndex.ButtonLabel) ?? true))
             {

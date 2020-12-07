@@ -1511,11 +1511,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Ingredient ?? true)
             {
-                fg.AppendItem(item.Ingredient.FormKey, "Ingredient");
+                fg.AppendItem(item.Ingredient.FormKeyNullable, "Ingredient");
             }
             if (printMask?.HarvestSound ?? true)
             {
-                fg.AppendItem(item.HarvestSound.FormKey, "HarvestSound");
+                fg.AppendItem(item.HarvestSound.FormKeyNullable, "HarvestSound");
             }
             if ((printMask?.Production?.Overall ?? true)
                 && item.Production.TryGet(out var ProductionItem))
@@ -1696,11 +1696,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.Ingredient.FormKey.TryGet(out var IngredientKey))
+            if (obj.Ingredient.FormKeyNullable.TryGet(out var IngredientKey))
             {
                 yield return IngredientKey;
             }
-            if (obj.HarvestSound.FormKey.TryGet(out var HarvestSoundKey))
+            if (obj.HarvestSound.FormKeyNullable.TryGet(out var HarvestSoundKey))
             {
                 yield return HarvestSoundKey;
             }
@@ -1914,11 +1914,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Ingredient) ?? true))
             {
-                item.Ingredient = new FormLinkNullable<IHarvestTargetGetter>(rhs.Ingredient.FormKey);
+                item.Ingredient = new FormLinkNullable<IHarvestTargetGetter>(rhs.Ingredient.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.HarvestSound) ?? true))
             {
-                item.HarvestSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.HarvestSound.FormKey);
+                item.HarvestSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.HarvestSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Production) ?? true))
             {

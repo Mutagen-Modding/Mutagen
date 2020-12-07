@@ -999,11 +999,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
             if (printMask?.Parent ?? true)
             {
-                fg.AppendItem(item.Parent.FormKey, "Parent");
+                fg.AppendItem(item.Parent.FormKeyNullable, "Parent");
             }
             if (printMask?.PreviousSibling ?? true)
             {
-                fg.AppendItem(item.PreviousSibling.FormKey, "PreviousSibling");
+                fg.AppendItem(item.PreviousSibling.FormKeyNullable, "PreviousSibling");
             }
             if (printMask?.Conditions?.Overall ?? true)
             {
@@ -1130,11 +1130,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.Parent.FormKey.TryGet(out var ParentKey))
+            if (obj.Parent.FormKeyNullable.TryGet(out var ParentKey))
             {
                 yield return ParentKey;
             }
-            if (obj.PreviousSibling.FormKey.TryGet(out var PreviousSiblingKey))
+            if (obj.PreviousSibling.FormKeyNullable.TryGet(out var PreviousSiblingKey))
             {
                 yield return PreviousSiblingKey;
             }
@@ -1192,11 +1192,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)AStoryManagerNode_FieldIndex.Parent) ?? true))
             {
-                item.Parent = new FormLinkNullable<IAStoryManagerNodeGetter>(rhs.Parent.FormKey);
+                item.Parent = new FormLinkNullable<IAStoryManagerNodeGetter>(rhs.Parent.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)AStoryManagerNode_FieldIndex.PreviousSibling) ?? true))
             {
-                item.PreviousSibling = new FormLinkNullable<IAStoryManagerNodeGetter>(rhs.PreviousSibling.FormKey);
+                item.PreviousSibling = new FormLinkNullable<IAStoryManagerNodeGetter>(rhs.PreviousSibling.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)AStoryManagerNode_FieldIndex.Conditions) ?? true))
             {

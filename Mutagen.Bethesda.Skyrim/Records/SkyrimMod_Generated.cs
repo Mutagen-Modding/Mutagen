@@ -6808,9 +6808,9 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<TMajor>(records, throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<ModContext<ISkyrimMod, TSetter, TGetter>> IMajorRecordContextEnumerable<ISkyrimMod>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IModContext<ISkyrimMod, TSetter, TGetter>> IMajorRecordContextEnumerable<ISkyrimMod>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> IMajorRecordContextEnumerable<ISkyrimMod>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> IMajorRecordContextEnumerable<ISkyrimMod>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
         #endregion
 
         #region Binary Translation
@@ -6855,7 +6855,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var flags = reader.GetInt32(offset: 8);
                 if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
                 {
-                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path.Path), stringsParam, path.ModKey);
+                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path.Path)!, stringsParam, path.ModKey);
                 }
                 return CreateFromBinary(
                     release: release,
@@ -6887,7 +6887,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var flags = reader.GetInt32(offset: 8);
                 if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
                 {
-                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path.Path), stringsParam, path.ModKey);
+                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path.Path)!, stringsParam, path.ModKey);
                 }
                 return CreateFromBinary(
                     release: release,
@@ -7006,6 +7006,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMajorRecordEnumerable,
         ILoquiObjectSetter<ISkyrimMod>,
         IMod,
+        IContextMod<ISkyrimMod>,
         ILinkedFormKeyContainer
     {
         new SkyrimModHeader ModHeader { get; }
@@ -7130,6 +7131,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMajorRecordGetterEnumerable,
         ILoquiObject<ISkyrimModGetter>,
         IModGetter,
+        IContextGetterMod<ISkyrimMod>,
         ILinkedFormKeyContainerGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -7435,7 +7437,7 @@ namespace Mutagen.Bethesda.Skyrim
                 mod: item,
                 path: path);
             bool disposeStrings = param.StringsWriter == null;
-            param.StringsWriter ??= EnumExt.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter(modKey, Path.Combine(Path.GetDirectoryName(path), "Strings")) : null;
+            param.StringsWriter ??= EnumExt.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter(modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings")) : null;
             using (var stream = new FileStream(path, FileMode.Create, FileAccess.Write))
             {
                 SkyrimModCommon.WriteParallel(
@@ -7667,7 +7669,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<ModContext<ISkyrimMod, TSetter, TGetter>> EnumerateMajorRecordContexts<TSetter, TGetter>(
+        public static IEnumerable<IModContext<ISkyrimMod, TSetter, TGetter>> EnumerateMajorRecordContexts<TSetter, TGetter>(
             this ISkyrimModGetter obj,
             ILinkCache linkCache,
             bool throwIfUnknown = true)
@@ -7679,12 +7681,12 @@ namespace Mutagen.Bethesda.Skyrim
                 linkCache: linkCache,
                 type: typeof(TGetter),
                 throwIfUnknown: throwIfUnknown)
-                .Select(m => m.AsType<TSetter, TGetter>())
+                .Select(m => m.AsType<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter, TSetter, TGetter>())
                 .Catch(e => throw RecordException.Factory(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        public static IEnumerable<IModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             this ISkyrimModGetter obj,
             ILinkCache linkCache,
             Type type,
@@ -7737,7 +7739,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var flags = reader.GetInt32(offset: 8);
                 if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
                 {
-                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path.Path), stringsParam, path.ModKey);
+                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path.Path)!, stringsParam, path.ModKey);
                 }
                 CopyInFromBinary(
                     item: item,
@@ -14460,7 +14462,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public IEnumerable<ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        public IEnumerable<IModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             ISkyrimModGetter obj,
             ILinkCache linkCache,
             Type type,
@@ -15822,7 +15824,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
                         {
                             yield return item;
                         }
@@ -15838,7 +15840,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
                         {
                             yield return item;
                         }
@@ -15854,7 +15856,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
                         {
                             yield return item;
                         }
@@ -15870,7 +15872,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
                         {
                             yield return item;
                         }
@@ -15886,7 +15888,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
                         {
                             yield return item;
                         }
@@ -15902,7 +15904,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
                         {
                             yield return item;
                         }
@@ -15918,7 +15920,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
                         {
                             yield return item;
                         }
@@ -15930,7 +15932,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IDialogResponsesInternal":
                     foreach (var groupItem in obj.DialogTopics)
                     {
-                        foreach (var item in DialogTopicCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.DialogTopics.GetOrAddAsOverride(linkCache.Lookup<IDialogTopicGetter>(r.FormKey))))
+                        foreach (var item in DialogTopicCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.DialogTopics.GetOrAddAsOverride(linkCache.Resolve<IDialogTopicGetter>(r.FormKey))))
                         {
                             yield return item;
                         }
@@ -16155,7 +16157,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
                         {
                             yield return item;
                         }
@@ -16175,7 +16177,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
                         {
                             yield return item;
                         }
@@ -16293,7 +16295,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
                         {
                             yield return item;
                         }
@@ -16374,7 +16376,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
                         {
                             yield return item;
                         }
@@ -16390,7 +16392,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
                         {
                             yield return item;
                         }
@@ -16406,7 +16408,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
                         {
                             yield return item;
                         }
@@ -16422,7 +16424,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
                         {
                             yield return item;
                         }
@@ -22058,7 +22060,7 @@ namespace Mutagen.Bethesda.Skyrim
                 mod: item,
                 path: path);
             bool disposeStrings = param.StringsWriter == null;
-            var stringsWriter = param.StringsWriter ?? (EnumExt.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter(modKey, Path.Combine(Path.GetDirectoryName(path), "Strings")) : null);
+            var stringsWriter = param.StringsWriter ?? (EnumExt.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter(modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings")) : null);
             var bundle = new WritingBundle(item.SkyrimRelease.ToGameRelease())
             {
                 StringsWriter = stringsWriter
@@ -22150,9 +22152,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => SkyrimModCommon.Instance.GetLinkFormKeys(this);
         [DebuggerStepThrough]
-        IEnumerable<ModContext<ISkyrimMod, TSetter, TGetter>> IMajorRecordContextEnumerable<ISkyrimMod>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IModContext<ISkyrimMod, TSetter, TGetter>> IMajorRecordContextEnumerable<ISkyrimMod>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> IMajorRecordContextEnumerable<ISkyrimMod>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> IMajorRecordContextEnumerable<ISkyrimMod>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
@@ -22792,7 +22794,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var flags = stream.GetInt32(offset: 8);
                 if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
                 {
-                    meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path.Path), stringsParam, path.ModKey);
+                    meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path.Path)!, stringsParam, path.ModKey);
                 }
                 return SkyrimModFactory(
                     stream: stream,

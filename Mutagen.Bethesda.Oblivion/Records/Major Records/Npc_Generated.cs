@@ -2335,11 +2335,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.DeathItem ?? true)
             {
-                fg.AppendItem(item.DeathItem.FormKey, "DeathItem");
+                fg.AppendItem(item.DeathItem.FormKeyNullable, "DeathItem");
             }
             if (printMask?.Race ?? true)
             {
-                fg.AppendItem(item.Race.FormKey, "Race");
+                fg.AppendItem(item.Race.FormKeyNullable, "Race");
             }
             if (printMask?.Spells?.Overall ?? true)
             {
@@ -2361,7 +2361,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Script ?? true)
             {
-                fg.AppendItem(item.Script.FormKey, "Script");
+                fg.AppendItem(item.Script.FormKeyNullable, "Script");
             }
             if (printMask?.Items?.Overall ?? true)
             {
@@ -2425,7 +2425,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Class ?? true)
             {
-                fg.AppendItem(item.Class.FormKey, "Class");
+                fg.AppendItem(item.Class.FormKeyNullable, "Class");
             }
             if ((printMask?.Stats?.Overall ?? true)
                 && item.Stats.TryGet(out var StatsItem))
@@ -2434,7 +2434,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Hair ?? true)
             {
-                fg.AppendItem(item.Hair.FormKey, "Hair");
+                fg.AppendItem(item.Hair.FormKeyNullable, "Hair");
             }
             if ((printMask?.HairLength ?? true)
                 && item.HairLength.TryGet(out var HairLengthItem))
@@ -2467,7 +2467,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.CombatStyle ?? true)
             {
-                fg.AppendItem(item.CombatStyle.FormKey, "CombatStyle");
+                fg.AppendItem(item.CombatStyle.FormKeyNullable, "CombatStyle");
             }
             if ((printMask?.FaceGenGeometrySymmetric ?? true)
                 && item.FaceGenGeometrySymmetric.TryGet(out var FaceGenGeometrySymmetricItem))
@@ -2737,11 +2737,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.DeathItem.FormKey.TryGet(out var DeathItemKey))
+            if (obj.DeathItem.FormKeyNullable.TryGet(out var DeathItemKey))
             {
                 yield return DeathItemKey;
             }
-            if (obj.Race.FormKey.TryGet(out var RaceKey))
+            if (obj.Race.FormKeyNullable.TryGet(out var RaceKey))
             {
                 yield return RaceKey;
             }
@@ -2749,7 +2749,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.Script.FormKey.TryGet(out var ScriptKey))
+            if (obj.Script.FormKeyNullable.TryGet(out var ScriptKey))
             {
                 yield return ScriptKey;
             }
@@ -2761,11 +2761,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.Class.FormKey.TryGet(out var ClassKey))
+            if (obj.Class.FormKeyNullable.TryGet(out var ClassKey))
             {
                 yield return ClassKey;
             }
-            if (obj.Hair.FormKey.TryGet(out var HairKey))
+            if (obj.Hair.FormKeyNullable.TryGet(out var HairKey))
             {
                 yield return HairKey;
             }
@@ -2776,7 +2776,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     yield return item;
                 }
             }
-            if (obj.CombatStyle.FormKey.TryGet(out var CombatStyleKey))
+            if (obj.CombatStyle.FormKeyNullable.TryGet(out var CombatStyleKey))
             {
                 yield return CombatStyleKey;
             }
@@ -2913,11 +2913,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.DeathItem) ?? true))
             {
-                item.DeathItem = new FormLinkNullable<IAItemGetter>(rhs.DeathItem.FormKey);
+                item.DeathItem = new FormLinkNullable<IAItemGetter>(rhs.DeathItem.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Race) ?? true))
             {
-                item.Race = new FormLinkNullable<IRaceGetter>(rhs.Race.FormKey);
+                item.Race = new FormLinkNullable<IRaceGetter>(rhs.Race.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Spells) ?? true))
             {
@@ -2940,7 +2940,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Script) ?? true))
             {
-                item.Script = new FormLinkNullable<IScriptGetter>(rhs.Script.FormKey);
+                item.Script = new FormLinkNullable<IScriptGetter>(rhs.Script.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Items) ?? true))
             {
@@ -3039,7 +3039,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Class) ?? true))
             {
-                item.Class = new FormLinkNullable<IClassGetter>(rhs.Class.FormKey);
+                item.Class = new FormLinkNullable<IClassGetter>(rhs.Class.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Stats) ?? true))
             {
@@ -3069,7 +3069,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Hair) ?? true))
             {
-                item.Hair = new FormLinkNullable<IHairGetter>(rhs.Hair.FormKey);
+                item.Hair = new FormLinkNullable<IHairGetter>(rhs.Hair.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.HairLength) ?? true))
             {
@@ -3108,7 +3108,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.CombatStyle) ?? true))
             {
-                item.CombatStyle = new FormLinkNullable<ICombatStyleGetter>(rhs.CombatStyle.FormKey);
+                item.CombatStyle = new FormLinkNullable<ICombatStyleGetter>(rhs.CombatStyle.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.FaceGenGeometrySymmetric) ?? true))
             {

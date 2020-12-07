@@ -2996,7 +2996,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Location ?? true)
             {
-                fg.AppendItem(item.Location.FormKey, "Location");
+                fg.AppendItem(item.Location.FormKeyNullable, "Location");
             }
             if ((printMask?.XWCN ?? true)
                 && item.XWCN.TryGet(out var XWCNItem))
@@ -3015,7 +3015,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Water ?? true)
             {
-                fg.AppendItem(item.Water.FormKey, "Water");
+                fg.AppendItem(item.Water.FormKeyNullable, "Water");
             }
             if ((printMask?.Ownership?.Overall ?? true)
                 && item.Ownership.TryGet(out var OwnershipItem))
@@ -3024,7 +3024,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.LockList ?? true)
             {
-                fg.AppendItem(item.LockList.FormKey, "LockList");
+                fg.AppendItem(item.LockList.FormKeyNullable, "LockList");
             }
             if ((printMask?.WaterEnvironmentMap ?? true)
                 && item.WaterEnvironmentMap.TryGet(out var WaterEnvironmentMapItem))
@@ -3033,23 +3033,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.SkyAndWeatherFromRegion ?? true)
             {
-                fg.AppendItem(item.SkyAndWeatherFromRegion.FormKey, "SkyAndWeatherFromRegion");
+                fg.AppendItem(item.SkyAndWeatherFromRegion.FormKeyNullable, "SkyAndWeatherFromRegion");
             }
             if (printMask?.AcousticSpace ?? true)
             {
-                fg.AppendItem(item.AcousticSpace.FormKey, "AcousticSpace");
+                fg.AppendItem(item.AcousticSpace.FormKeyNullable, "AcousticSpace");
             }
             if (printMask?.EncounterZone ?? true)
             {
-                fg.AppendItem(item.EncounterZone.FormKey, "EncounterZone");
+                fg.AppendItem(item.EncounterZone.FormKeyNullable, "EncounterZone");
             }
             if (printMask?.Music ?? true)
             {
-                fg.AppendItem(item.Music.FormKey, "Music");
+                fg.AppendItem(item.Music.FormKeyNullable, "Music");
             }
             if (printMask?.ImageSpace ?? true)
             {
-                fg.AppendItem(item.ImageSpace.FormKey, "ImageSpace");
+                fg.AppendItem(item.ImageSpace.FormKeyNullable, "ImageSpace");
             }
             if ((printMask?.Landscape?.Overall ?? true)
                 && item.Landscape.TryGet(out var LandscapeItem))
@@ -3353,11 +3353,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.Location.FormKey.TryGet(out var LocationKey))
+            if (obj.Location.FormKeyNullable.TryGet(out var LocationKey))
             {
                 yield return LocationKey;
             }
-            if (obj.Water.FormKey.TryGet(out var WaterKey))
+            if (obj.Water.FormKeyNullable.TryGet(out var WaterKey))
             {
                 yield return WaterKey;
             }
@@ -3368,27 +3368,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.LockList.FormKey.TryGet(out var LockListKey))
+            if (obj.LockList.FormKeyNullable.TryGet(out var LockListKey))
             {
                 yield return LockListKey;
             }
-            if (obj.SkyAndWeatherFromRegion.FormKey.TryGet(out var SkyAndWeatherFromRegionKey))
+            if (obj.SkyAndWeatherFromRegion.FormKeyNullable.TryGet(out var SkyAndWeatherFromRegionKey))
             {
                 yield return SkyAndWeatherFromRegionKey;
             }
-            if (obj.AcousticSpace.FormKey.TryGet(out var AcousticSpaceKey))
+            if (obj.AcousticSpace.FormKeyNullable.TryGet(out var AcousticSpaceKey))
             {
                 yield return AcousticSpaceKey;
             }
-            if (obj.EncounterZone.FormKey.TryGet(out var EncounterZoneKey))
+            if (obj.EncounterZone.FormKeyNullable.TryGet(out var EncounterZoneKey))
             {
                 yield return EncounterZoneKey;
             }
-            if (obj.Music.FormKey.TryGet(out var MusicKey))
+            if (obj.Music.FormKeyNullable.TryGet(out var MusicKey))
             {
                 yield return MusicKey;
             }
-            if (obj.ImageSpace.FormKey.TryGet(out var ImageSpaceKey))
+            if (obj.ImageSpace.FormKeyNullable.TryGet(out var ImageSpaceKey))
             {
                 yield return ImageSpaceKey;
             }
@@ -3844,7 +3844,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public IEnumerable<ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        public IEnumerable<IModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             ICellGetter obj,
             ILinkCache linkCache,
             Type type,
@@ -3873,7 +3873,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 parent: curContext,
                                 getter: (m, r) =>
                                 {
-                                    var baseRec = getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey));
+                                    var baseRec = getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
                                     if (baseRec.Landscape != null) return baseRec.Landscape;
                                     var copy = (Landscape)((ILandscapeGetter)r).DeepCopy(ModContextExt.LandscapeCopyMask);
                                     baseRec.Landscape = copy;
@@ -3897,7 +3897,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 getter: (m, r) =>
                                 {
                                     var copy = (ANavigationMesh)((IANavigationMeshGetter)r).DeepCopy();
-                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).NavigationMeshes.Add(copy);
+                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).NavigationMeshes.Add(copy);
                                     return copy;
                                 });
                         }
@@ -3916,7 +3916,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
+                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
                                     return copy;
                                 });
                         }
@@ -3932,7 +3932,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
+                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
                                     return copy;
                                 });
                         }
@@ -3953,7 +3953,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
+                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
                                     return copy;
                                 });
                         }
@@ -3969,7 +3969,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
+                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
                                     return copy;
                                 });
                         }
@@ -3990,7 +3990,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
+                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
                                     return copy;
                                 });
                         }
@@ -4006,7 +4006,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
+                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
                                     return copy;
                                 });
                         }
@@ -4027,7 +4027,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
+                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
                                     return copy;
                                 });
                         }
@@ -4043,7 +4043,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
+                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
                                     return copy;
                                 });
                         }
@@ -4064,7 +4064,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
+                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
                                     return copy;
                                 });
                         }
@@ -4080,7 +4080,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
+                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
                                     return copy;
                                 });
                         }
@@ -4100,7 +4100,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
+                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
                                     return copy;
                                 });
                         }
@@ -4116,7 +4116,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
+                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
                                     return copy;
                                 });
                         }
@@ -4137,7 +4137,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
+                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
                                     return copy;
                                 });
                         }
@@ -4153,7 +4153,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
+                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
                                     return copy;
                                 });
                         }
@@ -4174,7 +4174,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
+                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
                                     return copy;
                                 });
                         }
@@ -4190,7 +4190,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
+                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
                                     return copy;
                                 });
                         }
@@ -4211,7 +4211,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
+                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
                                     return copy;
                                 });
                         }
@@ -4227,7 +4227,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
+                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
                                     return copy;
                                 });
                         }
@@ -4248,7 +4248,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
+                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
                                     return copy;
                                 });
                         }
@@ -4264,7 +4264,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
+                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
                                     return copy;
                                 });
                         }
@@ -4285,7 +4285,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
+                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
                                     return copy;
                                 });
                         }
@@ -4301,7 +4301,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 getter: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Lookup<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
+                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
                                     return copy;
                                 });
                         }
@@ -4490,7 +4490,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Location) ?? true))
             {
-                item.Location = new FormLinkNullable<ILocationGetter>(rhs.Location.FormKey);
+                item.Location = new FormLinkNullable<ILocationGetter>(rhs.Location.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.XWCN) ?? true))
             {
@@ -4542,7 +4542,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Water) ?? true))
             {
-                item.Water = new FormLinkNullable<IWaterGetter>(rhs.Water.FormKey);
+                item.Water = new FormLinkNullable<IWaterGetter>(rhs.Water.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Ownership) ?? true))
             {
@@ -4572,7 +4572,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.LockList) ?? true))
             {
-                item.LockList = new FormLinkNullable<ILockListGetter>(rhs.LockList.FormKey);
+                item.LockList = new FormLinkNullable<ILockListGetter>(rhs.LockList.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.WaterEnvironmentMap) ?? true))
             {
@@ -4580,23 +4580,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.SkyAndWeatherFromRegion) ?? true))
             {
-                item.SkyAndWeatherFromRegion = new FormLinkNullable<IRegionGetter>(rhs.SkyAndWeatherFromRegion.FormKey);
+                item.SkyAndWeatherFromRegion = new FormLinkNullable<IRegionGetter>(rhs.SkyAndWeatherFromRegion.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.AcousticSpace) ?? true))
             {
-                item.AcousticSpace = new FormLinkNullable<IAcousticSpaceGetter>(rhs.AcousticSpace.FormKey);
+                item.AcousticSpace = new FormLinkNullable<IAcousticSpaceGetter>(rhs.AcousticSpace.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.EncounterZone) ?? true))
             {
-                item.EncounterZone = new FormLinkNullable<IEncounterZoneGetter>(rhs.EncounterZone.FormKey);
+                item.EncounterZone = new FormLinkNullable<IEncounterZoneGetter>(rhs.EncounterZone.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Music) ?? true))
             {
-                item.Music = new FormLinkNullable<IMusicTypeGetter>(rhs.Music.FormKey);
+                item.Music = new FormLinkNullable<IMusicTypeGetter>(rhs.Music.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.ImageSpace) ?? true))
             {
-                item.ImageSpace = new FormLinkNullable<IImageSpaceAdapterGetter>(rhs.ImageSpace.FormKey);
+                item.ImageSpace = new FormLinkNullable<IImageSpaceAdapterGetter>(rhs.ImageSpace.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Landscape) ?? true))
             {

@@ -842,7 +842,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Head ?? true)
             {
-                fg.AppendItem(item.Head.FormKey, "Head");
+                fg.AppendItem(item.Head.FormKeyNullable, "Head");
             }
         }
         
@@ -880,7 +880,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<FormKey> GetLinkFormKeys(IHeadPartReferenceGetter obj)
         {
-            if (obj.Head.FormKey.TryGet(out var HeadKey))
+            if (obj.Head.FormKeyNullable.TryGet(out var HeadKey))
             {
                 yield return HeadKey;
             }
@@ -909,7 +909,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)HeadPartReference_FieldIndex.Head) ?? true))
             {
-                item.Head = new FormLinkNullable<IHeadPartGetter>(rhs.Head.FormKey);
+                item.Head = new FormLinkNullable<IHeadPartGetter>(rhs.Head.FormKeyNullable);
             }
         }
         

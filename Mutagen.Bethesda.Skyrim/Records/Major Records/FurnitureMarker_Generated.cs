@@ -942,7 +942,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.MarkerKeyword ?? true)
             {
-                fg.AppendItem(item.MarkerKeyword.FormKey, "MarkerKeyword");
+                fg.AppendItem(item.MarkerKeyword.FormKeyNullable, "MarkerKeyword");
             }
             if ((printMask?.EntryPoints?.Overall ?? true)
                 && item.EntryPoints.TryGet(out var EntryPointsItem))
@@ -992,7 +992,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<FormKey> GetLinkFormKeys(IFurnitureMarkerGetter obj)
         {
-            if (obj.MarkerKeyword.FormKey.TryGet(out var MarkerKeywordKey))
+            if (obj.MarkerKeyword.FormKeyNullable.TryGet(out var MarkerKeywordKey))
             {
                 yield return MarkerKeywordKey;
             }
@@ -1047,7 +1047,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)FurnitureMarker_FieldIndex.MarkerKeyword) ?? true))
             {
-                item.MarkerKeyword = new FormLinkNullable<IKeywordGetter>(rhs.MarkerKeyword.FormKey);
+                item.MarkerKeyword = new FormLinkNullable<IKeywordGetter>(rhs.MarkerKeyword.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)FurnitureMarker_FieldIndex.EntryPoints) ?? true))
             {

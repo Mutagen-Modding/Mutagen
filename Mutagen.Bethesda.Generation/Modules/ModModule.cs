@@ -31,6 +31,8 @@ namespace Mutagen.Bethesda.Generation
             if (obj.GetObjectType() != ObjectType.Mod) yield break;
             yield return (LoquiInterfaceType.IGetter, nameof(IModGetter));
             yield return (LoquiInterfaceType.ISetter, nameof(IMod));
+            yield return (LoquiInterfaceType.IGetter, $"IContextGetterMod<{obj.Interface(getter: false)}>");
+            yield return (LoquiInterfaceType.ISetter, $"IContextMod<{obj.Interface(getter: false)}>");
         }
 
         public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
@@ -440,7 +442,7 @@ namespace Mutagen.Bethesda.Generation
                 if (obj.GetObjectData().UsesStringFiles)
                 {
                     fg.AppendLine("bool disposeStrings = param.StringsWriter == null;");
-                    fg.AppendLine("param.StringsWriter ??= EnumExt.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter(modKey, Path.Combine(Path.GetDirectoryName(path), \"Strings\")) : null;");
+                    fg.AppendLine("param.StringsWriter ??= EnumExt.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter(modKey, Path.Combine(Path.GetDirectoryName(path)!, \"Strings\")) : null;");
                 }
                 fg.AppendLine("using (var stream = new FileStream(path, FileMode.Create, FileAccess.Write))");
                 using (new BraceWrapper(fg))

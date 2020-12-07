@@ -1962,11 +1962,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.MenuDisplayObject ?? true)
             {
-                fg.AppendItem(item.MenuDisplayObject.FormKey, "MenuDisplayObject");
+                fg.AppendItem(item.MenuDisplayObject.FormKeyNullable, "MenuDisplayObject");
             }
             if (printMask?.EquipmentType ?? true)
             {
-                fg.AppendItem(item.EquipmentType.FormKey, "EquipmentType");
+                fg.AppendItem(item.EquipmentType.FormKeyNullable, "EquipmentType");
             }
             if ((printMask?.Description ?? true)
                 && item.Description.TryGet(out var DescriptionItem))
@@ -1985,11 +1985,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.PickUpSound ?? true)
             {
-                fg.AppendItem(item.PickUpSound.FormKey, "PickUpSound");
+                fg.AppendItem(item.PickUpSound.FormKeyNullable, "PickUpSound");
             }
             if (printMask?.PutDownSound ?? true)
             {
-                fg.AppendItem(item.PutDownSound.FormKey, "PutDownSound");
+                fg.AppendItem(item.PutDownSound.FormKeyNullable, "PutDownSound");
             }
             if (printMask?.Value ?? true)
             {
@@ -2229,11 +2229,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.MenuDisplayObject.FormKey.TryGet(out var MenuDisplayObjectKey))
+            if (obj.MenuDisplayObject.FormKeyNullable.TryGet(out var MenuDisplayObjectKey))
             {
                 yield return MenuDisplayObjectKey;
             }
-            if (obj.EquipmentType.FormKey.TryGet(out var EquipmentTypeKey))
+            if (obj.EquipmentType.FormKeyNullable.TryGet(out var EquipmentTypeKey))
             {
                 yield return EquipmentTypeKey;
             }
@@ -2251,11 +2251,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.PickUpSound.FormKey.TryGet(out var PickUpSoundKey))
+            if (obj.PickUpSound.FormKeyNullable.TryGet(out var PickUpSoundKey))
             {
                 yield return PickUpSoundKey;
             }
-            if (obj.PutDownSound.FormKey.TryGet(out var PutDownSoundKey))
+            if (obj.PutDownSound.FormKeyNullable.TryGet(out var PutDownSoundKey))
             {
                 yield return PutDownSoundKey;
             }
@@ -2370,11 +2370,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.MenuDisplayObject) ?? true))
             {
-                item.MenuDisplayObject = new FormLinkNullable<IStaticGetter>(rhs.MenuDisplayObject.FormKey);
+                item.MenuDisplayObject = new FormLinkNullable<IStaticGetter>(rhs.MenuDisplayObject.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.EquipmentType) ?? true))
             {
-                item.EquipmentType = new FormLinkNullable<IEquipTypeGetter>(rhs.EquipmentType.FormKey);
+                item.EquipmentType = new FormLinkNullable<IEquipTypeGetter>(rhs.EquipmentType.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.Description) ?? true))
             {
@@ -2434,11 +2434,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.PickUpSound) ?? true))
             {
-                item.PickUpSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.PickUpSound.FormKey);
+                item.PickUpSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.PickUpSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.PutDownSound) ?? true))
             {
-                item.PutDownSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.PutDownSound.FormKey);
+                item.PutDownSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.PutDownSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.Value) ?? true))
             {

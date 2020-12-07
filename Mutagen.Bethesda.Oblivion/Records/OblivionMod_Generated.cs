@@ -3612,9 +3612,9 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<TMajor>(records, throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<ModContext<IOblivionMod, TSetter, TGetter>> IMajorRecordContextEnumerable<IOblivionMod>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IModContext<IOblivionMod, TSetter, TGetter>> IMajorRecordContextEnumerable<IOblivionMod>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>> IMajorRecordContextEnumerable<IOblivionMod>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>> IMajorRecordContextEnumerable<IOblivionMod>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
         #endregion
 
         #region Binary Translation
@@ -3764,6 +3764,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMajorRecordEnumerable,
         ILoquiObjectSetter<IOblivionMod>,
         IMod,
+        IContextMod<IOblivionMod>,
         ILinkedFormKeyContainer
     {
         new OblivionModHeader ModHeader { get; }
@@ -3831,6 +3832,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMajorRecordContextEnumerable<IOblivionMod>,
         ILoquiObject<IOblivionModGetter>,
         IModGetter,
+        IContextGetterMod<IOblivionMod>,
         ILinkedFormKeyContainerGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -4301,7 +4303,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<ModContext<IOblivionMod, TSetter, TGetter>> EnumerateMajorRecordContexts<TSetter, TGetter>(
+        public static IEnumerable<IModContext<IOblivionMod, TSetter, TGetter>> EnumerateMajorRecordContexts<TSetter, TGetter>(
             this IOblivionModGetter obj,
             ILinkCache linkCache,
             bool throwIfUnknown = true)
@@ -4313,12 +4315,12 @@ namespace Mutagen.Bethesda.Oblivion
                 linkCache: linkCache,
                 type: typeof(TGetter),
                 throwIfUnknown: throwIfUnknown)
-                .Select(m => m.AsType<TSetter, TGetter>())
+                .Select(m => m.AsType<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter, TSetter, TGetter>())
                 .Catch(e => throw RecordException.Factory(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        public static IEnumerable<IModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             this IOblivionModGetter obj,
             ILinkCache linkCache,
             Type type,
@@ -7477,7 +7479,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public IEnumerable<ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        public IEnumerable<IModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             IOblivionModGetter obj,
             ILinkCache linkCache,
             Type type,
@@ -8155,7 +8157,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
                         {
                             yield return item;
                         }
@@ -8171,7 +8173,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
                         {
                             yield return item;
                         }
@@ -8187,7 +8189,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
                         {
                             yield return item;
                         }
@@ -8203,7 +8205,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
                         {
                             yield return item;
                         }
@@ -8219,7 +8221,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
                         {
                             yield return item;
                         }
@@ -8235,7 +8237,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
                         {
                             yield return item;
                         }
@@ -8247,7 +8249,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IRoadInternal":
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
                         {
                             yield return item;
                         }
@@ -8259,7 +8261,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IDialogItemInternal":
                     foreach (var groupItem in obj.DialogTopics)
                     {
-                        foreach (var item in DialogTopicCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.DialogTopics.GetOrAddAsOverride(linkCache.Lookup<IDialogTopicGetter>(r.FormKey))))
+                        foreach (var item in DialogTopicCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.DialogTopics.GetOrAddAsOverride(linkCache.Resolve<IDialogTopicGetter>(r.FormKey))))
                         {
                             yield return item;
                         }
@@ -8287,7 +8289,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Lookup<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
                         {
                             yield return item;
                         }
@@ -11281,9 +11283,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => OblivionModCommon.Instance.GetLinkFormKeys(this);
         [DebuggerStepThrough]
-        IEnumerable<ModContext<IOblivionMod, TSetter, TGetter>> IMajorRecordContextEnumerable<IOblivionMod>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IModContext<IOblivionMod, TSetter, TGetter>> IMajorRecordContextEnumerable<IOblivionMod>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>> IMajorRecordContextEnumerable<IOblivionMod>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>> IMajorRecordContextEnumerable<IOblivionMod>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

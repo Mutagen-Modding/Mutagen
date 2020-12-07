@@ -3854,7 +3854,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Base ?? true)
             {
-                fg.AppendItem(item.Base.FormKey, "Base");
+                fg.AppendItem(item.Base.FormKeyNullable, "Base");
             }
             if ((printMask?.BoundHalfExtents ?? true)
                 && item.BoundHalfExtents.TryGet(out var BoundHalfExtentsItem))
@@ -3906,11 +3906,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.LightingTemplate ?? true)
             {
-                fg.AppendItem(item.LightingTemplate.FormKey, "LightingTemplate");
+                fg.AppendItem(item.LightingTemplate.FormKeyNullable, "LightingTemplate");
             }
             if (printMask?.ImageSpace ?? true)
             {
-                fg.AppendItem(item.ImageSpace.FormKey, "ImageSpace");
+                fg.AppendItem(item.ImageSpace.FormKeyNullable, "ImageSpace");
             }
             if (printMask?.LinkedRooms?.Overall ?? true)
             {
@@ -3987,7 +3987,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Emittance ?? true)
             {
-                fg.AppendItem(item.Emittance.FormKey, "Emittance");
+                fg.AppendItem(item.Emittance.FormKeyNullable, "Emittance");
             }
             if ((printMask?.LightData?.Overall ?? true)
                 && item.LightData.TryGet(out var LightDataItem))
@@ -4006,11 +4006,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.TeleportMessageBox ?? true)
             {
-                fg.AppendItem(item.TeleportMessageBox.FormKey, "TeleportMessageBox");
+                fg.AppendItem(item.TeleportMessageBox.FormKeyNullable, "TeleportMessageBox");
             }
             if (printMask?.MultiboundReference ?? true)
             {
-                fg.AppendItem(item.MultiboundReference.FormKey, "MultiboundReference");
+                fg.AppendItem(item.MultiboundReference.FormKeyNullable, "MultiboundReference");
             }
             if ((printMask?.XWCN ?? true)
                 && item.XWCN.TryGet(out var XWCNItem))
@@ -4034,7 +4034,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.XCZR ?? true)
             {
-                fg.AppendItem(item.XCZR.FormKey, "XCZR");
+                fg.AppendItem(item.XCZR.FormKeyNullable, "XCZR");
             }
             if ((printMask?.XCZA ?? true)
                 && item.XCZA.TryGet(out var XCZAItem))
@@ -4043,7 +4043,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.XCZC ?? true)
             {
-                fg.AppendItem(item.XCZC.FormKey, "XCZC");
+                fg.AppendItem(item.XCZC.FormKeyNullable, "XCZC");
             }
             if ((printMask?.Scale ?? true)
                 && item.Scale.TryGet(out var ScaleItem))
@@ -4052,7 +4052,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.SpawnContainer ?? true)
             {
-                fg.AppendItem(item.SpawnContainer.FormKey, "SpawnContainer");
+                fg.AppendItem(item.SpawnContainer.FormKeyNullable, "SpawnContainer");
             }
             if ((printMask?.ActivateParents?.Overall ?? true)
                 && item.ActivateParents.TryGet(out var ActivateParentsItem))
@@ -4061,7 +4061,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.LeveledItemBaseObject ?? true)
             {
-                fg.AppendItem(item.LeveledItemBaseObject.FormKey, "LeveledItemBaseObject");
+                fg.AppendItem(item.LeveledItemBaseObject.FormKeyNullable, "LeveledItemBaseObject");
             }
             if ((printMask?.LevelModifier ?? true)
                 && item.LevelModifier.TryGet(out var LevelModifierItem))
@@ -4070,7 +4070,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.PersistentLocation ?? true)
             {
-                fg.AppendItem(item.PersistentLocation.FormKey, "PersistentLocation");
+                fg.AppendItem(item.PersistentLocation.FormKeyNullable, "PersistentLocation");
             }
             if ((printMask?.CollisionLayer ?? true)
                 && item.CollisionLayer.TryGet(out var CollisionLayerItem))
@@ -4084,7 +4084,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.EncounterZone ?? true)
             {
-                fg.AppendItem(item.EncounterZone.FormKey, "EncounterZone");
+                fg.AppendItem(item.EncounterZone.FormKeyNullable, "EncounterZone");
             }
             if ((printMask?.NavigationDoorLink?.Overall ?? true)
                 && item.NavigationDoorLink.TryGet(out var NavigationDoorLinkItem))
@@ -4131,7 +4131,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.LocationReference ?? true)
             {
-                fg.AppendItem(item.LocationReference.FormKey, "LocationReference");
+                fg.AppendItem(item.LocationReference.FormKeyNullable, "LocationReference");
             }
             if ((printMask?.EnableParent?.Overall ?? true)
                 && item.EnableParent.TryGet(out var EnableParentItem))
@@ -4187,7 +4187,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.AttachRef ?? true)
             {
-                fg.AppendItem(item.AttachRef.FormKey, "AttachRef");
+                fg.AppendItem(item.AttachRef.FormKeyNullable, "AttachRef");
             }
             if ((printMask?.DistantLodData ?? true)
                 && item.DistantLodData.TryGet(out var DistantLodDataItem))
@@ -4560,7 +4560,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.Base.FormKey.TryGet(out var BaseKey))
+            if (obj.Base.FormKeyNullable.TryGet(out var BaseKey))
             {
                 yield return BaseKey;
             }
@@ -4571,11 +4571,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.LightingTemplate.FormKey.TryGet(out var LightingTemplateKey))
+            if (obj.LightingTemplate.FormKeyNullable.TryGet(out var LightingTemplateKey))
             {
                 yield return LightingTemplateKey;
             }
-            if (obj.ImageSpace.FormKey.TryGet(out var ImageSpaceKey))
+            if (obj.ImageSpace.FormKeyNullable.TryGet(out var ImageSpaceKey))
             {
                 yield return ImageSpaceKey;
             }
@@ -4591,7 +4591,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.Emittance.FormKey.TryGet(out var EmittanceKey))
+            if (obj.Emittance.FormKeyNullable.TryGet(out var EmittanceKey))
             {
                 yield return EmittanceKey;
             }
@@ -4602,23 +4602,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.TeleportMessageBox.FormKey.TryGet(out var TeleportMessageBoxKey))
+            if (obj.TeleportMessageBox.FormKeyNullable.TryGet(out var TeleportMessageBoxKey))
             {
                 yield return TeleportMessageBoxKey;
             }
-            if (obj.MultiboundReference.FormKey.TryGet(out var MultiboundReferenceKey))
+            if (obj.MultiboundReference.FormKeyNullable.TryGet(out var MultiboundReferenceKey))
             {
                 yield return MultiboundReferenceKey;
             }
-            if (obj.XCZR.FormKey.TryGet(out var XCZRKey))
+            if (obj.XCZR.FormKeyNullable.TryGet(out var XCZRKey))
             {
                 yield return XCZRKey;
             }
-            if (obj.XCZC.FormKey.TryGet(out var XCZCKey))
+            if (obj.XCZC.FormKeyNullable.TryGet(out var XCZCKey))
             {
                 yield return XCZCKey;
             }
-            if (obj.SpawnContainer.FormKey.TryGet(out var SpawnContainerKey))
+            if (obj.SpawnContainer.FormKeyNullable.TryGet(out var SpawnContainerKey))
             {
                 yield return SpawnContainerKey;
             }
@@ -4629,11 +4629,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.LeveledItemBaseObject.FormKey.TryGet(out var LeveledItemBaseObjectKey))
+            if (obj.LeveledItemBaseObject.FormKeyNullable.TryGet(out var LeveledItemBaseObjectKey))
             {
                 yield return LeveledItemBaseObjectKey;
             }
-            if (obj.PersistentLocation.FormKey.TryGet(out var PersistentLocationKey))
+            if (obj.PersistentLocation.FormKeyNullable.TryGet(out var PersistentLocationKey))
             {
                 yield return PersistentLocationKey;
             }
@@ -4644,7 +4644,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.EncounterZone.FormKey.TryGet(out var EncounterZoneKey))
+            if (obj.EncounterZone.FormKeyNullable.TryGet(out var EncounterZoneKey))
             {
                 yield return EncounterZoneKey;
             }
@@ -4669,7 +4669,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.LocationReference.FormKey.TryGet(out var LocationReferenceKey))
+            if (obj.LocationReference.FormKeyNullable.TryGet(out var LocationReferenceKey))
             {
                 yield return LocationReferenceKey;
             }
@@ -4691,7 +4691,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.AttachRef.FormKey.TryGet(out var AttachRefKey))
+            if (obj.AttachRef.FormKeyNullable.TryGet(out var AttachRefKey))
             {
                 yield return AttachRefKey;
             }
@@ -4774,7 +4774,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Base) ?? true))
             {
-                item.Base = new FormLinkNullable<ISkyrimMajorRecordGetter>(rhs.Base.FormKey);
+                item.Base = new FormLinkNullable<ISkyrimMajorRecordGetter>(rhs.Base.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.BoundHalfExtents) ?? true))
             {
@@ -4907,11 +4907,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LightingTemplate) ?? true))
             {
-                item.LightingTemplate = new FormLinkNullable<ILightGetter>(rhs.LightingTemplate.FormKey);
+                item.LightingTemplate = new FormLinkNullable<ILightGetter>(rhs.LightingTemplate.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.ImageSpace) ?? true))
             {
-                item.ImageSpace = new FormLinkNullable<IImageSpaceAdapterGetter>(rhs.ImageSpace.FormKey);
+                item.ImageSpace = new FormLinkNullable<IImageSpaceAdapterGetter>(rhs.ImageSpace.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LinkedRooms) ?? true))
             {
@@ -5007,7 +5007,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Emittance) ?? true))
             {
-                item.Emittance = new FormLinkNullable<IEmittanceGetter>(rhs.Emittance.FormKey);
+                item.Emittance = new FormLinkNullable<IEmittanceGetter>(rhs.Emittance.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LightData) ?? true))
             {
@@ -5089,11 +5089,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.TeleportMessageBox) ?? true))
             {
-                item.TeleportMessageBox = new FormLinkNullable<IMessageGetter>(rhs.TeleportMessageBox.FormKey);
+                item.TeleportMessageBox = new FormLinkNullable<IMessageGetter>(rhs.TeleportMessageBox.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.MultiboundReference) ?? true))
             {
-                item.MultiboundReference = new FormLinkNullable<IPlacedObjectGetter>(rhs.MultiboundReference.FormKey);
+                item.MultiboundReference = new FormLinkNullable<IPlacedObjectGetter>(rhs.MultiboundReference.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XWCN) ?? true))
             {
@@ -5156,7 +5156,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XCZR) ?? true))
             {
-                item.XCZR = new FormLinkNullable<ILinkedReferenceGetter>(rhs.XCZR.FormKey);
+                item.XCZR = new FormLinkNullable<ILinkedReferenceGetter>(rhs.XCZR.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XCZA) ?? true))
             {
@@ -5171,7 +5171,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XCZC) ?? true))
             {
-                item.XCZC = new FormLinkNullable<ICellGetter>(rhs.XCZC.FormKey);
+                item.XCZC = new FormLinkNullable<ICellGetter>(rhs.XCZC.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Scale) ?? true))
             {
@@ -5179,7 +5179,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.SpawnContainer) ?? true))
             {
-                item.SpawnContainer = new FormLinkNullable<IPlacedObjectGetter>(rhs.SpawnContainer.FormKey);
+                item.SpawnContainer = new FormLinkNullable<IPlacedObjectGetter>(rhs.SpawnContainer.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.ActivateParents) ?? true))
             {
@@ -5209,7 +5209,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LeveledItemBaseObject) ?? true))
             {
-                item.LeveledItemBaseObject = new FormLinkNullable<ILeveledItemGetter>(rhs.LeveledItemBaseObject.FormKey);
+                item.LeveledItemBaseObject = new FormLinkNullable<ILeveledItemGetter>(rhs.LeveledItemBaseObject.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LevelModifier) ?? true))
             {
@@ -5217,7 +5217,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.PersistentLocation) ?? true))
             {
-                item.PersistentLocation = new FormLinkNullable<ILocationGetter>(rhs.PersistentLocation.FormKey);
+                item.PersistentLocation = new FormLinkNullable<ILocationGetter>(rhs.PersistentLocation.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.CollisionLayer) ?? true))
             {
@@ -5251,7 +5251,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.EncounterZone) ?? true))
             {
-                item.EncounterZone = new FormLinkNullable<IEncounterZoneGetter>(rhs.EncounterZone.FormKey);
+                item.EncounterZone = new FormLinkNullable<IEncounterZoneGetter>(rhs.EncounterZone.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.NavigationDoorLink) ?? true))
             {
@@ -5346,7 +5346,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LocationReference) ?? true))
             {
-                item.LocationReference = new FormLinkNullable<ILocationRecordGetter>(rhs.LocationReference.FormKey);
+                item.LocationReference = new FormLinkNullable<ILocationRecordGetter>(rhs.LocationReference.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.EnableParent) ?? true))
             {
@@ -5468,7 +5468,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.AttachRef) ?? true))
             {
-                item.AttachRef = new FormLinkNullable<IPlacedThingGetter>(rhs.AttachRef.FormKey);
+                item.AttachRef = new FormLinkNullable<IPlacedThingGetter>(rhs.AttachRef.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.DistantLodData) ?? true))
             {

@@ -34,9 +34,9 @@ namespace Mutagen.Bethesda.Generation
             if (obj.GetObjectType() == ObjectType.Mod)
             {
                 fg.AppendLine("[DebuggerStepThrough]");
-                fg.AppendLine($"IEnumerable<ModContext<{obj.Interface(getter: false)}, TSetter, TGetter>> IMajorRecordContextEnumerable<{obj.Interface(getter: false)}>.EnumerateMajorRecordContexts<TSetter, TGetter>({nameof(ILinkCache)} linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts{obj.GetGenericTypes(MaskType.Normal, "TSetter".AsEnumerable().And("TGetter").ToArray())}(linkCache, throwIfUnknown: throwIfUnknown);");
+                fg.AppendLine($"IEnumerable<IModContext<{obj.Interface(getter: false)}, TSetter, TGetter>> IMajorRecordContextEnumerable<{obj.Interface(getter: false)}>.EnumerateMajorRecordContexts<TSetter, TGetter>({nameof(ILinkCache)} linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts{obj.GetGenericTypes(MaskType.Normal, "TSetter".AsEnumerable().And("TGetter").ToArray())}(linkCache, throwIfUnknown: throwIfUnknown);");
                 fg.AppendLine("[DebuggerStepThrough]");
-                fg.AppendLine($"IEnumerable<ModContext<{obj.Interface(getter: false)}, IMajorRecordCommon, IMajorRecordCommonGetter>> IMajorRecordContextEnumerable<{obj.Interface(getter: false)}>.EnumerateMajorRecordContexts({nameof(ILinkCache)} linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);");
+                fg.AppendLine($"IEnumerable<IModContext<{obj.Interface(getter: false)}, IMajorRecordCommon, IMajorRecordCommonGetter>> IMajorRecordContextEnumerable<{obj.Interface(getter: false)}>.EnumerateMajorRecordContexts({nameof(ILinkCache)} linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);");
             }
         }
 
@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Generation
 
             fg.AppendLine("[DebuggerStepThrough]");
             using (var args = new FunctionWrapper(fg,
-                $"public static IEnumerable<ModContext<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, TSetter, TGetter>> EnumerateMajorRecordContexts{obj.GetGenericTypes(MaskType.Normal, new string[] { "TSetter", "TGetter" })}"))
+                $"public static IEnumerable<IModContext<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, TSetter, TGetter>> EnumerateMajorRecordContexts{obj.GetGenericTypes(MaskType.Normal, new string[] { "TSetter", "TGetter" })}"))
             {
                 args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, obj.Generics));
                 args.Wheres.Add($"where TSetter : class, IMajorRecordCommon, TGetter");
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Generation
                 }
                 using (new DepthWrapper(fg))
                 {
-                    fg.AppendLine($".Select(m => m.AsType<TSetter, TGetter>()){enderSemi}");
+                    fg.AppendLine($".Select(m => m.AsType<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, {nameof(IMajorRecordCommon)}, {nameof(IMajorRecordCommonGetter)}, TSetter, TGetter>()){enderSemi}");
                     if (needsCatch)
                     {
                         fg.AppendLine($"{catchLine};");
@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Generation
 
             fg.AppendLine("[DebuggerStepThrough]");
             using (var args = new FunctionWrapper(fg,
-                $"public static IEnumerable<ModContext<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts{obj.GetGenericTypes(MaskType.Normal)}"))
+                $"public static IEnumerable<IModContext<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts{obj.GetGenericTypes(MaskType.Normal)}"))
             {
                 args.Add($"this {obj.Interface(getter: true, internalInterface: true)} obj");
                 args.Add($"{nameof(ILinkCache)} linkCache");
@@ -210,7 +210,7 @@ namespace Mutagen.Bethesda.Generation
             var overrideStr = await obj.FunctionOverride(async c => await MajorRecordModule.HasMajorRecords(c, includeBaseClass: false, includeSelf: true) != Case.No);
 
             using (var args = new FunctionWrapper(fg,
-                $"public{overrideStr}IEnumerable<ModContext<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts"))
+                $"public{overrideStr}IEnumerable<IModContext<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts"))
             {
                 args.Add($"{obj.Interface(getter: getter, internalInterface: true)} obj");
                 args.Add($"{nameof(ILinkCache)} linkCache");
@@ -481,7 +481,7 @@ namespace Mutagen.Bethesda.Generation
                     fieldGen.AppendLine($"foreach (var groupItem in obj.{field.Name})");
                     using (new BraceWrapper(fieldGen))
                     {
-                        fieldGen.AppendLine($"foreach (var item in {group.GetGroupTarget().CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, {(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}, {(obj.GetObjectType() == ObjectType.Mod ? "parent: null" : "curContext")}, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.{field.Name}.GetOrAddAsOverride(linkCache.Lookup<{group.GetGroupTarget().Interface(getter: true, internalInterface: true)}>(r.FormKey))))");
+                        fieldGen.AppendLine($"foreach (var item in {group.GetGroupTarget().CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, {(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}, {(obj.GetObjectType() == ObjectType.Mod ? "parent: null" : "curContext")}, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.{field.Name}.GetOrAddAsOverride(linkCache.Resolve<{group.GetGroupTarget().Interface(getter: true, internalInterface: true)}>(r.FormKey))))");
 
                         using (new BraceWrapper(fieldGen))
                         {
@@ -519,7 +519,7 @@ namespace Mutagen.Bethesda.Generation
                             subFg.AppendLine($"getter: (m, r) =>");
                             using (new BraceWrapper(subFg))
                             {
-                                subFg.AppendLine($"var baseRec = getter(m, linkCache.Lookup<{obj.Interface(getter: true)}>(obj.FormKey));");
+                                subFg.AppendLine($"var baseRec = getter(m, linkCache.Resolve<{obj.Interface(getter: true)}>(obj.FormKey));");
                                 subFg.AppendLine($"if (baseRec.{loqui.Name} != null) return baseRec.{loqui.Name};");
                                 subFg.AppendLine($"var copy = ({loqui.TypeName()})(({loqui.Interface(getter: true)})r).DeepCopy(ModContextExt.{loqui.TargetObjectGeneration.Name}CopyMask);");
                                 subFg.AppendLine($"baseRec.{loqui.Name} = copy;");
@@ -617,7 +617,7 @@ namespace Mutagen.Bethesda.Generation
                                                 using (new BraceWrapper(subFg))
                                                 {
                                                     subFg.AppendLine($"var copy = ({contLoqui.TypeName()})(({contLoqui.Interface(getter: true)})r).DeepCopy();");
-                                                    subFg.AppendLine($"getter(m, linkCache.Lookup<{obj.Interface(getter: true)}>(obj.FormKey)).{cont.Name}.Add(copy);");
+                                                    subFg.AppendLine($"getter(m, linkCache.Resolve<{obj.Interface(getter: true)}>(obj.FormKey)).{cont.Name}.Add(copy);");
                                                     subFg.AppendLine($"return copy;");
                                                 }
                                             });

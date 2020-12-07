@@ -1817,7 +1817,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 printMask: printMask);
             if (printMask?.Base ?? true)
             {
-                fg.AppendItem(item.Base.FormKey, "Base");
+                fg.AppendItem(item.Base.FormKeyNullable, "Base");
             }
             if ((printMask?.XPCIFluff ?? true)
                 && item.XPCIFluff.TryGet(out var XPCIFluffItem))
@@ -1841,7 +1841,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Owner ?? true)
             {
-                fg.AppendItem(item.Owner.FormKey, "Owner");
+                fg.AppendItem(item.Owner.FormKeyNullable, "Owner");
             }
             if ((printMask?.FactionRank ?? true)
                 && item.FactionRank.TryGet(out var FactionRankItem))
@@ -1850,7 +1850,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.GlobalVariable ?? true)
             {
-                fg.AppendItem(item.GlobalVariable.FormKey, "GlobalVariable");
+                fg.AppendItem(item.GlobalVariable.FormKeyNullable, "GlobalVariable");
             }
             if ((printMask?.EnableParent?.Overall ?? true)
                 && item.EnableParent.TryGet(out var EnableParentItem))
@@ -1859,7 +1859,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Target ?? true)
             {
-                fg.AppendItem(item.Target.FormKey, "Target");
+                fg.AppendItem(item.Target.FormKeyNullable, "Target");
             }
             if ((printMask?.SpeedTreeSeed ?? true)
                 && item.SpeedTreeSeed.TryGet(out var SpeedTreeSeedItem))
@@ -1888,7 +1888,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.XRTM ?? true)
             {
-                fg.AppendItem(item.XRTM.FormKey, "XRTM");
+                fg.AppendItem(item.XRTM.FormKeyNullable, "XRTM");
             }
             if ((printMask?.ActionFlags ?? true)
                 && item.ActionFlags.TryGet(out var ActionFlagsItem))
@@ -1921,7 +1921,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.ContainedSoul ?? true)
             {
-                fg.AppendItem(item.ContainedSoul.FormKey, "ContainedSoul");
+                fg.AppendItem(item.ContainedSoul.FormKeyNullable, "ContainedSoul");
             }
             if ((printMask?.Location?.Overall ?? true)
                 && item.Location.TryGet(out var LocationItem))
@@ -2126,7 +2126,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.Base.FormKey.TryGet(out var BaseKey))
+            if (obj.Base.FormKeyNullable.TryGet(out var BaseKey))
             {
                 yield return BaseKey;
             }
@@ -2144,11 +2144,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     yield return item;
                 }
             }
-            if (obj.Owner.FormKey.TryGet(out var OwnerKey))
+            if (obj.Owner.FormKeyNullable.TryGet(out var OwnerKey))
             {
                 yield return OwnerKey;
             }
-            if (obj.GlobalVariable.FormKey.TryGet(out var GlobalVariableKey))
+            if (obj.GlobalVariable.FormKeyNullable.TryGet(out var GlobalVariableKey))
             {
                 yield return GlobalVariableKey;
             }
@@ -2159,15 +2159,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     yield return item;
                 }
             }
-            if (obj.Target.FormKey.TryGet(out var TargetKey))
+            if (obj.Target.FormKeyNullable.TryGet(out var TargetKey))
             {
                 yield return TargetKey;
             }
-            if (obj.XRTM.FormKey.TryGet(out var XRTMKey))
+            if (obj.XRTM.FormKeyNullable.TryGet(out var XRTMKey))
             {
                 yield return XRTMKey;
             }
-            if (obj.ContainedSoul.FormKey.TryGet(out var ContainedSoulKey))
+            if (obj.ContainedSoul.FormKeyNullable.TryGet(out var ContainedSoulKey))
             {
                 yield return ContainedSoulKey;
             }
@@ -2224,7 +2224,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Base) ?? true))
             {
-                item.Base = new FormLinkNullable<IOblivionMajorRecordGetter>(rhs.Base.FormKey);
+                item.Base = new FormLinkNullable<IOblivionMajorRecordGetter>(rhs.Base.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XPCIFluff) ?? true))
             {
@@ -2302,7 +2302,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Owner) ?? true))
             {
-                item.Owner = new FormLinkNullable<IOwnerGetter>(rhs.Owner.FormKey);
+                item.Owner = new FormLinkNullable<IOwnerGetter>(rhs.Owner.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.FactionRank) ?? true))
             {
@@ -2310,7 +2310,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.GlobalVariable) ?? true))
             {
-                item.GlobalVariable = new FormLinkNullable<IGlobalGetter>(rhs.GlobalVariable.FormKey);
+                item.GlobalVariable = new FormLinkNullable<IGlobalGetter>(rhs.GlobalVariable.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.EnableParent) ?? true))
             {
@@ -2340,7 +2340,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Target) ?? true))
             {
-                item.Target = new FormLinkNullable<IPlacedGetter>(rhs.Target.FormKey);
+                item.Target = new FormLinkNullable<IPlacedGetter>(rhs.Target.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.SpeedTreeSeed) ?? true))
             {
@@ -2386,7 +2386,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XRTM) ?? true))
             {
-                item.XRTM = new FormLinkNullable<IOblivionMajorRecordGetter>(rhs.XRTM.FormKey);
+                item.XRTM = new FormLinkNullable<IOblivionMajorRecordGetter>(rhs.XRTM.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.ActionFlags) ?? true))
             {
@@ -2443,7 +2443,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.ContainedSoul) ?? true))
             {
-                item.ContainedSoul = new FormLinkNullable<ISoulGemGetter>(rhs.ContainedSoul.FormKey);
+                item.ContainedSoul = new FormLinkNullable<ISoulGemGetter>(rhs.ContainedSoul.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Location) ?? true))
             {

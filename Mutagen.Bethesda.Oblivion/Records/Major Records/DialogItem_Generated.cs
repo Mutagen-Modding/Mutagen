@@ -1595,11 +1595,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Quest ?? true)
             {
-                fg.AppendItem(item.Quest.FormKey, "Quest");
+                fg.AppendItem(item.Quest.FormKeyNullable, "Quest");
             }
             if (printMask?.PreviousTopic ?? true)
             {
-                fg.AppendItem(item.PreviousTopic.FormKey, "PreviousTopic");
+                fg.AppendItem(item.PreviousTopic.FormKeyNullable, "PreviousTopic");
             }
             if (printMask?.Topics?.Overall ?? true)
             {
@@ -1815,11 +1815,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.Quest.FormKey.TryGet(out var QuestKey))
+            if (obj.Quest.FormKeyNullable.TryGet(out var QuestKey))
             {
                 yield return QuestKey;
             }
-            if (obj.PreviousTopic.FormKey.TryGet(out var PreviousTopicKey))
+            if (obj.PreviousTopic.FormKeyNullable.TryGet(out var PreviousTopicKey))
             {
                 yield return PreviousTopicKey;
             }
@@ -1921,11 +1921,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogItem_FieldIndex.Quest) ?? true))
             {
-                item.Quest = new FormLinkNullable<IQuestGetter>(rhs.Quest.FormKey);
+                item.Quest = new FormLinkNullable<IQuestGetter>(rhs.Quest.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogItem_FieldIndex.PreviousTopic) ?? true))
             {
-                item.PreviousTopic = new FormLinkNullable<IDialogItemGetter>(rhs.PreviousTopic.FormKey);
+                item.PreviousTopic = new FormLinkNullable<IDialogItemGetter>(rhs.PreviousTopic.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogItem_FieldIndex.Topics) ?? true))
             {

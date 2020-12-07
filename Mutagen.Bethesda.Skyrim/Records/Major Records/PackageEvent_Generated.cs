@@ -1150,7 +1150,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.Idle ?? true)
             {
-                fg.AppendItem(item.Idle.FormKey, "Idle");
+                fg.AppendItem(item.Idle.FormKeyNullable, "Idle");
             }
             if ((printMask?.SCHR ?? true)
                 && item.SCHR.TryGet(out var SCHRItem))
@@ -1253,7 +1253,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<FormKey> GetLinkFormKeys(IPackageEventGetter obj)
         {
-            if (obj.Idle.FormKey.TryGet(out var IdleKey))
+            if (obj.Idle.FormKeyNullable.TryGet(out var IdleKey))
             {
                 yield return IdleKey;
             }
@@ -1283,7 +1283,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)PackageEvent_FieldIndex.Idle) ?? true))
             {
-                item.Idle = new FormLinkNullable<IIdleAnimationGetter>(rhs.Idle.FormKey);
+                item.Idle = new FormLinkNullable<IIdleAnimationGetter>(rhs.Idle.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PackageEvent_FieldIndex.SCHR) ?? true))
             {

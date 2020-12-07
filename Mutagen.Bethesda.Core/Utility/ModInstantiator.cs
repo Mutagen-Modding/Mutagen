@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda
                     var deleg = lambda.Compile();
                     return (ModKey modKey, GameRelease release) =>
                     {
-                        return (TMod)deleg.DynamicInvoke(modKey);
+                        return (TMod)deleg.DynamicInvoke(modKey)!;
                     };
                 }
                 else
@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda
                     var deleg = lambda.Compile();
                     return (ModKey modKey, GameRelease release) =>
                     {
-                        return (TMod)deleg.DynamicInvoke(modKey, (int)release);
+                        return (TMod)deleg.DynamicInvoke(modKey, (int)release)!;
                     };
                 }
             }
@@ -101,7 +101,7 @@ namespace Mutagen.Bethesda
                             args[0] = modPath;
                             args[1] = release;
                             args[^1] = true;
-                            return (TMod)deleg.DynamicInvoke(args);
+                            return (TMod)deleg.DynamicInvoke(args)!;
                         };
                     }
                     else
@@ -111,7 +111,7 @@ namespace Mutagen.Bethesda
                             object[] args = new object[paramInfo.Length];
                             args[0] = modPath;
                             args[^1] = true;
-                            return (TMod)deleg.DynamicInvoke(args);
+                            return (TMod)deleg.DynamicInvoke(args)!;
                         };
                     }
                 }
@@ -149,7 +149,7 @@ namespace Mutagen.Bethesda
                         object[] args = new object[paramInfo.Length];
                         args[0] = modPath;
                         args[1] = release;
-                        return (IModGetter)deleg.DynamicInvoke(args);
+                        return (IModGetter)deleg.DynamicInvoke(args)!;
                     };
                 }
                 else
@@ -158,7 +158,7 @@ namespace Mutagen.Bethesda
                     {
                         object[] args = new object[paramInfo.Length];
                         args[0] = modPath;
-                        return (IModGetter)deleg.DynamicInvoke(args);
+                        return (IModGetter)deleg.DynamicInvoke(args)!;
                     };
                 }
             }

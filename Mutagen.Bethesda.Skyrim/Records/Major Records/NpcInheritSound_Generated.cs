@@ -762,7 +762,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 printMask: printMask);
             if (printMask?.InheritsSoundsFrom ?? true)
             {
-                fg.AppendItem(item.InheritsSoundsFrom.FormKey, "InheritsSoundsFrom");
+                fg.AppendItem(item.InheritsSoundsFrom.FormKeyNullable, "InheritsSoundsFrom");
             }
         }
         
@@ -824,7 +824,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.InheritsSoundsFrom.FormKey.TryGet(out var InheritsSoundsFromKey))
+            if (obj.InheritsSoundsFrom.FormKeyNullable.TryGet(out var InheritsSoundsFromKey))
             {
                 yield return InheritsSoundsFromKey;
             }
@@ -855,7 +855,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)NpcInheritSound_FieldIndex.InheritsSoundsFrom) ?? true))
             {
-                item.InheritsSoundsFrom = new FormLinkNullable<INpcGetter>(rhs.InheritsSoundsFrom.FormKey);
+                item.InheritsSoundsFrom = new FormLinkNullable<INpcGetter>(rhs.InheritsSoundsFrom.FormKeyNullable);
             }
         }
         

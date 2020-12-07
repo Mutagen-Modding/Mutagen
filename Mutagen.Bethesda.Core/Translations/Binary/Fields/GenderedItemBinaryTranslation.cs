@@ -440,7 +440,7 @@ namespace Mutagen.Bethesda.Binary
             try
             {
                 var male = item.Male;
-                if (male.FormKey != null)
+                if (male.FormKeyNullable != null)
                 {
                     using (HeaderExport.Subrecord(writer, maleMarker))
                     {
@@ -462,7 +462,7 @@ namespace Mutagen.Bethesda.Binary
             try
             {
                 var female = item.Female;
-                if (female.FormKey != null)
+                if (female.FormKeyNullable != null)
                 {
                     using (HeaderExport.Subrecord(writer, femaleMarker))
                     {

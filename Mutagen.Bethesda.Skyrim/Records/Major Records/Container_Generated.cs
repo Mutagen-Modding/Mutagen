@@ -1446,11 +1446,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.OpenSound ?? true)
             {
-                fg.AppendItem(item.OpenSound.FormKey, "OpenSound");
+                fg.AppendItem(item.OpenSound.FormKeyNullable, "OpenSound");
             }
             if (printMask?.CloseSound ?? true)
             {
-                fg.AppendItem(item.CloseSound.FormKey, "CloseSound");
+                fg.AppendItem(item.CloseSound.FormKeyNullable, "CloseSound");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
@@ -1620,11 +1620,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.OpenSound.FormKey.TryGet(out var OpenSoundKey))
+            if (obj.OpenSound.FormKeyNullable.TryGet(out var OpenSoundKey))
             {
                 yield return OpenSoundKey;
             }
-            if (obj.CloseSound.FormKey.TryGet(out var CloseSoundKey))
+            if (obj.CloseSound.FormKeyNullable.TryGet(out var CloseSoundKey))
             {
                 yield return CloseSoundKey;
             }
@@ -1825,11 +1825,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.OpenSound) ?? true))
             {
-                item.OpenSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.OpenSound.FormKey);
+                item.OpenSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.OpenSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.CloseSound) ?? true))
             {
-                item.CloseSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.CloseSound.FormKey);
+                item.CloseSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.CloseSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.DATADataTypeState) ?? true))
             {

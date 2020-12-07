@@ -9,6 +9,10 @@ using Constants = Mutagen.Bethesda.Internals.Constants;
 
 namespace Mutagen.Bethesda.UnitTests
 {
+    /// <summary>
+    /// Some tests that are less about testing correct functionality, and more confirming
+    /// that a specific API call is able to compile.
+    /// </summary>
     public class Api
     {
         private readonly ITestOutputHelper _testOutputHelper;
@@ -95,7 +99,7 @@ namespace Mutagen.Bethesda.UnitTests
             IEnumerable<IModListing<ISkyrimModGetter>> listings = Enumerable.Empty<IModListing<ISkyrimModGetter>>();
             IEnumerable<IAmmunitionGetter> ammun = listings.Ammunition().WinningOverrides();
             IEnumerable<IPlacedGetter> placed = listings.IPlaced().WinningOverrides();
-            IEnumerable<ModContext<ISkyrimMod, ICell, ICellGetter>> cells = listings.Cell().WinningContextOverrides(linkCache: null!);
+            IEnumerable<IModContext<ISkyrimMod, ICell, ICellGetter>> cells = listings.Cell().WinningContextOverrides(linkCache: null!);
             IEnumerable<ISkyrimModGetter> mods = Enumerable.Empty<ISkyrimModGetter>();
             ammun = mods.Ammunition().WinningOverrides();
             placed = mods.IPlaced().WinningOverrides();
@@ -140,5 +144,78 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.True(EnumExt.HasFlag(armor.MajorRecordFlagsRaw, Constants.InitiallyDisabled));
         }
 
+
+        [Fact]
+        public static void FormLink()
+        {
+            var mod = new SkyrimMod(Utility.LightMasterModKey, SkyrimRelease.SkyrimLE);
+            var light = mod.Lights.AddNew();
+            var cache = mod.ToImmutableLinkCache();
+
+            var link = new FormLink<ISkyrimMajorRecordGetter>(light.FormKey);
+            var nullableLink = new FormLinkNullable<ISkyrimMajorRecordGetter>(light.FormKey);
+            IFormLink<ISkyrimMajorRecordGetter> iLink = link;
+
+            // Normal resolution
+            link.TryResolve(cache, out var _);
+            link.TryResolve(cache, out ISkyrimMajorRecordGetter _);
+            link.Resolve(cache);
+            link.TryResolve<ILightGetter>(cache, out var _);
+            link.TryResolve(cache, out ILightGetter _);
+            link.Resolve<ILightGetter>(cache);
+
+            nullableLink.TryResolve(cache, out var _);
+            nullableLink.TryResolve(cache, out ISkyrimMajorRecordGetter _);
+            nullableLink.Resolve(cache);
+            nullableLink.TryResolve<ILightGetter>(cache, out var _);
+            nullableLink.TryResolve(cache, out ILightGetter _);
+            nullableLink.Resolve<ILightGetter>(cache);
+
+            iLink.TryResolve(cache, out var _);
+            iLink.Resolve(cache);
+            iLink.TryResolve<ISkyrimMajorRecordGetter, ILightGetter>(cache, out var _);
+            iLink.TryResolve(cache, out ILightGetter _);
+            iLink.Resolve<ISkyrimMajorRecordGetter, ILightGetter>(cache);
+
+            // Context resolution
+            // ToDo
+            // Enable when generic querying is supported
+            //link.TryResolveContext<ISkyrimMod, ISkyrimMajorRecord>(cache, out var _);
+            //link.TryResolveContext<ISkyrimMod, ISkyrimMajorRecord>(cache, out IModContext<ISkyrimMod, ISkyrimMajorRecord, ISkyrimMajorRecordGetter> _);
+            //link.ResolveContext<ISkyrimMod, ISkyrimMajorRecord>(cache);
+            link.TryResolveContext<ISkyrimMod, ILight, ILightGetter>(cache, out var _);
+            link.TryResolveContext(cache, out IModContext<ISkyrimMod, ILight, ILightGetter> _);
+            link.ResolveContext<ISkyrimMod, ILight, ILightGetter>(cache);
+
+            //nullableLink.TryResolveContext<ISkyrimMod, ISkyrimMajorRecord>(cache, out var _);
+            //nullableLink.TryResolveContext<ISkyrimMod, ISkyrimMajorRecord>(cache, out IModContext<ISkyrimMod, ISkyrimMajorRecord, ISkyrimMajorRecordGetter> _);
+            //nullableLink.ResolveContext<ISkyrimMod, ISkyrimMajorRecord>(cache);
+            nullableLink.TryResolveContext<ISkyrimMod, ILight, ILightGetter>(cache, out var _);
+            nullableLink.TryResolveContext(cache, out IModContext<ISkyrimMod, ILight, ILightGetter> _);
+            nullableLink.ResolveContext<ISkyrimMod, ILight, ILightGetter>(cache);
+
+            //iLink.TryResolveContext<ISkyrimMod, ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(cache, out var _);
+            //iLink.ResolveContext<ISkyrimMod, ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(cache);
+            iLink.TryResolveContext<ISkyrimMod, ISkyrimMajorRecordGetter, ILight, ILightGetter>(cache, out var _);
+            iLink.TryResolveContext(cache, out IModContext<ISkyrimMod, ILight, ILightGetter> _);
+            iLink.ResolveContext<ISkyrimMod, ISkyrimMajorRecordGetter, ILight, ILightGetter>(cache);
+        }
+
+        [Fact]
+        public static void LoadOrderTryGetValue()
+        {
+            var lo = new LoadOrder<ISkyrimModGetter>();
+            lo.TryGetValue(Utility.LightMasterModKey, out var item);
+        }
+
+        [Fact]
+        public static void GroupAccessors()
+        {
+            var mod = new SkyrimMod(Utility.LightMasterModKey, SkyrimRelease.SkyrimSE);
+            var group = new Group<Npc>(mod);
+            if (group.TryGetValue(Utility.Form1, out var npc))
+            {
+            }
+        }
     }
 }

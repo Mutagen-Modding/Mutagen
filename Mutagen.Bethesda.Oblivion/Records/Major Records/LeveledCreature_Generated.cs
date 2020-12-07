@@ -1114,11 +1114,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Script ?? true)
             {
-                fg.AppendItem(item.Script.FormKey, "Script");
+                fg.AppendItem(item.Script.FormKeyNullable, "Script");
             }
             if (printMask?.Template ?? true)
             {
-                fg.AppendItem(item.Template.FormKey, "Template");
+                fg.AppendItem(item.Template.FormKeyNullable, "Template");
             }
         }
         
@@ -1272,11 +1272,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.Script.FormKey.TryGet(out var ScriptKey))
+            if (obj.Script.FormKeyNullable.TryGet(out var ScriptKey))
             {
                 yield return ScriptKey;
             }
-            if (obj.Template.FormKey.TryGet(out var TemplateKey))
+            if (obj.Template.FormKeyNullable.TryGet(out var TemplateKey))
             {
                 yield return TemplateKey;
             }
@@ -1365,11 +1365,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledCreature_FieldIndex.Script) ?? true))
             {
-                item.Script = new FormLinkNullable<IScriptGetter>(rhs.Script.FormKey);
+                item.Script = new FormLinkNullable<IScriptGetter>(rhs.Script.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledCreature_FieldIndex.Template) ?? true))
             {
-                item.Template = new FormLinkNullable<IANpcGetter>(rhs.Template.FormKey);
+                item.Template = new FormLinkNullable<IANpcGetter>(rhs.Template.FormKeyNullable);
             }
         }
         

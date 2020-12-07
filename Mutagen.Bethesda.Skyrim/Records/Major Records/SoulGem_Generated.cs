@@ -1540,11 +1540,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.PickUpSound ?? true)
             {
-                fg.AppendItem(item.PickUpSound.FormKey, "PickUpSound");
+                fg.AppendItem(item.PickUpSound.FormKeyNullable, "PickUpSound");
             }
             if (printMask?.PutDownSound ?? true)
             {
-                fg.AppendItem(item.PutDownSound.FormKey, "PutDownSound");
+                fg.AppendItem(item.PutDownSound.FormKeyNullable, "PutDownSound");
             }
             if ((printMask?.Keywords?.Overall ?? true)
                 && item.Keywords.TryGet(out var KeywordsItem))
@@ -1583,7 +1583,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.LinkedTo ?? true)
             {
-                fg.AppendItem(item.LinkedTo.FormKey, "LinkedTo");
+                fg.AppendItem(item.LinkedTo.FormKeyNullable, "LinkedTo");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
@@ -1747,11 +1747,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.PickUpSound.FormKey.TryGet(out var PickUpSoundKey))
+            if (obj.PickUpSound.FormKeyNullable.TryGet(out var PickUpSoundKey))
             {
                 yield return PickUpSoundKey;
             }
-            if (obj.PutDownSound.FormKey.TryGet(out var PutDownSoundKey))
+            if (obj.PutDownSound.FormKeyNullable.TryGet(out var PutDownSoundKey))
             {
                 yield return PutDownSoundKey;
             }
@@ -1762,7 +1762,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.LinkedTo.FormKey.TryGet(out var LinkedToKey))
+            if (obj.LinkedTo.FormKeyNullable.TryGet(out var LinkedToKey))
             {
                 yield return LinkedToKey;
             }
@@ -1927,11 +1927,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SoulGem_FieldIndex.PickUpSound) ?? true))
             {
-                item.PickUpSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.PickUpSound.FormKey);
+                item.PickUpSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.PickUpSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)SoulGem_FieldIndex.PutDownSound) ?? true))
             {
-                item.PutDownSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.PutDownSound.FormKey);
+                item.PutDownSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.PutDownSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Keywords) ?? true))
             {
@@ -1978,7 +1978,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SoulGem_FieldIndex.LinkedTo) ?? true))
             {
-                item.LinkedTo = new FormLinkNullable<ISoulGemGetter>(rhs.LinkedTo.FormKey);
+                item.LinkedTo = new FormLinkNullable<ISoulGemGetter>(rhs.LinkedTo.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)SoulGem_FieldIndex.DATADataTypeState) ?? true))
             {

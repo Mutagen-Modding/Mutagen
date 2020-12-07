@@ -2405,11 +2405,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.CombatStyle ?? true)
             {
-                fg.AppendItem(item.CombatStyle.FormKey, "CombatStyle");
+                fg.AppendItem(item.CombatStyle.FormKeyNullable, "CombatStyle");
             }
             if (printMask?.OwnerQuest ?? true)
             {
-                fg.AppendItem(item.OwnerQuest.FormKey, "OwnerQuest");
+                fg.AppendItem(item.OwnerQuest.FormKeyNullable, "OwnerQuest");
             }
             if (printMask?.PackageTemplate ?? true)
             {
@@ -2681,11 +2681,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.CombatStyle.FormKey.TryGet(out var CombatStyleKey))
+            if (obj.CombatStyle.FormKeyNullable.TryGet(out var CombatStyleKey))
             {
                 yield return CombatStyleKey;
             }
-            if (obj.OwnerQuest.FormKey.TryGet(out var OwnerQuestKey))
+            if (obj.OwnerQuest.FormKeyNullable.TryGet(out var OwnerQuestKey))
             {
                 yield return OwnerQuestKey;
             }
@@ -2905,11 +2905,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.CombatStyle) ?? true))
             {
-                item.CombatStyle = new FormLinkNullable<ICombatStyleGetter>(rhs.CombatStyle.FormKey);
+                item.CombatStyle = new FormLinkNullable<ICombatStyleGetter>(rhs.CombatStyle.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.OwnerQuest) ?? true))
             {
-                item.OwnerQuest = new FormLinkNullable<IQuestGetter>(rhs.OwnerQuest.FormKey);
+                item.OwnerQuest = new FormLinkNullable<IQuestGetter>(rhs.OwnerQuest.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.PackageTemplate) ?? true))
             {

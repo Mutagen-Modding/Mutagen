@@ -2124,14 +2124,15 @@
     <Compile Include="Records\Major Records\APlaced_Generated.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\LinkCacheMixIns_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.1.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Loqui" Version="1.5.14" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.6.6" />
+    <PackageReference Include="Loqui" Version="1.5.15" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.6.7" />
     <PackageReference Include="NuGetizer" Version="0.4.11">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

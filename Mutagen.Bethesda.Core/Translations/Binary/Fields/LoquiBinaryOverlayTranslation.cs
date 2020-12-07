@@ -1,12 +1,7 @@
 using Loqui;
-using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
-using Noggog;
 using Noggog.Utility;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Mutagen.Bethesda.Binary
 {
@@ -24,7 +19,7 @@ namespace Mutagen.Bethesda.Binary
             if (regis == null) throw new ArgumentException();
             var className = $"{regis.Namespace}.Internals.{regis.Name}BinaryOverlay";
 
-            var tType = regis.ClassType.Assembly.GetType(className);
+            var tType = regis.ClassType.Assembly.GetType(className)!;
             var method = tType.GetMethods()
                 .Where((methodInfo) => methodInfo.Name.Equals($"{regis.Name}Factory"))
                 .Where((methodInfo) => methodInfo.IsStatic

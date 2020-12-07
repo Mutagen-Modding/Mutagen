@@ -976,15 +976,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.AmbientSound ?? true)
             {
-                fg.AppendItem(item.AmbientSound.FormKey, "AmbientSound");
+                fg.AppendItem(item.AmbientSound.FormKeyNullable, "AmbientSound");
             }
             if (printMask?.UseSoundFromRegion ?? true)
             {
-                fg.AppendItem(item.UseSoundFromRegion.FormKey, "UseSoundFromRegion");
+                fg.AppendItem(item.UseSoundFromRegion.FormKeyNullable, "UseSoundFromRegion");
             }
             if (printMask?.EnvironmentType ?? true)
             {
-                fg.AppendItem(item.EnvironmentType.FormKey, "EnvironmentType");
+                fg.AppendItem(item.EnvironmentType.FormKeyNullable, "EnvironmentType");
             }
         }
         
@@ -1095,15 +1095,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.AmbientSound.FormKey.TryGet(out var AmbientSoundKey))
+            if (obj.AmbientSound.FormKeyNullable.TryGet(out var AmbientSoundKey))
             {
                 yield return AmbientSoundKey;
             }
-            if (obj.UseSoundFromRegion.FormKey.TryGet(out var UseSoundFromRegionKey))
+            if (obj.UseSoundFromRegion.FormKeyNullable.TryGet(out var UseSoundFromRegionKey))
             {
                 yield return UseSoundFromRegionKey;
             }
-            if (obj.EnvironmentType.FormKey.TryGet(out var EnvironmentTypeKey))
+            if (obj.EnvironmentType.FormKeyNullable.TryGet(out var EnvironmentTypeKey))
             {
                 yield return EnvironmentTypeKey;
             }
@@ -1182,15 +1182,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.AmbientSound) ?? true))
             {
-                item.AmbientSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.AmbientSound.FormKey);
+                item.AmbientSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.AmbientSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.UseSoundFromRegion) ?? true))
             {
-                item.UseSoundFromRegion = new FormLinkNullable<IRegionGetter>(rhs.UseSoundFromRegion.FormKey);
+                item.UseSoundFromRegion = new FormLinkNullable<IRegionGetter>(rhs.UseSoundFromRegion.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.EnvironmentType) ?? true))
             {
-                item.EnvironmentType = new FormLinkNullable<IReverbParametersGetter>(rhs.EnvironmentType.FormKey);
+                item.EnvironmentType = new FormLinkNullable<IReverbParametersGetter>(rhs.EnvironmentType.FormKeyNullable);
             }
         }
         

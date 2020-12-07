@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Tests.GUI
                         return path;
                     }
                 })
-                .ToGuiProperty<string>(this, nameof(Name), string.Empty);
+                .ToGuiProperty(this, nameof(Name), string.Empty);
             Tests.Connect()
                 .Bind(out _testsDisplay)
                 .Subscribe()

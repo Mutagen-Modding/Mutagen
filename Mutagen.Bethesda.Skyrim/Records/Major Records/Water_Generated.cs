@@ -3465,19 +3465,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Material ?? true)
             {
-                fg.AppendItem(item.Material.FormKey, "Material");
+                fg.AppendItem(item.Material.FormKeyNullable, "Material");
             }
             if (printMask?.OpenSound ?? true)
             {
-                fg.AppendItem(item.OpenSound.FormKey, "OpenSound");
+                fg.AppendItem(item.OpenSound.FormKeyNullable, "OpenSound");
             }
             if (printMask?.Spell ?? true)
             {
-                fg.AppendItem(item.Spell.FormKey, "Spell");
+                fg.AppendItem(item.Spell.FormKeyNullable, "Spell");
             }
             if (printMask?.ImageSpace ?? true)
             {
-                fg.AppendItem(item.ImageSpace.FormKey, "ImageSpace");
+                fg.AppendItem(item.ImageSpace.FormKeyNullable, "ImageSpace");
             }
             if ((printMask?.DamagePerSecond ?? true)
                 && item.DamagePerSecond.TryGet(out var DamagePerSecondItem))
@@ -3993,19 +3993,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.Material.FormKey.TryGet(out var MaterialKey))
+            if (obj.Material.FormKeyNullable.TryGet(out var MaterialKey))
             {
                 yield return MaterialKey;
             }
-            if (obj.OpenSound.FormKey.TryGet(out var OpenSoundKey))
+            if (obj.OpenSound.FormKeyNullable.TryGet(out var OpenSoundKey))
             {
                 yield return OpenSoundKey;
             }
-            if (obj.Spell.FormKey.TryGet(out var SpellKey))
+            if (obj.Spell.FormKeyNullable.TryGet(out var SpellKey))
             {
                 yield return SpellKey;
             }
-            if (obj.ImageSpace.FormKey.TryGet(out var ImageSpaceKey))
+            if (obj.ImageSpace.FormKeyNullable.TryGet(out var ImageSpaceKey))
             {
                 yield return ImageSpaceKey;
             }
@@ -4102,19 +4102,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Material) ?? true))
             {
-                item.Material = new FormLinkNullable<IMaterialTypeGetter>(rhs.Material.FormKey);
+                item.Material = new FormLinkNullable<IMaterialTypeGetter>(rhs.Material.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.OpenSound) ?? true))
             {
-                item.OpenSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.OpenSound.FormKey);
+                item.OpenSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.OpenSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Spell) ?? true))
             {
-                item.Spell = new FormLinkNullable<ISpellGetter>(rhs.Spell.FormKey);
+                item.Spell = new FormLinkNullable<ISpellGetter>(rhs.Spell.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.ImageSpace) ?? true))
             {
-                item.ImageSpace = new FormLinkNullable<IImageSpaceAdapterGetter>(rhs.ImageSpace.FormKey);
+                item.ImageSpace = new FormLinkNullable<IImageSpaceAdapterGetter>(rhs.ImageSpace.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.DamagePerSecond) ?? true))
             {

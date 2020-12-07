@@ -2465,11 +2465,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.DeathItem ?? true)
             {
-                fg.AppendItem(item.DeathItem.FormKey, "DeathItem");
+                fg.AppendItem(item.DeathItem.FormKeyNullable, "DeathItem");
             }
             if (printMask?.Script ?? true)
             {
-                fg.AppendItem(item.Script.FormKey, "Script");
+                fg.AppendItem(item.Script.FormKeyNullable, "Script");
             }
             if ((printMask?.AIData?.Overall ?? true)
                 && item.AIData.TryGet(out var AIDataItem))
@@ -2525,7 +2525,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.CombatStyle ?? true)
             {
-                fg.AppendItem(item.CombatStyle.FormKey, "CombatStyle");
+                fg.AppendItem(item.CombatStyle.FormKeyNullable, "CombatStyle");
             }
             if ((printMask?.TurningSpeed ?? true)
                 && item.TurningSpeed.TryGet(out var TurningSpeedItem))
@@ -2554,7 +2554,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.InheritsSoundFrom ?? true)
             {
-                fg.AppendItem(item.InheritsSoundFrom.FormKey, "InheritsSoundFrom");
+                fg.AppendItem(item.InheritsSoundFrom.FormKeyNullable, "InheritsSoundFrom");
             }
             if (printMask?.Sounds?.Overall ?? true)
             {
@@ -2833,11 +2833,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.DeathItem.FormKey.TryGet(out var DeathItemKey))
+            if (obj.DeathItem.FormKeyNullable.TryGet(out var DeathItemKey))
             {
                 yield return DeathItemKey;
             }
-            if (obj.Script.FormKey.TryGet(out var ScriptKey))
+            if (obj.Script.FormKeyNullable.TryGet(out var ScriptKey))
             {
                 yield return ScriptKey;
             }
@@ -2845,11 +2845,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.CombatStyle.FormKey.TryGet(out var CombatStyleKey))
+            if (obj.CombatStyle.FormKeyNullable.TryGet(out var CombatStyleKey))
             {
                 yield return CombatStyleKey;
             }
-            if (obj.InheritsSoundFrom.FormKey.TryGet(out var InheritsSoundFromKey))
+            if (obj.InheritsSoundFrom.FormKeyNullable.TryGet(out var InheritsSoundFromKey))
             {
                 yield return InheritsSoundFromKey;
             }
@@ -3070,11 +3070,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Creature_FieldIndex.DeathItem) ?? true))
             {
-                item.DeathItem = new FormLinkNullable<IAItemGetter>(rhs.DeathItem.FormKey);
+                item.DeathItem = new FormLinkNullable<IAItemGetter>(rhs.DeathItem.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Creature_FieldIndex.Script) ?? true))
             {
-                item.Script = new FormLinkNullable<IScriptGetter>(rhs.Script.FormKey);
+                item.Script = new FormLinkNullable<IScriptGetter>(rhs.Script.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Creature_FieldIndex.AIData) ?? true))
             {
@@ -3179,7 +3179,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Creature_FieldIndex.CombatStyle) ?? true))
             {
-                item.CombatStyle = new FormLinkNullable<ICombatStyleGetter>(rhs.CombatStyle.FormKey);
+                item.CombatStyle = new FormLinkNullable<ICombatStyleGetter>(rhs.CombatStyle.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Creature_FieldIndex.TurningSpeed) ?? true))
             {
@@ -3203,7 +3203,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Creature_FieldIndex.InheritsSoundFrom) ?? true))
             {
-                item.InheritsSoundFrom = new FormLinkNullable<ICreatureGetter>(rhs.InheritsSoundFrom.FormKey);
+                item.InheritsSoundFrom = new FormLinkNullable<ICreatureGetter>(rhs.InheritsSoundFrom.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Creature_FieldIndex.Sounds) ?? true))
             {

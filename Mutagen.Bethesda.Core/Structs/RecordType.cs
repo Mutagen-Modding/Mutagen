@@ -84,9 +84,9 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="other">object to compare to</param>
         /// <returns>True if RecordType with equal TypeInt</returns>
-        public override bool Equals(object other)
+        public override bool Equals(object? other)
         {
-            if (!(other is RecordType rhs)) return false;
+            if (other is not RecordType rhs) return false;
             return Equals(rhs);
         }
 
@@ -105,7 +105,7 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="other">String to compare to</param>
         /// <returns>True if equal Type string value</returns>
-        public bool Equals(string other)
+        public bool Equals(string? other)
         {
             if (string.IsNullOrWhiteSpace(other)) return false;
             if (other.Length != 4) return false;

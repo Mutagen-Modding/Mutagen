@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
@@ -55,13 +55,14 @@ namespace Mutagen.Bethesda
             return $"{ModKey} => {Path}";
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return obj is ModPath modPath && Equals(modPath);
         }
 
-        public bool Equals(ModPath other)
+        public bool Equals(ModPath? other)
         {
+            if (other == null) return false;
             if (!ModKey.Equals(other.ModKey)) return false;
             if (string.Equals(Path, other.Path, StringComparison.OrdinalIgnoreCase)) return false;
             return true;

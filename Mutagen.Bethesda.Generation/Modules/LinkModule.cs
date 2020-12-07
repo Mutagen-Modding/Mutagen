@@ -138,7 +138,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         if (field.Nullable)
                         {
-                            fg.AppendLine($"if (obj.{field.Name}.FormKey.TryGet(out var {field.Name}Key))");
+                            fg.AppendLine($"if (obj.{field.Name}.{formLink.FormIDTypeString}.TryGet(out var {field.Name}Key))");
                             using (new BraceWrapper(fg))
                             {
                                 fg.AppendLine($"yield return {field.Name}Key;");
@@ -146,7 +146,7 @@ namespace Mutagen.Bethesda.Generation
                         }
                         else if (formLink.FormIDType == FormLinkType.FormIDTypeEnum.Normal)
                         {
-                            fg.AppendLine($"yield return obj.{field.Name}.FormKey;");
+                            fg.AppendLine($"yield return obj.{field.Name}.{formLink.FormIDTypeString};");
                         }
                     }
                     else if (field is LoquiType loqui)
@@ -223,7 +223,7 @@ namespace Mutagen.Bethesda.Generation
                             && formIDType.FormIDType == FormLinkType.FormIDTypeEnum.Normal)
                         {
                             string filterNulls = cont is GenderedType && ((GenderedType)cont).ItemNullable ? ".NotNull()" : null;
-                            subFg.AppendLine($"foreach (var item in {access}.Select(f => f.FormKey){filterNulls})");
+                            subFg.AppendLine($"foreach (var item in {access}.Select(f => f.{formIDType.FormIDTypeString}){filterNulls})");
                         }
                         else
                         {

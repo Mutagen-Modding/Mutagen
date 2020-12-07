@@ -1677,11 +1677,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Branch ?? true)
             {
-                fg.AppendItem(item.Branch.FormKey, "Branch");
+                fg.AppendItem(item.Branch.FormKeyNullable, "Branch");
             }
             if (printMask?.Quest ?? true)
             {
-                fg.AppendItem(item.Quest.FormKey, "Quest");
+                fg.AppendItem(item.Quest.FormKeyNullable, "Quest");
             }
             if (printMask?.TopicFlags ?? true)
             {
@@ -1857,11 +1857,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.Branch.FormKey.TryGet(out var BranchKey))
+            if (obj.Branch.FormKeyNullable.TryGet(out var BranchKey))
             {
                 yield return BranchKey;
             }
-            if (obj.Quest.FormKey.TryGet(out var QuestKey))
+            if (obj.Quest.FormKeyNullable.TryGet(out var QuestKey))
             {
                 yield return QuestKey;
             }
@@ -1950,7 +1950,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public IEnumerable<ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        public IEnumerable<IModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             IDialogTopicGetter obj,
             ILinkCache linkCache,
             Type type,
@@ -1981,7 +1981,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 getter: (m, r) =>
                                 {
                                     var copy = (DialogResponses)((IDialogResponsesGetter)r).DeepCopy();
-                                    getter(m, linkCache.Lookup<IDialogTopicGetter>(obj.FormKey)).Responses.Add(copy);
+                                    getter(m, linkCache.Resolve<IDialogTopicGetter>(obj.FormKey)).Responses.Add(copy);
                                     return copy;
                                 });
                         }
@@ -2045,11 +2045,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Branch) ?? true))
             {
-                item.Branch = new FormLinkNullable<IDialogBranchGetter>(rhs.Branch.FormKey);
+                item.Branch = new FormLinkNullable<IDialogBranchGetter>(rhs.Branch.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Quest) ?? true))
             {
-                item.Quest = new FormLinkNullable<IQuestGetter>(rhs.Quest.FormKey);
+                item.Quest = new FormLinkNullable<IQuestGetter>(rhs.Quest.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.TopicFlags) ?? true))
             {

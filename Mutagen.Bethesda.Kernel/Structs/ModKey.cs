@@ -99,9 +99,9 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="obj">object to compare to</param>
         /// <returns>True if ModKey with equal Name and Master value</returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            if (!(obj is ModKey key)) return false;
+            if (obj is not ModKey key) return false;
             return Equals(key);
         }
 

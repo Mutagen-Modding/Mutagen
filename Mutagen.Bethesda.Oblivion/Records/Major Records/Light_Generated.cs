@@ -1116,7 +1116,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Script ?? true)
             {
-                fg.AppendItem(item.Script.FormKey, "Script");
+                fg.AppendItem(item.Script.FormKeyNullable, "Script");
             }
             if ((printMask?.Name ?? true)
                 && item.Name.TryGet(out var NameItem))
@@ -1140,7 +1140,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Sound ?? true)
             {
-                fg.AppendItem(item.Sound.FormKey, "Sound");
+                fg.AppendItem(item.Sound.FormKeyNullable, "Sound");
             }
         }
         
@@ -1303,11 +1303,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.Script.FormKey.TryGet(out var ScriptKey))
+            if (obj.Script.FormKeyNullable.TryGet(out var ScriptKey))
             {
                 yield return ScriptKey;
             }
-            if (obj.Sound.FormKey.TryGet(out var SoundKey))
+            if (obj.Sound.FormKeyNullable.TryGet(out var SoundKey))
             {
                 yield return SoundKey;
             }
@@ -1390,7 +1390,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Script) ?? true))
             {
-                item.Script = new FormLinkNullable<IScriptGetter>(rhs.Script.FormKey);
+                item.Script = new FormLinkNullable<IScriptGetter>(rhs.Script.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Name) ?? true))
             {
@@ -1432,7 +1432,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Sound) ?? true))
             {
-                item.Sound = new FormLinkNullable<ISoundGetter>(rhs.Sound.FormKey);
+                item.Sound = new FormLinkNullable<ISoundGetter>(rhs.Sound.FormKeyNullable);
             }
         }
         

@@ -43,10 +43,9 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="obj">object to compare to</param>
         /// <returns>True if ModIndex with equal index</returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            if (!(obj is ModIndex)) return false;
-            ModIndex rhs = (ModIndex)obj;
+            if (obj is not ModIndex rhs) return false;
             return this.ID == rhs.ID;
         }
 

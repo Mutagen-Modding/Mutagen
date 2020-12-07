@@ -1320,7 +1320,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Worldspace ?? true)
             {
-                fg.AppendItem(item.Worldspace.FormKey, "Worldspace");
+                fg.AppendItem(item.Worldspace.FormKeyNullable, "Worldspace");
             }
             if (printMask?.Areas?.Overall ?? true)
             {
@@ -1503,7 +1503,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.Worldspace.FormKey.TryGet(out var WorldspaceKey))
+            if (obj.Worldspace.FormKeyNullable.TryGet(out var WorldspaceKey))
             {
                 yield return WorldspaceKey;
             }
@@ -1596,7 +1596,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.Worldspace) ?? true))
             {
-                item.Worldspace = new FormLinkNullable<IWorldspaceGetter>(rhs.Worldspace.FormKey);
+                item.Worldspace = new FormLinkNullable<IWorldspaceGetter>(rhs.Worldspace.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.Areas) ?? true))
             {

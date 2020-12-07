@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Tests.GUI
                 .DisposeWith(this);
             _Name = this.WhenAnyValue(x => x.Settings.GameRelease)
                 .Select(g => g.ToString())
-                .ToGuiProperty<string>(this, nameof(Name), string.Empty);
+                .ToGuiProperty(this, nameof(Name), string.Empty);
             _State = Passthroughs.Connect()
                 .TransformMany(x => x.Tests)
                 .AutoRefresh(x => x.State)

@@ -3560,19 +3560,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.ParentLocation ?? true)
             {
-                fg.AppendItem(item.ParentLocation.FormKey, "ParentLocation");
+                fg.AppendItem(item.ParentLocation.FormKeyNullable, "ParentLocation");
             }
             if (printMask?.Music ?? true)
             {
-                fg.AppendItem(item.Music.FormKey, "Music");
+                fg.AppendItem(item.Music.FormKeyNullable, "Music");
             }
             if (printMask?.UnreportedCrimeFaction ?? true)
             {
-                fg.AppendItem(item.UnreportedCrimeFaction.FormKey, "UnreportedCrimeFaction");
+                fg.AppendItem(item.UnreportedCrimeFaction.FormKeyNullable, "UnreportedCrimeFaction");
             }
             if (printMask?.WorldLocationMarkerRef ?? true)
             {
-                fg.AppendItem(item.WorldLocationMarkerRef.FormKey, "WorldLocationMarkerRef");
+                fg.AppendItem(item.WorldLocationMarkerRef.FormKeyNullable, "WorldLocationMarkerRef");
             }
             if ((printMask?.WorldLocationRadius ?? true)
                 && item.WorldLocationRadius.TryGet(out var WorldLocationRadiusItem))
@@ -3581,7 +3581,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.HorseMarkerRef ?? true)
             {
-                fg.AppendItem(item.HorseMarkerRef.FormKey, "HorseMarkerRef");
+                fg.AppendItem(item.HorseMarkerRef.FormKeyNullable, "HorseMarkerRef");
             }
             if ((printMask?.Color ?? true)
                 && item.Color.TryGet(out var ColorItem))
@@ -3858,23 +3858,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.ParentLocation.FormKey.TryGet(out var ParentLocationKey))
+            if (obj.ParentLocation.FormKeyNullable.TryGet(out var ParentLocationKey))
             {
                 yield return ParentLocationKey;
             }
-            if (obj.Music.FormKey.TryGet(out var MusicKey))
+            if (obj.Music.FormKeyNullable.TryGet(out var MusicKey))
             {
                 yield return MusicKey;
             }
-            if (obj.UnreportedCrimeFaction.FormKey.TryGet(out var UnreportedCrimeFactionKey))
+            if (obj.UnreportedCrimeFaction.FormKeyNullable.TryGet(out var UnreportedCrimeFactionKey))
             {
                 yield return UnreportedCrimeFactionKey;
             }
-            if (obj.WorldLocationMarkerRef.FormKey.TryGet(out var WorldLocationMarkerRefKey))
+            if (obj.WorldLocationMarkerRef.FormKeyNullable.TryGet(out var WorldLocationMarkerRefKey))
             {
                 yield return WorldLocationMarkerRefKey;
             }
-            if (obj.HorseMarkerRef.FormKey.TryGet(out var HorseMarkerRefKey))
+            if (obj.HorseMarkerRef.FormKeyNullable.TryGet(out var HorseMarkerRefKey))
             {
                 yield return HorseMarkerRefKey;
             }
@@ -4425,19 +4425,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.ParentLocation) ?? true))
             {
-                item.ParentLocation = new FormLinkNullable<ILocationGetter>(rhs.ParentLocation.FormKey);
+                item.ParentLocation = new FormLinkNullable<ILocationGetter>(rhs.ParentLocation.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.Music) ?? true))
             {
-                item.Music = new FormLinkNullable<IMusicTypeGetter>(rhs.Music.FormKey);
+                item.Music = new FormLinkNullable<IMusicTypeGetter>(rhs.Music.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.UnreportedCrimeFaction) ?? true))
             {
-                item.UnreportedCrimeFaction = new FormLinkNullable<IFactionGetter>(rhs.UnreportedCrimeFaction.FormKey);
+                item.UnreportedCrimeFaction = new FormLinkNullable<IFactionGetter>(rhs.UnreportedCrimeFaction.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.WorldLocationMarkerRef) ?? true))
             {
-                item.WorldLocationMarkerRef = new FormLinkNullable<IPlacedSimpleGetter>(rhs.WorldLocationMarkerRef.FormKey);
+                item.WorldLocationMarkerRef = new FormLinkNullable<IPlacedSimpleGetter>(rhs.WorldLocationMarkerRef.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.WorldLocationRadius) ?? true))
             {
@@ -4445,7 +4445,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.HorseMarkerRef) ?? true))
             {
-                item.HorseMarkerRef = new FormLinkNullable<IPlacedObjectGetter>(rhs.HorseMarkerRef.FormKey);
+                item.HorseMarkerRef = new FormLinkNullable<IPlacedObjectGetter>(rhs.HorseMarkerRef.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.Color) ?? true))
             {

@@ -311,7 +311,7 @@ namespace Mutagen.Bethesda.Skyrim
                     var marker = markers[i];
                     var disabledPts = marker.DisabledEntryPoints;
                     var markerKeyword = marker.MarkerKeyword;
-                    if (disabledPts == null && markerKeyword.FormKey == null) continue;
+                    if (disabledPts == null && markerKeyword.FormKeyNullable == null) continue;
 
                     // Write out index
                     using (HeaderExport.Subrecord(writer, RecordTypes.ENAM))
@@ -328,9 +328,9 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
 
-                    if (markerKeyword.FormKey != null)
+                    if (markerKeyword.FormKeyNullable != null)
                     {
-                        FormKeyBinaryTranslation.Instance.Write(writer, markerKeyword.FormKey.Value, FurnitureBinaryCreateTranslation.FNMK);
+                        FormKeyBinaryTranslation.Instance.Write(writer, markerKeyword.FormKeyNullable.Value, FurnitureBinaryCreateTranslation.FNMK);
                     }
                 }
             }

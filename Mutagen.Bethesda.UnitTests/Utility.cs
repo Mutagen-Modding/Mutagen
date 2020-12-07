@@ -32,6 +32,7 @@ namespace Mutagen.Bethesda.UnitTests
         public static readonly string TempFolderPath = "MutagenUnitTests";
         public static ModPath OblivionTestMod = new ModPath(ModKey.FromNameAndExtension("test.esp"), "../../../oblivion_test.esp");
         public static ModPath OblivionOverrideMod = new ModPath(ModKey.FromNameAndExtension("override.esp"), "../../../oblivion_override.esp");
-        public static ModPath SkyrimTestMod = new ModPath(ModKey.FromNameAndExtension("test.esp"), "../../../skyrim_test.esp");
+        public static ModPath SkyrimTestMod = ModPath.FromPath("../../../skyrim_test.esp");
+        public static ModPath SkyrimOverrideMod = ModPath.FromPath("../../../skyrim_override.esp");
     }
 }

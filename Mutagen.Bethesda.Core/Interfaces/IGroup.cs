@@ -1,10 +1,8 @@
-using Loqui;
-using Loqui.Xml;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Noggog;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace Mutagen.Bethesda
@@ -143,6 +141,23 @@ namespace Mutagen.Bethesda
             var ret = (TMajor)source.Duplicate(() => group.SourceMod.GetNextFormKey(edid));
             group.Add(ret);
             return ret;
+        }
+
+        /// <summary>
+        /// Tries to retrieve a record from the group.
+        /// </summary>
+        /// <typeparam name="TMajor">Record type of the group</typeparam>
+        /// <param name="group">Group to retrieve from</param>
+        /// <param name="formKey">FormKey to query for</param>
+        /// <param name="record">Record object, if located</param>
+        /// <returns>True if record retreived from group</returns>
+        public static bool TryGetValue<TMajor>(
+            this IGroupCommonGetter<TMajor> group, 
+            FormKey formKey, 
+            [MaybeNullWhen(false)] out TMajor record)
+            where TMajor : IMajorRecordCommonGetter, IBinaryItem, IDuplicatable
+        {
+            return group.RecordCache.TryGetValue(formKey, out record);
         }
     }
 }

@@ -981,7 +981,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.BaseEffect ?? true)
             {
-                fg.AppendItem(item.BaseEffect.FormKey, "BaseEffect");
+                fg.AppendItem(item.BaseEffect.FormKeyNullable, "BaseEffect");
             }
             if ((printMask?.Data?.Overall ?? true)
                 && item.Data.TryGet(out var DataItem))
@@ -1044,7 +1044,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<FormKey> GetLinkFormKeys(IEffectGetter obj)
         {
-            if (obj.BaseEffect.FormKey.TryGet(out var BaseEffectKey))
+            if (obj.BaseEffect.FormKeyNullable.TryGet(out var BaseEffectKey))
             {
                 yield return BaseEffectKey;
             }
@@ -1074,7 +1074,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)Effect_FieldIndex.BaseEffect) ?? true))
             {
-                item.BaseEffect = new FormLinkNullable<IMagicEffectGetter>(rhs.BaseEffect.FormKey);
+                item.BaseEffect = new FormLinkNullable<IMagicEffectGetter>(rhs.BaseEffect.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Effect_FieldIndex.Data) ?? true))
             {

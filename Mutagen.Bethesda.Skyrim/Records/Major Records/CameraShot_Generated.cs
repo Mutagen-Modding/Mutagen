@@ -1406,7 +1406,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.ImageSpaceModifier ?? true)
             {
-                fg.AppendItem(item.ImageSpaceModifier.FormKey, "ImageSpaceModifier");
+                fg.AppendItem(item.ImageSpaceModifier.FormKeyNullable, "ImageSpaceModifier");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
@@ -1551,7 +1551,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.ImageSpaceModifier.FormKey.TryGet(out var ImageSpaceModifierKey))
+            if (obj.ImageSpaceModifier.FormKeyNullable.TryGet(out var ImageSpaceModifierKey))
             {
                 yield return ImageSpaceModifierKey;
             }
@@ -1678,7 +1678,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.ImageSpaceModifier) ?? true))
             {
-                item.ImageSpaceModifier = new FormLinkNullable<IImageSpaceAdapterGetter>(rhs.ImageSpaceModifier.FormKey);
+                item.ImageSpaceModifier = new FormLinkNullable<IImageSpaceAdapterGetter>(rhs.ImageSpaceModifier.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.DATADataTypeState) ?? true))
             {

@@ -1649,11 +1649,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.ObjectEffect ?? true)
             {
-                fg.AppendItem(item.ObjectEffect.FormKey, "ObjectEffect");
+                fg.AppendItem(item.ObjectEffect.FormKeyNullable, "ObjectEffect");
             }
             if (printMask?.ImageSpaceModifier ?? true)
             {
-                fg.AppendItem(item.ImageSpaceModifier.FormKey, "ImageSpaceModifier");
+                fg.AppendItem(item.ImageSpaceModifier.FormKeyNullable, "ImageSpaceModifier");
             }
             if (printMask?.Light ?? true)
             {
@@ -1875,11 +1875,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.ObjectEffect.FormKey.TryGet(out var ObjectEffectKey))
+            if (obj.ObjectEffect.FormKeyNullable.TryGet(out var ObjectEffectKey))
             {
                 yield return ObjectEffectKey;
             }
-            if (obj.ImageSpaceModifier.FormKey.TryGet(out var ImageSpaceModifierKey))
+            if (obj.ImageSpaceModifier.FormKeyNullable.TryGet(out var ImageSpaceModifierKey))
             {
                 yield return ImageSpaceModifierKey;
             }
@@ -2020,11 +2020,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.ObjectEffect) ?? true))
             {
-                item.ObjectEffect = new FormLinkNullable<IEffectRecordGetter>(rhs.ObjectEffect.FormKey);
+                item.ObjectEffect = new FormLinkNullable<IEffectRecordGetter>(rhs.ObjectEffect.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.ImageSpaceModifier) ?? true))
             {
-                item.ImageSpaceModifier = new FormLinkNullable<IImageSpaceAdapterGetter>(rhs.ImageSpaceModifier.FormKey);
+                item.ImageSpaceModifier = new FormLinkNullable<IImageSpaceAdapterGetter>(rhs.ImageSpaceModifier.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.Light) ?? true))
             {

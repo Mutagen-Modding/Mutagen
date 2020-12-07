@@ -1006,7 +1006,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.SoundDescriptor ?? true)
             {
-                fg.AppendItem(item.SoundDescriptor.FormKey, "SoundDescriptor");
+                fg.AppendItem(item.SoundDescriptor.FormKeyNullable, "SoundDescriptor");
             }
         }
         
@@ -1123,7 +1123,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.SoundDescriptor.FormKey.TryGet(out var SoundDescriptorKey))
+            if (obj.SoundDescriptor.FormKeyNullable.TryGet(out var SoundDescriptorKey))
             {
                 yield return SoundDescriptorKey;
             }
@@ -1224,7 +1224,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SoundMarker_FieldIndex.SoundDescriptor) ?? true))
             {
-                item.SoundDescriptor = new FormLinkNullable<ISoundDescriptorGetter>(rhs.SoundDescriptor.FormKey);
+                item.SoundDescriptor = new FormLinkNullable<ISoundDescriptorGetter>(rhs.SoundDescriptor.FormKeyNullable);
             }
         }
         

@@ -837,7 +837,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (printMask?.Owner ?? true)
             {
-                fg.AppendItem(item.Owner.FormKey, "Owner");
+                fg.AppendItem(item.Owner.FormKeyNullable, "Owner");
             }
             if ((printMask?.FactionRank ?? true)
                 && item.FactionRank.TryGet(out var FactionRankItem))
@@ -880,7 +880,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<FormKey> GetLinkFormKeys(IOwnershipGetter obj)
         {
-            if (obj.Owner.FormKey.TryGet(out var OwnerKey))
+            if (obj.Owner.FormKeyNullable.TryGet(out var OwnerKey))
             {
                 yield return OwnerKey;
             }
@@ -905,7 +905,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)Ownership_FieldIndex.Owner) ?? true))
             {
-                item.Owner = new FormLinkNullable<IOwnerGetter>(rhs.Owner.FormKey);
+                item.Owner = new FormLinkNullable<IOwnerGetter>(rhs.Owner.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Ownership_FieldIndex.FactionRank) ?? true))
             {

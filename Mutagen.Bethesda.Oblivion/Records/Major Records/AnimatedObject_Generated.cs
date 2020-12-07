@@ -893,7 +893,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.IdleAnimation ?? true)
             {
-                fg.AppendItem(item.IdleAnimation.FormKey, "IdleAnimation");
+                fg.AppendItem(item.IdleAnimation.FormKeyNullable, "IdleAnimation");
             }
         }
         
@@ -1001,7 +1001,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.IdleAnimation.FormKey.TryGet(out var IdleAnimationKey))
+            if (obj.IdleAnimation.FormKeyNullable.TryGet(out var IdleAnimationKey))
             {
                 yield return IdleAnimationKey;
             }
@@ -1084,7 +1084,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AnimatedObject_FieldIndex.IdleAnimation) ?? true))
             {
-                item.IdleAnimation = new FormLinkNullable<IIdleAnimationGetter>(rhs.IdleAnimation.FormKey);
+                item.IdleAnimation = new FormLinkNullable<IIdleAnimationGetter>(rhs.IdleAnimation.FormKeyNullable);
             }
         }
         

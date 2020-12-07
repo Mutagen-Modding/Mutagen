@@ -1768,15 +1768,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.EquipType ?? true)
             {
-                fg.AppendItem(item.EquipType.FormKey, "EquipType");
+                fg.AppendItem(item.EquipType.FormKeyNullable, "EquipType");
             }
             if (printMask?.PickUpSound ?? true)
             {
-                fg.AppendItem(item.PickUpSound.FormKey, "PickUpSound");
+                fg.AppendItem(item.PickUpSound.FormKeyNullable, "PickUpSound");
             }
             if (printMask?.PutDownSound ?? true)
             {
-                fg.AppendItem(item.PutDownSound.FormKey, "PutDownSound");
+                fg.AppendItem(item.PutDownSound.FormKeyNullable, "PutDownSound");
             }
             if (printMask?.Value ?? true)
             {
@@ -1998,15 +1998,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.EquipType.FormKey.TryGet(out var EquipTypeKey))
+            if (obj.EquipType.FormKeyNullable.TryGet(out var EquipTypeKey))
             {
                 yield return EquipTypeKey;
             }
-            if (obj.PickUpSound.FormKey.TryGet(out var PickUpSoundKey))
+            if (obj.PickUpSound.FormKeyNullable.TryGet(out var PickUpSoundKey))
             {
                 yield return PickUpSoundKey;
             }
-            if (obj.PutDownSound.FormKey.TryGet(out var PutDownSoundKey))
+            if (obj.PutDownSound.FormKeyNullable.TryGet(out var PutDownSoundKey))
             {
                 yield return PutDownSoundKey;
             }
@@ -2224,15 +2224,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.EquipType) ?? true))
             {
-                item.EquipType = new FormLinkNullable<IEquipTypeGetter>(rhs.EquipType.FormKey);
+                item.EquipType = new FormLinkNullable<IEquipTypeGetter>(rhs.EquipType.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.PickUpSound) ?? true))
             {
-                item.PickUpSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.PickUpSound.FormKey);
+                item.PickUpSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.PickUpSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.PutDownSound) ?? true))
             {
-                item.PutDownSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.PutDownSound.FormKey);
+                item.PutDownSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.PutDownSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.Value) ?? true))
             {

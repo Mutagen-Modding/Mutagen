@@ -1622,7 +1622,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Race ?? true)
             {
-                fg.AppendItem(item.Race.FormKey, "Race");
+                fg.AppendItem(item.Race.FormKeyNullable, "Race");
             }
             if (true)
             {
@@ -1688,11 +1688,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.FootstepSound ?? true)
             {
-                fg.AppendItem(item.FootstepSound.FormKey, "FootstepSound");
+                fg.AppendItem(item.FootstepSound.FormKeyNullable, "FootstepSound");
             }
             if (printMask?.ArtObject ?? true)
             {
-                fg.AppendItem(item.ArtObject.FormKey, "ArtObject");
+                fg.AppendItem(item.ArtObject.FormKeyNullable, "ArtObject");
             }
             if (printMask?.DNAMDataTypeState ?? true)
             {
@@ -1846,7 +1846,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.Race.FormKey.TryGet(out var RaceKey))
+            if (obj.Race.FormKeyNullable.TryGet(out var RaceKey))
             {
                 yield return RaceKey;
             }
@@ -1866,14 +1866,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (obj.SkinTexture.TryGet(out var SkinTextureItem))
             {
-                foreach (var item in SkinTextureItem.Select(f => f.FormKey).NotNull())
+                foreach (var item in SkinTextureItem.Select(f => f.FormKeyNullable).NotNull())
                 {
                     yield return item;
                 }
             }
             if (obj.TextureSwapList.TryGet(out var TextureSwapListItem))
             {
-                foreach (var item in TextureSwapListItem.Select(f => f.FormKey).NotNull())
+                foreach (var item in TextureSwapListItem.Select(f => f.FormKeyNullable).NotNull())
                 {
                     yield return item;
                 }
@@ -1882,11 +1882,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.FootstepSound.FormKey.TryGet(out var FootstepSoundKey))
+            if (obj.FootstepSound.FormKeyNullable.TryGet(out var FootstepSoundKey))
             {
                 yield return FootstepSoundKey;
             }
-            if (obj.ArtObject.FormKey.TryGet(out var ArtObjectKey))
+            if (obj.ArtObject.FormKeyNullable.TryGet(out var ArtObjectKey))
             {
                 yield return ArtObjectKey;
             }
@@ -1969,7 +1969,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Race) ?? true))
             {
-                item.Race = new FormLinkNullable<IRaceGetter>(rhs.Race.FormKey);
+                item.Race = new FormLinkNullable<IRaceGetter>(rhs.Race.FormKeyNullable);
             }
             item.Priority = new GenderedItem<Byte>(
                 male: rhs.Priority.Male,
@@ -2028,8 +2028,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             else
             {
                 item.SkinTexture = new GenderedItem<IFormLinkNullable<ITextureSetGetter>>(
-                    male: new FormLinkNullable<ITextureSetGetter>(rhsSkinTextureitem.Male.FormKey),
-                    female: new FormLinkNullable<ITextureSetGetter>(rhsSkinTextureitem.Female.FormKey));
+                    male: new FormLinkNullable<ITextureSetGetter>(rhsSkinTextureitem.Male.FormKeyNullable),
+                    female: new FormLinkNullable<ITextureSetGetter>(rhsSkinTextureitem.Female.FormKeyNullable));
             }
             if (!rhs.TextureSwapList.TryGet(out var rhsTextureSwapListitem))
             {
@@ -2038,8 +2038,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             else
             {
                 item.TextureSwapList = new GenderedItem<IFormLinkNullable<IFormListGetter>>(
-                    male: new FormLinkNullable<IFormListGetter>(rhsTextureSwapListitem.Male.FormKey),
-                    female: new FormLinkNullable<IFormListGetter>(rhsTextureSwapListitem.Female.FormKey));
+                    male: new FormLinkNullable<IFormListGetter>(rhsTextureSwapListitem.Male.FormKeyNullable),
+                    female: new FormLinkNullable<IFormListGetter>(rhsTextureSwapListitem.Female.FormKeyNullable));
             }
             if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.AdditionalRaces) ?? true))
             {
@@ -2062,11 +2062,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.FootstepSound) ?? true))
             {
-                item.FootstepSound = new FormLinkNullable<IFootstepSetGetter>(rhs.FootstepSound.FormKey);
+                item.FootstepSound = new FormLinkNullable<IFootstepSetGetter>(rhs.FootstepSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.ArtObject) ?? true))
             {
-                item.ArtObject = new FormLinkNullable<IArtObjectGetter>(rhs.ArtObject.FormKey);
+                item.ArtObject = new FormLinkNullable<IArtObjectGetter>(rhs.ArtObject.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.DNAMDataTypeState) ?? true))
             {

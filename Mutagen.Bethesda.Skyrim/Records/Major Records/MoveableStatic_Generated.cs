@@ -1128,7 +1128,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.LoopingSound ?? true)
             {
-                fg.AppendItem(item.LoopingSound.FormKey, "LoopingSound");
+                fg.AppendItem(item.LoopingSound.FormKeyNullable, "LoopingSound");
             }
         }
         
@@ -1266,7 +1266,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.LoopingSound.FormKey.TryGet(out var LoopingSoundKey))
+            if (obj.LoopingSound.FormKeyNullable.TryGet(out var LoopingSoundKey))
             {
                 yield return LoopingSoundKey;
             }
@@ -1405,7 +1405,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MoveableStatic_FieldIndex.LoopingSound) ?? true))
             {
-                item.LoopingSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.LoopingSound.FormKey);
+                item.LoopingSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.LoopingSound.FormKeyNullable);
             }
         }
         

@@ -1,3 +1,4 @@
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -86,6 +87,21 @@ namespace Mutagen.Bethesda.Core.Persistance
                 streamWriter.WriteLine(pair.Key);
                 streamWriter.WriteLine(pair.Value);
             }
+        }
+
+        public static void WriteToFile(string path, IModGetter mod)
+        {
+            WriteToFile(
+                path,
+                mod.NextFormID, 
+                mod.EnumerateMajorRecords()
+                    .SelectWhere(m =>
+                    {
+                        var edid = m.EditorID;
+                        if (edid == null) return TryGet<KeyValuePair<string, FormKey>>.Failure;
+                        return TryGet<KeyValuePair<string, FormKey>>.Succeed(
+                            new KeyValuePair<string, FormKey>(edid, m.FormKey));
+                    }));
         }
     }
 }

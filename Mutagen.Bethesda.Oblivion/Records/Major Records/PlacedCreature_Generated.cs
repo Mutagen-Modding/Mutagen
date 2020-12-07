@@ -1137,11 +1137,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 printMask: printMask);
             if (printMask?.Base ?? true)
             {
-                fg.AppendItem(item.Base.FormKey, "Base");
+                fg.AppendItem(item.Base.FormKeyNullable, "Base");
             }
             if (printMask?.Owner ?? true)
             {
-                fg.AppendItem(item.Owner.FormKey, "Owner");
+                fg.AppendItem(item.Owner.FormKeyNullable, "Owner");
             }
             if ((printMask?.FactionRank ?? true)
                 && item.FactionRank.TryGet(out var FactionRankItem))
@@ -1150,7 +1150,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.GlobalVariable ?? true)
             {
-                fg.AppendItem(item.GlobalVariable.FormKey, "GlobalVariable");
+                fg.AppendItem(item.GlobalVariable.FormKeyNullable, "GlobalVariable");
             }
             if ((printMask?.EnableParent?.Overall ?? true)
                 && item.EnableParent.TryGet(out var EnableParentItem))
@@ -1302,15 +1302,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.Base.FormKey.TryGet(out var BaseKey))
+            if (obj.Base.FormKeyNullable.TryGet(out var BaseKey))
             {
                 yield return BaseKey;
             }
-            if (obj.Owner.FormKey.TryGet(out var OwnerKey))
+            if (obj.Owner.FormKeyNullable.TryGet(out var OwnerKey))
             {
                 yield return OwnerKey;
             }
-            if (obj.GlobalVariable.FormKey.TryGet(out var GlobalVariableKey))
+            if (obj.GlobalVariable.FormKeyNullable.TryGet(out var GlobalVariableKey))
             {
                 yield return GlobalVariableKey;
             }
@@ -1374,11 +1374,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.Base) ?? true))
             {
-                item.Base = new FormLinkNullable<ICreatureGetter>(rhs.Base.FormKey);
+                item.Base = new FormLinkNullable<ICreatureGetter>(rhs.Base.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.Owner) ?? true))
             {
-                item.Owner = new FormLinkNullable<IFactionGetter>(rhs.Owner.FormKey);
+                item.Owner = new FormLinkNullable<IFactionGetter>(rhs.Owner.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.FactionRank) ?? true))
             {
@@ -1386,7 +1386,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.GlobalVariable) ?? true))
             {
-                item.GlobalVariable = new FormLinkNullable<IGlobalGetter>(rhs.GlobalVariable.FormKey);
+                item.GlobalVariable = new FormLinkNullable<IGlobalGetter>(rhs.GlobalVariable.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.EnableParent) ?? true))
             {

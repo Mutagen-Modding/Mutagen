@@ -837,7 +837,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Sound ?? true)
             {
-                fg.AppendItem(item.Sound.FormKey, "Sound");
+                fg.AppendItem(item.Sound.FormKeyNullable, "Sound");
             }
             if ((printMask?.Chance ?? true)
                 && item.Chance.TryGet(out var ChanceItem))
@@ -880,7 +880,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Mutagen
         public IEnumerable<FormKey> GetLinkFormKeys(ISoundItemGetter obj)
         {
-            if (obj.Sound.FormKey.TryGet(out var SoundKey))
+            if (obj.Sound.FormKeyNullable.TryGet(out var SoundKey))
             {
                 yield return SoundKey;
             }
@@ -905,7 +905,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)SoundItem_FieldIndex.Sound) ?? true))
             {
-                item.Sound = new FormLinkNullable<ISoundGetter>(rhs.Sound.FormKey);
+                item.Sound = new FormLinkNullable<ISoundGetter>(rhs.Sound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)SoundItem_FieldIndex.Chance) ?? true))
             {

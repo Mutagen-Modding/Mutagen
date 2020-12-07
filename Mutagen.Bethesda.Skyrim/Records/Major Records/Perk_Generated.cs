@@ -1582,7 +1582,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.NextPerk ?? true)
             {
-                fg.AppendItem(item.NextPerk.FormKey, "NextPerk");
+                fg.AppendItem(item.NextPerk.FormKeyNullable, "NextPerk");
             }
             if (printMask?.Effects?.Overall ?? true)
             {
@@ -1754,7 +1754,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.NextPerk.FormKey.TryGet(out var NextPerkKey))
+            if (obj.NextPerk.FormKeyNullable.TryGet(out var NextPerkKey))
             {
                 yield return NextPerkKey;
             }
@@ -1920,7 +1920,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.NextPerk) ?? true))
             {
-                item.NextPerk = new FormLinkNullable<IPerkGetter>(rhs.NextPerk.FormKey);
+                item.NextPerk = new FormLinkNullable<IPerkGetter>(rhs.NextPerk.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.Effects) ?? true))
             {

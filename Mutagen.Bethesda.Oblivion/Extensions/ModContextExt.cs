@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly Road.TranslationMask? RoadCopyMask = null;
         public static readonly PathGrid.TranslationMask? PathGridCopyMask = null;
 
-        internal static IEnumerable<ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        internal static IEnumerable<IModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             this IListGroupGetter<ICellBlockGetter> cellBlocks,
             ILinkCache linkCache,
             Type type,
@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 var blockNum = readOnlyBlock.BlockNumber;
                 var blockModified = readOnlyBlock.LastModified;
-                var blockContext = new ModContext(
+                var blockContext = new ModContext<ICellBlockGetter>(
                     modKey: modKey,
                     parent: parent,
                     record: readOnlyBlock);
@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     var subBlockNum = readOnlySubBlock.BlockNumber;
                     var subBlockModified = readOnlySubBlock.LastModified;
-                    var subBlockContext = new ModContext(
+                    var subBlockContext = new ModContext<ICellSubBlockGetter>(
                         modKey: modKey,
                         parent: blockContext,
                         record: readOnlySubBlock);
@@ -110,7 +110,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        internal static IEnumerable<ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        internal static IEnumerable<IModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             this IReadOnlyList<IWorldspaceBlockGetter> worldspaceBlocks,
             IWorldspaceGetter worldspace,
             ILinkCache linkCache,
@@ -125,7 +125,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var blockNumX = readOnlyBlock.BlockNumberX;
                 var blockNumY = readOnlyBlock.BlockNumberY;
                 var blockModified = readOnlyBlock.LastModified;
-                var blockContext = new ModContext(
+                var blockContext = new ModContext<IWorldspaceBlockGetter>(
                     modKey: modKey,
                     parent: parent,
                     record: readOnlyBlock);
@@ -134,7 +134,7 @@ namespace Mutagen.Bethesda.Oblivion
                     var subBlockNumY = readOnlySubBlock.BlockNumberY;
                     var subBlockNumX = readOnlySubBlock.BlockNumberX;
                     var subBlockModified = readOnlySubBlock.LastModified;
-                    var subBlockContext = new ModContext(
+                    var subBlockContext = new ModContext<IWorldspaceSubBlockGetter>(
                         modKey: modKey,
                         parent: blockContext,
                         record: readOnlySubBlock);

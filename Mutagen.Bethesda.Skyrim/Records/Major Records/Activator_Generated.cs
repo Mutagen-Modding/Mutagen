@@ -1522,15 +1522,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.LoopingSound ?? true)
             {
-                fg.AppendItem(item.LoopingSound.FormKey, "LoopingSound");
+                fg.AppendItem(item.LoopingSound.FormKeyNullable, "LoopingSound");
             }
             if (printMask?.ActivationSound ?? true)
             {
-                fg.AppendItem(item.ActivationSound.FormKey, "ActivationSound");
+                fg.AppendItem(item.ActivationSound.FormKeyNullable, "ActivationSound");
             }
             if (printMask?.WaterType ?? true)
             {
-                fg.AppendItem(item.WaterType.FormKey, "WaterType");
+                fg.AppendItem(item.WaterType.FormKeyNullable, "WaterType");
             }
             if ((printMask?.ActivateTextOverride ?? true)
                 && item.ActivateTextOverride.TryGet(out var ActivateTextOverrideItem))
@@ -1544,7 +1544,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.InteractionKeyword ?? true)
             {
-                fg.AppendItem(item.InteractionKeyword.FormKey, "InteractionKeyword");
+                fg.AppendItem(item.InteractionKeyword.FormKeyNullable, "InteractionKeyword");
             }
         }
         
@@ -1722,19 +1722,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.LoopingSound.FormKey.TryGet(out var LoopingSoundKey))
+            if (obj.LoopingSound.FormKeyNullable.TryGet(out var LoopingSoundKey))
             {
                 yield return LoopingSoundKey;
             }
-            if (obj.ActivationSound.FormKey.TryGet(out var ActivationSoundKey))
+            if (obj.ActivationSound.FormKeyNullable.TryGet(out var ActivationSoundKey))
             {
                 yield return ActivationSoundKey;
             }
-            if (obj.WaterType.FormKey.TryGet(out var WaterTypeKey))
+            if (obj.WaterType.FormKeyNullable.TryGet(out var WaterTypeKey))
             {
                 yield return WaterTypeKey;
             }
-            if (obj.InteractionKeyword.FormKey.TryGet(out var InteractionKeywordKey))
+            if (obj.InteractionKeyword.FormKeyNullable.TryGet(out var InteractionKeywordKey))
             {
                 yield return InteractionKeywordKey;
             }
@@ -1926,15 +1926,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.LoopingSound) ?? true))
             {
-                item.LoopingSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.LoopingSound.FormKey);
+                item.LoopingSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.LoopingSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.ActivationSound) ?? true))
             {
-                item.ActivationSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.ActivationSound.FormKey);
+                item.ActivationSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.ActivationSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.WaterType) ?? true))
             {
-                item.WaterType = new FormLinkNullable<IWaterGetter>(rhs.WaterType.FormKey);
+                item.WaterType = new FormLinkNullable<IWaterGetter>(rhs.WaterType.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.ActivateTextOverride) ?? true))
             {
@@ -1946,7 +1946,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.InteractionKeyword) ?? true))
             {
-                item.InteractionKeyword = new FormLinkNullable<IKeywordGetter>(rhs.InteractionKeyword.FormKey);
+                item.InteractionKeyword = new FormLinkNullable<IKeywordGetter>(rhs.InteractionKeyword.FormKeyNullable);
             }
         }
         

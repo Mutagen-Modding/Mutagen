@@ -1118,7 +1118,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Sound ?? true)
             {
-                fg.AppendItem(item.Sound.FormKey, "Sound");
+                fg.AppendItem(item.Sound.FormKeyNullable, "Sound");
             }
             if (printMask?.MasterParticleSystemCap ?? true)
             {
@@ -1257,7 +1257,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.Sound.FormKey.TryGet(out var SoundKey))
+            if (obj.Sound.FormKeyNullable.TryGet(out var SoundKey))
             {
                 yield return SoundKey;
             }
@@ -1366,7 +1366,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AddonNode_FieldIndex.Sound) ?? true))
             {
-                item.Sound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.Sound.FormKey);
+                item.Sound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.Sound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)AddonNode_FieldIndex.MasterParticleSystemCap) ?? true))
             {

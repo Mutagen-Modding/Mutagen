@@ -1984,7 +1984,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.ObjectEffect ?? true)
             {
-                fg.AppendItem(item.ObjectEffect.FormKey, "ObjectEffect");
+                fg.AppendItem(item.ObjectEffect.FormKeyNullable, "ObjectEffect");
             }
             if ((printMask?.EnchantmentAmount ?? true)
                 && item.EnchantmentAmount.TryGet(out var EnchantmentAmountItem))
@@ -2008,11 +2008,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.PickUpSound ?? true)
             {
-                fg.AppendItem(item.PickUpSound.FormKey, "PickUpSound");
+                fg.AppendItem(item.PickUpSound.FormKeyNullable, "PickUpSound");
             }
             if (printMask?.PutDownSound ?? true)
             {
-                fg.AppendItem(item.PutDownSound.FormKey, "PutDownSound");
+                fg.AppendItem(item.PutDownSound.FormKeyNullable, "PutDownSound");
             }
             if ((printMask?.RagdollConstraintTemplate ?? true)
                 && item.RagdollConstraintTemplate.TryGet(out var RagdollConstraintTemplateItem))
@@ -2021,19 +2021,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.EquipmentType ?? true)
             {
-                fg.AppendItem(item.EquipmentType.FormKey, "EquipmentType");
+                fg.AppendItem(item.EquipmentType.FormKeyNullable, "EquipmentType");
             }
             if (printMask?.BashImpactDataSet ?? true)
             {
-                fg.AppendItem(item.BashImpactDataSet.FormKey, "BashImpactDataSet");
+                fg.AppendItem(item.BashImpactDataSet.FormKeyNullable, "BashImpactDataSet");
             }
             if (printMask?.AlternateBlockMaterial ?? true)
             {
-                fg.AppendItem(item.AlternateBlockMaterial.FormKey, "AlternateBlockMaterial");
+                fg.AppendItem(item.AlternateBlockMaterial.FormKeyNullable, "AlternateBlockMaterial");
             }
             if (printMask?.Race ?? true)
             {
-                fg.AppendItem(item.Race.FormKey, "Race");
+                fg.AppendItem(item.Race.FormKeyNullable, "Race");
             }
             if ((printMask?.Keywords?.Overall ?? true)
                 && item.Keywords.TryGet(out var KeywordsItem))
@@ -2091,7 +2091,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.TemplateArmor ?? true)
             {
-                fg.AppendItem(item.TemplateArmor.FormKey, "TemplateArmor");
+                fg.AppendItem(item.TemplateArmor.FormKeyNullable, "TemplateArmor");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
@@ -2275,7 +2275,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.ObjectEffect.FormKey.TryGet(out var ObjectEffectKey))
+            if (obj.ObjectEffect.FormKeyNullable.TryGet(out var ObjectEffectKey))
             {
                 yield return ObjectEffectKey;
             }
@@ -2293,27 +2293,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.PickUpSound.FormKey.TryGet(out var PickUpSoundKey))
+            if (obj.PickUpSound.FormKeyNullable.TryGet(out var PickUpSoundKey))
             {
                 yield return PickUpSoundKey;
             }
-            if (obj.PutDownSound.FormKey.TryGet(out var PutDownSoundKey))
+            if (obj.PutDownSound.FormKeyNullable.TryGet(out var PutDownSoundKey))
             {
                 yield return PutDownSoundKey;
             }
-            if (obj.EquipmentType.FormKey.TryGet(out var EquipmentTypeKey))
+            if (obj.EquipmentType.FormKeyNullable.TryGet(out var EquipmentTypeKey))
             {
                 yield return EquipmentTypeKey;
             }
-            if (obj.BashImpactDataSet.FormKey.TryGet(out var BashImpactDataSetKey))
+            if (obj.BashImpactDataSet.FormKeyNullable.TryGet(out var BashImpactDataSetKey))
             {
                 yield return BashImpactDataSetKey;
             }
-            if (obj.AlternateBlockMaterial.FormKey.TryGet(out var AlternateBlockMaterialKey))
+            if (obj.AlternateBlockMaterial.FormKeyNullable.TryGet(out var AlternateBlockMaterialKey))
             {
                 yield return AlternateBlockMaterialKey;
             }
-            if (obj.Race.FormKey.TryGet(out var RaceKey))
+            if (obj.Race.FormKeyNullable.TryGet(out var RaceKey))
             {
                 yield return RaceKey;
             }
@@ -2328,7 +2328,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.TemplateArmor.FormKey.TryGet(out var TemplateArmorKey))
+            if (obj.TemplateArmor.FormKeyNullable.TryGet(out var TemplateArmorKey))
             {
                 yield return TemplateArmorKey;
             }
@@ -2437,7 +2437,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.ObjectEffect) ?? true))
             {
-                item.ObjectEffect = new FormLinkNullable<IEffectRecordGetter>(rhs.ObjectEffect.FormKey);
+                item.ObjectEffect = new FormLinkNullable<IEffectRecordGetter>(rhs.ObjectEffect.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.EnchantmentAmount) ?? true))
             {
@@ -2511,11 +2511,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.PickUpSound) ?? true))
             {
-                item.PickUpSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.PickUpSound.FormKey);
+                item.PickUpSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.PickUpSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.PutDownSound) ?? true))
             {
-                item.PutDownSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.PutDownSound.FormKey);
+                item.PutDownSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.PutDownSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.RagdollConstraintTemplate) ?? true))
             {
@@ -2523,19 +2523,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.EquipmentType) ?? true))
             {
-                item.EquipmentType = new FormLinkNullable<IEquipTypeGetter>(rhs.EquipmentType.FormKey);
+                item.EquipmentType = new FormLinkNullable<IEquipTypeGetter>(rhs.EquipmentType.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.BashImpactDataSet) ?? true))
             {
-                item.BashImpactDataSet = new FormLinkNullable<IImpactDataSetGetter>(rhs.BashImpactDataSet.FormKey);
+                item.BashImpactDataSet = new FormLinkNullable<IImpactDataSetGetter>(rhs.BashImpactDataSet.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.AlternateBlockMaterial) ?? true))
             {
-                item.AlternateBlockMaterial = new FormLinkNullable<IMaterialTypeGetter>(rhs.AlternateBlockMaterial.FormKey);
+                item.AlternateBlockMaterial = new FormLinkNullable<IMaterialTypeGetter>(rhs.AlternateBlockMaterial.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.Race) ?? true))
             {
-                item.Race = new FormLinkNullable<IRaceGetter>(rhs.Race.FormKey);
+                item.Race = new FormLinkNullable<IRaceGetter>(rhs.Race.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.Keywords) ?? true))
             {
@@ -2601,7 +2601,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.TemplateArmor) ?? true))
             {
-                item.TemplateArmor = new FormLinkNullable<IArmorGetter>(rhs.TemplateArmor.FormKey);
+                item.TemplateArmor = new FormLinkNullable<IArmorGetter>(rhs.TemplateArmor.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.DATADataTypeState) ?? true))
             {

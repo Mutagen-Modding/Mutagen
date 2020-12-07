@@ -3441,15 +3441,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.DeathItem ?? true)
             {
-                fg.AppendItem(item.DeathItem.FormKey, "DeathItem");
+                fg.AppendItem(item.DeathItem.FormKeyNullable, "DeathItem");
             }
             if (printMask?.Voice ?? true)
             {
-                fg.AppendItem(item.Voice.FormKey, "Voice");
+                fg.AppendItem(item.Voice.FormKeyNullable, "Voice");
             }
             if (printMask?.Template ?? true)
             {
-                fg.AppendItem(item.Template.FormKey, "Template");
+                fg.AppendItem(item.Template.FormKeyNullable, "Template");
             }
             if (printMask?.Race ?? true)
             {
@@ -3481,15 +3481,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.WornArmor ?? true)
             {
-                fg.AppendItem(item.WornArmor.FormKey, "WornArmor");
+                fg.AppendItem(item.WornArmor.FormKeyNullable, "WornArmor");
             }
             if (printMask?.FarAwayModel ?? true)
             {
-                fg.AppendItem(item.FarAwayModel.FormKey, "FarAwayModel");
+                fg.AppendItem(item.FarAwayModel.FormKeyNullable, "FarAwayModel");
             }
             if (printMask?.AttackRace ?? true)
             {
-                fg.AppendItem(item.AttackRace.FormKey, "AttackRace");
+                fg.AppendItem(item.AttackRace.FormKeyNullable, "AttackRace");
             }
             if (printMask?.Attacks?.Overall ?? true)
             {
@@ -3511,19 +3511,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.SpectatorOverridePackageList ?? true)
             {
-                fg.AppendItem(item.SpectatorOverridePackageList.FormKey, "SpectatorOverridePackageList");
+                fg.AppendItem(item.SpectatorOverridePackageList.FormKeyNullable, "SpectatorOverridePackageList");
             }
             if (printMask?.ObserveDeadBodyOverridePackageList ?? true)
             {
-                fg.AppendItem(item.ObserveDeadBodyOverridePackageList.FormKey, "ObserveDeadBodyOverridePackageList");
+                fg.AppendItem(item.ObserveDeadBodyOverridePackageList.FormKeyNullable, "ObserveDeadBodyOverridePackageList");
             }
             if (printMask?.GuardWarnOverridePackageList ?? true)
             {
-                fg.AppendItem(item.GuardWarnOverridePackageList.FormKey, "GuardWarnOverridePackageList");
+                fg.AppendItem(item.GuardWarnOverridePackageList.FormKeyNullable, "GuardWarnOverridePackageList");
             }
             if (printMask?.CombatOverridePackageList ?? true)
             {
-                fg.AppendItem(item.CombatOverridePackageList.FormKey, "CombatOverridePackageList");
+                fg.AppendItem(item.CombatOverridePackageList.FormKeyNullable, "CombatOverridePackageList");
             }
             if ((printMask?.Perks?.Overall ?? true)
                 && item.Perks.TryGet(out var PerksItem))
@@ -3643,15 +3643,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.HairColor ?? true)
             {
-                fg.AppendItem(item.HairColor.FormKey, "HairColor");
+                fg.AppendItem(item.HairColor.FormKeyNullable, "HairColor");
             }
             if (printMask?.CombatStyle ?? true)
             {
-                fg.AppendItem(item.CombatStyle.FormKey, "CombatStyle");
+                fg.AppendItem(item.CombatStyle.FormKeyNullable, "CombatStyle");
             }
             if (printMask?.GiftFilter ?? true)
             {
-                fg.AppendItem(item.GiftFilter.FormKey, "GiftFilter");
+                fg.AppendItem(item.GiftFilter.FormKeyNullable, "GiftFilter");
             }
             if (printMask?.NAM5 ?? true)
             {
@@ -3676,23 +3676,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.DefaultOutfit ?? true)
             {
-                fg.AppendItem(item.DefaultOutfit.FormKey, "DefaultOutfit");
+                fg.AppendItem(item.DefaultOutfit.FormKeyNullable, "DefaultOutfit");
             }
             if (printMask?.SleepingOutfit ?? true)
             {
-                fg.AppendItem(item.SleepingOutfit.FormKey, "SleepingOutfit");
+                fg.AppendItem(item.SleepingOutfit.FormKeyNullable, "SleepingOutfit");
             }
             if (printMask?.DefaultPackageList ?? true)
             {
-                fg.AppendItem(item.DefaultPackageList.FormKey, "DefaultPackageList");
+                fg.AppendItem(item.DefaultPackageList.FormKeyNullable, "DefaultPackageList");
             }
             if (printMask?.CrimeFaction ?? true)
             {
-                fg.AppendItem(item.CrimeFaction.FormKey, "CrimeFaction");
+                fg.AppendItem(item.CrimeFaction.FormKeyNullable, "CrimeFaction");
             }
             if (printMask?.HeadTexture ?? true)
             {
-                fg.AppendItem(item.HeadTexture.FormKey, "HeadTexture");
+                fg.AppendItem(item.HeadTexture.FormKeyNullable, "HeadTexture");
             }
             if ((printMask?.TextureLighting ?? true)
                 && item.TextureLighting.TryGet(out var TextureLightingItem))
@@ -3956,15 +3956,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.DeathItem.FormKey.TryGet(out var DeathItemKey))
+            if (obj.DeathItem.FormKeyNullable.TryGet(out var DeathItemKey))
             {
                 yield return DeathItemKey;
             }
-            if (obj.Voice.FormKey.TryGet(out var VoiceKey))
+            if (obj.Voice.FormKeyNullable.TryGet(out var VoiceKey))
             {
                 yield return VoiceKey;
             }
-            if (obj.Template.FormKey.TryGet(out var TemplateKey))
+            if (obj.Template.FormKeyNullable.TryGet(out var TemplateKey))
             {
                 yield return TemplateKey;
             }
@@ -3983,15 +3983,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.WornArmor.FormKey.TryGet(out var WornArmorKey))
+            if (obj.WornArmor.FormKeyNullable.TryGet(out var WornArmorKey))
             {
                 yield return WornArmorKey;
             }
-            if (obj.FarAwayModel.FormKey.TryGet(out var FarAwayModelKey))
+            if (obj.FarAwayModel.FormKeyNullable.TryGet(out var FarAwayModelKey))
             {
                 yield return FarAwayModelKey;
             }
-            if (obj.AttackRace.FormKey.TryGet(out var AttackRaceKey))
+            if (obj.AttackRace.FormKeyNullable.TryGet(out var AttackRaceKey))
             {
                 yield return AttackRaceKey;
             }
@@ -3999,19 +3999,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.SpectatorOverridePackageList.FormKey.TryGet(out var SpectatorOverridePackageListKey))
+            if (obj.SpectatorOverridePackageList.FormKeyNullable.TryGet(out var SpectatorOverridePackageListKey))
             {
                 yield return SpectatorOverridePackageListKey;
             }
-            if (obj.ObserveDeadBodyOverridePackageList.FormKey.TryGet(out var ObserveDeadBodyOverridePackageListKey))
+            if (obj.ObserveDeadBodyOverridePackageList.FormKeyNullable.TryGet(out var ObserveDeadBodyOverridePackageListKey))
             {
                 yield return ObserveDeadBodyOverridePackageListKey;
             }
-            if (obj.GuardWarnOverridePackageList.FormKey.TryGet(out var GuardWarnOverridePackageListKey))
+            if (obj.GuardWarnOverridePackageList.FormKeyNullable.TryGet(out var GuardWarnOverridePackageListKey))
             {
                 yield return GuardWarnOverridePackageListKey;
             }
-            if (obj.CombatOverridePackageList.FormKey.TryGet(out var CombatOverridePackageListKey))
+            if (obj.CombatOverridePackageList.FormKeyNullable.TryGet(out var CombatOverridePackageListKey))
             {
                 yield return CombatOverridePackageListKey;
             }
@@ -4046,15 +4046,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.HairColor.FormKey.TryGet(out var HairColorKey))
+            if (obj.HairColor.FormKeyNullable.TryGet(out var HairColorKey))
             {
                 yield return HairColorKey;
             }
-            if (obj.CombatStyle.FormKey.TryGet(out var CombatStyleKey))
+            if (obj.CombatStyle.FormKeyNullable.TryGet(out var CombatStyleKey))
             {
                 yield return CombatStyleKey;
             }
-            if (obj.GiftFilter.FormKey.TryGet(out var GiftFilterKey))
+            if (obj.GiftFilter.FormKeyNullable.TryGet(out var GiftFilterKey))
             {
                 yield return GiftFilterKey;
             }
@@ -4065,23 +4065,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.DefaultOutfit.FormKey.TryGet(out var DefaultOutfitKey))
+            if (obj.DefaultOutfit.FormKeyNullable.TryGet(out var DefaultOutfitKey))
             {
                 yield return DefaultOutfitKey;
             }
-            if (obj.SleepingOutfit.FormKey.TryGet(out var SleepingOutfitKey))
+            if (obj.SleepingOutfit.FormKeyNullable.TryGet(out var SleepingOutfitKey))
             {
                 yield return SleepingOutfitKey;
             }
-            if (obj.DefaultPackageList.FormKey.TryGet(out var DefaultPackageListKey))
+            if (obj.DefaultPackageList.FormKeyNullable.TryGet(out var DefaultPackageListKey))
             {
                 yield return DefaultPackageListKey;
             }
-            if (obj.CrimeFaction.FormKey.TryGet(out var CrimeFactionKey))
+            if (obj.CrimeFaction.FormKeyNullable.TryGet(out var CrimeFactionKey))
             {
                 yield return CrimeFactionKey;
             }
-            if (obj.HeadTexture.FormKey.TryGet(out var HeadTextureKey))
+            if (obj.HeadTexture.FormKeyNullable.TryGet(out var HeadTextureKey))
             {
                 yield return HeadTextureKey;
             }
@@ -4232,15 +4232,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.DeathItem) ?? true))
             {
-                item.DeathItem = new FormLinkNullable<ILeveledItemGetter>(rhs.DeathItem.FormKey);
+                item.DeathItem = new FormLinkNullable<ILeveledItemGetter>(rhs.DeathItem.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Voice) ?? true))
             {
-                item.Voice = new FormLinkNullable<IVoiceTypeGetter>(rhs.Voice.FormKey);
+                item.Voice = new FormLinkNullable<IVoiceTypeGetter>(rhs.Voice.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Template) ?? true))
             {
-                item.Template = new FormLinkNullable<INpcSpawnGetter>(rhs.Template.FormKey);
+                item.Template = new FormLinkNullable<INpcSpawnGetter>(rhs.Template.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Race) ?? true))
             {
@@ -4301,15 +4301,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.WornArmor) ?? true))
             {
-                item.WornArmor = new FormLinkNullable<IArmorGetter>(rhs.WornArmor.FormKey);
+                item.WornArmor = new FormLinkNullable<IArmorGetter>(rhs.WornArmor.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.FarAwayModel) ?? true))
             {
-                item.FarAwayModel = new FormLinkNullable<IArmorGetter>(rhs.FarAwayModel.FormKey);
+                item.FarAwayModel = new FormLinkNullable<IArmorGetter>(rhs.FarAwayModel.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.AttackRace) ?? true))
             {
-                item.AttackRace = new FormLinkNullable<IRaceGetter>(rhs.AttackRace.FormKey);
+                item.AttackRace = new FormLinkNullable<IRaceGetter>(rhs.AttackRace.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Attacks) ?? true))
             {
@@ -4337,19 +4337,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.SpectatorOverridePackageList) ?? true))
             {
-                item.SpectatorOverridePackageList = new FormLinkNullable<IFormListGetter>(rhs.SpectatorOverridePackageList.FormKey);
+                item.SpectatorOverridePackageList = new FormLinkNullable<IFormListGetter>(rhs.SpectatorOverridePackageList.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.ObserveDeadBodyOverridePackageList) ?? true))
             {
-                item.ObserveDeadBodyOverridePackageList = new FormLinkNullable<IFormListGetter>(rhs.ObserveDeadBodyOverridePackageList.FormKey);
+                item.ObserveDeadBodyOverridePackageList = new FormLinkNullable<IFormListGetter>(rhs.ObserveDeadBodyOverridePackageList.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.GuardWarnOverridePackageList) ?? true))
             {
-                item.GuardWarnOverridePackageList = new FormLinkNullable<IFormListGetter>(rhs.GuardWarnOverridePackageList.FormKey);
+                item.GuardWarnOverridePackageList = new FormLinkNullable<IFormListGetter>(rhs.GuardWarnOverridePackageList.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.CombatOverridePackageList) ?? true))
             {
-                item.CombatOverridePackageList = new FormLinkNullable<IFormListGetter>(rhs.CombatOverridePackageList.FormKey);
+                item.CombatOverridePackageList = new FormLinkNullable<IFormListGetter>(rhs.CombatOverridePackageList.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Perks) ?? true))
             {
@@ -4542,15 +4542,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.HairColor) ?? true))
             {
-                item.HairColor = new FormLinkNullable<IColorRecordGetter>(rhs.HairColor.FormKey);
+                item.HairColor = new FormLinkNullable<IColorRecordGetter>(rhs.HairColor.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.CombatStyle) ?? true))
             {
-                item.CombatStyle = new FormLinkNullable<ICombatStyleGetter>(rhs.CombatStyle.FormKey);
+                item.CombatStyle = new FormLinkNullable<ICombatStyleGetter>(rhs.CombatStyle.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.GiftFilter) ?? true))
             {
-                item.GiftFilter = new FormLinkNullable<IFormListGetter>(rhs.GiftFilter.FormKey);
+                item.GiftFilter = new FormLinkNullable<IFormListGetter>(rhs.GiftFilter.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.NAM5) ?? true))
             {
@@ -4596,23 +4596,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.DefaultOutfit) ?? true))
             {
-                item.DefaultOutfit = new FormLinkNullable<IOutfitGetter>(rhs.DefaultOutfit.FormKey);
+                item.DefaultOutfit = new FormLinkNullable<IOutfitGetter>(rhs.DefaultOutfit.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.SleepingOutfit) ?? true))
             {
-                item.SleepingOutfit = new FormLinkNullable<IOutfitGetter>(rhs.SleepingOutfit.FormKey);
+                item.SleepingOutfit = new FormLinkNullable<IOutfitGetter>(rhs.SleepingOutfit.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.DefaultPackageList) ?? true))
             {
-                item.DefaultPackageList = new FormLinkNullable<IFormListGetter>(rhs.DefaultPackageList.FormKey);
+                item.DefaultPackageList = new FormLinkNullable<IFormListGetter>(rhs.DefaultPackageList.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.CrimeFaction) ?? true))
             {
-                item.CrimeFaction = new FormLinkNullable<IFactionGetter>(rhs.CrimeFaction.FormKey);
+                item.CrimeFaction = new FormLinkNullable<IFactionGetter>(rhs.CrimeFaction.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.HeadTexture) ?? true))
             {
-                item.HeadTexture = new FormLinkNullable<ITextureSetGetter>(rhs.HeadTexture.FormKey);
+                item.HeadTexture = new FormLinkNullable<ITextureSetGetter>(rhs.HeadTexture.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.TextureLighting) ?? true))
             {

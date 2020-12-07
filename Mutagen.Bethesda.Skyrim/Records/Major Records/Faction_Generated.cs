@@ -1754,27 +1754,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.ExteriorJailMarker ?? true)
             {
-                fg.AppendItem(item.ExteriorJailMarker.FormKey, "ExteriorJailMarker");
+                fg.AppendItem(item.ExteriorJailMarker.FormKeyNullable, "ExteriorJailMarker");
             }
             if (printMask?.FollowerWaitMarker ?? true)
             {
-                fg.AppendItem(item.FollowerWaitMarker.FormKey, "FollowerWaitMarker");
+                fg.AppendItem(item.FollowerWaitMarker.FormKeyNullable, "FollowerWaitMarker");
             }
             if (printMask?.StolenGoodsContainer ?? true)
             {
-                fg.AppendItem(item.StolenGoodsContainer.FormKey, "StolenGoodsContainer");
+                fg.AppendItem(item.StolenGoodsContainer.FormKeyNullable, "StolenGoodsContainer");
             }
             if (printMask?.PlayerInventoryContainer ?? true)
             {
-                fg.AppendItem(item.PlayerInventoryContainer.FormKey, "PlayerInventoryContainer");
+                fg.AppendItem(item.PlayerInventoryContainer.FormKeyNullable, "PlayerInventoryContainer");
             }
             if (printMask?.SharedCrimeFactionList ?? true)
             {
-                fg.AppendItem(item.SharedCrimeFactionList.FormKey, "SharedCrimeFactionList");
+                fg.AppendItem(item.SharedCrimeFactionList.FormKeyNullable, "SharedCrimeFactionList");
             }
             if (printMask?.JailOutfit ?? true)
             {
-                fg.AppendItem(item.JailOutfit.FormKey, "JailOutfit");
+                fg.AppendItem(item.JailOutfit.FormKeyNullable, "JailOutfit");
             }
             if ((printMask?.CrimeValues?.Overall ?? true)
                 && item.CrimeValues.TryGet(out var CrimeValuesItem))
@@ -1801,11 +1801,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.VendorBuySellList ?? true)
             {
-                fg.AppendItem(item.VendorBuySellList.FormKey, "VendorBuySellList");
+                fg.AppendItem(item.VendorBuySellList.FormKeyNullable, "VendorBuySellList");
             }
             if (printMask?.MerchantContainer ?? true)
             {
-                fg.AppendItem(item.MerchantContainer.FormKey, "MerchantContainer");
+                fg.AppendItem(item.MerchantContainer.FormKeyNullable, "MerchantContainer");
             }
             if ((printMask?.VendorValues?.Overall ?? true)
                 && item.VendorValues.TryGet(out var VendorValuesItem))
@@ -1985,35 +1985,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.ExteriorJailMarker.FormKey.TryGet(out var ExteriorJailMarkerKey))
+            if (obj.ExteriorJailMarker.FormKeyNullable.TryGet(out var ExteriorJailMarkerKey))
             {
                 yield return ExteriorJailMarkerKey;
             }
-            if (obj.FollowerWaitMarker.FormKey.TryGet(out var FollowerWaitMarkerKey))
+            if (obj.FollowerWaitMarker.FormKeyNullable.TryGet(out var FollowerWaitMarkerKey))
             {
                 yield return FollowerWaitMarkerKey;
             }
-            if (obj.StolenGoodsContainer.FormKey.TryGet(out var StolenGoodsContainerKey))
+            if (obj.StolenGoodsContainer.FormKeyNullable.TryGet(out var StolenGoodsContainerKey))
             {
                 yield return StolenGoodsContainerKey;
             }
-            if (obj.PlayerInventoryContainer.FormKey.TryGet(out var PlayerInventoryContainerKey))
+            if (obj.PlayerInventoryContainer.FormKeyNullable.TryGet(out var PlayerInventoryContainerKey))
             {
                 yield return PlayerInventoryContainerKey;
             }
-            if (obj.SharedCrimeFactionList.FormKey.TryGet(out var SharedCrimeFactionListKey))
+            if (obj.SharedCrimeFactionList.FormKeyNullable.TryGet(out var SharedCrimeFactionListKey))
             {
                 yield return SharedCrimeFactionListKey;
             }
-            if (obj.JailOutfit.FormKey.TryGet(out var JailOutfitKey))
+            if (obj.JailOutfit.FormKeyNullable.TryGet(out var JailOutfitKey))
             {
                 yield return JailOutfitKey;
             }
-            if (obj.VendorBuySellList.FormKey.TryGet(out var VendorBuySellListKey))
+            if (obj.VendorBuySellList.FormKeyNullable.TryGet(out var VendorBuySellListKey))
             {
                 yield return VendorBuySellListKey;
             }
-            if (obj.MerchantContainer.FormKey.TryGet(out var MerchantContainerKey))
+            if (obj.MerchantContainer.FormKeyNullable.TryGet(out var MerchantContainerKey))
             {
                 yield return MerchantContainerKey;
             }
@@ -2117,27 +2117,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.ExteriorJailMarker) ?? true))
             {
-                item.ExteriorJailMarker = new FormLinkNullable<IPlacedObjectGetter>(rhs.ExteriorJailMarker.FormKey);
+                item.ExteriorJailMarker = new FormLinkNullable<IPlacedObjectGetter>(rhs.ExteriorJailMarker.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.FollowerWaitMarker) ?? true))
             {
-                item.FollowerWaitMarker = new FormLinkNullable<IPlacedObjectGetter>(rhs.FollowerWaitMarker.FormKey);
+                item.FollowerWaitMarker = new FormLinkNullable<IPlacedObjectGetter>(rhs.FollowerWaitMarker.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.StolenGoodsContainer) ?? true))
             {
-                item.StolenGoodsContainer = new FormLinkNullable<IPlacedObjectGetter>(rhs.StolenGoodsContainer.FormKey);
+                item.StolenGoodsContainer = new FormLinkNullable<IPlacedObjectGetter>(rhs.StolenGoodsContainer.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.PlayerInventoryContainer) ?? true))
             {
-                item.PlayerInventoryContainer = new FormLinkNullable<IPlacedObjectGetter>(rhs.PlayerInventoryContainer.FormKey);
+                item.PlayerInventoryContainer = new FormLinkNullable<IPlacedObjectGetter>(rhs.PlayerInventoryContainer.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.SharedCrimeFactionList) ?? true))
             {
-                item.SharedCrimeFactionList = new FormLinkNullable<IFormListGetter>(rhs.SharedCrimeFactionList.FormKey);
+                item.SharedCrimeFactionList = new FormLinkNullable<IFormListGetter>(rhs.SharedCrimeFactionList.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.JailOutfit) ?? true))
             {
-                item.JailOutfit = new FormLinkNullable<IOutfitGetter>(rhs.JailOutfit.FormKey);
+                item.JailOutfit = new FormLinkNullable<IOutfitGetter>(rhs.JailOutfit.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.CrimeValues) ?? true))
             {
@@ -2191,11 +2191,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.VendorBuySellList) ?? true))
             {
-                item.VendorBuySellList = new FormLinkNullable<IFormListGetter>(rhs.VendorBuySellList.FormKey);
+                item.VendorBuySellList = new FormLinkNullable<IFormListGetter>(rhs.VendorBuySellList.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.MerchantContainer) ?? true))
             {
-                item.MerchantContainer = new FormLinkNullable<IPlacedObjectGetter>(rhs.MerchantContainer.FormKey);
+                item.MerchantContainer = new FormLinkNullable<IPlacedObjectGetter>(rhs.MerchantContainer.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.VendorValues) ?? true))
             {
