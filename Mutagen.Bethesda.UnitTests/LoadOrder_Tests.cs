@@ -87,7 +87,7 @@ namespace Mutagen.Bethesda.UnitTests
                     creationClubFilePath: cccPath)
                 .ToList();
             results.Should().HaveCount(7);
-            results.Should().BeEquivalentTo(new LoadOrderListing[]
+            results.Should().Equal(new LoadOrderListing[]
             {
                 new LoadOrderListing(Utility.LightMasterModKey, enabled: true),
                 new LoadOrderListing(Utility.MasterModKey, enabled: true),
@@ -130,7 +130,7 @@ namespace Mutagen.Bethesda.UnitTests
                     creationClubFilePath: cccPath)
                 .ToList();
             results.Should().HaveCount(6);
-            results.Should().BeEquivalentTo(new LoadOrderListing[]
+            results.Should().Equal(new LoadOrderListing[]
             {
                 new LoadOrderListing(Utility.MasterModKey, enabled: true),
                 new LoadOrderListing(Utility.MasterModKey2, enabled: false),
@@ -163,7 +163,7 @@ namespace Mutagen.Bethesda.UnitTests
                     creationClubFilePath: null)
                 .ToList();
             results.Should().HaveCount(2);
-            results.Should().BeEquivalentTo(new LoadOrderListing[]
+            results.Should().Equal(new LoadOrderListing[]
             {
                 new LoadOrderListing(Utility.MasterModKey, enabled: true),
                 new LoadOrderListing(Utility.PluginModKey, enabled: true),
@@ -215,7 +215,7 @@ namespace Mutagen.Bethesda.UnitTests
                     creationClubFilePath: cccPath)
                 .ToList();
             results.Should().HaveCount(8);
-            results.Should().BeEquivalentTo(new LoadOrderListing[]
+            results.Should().Equal(new LoadOrderListing[]
             {
                 new LoadOrderListing(Utility.LightMasterModKey2, enabled: true),
                 new LoadOrderListing(Utility.LightMasterModKey, enabled: true),
@@ -237,13 +237,13 @@ namespace Mutagen.Bethesda.UnitTests
             var dataFolderPath = Path.Combine(tmpFolder.Dir.Path, "Data");
             Directory.CreateDirectory(dataFolderPath);
             File.WriteAllText(Path.Combine(dataFolderPath, Utility.LightMasterModKey.FileName), string.Empty);
+            File.WriteAllText(Path.Combine(dataFolderPath, Utility.Skyrim.FileName), string.Empty);
             File.WriteAllLines(pluginPath,
                 new string[]
                 {
-                    Skyrim.Constants.Skyrim.ToString(),
-                    Skyrim.Constants.Update.ToString(),
-                    Skyrim.Constants.Dawnguard.ToString(),
-                    Utility.PluginModKey.ToString(),
+                    $"*{Utility.MasterModKey}",
+                    $"*{Utility.MasterModKey2}",
+                    $"*{Utility.PluginModKey}",
                 });
             File.WriteAllLines(cccPath,
                 new string[]
@@ -252,84 +252,81 @@ namespace Mutagen.Bethesda.UnitTests
                     Utility.LightMasterModKey2.ToString(),
                 });
             await Task.Delay(1000);
-            var live = LoadOrder.GetLiveLoadOrder(GameRelease.SkyrimLE, pluginPath, dataFolderPath, out var state, cccLoadOrderFilePath: cccPath);
+            var live = LoadOrder.GetLiveLoadOrder(GameRelease.SkyrimSE, pluginPath, dataFolderPath, out var state, cccLoadOrderFilePath: cccPath);
             state.Subscribe(x =>
             {
                 if (x.Failed) throw x.Exception ?? new Exception();
             });
             var list = live.AsObservableList();
             await Task.Delay(1000);
-            list.Items.Select(x => x.ModKey).Should().BeEquivalentTo(new ModKey[]
+            list.Items.Select(x => x.ModKey).Should().Equal(new ModKey[]
             {
                 Skyrim.Constants.Skyrim,
-                Skyrim.Constants.Update,
-                Skyrim.Constants.Dawnguard,
                 Utility.LightMasterModKey,
+                Utility.MasterModKey,
+                Utility.MasterModKey2,
                 Utility.PluginModKey,
             });
 
             File.WriteAllLines(pluginPath,
                 new string[]
                 {
-                    Skyrim.Constants.Skyrim.ToString(),
-                    Skyrim.Constants.Dawnguard.ToString(),
-                    Utility.PluginModKey.ToString(),
+                    $"*{Utility.MasterModKey}",
+                    $"*{Utility.PluginModKey}",
                 });
             File.WriteAllText(Path.Combine(dataFolderPath, Utility.LightMasterModKey2.FileName), string.Empty);
             File.Delete(Path.Combine(dataFolderPath, Utility.LightMasterModKey.FileName));
             await Task.Delay(1000);
-            list.Items.Select(x => x.ModKey).Should().BeEquivalentTo(new ModKey[]
+            list.Items.Select(x => x.ModKey).Should().Equal(new ModKey[]
             {
                 Skyrim.Constants.Skyrim,
-                Skyrim.Constants.Dawnguard,
                 Utility.LightMasterModKey2,
+                Utility.MasterModKey,
                 Utility.PluginModKey,
             });
 
             File.WriteAllLines(pluginPath,
                 new string[]
                 {
-                    Skyrim.Constants.Skyrim.ToString(),
-                    Skyrim.Constants.Dawnguard.ToString(),
-                    Skyrim.Constants.Dragonborn.ToString(),
+                    $"*{Utility.MasterModKey}",
+                    $"*{Utility.MasterModKey2}",
                 });
             await Task.Delay(1000);
-            list.Items.Select(x => x.ModKey).Should().BeEquivalentTo(new ModKey[]
+            list.Items.Select(x => x.ModKey).Should().Equal(new ModKey[]
             {
                 Skyrim.Constants.Skyrim,
-                Skyrim.Constants.Dawnguard,
-                Skyrim.Constants.Dragonborn,
                 Utility.LightMasterModKey2,
+                Utility.MasterModKey,
+                Utility.MasterModKey2,
             });
 
             File.WriteAllLines(pluginPath,
                 new string[]
                 {
-                    Skyrim.Constants.Skyrim.ToString(),
-                    Skyrim.Constants.Dawnguard.ToString(),
-                    Skyrim.Constants.Dragonborn.ToString(),
-                    Utility.PluginModKey.ToString(),
+                    $"*{Utility.MasterModKey}",
+                    $"*{Utility.MasterModKey2}",
+                    $"*{Utility.PluginModKey}",
                 });
             File.Delete(Path.Combine(dataFolderPath, Utility.LightMasterModKey2.FileName));
             await Task.Delay(1000);
-            list.Items.Select(x => x.ModKey).Should().BeEquivalentTo(new ModKey[]
+            list.Items.Select(x => x.ModKey).Should().Equal(new ModKey[]
             {
                 Skyrim.Constants.Skyrim,
-                Skyrim.Constants.Dawnguard,
-                Skyrim.Constants.Dragonborn,
+                Utility.MasterModKey,
+                Utility.MasterModKey2,
                 Utility.PluginModKey,
             });
 
             // Does not respect just data folder modification
             // Since LoadOrderListing doesn't specify whether data folder is present
             // Data folder is just used for Timestamp alignment for Oblivion
-            File.Delete(Path.Combine(dataFolderPath, Skyrim.Constants.Dawnguard.FileName));
+            File.Delete(Path.Combine(dataFolderPath, Utility.MasterModKey2.FileName));
             await Task.Delay(1000);
-            list.Items.Select(x => x.ModKey).Should().BeEquivalentTo(new ModKey[]
+            list.Items.Select(x => x.ModKey).Should().Equal(new ModKey[]
             {
                 Skyrim.Constants.Skyrim,
-                Skyrim.Constants.Dawnguard,
-                Skyrim.Constants.Dragonborn,
+                Utility.MasterModKey,
+                Utility.MasterModKey2,
                 Utility.PluginModKey,
             });
         }
@@ -373,7 +370,7 @@ namespace Mutagen.Bethesda.UnitTests
                     esm2,
                 },
                 selector: m => m)
-                .Should().BeEquivalentTo(new ModKey[]
+                .Should().Equal(new ModKey[]
                 {
                     baseEsm,
                     baseEsm2,
@@ -415,7 +412,7 @@ namespace Mutagen.Bethesda.UnitTests
                     esm2,
                 },
                 selector: m => m)
-                .Should().BeEquivalentTo(new ModKey[]
+                .Should().Equal(new ModKey[]
                 {
                     // First, because wasn't listed on plugins
                     ccEsm3,
@@ -437,13 +434,14 @@ namespace Mutagen.Bethesda.UnitTests
             var dataFolderPath = Path.Combine(tmpFolder.Dir.Path, "Data");
             Directory.CreateDirectory(dataFolderPath);
             File.WriteAllText(Path.Combine(dataFolderPath, Utility.LightMasterModKey.FileName), string.Empty);
+            File.WriteAllText(Path.Combine(dataFolderPath, Utility.Skyrim.FileName), string.Empty);
             File.WriteAllLines(pluginPath,
                 new string[]
                 {
-                    Skyrim.Constants.Skyrim.ToString(),
-                    Skyrim.Constants.Update.ToString(),
-                    Skyrim.Constants.Dawnguard.ToString(),
-                    Utility.PluginModKey.ToString(),
+                    $"*{Utility.MasterModKey}",
+                    $"*{Utility.MasterModKey2}",
+                    $"*{Utility.MasterModKey3}",
+                    $"*{Utility.PluginModKey}",
                 });
             File.WriteAllLines(cccPath,
                 new string[]
@@ -452,15 +450,16 @@ namespace Mutagen.Bethesda.UnitTests
                     Utility.LightMasterModKey2.ToString(),
                 });
             await Task.Delay(1000);
-            var live = LoadOrder.GetLiveLoadOrder(GameRelease.SkyrimLE, pluginPath, dataFolderPath, out var state, cccLoadOrderFilePath: cccPath);
+            var live = LoadOrder.GetLiveLoadOrder(GameRelease.SkyrimSE, pluginPath, dataFolderPath, out var state, cccLoadOrderFilePath: cccPath);
             var list = live.AsObservableList();
             await Task.Delay(1000);
-            list.Items.Select(x => x.ModKey).Should().BeEquivalentTo(new ModKey[]
+            list.Items.Select(x => x.ModKey).Should().Equal(new ModKey[]
             {
                 Skyrim.Constants.Skyrim,
-                Skyrim.Constants.Update,
-                Skyrim.Constants.Dawnguard,
                 Utility.LightMasterModKey,
+                Utility.MasterModKey,
+                Utility.MasterModKey2,
+                Utility.MasterModKey3,
                 Utility.PluginModKey,
             });
 
@@ -468,16 +467,17 @@ namespace Mutagen.Bethesda.UnitTests
             File.WriteAllLines(pluginPath,
                 new string[]
                 {
-                    Skyrim.Constants.Skyrim.ToString(),
-                    Skyrim.Constants.Dawnguard.ToString(),
-                    Utility.PluginModKey.ToString(),
+                    $"*{Utility.MasterModKey}",
+                    $"*{Utility.MasterModKey3}",
+                    $"*{Utility.PluginModKey}",
                 });
             await Task.Delay(1000);
-            list.Items.Select(x => x.ModKey).Should().BeEquivalentTo(new ModKey[]
+            list.Items.Select(x => x.ModKey).Should().Equal(new ModKey[]
             {
                 Skyrim.Constants.Skyrim,
-                Skyrim.Constants.Dawnguard,
                 Utility.LightMasterModKey,
+                Utility.MasterModKey,
+                Utility.MasterModKey3,
                 Utility.PluginModKey,
             });
 
@@ -485,18 +485,19 @@ namespace Mutagen.Bethesda.UnitTests
             File.WriteAllLines(pluginPath,
                 new string[]
                 {
-                    Skyrim.Constants.Skyrim.ToString(),
-                    Skyrim.Constants.Update.ToString(),
-                    Skyrim.Constants.Dawnguard.ToString(),
-                    Utility.PluginModKey.ToString(),
+                    $"*{Utility.MasterModKey}",
+                    $"*{Utility.MasterModKey2}",
+                    $"*{Utility.MasterModKey3}",
+                    $"*{Utility.PluginModKey}",
                 });
             await Task.Delay(1000);
-            list.Items.Select(x => x.ModKey).Should().BeEquivalentTo(new ModKey[]
+            list.Items.Select(x => x.ModKey).Should().Equal(new ModKey[]
             {
                 Skyrim.Constants.Skyrim,
-                Skyrim.Constants.Update,
-                Skyrim.Constants.Dawnguard,
                 Utility.LightMasterModKey,
+                Utility.MasterModKey,
+                Utility.MasterModKey2,
+                Utility.MasterModKey3,
                 Utility.PluginModKey,
             });
         }
@@ -531,7 +532,7 @@ namespace Mutagen.Bethesda.UnitTests
             var live = LoadOrder.GetLiveLoadOrder(GameRelease.SkyrimSE, pluginPath, dataFolderPath, out var state, cccLoadOrderFilePath: cccPath);
             var list = live.AsObservableList();
             await Task.Delay(1000);
-            list.Items.Select(x => x.ModKey).Should().BeEquivalentTo(new ModKey[]
+            list.Items.Select(x => x.ModKey).Should().Equal(new ModKey[]
             {
                 Skyrim.Constants.Skyrim,
                 Skyrim.Constants.Update,
@@ -550,7 +551,7 @@ namespace Mutagen.Bethesda.UnitTests
                     $"{Utility.LightMasterModKey}",
                 });
             await Task.Delay(1000);
-            list.Items.Select(x => x.ModKey).Should().BeEquivalentTo(new ModKey[]
+            list.Items.Select(x => x.ModKey).Should().Equal(new ModKey[]
             {
                 Skyrim.Constants.Skyrim,
                 Skyrim.Constants.Update,
@@ -570,7 +571,7 @@ namespace Mutagen.Bethesda.UnitTests
                     $"{Utility.LightMasterModKey2}",
                 });
             await Task.Delay(1000);
-            list.Items.Select(x => x.ModKey).Should().BeEquivalentTo(new ModKey[]
+            list.Items.Select(x => x.ModKey).Should().Equal(new ModKey[]
             {
                 Skyrim.Constants.Skyrim,
                 Skyrim.Constants.Update,
