@@ -347,7 +347,7 @@ namespace Mutagen.Bethesda.UnitTests
             ModKey esp = new ModKey("Normal", ModType.Plugin);
             ModKey esp2 = new ModKey("Normal2", ModType.Plugin);
 
-            LoadOrder.OrderListings(
+            var ordered = LoadOrder.OrderListings(
                 implicitListings: new ModKey[]
                 {
                     baseEsm,
@@ -362,29 +362,30 @@ namespace Mutagen.Bethesda.UnitTests
                 },
                 pluginsListings: new ModKey[]
                 {
-                    esp,
-                    esp2,
-                    esl,
-                    esl2,
                     esm,
                     esm2,
+                    esl,
+                    esl2,
+                    esp,
+                    esp2,
                 },
                 selector: m => m)
-                .Should().Equal(new ModKey[]
-                {
-                    baseEsm,
-                    baseEsm2,
-                    ccEsm,
-                    ccEsm2,
-                    ccEsl,
-                    ccEsl2,
-                    esm,
-                    esm2,
-                    esl,
-                    esl2,
-                    esp,
-                    esp2,
-                });
+                .ToList();
+            ordered.Should().Equal(new ModKey[]
+            {
+                baseEsm,
+                baseEsm2,
+                ccEsm,
+                ccEsm2,
+                ccEsl,
+                ccEsl2,
+                esm,
+                esm2,
+                esl,
+                esl2,
+                esp,
+                esp2,
+            });
         }
 
         [Fact]
@@ -580,6 +581,43 @@ namespace Mutagen.Bethesda.UnitTests
                 Utility.LightMasterModKey2,
                 Utility.MasterModKey,
                 Utility.PluginModKey,
+            });
+        }
+
+        [Fact]
+        public async Task LiveLoadOrder_DontReorderPluginsFile()
+        {
+            using var tmpFolder = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(LoadOrder_Tests), nameof(LiveLoadOrder_DontReorderPluginsFile)));
+            var pluginPath = Path.Combine(tmpFolder.Dir.Path, "Plugins.txt");
+            var cccPath = Path.Combine(tmpFolder.Dir.Path, "Skyrim.ccc");
+            var dataFolderPath = Path.Combine(tmpFolder.Dir.Path, "Data");
+            Directory.CreateDirectory(dataFolderPath);
+            File.WriteAllText(Path.Combine(dataFolderPath, Utility.Skyrim.FileName), string.Empty);
+            File.WriteAllText(Path.Combine(dataFolderPath, Utility.LightMasterModKey.FileName), string.Empty);
+            File.WriteAllLines(pluginPath,
+                new string[]
+                {
+                    $"*{Utility.PluginModKey}",
+                    $"*{Utility.MasterModKey}",
+                    $"*{Utility.PluginModKey2}",
+                });
+            File.WriteAllLines(cccPath,
+                new string[]
+                {
+                    Utility.LightMasterModKey.ToString(),
+                    Utility.LightMasterModKey2.ToString(),
+                });
+            await Task.Delay(1000);
+            var live = LoadOrder.GetLiveLoadOrder(GameRelease.SkyrimSE, pluginPath, dataFolderPath, out var state, cccLoadOrderFilePath: cccPath);
+            var list = live.AsObservableList();
+            await Task.Delay(1000);
+            list.Items.Select(x => x.ModKey).Should().Equal(new ModKey[]
+            {
+                Utility.Skyrim,
+                Utility.LightMasterModKey,
+                Utility.PluginModKey,
+                Utility.MasterModKey,
+                Utility.PluginModKey2,
             });
         }
 
