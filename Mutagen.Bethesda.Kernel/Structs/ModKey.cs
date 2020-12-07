@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda
         public string Name => name_ ?? string.Empty;
         
         /// <summary>
-        /// Mod yype
+        /// Mod type
         /// </summary>
         public ModType Type { get; private set; }
         
