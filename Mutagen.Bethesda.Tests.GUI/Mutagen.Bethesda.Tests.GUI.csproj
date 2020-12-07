@@ -13,8 +13,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.6.6" />
-    <PackageReference Include="Noggog.WPF" Version="1.6.6" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.6.7" />
+    <PackageReference Include="Noggog.WPF" Version="1.6.7" />
     <PackageReference Include="NuGetizer" Version="0.4.11">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
