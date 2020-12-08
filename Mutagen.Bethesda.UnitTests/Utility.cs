@@ -1,5 +1,8 @@
+using Noggog.Utility;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Mutagen.Bethesda.UnitTests
@@ -34,5 +37,10 @@ namespace Mutagen.Bethesda.UnitTests
         public static ModPath OblivionOverrideMod = new ModPath(ModKey.FromNameAndExtension("override.esp"), "../../../oblivion_override.esp");
         public static ModPath SkyrimTestMod = ModPath.FromPath("../../../skyrim_test.esp");
         public static ModPath SkyrimOverrideMod = ModPath.FromPath("../../../skyrim_override.esp");
+
+        public static TempFolder GetTempFolder(string folderName, [CallerMemberName] string testName = null)
+        {
+            return new TempFolder(Path.Combine(Utility.TempFolderPath, folderName, testName!));
+        }
     }
 }

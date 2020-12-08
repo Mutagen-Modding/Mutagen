@@ -14,8 +14,8 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void FromCreationClubPathMissing()
         {
-            using var tmp = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(CreationClubListings_Test), nameof(FromCreationClubPathMissing)));
-            var missingPath = Path.Combine(tmp.Dir.Path, "Skyrim.ccc");
+            using var tmpFolder = Utility.GetTempFolder(nameof(CreationClubListings_Test));
+            var missingPath = Path.Combine(tmpFolder.Dir.Path, "Skyrim.ccc");
             Action a = () =>
                 CreationClubListings.ListingsFromPath(
                     cccFilePath: missingPath,
@@ -26,9 +26,9 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void FromCreationClubPath()
         {
-            using var tmp = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(CreationClubListings_Test), nameof(FromCreationClubPath)));
-            var cccPath = Path.Combine(tmp.Dir.Path, "Skyrim.ccc");
-            var dataPath = Path.Combine(tmp.Dir.Path, "Data");
+            using var tmpFolder = Utility.GetTempFolder(nameof(CreationClubListings_Test));
+            var cccPath = Path.Combine(tmpFolder.Dir.Path, "Skyrim.ccc");
+            var dataPath = Path.Combine(tmpFolder.Dir.Path, "Data");
             File.WriteAllLines(cccPath,
                 new string[]
                 {
@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public async Task LiveLoadOrder()
         {
-            using var tmpFolder = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(CreationClubListings_Test), nameof(LiveLoadOrder)));
+            using var tmpFolder = Utility.GetTempFolder(nameof(CreationClubListings_Test));
             var path = Path.Combine(tmpFolder.Dir.Path, "Skyrim.ccc");
             var data = Path.Combine(tmpFolder.Dir.Path, "Data");
             Directory.CreateDirectory(data);

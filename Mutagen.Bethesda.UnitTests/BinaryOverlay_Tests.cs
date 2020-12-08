@@ -211,7 +211,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void DisposedIfException()
         {
-            using var tmpFolder = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(DisposedIfException)));
+            using var tmpFolder = Utility.GetTempFolder(nameof(BinaryOverlay_Tests));
             var modPath = Path.Combine(tmpFolder.Dir.Path, "Test.esp");
             try
             {
