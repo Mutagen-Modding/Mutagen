@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void GetListings()
         {
-            using var tmp = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(LoadOrder_Tests), nameof(GetListings)));
+            using var tmp = Utility.GetTempFolder(nameof(LoadOrder_Tests));
             var cccPath = Path.Combine(tmp.Dir.Path, "Skyrim.ccc");
             var pluginsPath = Path.Combine(tmp.Dir.Path, "Plugins.txt");
             var dataPath = Path.Combine(tmp.Dir.Path, "Data");
@@ -102,7 +102,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void GetListings_CreationClubMissing()
         {
-            using var tmp = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(LoadOrder_Tests), nameof(GetListings_CreationClubMissing)));
+            using var tmp = Utility.GetTempFolder(nameof(LoadOrder_Tests));
             var cccPath = Path.Combine(tmp.Dir.Path, "Skyrim.ccc");
             var pluginsPath = Path.Combine(tmp.Dir.Path, "Plugins.txt");
             var dataPath = Path.Combine(tmp.Dir.Path, "Data");
@@ -144,7 +144,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void GetListings_NoCreationClub()
         {
-            using var tmp = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(LoadOrder_Tests), nameof(GetListings_NoCreationClub)));
+            using var tmp = Utility.GetTempFolder(nameof(LoadOrder_Tests));
             var pluginsPath = Path.Combine(tmp.Dir.Path, "Plugins.txt");
             var dataPath = Path.Combine(tmp.Dir.Path, "Data");
             File.WriteAllLines(pluginsPath,
@@ -177,7 +177,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void GetListings_VortexCreationClub()
         {
-            using var tmp = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(LoadOrder_Tests), nameof(GetListings)));
+            using var tmp = Utility.GetTempFolder(nameof(LoadOrder_Tests));
             var cccPath = Path.Combine(tmp.Dir.Path, "Skyrim.ccc");
             var pluginsPath = Path.Combine(tmp.Dir.Path, "Plugins.txt");
             var dataPath = Path.Combine(tmp.Dir.Path, "Data");
@@ -231,7 +231,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public async Task LiveLoadOrder()
         {
-            using var tmpFolder = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(LoadOrder_Tests), nameof(LiveLoadOrder)));
+            using var tmpFolder = Utility.GetTempFolder(nameof(LoadOrder_Tests));
             var pluginPath = Path.Combine(tmpFolder.Dir.Path, "Plugins.txt");
             var cccPath = Path.Combine(tmpFolder.Dir.Path, "Skyrim.ccc");
             var dataFolderPath = Path.Combine(tmpFolder.Dir.Path, "Data");
@@ -429,7 +429,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public async Task LiveLoadOrder_EnsureReaddRetainsOrder()
         {
-            using var tmpFolder = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(LoadOrder_Tests), nameof(LiveLoadOrder_EnsureReaddRetainsOrder)));
+            using var tmpFolder = Utility.GetTempFolder(nameof(LoadOrder_Tests));
             var pluginPath = Path.Combine(tmpFolder.Dir.Path, "Plugins.txt");
             var cccPath = Path.Combine(tmpFolder.Dir.Path, "Skyrim.ccc");
             var dataFolderPath = Path.Combine(tmpFolder.Dir.Path, "Data");
@@ -508,7 +508,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public async Task LiveLoadOrder_PluginsCCListingReorders()
         {
-            using var tmpFolder = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(LoadOrder_Tests), nameof(LiveLoadOrder_PluginsCCListingReorders)));
+            using var tmpFolder = Utility.GetTempFolder(nameof(LoadOrder_Tests));
             var pluginPath = Path.Combine(tmpFolder.Dir.Path, "Plugins.txt");
             var cccPath = Path.Combine(tmpFolder.Dir.Path, "Skyrim.ccc");
             var dataFolderPath = Path.Combine(tmpFolder.Dir.Path, "Data");
@@ -587,7 +587,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public async Task LiveLoadOrder_DontReorderPluginsFile()
         {
-            using var tmpFolder = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(LoadOrder_Tests), nameof(LiveLoadOrder_DontReorderPluginsFile)));
+            using var tmpFolder = Utility.GetTempFolder(nameof(LoadOrder_Tests));
             var pluginPath = Path.Combine(tmpFolder.Dir.Path, "Plugins.txt");
             var cccPath = Path.Combine(tmpFolder.Dir.Path, "Skyrim.ccc");
             var dataFolderPath = Path.Combine(tmpFolder.Dir.Path, "Data");
@@ -624,7 +624,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void WriteExclude()
         {
-            using var tmpFolder = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(PluginListings_Tests), nameof(WriteExclude)));
+            using var tmpFolder = Utility.GetTempFolder(nameof(LoadOrder_Tests));
             var path = Path.Combine(tmpFolder.Dir.Path, "Plugins.txt");
             LoadOrder.Write(
                 path,
@@ -643,7 +643,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void WriteMarkers()
         {
-            using var tmpFolder = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(PluginListings_Tests), nameof(WriteMarkers)));
+            using var tmpFolder = Utility.GetTempFolder(nameof(LoadOrder_Tests));
             var path = Path.Combine(tmpFolder.Dir.Path, "Plugins.txt");
             LoadOrder.Write(
                 path,
@@ -664,7 +664,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void WriteImplicitFilteredOut()
         {
-            using var tmpFolder = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(PluginListings_Tests), nameof(WriteImplicit)));
+            using var tmpFolder = Utility.GetTempFolder(nameof(LoadOrder_Tests));
             var path = Path.Combine(tmpFolder.Dir.Path, "Plugins.txt");
             LoadOrder.Write(
                 path,
@@ -685,7 +685,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void WriteImplicit()
         {
-            using var tmpFolder = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(PluginListings_Tests), nameof(WriteImplicit)));
+            using var tmpFolder = Utility.GetTempFolder(nameof(LoadOrder_Tests));
             var path = Path.Combine(tmpFolder.Dir.Path, "Plugins.txt");
             LoadOrder.Write(
                 path,

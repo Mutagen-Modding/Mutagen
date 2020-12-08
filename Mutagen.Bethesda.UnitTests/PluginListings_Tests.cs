@@ -27,7 +27,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public async Task LiveLoadOrder()
         {
-            using var tmpFolder = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(PluginListings_Tests), nameof(LiveLoadOrder)));
+            using var tmpFolder = Utility.GetTempFolder(nameof(PluginListings_Tests));
             var path = Path.Combine(tmpFolder.Dir.Path, "Plugins.txt");
             File.WriteAllLines(path,
                 new string[]
@@ -69,22 +69,22 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void FromPathMissingWithImplicit()
         {
-            using var tmp = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(PluginListings_Tests), nameof(FromPathMissingWithImplicit)));
-            using var file = File.Create(Path.Combine(tmp.Dir.Path, "Skyrim.esm"));
-            var missingPath = Path.Combine(tmp.Dir.Path, "Plugins.txt");
+            using var tmpFolder = Utility.GetTempFolder(nameof(PluginListings_Tests));
+            using var file = File.Create(Path.Combine(tmpFolder.Dir.Path, "Skyrim.esm"));
+            var missingPath = Path.Combine(tmpFolder.Dir.Path, "Plugins.txt");
             LoadOrder.GetListings(
                 pluginsFilePath: missingPath,
                 creationClubFilePath: null,
                 game: GameRelease.SkyrimSE,
-                dataPath: tmp.Dir.Path)
+                dataPath: tmpFolder.Dir.Path)
                 .Should().Equal(new LoadOrderListing("Skyrim.esm", true));
         }
 
         [Fact]
         public void FromPathMissing()
         {
-            using var tmp = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(PluginListings_Tests), nameof(FromPathMissing)));
-            var missingPath = Path.Combine(tmp.Dir.Path, "Plugins.txt");
+            using var tmpFolder = Utility.GetTempFolder(nameof(PluginListings_Tests));
+            var missingPath = Path.Combine(tmpFolder.Dir.Path, "Plugins.txt");
             Action a = () =>
                 PluginListings.ListingsFromPath(
                     pluginTextPath: missingPath,
