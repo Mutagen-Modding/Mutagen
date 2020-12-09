@@ -414,7 +414,19 @@ namespace Mutagen.Bethesda
 
                         void AddRecords(TModGetter mod, Type type)
                         {
-                            list = list.AddRange(mod.EnumerateMajorRecords(type));
+                            foreach (var item in mod.EnumerateMajorRecords(type))
+                            {
+                                var iterFormKey = item.FormKey;
+                                if (!cache.TryGetValue(iterFormKey, out var targetList))
+                                {
+                                    targetList = ImmutableList<IMajorRecordCommonGetter>.Empty;
+                                }
+                                cache.Set(iterFormKey, targetList.Add(item));
+                            }
+                            if (cache.TryGetValue(formKey, out var requeriedList))
+                            {
+                                list = requeriedList;
+                            }
                         }
 
                         // Add records from that mod that aren't already cached
@@ -513,7 +525,19 @@ namespace Mutagen.Bethesda
 
                         void AddRecords(TModGetter mod, Type type)
                         {
-                            list = list.AddRange(mod.EnumerateMajorRecordContexts(this, type));
+                            foreach (var item in mod.EnumerateMajorRecordContexts(this, type))
+                            {
+                                var iterFormKey = item.Record.FormKey;
+                                if (!cache.TryGetValue(iterFormKey, out var targetList))
+                                {
+                                    targetList = ImmutableList<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>.Empty;
+                                }
+                                cache.Set(iterFormKey, targetList.Add(item));
+                            }
+                            if (cache.TryGetValue(formKey, out var requeriedList))
+                            {
+                                list = requeriedList;
+                            }
                         }
 
                         // Add records from that mod that aren't already cached
@@ -571,6 +595,11 @@ namespace Mutagen.Bethesda
         public void Add(FormKey key, T item)
         {
             _dictionary.Add(key, item);
+        }
+
+        public void Set(FormKey key, T item)
+        {
+            _dictionary[key] = item;
         }
     }
 }

@@ -192,7 +192,9 @@ namespace Mutagen.Bethesda
             IEnumerable<T> creationClubListings,
             Func<T, ModKey> selector)
         {
-            var plugins = pluginsListings.ToList();
+            var plugins = pluginsListings
+                .Select(selector)
+                .ToList();
             return implicitListings
                 .Concat(
                     OrderListings(creationClubListings
@@ -207,12 +209,12 @@ namespace Mutagen.Bethesda
                         // If CC mod is on plugins list, refer to its ordering
                         .OrderBy(selector, Comparer<ModKey>.Create((x, y) =>
                         {
-                            var xIndex = plugins.IndexOf(x, (a, b) => selector(a) == b);
-                            var yIndex = plugins.IndexOf(y, (a, b) => selector(a) == b);
+                            var xIndex = plugins.IndexOf(x);
+                            var yIndex = plugins.IndexOf(y);
                             if (xIndex == yIndex) return 0;
                             return xIndex - yIndex;
                         })), selector))
-                .Concat(OrderListings(pluginsListings, selector))
+                .Concat(pluginsListings)
                 .Distinct(selector);
         }
 

@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda
         public static readonly FormKey Null = new FormKey(ModKey.Null, 0);
         
         /// <summary>
-        /// Record ID
+        /// Record ID, with master indices set to zero.
         /// </summary>
         public readonly uint ID;
         
