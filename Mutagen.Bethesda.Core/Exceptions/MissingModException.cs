@@ -29,5 +29,10 @@ namespace Mutagen.Bethesda
         {
             ModPath = new ModPath(key, string.Empty);
         }
+        
+        public override string ToString()
+        {
+            return $"{nameof(MissingModException)} {ModPath}: {this.Message} {this.InnerException}{this.StackTrace}";
+        }
     }
 }
