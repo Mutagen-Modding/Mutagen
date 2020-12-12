@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
@@ -38,13 +38,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public enum TypeEnum
         {
-            Missile,
-            Lobber,
-            Beam,
-            Flame,
-            Cone,
-            Barrier,
-            Arrow
+            Missile = 0x01,
+            Lobber = 0x02,
+            Beam = 0x04,
+            Flame = 0x08,
+            Cone = 0x10,
+            Barrier = 0x20,
+            Arrow = 0x40,
         }
     }
 }
