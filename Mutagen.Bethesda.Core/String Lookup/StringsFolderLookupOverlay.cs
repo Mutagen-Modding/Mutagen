@@ -73,21 +73,42 @@ namespace Mutagen.Bethesda
                     }
                     foreach (var bsaFile in Directory.EnumerateFiles(dataPath, "*.bsa"))
                     {
-                        var bsaReader = BSAReader.Load(new AbsolutePath(bsaFile, skipValidation: true));
-                        if (!bsaReader.TryGetFolder("strings", out var stringsFolder)) continue;
-                        foreach (var item in stringsFolder.Files)
+                        try
                         {
-                            if (!StringsUtility.TryRetrieveInfoFromString(Path.GetFileName(item.Path.ToString()), out var type, out var lang, out var modName)) continue;
-                            if (!MemoryExtensions.Equals(modKey.Name, modName, StringComparison.OrdinalIgnoreCase)) continue;
-                            var dict = bundle.Get(type);
-                            if (dict.ContainsKey(lang)) continue;
-                            dict[lang] = new Lazy<IStringsLookup>(() =>
+                            var bsaReader = BSAReader.Load(new AbsolutePath(bsaFile, skipValidation: true));
+                            if (!bsaReader.TryGetFolder("strings", out var stringsFolder)) continue;
+                            try
                             {
-                                byte[] bytes = new byte[item.Size];
-                                using var stream = new MemoryStream(bytes);
-                                item.CopyDataTo(stream).AsTask().Wait();
-                                return new StringsLookupOverlay(bytes, type);
-                            }, LazyThreadSafetyMode.ExecutionAndPublication);
+                                foreach (var item in stringsFolder.Files)
+                                {
+                                    if (!StringsUtility.TryRetrieveInfoFromString(Path.GetFileName(item.Path.ToString()), out var type, out var lang, out var modName)) continue;
+                                    if (!MemoryExtensions.Equals(modKey.Name, modName, StringComparison.OrdinalIgnoreCase)) continue;
+                                    var dict = bundle.Get(type);
+                                    if (dict.ContainsKey(lang)) continue;
+                                    dict[lang] = new Lazy<IStringsLookup>(() =>
+                                    {
+                                        try
+                                        {
+                                            byte[] bytes = new byte[item.Size];
+                                            using var stream = new MemoryStream(bytes);
+                                            item.CopyDataTo(stream).AsTask().Wait();
+                                            return new StringsLookupOverlay(bytes, type);
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            throw BsaException.FolderError("String file from BSA failed to parse", ex, bsaFile, item.Path.ToString());
+                                        }
+                                    }, LazyThreadSafetyMode.ExecutionAndPublication);
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                throw BsaException.FolderError("BSA folder failed to parse for string file", ex, bsaFile, stringsFolder.Name ?? string.Empty);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            throw BsaException.OverallError("BSA failed to parse for string file", ex, bsaFile);
                         }
                     }
                     return bundle;
