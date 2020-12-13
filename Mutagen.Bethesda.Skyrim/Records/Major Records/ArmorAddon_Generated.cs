@@ -60,10 +60,6 @@ namespace Mutagen.Bethesda.Skyrim
         public IGenderedItem<Byte> Priority { get; set; } = new GenderedItem<Byte>(default, default);
         IGenderedItemGetter<Byte> IArmorAddonGetter.Priority => this.Priority;
         #endregion
-        #region WeightSliderEnabled
-        public IGenderedItem<Boolean> WeightSliderEnabled { get; set; } = new GenderedItem<Boolean>(default, default);
-        IGenderedItemGetter<Boolean> IArmorAddonGetter.WeightSliderEnabled => this.WeightSliderEnabled;
-        #endregion
         #region Unknown
         public UInt16 Unknown { get; set; } = default;
         #endregion
