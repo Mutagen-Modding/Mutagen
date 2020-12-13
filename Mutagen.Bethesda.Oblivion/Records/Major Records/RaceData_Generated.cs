@@ -79,11 +79,11 @@ namespace Mutagen.Bethesda.Oblivion
         public Int32 Unused { get; set; } = default;
         #endregion
         #region Height
-        public GenderedItem<Single> Height { get; set; } = new GenderedItem<Single>(default, default);
+        public IGenderedItem<Single> Height { get; set; } = new GenderedItem<Single>(default, default);
         IGenderedItemGetter<Single> IRaceDataGetter.Height => this.Height;
         #endregion
         #region Weight
-        public GenderedItem<Single> Weight { get; set; } = new GenderedItem<Single>(default, default);
+        public IGenderedItem<Single> Weight { get; set; } = new GenderedItem<Single>(default, default);
         IGenderedItemGetter<Single> IRaceDataGetter.Weight => this.Weight;
         #endregion
         #region Flags
@@ -801,8 +801,8 @@ namespace Mutagen.Bethesda.Oblivion
         new SkillBoost SkillBoost5 { get; set; }
         new SkillBoost SkillBoost6 { get; set; }
         new Int32 Unused { get; set; }
-        new GenderedItem<Single> Height { get; set; }
-        new GenderedItem<Single> Weight { get; set; }
+        new IGenderedItem<Single> Height { get; set; }
+        new IGenderedItem<Single> Weight { get; set; }
         new Race.Flag Flags { get; set; }
     }
 

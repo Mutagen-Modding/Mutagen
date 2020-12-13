@@ -50,7 +50,7 @@ namespace Mutagen.Bethesda.Generation
 
         public override void GenerateForClass(FileGeneration fg)
         {
-            fg.AppendLine($"public GenderedItem<{SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}{SubTypeGeneration.NullChar}>{(this.Nullable ? "?" : null)} {this.Name} {{ get; set; }}{(this.Nullable ? null : $" = new GenderedItem<{SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}{(this.ItemNullable ? "?" : null)}>({this.SubTypeGeneration.GetDefault(getter: false)}, {this.SubTypeGeneration.GetDefault(getter: false)});")}");
+            fg.AppendLine($"public IGenderedItem<{SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}{SubTypeGeneration.NullChar}>{(this.Nullable ? "?" : null)} {this.Name} {{ get; set; }}{(this.Nullable ? null : $" = new GenderedItem<{SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}{(this.ItemNullable ? "?" : null)}>({this.SubTypeGeneration.GetDefault(getter: false)}, {this.SubTypeGeneration.GetDefault(getter: false)});")}");
             fg.AppendLine($"IGenderedItemGetter<{SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}{SubTypeGeneration.NullChar}>{(this.Nullable ? "?" : null)} {this.ObjectGen.Interface(getter: true, internalInterface: true)}.{this.Name} => this.{this.Name};");
         }
 
@@ -194,7 +194,7 @@ namespace Mutagen.Bethesda.Generation
             }
             else
             {
-                fg.AppendLine($"new GenderedItem<{SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}{SubTypeGeneration.NullChar}>{(this.Nullable ? "?" : null)} {this.Name} {{ get; set; }}");
+                fg.AppendLine($"new IGenderedItem<{SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}{SubTypeGeneration.NullChar}>{(this.Nullable ? "?" : null)} {this.Name} {{ get; set; }}");
             }
         }
 
@@ -225,7 +225,7 @@ namespace Mutagen.Bethesda.Generation
 
         public override string TypeName(bool getter, bool needsCovariance = false)
         {
-            return $"{(getter ? "IGenderedItemGetter" : "GenderedItem")}<{SubTypeGeneration.TypeName(getter, needsCovariance: true)}{this.SubTypeGeneration.NullChar}>";
+            return $"{(getter ? "IGenderedItemGetter" : "IGenderedItem")}<{SubTypeGeneration.TypeName(getter, needsCovariance: true)}{this.SubTypeGeneration.NullChar}>";
         }
 
         public override string GetDuplicate(Accessor accessor)

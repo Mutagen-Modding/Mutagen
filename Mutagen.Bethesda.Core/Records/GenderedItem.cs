@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda
         /// Male item
         /// </summary>
         T Male { get; }
-        
+
         /// <summary>
         /// Female item
         /// </summary>
@@ -25,9 +25,25 @@ namespace Mutagen.Bethesda
     }
 
     /// <summary>
+    /// An interface for an object exposing readonly Gendered Items
+    /// </summary>
+    public interface IGenderedItem<T> : IGenderedItemGetter<T>
+    {
+        /// <summary>
+        /// Male item
+        /// </summary>
+        new T Male { set; get; }
+
+        /// <summary>
+        /// Female item
+        /// </summary>
+        new T Female { set; get; }
+    }
+
+    /// <summary>
     /// An object exposing data in a gendered format
     /// </summary>
-    public class GenderedItem<T> : IGenderedItemGetter<T>
+    public class GenderedItem<T> : IGenderedItem<T>
     {
         /// <summary>
         /// Male item

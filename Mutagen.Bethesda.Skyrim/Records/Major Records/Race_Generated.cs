@@ -136,11 +136,11 @@ namespace Mutagen.Bethesda.Skyrim
         public Int16 Unknown { get; set; } = default;
         #endregion
         #region Height
-        public GenderedItem<Single> Height { get; set; } = new GenderedItem<Single>(default, default);
+        public IGenderedItem<Single> Height { get; set; } = new GenderedItem<Single>(default, default);
         IGenderedItemGetter<Single> IRaceGetter.Height => this.Height;
         #endregion
         #region Weight
-        public GenderedItem<Single> Weight { get; set; } = new GenderedItem<Single>(default, default);
+        public IGenderedItem<Single> Weight { get; set; } = new GenderedItem<Single>(default, default);
         IGenderedItemGetter<Single> IRaceGetter.Weight => this.Weight;
         #endregion
         #region Flags
@@ -222,7 +222,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMountDataGetter IRaceGetter.MountData => MountData;
         #endregion
         #region SkeletalModel
-        public GenderedItem<SimpleModel?>? SkeletalModel { get; set; }
+        public IGenderedItem<SimpleModel?>? SkeletalModel { get; set; }
         IGenderedItemGetter<ISimpleModelGetter?>? IRaceGetter.SkeletalModel => this.SkeletalModel;
         #endregion
         #region MovementTypeNames
@@ -240,15 +240,15 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region Voices
-        public GenderedItem<IFormLink<IVoiceTypeGetter>> Voices { get; set; } = new GenderedItem<IFormLink<IVoiceTypeGetter>>(FormLink<VoiceType>.Null, FormLink<VoiceType>.Null);
+        public IGenderedItem<IFormLink<IVoiceTypeGetter>> Voices { get; set; } = new GenderedItem<IFormLink<IVoiceTypeGetter>>(FormLink<VoiceType>.Null, FormLink<VoiceType>.Null);
         IGenderedItemGetter<IFormLink<IVoiceTypeGetter>> IRaceGetter.Voices => this.Voices;
         #endregion
         #region DecapitateArmors
-        public GenderedItem<IFormLink<IArmorGetter>>? DecapitateArmors { get; set; }
+        public IGenderedItem<IFormLink<IArmorGetter>>? DecapitateArmors { get; set; }
         IGenderedItemGetter<IFormLink<IArmorGetter>>? IRaceGetter.DecapitateArmors => this.DecapitateArmors;
         #endregion
         #region DefaultHairColors
-        public GenderedItem<IFormLink<IColorRecordGetter>>? DefaultHairColors { get; set; }
+        public IGenderedItem<IFormLink<IColorRecordGetter>>? DefaultHairColors { get; set; }
         IGenderedItemGetter<IFormLink<IColorRecordGetter>>? IRaceGetter.DefaultHairColors => this.DefaultHairColors;
         #endregion
         #region NumberOfTintsInList
@@ -280,7 +280,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region BodyData
-        public GenderedItem<BodyData?> BodyData { get; set; } = new GenderedItem<BodyData?>(default(BodyData?), default(BodyData?));
+        public IGenderedItem<BodyData?> BodyData { get; set; } = new GenderedItem<BodyData?>(default(BodyData?), default(BodyData?));
         IGenderedItemGetter<IBodyDataGetter?> IRaceGetter.BodyData => this.BodyData;
         #endregion
         #region Hairs
@@ -315,7 +315,7 @@ namespace Mutagen.Bethesda.Skyrim
         public FormLinkNullable<IBodyPartDataGetter> BodyPartData { get; set; } = new FormLinkNullable<IBodyPartDataGetter>();
         #endregion
         #region BehaviorGraph
-        public GenderedItem<Model?> BehaviorGraph { get; set; } = new GenderedItem<Model?>(default(Model?), default(Model?));
+        public IGenderedItem<Model?> BehaviorGraph { get; set; } = new GenderedItem<Model?>(default(Model?), default(Model?));
         IGenderedItemGetter<IModelGetter?> IRaceGetter.BehaviorGraph => this.BehaviorGraph;
         #endregion
         #region MaterialType
@@ -402,7 +402,7 @@ namespace Mutagen.Bethesda.Skyrim
         public FormLinkNullable<IMovementTypeGetter> BaseMovementDefaultSprint { get; set; } = new FormLinkNullable<IMovementTypeGetter>();
         #endregion
         #region HeadData
-        public GenderedItem<HeadData?>? HeadData { get; set; }
+        public IGenderedItem<HeadData?>? HeadData { get; set; }
         IGenderedItemGetter<IHeadDataGetter?>? IRaceGetter.HeadData => this.HeadData;
         #endregion
         #region MorphRace
@@ -3867,8 +3867,8 @@ namespace Mutagen.Bethesda.Skyrim
         new SkillBoost SkillBoost5 { get; set; }
         new SkillBoost SkillBoost6 { get; set; }
         new Int16 Unknown { get; set; }
-        new GenderedItem<Single> Height { get; set; }
-        new GenderedItem<Single> Weight { get; set; }
+        new IGenderedItem<Single> Height { get; set; }
+        new IGenderedItem<Single> Weight { get; set; }
         new Race.Flag Flags { get; set; }
         new IDictionary<BasicStat, Single> Starting { get; }
         new Single BaseCarryWeight { get; set; }
@@ -3889,21 +3889,21 @@ namespace Mutagen.Bethesda.Skyrim
         new Single AngularAccelerationRate { get; set; }
         new Single AngularTolerance { get; set; }
         new MountData MountData { get; set; }
-        new GenderedItem<SimpleModel?>? SkeletalModel { get; set; }
+        new IGenderedItem<SimpleModel?>? SkeletalModel { get; set; }
         new ExtendedList<String> MovementTypeNames { get; }
-        new GenderedItem<IFormLink<IVoiceTypeGetter>> Voices { get; set; }
-        new GenderedItem<IFormLink<IArmorGetter>>? DecapitateArmors { get; set; }
-        new GenderedItem<IFormLink<IColorRecordGetter>>? DefaultHairColors { get; set; }
+        new IGenderedItem<IFormLink<IVoiceTypeGetter>> Voices { get; set; }
+        new IGenderedItem<IFormLink<IArmorGetter>>? DecapitateArmors { get; set; }
+        new IGenderedItem<IFormLink<IColorRecordGetter>>? DefaultHairColors { get; set; }
         new UInt16? NumberOfTintsInList { get; set; }
         new Single FacegenMainClamp { get; set; }
         new Single FacegenFaceClamp { get; set; }
         new FormLinkNullable<IRaceGetter> AttackRace { get; set; }
         new ExtendedList<Attack> Attacks { get; }
-        new GenderedItem<BodyData?> BodyData { get; set; }
+        new IGenderedItem<BodyData?> BodyData { get; set; }
         new ExtendedList<IFormLink<IHairGetter>>? Hairs { get; set; }
         new ExtendedList<IFormLink<IEyesGetter>>? Eyes { get; set; }
         new FormLinkNullable<IBodyPartDataGetter> BodyPartData { get; set; }
-        new GenderedItem<Model?> BehaviorGraph { get; set; }
+        new IGenderedItem<Model?> BehaviorGraph { get; set; }
         new FormLinkNullable<IMaterialTypeGetter> MaterialType { get; set; }
         new FormLinkNullable<IImpactDataSetGetter> ImpactDataSet { get; set; }
         new FormLinkNullable<IArtObjectGetter> DecapitationFX { get; set; }
@@ -3921,7 +3921,7 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<IMovementTypeGetter> BaseMovementDefaultFly { get; set; }
         new FormLinkNullable<IMovementTypeGetter> BaseMovementDefaultSneak { get; set; }
         new FormLinkNullable<IMovementTypeGetter> BaseMovementDefaultSprint { get; set; }
-        new GenderedItem<HeadData?>? HeadData { get; set; }
+        new IGenderedItem<HeadData?>? HeadData { get; set; }
         new FormLinkNullable<IRaceGetter> MorphRace { get; set; }
         new FormLinkNullable<IRaceGetter> ArmorRace { get; set; }
         new Race.DATADataType DATADataTypeState { get; set; }
@@ -3936,18 +3936,18 @@ namespace Mutagen.Bethesda.Skyrim
         IRace,
         IRaceGetter
     {
-        new GenderedItem<Single> Height { get; set; }
-        new GenderedItem<Single> Weight { get; set; }
+        new IGenderedItem<Single> Height { get; set; }
+        new IGenderedItem<Single> Weight { get; set; }
         new IDictionary<BasicStat, Single> Starting { get; }
         new IDictionary<BasicStat, Single> Regen { get; }
-        new GenderedItem<SimpleModel?>? SkeletalModel { get; set; }
-        new GenderedItem<IFormLink<IVoiceTypeGetter>> Voices { get; set; }
-        new GenderedItem<IFormLink<IArmorGetter>>? DecapitateArmors { get; set; }
-        new GenderedItem<IFormLink<IColorRecordGetter>>? DefaultHairColors { get; set; }
-        new GenderedItem<BodyData?> BodyData { get; set; }
-        new GenderedItem<Model?> BehaviorGraph { get; set; }
+        new IGenderedItem<SimpleModel?>? SkeletalModel { get; set; }
+        new IGenderedItem<IFormLink<IVoiceTypeGetter>> Voices { get; set; }
+        new IGenderedItem<IFormLink<IArmorGetter>>? DecapitateArmors { get; set; }
+        new IGenderedItem<IFormLink<IColorRecordGetter>>? DefaultHairColors { get; set; }
+        new IGenderedItem<BodyData?> BodyData { get; set; }
+        new IGenderedItem<Model?> BehaviorGraph { get; set; }
         new IDictionary<BipedObject, String> BipedObjectNames { get; }
-        new GenderedItem<HeadData?>? HeadData { get; set; }
+        new IGenderedItem<HeadData?>? HeadData { get; set; }
     }
 
     public partial interface IRaceGetter :

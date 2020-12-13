@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Skyrim
         UInt32? IRankGetter.Number => this.Number;
         #endregion
         #region Title
-        public GenderedItem<TranslatedString?>? Title { get; set; }
+        public IGenderedItem<TranslatedString?>? Title { get; set; }
         IGenderedItemGetter<ITranslatedStringGetter?>? IRankGetter.Title => this.Title;
         #endregion
         #region Insignia
@@ -488,7 +488,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IRank>
     {
         new UInt32? Number { get; set; }
-        new GenderedItem<TranslatedString?>? Title { get; set; }
+        new IGenderedItem<TranslatedString?>? Title { get; set; }
         new String? Insignia { get; set; }
     }
 

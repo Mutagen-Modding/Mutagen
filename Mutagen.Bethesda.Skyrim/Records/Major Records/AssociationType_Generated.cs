@@ -43,11 +43,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region ParentTitle
-        public GenderedItem<String?>? ParentTitle { get; set; }
+        public IGenderedItem<String?>? ParentTitle { get; set; }
         IGenderedItemGetter<String?>? IAssociationTypeGetter.ParentTitle => this.ParentTitle;
         #endregion
         #region Title
-        public GenderedItem<String?>? Title { get; set; }
+        public IGenderedItem<String?>? Title { get; set; }
         IGenderedItemGetter<String?>? IAssociationTypeGetter.Title => this.Title;
         #endregion
         #region Flags
@@ -541,8 +541,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IAssociationTypeInternal>
     {
-        new GenderedItem<String?>? ParentTitle { get; set; }
-        new GenderedItem<String?>? Title { get; set; }
+        new IGenderedItem<String?>? ParentTitle { get; set; }
+        new IGenderedItem<String?>? Title { get; set; }
         new AssociationType.Flag Flags { get; set; }
     }
 
@@ -551,8 +551,8 @@ namespace Mutagen.Bethesda.Skyrim
         IAssociationType,
         IAssociationTypeGetter
     {
-        new GenderedItem<String?>? ParentTitle { get; set; }
-        new GenderedItem<String?>? Title { get; set; }
+        new IGenderedItem<String?>? ParentTitle { get; set; }
+        new IGenderedItem<String?>? Title { get; set; }
     }
 
     public partial interface IAssociationTypeGetter :

@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Oblivion
         Int32? IRankGetter.RankNumber => this.RankNumber;
         #endregion
         #region Name
-        public GenderedItem<String?>? Name { get; set; }
+        public IGenderedItem<String?>? Name { get; set; }
         IGenderedItemGetter<String?>? IRankGetter.Name => this.Name;
         #endregion
         #region Insignia
@@ -488,7 +488,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IRank>
     {
         new Int32? RankNumber { get; set; }
-        new GenderedItem<String?>? Name { get; set; }
+        new IGenderedItem<String?>? Name { get; set; }
         new String? Insignia { get; set; }
     }
 
