@@ -32,6 +32,7 @@ namespace Mutagen.Bethesda.UnitTests
         public static readonly FormKey Form1 = new FormKey(PluginModKey, 0x123456);
         public static readonly FormKey Form2 = new FormKey(PluginModKey, 0x12345F);
         public static readonly FormKey Form3 = new FormKey(PluginModKey, 0x223456);
+        public static readonly FormKey Form4 = new FormKey(PluginModKey, 0x22345F);
         public static readonly string TempFolderPath = "MutagenUnitTests";
         public static ModPath OblivionTestMod = new ModPath(ModKey.FromNameAndExtension("test.esp"), "../../../oblivion_test.esp");
         public static ModPath OblivionOverrideMod = new ModPath(ModKey.FromNameAndExtension("override.esp"), "../../../oblivion_override.esp");
