@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Skyrim
         UInt16? IArmorGetter.EnchantmentAmount => this.EnchantmentAmount;
         #endregion
         #region WorldModel
-        public GenderedItem<ArmorModel?>? WorldModel { get; set; }
+        public IGenderedItem<ArmorModel?>? WorldModel { get; set; }
         IGenderedItemGetter<IArmorModelGetter?>? IArmorGetter.WorldModel => this.WorldModel;
         #endregion
         #region BodyTemplate
@@ -1414,7 +1414,7 @@ namespace Mutagen.Bethesda.Skyrim
         new TranslatedString? Name { get; set; }
         new FormLinkNullable<IEffectRecordGetter> ObjectEffect { get; set; }
         new UInt16? EnchantmentAmount { get; set; }
-        new GenderedItem<ArmorModel?>? WorldModel { get; set; }
+        new IGenderedItem<ArmorModel?>? WorldModel { get; set; }
         new BodyTemplate? BodyTemplate { get; set; }
         new Destructible? Destructible { get; set; }
         new FormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; set; }
@@ -1443,7 +1443,7 @@ namespace Mutagen.Bethesda.Skyrim
         IArmor,
         IArmorGetter
     {
-        new GenderedItem<ArmorModel?>? WorldModel { get; set; }
+        new IGenderedItem<ArmorModel?>? WorldModel { get; set; }
     }
 
     public partial interface IArmorGetter :

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Mutagen.Bethesda
 {
-    public class RecordException : AggregateException
+    public class RecordException : Exception
     {
         public ModKey? ModKey { get; internal set; }
         public FormKey? FormKey { get; internal set; }

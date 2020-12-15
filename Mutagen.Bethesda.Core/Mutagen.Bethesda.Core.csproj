@@ -26,8 +26,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Loqui" Version="1.5.15" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.6.7" />
+    <PackageReference Include="Loqui" Version="1.5.16" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.6.8" />
     <PackageReference Include="NuGetizer" Version="0.4.11">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -57,6 +57,7 @@
     <Compile Include="Enums\Quadrant.cs" />
     <Compile Include="Enums\StringsFileFormat.cs" />
     <Compile Include="Enums\StringsSource.cs" />
+    <Compile Include="Exceptions\BsaException.cs" />
     <Compile Include="Exceptions\MissingModException.cs" />
     <Compile Include="Exceptions\RecordException.cs" />
     <Compile Include="Exceptions\SubrecordException.cs" />

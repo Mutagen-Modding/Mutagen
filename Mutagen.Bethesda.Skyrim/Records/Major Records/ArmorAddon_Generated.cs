@@ -57,12 +57,8 @@ namespace Mutagen.Bethesda.Skyrim
         public FormLinkNullable<IRaceGetter> Race { get; set; } = new FormLinkNullable<IRaceGetter>();
         #endregion
         #region Priority
-        public GenderedItem<Byte> Priority { get; set; } = new GenderedItem<Byte>(default, default);
+        public IGenderedItem<Byte> Priority { get; set; } = new GenderedItem<Byte>(default, default);
         IGenderedItemGetter<Byte> IArmorAddonGetter.Priority => this.Priority;
-        #endregion
-        #region WeightSliderEnabled
-        public GenderedItem<Boolean> WeightSliderEnabled { get; set; } = new GenderedItem<Boolean>(default, default);
-        IGenderedItemGetter<Boolean> IArmorAddonGetter.WeightSliderEnabled => this.WeightSliderEnabled;
         #endregion
         #region Unknown
         public UInt16 Unknown { get; set; } = default;
@@ -77,19 +73,19 @@ namespace Mutagen.Bethesda.Skyrim
         public Single WeaponAdjust { get; set; } = default;
         #endregion
         #region WorldModel
-        public GenderedItem<Model?>? WorldModel { get; set; }
+        public IGenderedItem<Model?>? WorldModel { get; set; }
         IGenderedItemGetter<IModelGetter?>? IArmorAddonGetter.WorldModel => this.WorldModel;
         #endregion
         #region FirstPersonModel
-        public GenderedItem<Model?>? FirstPersonModel { get; set; }
+        public IGenderedItem<Model?>? FirstPersonModel { get; set; }
         IGenderedItemGetter<IModelGetter?>? IArmorAddonGetter.FirstPersonModel => this.FirstPersonModel;
         #endregion
         #region SkinTexture
-        public GenderedItem<IFormLinkNullable<ITextureSetGetter>>? SkinTexture { get; set; }
+        public IGenderedItem<IFormLinkNullable<ITextureSetGetter>>? SkinTexture { get; set; }
         IGenderedItemGetter<IFormLinkNullable<ITextureSetGetter>>? IArmorAddonGetter.SkinTexture => this.SkinTexture;
         #endregion
         #region TextureSwapList
-        public GenderedItem<IFormLinkNullable<IFormListGetter>>? TextureSwapList { get; set; }
+        public IGenderedItem<IFormLinkNullable<IFormListGetter>>? TextureSwapList { get; set; }
         IGenderedItemGetter<IFormLinkNullable<IFormListGetter>>? IArmorAddonGetter.TextureSwapList => this.TextureSwapList;
         #endregion
         #region AdditionalRaces
@@ -1082,16 +1078,16 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new BodyTemplate? BodyTemplate { get; set; }
         new FormLinkNullable<IRaceGetter> Race { get; set; }
-        new GenderedItem<Byte> Priority { get; set; }
-        new GenderedItem<Boolean> WeightSliderEnabled { get; set; }
+        new IGenderedItem<Byte> Priority { get; set; }
+        new IGenderedItem<Boolean> WeightSliderEnabled { get; set; }
         new UInt16 Unknown { get; set; }
         new Byte DetectionSoundValue { get; set; }
         new Byte Unknown2 { get; set; }
         new Single WeaponAdjust { get; set; }
-        new GenderedItem<Model?>? WorldModel { get; set; }
-        new GenderedItem<Model?>? FirstPersonModel { get; set; }
-        new GenderedItem<IFormLinkNullable<ITextureSetGetter>>? SkinTexture { get; set; }
-        new GenderedItem<IFormLinkNullable<IFormListGetter>>? TextureSwapList { get; set; }
+        new IGenderedItem<Model?>? WorldModel { get; set; }
+        new IGenderedItem<Model?>? FirstPersonModel { get; set; }
+        new IGenderedItem<IFormLinkNullable<ITextureSetGetter>>? SkinTexture { get; set; }
+        new IGenderedItem<IFormLinkNullable<IFormListGetter>>? TextureSwapList { get; set; }
         new ExtendedList<IFormLink<IRaceGetter>> AdditionalRaces { get; }
         new FormLinkNullable<IFootstepSetGetter> FootstepSound { get; set; }
         new FormLinkNullable<IArtObjectGetter> ArtObject { get; set; }
@@ -1103,12 +1099,12 @@ namespace Mutagen.Bethesda.Skyrim
         IArmorAddon,
         IArmorAddonGetter
     {
-        new GenderedItem<Byte> Priority { get; set; }
-        new GenderedItem<Boolean> WeightSliderEnabled { get; set; }
-        new GenderedItem<Model?>? WorldModel { get; set; }
-        new GenderedItem<Model?>? FirstPersonModel { get; set; }
-        new GenderedItem<IFormLinkNullable<ITextureSetGetter>>? SkinTexture { get; set; }
-        new GenderedItem<IFormLinkNullable<IFormListGetter>>? TextureSwapList { get; set; }
+        new IGenderedItem<Byte> Priority { get; set; }
+        new IGenderedItem<Boolean> WeightSliderEnabled { get; set; }
+        new IGenderedItem<Model?>? WorldModel { get; set; }
+        new IGenderedItem<Model?>? FirstPersonModel { get; set; }
+        new IGenderedItem<IFormLinkNullable<ITextureSetGetter>>? SkinTexture { get; set; }
+        new IGenderedItem<IFormLinkNullable<IFormListGetter>>? TextureSwapList { get; set; }
     }
 
     public partial interface IArmorAddonGetter :

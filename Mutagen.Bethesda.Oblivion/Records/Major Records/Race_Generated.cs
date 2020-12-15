@@ -92,11 +92,11 @@ namespace Mutagen.Bethesda.Oblivion
         IRaceDataGetter? IRaceGetter.Data => this.Data;
         #endregion
         #region Voices
-        public GenderedItem<IFormLink<IRaceGetter>>? Voices { get; set; }
+        public IGenderedItem<IFormLink<IRaceGetter>>? Voices { get; set; }
         IGenderedItemGetter<IFormLink<IRaceGetter>>? IRaceGetter.Voices => this.Voices;
         #endregion
         #region DefaultHair
-        public GenderedItem<IFormLink<IHairGetter>>? DefaultHair { get; set; }
+        public IGenderedItem<IFormLink<IHairGetter>>? DefaultHair { get; set; }
         IGenderedItemGetter<IFormLink<IHairGetter>>? IRaceGetter.DefaultHair => this.DefaultHair;
         #endregion
         #region DefaultHairColor
@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda.Oblivion
         Int32? IRaceGetter.FaceGenFaceClamp => this.FaceGenFaceClamp;
         #endregion
         #region RaceStats
-        public GenderedItem<RaceStats>? RaceStats { get; set; }
+        public IGenderedItem<RaceStats>? RaceStats { get; set; }
         IGenderedItemGetter<IRaceStatsGetter>? IRaceGetter.RaceStats => this.RaceStats;
         #endregion
         #region FaceData
@@ -133,7 +133,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region BodyData
-        public GenderedItem<BodyData?>? BodyData { get; set; }
+        public IGenderedItem<BodyData?>? BodyData { get; set; }
         IGenderedItemGetter<IBodyDataGetter?>? IRaceGetter.BodyData => this.BodyData;
         #endregion
         #region Hairs
@@ -1457,14 +1457,14 @@ namespace Mutagen.Bethesda.Oblivion
         new ExtendedList<IFormLink<ISpellGetter>> Spells { get; }
         new ExtendedList<RaceRelation> Relations { get; }
         new RaceData? Data { get; set; }
-        new GenderedItem<IFormLink<IRaceGetter>>? Voices { get; set; }
-        new GenderedItem<IFormLink<IHairGetter>>? DefaultHair { get; set; }
+        new IGenderedItem<IFormLink<IRaceGetter>>? Voices { get; set; }
+        new IGenderedItem<IFormLink<IHairGetter>>? DefaultHair { get; set; }
         new Byte? DefaultHairColor { get; set; }
         new Int32? FaceGenMainClamp { get; set; }
         new Int32? FaceGenFaceClamp { get; set; }
-        new GenderedItem<RaceStats>? RaceStats { get; set; }
+        new IGenderedItem<RaceStats>? RaceStats { get; set; }
         new ExtendedList<FacePart> FaceData { get; }
-        new GenderedItem<BodyData?>? BodyData { get; set; }
+        new IGenderedItem<BodyData?>? BodyData { get; set; }
         new ExtendedList<IFormLink<IHairGetter>>? Hairs { get; set; }
         new ExtendedList<IFormLink<IEyeGetter>>? Eyes { get; set; }
         new FaceGenData? FaceGenData { get; set; }
@@ -1476,10 +1476,10 @@ namespace Mutagen.Bethesda.Oblivion
         IRace,
         IRaceGetter
     {
-        new GenderedItem<IFormLink<IRaceGetter>>? Voices { get; set; }
-        new GenderedItem<IFormLink<IHairGetter>>? DefaultHair { get; set; }
-        new GenderedItem<RaceStats>? RaceStats { get; set; }
-        new GenderedItem<BodyData?>? BodyData { get; set; }
+        new IGenderedItem<IFormLink<IRaceGetter>>? Voices { get; set; }
+        new IGenderedItem<IFormLink<IHairGetter>>? DefaultHair { get; set; }
+        new IGenderedItem<RaceStats>? RaceStats { get; set; }
+        new IGenderedItem<BodyData?>? BodyData { get; set; }
     }
 
     public partial interface IRaceGetter :
