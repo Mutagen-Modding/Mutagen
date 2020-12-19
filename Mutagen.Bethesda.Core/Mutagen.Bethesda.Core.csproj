@@ -21,14 +21,14 @@
   <ItemGroup>
     <PackageReference Include="Compression.BSA" Version="2.2.1.1" />
     <PackageReference Include="DotNetZip" Version="1.15.0" />
-    <PackageReference Include="DynamicData" Version="6.17.14" />
+    <PackageReference Include="DynamicData" Version="7.1.1" />
     <PackageReference Include="GitInfo" Version="2.1.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Loqui" Version="1.5.16" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.6.8" />
-    <PackageReference Include="NuGetizer" Version="0.4.11">
+    <PackageReference Include="Loqui" Version="2.1.0" />
+    <PackageReference Include="Noggog.CSharpExt" Version="2.1.0" />
+    <PackageReference Include="NuGetizer" Version="0.6.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
