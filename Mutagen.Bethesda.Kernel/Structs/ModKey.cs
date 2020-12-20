@@ -4,9 +4,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
@@ -295,6 +292,9 @@ namespace Mutagen.Bethesda
 
         private static readonly Comparer<ModKey> _byTypeComparer = Comparer<ModKey>.Create((x, y) => x.Type.CompareTo(y.Type));
         public static Comparer<ModKey> ByTypeComparer => _byTypeComparer;
+
+        private static readonly Comparer<ModKey> _alphabetical = Comparer<ModKey>.Create((x, y) => x.FileName.CompareTo(y.FileName));
+        public static Comparer<ModKey> Alphabetical => _alphabetical;
         #endregion
     }
 }

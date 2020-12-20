@@ -20,8 +20,8 @@ namespace Mutagen.Bethesda
         public override bool Equals(object? obj)
         {
             return obj is LoadOrderListing listing &&
-                   ModKey.Equals(listing.ModKey) &&
-                   Enabled == listing.Enabled;
+                ModKey.Equals(listing.ModKey) &&
+                Enabled == listing.Enabled;
         }
 
         public override int GetHashCode()
