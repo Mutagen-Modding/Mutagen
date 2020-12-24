@@ -488,10 +488,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = SpellUnleveled_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormLinkInformation> LinkFormKeys => SpellUnleveledCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => SpellUnleveledCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> LinkFormKeys => SpellUnleveledCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SpellUnleveledCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SpellUnleveledCommon.Instance.RemapLinks(this, mapping);
         public SpellUnleveled(FormKey formKey)
@@ -1718,10 +1715,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormLinkInformation> LinkFormKeys => SpellUnleveledCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => SpellUnleveledCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> LinkFormKeys => SpellUnleveledCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SpellUnleveledBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

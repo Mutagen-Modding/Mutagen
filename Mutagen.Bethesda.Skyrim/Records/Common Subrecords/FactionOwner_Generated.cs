@@ -373,10 +373,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormLinkInformation> LinkFormKeys => FactionOwnerCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => FactionOwnerCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> LinkFormKeys => FactionOwnerCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FactionOwnerCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FactionOwnerCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -1098,10 +1095,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormLinkInformation> LinkFormKeys => FactionOwnerCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => FactionOwnerCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> LinkFormKeys => FactionOwnerCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => FactionOwnerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

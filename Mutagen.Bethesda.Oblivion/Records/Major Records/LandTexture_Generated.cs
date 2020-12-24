@@ -550,10 +550,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = LandTexture_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormLinkInformation> LinkFormKeys => LandTextureCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => LandTextureCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> LinkFormKeys => LandTextureCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LandTextureCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LandTextureCommon.Instance.RemapLinks(this, mapping);
         public LandTexture(FormKey formKey)
@@ -1650,10 +1647,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormLinkInformation> LinkFormKeys => LandTextureCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => LandTextureCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> LinkFormKeys => LandTextureCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LandTextureBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

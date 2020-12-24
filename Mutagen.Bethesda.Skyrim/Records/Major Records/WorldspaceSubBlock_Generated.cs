@@ -595,10 +595,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = (RecordType)Cell.GrupRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormLinkInformation> LinkFormKeys => WorldspaceSubBlockCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => WorldspaceSubBlockCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> LinkFormKeys => WorldspaceSubBlockCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceSubBlockCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceSubBlockCommon.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
@@ -2262,10 +2259,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormLinkInformation> LinkFormKeys => WorldspaceSubBlockCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => WorldspaceSubBlockCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> LinkFormKeys => WorldspaceSubBlockCommon.Instance.GetLinkFormKeys(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

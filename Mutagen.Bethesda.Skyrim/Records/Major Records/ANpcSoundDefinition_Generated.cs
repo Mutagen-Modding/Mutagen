@@ -315,10 +315,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected virtual IEnumerable<FormLinkInformation> LinkFormKeys => ANpcSoundDefinitionCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => ANpcSoundDefinitionCommon.Instance.GetLinkFormKeys(this);
+        public virtual IEnumerable<FormLinkInformation> LinkFormKeys => ANpcSoundDefinitionCommon.Instance.GetLinkFormKeys(this);
         protected virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ANpcSoundDefinitionCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ANpcSoundDefinitionCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -940,10 +937,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected virtual IEnumerable<FormLinkInformation> LinkFormKeys => ANpcSoundDefinitionCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => ANpcSoundDefinitionCommon.Instance.GetLinkFormKeys(this);
+        public virtual IEnumerable<FormLinkInformation> LinkFormKeys => ANpcSoundDefinitionCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => ANpcSoundDefinitionBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

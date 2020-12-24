@@ -387,10 +387,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Footstep_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormLinkInformation> LinkFormKeys => FootstepCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => FootstepCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> LinkFormKeys => FootstepCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FootstepCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FootstepCommon.Instance.RemapLinks(this, mapping);
         public Footstep(
@@ -1375,10 +1372,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormLinkInformation> LinkFormKeys => FootstepCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => FootstepCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> LinkFormKeys => FootstepCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => FootstepBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

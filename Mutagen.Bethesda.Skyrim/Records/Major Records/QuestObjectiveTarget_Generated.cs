@@ -533,10 +533,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = QuestObjectiveTarget_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormLinkInformation> LinkFormKeys => QuestObjectiveTargetCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => QuestObjectiveTargetCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> LinkFormKeys => QuestObjectiveTargetCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestObjectiveTargetCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestObjectiveTargetCommon.Instance.RemapLinks(this, mapping);
         [Flags]
@@ -1368,10 +1365,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormLinkInformation> LinkFormKeys => QuestObjectiveTargetCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => QuestObjectiveTargetCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> LinkFormKeys => QuestObjectiveTargetCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => QuestObjectiveTargetBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

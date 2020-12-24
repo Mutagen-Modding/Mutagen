@@ -504,10 +504,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = AVirtualMachineAdapter_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected virtual IEnumerable<FormLinkInformation> LinkFormKeys => AVirtualMachineAdapterCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => AVirtualMachineAdapterCommon.Instance.GetLinkFormKeys(this);
+        public virtual IEnumerable<FormLinkInformation> LinkFormKeys => AVirtualMachineAdapterCommon.Instance.GetLinkFormKeys(this);
         protected virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AVirtualMachineAdapterCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AVirtualMachineAdapterCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -1251,10 +1248,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected virtual IEnumerable<FormLinkInformation> LinkFormKeys => AVirtualMachineAdapterCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => AVirtualMachineAdapterCommon.Instance.GetLinkFormKeys(this);
+        public virtual IEnumerable<FormLinkInformation> LinkFormKeys => AVirtualMachineAdapterCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => AVirtualMachineAdapterBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

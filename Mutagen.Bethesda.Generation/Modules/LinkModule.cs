@@ -319,10 +319,7 @@ namespace Mutagen.Bethesda.Generation
 
         public static async Task GenerateInterfaceImplementation(ObjectGeneration obj, FileGeneration fg, bool getter)
         {
-            fg.AppendLine($"[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-            fg.AppendLine($"protected{await obj.FunctionOverride(async (o) => obj.GetObjectType() == ObjectType.Mod || (await HasLinks(o, includeBaseClass: false)) != LinkCase.No)}IEnumerable<{nameof(FormLinkInformation)}> {nameof(ILinkedFormKeyContainerGetter.LinkFormKeys)} => {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.GetLinkFormKeys(this);");
-            fg.AppendLine($"[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-            fg.AppendLine($"IEnumerable<{nameof(FormLinkInformation)}> {nameof(ILinkedFormKeyContainerGetter)}.{nameof(ILinkedFormKeyContainerGetter.LinkFormKeys)} => {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.GetLinkFormKeys(this);");
+            fg.AppendLine($"public{await obj.FunctionOverride(async (o) => obj.GetObjectType() == ObjectType.Mod || (await HasLinks(o, includeBaseClass: false)) != LinkCase.No)}IEnumerable<{nameof(FormLinkInformation)}> {nameof(ILinkedFormKeyContainerGetter.LinkFormKeys)} => {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.GetLinkFormKeys(this);");
 
             if (!getter)
             {
