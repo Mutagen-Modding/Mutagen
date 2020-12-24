@@ -386,9 +386,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => NpcSoundCommon.Instance.GetLinkFormKeys(this);
+        protected IEnumerable<FormLinkInformation> LinkFormKeys => NpcSoundCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => NpcSoundCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => NpcSoundCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcSoundCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcSoundCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -878,11 +878,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(INpcSoundGetter obj)
+        public IEnumerable<FormLinkInformation> GetLinkFormKeys(INpcSoundGetter obj)
         {
-            if (obj.Sound.FormKeyNullable.TryGet(out var SoundKey))
+            if (obj.Sound.FormKeyNullable.HasValue)
             {
-                yield return SoundKey;
+                yield return FormLinkInformation.Factory(obj.Sound);
             }
             yield break;
         }
@@ -1135,9 +1135,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => NpcSoundCommon.Instance.GetLinkFormKeys(this);
+        protected IEnumerable<FormLinkInformation> LinkFormKeys => NpcSoundCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => NpcSoundCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => NpcSoundCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => NpcSoundBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

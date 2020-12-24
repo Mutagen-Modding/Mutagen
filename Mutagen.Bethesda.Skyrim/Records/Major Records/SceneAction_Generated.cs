@@ -982,9 +982,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = SceneAction_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => SceneActionCommon.Instance.GetLinkFormKeys(this);
+        protected IEnumerable<FormLinkInformation> LinkFormKeys => SceneActionCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => SceneActionCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => SceneActionCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SceneActionCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SceneActionCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -1701,15 +1701,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ISceneActionGetter obj)
+        public IEnumerable<FormLinkInformation> GetLinkFormKeys(ISceneActionGetter obj)
         {
-            foreach (var item in obj.Packages.Select(f => f.FormKey))
+            foreach (var item in obj.Packages)
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
-            if (obj.Topic.FormKeyNullable.TryGet(out var TopicKey))
+            if (obj.Topic.FormKeyNullable.HasValue)
             {
-                yield return TopicKey;
+                yield return FormLinkInformation.Factory(obj.Topic);
             }
             yield break;
         }
@@ -2252,9 +2252,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => SceneActionCommon.Instance.GetLinkFormKeys(this);
+        protected IEnumerable<FormLinkInformation> LinkFormKeys => SceneActionCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => SceneActionCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => SceneActionCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => SceneActionBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

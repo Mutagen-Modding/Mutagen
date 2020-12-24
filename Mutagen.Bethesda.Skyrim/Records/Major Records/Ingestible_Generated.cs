@@ -1116,9 +1116,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = Ingestible_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => IngestibleCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormLinkInformation> LinkFormKeys => IngestibleCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => IngestibleCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => IngestibleCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IngestibleCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IngestibleCommon.Instance.RemapLinks(this, mapping);
         public Ingestible(
@@ -1994,7 +1994,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IIngestibleGetter obj)
+        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IIngestibleGetter obj)
         {
             foreach (var item in base.GetLinkFormKeys(obj))
             {
@@ -2002,9 +2002,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (obj.Keywords.TryGet(out var KeywordsItem))
             {
-                foreach (var item in KeywordsItem.Select(f => f.FormKey))
+                foreach (var item in KeywordsItem)
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.Model.TryGet(out var ModelItems))
@@ -2021,23 +2021,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.PickUpSound.FormKeyNullable.TryGet(out var PickUpSoundKey))
+            if (obj.PickUpSound.FormKeyNullable.HasValue)
             {
-                yield return PickUpSoundKey;
+                yield return FormLinkInformation.Factory(obj.PickUpSound);
             }
-            if (obj.PutDownSound.FormKeyNullable.TryGet(out var PutDownSoundKey))
+            if (obj.PutDownSound.FormKeyNullable.HasValue)
             {
-                yield return PutDownSoundKey;
+                yield return FormLinkInformation.Factory(obj.PutDownSound);
             }
-            if (obj.EquipmentType.FormKeyNullable.TryGet(out var EquipmentTypeKey))
+            if (obj.EquipmentType.FormKeyNullable.HasValue)
             {
-                yield return EquipmentTypeKey;
+                yield return FormLinkInformation.Factory(obj.EquipmentType);
             }
-            yield return obj.Addiction.FormKey;
-            yield return obj.ConsumeSound.FormKey;
+            yield return FormLinkInformation.Factory(obj.Addiction);
+            yield return FormLinkInformation.Factory(obj.ConsumeSound);
             foreach (var item in obj.Effects.SelectMany(f => f.LinkFormKeys))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
@@ -2799,9 +2799,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => IngestibleCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormLinkInformation> LinkFormKeys => IngestibleCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => IngestibleCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => IngestibleCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => IngestibleBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

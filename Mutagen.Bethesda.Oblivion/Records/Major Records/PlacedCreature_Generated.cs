@@ -614,9 +614,9 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public static readonly RecordType GrupRecordType = PlacedCreature_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => PlacedCreatureCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormLinkInformation> LinkFormKeys => PlacedCreatureCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PlacedCreatureCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => PlacedCreatureCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedCreatureCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedCreatureCommon.Instance.RemapLinks(this, mapping);
         public PlacedCreature(FormKey formKey)
@@ -1296,23 +1296,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IPlacedCreatureGetter obj)
+        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IPlacedCreatureGetter obj)
         {
             foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
             }
-            if (obj.Base.FormKeyNullable.TryGet(out var BaseKey))
+            if (obj.Base.FormKeyNullable.HasValue)
             {
-                yield return BaseKey;
+                yield return FormLinkInformation.Factory(obj.Base);
             }
-            if (obj.Owner.FormKeyNullable.TryGet(out var OwnerKey))
+            if (obj.Owner.FormKeyNullable.HasValue)
             {
-                yield return OwnerKey;
+                yield return FormLinkInformation.Factory(obj.Owner);
             }
-            if (obj.GlobalVariable.FormKeyNullable.TryGet(out var GlobalVariableKey))
+            if (obj.GlobalVariable.FormKeyNullable.HasValue)
             {
-                yield return GlobalVariableKey;
+                yield return FormLinkInformation.Factory(obj.GlobalVariable);
             }
             if (obj.EnableParent.TryGet(out var EnableParentItems))
             {
@@ -1840,9 +1840,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => PlacedCreatureCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormLinkInformation> LinkFormKeys => PlacedCreatureCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PlacedCreatureCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => PlacedCreatureCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PlacedCreatureBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

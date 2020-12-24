@@ -1092,9 +1092,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = Book_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => BookCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormLinkInformation> LinkFormKeys => BookCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => BookCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => BookCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BookCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BookCommon.Instance.RemapLinks(this, mapping);
         public Book(
@@ -1971,7 +1971,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IBookGetter obj)
+        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IBookGetter obj)
         {
             foreach (var item in base.GetLinkFormKeys(obj))
             {
@@ -1998,19 +1998,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.PickUpSound.FormKeyNullable.TryGet(out var PickUpSoundKey))
+            if (obj.PickUpSound.FormKeyNullable.HasValue)
             {
-                yield return PickUpSoundKey;
+                yield return FormLinkInformation.Factory(obj.PickUpSound);
             }
-            if (obj.PutDownSound.FormKeyNullable.TryGet(out var PutDownSoundKey))
+            if (obj.PutDownSound.FormKeyNullable.HasValue)
             {
-                yield return PutDownSoundKey;
+                yield return FormLinkInformation.Factory(obj.PutDownSound);
             }
             if (obj.Keywords.TryGet(out var KeywordsItem))
             {
-                foreach (var item in KeywordsItem.Select(f => f.FormKey))
+                foreach (var item in KeywordsItem)
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.Teaches is ILinkedFormKeyContainerGetter TeacheslinkCont)
@@ -2020,9 +2020,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.InventoryArt.FormKeyNullable.TryGet(out var InventoryArtKey))
+            if (obj.InventoryArt.FormKeyNullable.HasValue)
             {
-                yield return InventoryArtKey;
+                yield return FormLinkInformation.Factory(obj.InventoryArt);
             }
             yield break;
         }
@@ -2842,9 +2842,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => BookCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormLinkInformation> LinkFormKeys => BookCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => BookCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => BookCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => BookBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

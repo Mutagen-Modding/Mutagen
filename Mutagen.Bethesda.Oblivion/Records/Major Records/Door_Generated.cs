@@ -675,9 +675,9 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public static readonly RecordType GrupRecordType = Door_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => DoorCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormLinkInformation> LinkFormKeys => DoorCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => DoorCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => DoorCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DoorCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DoorCommon.Instance.RemapLinks(this, mapping);
         public Door(FormKey formKey)
@@ -1362,31 +1362,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IDoorGetter obj)
+        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IDoorGetter obj)
         {
             foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
             }
-            if (obj.Script.FormKeyNullable.TryGet(out var ScriptKey))
+            if (obj.Script.FormKeyNullable.HasValue)
             {
-                yield return ScriptKey;
+                yield return FormLinkInformation.Factory(obj.Script);
             }
-            if (obj.OpenSound.FormKeyNullable.TryGet(out var OpenSoundKey))
+            if (obj.OpenSound.FormKeyNullable.HasValue)
             {
-                yield return OpenSoundKey;
+                yield return FormLinkInformation.Factory(obj.OpenSound);
             }
-            if (obj.CloseSound.FormKeyNullable.TryGet(out var CloseSoundKey))
+            if (obj.CloseSound.FormKeyNullable.HasValue)
             {
-                yield return CloseSoundKey;
+                yield return FormLinkInformation.Factory(obj.CloseSound);
             }
-            if (obj.LoopSound.FormKeyNullable.TryGet(out var LoopSoundKey))
+            if (obj.LoopSound.FormKeyNullable.HasValue)
             {
-                yield return LoopSoundKey;
+                yield return FormLinkInformation.Factory(obj.LoopSound);
             }
-            foreach (var item in obj.RandomTeleportDestinations.Select(f => f.FormKey))
+            foreach (var item in obj.RandomTeleportDestinations)
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
@@ -1904,9 +1904,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => DoorCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormLinkInformation> LinkFormKeys => DoorCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => DoorCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => DoorCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => DoorBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

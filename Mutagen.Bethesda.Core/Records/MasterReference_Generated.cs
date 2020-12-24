@@ -853,7 +853,7 @@ namespace Mutagen.Bethesda.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IMasterReferenceGetter obj)
+        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IMasterReferenceGetter obj)
         {
             yield break;
         }

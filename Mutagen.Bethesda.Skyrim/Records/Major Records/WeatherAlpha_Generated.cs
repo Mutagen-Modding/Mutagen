@@ -932,7 +932,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IWeatherAlphaGetter obj)
+        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IWeatherAlphaGetter obj)
         {
             yield break;
         }

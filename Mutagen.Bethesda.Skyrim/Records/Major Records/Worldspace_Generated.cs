@@ -1601,9 +1601,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = Worldspace_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => WorldspaceCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormLinkInformation> LinkFormKeys => WorldspaceCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => WorldspaceCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => WorldspaceCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceCommon.Instance.RemapLinks(this, mapping);
         public Worldspace(
@@ -3212,7 +3212,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IWorldspaceGetter obj)
+        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IWorldspaceGetter obj)
         {
             foreach (var item in base.GetLinkFormKeys(obj))
             {
@@ -3220,19 +3220,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.LargeReferences.SelectMany(f => f.LinkFormKeys))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
-            if (obj.InteriorLighting.FormKeyNullable.TryGet(out var InteriorLightingKey))
+            if (obj.InteriorLighting.FormKeyNullable.HasValue)
             {
-                yield return InteriorLightingKey;
+                yield return FormLinkInformation.Factory(obj.InteriorLighting);
             }
-            if (obj.EncounterZone.FormKeyNullable.TryGet(out var EncounterZoneKey))
+            if (obj.EncounterZone.FormKeyNullable.HasValue)
             {
-                yield return EncounterZoneKey;
+                yield return FormLinkInformation.Factory(obj.EncounterZone);
             }
-            if (obj.Location.FormKeyNullable.TryGet(out var LocationKey))
+            if (obj.Location.FormKeyNullable.HasValue)
             {
-                yield return LocationKey;
+                yield return FormLinkInformation.Factory(obj.Location);
             }
             if (obj.Parent.TryGet(out var ParentItems))
             {
@@ -3241,17 +3241,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.Climate.FormKeyNullable.TryGet(out var ClimateKey))
+            if (obj.Climate.FormKeyNullable.HasValue)
             {
-                yield return ClimateKey;
+                yield return FormLinkInformation.Factory(obj.Climate);
             }
-            if (obj.Water.FormKeyNullable.TryGet(out var WaterKey))
+            if (obj.Water.FormKeyNullable.HasValue)
             {
-                yield return WaterKey;
+                yield return FormLinkInformation.Factory(obj.Water);
             }
-            if (obj.LodWater.FormKeyNullable.TryGet(out var LodWaterKey))
+            if (obj.LodWater.FormKeyNullable.HasValue)
             {
-                yield return LodWaterKey;
+                yield return FormLinkInformation.Factory(obj.LodWater);
             }
             if (obj.CloudModel.TryGet(out var CloudModelItems))
             {
@@ -3260,9 +3260,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.Music.FormKeyNullable.TryGet(out var MusicKey))
+            if (obj.Music.FormKeyNullable.HasValue)
             {
-                yield return MusicKey;
+                yield return FormLinkInformation.Factory(obj.Music);
             }
             if (obj.TopCell.TryGet(out var TopCellItems))
             {
@@ -3273,7 +3273,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.SubCells.SelectMany(f => f.LinkFormKeys))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
@@ -5513,9 +5513,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => WorldspaceCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormLinkInformation> LinkFormKeys => WorldspaceCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => WorldspaceCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => WorldspaceCommon.Instance.GetLinkFormKeys(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

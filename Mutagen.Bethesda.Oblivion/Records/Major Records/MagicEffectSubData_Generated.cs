@@ -539,9 +539,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => MagicEffectSubDataCommon.Instance.GetLinkFormKeys(this);
+        protected IEnumerable<FormLinkInformation> LinkFormKeys => MagicEffectSubDataCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => MagicEffectSubDataCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => MagicEffectSubDataCommon.Instance.GetLinkFormKeys(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectSubDataCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectSubDataCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -1069,13 +1069,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IMagicEffectSubDataGetter obj)
+        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IMagicEffectSubDataGetter obj)
         {
-            yield return obj.EnchantEffect.FormKey;
-            yield return obj.CastingSound.FormKey;
-            yield return obj.BoltSound.FormKey;
-            yield return obj.HitSound.FormKey;
-            yield return obj.AreaSound.FormKey;
+            yield return FormLinkInformation.Factory(obj.EnchantEffect);
+            yield return FormLinkInformation.Factory(obj.CastingSound);
+            yield return FormLinkInformation.Factory(obj.BoltSound);
+            yield return FormLinkInformation.Factory(obj.HitSound);
+            yield return FormLinkInformation.Factory(obj.AreaSound);
             yield break;
         }
         
@@ -1342,9 +1342,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => MagicEffectSubDataCommon.Instance.GetLinkFormKeys(this);
+        protected IEnumerable<FormLinkInformation> LinkFormKeys => MagicEffectSubDataCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => MagicEffectSubDataCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => MagicEffectSubDataCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => MagicEffectSubDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

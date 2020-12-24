@@ -116,7 +116,7 @@ namespace Mutagen.Bethesda.Generation
         public override async Task GenerateInCommon(ObjectGeneration obj, FileGeneration fg, MaskTypeSet maskTypes)
         {
             if (!maskTypes.Applicable(LoquiInterfaceType.IGetter, CommonGenerics.Class)) return;
-            fg.AppendLine($"public IEnumerable<{nameof(FormKey)}> GetLinkFormKeys({obj.Interface(getter: true)} obj)");
+            fg.AppendLine($"public IEnumerable<{nameof(FormLinkInformation)}> GetLinkFormKeys({obj.Interface(getter: true)} obj)");
             using (new BraceWrapper(fg))
             {
                 foreach (var baseClass in obj.BaseClassTrail())
@@ -138,15 +138,15 @@ namespace Mutagen.Bethesda.Generation
                     {
                         if (field.Nullable)
                         {
-                            fg.AppendLine($"if (obj.{field.Name}.{formLink.FormIDTypeString}.TryGet(out var {field.Name}Key))");
+                            fg.AppendLine($"if (obj.{field.Name}.{formLink.FormIDTypeString}.HasValue)");
                             using (new BraceWrapper(fg))
                             {
-                                fg.AppendLine($"yield return {field.Name}Key;");
+                                fg.AppendLine($"yield return {nameof(FormLinkInformation)}.{nameof(FormLinkInformation.Factory)}(obj.{field.Name});");
                             }
                         }
                         else if (formLink.FormIDType == FormLinkType.FormIDTypeEnum.Normal)
                         {
-                            fg.AppendLine($"yield return obj.{field.Name}.{formLink.FormIDTypeString};");
+                            fg.AppendLine($"yield return {nameof(FormLinkInformation)}.{nameof(FormLinkInformation.Factory)}(obj.{field.Name});");
                         }
                     }
                     else if (field is LoquiType loqui)
@@ -223,7 +223,7 @@ namespace Mutagen.Bethesda.Generation
                             && formIDType.FormIDType == FormLinkType.FormIDTypeEnum.Normal)
                         {
                             string filterNulls = cont is GenderedType && ((GenderedType)cont).ItemNullable ? ".NotNull()" : null;
-                            subFg.AppendLine($"foreach (var item in {access}.Select(f => f.{formIDType.FormIDTypeString}){filterNulls})");
+                            subFg.AppendLine($"foreach (var item in {access}{filterNulls})");
                         }
                         else
                         {
@@ -239,7 +239,7 @@ namespace Mutagen.Bethesda.Generation
                             fg.AppendLines(subFg);
                             using (new BraceWrapper(fg))
                             {
-                                fg.AppendLine($"yield return item;");
+                                fg.AppendLine($"yield return {nameof(FormLinkInformation)}.{nameof(FormLinkInformation.Factory)}(item);");
                             }
                         }
                     }
@@ -320,9 +320,9 @@ namespace Mutagen.Bethesda.Generation
         public static async Task GenerateInterfaceImplementation(ObjectGeneration obj, FileGeneration fg, bool getter)
         {
             fg.AppendLine($"[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-            fg.AppendLine($"protected{await obj.FunctionOverride(async (o) => obj.GetObjectType() == ObjectType.Mod || (await HasLinks(o, includeBaseClass: false)) != LinkCase.No)}IEnumerable<{nameof(FormKey)}> {nameof(ILinkedFormKeyContainerGetter.LinkFormKeys)} => {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.GetLinkFormKeys(this);");
+            fg.AppendLine($"protected{await obj.FunctionOverride(async (o) => obj.GetObjectType() == ObjectType.Mod || (await HasLinks(o, includeBaseClass: false)) != LinkCase.No)}IEnumerable<{nameof(FormLinkInformation)}> {nameof(ILinkedFormKeyContainerGetter.LinkFormKeys)} => {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.GetLinkFormKeys(this);");
             fg.AppendLine($"[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-            fg.AppendLine($"IEnumerable<{nameof(FormKey)}> {nameof(ILinkedFormKeyContainerGetter)}.{nameof(ILinkedFormKeyContainerGetter.LinkFormKeys)} => {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.GetLinkFormKeys(this);");
+            fg.AppendLine($"IEnumerable<{nameof(FormLinkInformation)}> {nameof(ILinkedFormKeyContainerGetter)}.{nameof(ILinkedFormKeyContainerGetter.LinkFormKeys)} => {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.GetLinkFormKeys(this);");
 
             if (!getter)
             {

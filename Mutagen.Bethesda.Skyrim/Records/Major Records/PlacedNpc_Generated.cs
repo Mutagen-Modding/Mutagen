@@ -1499,9 +1499,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public new static readonly RecordType GrupRecordType = PlacedNpc_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => PlacedNpcCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormLinkInformation> LinkFormKeys => PlacedNpcCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PlacedNpcCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => PlacedNpcCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedNpcCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedNpcCommon.Instance.RemapLinks(this, mapping);
         public PlacedNpc(
@@ -2594,7 +2594,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IPlacedNpcGetter obj)
+        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IPlacedNpcGetter obj)
         {
             foreach (var item in base.GetLinkFormKeys(obj))
             {
@@ -2607,13 +2607,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.Base.FormKeyNullable.TryGet(out var BaseKey))
+            if (obj.Base.FormKeyNullable.HasValue)
             {
-                yield return BaseKey;
+                yield return FormLinkInformation.Factory(obj.Base);
             }
-            if (obj.EncounterZone.FormKeyNullable.TryGet(out var EncounterZoneKey))
+            if (obj.EncounterZone.FormKeyNullable.HasValue)
             {
-                yield return EncounterZoneKey;
+                yield return FormLinkInformation.Factory(obj.EncounterZone);
             }
             if (obj.Patrol.TryGet(out var PatrolItems))
             {
@@ -2622,13 +2622,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.MerchantContainer.FormKeyNullable.TryGet(out var MerchantContainerKey))
+            if (obj.MerchantContainer.FormKeyNullable.HasValue)
             {
-                yield return MerchantContainerKey;
+                yield return FormLinkInformation.Factory(obj.MerchantContainer);
             }
             foreach (var item in obj.LinkedReferences.SelectMany(f => f.LinkFormKeys))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
             if (obj.ActivateParents.TryGet(out var ActivateParentsItems))
             {
@@ -2637,24 +2637,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.PersistentLocation.FormKeyNullable.TryGet(out var PersistentLocationKey))
+            if (obj.PersistentLocation.FormKeyNullable.HasValue)
             {
-                yield return PersistentLocationKey;
+                yield return FormLinkInformation.Factory(obj.PersistentLocation);
             }
-            if (obj.LocationReference.FormKeyNullable.TryGet(out var LocationReferenceKey))
+            if (obj.LocationReference.FormKeyNullable.HasValue)
             {
-                yield return LocationReferenceKey;
+                yield return FormLinkInformation.Factory(obj.LocationReference);
             }
             if (obj.LocationRefTypes.TryGet(out var LocationRefTypesItem))
             {
-                foreach (var item in LocationRefTypesItem.Select(f => f.FormKey))
+                foreach (var item in LocationRefTypesItem)
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.Horse.FormKeyNullable.TryGet(out var HorseKey))
+            if (obj.Horse.FormKeyNullable.HasValue)
             {
-                yield return HorseKey;
+                yield return FormLinkInformation.Factory(obj.Horse);
             }
             if (obj.EnableParent.TryGet(out var EnableParentItems))
             {
@@ -2670,13 +2670,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.Emittance.FormKeyNullable.TryGet(out var EmittanceKey))
+            if (obj.Emittance.FormKeyNullable.HasValue)
             {
-                yield return EmittanceKey;
+                yield return FormLinkInformation.Factory(obj.Emittance);
             }
-            if (obj.MultiboundReference.FormKeyNullable.TryGet(out var MultiboundReferenceKey))
+            if (obj.MultiboundReference.FormKeyNullable.HasValue)
             {
-                yield return MultiboundReferenceKey;
+                yield return FormLinkInformation.Factory(obj.MultiboundReference);
             }
             yield break;
         }
@@ -3712,9 +3712,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => PlacedNpcCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormLinkInformation> LinkFormKeys => PlacedNpcCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PlacedNpcCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => PlacedNpcCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PlacedNpcBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

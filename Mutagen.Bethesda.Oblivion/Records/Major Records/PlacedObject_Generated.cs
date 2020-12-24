@@ -1198,9 +1198,9 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public static readonly RecordType GrupRecordType = PlacedObject_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => PlacedObjectCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormLinkInformation> LinkFormKeys => PlacedObjectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PlacedObjectCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => PlacedObjectCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedObjectCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedObjectCommon.Instance.RemapLinks(this, mapping);
         public PlacedObject(FormKey formKey)
@@ -2120,15 +2120,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IPlacedObjectGetter obj)
+        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IPlacedObjectGetter obj)
         {
             foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
             }
-            if (obj.Base.FormKeyNullable.TryGet(out var BaseKey))
+            if (obj.Base.FormKeyNullable.HasValue)
             {
-                yield return BaseKey;
+                yield return FormLinkInformation.Factory(obj.Base);
             }
             if (obj.TeleportDestination.TryGet(out var TeleportDestinationItems))
             {
@@ -2144,13 +2144,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     yield return item;
                 }
             }
-            if (obj.Owner.FormKeyNullable.TryGet(out var OwnerKey))
+            if (obj.Owner.FormKeyNullable.HasValue)
             {
-                yield return OwnerKey;
+                yield return FormLinkInformation.Factory(obj.Owner);
             }
-            if (obj.GlobalVariable.FormKeyNullable.TryGet(out var GlobalVariableKey))
+            if (obj.GlobalVariable.FormKeyNullable.HasValue)
             {
-                yield return GlobalVariableKey;
+                yield return FormLinkInformation.Factory(obj.GlobalVariable);
             }
             if (obj.EnableParent.TryGet(out var EnableParentItems))
             {
@@ -2159,17 +2159,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     yield return item;
                 }
             }
-            if (obj.Target.FormKeyNullable.TryGet(out var TargetKey))
+            if (obj.Target.FormKeyNullable.HasValue)
             {
-                yield return TargetKey;
+                yield return FormLinkInformation.Factory(obj.Target);
             }
-            if (obj.XRTM.FormKeyNullable.TryGet(out var XRTMKey))
+            if (obj.XRTM.FormKeyNullable.HasValue)
             {
-                yield return XRTMKey;
+                yield return FormLinkInformation.Factory(obj.XRTM);
             }
-            if (obj.ContainedSoul.FormKeyNullable.TryGet(out var ContainedSoulKey))
+            if (obj.ContainedSoul.FormKeyNullable.HasValue)
             {
-                yield return ContainedSoulKey;
+                yield return FormLinkInformation.Factory(obj.ContainedSoul);
             }
             yield break;
         }
@@ -3052,9 +3052,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => PlacedObjectCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormLinkInformation> LinkFormKeys => PlacedObjectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PlacedObjectCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => PlacedObjectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PlacedObjectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

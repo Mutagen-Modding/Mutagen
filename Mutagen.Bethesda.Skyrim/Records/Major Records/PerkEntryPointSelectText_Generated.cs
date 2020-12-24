@@ -894,7 +894,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IPerkEntryPointSelectTextGetter obj)
+        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IPerkEntryPointSelectTextGetter obj)
         {
             foreach (var item in base.GetLinkFormKeys(obj))
             {

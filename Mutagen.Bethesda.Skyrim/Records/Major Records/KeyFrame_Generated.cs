@@ -848,7 +848,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IKeyFrameGetter obj)
+        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IKeyFrameGetter obj)
         {
             yield break;
         }

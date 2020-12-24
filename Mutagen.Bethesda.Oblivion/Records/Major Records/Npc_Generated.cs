@@ -1644,9 +1644,9 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public static readonly RecordType GrupRecordType = Npc_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => NpcCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormLinkInformation> LinkFormKeys => NpcCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => NpcCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => NpcCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcCommon.Instance.RemapLinks(this, mapping);
         public Npc(FormKey formKey)
@@ -2727,7 +2727,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(INpcGetter obj)
+        public IEnumerable<FormLinkInformation> GetLinkFormKeys(INpcGetter obj)
         {
             foreach (var item in base.GetLinkFormKeys(obj))
             {
@@ -2735,50 +2735,50 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.Factions.SelectMany(f => f.LinkFormKeys))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
-            if (obj.DeathItem.FormKeyNullable.TryGet(out var DeathItemKey))
+            if (obj.DeathItem.FormKeyNullable.HasValue)
             {
-                yield return DeathItemKey;
+                yield return FormLinkInformation.Factory(obj.DeathItem);
             }
-            if (obj.Race.FormKeyNullable.TryGet(out var RaceKey))
+            if (obj.Race.FormKeyNullable.HasValue)
             {
-                yield return RaceKey;
+                yield return FormLinkInformation.Factory(obj.Race);
             }
-            foreach (var item in obj.Spells.Select(f => f.FormKey))
+            foreach (var item in obj.Spells)
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
-            if (obj.Script.FormKeyNullable.TryGet(out var ScriptKey))
+            if (obj.Script.FormKeyNullable.HasValue)
             {
-                yield return ScriptKey;
+                yield return FormLinkInformation.Factory(obj.Script);
             }
             foreach (var item in obj.Items.SelectMany(f => f.LinkFormKeys))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.AIPackages.Select(f => f.FormKey))
+            foreach (var item in obj.AIPackages)
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
-            if (obj.Class.FormKeyNullable.TryGet(out var ClassKey))
+            if (obj.Class.FormKeyNullable.HasValue)
             {
-                yield return ClassKey;
+                yield return FormLinkInformation.Factory(obj.Class);
             }
-            if (obj.Hair.FormKeyNullable.TryGet(out var HairKey))
+            if (obj.Hair.FormKeyNullable.HasValue)
             {
-                yield return HairKey;
+                yield return FormLinkInformation.Factory(obj.Hair);
             }
             if (obj.Eyes.TryGet(out var EyesItem))
             {
-                foreach (var item in EyesItem.Select(f => f.FormKey))
+                foreach (var item in EyesItem)
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.CombatStyle.FormKeyNullable.TryGet(out var CombatStyleKey))
+            if (obj.CombatStyle.FormKeyNullable.HasValue)
             {
-                yield return CombatStyleKey;
+                yield return FormLinkInformation.Factory(obj.CombatStyle);
             }
             yield break;
         }
@@ -3844,9 +3844,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => NpcCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormLinkInformation> LinkFormKeys => NpcCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => NpcCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => NpcCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => NpcBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

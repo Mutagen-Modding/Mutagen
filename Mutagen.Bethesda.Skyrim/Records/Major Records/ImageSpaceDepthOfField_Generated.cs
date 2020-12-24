@@ -1072,7 +1072,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IImageSpaceDepthOfFieldGetter obj)
+        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IImageSpaceDepthOfFieldGetter obj)
         {
             yield break;
         }

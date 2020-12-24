@@ -2587,9 +2587,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = Water_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => WaterCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormLinkInformation> LinkFormKeys => WaterCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => WaterCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => WaterCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WaterCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WaterCommon.Instance.RemapLinks(this, mapping);
         public Water(
@@ -3987,27 +3987,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IWaterGetter obj)
+        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IWaterGetter obj)
         {
             foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
             }
-            if (obj.Material.FormKeyNullable.TryGet(out var MaterialKey))
+            if (obj.Material.FormKeyNullable.HasValue)
             {
-                yield return MaterialKey;
+                yield return FormLinkInformation.Factory(obj.Material);
             }
-            if (obj.OpenSound.FormKeyNullable.TryGet(out var OpenSoundKey))
+            if (obj.OpenSound.FormKeyNullable.HasValue)
             {
-                yield return OpenSoundKey;
+                yield return FormLinkInformation.Factory(obj.OpenSound);
             }
-            if (obj.Spell.FormKeyNullable.TryGet(out var SpellKey))
+            if (obj.Spell.FormKeyNullable.HasValue)
             {
-                yield return SpellKey;
+                yield return FormLinkInformation.Factory(obj.Spell);
             }
-            if (obj.ImageSpace.FormKeyNullable.TryGet(out var ImageSpaceKey))
+            if (obj.ImageSpace.FormKeyNullable.HasValue)
             {
-                yield return ImageSpaceKey;
+                yield return FormLinkInformation.Factory(obj.ImageSpace);
             }
             yield break;
         }
@@ -5068,9 +5068,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => WaterCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormLinkInformation> LinkFormKeys => WaterCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => WaterCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => WaterCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => WaterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

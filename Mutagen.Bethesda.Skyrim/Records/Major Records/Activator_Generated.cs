@@ -880,9 +880,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = Activator_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => ActivatorCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormLinkInformation> LinkFormKeys => ActivatorCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ActivatorCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => ActivatorCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActivatorCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActivatorCommon.Instance.RemapLinks(this, mapping);
         public Activator(
@@ -1688,7 +1688,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IActivatorGetter obj)
+        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IActivatorGetter obj)
         {
             foreach (var item in base.GetLinkFormKeys(obj))
             {
@@ -1717,26 +1717,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (obj.Keywords.TryGet(out var KeywordsItem))
             {
-                foreach (var item in KeywordsItem.Select(f => f.FormKey))
+                foreach (var item in KeywordsItem)
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.LoopingSound.FormKeyNullable.TryGet(out var LoopingSoundKey))
+            if (obj.LoopingSound.FormKeyNullable.HasValue)
             {
-                yield return LoopingSoundKey;
+                yield return FormLinkInformation.Factory(obj.LoopingSound);
             }
-            if (obj.ActivationSound.FormKeyNullable.TryGet(out var ActivationSoundKey))
+            if (obj.ActivationSound.FormKeyNullable.HasValue)
             {
-                yield return ActivationSoundKey;
+                yield return FormLinkInformation.Factory(obj.ActivationSound);
             }
-            if (obj.WaterType.FormKeyNullable.TryGet(out var WaterTypeKey))
+            if (obj.WaterType.FormKeyNullable.HasValue)
             {
-                yield return WaterTypeKey;
+                yield return FormLinkInformation.Factory(obj.WaterType);
             }
-            if (obj.InteractionKeyword.FormKeyNullable.TryGet(out var InteractionKeywordKey))
+            if (obj.InteractionKeyword.FormKeyNullable.HasValue)
             {
-                yield return InteractionKeywordKey;
+                yield return FormLinkInformation.Factory(obj.InteractionKeyword);
             }
             yield break;
         }
@@ -2415,9 +2415,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => ActivatorCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormLinkInformation> LinkFormKeys => ActivatorCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ActivatorCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => ActivatorCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ActivatorBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

@@ -1041,7 +1041,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IEffectShaderGetter obj)
+        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IEffectShaderGetter obj)
         {
             foreach (var item in base.GetLinkFormKeys(obj))
             {

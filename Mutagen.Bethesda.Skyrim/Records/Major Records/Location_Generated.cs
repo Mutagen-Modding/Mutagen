@@ -2562,9 +2562,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = Location_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => LocationCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormLinkInformation> LinkFormKeys => LocationCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LocationCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => LocationCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCommon.Instance.RemapLinks(this, mapping);
         public Location(
@@ -3742,7 +3742,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ILocationGetter obj)
+        public IEnumerable<FormLinkInformation> GetLinkFormKeys(ILocationGetter obj)
         {
             foreach (var item in base.GetLinkFormKeys(obj))
             {
@@ -3752,131 +3752,131 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var item in ActorCellPersistentReferencesItem.SelectMany(f => f.LinkFormKeys))
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.LocationCellPersistentReferences.TryGet(out var LocationCellPersistentReferencesItem))
             {
                 foreach (var item in LocationCellPersistentReferencesItem.SelectMany(f => f.LinkFormKeys))
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.ReferenceCellPersistentReferences.TryGet(out var ReferenceCellPersistentReferencesItem))
             {
-                foreach (var item in ReferenceCellPersistentReferencesItem.Select(f => f.FormKey))
+                foreach (var item in ReferenceCellPersistentReferencesItem)
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.ActorCellUniques.TryGet(out var ActorCellUniquesItem))
             {
                 foreach (var item in ActorCellUniquesItem.SelectMany(f => f.LinkFormKeys))
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.LocationCellUniques.TryGet(out var LocationCellUniquesItem))
             {
                 foreach (var item in LocationCellUniquesItem.SelectMany(f => f.LinkFormKeys))
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.ReferenceCellUnique.TryGet(out var ReferenceCellUniqueItem))
             {
-                foreach (var item in ReferenceCellUniqueItem.Select(f => f.FormKey))
+                foreach (var item in ReferenceCellUniqueItem)
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.ActorCellStaticReferences.TryGet(out var ActorCellStaticReferencesItem))
             {
                 foreach (var item in ActorCellStaticReferencesItem.SelectMany(f => f.LinkFormKeys))
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.LocationCellStaticReferences.TryGet(out var LocationCellStaticReferencesItem))
             {
                 foreach (var item in LocationCellStaticReferencesItem.SelectMany(f => f.LinkFormKeys))
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.ReferenceCellStaticReferences.TryGet(out var ReferenceCellStaticReferencesItem))
             {
-                foreach (var item in ReferenceCellStaticReferencesItem.Select(f => f.FormKey))
+                foreach (var item in ReferenceCellStaticReferencesItem)
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
             foreach (var item in obj.ActorCellEncounterCell.SelectMany(f => f.LinkFormKeys))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
             foreach (var item in obj.LocationCellEncounterCell.SelectMany(f => f.LinkFormKeys))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
             foreach (var item in obj.ReferenceCellEncounterCell.SelectMany(f => f.LinkFormKeys))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
             if (obj.ActorCellMarkerReference.TryGet(out var ActorCellMarkerReferenceItem))
             {
-                foreach (var item in ActorCellMarkerReferenceItem.Select(f => f.FormKey))
+                foreach (var item in ActorCellMarkerReferenceItem)
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.LocationCellMarkerReference.TryGet(out var LocationCellMarkerReferenceItem))
             {
-                foreach (var item in LocationCellMarkerReferenceItem.Select(f => f.FormKey))
+                foreach (var item in LocationCellMarkerReferenceItem)
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.ActorCellEnablePoint.TryGet(out var ActorCellEnablePointItem))
             {
                 foreach (var item in ActorCellEnablePointItem.SelectMany(f => f.LinkFormKeys))
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.LocationCellEnablePoint.TryGet(out var LocationCellEnablePointItem))
             {
                 foreach (var item in LocationCellEnablePointItem.SelectMany(f => f.LinkFormKeys))
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.Keywords.TryGet(out var KeywordsItem))
             {
-                foreach (var item in KeywordsItem.Select(f => f.FormKey))
+                foreach (var item in KeywordsItem)
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.ParentLocation.FormKeyNullable.TryGet(out var ParentLocationKey))
+            if (obj.ParentLocation.FormKeyNullable.HasValue)
             {
-                yield return ParentLocationKey;
+                yield return FormLinkInformation.Factory(obj.ParentLocation);
             }
-            if (obj.Music.FormKeyNullable.TryGet(out var MusicKey))
+            if (obj.Music.FormKeyNullable.HasValue)
             {
-                yield return MusicKey;
+                yield return FormLinkInformation.Factory(obj.Music);
             }
-            if (obj.UnreportedCrimeFaction.FormKeyNullable.TryGet(out var UnreportedCrimeFactionKey))
+            if (obj.UnreportedCrimeFaction.FormKeyNullable.HasValue)
             {
-                yield return UnreportedCrimeFactionKey;
+                yield return FormLinkInformation.Factory(obj.UnreportedCrimeFaction);
             }
-            if (obj.WorldLocationMarkerRef.FormKeyNullable.TryGet(out var WorldLocationMarkerRefKey))
+            if (obj.WorldLocationMarkerRef.FormKeyNullable.HasValue)
             {
-                yield return WorldLocationMarkerRefKey;
+                yield return FormLinkInformation.Factory(obj.WorldLocationMarkerRef);
             }
-            if (obj.HorseMarkerRef.FormKeyNullable.TryGet(out var HorseMarkerRefKey))
+            if (obj.HorseMarkerRef.FormKeyNullable.HasValue)
             {
-                yield return HorseMarkerRefKey;
+                yield return FormLinkInformation.Factory(obj.HorseMarkerRef);
             }
             yield break;
         }
@@ -5213,9 +5213,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => LocationCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormLinkInformation> LinkFormKeys => LocationCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LocationCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => LocationCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LocationBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

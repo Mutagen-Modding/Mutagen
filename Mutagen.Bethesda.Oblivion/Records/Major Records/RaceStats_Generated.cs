@@ -1100,7 +1100,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IRaceStatsGetter obj)
+        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IRaceStatsGetter obj)
         {
             yield break;
         }

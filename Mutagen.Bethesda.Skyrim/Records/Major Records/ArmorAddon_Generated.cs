@@ -963,9 +963,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = ArmorAddon_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => ArmorAddonCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormLinkInformation> LinkFormKeys => ArmorAddonCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ArmorAddonCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => ArmorAddonCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorAddonCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorAddonCommon.Instance.RemapLinks(this, mapping);
         public ArmorAddon(
@@ -1836,55 +1836,55 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IArmorAddonGetter obj)
+        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IArmorAddonGetter obj)
         {
             foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
             }
-            if (obj.Race.FormKeyNullable.TryGet(out var RaceKey))
+            if (obj.Race.FormKeyNullable.HasValue)
             {
-                yield return RaceKey;
+                yield return FormLinkInformation.Factory(obj.Race);
             }
             if (obj.WorldModel.TryGet(out var WorldModelItem))
             {
                 foreach (var item in WorldModelItem.NotNull().SelectMany(f => f.LinkFormKeys))
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.FirstPersonModel.TryGet(out var FirstPersonModelItem))
             {
                 foreach (var item in FirstPersonModelItem.NotNull().SelectMany(f => f.LinkFormKeys))
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.SkinTexture.TryGet(out var SkinTextureItem))
             {
-                foreach (var item in SkinTextureItem.Select(f => f.FormKeyNullable).NotNull())
+                foreach (var item in SkinTextureItem.NotNull())
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.TextureSwapList.TryGet(out var TextureSwapListItem))
             {
-                foreach (var item in TextureSwapListItem.Select(f => f.FormKeyNullable).NotNull())
+                foreach (var item in TextureSwapListItem.NotNull())
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
-            foreach (var item in obj.AdditionalRaces.Select(f => f.FormKey))
+            foreach (var item in obj.AdditionalRaces)
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
-            if (obj.FootstepSound.FormKeyNullable.TryGet(out var FootstepSoundKey))
+            if (obj.FootstepSound.FormKeyNullable.HasValue)
             {
-                yield return FootstepSoundKey;
+                yield return FormLinkInformation.Factory(obj.FootstepSound);
             }
-            if (obj.ArtObject.FormKeyNullable.TryGet(out var ArtObjectKey))
+            if (obj.ArtObject.FormKeyNullable.HasValue)
             {
-                yield return ArtObjectKey;
+                yield return FormLinkInformation.Factory(obj.ArtObject);
             }
             yield break;
         }
@@ -2596,9 +2596,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => ArmorAddonCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormLinkInformation> LinkFormKeys => ArmorAddonCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ArmorAddonCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => ArmorAddonCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ArmorAddonBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

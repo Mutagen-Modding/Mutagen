@@ -2616,9 +2616,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = Npc_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => NpcCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormLinkInformation> LinkFormKeys => NpcCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => NpcCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => NpcCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcCommon.Instance.RemapLinks(this, mapping);
         public Npc(
@@ -3939,7 +3939,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(INpcGetter obj)
+        public IEnumerable<FormLinkInformation> GetLinkFormKeys(INpcGetter obj)
         {
             foreach (var item in base.GetLinkFormKeys(obj))
             {
@@ -3954,26 +3954,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Factions.SelectMany(f => f.LinkFormKeys))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
-            if (obj.DeathItem.FormKeyNullable.TryGet(out var DeathItemKey))
+            if (obj.DeathItem.FormKeyNullable.HasValue)
             {
-                yield return DeathItemKey;
+                yield return FormLinkInformation.Factory(obj.DeathItem);
             }
-            if (obj.Voice.FormKeyNullable.TryGet(out var VoiceKey))
+            if (obj.Voice.FormKeyNullable.HasValue)
             {
-                yield return VoiceKey;
+                yield return FormLinkInformation.Factory(obj.Voice);
             }
-            if (obj.Template.FormKeyNullable.TryGet(out var TemplateKey))
+            if (obj.Template.FormKeyNullable.HasValue)
             {
-                yield return TemplateKey;
+                yield return FormLinkInformation.Factory(obj.Template);
             }
-            yield return obj.Race.FormKey;
+            yield return FormLinkInformation.Factory(obj.Race);
             if (obj.ActorEffect.TryGet(out var ActorEffectItem))
             {
-                foreach (var item in ActorEffectItem.Select(f => f.FormKey))
+                foreach (var item in ActorEffectItem)
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.Destructible.TryGet(out var DestructibleItems))
@@ -3983,43 +3983,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.WornArmor.FormKeyNullable.TryGet(out var WornArmorKey))
+            if (obj.WornArmor.FormKeyNullable.HasValue)
             {
-                yield return WornArmorKey;
+                yield return FormLinkInformation.Factory(obj.WornArmor);
             }
-            if (obj.FarAwayModel.FormKeyNullable.TryGet(out var FarAwayModelKey))
+            if (obj.FarAwayModel.FormKeyNullable.HasValue)
             {
-                yield return FarAwayModelKey;
+                yield return FormLinkInformation.Factory(obj.FarAwayModel);
             }
-            if (obj.AttackRace.FormKeyNullable.TryGet(out var AttackRaceKey))
+            if (obj.AttackRace.FormKeyNullable.HasValue)
             {
-                yield return AttackRaceKey;
+                yield return FormLinkInformation.Factory(obj.AttackRace);
             }
             foreach (var item in obj.Attacks.SelectMany(f => f.LinkFormKeys))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
-            if (obj.SpectatorOverridePackageList.FormKeyNullable.TryGet(out var SpectatorOverridePackageListKey))
+            if (obj.SpectatorOverridePackageList.FormKeyNullable.HasValue)
             {
-                yield return SpectatorOverridePackageListKey;
+                yield return FormLinkInformation.Factory(obj.SpectatorOverridePackageList);
             }
-            if (obj.ObserveDeadBodyOverridePackageList.FormKeyNullable.TryGet(out var ObserveDeadBodyOverridePackageListKey))
+            if (obj.ObserveDeadBodyOverridePackageList.FormKeyNullable.HasValue)
             {
-                yield return ObserveDeadBodyOverridePackageListKey;
+                yield return FormLinkInformation.Factory(obj.ObserveDeadBodyOverridePackageList);
             }
-            if (obj.GuardWarnOverridePackageList.FormKeyNullable.TryGet(out var GuardWarnOverridePackageListKey))
+            if (obj.GuardWarnOverridePackageList.FormKeyNullable.HasValue)
             {
-                yield return GuardWarnOverridePackageListKey;
+                yield return FormLinkInformation.Factory(obj.GuardWarnOverridePackageList);
             }
-            if (obj.CombatOverridePackageList.FormKeyNullable.TryGet(out var CombatOverridePackageListKey))
+            if (obj.CombatOverridePackageList.FormKeyNullable.HasValue)
             {
-                yield return CombatOverridePackageListKey;
+                yield return FormLinkInformation.Factory(obj.CombatOverridePackageList);
             }
             if (obj.Perks.TryGet(out var PerksItem))
             {
                 foreach (var item in PerksItem.SelectMany(f => f.LinkFormKeys))
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.Items.TryGet(out var ItemsItem))
@@ -4027,36 +4027,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 foreach (var item in ItemsItem.WhereCastable<IContainerEntryGetter, ILinkedFormKeyContainerGetter>()
                     .SelectMany((f) => f.LinkFormKeys))
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
-            foreach (var item in obj.Packages.Select(f => f.FormKey))
+            foreach (var item in obj.Packages)
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
             if (obj.Keywords.TryGet(out var KeywordsItem))
             {
-                foreach (var item in KeywordsItem.Select(f => f.FormKey))
+                foreach (var item in KeywordsItem)
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
-            yield return obj.Class.FormKey;
-            foreach (var item in obj.HeadParts.Select(f => f.FormKey))
+            yield return FormLinkInformation.Factory(obj.Class);
+            foreach (var item in obj.HeadParts)
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
-            if (obj.HairColor.FormKeyNullable.TryGet(out var HairColorKey))
+            if (obj.HairColor.FormKeyNullable.HasValue)
             {
-                yield return HairColorKey;
+                yield return FormLinkInformation.Factory(obj.HairColor);
             }
-            if (obj.CombatStyle.FormKeyNullable.TryGet(out var CombatStyleKey))
+            if (obj.CombatStyle.FormKeyNullable.HasValue)
             {
-                yield return CombatStyleKey;
+                yield return FormLinkInformation.Factory(obj.CombatStyle);
             }
-            if (obj.GiftFilter.FormKeyNullable.TryGet(out var GiftFilterKey))
+            if (obj.GiftFilter.FormKeyNullable.HasValue)
             {
-                yield return GiftFilterKey;
+                yield return FormLinkInformation.Factory(obj.GiftFilter);
             }
             if (obj.Sound is ILinkedFormKeyContainerGetter SoundlinkCont)
             {
@@ -4065,25 +4065,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.DefaultOutfit.FormKeyNullable.TryGet(out var DefaultOutfitKey))
+            if (obj.DefaultOutfit.FormKeyNullable.HasValue)
             {
-                yield return DefaultOutfitKey;
+                yield return FormLinkInformation.Factory(obj.DefaultOutfit);
             }
-            if (obj.SleepingOutfit.FormKeyNullable.TryGet(out var SleepingOutfitKey))
+            if (obj.SleepingOutfit.FormKeyNullable.HasValue)
             {
-                yield return SleepingOutfitKey;
+                yield return FormLinkInformation.Factory(obj.SleepingOutfit);
             }
-            if (obj.DefaultPackageList.FormKeyNullable.TryGet(out var DefaultPackageListKey))
+            if (obj.DefaultPackageList.FormKeyNullable.HasValue)
             {
-                yield return DefaultPackageListKey;
+                yield return FormLinkInformation.Factory(obj.DefaultPackageList);
             }
-            if (obj.CrimeFaction.FormKeyNullable.TryGet(out var CrimeFactionKey))
+            if (obj.CrimeFaction.FormKeyNullable.HasValue)
             {
-                yield return CrimeFactionKey;
+                yield return FormLinkInformation.Factory(obj.CrimeFaction);
             }
-            if (obj.HeadTexture.FormKeyNullable.TryGet(out var HeadTextureKey))
+            if (obj.HeadTexture.FormKeyNullable.HasValue)
             {
-                yield return HeadTextureKey;
+                yield return FormLinkInformation.Factory(obj.HeadTexture);
             }
             yield break;
         }
@@ -5661,9 +5661,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => NpcCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormLinkInformation> LinkFormKeys => NpcCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => NpcCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => NpcCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => NpcBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

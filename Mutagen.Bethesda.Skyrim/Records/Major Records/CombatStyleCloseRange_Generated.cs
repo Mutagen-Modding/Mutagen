@@ -987,7 +987,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ICombatStyleCloseRangeGetter obj)
+        public IEnumerable<FormLinkInformation> GetLinkFormKeys(ICombatStyleCloseRangeGetter obj)
         {
             yield break;
         }

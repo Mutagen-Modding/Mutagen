@@ -459,9 +459,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = AcousticSpace_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => AcousticSpaceCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormLinkInformation> LinkFormKeys => AcousticSpaceCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => AcousticSpaceCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => AcousticSpaceCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AcousticSpaceCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AcousticSpaceCommon.Instance.RemapLinks(this, mapping);
         public AcousticSpace(
@@ -1089,23 +1089,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IAcousticSpaceGetter obj)
+        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IAcousticSpaceGetter obj)
         {
             foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
             }
-            if (obj.AmbientSound.FormKeyNullable.TryGet(out var AmbientSoundKey))
+            if (obj.AmbientSound.FormKeyNullable.HasValue)
             {
-                yield return AmbientSoundKey;
+                yield return FormLinkInformation.Factory(obj.AmbientSound);
             }
-            if (obj.UseSoundFromRegion.FormKeyNullable.TryGet(out var UseSoundFromRegionKey))
+            if (obj.UseSoundFromRegion.FormKeyNullable.HasValue)
             {
-                yield return UseSoundFromRegionKey;
+                yield return FormLinkInformation.Factory(obj.UseSoundFromRegion);
             }
-            if (obj.EnvironmentType.FormKeyNullable.TryGet(out var EnvironmentTypeKey))
+            if (obj.EnvironmentType.FormKeyNullable.HasValue)
             {
-                yield return EnvironmentTypeKey;
+                yield return FormLinkInformation.Factory(obj.EnvironmentType);
             }
             yield break;
         }
@@ -1529,9 +1529,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => AcousticSpaceCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormLinkInformation> LinkFormKeys => AcousticSpaceCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => AcousticSpaceCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => AcousticSpaceCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => AcousticSpaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

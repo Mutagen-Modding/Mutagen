@@ -1849,9 +1849,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = Cell_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => CellCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormLinkInformation> LinkFormKeys => CellCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => CellCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => CellCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellCommon.Instance.RemapLinks(this, mapping);
         public Cell(
@@ -3339,27 +3339,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ICellGetter obj)
+        public IEnumerable<FormLinkInformation> GetLinkFormKeys(ICellGetter obj)
         {
             foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
             }
-            yield return obj.LightingTemplate.FormKey;
+            yield return FormLinkInformation.Factory(obj.LightingTemplate);
             if (obj.Regions.TryGet(out var RegionsItem))
             {
-                foreach (var item in RegionsItem.Select(f => f.FormKey))
+                foreach (var item in RegionsItem)
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.Location.FormKeyNullable.TryGet(out var LocationKey))
+            if (obj.Location.FormKeyNullable.HasValue)
             {
-                yield return LocationKey;
+                yield return FormLinkInformation.Factory(obj.Location);
             }
-            if (obj.Water.FormKeyNullable.TryGet(out var WaterKey))
+            if (obj.Water.FormKeyNullable.HasValue)
             {
-                yield return WaterKey;
+                yield return FormLinkInformation.Factory(obj.Water);
             }
             if (obj.Ownership.TryGet(out var OwnershipItems))
             {
@@ -3368,29 +3368,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.LockList.FormKeyNullable.TryGet(out var LockListKey))
+            if (obj.LockList.FormKeyNullable.HasValue)
             {
-                yield return LockListKey;
+                yield return FormLinkInformation.Factory(obj.LockList);
             }
-            if (obj.SkyAndWeatherFromRegion.FormKeyNullable.TryGet(out var SkyAndWeatherFromRegionKey))
+            if (obj.SkyAndWeatherFromRegion.FormKeyNullable.HasValue)
             {
-                yield return SkyAndWeatherFromRegionKey;
+                yield return FormLinkInformation.Factory(obj.SkyAndWeatherFromRegion);
             }
-            if (obj.AcousticSpace.FormKeyNullable.TryGet(out var AcousticSpaceKey))
+            if (obj.AcousticSpace.FormKeyNullable.HasValue)
             {
-                yield return AcousticSpaceKey;
+                yield return FormLinkInformation.Factory(obj.AcousticSpace);
             }
-            if (obj.EncounterZone.FormKeyNullable.TryGet(out var EncounterZoneKey))
+            if (obj.EncounterZone.FormKeyNullable.HasValue)
             {
-                yield return EncounterZoneKey;
+                yield return FormLinkInformation.Factory(obj.EncounterZone);
             }
-            if (obj.Music.FormKeyNullable.TryGet(out var MusicKey))
+            if (obj.Music.FormKeyNullable.HasValue)
             {
-                yield return MusicKey;
+                yield return FormLinkInformation.Factory(obj.Music);
             }
-            if (obj.ImageSpace.FormKeyNullable.TryGet(out var ImageSpaceKey))
+            if (obj.ImageSpace.FormKeyNullable.HasValue)
             {
-                yield return ImageSpaceKey;
+                yield return FormLinkInformation.Factory(obj.ImageSpace);
             }
             if (obj.Landscape.TryGet(out var LandscapeItems))
             {
@@ -3402,17 +3402,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             foreach (var item in obj.NavigationMeshes.WhereCastable<IANavigationMeshGetter, ILinkedFormKeyContainerGetter>()
                 .SelectMany((f) => f.LinkFormKeys))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
             foreach (var item in obj.Persistent.WhereCastable<IPlacedGetter, ILinkedFormKeyContainerGetter>()
                 .SelectMany((f) => f.LinkFormKeys))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
             foreach (var item in obj.Temporary.WhereCastable<IPlacedGetter, ILinkedFormKeyContainerGetter>()
                 .SelectMany((f) => f.LinkFormKeys))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
@@ -5332,9 +5332,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => CellCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormLinkInformation> LinkFormKeys => CellCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => CellCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => CellCommon.Instance.GetLinkFormKeys(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

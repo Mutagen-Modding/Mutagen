@@ -1127,9 +1127,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = Faction_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => FactionCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormLinkInformation> LinkFormKeys => FactionCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => FactionCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => FactionCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FactionCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FactionCommon.Instance.RemapLinks(this, mapping);
         public Faction(
@@ -1975,7 +1975,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IFactionGetter obj)
+        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IFactionGetter obj)
         {
             foreach (var item in base.GetLinkFormKeys(obj))
             {
@@ -1983,39 +1983,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Relations.SelectMany(f => f.LinkFormKeys))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
-            if (obj.ExteriorJailMarker.FormKeyNullable.TryGet(out var ExteriorJailMarkerKey))
+            if (obj.ExteriorJailMarker.FormKeyNullable.HasValue)
             {
-                yield return ExteriorJailMarkerKey;
+                yield return FormLinkInformation.Factory(obj.ExteriorJailMarker);
             }
-            if (obj.FollowerWaitMarker.FormKeyNullable.TryGet(out var FollowerWaitMarkerKey))
+            if (obj.FollowerWaitMarker.FormKeyNullable.HasValue)
             {
-                yield return FollowerWaitMarkerKey;
+                yield return FormLinkInformation.Factory(obj.FollowerWaitMarker);
             }
-            if (obj.StolenGoodsContainer.FormKeyNullable.TryGet(out var StolenGoodsContainerKey))
+            if (obj.StolenGoodsContainer.FormKeyNullable.HasValue)
             {
-                yield return StolenGoodsContainerKey;
+                yield return FormLinkInformation.Factory(obj.StolenGoodsContainer);
             }
-            if (obj.PlayerInventoryContainer.FormKeyNullable.TryGet(out var PlayerInventoryContainerKey))
+            if (obj.PlayerInventoryContainer.FormKeyNullable.HasValue)
             {
-                yield return PlayerInventoryContainerKey;
+                yield return FormLinkInformation.Factory(obj.PlayerInventoryContainer);
             }
-            if (obj.SharedCrimeFactionList.FormKeyNullable.TryGet(out var SharedCrimeFactionListKey))
+            if (obj.SharedCrimeFactionList.FormKeyNullable.HasValue)
             {
-                yield return SharedCrimeFactionListKey;
+                yield return FormLinkInformation.Factory(obj.SharedCrimeFactionList);
             }
-            if (obj.JailOutfit.FormKeyNullable.TryGet(out var JailOutfitKey))
+            if (obj.JailOutfit.FormKeyNullable.HasValue)
             {
-                yield return JailOutfitKey;
+                yield return FormLinkInformation.Factory(obj.JailOutfit);
             }
-            if (obj.VendorBuySellList.FormKeyNullable.TryGet(out var VendorBuySellListKey))
+            if (obj.VendorBuySellList.FormKeyNullable.HasValue)
             {
-                yield return VendorBuySellListKey;
+                yield return FormLinkInformation.Factory(obj.VendorBuySellList);
             }
-            if (obj.MerchantContainer.FormKeyNullable.TryGet(out var MerchantContainerKey))
+            if (obj.MerchantContainer.FormKeyNullable.HasValue)
             {
-                yield return MerchantContainerKey;
+                yield return FormLinkInformation.Factory(obj.MerchantContainer);
             }
             if (obj.VendorLocation is ILinkedFormKeyContainerGetter VendorLocationlinkCont)
             {
@@ -2029,7 +2029,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 foreach (var item in ConditionsItem.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter>()
                     .SelectMany((f) => f.LinkFormKeys))
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
             yield break;
@@ -2807,9 +2807,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => FactionCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormLinkInformation> LinkFormKeys => FactionCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => FactionCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => FactionCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => FactionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

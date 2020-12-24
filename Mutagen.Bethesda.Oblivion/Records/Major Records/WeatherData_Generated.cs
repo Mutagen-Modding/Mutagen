@@ -1319,7 +1319,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IWeatherDataGetter obj)
+        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IWeatherDataGetter obj)
         {
             yield break;
         }

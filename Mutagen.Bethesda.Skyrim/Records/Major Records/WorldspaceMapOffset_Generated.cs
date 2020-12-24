@@ -856,7 +856,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IWorldspaceMapOffsetGetter obj)
+        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IWorldspaceMapOffsetGetter obj)
         {
             yield break;
         }

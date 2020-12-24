@@ -1520,9 +1520,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = Weapon_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => WeaponCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormLinkInformation> LinkFormKeys => WeaponCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => WeaponCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => WeaponCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeaponCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeaponCommon.Instance.RemapLinks(this, mapping);
         public Weapon(
@@ -2584,7 +2584,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IWeaponGetter obj)
+        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IWeaponGetter obj)
         {
             foreach (var item in base.GetLinkFormKeys(obj))
             {
@@ -2604,9 +2604,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.ObjectEffect.FormKeyNullable.TryGet(out var ObjectEffectKey))
+            if (obj.ObjectEffect.FormKeyNullable.HasValue)
             {
-                yield return ObjectEffectKey;
+                yield return FormLinkInformation.Factory(obj.ObjectEffect);
             }
             if (obj.Destructible.TryGet(out var DestructibleItems))
             {
@@ -2615,31 +2615,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.EquipmentType.FormKeyNullable.TryGet(out var EquipmentTypeKey))
+            if (obj.EquipmentType.FormKeyNullable.HasValue)
             {
-                yield return EquipmentTypeKey;
+                yield return FormLinkInformation.Factory(obj.EquipmentType);
             }
-            if (obj.BlockBashImpact.FormKeyNullable.TryGet(out var BlockBashImpactKey))
+            if (obj.BlockBashImpact.FormKeyNullable.HasValue)
             {
-                yield return BlockBashImpactKey;
+                yield return FormLinkInformation.Factory(obj.BlockBashImpact);
             }
-            if (obj.AlternateBlockMaterial.FormKeyNullable.TryGet(out var AlternateBlockMaterialKey))
+            if (obj.AlternateBlockMaterial.FormKeyNullable.HasValue)
             {
-                yield return AlternateBlockMaterialKey;
+                yield return FormLinkInformation.Factory(obj.AlternateBlockMaterial);
             }
-            if (obj.PickUpSound.FormKeyNullable.TryGet(out var PickUpSoundKey))
+            if (obj.PickUpSound.FormKeyNullable.HasValue)
             {
-                yield return PickUpSoundKey;
+                yield return FormLinkInformation.Factory(obj.PickUpSound);
             }
-            if (obj.PutDownSound.FormKeyNullable.TryGet(out var PutDownSoundKey))
+            if (obj.PutDownSound.FormKeyNullable.HasValue)
             {
-                yield return PutDownSoundKey;
+                yield return FormLinkInformation.Factory(obj.PutDownSound);
             }
             if (obj.Keywords.TryGet(out var KeywordsItem))
             {
-                foreach (var item in KeywordsItem.Select(f => f.FormKey))
+                foreach (var item in KeywordsItem)
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.ScopeModel.TryGet(out var ScopeModelItems))
@@ -2649,41 +2649,41 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.ImpactDataSet.FormKeyNullable.TryGet(out var ImpactDataSetKey))
+            if (obj.ImpactDataSet.FormKeyNullable.HasValue)
             {
-                yield return ImpactDataSetKey;
+                yield return FormLinkInformation.Factory(obj.ImpactDataSet);
             }
-            if (obj.FirstPersonModel.FormKeyNullable.TryGet(out var FirstPersonModelKey))
+            if (obj.FirstPersonModel.FormKeyNullable.HasValue)
             {
-                yield return FirstPersonModelKey;
+                yield return FormLinkInformation.Factory(obj.FirstPersonModel);
             }
-            if (obj.AttackSound.FormKeyNullable.TryGet(out var AttackSoundKey))
+            if (obj.AttackSound.FormKeyNullable.HasValue)
             {
-                yield return AttackSoundKey;
+                yield return FormLinkInformation.Factory(obj.AttackSound);
             }
-            if (obj.AttackSound2D.FormKeyNullable.TryGet(out var AttackSound2DKey))
+            if (obj.AttackSound2D.FormKeyNullable.HasValue)
             {
-                yield return AttackSound2DKey;
+                yield return FormLinkInformation.Factory(obj.AttackSound2D);
             }
-            if (obj.AttackLoopSound.FormKeyNullable.TryGet(out var AttackLoopSoundKey))
+            if (obj.AttackLoopSound.FormKeyNullable.HasValue)
             {
-                yield return AttackLoopSoundKey;
+                yield return FormLinkInformation.Factory(obj.AttackLoopSound);
             }
-            if (obj.AttackFailSound.FormKeyNullable.TryGet(out var AttackFailSoundKey))
+            if (obj.AttackFailSound.FormKeyNullable.HasValue)
             {
-                yield return AttackFailSoundKey;
+                yield return FormLinkInformation.Factory(obj.AttackFailSound);
             }
-            if (obj.IdleSound.FormKeyNullable.TryGet(out var IdleSoundKey))
+            if (obj.IdleSound.FormKeyNullable.HasValue)
             {
-                yield return IdleSoundKey;
+                yield return FormLinkInformation.Factory(obj.IdleSound);
             }
-            if (obj.EquipSound.FormKeyNullable.TryGet(out var EquipSoundKey))
+            if (obj.EquipSound.FormKeyNullable.HasValue)
             {
-                yield return EquipSoundKey;
+                yield return FormLinkInformation.Factory(obj.EquipSound);
             }
-            if (obj.UnequipSound.FormKeyNullable.TryGet(out var UnequipSoundKey))
+            if (obj.UnequipSound.FormKeyNullable.HasValue)
             {
-                yield return UnequipSoundKey;
+                yield return FormLinkInformation.Factory(obj.UnequipSound);
             }
             if (obj.Critical.TryGet(out var CriticalItems))
             {
@@ -2692,9 +2692,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.Template.FormKeyNullable.TryGet(out var TemplateKey))
+            if (obj.Template.FormKeyNullable.HasValue)
             {
-                yield return TemplateKey;
+                yield return FormLinkInformation.Factory(obj.Template);
             }
             yield break;
         }
@@ -3780,9 +3780,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => WeaponCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormLinkInformation> LinkFormKeys => WeaponCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => WeaponCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => WeaponCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => WeaponBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

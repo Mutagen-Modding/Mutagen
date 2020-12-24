@@ -1153,7 +1153,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IAmbientColorsGetter obj)
+        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IAmbientColorsGetter obj)
         {
             yield break;
         }

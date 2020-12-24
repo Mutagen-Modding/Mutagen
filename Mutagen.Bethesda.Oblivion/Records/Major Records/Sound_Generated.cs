@@ -993,7 +993,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ISoundGetter obj)
+        public IEnumerable<FormLinkInformation> GetLinkFormKeys(ISoundGetter obj)
         {
             foreach (var item in base.GetLinkFormKeys(obj))
             {

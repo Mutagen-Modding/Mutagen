@@ -948,7 +948,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ICellWaterVelocityGetter obj)
+        public IEnumerable<FormLinkInformation> GetLinkFormKeys(ICellWaterVelocityGetter obj)
         {
             yield break;
         }

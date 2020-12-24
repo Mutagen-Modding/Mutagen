@@ -857,7 +857,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ISceneAdapterGetter obj)
+        public IEnumerable<FormLinkInformation> GetLinkFormKeys(ISceneAdapterGetter obj)
         {
             foreach (var item in base.GetLinkFormKeys(obj))
             {

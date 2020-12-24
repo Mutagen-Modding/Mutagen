@@ -1367,9 +1367,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = Projectile_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => ProjectileCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormLinkInformation> LinkFormKeys => ProjectileCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ProjectileCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => ProjectileCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ProjectileCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ProjectileCommon.Instance.RemapLinks(this, mapping);
         public Projectile(
@@ -2339,7 +2339,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IProjectileGetter obj)
+        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IProjectileGetter obj)
         {
             foreach (var item in base.GetLinkFormKeys(obj))
             {
@@ -2359,15 +2359,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            yield return obj.Light.FormKey;
-            yield return obj.MuzzleFlash.FormKey;
-            yield return obj.Explosion.FormKey;
-            yield return obj.Sound.FormKey;
-            yield return obj.CountdownSound.FormKey;
-            yield return obj.DisaleSound.FormKey;
-            yield return obj.DefaultWeaponSource.FormKey;
-            yield return obj.DecalData.FormKey;
-            yield return obj.CollisionLayer.FormKey;
+            yield return FormLinkInformation.Factory(obj.Light);
+            yield return FormLinkInformation.Factory(obj.MuzzleFlash);
+            yield return FormLinkInformation.Factory(obj.Explosion);
+            yield return FormLinkInformation.Factory(obj.Sound);
+            yield return FormLinkInformation.Factory(obj.CountdownSound);
+            yield return FormLinkInformation.Factory(obj.DisaleSound);
+            yield return FormLinkInformation.Factory(obj.DefaultWeaponSource);
+            yield return FormLinkInformation.Factory(obj.DecalData);
+            yield return FormLinkInformation.Factory(obj.CollisionLayer);
             yield break;
         }
         
@@ -3145,9 +3145,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => ProjectileCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormLinkInformation> LinkFormKeys => ProjectileCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ProjectileCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => ProjectileCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ProjectileBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

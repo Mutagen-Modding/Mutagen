@@ -2127,9 +2127,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = MagicEffect_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => MagicEffectCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormLinkInformation> LinkFormKeys => MagicEffectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => MagicEffectCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => MagicEffectCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectCommon.Instance.RemapLinks(this, mapping);
         public MagicEffect(
@@ -3311,7 +3311,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IMagicEffectGetter obj)
+        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IMagicEffectGetter obj)
         {
             foreach (var item in base.GetLinkFormKeys(obj))
             {
@@ -3324,47 +3324,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.MenuDisplayObject.FormKeyNullable.TryGet(out var MenuDisplayObjectKey))
+            if (obj.MenuDisplayObject.FormKeyNullable.HasValue)
             {
-                yield return MenuDisplayObjectKey;
+                yield return FormLinkInformation.Factory(obj.MenuDisplayObject);
             }
             if (obj.Keywords.TryGet(out var KeywordsItem))
             {
-                foreach (var item in KeywordsItem.Select(f => f.FormKey))
+                foreach (var item in KeywordsItem)
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
-            yield return obj.CastingLight.FormKey;
-            yield return obj.HitShader.FormKey;
-            yield return obj.EnchantShader.FormKey;
-            yield return obj.Projectile.FormKey;
-            yield return obj.Explosion.FormKey;
-            yield return obj.CastingArt.FormKey;
-            yield return obj.HitEffectArt.FormKey;
-            yield return obj.ImpactData.FormKey;
-            yield return obj.DualCastArt.FormKey;
-            yield return obj.EnchantArt.FormKey;
-            yield return obj.Unknown2.FormKey;
-            yield return obj.Unknown3.FormKey;
-            yield return obj.EquipAbility.FormKey;
-            yield return obj.ImageSpaceModifier.FormKey;
-            yield return obj.PerkToApply.FormKey;
-            foreach (var item in obj.CounterEffects.Select(f => f.FormKey))
+            yield return FormLinkInformation.Factory(obj.CastingLight);
+            yield return FormLinkInformation.Factory(obj.HitShader);
+            yield return FormLinkInformation.Factory(obj.EnchantShader);
+            yield return FormLinkInformation.Factory(obj.Projectile);
+            yield return FormLinkInformation.Factory(obj.Explosion);
+            yield return FormLinkInformation.Factory(obj.CastingArt);
+            yield return FormLinkInformation.Factory(obj.HitEffectArt);
+            yield return FormLinkInformation.Factory(obj.ImpactData);
+            yield return FormLinkInformation.Factory(obj.DualCastArt);
+            yield return FormLinkInformation.Factory(obj.EnchantArt);
+            yield return FormLinkInformation.Factory(obj.Unknown2);
+            yield return FormLinkInformation.Factory(obj.Unknown3);
+            yield return FormLinkInformation.Factory(obj.EquipAbility);
+            yield return FormLinkInformation.Factory(obj.ImageSpaceModifier);
+            yield return FormLinkInformation.Factory(obj.PerkToApply);
+            foreach (var item in obj.CounterEffects)
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
             if (obj.Sounds.TryGet(out var SoundsItem))
             {
                 foreach (var item in SoundsItem.SelectMany(f => f.LinkFormKeys))
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
             foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter>()
                 .SelectMany((f) => f.LinkFormKeys))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
@@ -4402,9 +4402,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => MagicEffectCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormLinkInformation> LinkFormKeys => MagicEffectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => MagicEffectCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => MagicEffectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => MagicEffectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

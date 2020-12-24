@@ -852,9 +852,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = Impact_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => ImpactCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormLinkInformation> LinkFormKeys => ImpactCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ImpactCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => ImpactCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ImpactCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ImpactCommon.Instance.RemapLinks(this, mapping);
         public Impact(
@@ -1634,7 +1634,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IImpactGetter obj)
+        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IImpactGetter obj)
         {
             foreach (var item in base.GetLinkFormKeys(obj))
             {
@@ -1647,25 +1647,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.TextureSet.FormKeyNullable.TryGet(out var TextureSetKey))
+            if (obj.TextureSet.FormKeyNullable.HasValue)
             {
-                yield return TextureSetKey;
+                yield return FormLinkInformation.Factory(obj.TextureSet);
             }
-            if (obj.SecondaryTextureSet.FormKeyNullable.TryGet(out var SecondaryTextureSetKey))
+            if (obj.SecondaryTextureSet.FormKeyNullable.HasValue)
             {
-                yield return SecondaryTextureSetKey;
+                yield return FormLinkInformation.Factory(obj.SecondaryTextureSet);
             }
-            if (obj.Sound1.FormKeyNullable.TryGet(out var Sound1Key))
+            if (obj.Sound1.FormKeyNullable.HasValue)
             {
-                yield return Sound1Key;
+                yield return FormLinkInformation.Factory(obj.Sound1);
             }
-            if (obj.Sound2.FormKeyNullable.TryGet(out var Sound2Key))
+            if (obj.Sound2.FormKeyNullable.HasValue)
             {
-                yield return Sound2Key;
+                yield return FormLinkInformation.Factory(obj.Sound2);
             }
-            if (obj.Hazard.FormKeyNullable.TryGet(out var HazardKey))
+            if (obj.Hazard.FormKeyNullable.HasValue)
             {
-                yield return HazardKey;
+                yield return FormLinkInformation.Factory(obj.Hazard);
             }
             yield break;
         }
@@ -2255,9 +2255,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => ImpactCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormLinkInformation> LinkFormKeys => ImpactCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ImpactCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => ImpactCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ImpactBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

@@ -1020,9 +1020,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = Explosion_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => ExplosionCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormLinkInformation> LinkFormKeys => ExplosionCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ExplosionCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => ExplosionCommon.Instance.GetLinkFormKeys(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ExplosionCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ExplosionCommon.Instance.RemapLinks(this, mapping);
         public Explosion(
@@ -1855,7 +1855,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IExplosionGetter obj)
+        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IExplosionGetter obj)
         {
             foreach (var item in base.GetLinkFormKeys(obj))
             {
@@ -1875,20 +1875,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.ObjectEffect.FormKeyNullable.TryGet(out var ObjectEffectKey))
+            if (obj.ObjectEffect.FormKeyNullable.HasValue)
             {
-                yield return ObjectEffectKey;
+                yield return FormLinkInformation.Factory(obj.ObjectEffect);
             }
-            if (obj.ImageSpaceModifier.FormKeyNullable.TryGet(out var ImageSpaceModifierKey))
+            if (obj.ImageSpaceModifier.FormKeyNullable.HasValue)
             {
-                yield return ImageSpaceModifierKey;
+                yield return FormLinkInformation.Factory(obj.ImageSpaceModifier);
             }
-            yield return obj.Light.FormKey;
-            yield return obj.Sound1.FormKey;
-            yield return obj.Sound2.FormKey;
-            yield return obj.ImpactDataSet.FormKey;
-            yield return obj.PlacedObject.FormKey;
-            yield return obj.SpawnProjectile.FormKey;
+            yield return FormLinkInformation.Factory(obj.Light);
+            yield return FormLinkInformation.Factory(obj.Sound1);
+            yield return FormLinkInformation.Factory(obj.Sound2);
+            yield return FormLinkInformation.Factory(obj.ImpactDataSet);
+            yield return FormLinkInformation.Factory(obj.PlacedObject);
+            yield return FormLinkInformation.Factory(obj.SpawnProjectile);
             yield break;
         }
         
@@ -2556,9 +2556,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => ExplosionCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormLinkInformation> LinkFormKeys => ExplosionCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ExplosionCommon.Instance.GetLinkFormKeys(this);
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => ExplosionCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ExplosionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
