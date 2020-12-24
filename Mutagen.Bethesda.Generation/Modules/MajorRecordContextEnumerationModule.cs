@@ -389,7 +389,18 @@ namespace Mutagen.Bethesda.Generation
 
                                     if (grup != null)
                                     {
-                                        subFg.AppendLine($"foreach (var item in EnumerateMajorRecordContexts({accessor}, linkCache, typeof({grup.GetGroupTarget().Interface(getter: true)}), throwIfUnknown: throwIfUnknown))");
+                                        using (var args = new ArgsWrapper(subFg,
+                                            $"foreach (var item in EnumerateMajorRecordContexts",
+                                            suffixLine: ")")
+                                        {
+                                            SemiColon = false
+                                        })
+                                        {
+                                            args.Add(accessor.ToString());
+                                            args.AddPassArg("linkCache");
+                                            args.Add($"type: typeof({grup.GetGroupTarget().Interface(getter: true)})");
+                                            args.AddPassArg("throwIfUnknown");
+                                        }
                                         using (new BraceWrapper(subFg))
                                         {
                                             subFg.AppendLine("yield return item;");
@@ -464,7 +475,16 @@ namespace Mutagen.Bethesda.Generation
                 if (blackList?.Contains(group.GetGroupTarget()) ?? false) return;
                 if (!hasTarget)
                 {
-                    fieldGen.AppendLine($"foreach (var item in obj.{field.Name}.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))");
+                    using (var args = new ArgsWrapper(fieldGen,
+                        $"foreach (var item in obj.{field.Name}.EnumerateMajorRecords",
+                        suffixLine: ")")
+                    {
+                        SemiColon = false
+                    })
+                    {
+                        args.AddPassArg("type");
+                        args.AddPassArg("throwIfUnknown");
+                    }
                     using (new BraceWrapper(fieldGen))
                     {
                         using (var args = new ArgsWrapper(fieldGen,
@@ -481,8 +501,21 @@ namespace Mutagen.Bethesda.Generation
                     fieldGen.AppendLine($"foreach (var groupItem in obj.{field.Name})");
                     using (new BraceWrapper(fieldGen))
                     {
-                        fieldGen.AppendLine($"foreach (var item in {group.GetGroupTarget().CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, {(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}, {(obj.GetObjectType() == ObjectType.Mod ? "parent: null" : "curContext")}, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.{field.Name}.GetOrAddAsOverride(linkCache.Resolve<{group.GetGroupTarget().Interface(getter: true, internalInterface: true)}>(r.FormKey))))");
-
+                        using (var args = new ArgsWrapper(fieldGen,
+                            $"foreach (var item in {group.GetGroupTarget().CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.EnumerateMajorRecordContexts",
+                            suffixLine: ")")
+                        {
+                            SemiColon = false
+                        })
+                        {
+                            args.Add("groupItem");
+                            args.AddPassArg("linkCache");
+                            args.AddPassArg("type");
+                            args.Add($"modKey: {(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}");
+                            args.Add($"parent: {(obj.GetObjectType() == ObjectType.Mod ? "null" : "curContext")}");
+                            args.AddPassArg("throwIfUnknown");
+                            args.Add($"getter: (m, r) => m.{field.Name}.GetOrAddAsOverride(linkCache.Resolve<{group.GetGroupTarget().Interface(getter: true, internalInterface: true)}>(r.FormKey))");
+                        }
                         using (new BraceWrapper(fieldGen))
                         {
                             fieldGen.AppendLine("yield return item;");
@@ -496,7 +529,20 @@ namespace Mutagen.Bethesda.Generation
                 var fieldAccessor = loqui.Nullable ? $"{obj.ObjectName}{loqui.Name}item" : $"{accessor}.{loqui.Name}";
                 if (loqui.TargetObjectGeneration.IsListGroup())
                 { // List groups 
-                    fieldGen.AppendLine($"foreach (var item in obj.{field.Name}.EnumerateMajorRecordContexts(linkCache, type, {(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}, {(obj.GetObjectType() == ObjectType.Mod ? "parent: null" : "curContext")}, throwIfUnknown: throwIfUnknown))");
+
+                    using (var args = new ArgsWrapper(fieldGen,
+                        $"foreach (var item in obj.{field.Name}.EnumerateMajorRecordContexts",
+                        suffixLine: ")")
+                    {
+                        SemiColon = false
+                    })
+                    {
+                        args.AddPassArg("linkCache");
+                        args.AddPassArg("type");
+                        args.Add($"modKey: {(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}");
+                        args.Add($"parent: {(obj.GetObjectType() == ObjectType.Mod ? "null" : "curContext")}");
+                        args.AddPassArg("throwIfUnknown");
+                    }
                     using (new BraceWrapper(fieldGen))
                     {
                         fieldGen.AppendLine("yield return item;");

@@ -14471,7 +14471,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IGameSettingGetter":
                 case "IGameSetting":
                 case "IGameSettingInternal":
-                    foreach (var item in obj.GameSettings.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.GameSettings.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -14483,7 +14485,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IKeywordGetter":
                 case "IKeyword":
                 case "IKeywordInternal":
-                    foreach (var item in obj.Keywords.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Keywords.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -14495,7 +14499,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILocationReferenceTypeGetter":
                 case "ILocationReferenceType":
                 case "ILocationReferenceTypeInternal":
-                    foreach (var item in obj.LocationReferenceTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.LocationReferenceTypes.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -14507,7 +14513,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IActionRecordGetter":
                 case "IActionRecord":
                 case "IActionRecordInternal":
-                    foreach (var item in obj.Actions.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Actions.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -14519,7 +14527,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ITextureSetGetter":
                 case "ITextureSet":
                 case "ITextureSetInternal":
-                    foreach (var item in obj.TextureSets.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.TextureSets.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -14531,7 +14541,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IGlobalGetter":
                 case "IGlobal":
                 case "IGlobalInternal":
-                    foreach (var item in obj.Globals.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Globals.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -14543,7 +14555,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IClassGetter":
                 case "IClass":
                 case "IClassInternal":
-                    foreach (var item in obj.Classes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Classes.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -14555,7 +14569,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IFactionGetter":
                 case "IFaction":
                 case "IFactionInternal":
-                    foreach (var item in obj.Factions.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Factions.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -14567,7 +14583,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IHeadPartGetter":
                 case "IHeadPart":
                 case "IHeadPartInternal":
-                    foreach (var item in obj.HeadParts.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.HeadParts.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -14579,7 +14597,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IHairGetter":
                 case "IHair":
                 case "IHairInternal":
-                    foreach (var item in obj.Hairs.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Hairs.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -14591,7 +14611,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IEyesGetter":
                 case "IEyes":
                 case "IEyesInternal":
-                    foreach (var item in obj.Eyes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Eyes.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -14603,7 +14625,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IRaceGetter":
                 case "IRace":
                 case "IRaceInternal":
-                    foreach (var item in obj.Races.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Races.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -14615,7 +14639,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ISoundMarkerGetter":
                 case "ISoundMarker":
                 case "ISoundMarkerInternal":
-                    foreach (var item in obj.SoundMarkers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.SoundMarkers.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -14627,7 +14653,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IAcousticSpaceGetter":
                 case "IAcousticSpace":
                 case "IAcousticSpaceInternal":
-                    foreach (var item in obj.AcousticSpaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.AcousticSpaces.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -14639,7 +14667,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IMagicEffectGetter":
                 case "IMagicEffect":
                 case "IMagicEffectInternal":
-                    foreach (var item in obj.MagicEffects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.MagicEffects.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -14651,7 +14681,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILandscapeTextureGetter":
                 case "ILandscapeTexture":
                 case "ILandscapeTextureInternal":
-                    foreach (var item in obj.LandscapeTextures.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.LandscapeTextures.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -14663,7 +14695,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IObjectEffectGetter":
                 case "IObjectEffect":
                 case "IObjectEffectInternal":
-                    foreach (var item in obj.ObjectEffects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.ObjectEffects.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -14675,7 +14709,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ISpellGetter":
                 case "ISpell":
                 case "ISpellInternal":
-                    foreach (var item in obj.Spells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Spells.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -14687,7 +14723,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IScrollGetter":
                 case "IScroll":
                 case "IScrollInternal":
-                    foreach (var item in obj.Scrolls.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Scrolls.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -14699,7 +14737,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IActivatorGetter":
                 case "IActivator":
                 case "IActivatorInternal":
-                    foreach (var item in obj.Activators.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Activators.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -14711,7 +14751,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ITalkingActivatorGetter":
                 case "ITalkingActivator":
                 case "ITalkingActivatorInternal":
-                    foreach (var item in obj.TalkingActivators.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.TalkingActivators.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -14723,7 +14765,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IArmorGetter":
                 case "IArmor":
                 case "IArmorInternal":
-                    foreach (var item in obj.Armors.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Armors.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -14735,7 +14779,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IBookGetter":
                 case "IBook":
                 case "IBookInternal":
-                    foreach (var item in obj.Books.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Books.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -14747,7 +14793,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IContainerGetter":
                 case "IContainer":
                 case "IContainerInternal":
-                    foreach (var item in obj.Containers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Containers.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -14759,7 +14807,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IDoorGetter":
                 case "IDoor":
                 case "IDoorInternal":
-                    foreach (var item in obj.Doors.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Doors.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -14771,7 +14821,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IIngredientGetter":
                 case "IIngredient":
                 case "IIngredientInternal":
-                    foreach (var item in obj.Ingredients.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Ingredients.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -14783,7 +14835,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILightGetter":
                 case "ILight":
                 case "ILightInternal":
-                    foreach (var item in obj.Lights.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Lights.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -14795,7 +14849,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IMiscItemGetter":
                 case "IMiscItem":
                 case "IMiscItemInternal":
-                    foreach (var item in obj.MiscItems.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.MiscItems.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -14807,7 +14863,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IAlchemicalApparatusGetter":
                 case "IAlchemicalApparatus":
                 case "IAlchemicalApparatusInternal":
-                    foreach (var item in obj.AlchemicalApparatuses.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.AlchemicalApparatuses.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -14819,7 +14877,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IStaticGetter":
                 case "IStatic":
                 case "IStaticInternal":
-                    foreach (var item in obj.Statics.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Statics.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -14831,7 +14891,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IMoveableStaticGetter":
                 case "IMoveableStatic":
                 case "IMoveableStaticInternal":
-                    foreach (var item in obj.MoveableStatics.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.MoveableStatics.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -14843,7 +14905,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IGrassGetter":
                 case "IGrass":
                 case "IGrassInternal":
-                    foreach (var item in obj.Grasses.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Grasses.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -14855,7 +14919,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ITreeGetter":
                 case "ITree":
                 case "ITreeInternal":
-                    foreach (var item in obj.Trees.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Trees.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -14867,7 +14933,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IFloraGetter":
                 case "IFlora":
                 case "IFloraInternal":
-                    foreach (var item in obj.Florae.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Florae.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -14879,7 +14947,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IFurnitureGetter":
                 case "IFurniture":
                 case "IFurnitureInternal":
-                    foreach (var item in obj.Furniture.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Furniture.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -14891,7 +14961,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IWeaponGetter":
                 case "IWeapon":
                 case "IWeaponInternal":
-                    foreach (var item in obj.Weapons.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Weapons.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -14903,7 +14975,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IAmmunitionGetter":
                 case "IAmmunition":
                 case "IAmmunitionInternal":
-                    foreach (var item in obj.Ammunitions.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Ammunitions.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -14915,7 +14989,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "INpcGetter":
                 case "INpc":
                 case "INpcInternal":
-                    foreach (var item in obj.Npcs.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Npcs.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -14927,7 +15003,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILeveledNpcGetter":
                 case "ILeveledNpc":
                 case "ILeveledNpcInternal":
-                    foreach (var item in obj.LeveledNpcs.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.LeveledNpcs.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -14939,7 +15017,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IKeyGetter":
                 case "IKey":
                 case "IKeyInternal":
-                    foreach (var item in obj.Keys.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Keys.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -14951,7 +15031,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IIngestibleGetter":
                 case "IIngestible":
                 case "IIngestibleInternal":
-                    foreach (var item in obj.Ingestibles.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Ingestibles.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -14963,7 +15045,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IIdleMarkerGetter":
                 case "IIdleMarker":
                 case "IIdleMarkerInternal":
-                    foreach (var item in obj.IdleMarkers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.IdleMarkers.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -14975,7 +15059,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IConstructibleObjectGetter":
                 case "IConstructibleObject":
                 case "IConstructibleObjectInternal":
-                    foreach (var item in obj.ConstructibleObjects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.ConstructibleObjects.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -14987,7 +15073,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IProjectileGetter":
                 case "IProjectile":
                 case "IProjectileInternal":
-                    foreach (var item in obj.Projectiles.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Projectiles.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -14999,7 +15087,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IHazardGetter":
                 case "IHazard":
                 case "IHazardInternal":
-                    foreach (var item in obj.Hazards.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Hazards.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15011,7 +15101,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ISoulGemGetter":
                 case "ISoulGem":
                 case "ISoulGemInternal":
-                    foreach (var item in obj.SoulGems.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.SoulGems.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15023,7 +15115,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILeveledItemGetter":
                 case "ILeveledItem":
                 case "ILeveledItemInternal":
-                    foreach (var item in obj.LeveledItems.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.LeveledItems.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15035,7 +15129,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IWeatherGetter":
                 case "IWeather":
                 case "IWeatherInternal":
-                    foreach (var item in obj.Weathers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Weathers.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15047,7 +15143,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IClimateGetter":
                 case "IClimate":
                 case "IClimateInternal":
-                    foreach (var item in obj.Climates.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Climates.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15059,7 +15157,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IShaderParticleGeometryGetter":
                 case "IShaderParticleGeometry":
                 case "IShaderParticleGeometryInternal":
-                    foreach (var item in obj.ShaderParticleGeometries.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.ShaderParticleGeometries.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15071,7 +15171,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IVisualEffectGetter":
                 case "IVisualEffect":
                 case "IVisualEffectInternal":
-                    foreach (var item in obj.VisualEffects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.VisualEffects.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15083,7 +15185,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IRegionGetter":
                 case "IRegion":
                 case "IRegionInternal":
-                    foreach (var item in obj.Regions.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Regions.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15095,7 +15199,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "INavigationMeshInfoMapGetter":
                 case "INavigationMeshInfoMap":
                 case "INavigationMeshInfoMapInternal":
-                    foreach (var item in obj.NavigationMeshInfoMaps.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.NavigationMeshInfoMaps.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15107,7 +15213,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IWorldspaceGetter":
                 case "IWorldspace":
                 case "IWorldspaceInternal":
-                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15119,7 +15227,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IDialogTopicGetter":
                 case "IDialogTopic":
                 case "IDialogTopicInternal":
-                    foreach (var item in obj.DialogTopics.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.DialogTopics.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15131,7 +15241,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IQuestGetter":
                 case "IQuest":
                 case "IQuestInternal":
-                    foreach (var item in obj.Quests.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Quests.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15143,7 +15255,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IIdleAnimationGetter":
                 case "IIdleAnimation":
                 case "IIdleAnimationInternal":
-                    foreach (var item in obj.IdleAnimations.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.IdleAnimations.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15155,7 +15269,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPackageGetter":
                 case "IPackage":
                 case "IPackageInternal":
-                    foreach (var item in obj.Packages.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Packages.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15167,7 +15283,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ICombatStyleGetter":
                 case "ICombatStyle":
                 case "ICombatStyleInternal":
-                    foreach (var item in obj.CombatStyles.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.CombatStyles.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15179,7 +15297,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILoadScreenGetter":
                 case "ILoadScreen":
                 case "ILoadScreenInternal":
-                    foreach (var item in obj.LoadScreens.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.LoadScreens.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15191,7 +15311,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILeveledSpellGetter":
                 case "ILeveledSpell":
                 case "ILeveledSpellInternal":
-                    foreach (var item in obj.LeveledSpells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.LeveledSpells.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15203,7 +15325,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IAnimatedObjectGetter":
                 case "IAnimatedObject":
                 case "IAnimatedObjectInternal":
-                    foreach (var item in obj.AnimatedObjects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.AnimatedObjects.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15215,7 +15339,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IWaterGetter":
                 case "IWater":
                 case "IWaterInternal":
-                    foreach (var item in obj.Waters.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Waters.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15227,7 +15353,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IEffectShaderGetter":
                 case "IEffectShader":
                 case "IEffectShaderInternal":
-                    foreach (var item in obj.EffectShaders.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.EffectShaders.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15239,7 +15367,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IExplosionGetter":
                 case "IExplosion":
                 case "IExplosionInternal":
-                    foreach (var item in obj.Explosions.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Explosions.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15251,7 +15381,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IDebrisGetter":
                 case "IDebris":
                 case "IDebrisInternal":
-                    foreach (var item in obj.Debris.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Debris.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15263,7 +15395,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IImageSpaceGetter":
                 case "IImageSpace":
                 case "IImageSpaceInternal":
-                    foreach (var item in obj.ImageSpaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.ImageSpaces.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15275,7 +15409,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IImageSpaceAdapterGetter":
                 case "IImageSpaceAdapter":
                 case "IImageSpaceAdapterInternal":
-                    foreach (var item in obj.ImageSpaceAdapters.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.ImageSpaceAdapters.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15287,7 +15423,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IFormListGetter":
                 case "IFormList":
                 case "IFormListInternal":
-                    foreach (var item in obj.FormLists.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.FormLists.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15299,7 +15437,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPerkGetter":
                 case "IPerk":
                 case "IPerkInternal":
-                    foreach (var item in obj.Perks.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Perks.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15311,7 +15451,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IBodyPartDataGetter":
                 case "IBodyPartData":
                 case "IBodyPartDataInternal":
-                    foreach (var item in obj.BodyParts.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.BodyParts.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15323,7 +15465,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IAddonNodeGetter":
                 case "IAddonNode":
                 case "IAddonNodeInternal":
-                    foreach (var item in obj.AddonNodes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.AddonNodes.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15335,7 +15479,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IActorValueInformationGetter":
                 case "IActorValueInformation":
                 case "IActorValueInformationInternal":
-                    foreach (var item in obj.ActorValueInformation.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.ActorValueInformation.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15347,7 +15493,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ICameraShotGetter":
                 case "ICameraShot":
                 case "ICameraShotInternal":
-                    foreach (var item in obj.CameraShots.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.CameraShots.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15359,7 +15507,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ICameraPathGetter":
                 case "ICameraPath":
                 case "ICameraPathInternal":
-                    foreach (var item in obj.CameraPaths.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.CameraPaths.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15371,7 +15521,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IVoiceTypeGetter":
                 case "IVoiceType":
                 case "IVoiceTypeInternal":
-                    foreach (var item in obj.VoiceTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.VoiceTypes.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15383,7 +15535,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IMaterialTypeGetter":
                 case "IMaterialType":
                 case "IMaterialTypeInternal":
-                    foreach (var item in obj.MaterialTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.MaterialTypes.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15395,7 +15549,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IImpactGetter":
                 case "IImpact":
                 case "IImpactInternal":
-                    foreach (var item in obj.Impacts.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Impacts.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15407,7 +15563,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IImpactDataSetGetter":
                 case "IImpactDataSet":
                 case "IImpactDataSetInternal":
-                    foreach (var item in obj.ImpactDataSets.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.ImpactDataSets.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15419,7 +15577,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IArmorAddonGetter":
                 case "IArmorAddon":
                 case "IArmorAddonInternal":
-                    foreach (var item in obj.ArmorAddons.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.ArmorAddons.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15431,7 +15591,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IEncounterZoneGetter":
                 case "IEncounterZone":
                 case "IEncounterZoneInternal":
-                    foreach (var item in obj.EncounterZones.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.EncounterZones.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15443,7 +15605,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILocationGetter":
                 case "ILocation":
                 case "ILocationInternal":
-                    foreach (var item in obj.Locations.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Locations.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15455,7 +15619,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IMessageGetter":
                 case "IMessage":
                 case "IMessageInternal":
-                    foreach (var item in obj.Messages.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Messages.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15467,7 +15633,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IDefaultObjectManagerGetter":
                 case "IDefaultObjectManager":
                 case "IDefaultObjectManagerInternal":
-                    foreach (var item in obj.DefaultObjectManagers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.DefaultObjectManagers.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15479,7 +15647,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILightingTemplateGetter":
                 case "ILightingTemplate":
                 case "ILightingTemplateInternal":
-                    foreach (var item in obj.LightingTemplates.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.LightingTemplates.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15491,7 +15661,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IMusicTypeGetter":
                 case "IMusicType":
                 case "IMusicTypeInternal":
-                    foreach (var item in obj.MusicTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.MusicTypes.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15503,7 +15675,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IFootstepGetter":
                 case "IFootstep":
                 case "IFootstepInternal":
-                    foreach (var item in obj.Footsteps.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Footsteps.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15515,7 +15689,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IFootstepSetGetter":
                 case "IFootstepSet":
                 case "IFootstepSetInternal":
-                    foreach (var item in obj.FootstepSets.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.FootstepSets.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15527,7 +15703,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IStoryManagerBranchNodeGetter":
                 case "IStoryManagerBranchNode":
                 case "IStoryManagerBranchNodeInternal":
-                    foreach (var item in obj.StoryManagerBranchNodes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.StoryManagerBranchNodes.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15539,7 +15717,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IStoryManagerQuestNodeGetter":
                 case "IStoryManagerQuestNode":
                 case "IStoryManagerQuestNodeInternal":
-                    foreach (var item in obj.StoryManagerQuestNodes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.StoryManagerQuestNodes.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15551,7 +15731,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IStoryManagerEventNodeGetter":
                 case "IStoryManagerEventNode":
                 case "IStoryManagerEventNodeInternal":
-                    foreach (var item in obj.StoryManagerEventNodes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.StoryManagerEventNodes.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15563,7 +15745,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IDialogBranchGetter":
                 case "IDialogBranch":
                 case "IDialogBranchInternal":
-                    foreach (var item in obj.DialogBranches.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.DialogBranches.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15575,7 +15759,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IMusicTrackGetter":
                 case "IMusicTrack":
                 case "IMusicTrackInternal":
-                    foreach (var item in obj.MusicTracks.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.MusicTracks.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15587,7 +15773,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IDialogViewGetter":
                 case "IDialogView":
                 case "IDialogViewInternal":
-                    foreach (var item in obj.DialogViews.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.DialogViews.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15599,7 +15787,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IWordOfPowerGetter":
                 case "IWordOfPower":
                 case "IWordOfPowerInternal":
-                    foreach (var item in obj.WordsOfPower.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.WordsOfPower.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15611,7 +15801,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IShoutGetter":
                 case "IShout":
                 case "IShoutInternal":
-                    foreach (var item in obj.Shouts.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Shouts.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15623,7 +15815,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IEquipTypeGetter":
                 case "IEquipType":
                 case "IEquipTypeInternal":
-                    foreach (var item in obj.EquipTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.EquipTypes.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15635,7 +15829,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IRelationshipGetter":
                 case "IRelationship":
                 case "IRelationshipInternal":
-                    foreach (var item in obj.Relationships.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Relationships.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15647,7 +15843,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ISceneGetter":
                 case "IScene":
                 case "ISceneInternal":
-                    foreach (var item in obj.Scenes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Scenes.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15659,7 +15857,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IAssociationTypeGetter":
                 case "IAssociationType":
                 case "IAssociationTypeInternal":
-                    foreach (var item in obj.AssociationTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.AssociationTypes.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15671,7 +15871,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IOutfitGetter":
                 case "IOutfit":
                 case "IOutfitInternal":
-                    foreach (var item in obj.Outfits.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Outfits.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15683,7 +15885,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IArtObjectGetter":
                 case "IArtObject":
                 case "IArtObjectInternal":
-                    foreach (var item in obj.ArtObjects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.ArtObjects.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15695,7 +15899,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IMaterialObjectGetter":
                 case "IMaterialObject":
                 case "IMaterialObjectInternal":
-                    foreach (var item in obj.MaterialObjects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.MaterialObjects.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15707,7 +15913,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IMovementTypeGetter":
                 case "IMovementType":
                 case "IMovementTypeInternal":
-                    foreach (var item in obj.MovementTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.MovementTypes.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15719,7 +15927,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ISoundDescriptorGetter":
                 case "ISoundDescriptor":
                 case "ISoundDescriptorInternal":
-                    foreach (var item in obj.SoundDescriptors.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.SoundDescriptors.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15731,7 +15941,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IDualCastDataGetter":
                 case "IDualCastData":
                 case "IDualCastDataInternal":
-                    foreach (var item in obj.DualCastData.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.DualCastData.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15743,7 +15955,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ISoundCategoryGetter":
                 case "ISoundCategory":
                 case "ISoundCategoryInternal":
-                    foreach (var item in obj.SoundCategories.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.SoundCategories.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15755,7 +15969,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ISoundOutputModelGetter":
                 case "ISoundOutputModel":
                 case "ISoundOutputModelInternal":
-                    foreach (var item in obj.SoundOutputModels.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.SoundOutputModels.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15767,7 +15983,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ICollisionLayerGetter":
                 case "ICollisionLayer":
                 case "ICollisionLayerInternal":
-                    foreach (var item in obj.CollisionLayers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.CollisionLayers.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15779,7 +15997,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IColorRecordGetter":
                 case "IColorRecord":
                 case "IColorRecordInternal":
-                    foreach (var item in obj.Colors.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Colors.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15791,7 +16011,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IReverbParametersGetter":
                 case "IReverbParameters":
                 case "IReverbParametersInternal":
-                    foreach (var item in obj.ReverbParameters.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.ReverbParameters.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15803,7 +16025,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IVolumetricLightingGetter":
                 case "IVolumetricLighting":
                 case "IVolumetricLightingInternal":
-                    foreach (var item in obj.VolumetricLightings.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.VolumetricLightings.EnumerateMajorRecords(
+                        type: type,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
                             modKey: obj.ModKey,
@@ -15815,13 +16039,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ICellGetter":
                 case "ICell":
                 case "ICellInternal":
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        modKey: obj.ModKey,
+                        parent: null,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
+                            groupItem,
+                            linkCache: linkCache,
+                            type: type,
+                            modKey: obj.ModKey,
+                            parent: null,
+                            throwIfUnknown: throwIfUnknown,
+                            getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
                         {
                             yield return item;
                         }
@@ -15831,13 +16067,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILandscapeGetter":
                 case "ILandscape":
                 case "ILandscapeInternal":
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        modKey: obj.ModKey,
+                        parent: null,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
+                            groupItem,
+                            linkCache: linkCache,
+                            type: type,
+                            modKey: obj.ModKey,
+                            parent: null,
+                            throwIfUnknown: throwIfUnknown,
+                            getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
                         {
                             yield return item;
                         }
@@ -15847,13 +16095,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IANavigationMeshGetter":
                 case "IANavigationMesh":
                 case "IANavigationMeshInternal":
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        modKey: obj.ModKey,
+                        parent: null,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
+                            groupItem,
+                            linkCache: linkCache,
+                            type: type,
+                            modKey: obj.ModKey,
+                            parent: null,
+                            throwIfUnknown: throwIfUnknown,
+                            getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
                         {
                             yield return item;
                         }
@@ -15863,13 +16123,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlacedNpcGetter":
                 case "IPlacedNpc":
                 case "IPlacedNpcInternal":
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        modKey: obj.ModKey,
+                        parent: null,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
+                            groupItem,
+                            linkCache: linkCache,
+                            type: type,
+                            modKey: obj.ModKey,
+                            parent: null,
+                            throwIfUnknown: throwIfUnknown,
+                            getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
                         {
                             yield return item;
                         }
@@ -15879,13 +16151,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlacedObjectGetter":
                 case "IPlacedObject":
                 case "IPlacedObjectInternal":
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        modKey: obj.ModKey,
+                        parent: null,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
+                            groupItem,
+                            linkCache: linkCache,
+                            type: type,
+                            modKey: obj.ModKey,
+                            parent: null,
+                            throwIfUnknown: throwIfUnknown,
+                            getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
                         {
                             yield return item;
                         }
@@ -15895,13 +16179,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IAPlacedGetter":
                 case "IAPlaced":
                 case "IAPlacedInternal":
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        modKey: obj.ModKey,
+                        parent: null,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
+                            groupItem,
+                            linkCache: linkCache,
+                            type: type,
+                            modKey: obj.ModKey,
+                            parent: null,
+                            throwIfUnknown: throwIfUnknown,
+                            getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
                         {
                             yield return item;
                         }
@@ -15911,13 +16207,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IAPlacedTrapGetter":
                 case "IAPlacedTrap":
                 case "IAPlacedTrapInternal":
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        modKey: obj.ModKey,
+                        parent: null,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
+                            groupItem,
+                            linkCache: linkCache,
+                            type: type,
+                            modKey: obj.ModKey,
+                            parent: null,
+                            throwIfUnknown: throwIfUnknown,
+                            getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
                         {
                             yield return item;
                         }
@@ -15929,7 +16237,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IDialogResponsesInternal":
                     foreach (var groupItem in obj.DialogTopics)
                     {
-                        foreach (var item in DialogTopicCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.DialogTopics.GetOrAddAsOverride(linkCache.Resolve<IDialogTopicGetter>(r.FormKey))))
+                        foreach (var item in DialogTopicCommon.Instance.EnumerateMajorRecordContexts(
+                            groupItem,
+                            linkCache: linkCache,
+                            type: type,
+                            modKey: obj.ModKey,
+                            parent: null,
+                            throwIfUnknown: throwIfUnknown,
+                            getter: (m, r) => m.DialogTopics.GetOrAddAsOverride(linkCache.Resolve<IDialogTopicGetter>(r.FormKey))))
                         {
                             yield return item;
                         }
@@ -15938,11 +16253,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IIdleRelation":
                 case "IIdleRelationGetter":
                 {
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IActionRecordGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IActionRecordGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IIdleAnimationGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IIdleAnimationGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -15951,99 +16274,195 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IObjectId":
                 case "IObjectIdGetter":
                 {
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IActivatorGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IActivatorGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IAmmunitionGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IAmmunitionGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IArmorGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IBookGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IBookGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IContainerGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IContainerGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IDoorGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IDoorGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IFactionGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IFormListGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IFormListGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IFurnitureGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IFurnitureGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IIdleMarkerGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IIdleMarkerGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IIngestibleGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IIngestibleGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IKeyGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IKeyGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(ILightGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(ILightGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IMiscItemGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IMoveableStaticGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IMoveableStaticGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(INpcGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(INpcGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IProjectileGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IProjectileGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IScrollGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IScrollGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IShoutGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IShoutGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(ISoundMarkerGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(ISoundMarkerGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(ISpellGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(ISpellGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IStaticGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IStaticGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(ITextureSetGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(ITextureSetGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IWeaponGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -16052,55 +16471,107 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IItem":
                 case "IItemGetter":
                 {
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IAlchemicalApparatusGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IAlchemicalApparatusGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IAmmunitionGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IAmmunitionGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IArmorGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IBookGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IBookGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IIngestibleGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IIngestibleGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IIngredientGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IIngredientGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IKeyGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IKeyGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(ILeveledItemGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(ILightGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(ILightGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IMiscItemGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IScrollGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IScrollGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(ISoulGemGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(ISoulGemGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IWeaponGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -16109,11 +16580,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IOutfitTarget":
                 case "IOutfitTargetGetter":
                 {
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IArmorGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(ILeveledItemGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -16122,11 +16601,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IComplexLocation":
                 case "IComplexLocationGetter":
                 {
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IWorldspaceGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IWorldspaceGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        modKey: obj.ModKey,
+                        parent: null,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -16135,7 +16623,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IDialog":
                 case "IDialogGetter":
                 {
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IDialogTopicGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IDialogTopicGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -16144,17 +16636,33 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILocationTargetable":
                 case "ILocationTargetableGetter":
                 {
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IDoorGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IDoorGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        modKey: obj.ModKey,
+                        parent: null,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
+                            groupItem,
+                            linkCache: linkCache,
+                            type: type,
+                            modKey: obj.ModKey,
+                            parent: null,
+                            throwIfUnknown: throwIfUnknown,
+                            getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
                         {
                             yield return item;
                         }
@@ -16164,17 +16672,33 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IOwner":
                 case "IOwnerGetter":
                 {
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IFactionGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        modKey: obj.ModKey,
+                        parent: null,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
+                            groupItem,
+                            linkCache: linkCache,
+                            type: type,
+                            modKey: obj.ModKey,
+                            parent: null,
+                            throwIfUnknown: throwIfUnknown,
+                            getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
                         {
                             yield return item;
                         }
@@ -16184,11 +16708,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IRelatable":
                 case "IRelatableGetter":
                 {
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IFactionGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IRaceGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IRaceGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -16197,23 +16729,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IRegionTarget":
                 case "IRegionTargetGetter":
                 {
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IFloraGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IFloraGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(ILandscapeTextureGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(ILandscapeTextureGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IMoveableStaticGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IMoveableStaticGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IStaticGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IStaticGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(ITreeGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(ITreeGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -16222,11 +16774,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IAliasVoiceType":
                 case "IAliasVoiceTypeGetter":
                 {
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IFormListGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IFormListGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(INpcGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(INpcGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -16235,11 +16795,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILockList":
                 case "ILockListGetter":
                 {
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IFormListGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IFormListGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(INpcGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(INpcGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -16248,11 +16816,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlacedTrapTarget":
                 case "IPlacedTrapTargetGetter":
                 {
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IHazardGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IHazardGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IProjectileGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IProjectileGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -16261,19 +16837,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IHarvestTarget":
                 case "IHarvestTargetGetter":
                 {
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IIngestibleGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IIngestibleGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IIngredientGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IIngredientGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(ILeveledItemGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IMiscItemGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -16282,17 +16874,33 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IKeywordLinkedReference":
                 case "IKeywordLinkedReferenceGetter":
                 {
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IKeywordGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IKeywordGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        modKey: obj.ModKey,
+                        parent: null,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
+                            groupItem,
+                            linkCache: linkCache,
+                            type: type,
+                            modKey: obj.ModKey,
+                            parent: null,
+                            throwIfUnknown: throwIfUnknown,
+                            getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
                         {
                             yield return item;
                         }
@@ -16302,11 +16910,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "INpcSpawn":
                 case "INpcSpawnGetter":
                 {
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(ILeveledNpcGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(ILeveledNpcGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(INpcGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(INpcGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -16315,11 +16931,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ISpellSpawn":
                 case "ISpellSpawnGetter":
                 {
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(ILeveledSpellGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(ILeveledSpellGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(ISpellGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(ISpellGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -16328,11 +16952,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IEmittance":
                 case "IEmittanceGetter":
                 {
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(ILightGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(ILightGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IRegionGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IRegionGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -16341,11 +16973,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILocationRecord":
                 case "ILocationRecordGetter":
                 {
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(ILocationGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(ILocationGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(ILocationReferenceTypeGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(ILocationReferenceTypeGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -16354,11 +16994,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IEffectRecord":
                 case "IEffectRecordGetter":
                 {
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IObjectEffectGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IObjectEffectGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(ISpellGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(ISpellGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -16367,13 +17015,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILinkedReference":
                 case "ILinkedReferenceGetter":
                 {
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        modKey: obj.ModKey,
+                        parent: null,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
+                            groupItem,
+                            linkCache: linkCache,
+                            type: type,
+                            modKey: obj.ModKey,
+                            parent: null,
+                            throwIfUnknown: throwIfUnknown,
+                            getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
                         {
                             yield return item;
                         }
@@ -16383,13 +17043,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlaced":
                 case "IPlacedGetter":
                 {
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        modKey: obj.ModKey,
+                        parent: null,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
+                            groupItem,
+                            linkCache: linkCache,
+                            type: type,
+                            modKey: obj.ModKey,
+                            parent: null,
+                            throwIfUnknown: throwIfUnknown,
+                            getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
                         {
                             yield return item;
                         }
@@ -16399,13 +17071,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlacedSimple":
                 case "IPlacedSimpleGetter":
                 {
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        modKey: obj.ModKey,
+                        parent: null,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
+                            groupItem,
+                            linkCache: linkCache,
+                            type: type,
+                            modKey: obj.ModKey,
+                            parent: null,
+                            throwIfUnknown: throwIfUnknown,
+                            getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
                         {
                             yield return item;
                         }
@@ -16415,13 +17099,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlacedThing":
                 case "IPlacedThingGetter":
                 {
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        modKey: obj.ModKey,
+                        parent: null,
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
+                            groupItem,
+                            linkCache: linkCache,
+                            type: type,
+                            modKey: obj.ModKey,
+                            parent: null,
+                            throwIfUnknown: throwIfUnknown,
+                            getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
                         {
                             yield return item;
                         }
@@ -16431,11 +17127,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ISound":
                 case "ISoundGetter":
                 {
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(ISoundDescriptorGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(ISoundDescriptorGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(ISoundMarkerGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(ISoundMarkerGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
