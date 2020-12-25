@@ -68,4 +68,12 @@ namespace Mutagen.Bethesda
         /// </summary>
         new ushort? FormVersion { get; }
     }
+
+    public static class IMajorRecordCommonGetterExt
+    {
+        public static FormLinkInformation ToFormLinkInformation(this IMajorRecordCommonGetter majorRec)
+        {
+            return FormLinkInformation.Factory(majorRec);
+        }
+    }
 }

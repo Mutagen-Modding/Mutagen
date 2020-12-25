@@ -74,6 +74,11 @@ namespace Mutagen.Bethesda
             return new FormLinkInformation(link.FormKey, typeof(TMajorGetter));
         }
 
+        public static FormLinkInformation Factory(IMajorRecordCommonGetter majorRec)
+        {
+            return new FormLinkInformation(majorRec.FormKey, majorRec.Registration.GetterType);
+        }
+
         public static FormLinkInformation Factory(FormLinkInformation rhs) => rhs;
     }
 }
