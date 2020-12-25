@@ -2322,13 +2322,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void RemapLinks(IAPlacedTrapGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(APlacedTrap obj, APlacedTrap rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
-        {
-            throw new NotImplementedException();
-        }
-        
         #endregion
         
     }

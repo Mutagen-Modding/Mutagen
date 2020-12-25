@@ -1159,13 +1159,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public void RemapLinks(IOblivionMajorRecordGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(OblivionMajorRecord obj, OblivionMajorRecord rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
-        {
-            throw new NotImplementedException();
-        }
-        
         public virtual IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(IOblivionMajorRecordGetter obj)
         {
             yield break;

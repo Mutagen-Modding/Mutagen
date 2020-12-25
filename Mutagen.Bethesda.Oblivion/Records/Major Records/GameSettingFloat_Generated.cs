@@ -987,17 +987,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public void RemapLinks(IGameSettingFloatGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(GameSettingFloat obj, GameSettingFloat rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
-        {
-            var ret = new GameSettingFloat(getNextFormKey());
-            ret.DeepCopyIn((GameSettingFloat)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (GameSettingFloat)item, getNextFormKey, duplicatedRecords);
-            return ret;
-        }
-        
         #endregion
         
     }

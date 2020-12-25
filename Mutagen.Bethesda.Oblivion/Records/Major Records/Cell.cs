@@ -40,24 +40,6 @@ namespace Mutagen.Bethesda.Oblivion
 
     namespace Internals
     {
-        public partial class CellCommon
-        {
-            partial void PostDuplicate(Cell obj, Cell rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
-            {
-                if (rhs.PathGrid.TryGet(out var pathGrid))
-                {
-                    obj.PathGrid = (PathGrid)pathGrid.Duplicate(getNextFormKey, duplicatedRecords);
-                }
-                if (rhs.Landscape.TryGet(out var landscape))
-                {
-                    obj.Landscape = (Landscape)landscape.Duplicate(getNextFormKey, duplicatedRecords);
-                }
-                obj.Persistent.SetTo(new ExtendedList<IPlaced>(rhs.Persistent.Select((i) => (IPlaced)i.Duplicate(getNextFormKey, duplicatedRecords))));
-                obj.Temporary.SetTo(new ExtendedList<IPlaced>(rhs.Temporary.Select((i) => (IPlaced)i.Duplicate(getNextFormKey, duplicatedRecords))));
-                obj.VisibleWhenDistant.SetTo(new ExtendedList<IPlaced>(rhs.VisibleWhenDistant.Select((i) => (IPlaced)i.Duplicate(getNextFormKey))));
-            }
-        }
-
         public partial class CellBinaryCreateTranslation
         {
             static partial void CustomBinaryEndImport(MutagenFrame frame, ICellInternal obj)

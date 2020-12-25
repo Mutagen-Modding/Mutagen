@@ -1773,17 +1773,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void RemapLinks(ISoundDescriptorGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(SoundDescriptor obj, SoundDescriptor rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
-        {
-            var ret = new SoundDescriptor(getNextFormKey(), ((ISoundDescriptorGetter)item).FormVersion);
-            ret.DeepCopyIn((SoundDescriptor)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (SoundDescriptor)item, getNextFormKey, duplicatedRecords);
-            return ret;
-        }
-        
         #endregion
         
     }

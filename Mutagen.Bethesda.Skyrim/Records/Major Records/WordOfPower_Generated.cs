@@ -1005,17 +1005,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void RemapLinks(IWordOfPowerGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(WordOfPower obj, WordOfPower rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
-        {
-            var ret = new WordOfPower(getNextFormKey(), ((IWordOfPowerGetter)item).FormVersion);
-            ret.DeepCopyIn((WordOfPower)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (WordOfPower)item, getNextFormKey, duplicatedRecords);
-            return ret;
-        }
-        
         #endregion
         
     }

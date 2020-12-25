@@ -1596,17 +1596,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void RemapLinks(ITalkingActivatorGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(TalkingActivator obj, TalkingActivator rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
-        {
-            var ret = new TalkingActivator(getNextFormKey(), ((ITalkingActivatorGetter)item).FormVersion);
-            ret.DeepCopyIn((TalkingActivator)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (TalkingActivator)item, getNextFormKey, duplicatedRecords);
-            return ret;
-        }
-        
         #endregion
         
     }

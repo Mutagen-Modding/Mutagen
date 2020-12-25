@@ -1055,17 +1055,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void RemapLinks(IWorldspaceNavigationMeshGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(WorldspaceNavigationMesh obj, WorldspaceNavigationMesh rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
-        {
-            var ret = new WorldspaceNavigationMesh(getNextFormKey(), ((IWorldspaceNavigationMeshGetter)item).FormVersion);
-            ret.DeepCopyIn((WorldspaceNavigationMesh)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (WorldspaceNavigationMesh)item, getNextFormKey, duplicatedRecords);
-            return ret;
-        }
-        
         #endregion
         
     }

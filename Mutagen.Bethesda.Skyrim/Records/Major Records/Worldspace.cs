@@ -62,41 +62,6 @@ namespace Mutagen.Bethesda.Skyrim
 
     namespace Internals
     {
-        public partial class WorldspaceCommon
-        {
-            private static WorldspaceBlock.TranslationMask duplicateBlockCopyMask = new WorldspaceBlock.TranslationMask(true)
-            {
-                Items = false
-            };
-
-            private static WorldspaceSubBlock.TranslationMask duplicateSubBlockCopyMask = new WorldspaceSubBlock.TranslationMask(true)
-            {
-                Items = false
-            };
-
-            partial void PostDuplicate(Worldspace obj, Worldspace rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
-            {
-                if (rhs.TopCell.TryGet(out var topCell))
-                {
-                    obj.TopCell = (Cell)topCell.Duplicate(getNextFormKey, duplicatedRecords);
-                }
-                obj.SubCells.SetTo(rhs.SubCells.Select((block) =>
-                {
-                    var blockRet = new WorldspaceBlock();
-                    blockRet.DeepCopyIn(block, duplicateBlockCopyMask);
-                    blockRet.Items.SetTo(block.Items.Select((subBlock) =>
-                    {
-                        var subBlockRet = new WorldspaceSubBlock();
-                        subBlockRet.DeepCopyIn(subBlock, duplicateSubBlockCopyMask);
-                        subBlockRet.Items.SetTo(subBlock.Items.Select(c => (Cell)c.Duplicate(getNextFormKey, duplicatedRecords)));
-                        return subBlockRet;
-                    }));
-
-                    return blockRet;
-                }));
-            }
-        }
-
         public partial class WorldspaceBinaryCreateTranslation
         {
             static partial void CustomBinaryEndImport(MutagenFrame frame, IWorldspaceInternal obj)

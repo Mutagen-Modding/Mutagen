@@ -1080,17 +1080,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void RemapLinks(IStoryManagerBranchNodeGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(StoryManagerBranchNode obj, StoryManagerBranchNode rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
-        {
-            var ret = new StoryManagerBranchNode(getNextFormKey(), ((IStoryManagerBranchNodeGetter)item).FormVersion);
-            ret.DeepCopyIn((StoryManagerBranchNode)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (StoryManagerBranchNode)item, getNextFormKey, duplicatedRecords);
-            return ret;
-        }
-        
         #endregion
         
     }

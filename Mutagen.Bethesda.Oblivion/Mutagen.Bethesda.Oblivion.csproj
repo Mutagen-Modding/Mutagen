@@ -99,9 +99,6 @@
     <Compile Include="Records\Major Records\Cell.cs">
       <DependentUpon>Cell.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\CellBlock.cs">
-      <DependentUpon>Cell.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\CellSubBlock.cs">
       <DependentUpon>Cell.xml</DependentUpon>
     </Compile>

@@ -173,7 +173,7 @@ namespace Mutagen.Bethesda
             this IGroupCommonGetter<TMajor> group, 
             FormKey formKey, 
             [MaybeNullWhen(false)] out TMajor record)
-            where TMajor : IMajorRecordCommonGetter, IBinaryItem, IDuplicatable
+            where TMajor : IMajorRecordCommonGetter, IBinaryItem
         {
             return group.RecordCache.TryGetValue(formKey, out record);
         }

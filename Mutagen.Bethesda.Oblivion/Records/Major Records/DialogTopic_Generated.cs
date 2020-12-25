@@ -1651,17 +1651,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public void RemapLinks(IDialogTopicGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(DialogTopic obj, DialogTopic rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
-        {
-            var ret = new DialogTopic(getNextFormKey());
-            ret.DeepCopyIn((DialogTopic)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (DialogTopic)item, getNextFormKey, duplicatedRecords);
-            return ret;
-        }
-        
         public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(IDialogTopicGetter obj)
         {
             foreach (var subItem in obj.Items)

@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Binary;
 using Noggog;
 using System;
 using System.Collections.Generic;
@@ -7,22 +7,6 @@ using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class CellSubBlock
-    {
-        public static CellSubBlock.TranslationMask duplicateMask = new CellSubBlock.TranslationMask(true)
-        {
-            Cells = false
-        };
-
-        public object Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecordTracker = null)
-        {
-            var ret = new CellSubBlock();
-            ret.DeepCopyIn(this, duplicateMask);
-            ret.Cells = this.Cells.Select(i => (Cell)i.Duplicate(getNextFormKey, duplicatedRecordTracker)).ToExtendedList();
-            return ret;
-        }
-    }
-
     namespace Internals
     {
         partial class CellSubBlockBinaryOverlay

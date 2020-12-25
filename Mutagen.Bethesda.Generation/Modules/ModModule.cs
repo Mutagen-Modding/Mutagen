@@ -154,48 +154,6 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine();
 
             using (var args = new FunctionWrapper(fg,
-                $"public Dictionary<FormKey, {nameof(IMajorRecordCommon)}> CopyInDuplicate"))
-            {
-                args.Add($"{obj.Name} rhs");
-                args.Add($"GroupMask? mask = null");
-            }
-            using (new BraceWrapper(fg))
-            {
-                fg.AppendLine($"var duppedRecords = new List<({nameof(IMajorRecordCommon)} Record, FormKey OriginalFormKey)>();");
-                foreach (var field in obj.IterateFields())
-                {
-                    if (!(field is LoquiType loqui)) continue;
-                    if (loqui.TargetObjectGeneration.GetObjectType() != ObjectType.Group) continue;
-                    var dictGroup = loqui.TargetObjectGeneration.Name == "Group";
-                    fg.AppendLine($"if (mask?.{field.Name} ?? true)");
-                    using (new BraceWrapper(fg))
-                    {
-                        fg.AppendLine($"this.{field.Name}.{(dictGroup ? "RecordCache" : "Records")}.{(dictGroup ? "Set" : "AddRange")}(");
-                        using (new DepthWrapper(fg))
-                        {
-                            fg.AppendLine($"rhs.{field.Name}.Records");
-                            using (new DepthWrapper(fg))
-                            {
-                                fg.AppendLine($".Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))");
-                                fg.AppendLine($".Cast<{loqui.GetGroupTarget().Name}>());");
-                            }
-                        }
-                    }
-                }
-                fg.AppendLine($"var router = new Dictionary<FormKey, {nameof(IMajorRecordCommon)}>();");
-                fg.AppendLine($"router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, {nameof(IMajorRecordCommon)}>(dup.OriginalFormKey, dup.Record)));");
-                fg.AppendLine($"var mapping = new Dictionary<FormKey, FormKey>();");
-                fg.AppendLine($"var package = this.{nameof(ILinkCacheExt.ToImmutableLinkCache)}();");
-                fg.AppendLine("foreach (var rec in router.Values)");
-                using (new BraceWrapper(fg))
-                {
-                    fg.AppendLine($"rec.RemapLinks(mapping);");
-                }
-                fg.AppendLine($"return router;");
-            }
-            fg.AppendLine();
-
-            using (var args = new FunctionWrapper(fg,
                 "public override void SyncRecordCount"))
             {
             }

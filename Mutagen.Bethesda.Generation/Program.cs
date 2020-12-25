@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "ach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).Enumera";
+            string testString = "public Dictionary<FormKey, IMajorRecordCommon> CopyInDuplicat";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

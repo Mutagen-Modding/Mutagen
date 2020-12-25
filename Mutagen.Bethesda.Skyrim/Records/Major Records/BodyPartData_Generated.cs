@@ -1140,17 +1140,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void RemapLinks(IBodyPartDataGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(BodyPartData obj, BodyPartData rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
-        {
-            var ret = new BodyPartData(getNextFormKey(), ((IBodyPartDataGetter)item).FormVersion);
-            ret.DeepCopyIn((BodyPartData)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (BodyPartData)item, getNextFormKey, duplicatedRecords);
-            return ret;
-        }
-        
         #endregion
         
     }

@@ -1304,17 +1304,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void RemapLinks(IIdleMarkerGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(IdleMarker obj, IdleMarker rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
-        {
-            var ret = new IdleMarker(getNextFormKey(), ((IIdleMarkerGetter)item).FormVersion);
-            ret.DeepCopyIn((IdleMarker)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (IdleMarker)item, getNextFormKey, duplicatedRecords);
-            return ret;
-        }
-        
         #endregion
         
     }

@@ -28,14 +28,6 @@ namespace Mutagen.Bethesda.Oblivion
 
     namespace Internals
     {
-        public partial class DialogTopicCommon
-        {
-            partial void PostDuplicate(DialogTopic obj, DialogTopic rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
-            {
-                obj.Items.SetTo(rhs.Items.Select((dia) => (DialogItem)dia.Duplicate(getNextFormKey, duplicatedRecords)));
-            }
-        }
-
         public partial class DialogTopicBinaryCreateTranslation
         {
             static partial void CustomBinaryEndImport(MutagenFrame frame, IDialogTopicInternal obj)

@@ -1492,17 +1492,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void RemapLinks(IVolumetricLightingGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(VolumetricLighting obj, VolumetricLighting rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
-        {
-            var ret = new VolumetricLighting(getNextFormKey(), ((IVolumetricLightingGetter)item).FormVersion);
-            ret.DeepCopyIn((VolumetricLighting)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (VolumetricLighting)item, getNextFormKey, duplicatedRecords);
-            return ret;
-        }
-        
         #endregion
         
     }

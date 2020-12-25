@@ -21,7 +21,7 @@ namespace Mutagen.Bethesda
         
     }
 
-    public partial interface IMajorRecordGetter : IMajorRecordCommonGetter, IDuplicatable
+    public partial interface IMajorRecordGetter : IMajorRecordCommonGetter
     {
     }
 
@@ -62,11 +62,6 @@ namespace Mutagen.Bethesda
         ushort? IMajorRecordCommonGetter.FormVersion => FormVersionAbstract;
         ushort? IFormVersionGetter.FormVersion => FormVersionAbstract;
 
-        object IDuplicatable.Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecordTracker)
-        {
-            return this.Duplicate(getNextFormKey, duplicatedRecordTracker);
-        }
-
         public virtual bool Disable()
         {
             if (this.IsDeleted) return false;
@@ -106,10 +101,5 @@ namespace Mutagen.Bethesda.Internals
         protected abstract ushort? FormVersionAbstract { get; }
         ushort? IMajorRecordCommonGetter.FormVersion => FormVersionAbstract;
         ushort? IFormVersionGetter.FormVersion => FormVersionAbstract;
-
-        object IDuplicatable.Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecordTracker)
-        {
-            return ((MajorRecordCommon)this.CommonInstance()).Duplicate(this, getNextFormKey, duplicatedRecordTracker);
-        }
     }
 }

@@ -69,7 +69,6 @@
     <Compile Include="Extensions\LoadOrderExt.cs" />
     <Compile Include="Extensions\GameReleaseExt.cs" />
     <Compile Include="Interfaces\Aspect\IKeywordCommon.cs" />
-    <Compile Include="Interfaces\IDuplicatable.cs" />
     <Compile Include="Interfaces\IGameSettingCommon.cs" />
     <Compile Include="Interfaces\IGroup.cs" />
     <Compile Include="Interfaces\Aspect\IKeyworded.cs" />

@@ -1258,17 +1258,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void RemapLinks(IEncounterZoneGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(EncounterZone obj, EncounterZone rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
-        {
-            var ret = new EncounterZone(getNextFormKey(), ((IEncounterZoneGetter)item).FormVersion);
-            ret.DeepCopyIn((EncounterZone)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (EncounterZone)item, getNextFormKey, duplicatedRecords);
-            return ret;
-        }
-        
         #endregion
         
     }

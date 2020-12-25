@@ -723,16 +723,6 @@ namespace Mutagen.Bethesda
         }
 
         #region Mutagen
-        public static IMajorRecordCommon Duplicate(
-            this MajorRecord item,
-            Func<FormKey> getNextFormKey,
-            IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords = null)
-        {
-            return ((MajorRecordCommon)((IMajorRecordGetter)item).CommonInstance()!).Duplicate(
-                item: item,
-                getNextFormKey: getNextFormKey,
-                duplicatedRecords: duplicatedRecords);
-        }
         [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(this IMajorRecordGetter obj)
         {
@@ -1270,13 +1260,6 @@ namespace Mutagen.Bethesda.Internals
         }
         
         public void RemapLinks(IMajorRecordGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(MajorRecord obj, MajorRecord rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public virtual IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
-        {
-            throw new NotImplementedException();
-        }
-        
         public virtual IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(IMajorRecordGetter obj)
         {
             yield break;
