@@ -119,12 +119,21 @@ namespace Mutagen.Bethesda
         /// <param name="source">Source record to duplicate</param>
         /// <returns>Duplicated and added record</returns>
         public static TMajor DuplicateIn<TMajor, TMajorGetter>(this IGroupCommon<TMajor> group, TMajorGetter source)
-            where TMajor : IMajorRecordCommon, TMajorGetter
-            where TMajorGetter : IMajorRecordCommonGetter, IBinaryItem, IDuplicatable
+            where TMajor : IMajorRecordInternal, TMajorGetter
+            where TMajorGetter : IMajorRecordGetter, IBinaryItem
         {
-            var ret = (TMajor)source.Duplicate(group.SourceMod.GetNextFormKey);
-            group.Add(ret);
-            return ret;
+            try
+            {
+                var newRec = group.AddNew();
+                var mask = OverrideMixIns.AddAsOverrideMasks.GetValueOrDefault(typeof(TMajor));
+                newRec.DeepCopyIn(source, mask as MajorRecord.TranslationMask);
+                group.RecordCache.Set(newRec);
+                return newRec;
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Factory(ex, source.FormKey, source.EditorID);
+            }
         }
 
         /// <summary>
@@ -135,12 +144,21 @@ namespace Mutagen.Bethesda
         /// <param name="source">Source record to duplicate</param>
         /// <returns>Duplicated and added record</returns>
         public static TMajor DuplicateIn<TMajor, TMajorGetter>(this IGroupCommon<TMajor> group, string edid, TMajorGetter source)
-            where TMajor : IMajorRecordCommon, TMajorGetter
-            where TMajorGetter : IMajorRecordCommonGetter, IBinaryItem, IDuplicatable
+            where TMajor : IMajorRecordInternal, TMajorGetter
+            where TMajorGetter : IMajorRecordGetter, IBinaryItem
         {
-            var ret = (TMajor)source.Duplicate(() => group.SourceMod.GetNextFormKey(edid));
-            group.Add(ret);
-            return ret;
+            try
+            {
+                var newRec = group.AddNew(edid);
+                var mask = OverrideMixIns.AddAsOverrideMasks.GetValueOrDefault(typeof(TMajor));
+                newRec.DeepCopyIn(source, mask as MajorRecord.TranslationMask);
+                group.RecordCache.Set(newRec);
+                return newRec;
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Factory(ex, source.FormKey, source.EditorID);
+            }
         }
 
         /// <summary>
