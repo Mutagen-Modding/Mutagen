@@ -328,11 +328,11 @@ namespace Mutagen.Bethesda.Generation
                                 includeType: false);
                         }
                     }
+                }
 
-                    foreach (var kv in generationDict)
-                    {
-                        fg.AppendLines(kv.Value);
-                    }
+                foreach (var kv in generationDict)
+                {
+                    fg.AppendLines(kv.Value);
                 }
             }
             fg.AppendLine();
@@ -698,7 +698,7 @@ namespace Mutagen.Bethesda.Generation
 
                 var groupTargetGetter = group.GetGroupTarget().Interface(getter: true, internalInterface: true);
                 var groupTargetSetter = group.GetGroupTarget().Interface(getter: false, internalInterface: true);
-                if (!hasTarget)
+                if (includeSelf)
                 {
                     fieldGen.AppendLine($"foreach (var item in obj.{field.Name})");
                     using (new BraceWrapper(fieldGen))
@@ -712,7 +712,7 @@ namespace Mutagen.Bethesda.Generation
                         }
                     }
                 }
-                else
+                if (hasTarget)
                 {
                     fieldGen.AppendLine($"foreach (var groupItem in obj.{field.Name})");
                     using (new BraceWrapper(fieldGen))
