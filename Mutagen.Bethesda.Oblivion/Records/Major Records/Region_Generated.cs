@@ -770,7 +770,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GrupRecordType = Region_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => RegionCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionCommon.Instance.RemapLinks(this, mapping);
         public Region(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -856,7 +856,7 @@ namespace Mutagen.Bethesda.Oblivion
         IRegionGetter,
         IOblivionMajorRecord,
         ILoquiObjectSetter<IRegionInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new String? Icon { get; set; }
         new Color? MapColor { get; set; }
@@ -879,7 +879,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IRegionGetter :
         IOblivionMajorRecordGetter,
         ILoquiObject<IRegionGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Region_Registration.Instance;

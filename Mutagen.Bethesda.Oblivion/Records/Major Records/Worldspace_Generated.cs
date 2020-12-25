@@ -941,7 +941,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GrupRecordType = Worldspace_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => WorldspaceCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceCommon.Instance.RemapLinks(this, mapping);
         public Worldspace(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -1063,7 +1063,7 @@ namespace Mutagen.Bethesda.Oblivion
         INamed,
         IMajorRecordEnumerable,
         ILoquiObjectSetter<IWorldspaceInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new String? Name { get; set; }
         new FormLinkNullable<IWorldspaceGetter> Parent { get; set; }
@@ -1094,7 +1094,7 @@ namespace Mutagen.Bethesda.Oblivion
         INamedGetter,
         IMajorRecordGetterEnumerable,
         ILoquiObject<IWorldspaceGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Worldspace_Registration.Instance;

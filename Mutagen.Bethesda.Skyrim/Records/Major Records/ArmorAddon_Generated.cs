@@ -964,7 +964,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = ArmorAddon_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => ArmorAddonCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorAddonCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorAddonCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorAddonCommon.Instance.RemapLinks(this, mapping);
         public ArmorAddon(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -1071,7 +1071,7 @@ namespace Mutagen.Bethesda.Skyrim
         IArmorAddonGetter,
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IArmorAddonInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new BodyTemplate? BodyTemplate { get; set; }
         new FormLinkNullable<IRaceGetter> Race { get; set; }
@@ -1107,7 +1107,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IArmorAddonGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IArmorAddonGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => ArmorAddon_Registration.Instance;

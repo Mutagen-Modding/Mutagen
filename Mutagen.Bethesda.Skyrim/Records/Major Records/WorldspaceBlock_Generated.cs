@@ -597,7 +597,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = (RecordType)WorldspaceSubBlock.GrupRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => WorldspaceBlockCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceBlockCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceBlockCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceBlockCommon.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
@@ -694,7 +694,7 @@ namespace Mutagen.Bethesda.Skyrim
         IWorldspaceBlockGetter,
         IMajorRecordEnumerable,
         ILoquiObjectSetter<IWorldspaceBlock>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new Int16 BlockNumberY { get; set; }
         new Int16 BlockNumberX { get; set; }
@@ -708,7 +708,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject,
         IMajorRecordGetterEnumerable,
         ILoquiObject<IWorldspaceBlockGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

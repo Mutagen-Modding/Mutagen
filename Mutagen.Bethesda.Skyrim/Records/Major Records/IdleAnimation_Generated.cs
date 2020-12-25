@@ -811,7 +811,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = IdleAnimation_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => IdleAnimationCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IdleAnimationCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IdleAnimationCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IdleAnimationCommon.Instance.RemapLinks(this, mapping);
         public IdleAnimation(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -919,7 +919,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         IIdleRelation,
         ILoquiObjectSetter<IIdleAnimationInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ExtendedList<Condition> Conditions { get; }
         new String? Filename { get; set; }
@@ -944,7 +944,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IIdleRelationGetter,
         ILoquiObject<IIdleAnimationGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => IdleAnimation_Registration.Instance;
@@ -1555,7 +1555,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter>()
+            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);

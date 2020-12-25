@@ -490,7 +490,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GrupRecordType = SpellUnleveled_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => SpellUnleveledCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SpellUnleveledCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SpellUnleveledCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SpellUnleveledCommon.Instance.RemapLinks(this, mapping);
         public SpellUnleveled(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -576,7 +576,7 @@ namespace Mutagen.Bethesda.Oblivion
         ISpellUnleveledGetter,
         ISpell,
         ILoquiObjectSetter<ISpellUnleveledInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new SpellData? Data { get; set; }
         new ExtendedList<Effect> Effects { get; }
@@ -592,7 +592,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ISpellUnleveledGetter :
         ISpellGetter,
         ILoquiObject<ISpellUnleveledGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => SpellUnleveled_Registration.Instance;

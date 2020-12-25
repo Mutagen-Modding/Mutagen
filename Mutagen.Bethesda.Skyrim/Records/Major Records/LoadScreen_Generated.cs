@@ -731,7 +731,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = LoadScreen_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => LoadScreenCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LoadScreenCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LoadScreenCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LoadScreenCommon.Instance.RemapLinks(this, mapping);
         public LoadScreen(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -840,7 +840,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         IHasIcons,
         ILoquiObjectSetter<ILoadScreenInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new Icons? Icons { get; set; }
         new TranslatedString Description { get; set; }
@@ -868,7 +868,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IHasIconsGetter,
         ILoquiObject<ILoadScreenGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => LoadScreen_Registration.Instance;
@@ -1480,7 +1480,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter>()
+            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);

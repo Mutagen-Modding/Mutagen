@@ -474,7 +474,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public IEnumerable<FormLinkInformation> ContainedFormLinks => NpcSoundTypeCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcSoundTypeCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcSoundTypeCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcSoundTypeCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -536,7 +536,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface INpcSoundType :
         INpcSoundTypeGetter,
         ILoquiObjectSetter<INpcSoundType>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new NpcSoundType.SoundType? Type { get; set; }
         new ExtendedList<NpcSound> Sounds { get; }
@@ -545,7 +545,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface INpcSoundTypeGetter :
         ILoquiObject,
         ILoquiObject<INpcSoundTypeGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

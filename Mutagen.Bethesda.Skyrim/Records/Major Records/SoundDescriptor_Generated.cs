@@ -956,7 +956,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = SoundDescriptor_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => SoundDescriptorCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoundDescriptorCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoundDescriptorCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoundDescriptorCommon.Instance.RemapLinks(this, mapping);
         public SoundDescriptor(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -1064,7 +1064,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ISound,
         ILoquiObjectSetter<ISoundDescriptorInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new MemorySlice<Byte>? CNAM { get; set; }
         new FormLinkNullable<ISoundCategoryGetter> Category { get; set; }
@@ -1093,7 +1093,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         ISoundGetter,
         ILoquiObject<ISoundDescriptorGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => SoundDescriptor_Registration.Instance;
@@ -1764,7 +1764,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(obj.OutputModel);
             }
-            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter>()
+            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);

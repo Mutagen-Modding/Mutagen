@@ -508,7 +508,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GrupRecordType = LoadScreen_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => LoadScreenCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LoadScreenCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LoadScreenCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LoadScreenCommon.Instance.RemapLinks(this, mapping);
         public LoadScreen(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -594,7 +594,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoadScreenGetter,
         IOblivionMajorRecord,
         ILoquiObjectSetter<ILoadScreenInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new String? Icon { get; set; }
         new String? Description { get; set; }
@@ -611,7 +611,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILoadScreenGetter :
         IOblivionMajorRecordGetter,
         ILoquiObject<ILoadScreenGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => LoadScreen_Registration.Instance;

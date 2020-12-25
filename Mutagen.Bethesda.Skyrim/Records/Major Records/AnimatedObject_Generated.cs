@@ -406,7 +406,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = AnimatedObject_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => AnimatedObjectCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AnimatedObjectCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AnimatedObjectCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AnimatedObjectCommon.Instance.RemapLinks(this, mapping);
         public AnimatedObject(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -510,7 +510,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         IModeled,
         ILoquiObjectSetter<IAnimatedObjectInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new Model? Model { get; set; }
         new String? UnloadEvent { get; set; }
@@ -527,7 +527,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IModeledGetter,
         ILoquiObject<IAnimatedObjectGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => AnimatedObject_Registration.Instance;

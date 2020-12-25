@@ -508,7 +508,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GrupRecordType = LeveledSpell_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => LeveledSpellCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledSpellCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledSpellCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledSpellCommon.Instance.RemapLinks(this, mapping);
         public LeveledSpell(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -594,7 +594,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILeveledSpellGetter,
         IASpell,
         ILoquiObjectSetter<ILeveledSpellInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new Byte? ChanceNone { get; set; }
         new LeveledFlag? Flags { get; set; }
@@ -611,7 +611,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILeveledSpellGetter :
         IASpellGetter,
         ILoquiObject<ILeveledSpellGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => LeveledSpell_Registration.Instance;

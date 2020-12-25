@@ -623,7 +623,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = LeveledNpc_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => LeveledNpcCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledNpcCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledNpcCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledNpcCommon.Instance.RemapLinks(this, mapping);
         public LeveledNpc(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -727,7 +727,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         INpcSpawn,
         ILoquiObjectSetter<ILeveledNpcInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ObjectBounds ObjectBounds { get; set; }
         new Byte ChanceNone { get; set; }
@@ -748,7 +748,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         INpcSpawnGetter,
         ILoquiObject<ILeveledNpcGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => LeveledNpc_Registration.Instance;
@@ -1309,7 +1309,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (obj.Entries.TryGet(out var EntriesItem))
             {
-                foreach (var item in EntriesItem.WhereCastable<ILeveledNpcEntryGetter, ILinkedFormKeyContainerGetter>()
+                foreach (var item in EntriesItem.WhereCastable<ILeveledNpcEntryGetter, IFormLinkContainerGetter>()
                     .SelectMany((f) => f.ContainedFormLinks))
                 {
                     yield return FormLinkInformation.Factory(item);

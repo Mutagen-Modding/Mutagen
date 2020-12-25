@@ -318,7 +318,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = ATopicReference_Registration.TriggeringRecordType;
         public virtual IEnumerable<FormLinkInformation> ContainedFormLinks => ATopicReferenceCommon.Instance.GetContainedFormLinks(this);
         protected virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ATopicReferenceCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ATopicReferenceCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ATopicReferenceCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -356,14 +356,14 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IATopicReference :
         IATopicReferenceGetter,
         ILoquiObjectSetter<IATopicReference>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
     }
 
     public partial interface IATopicReferenceGetter :
         ILoquiObject,
         ILoquiObject<IATopicReferenceGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

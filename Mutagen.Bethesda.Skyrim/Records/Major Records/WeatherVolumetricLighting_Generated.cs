@@ -448,7 +448,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = WeatherVolumetricLighting_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => WeatherVolumetricLightingCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherVolumetricLightingCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherVolumetricLightingCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherVolumetricLightingCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -510,7 +510,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IWeatherVolumetricLighting :
         IWeatherVolumetricLightingGetter,
         ILoquiObjectSetter<IWeatherVolumetricLighting>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IVolumetricLightingGetter> Sunrise { get; set; }
         new FormLink<IVolumetricLightingGetter> Day { get; set; }
@@ -521,7 +521,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IWeatherVolumetricLightingGetter :
         ILoquiObject,
         ILoquiObject<IWeatherVolumetricLightingGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

@@ -545,7 +545,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public IEnumerable<FormLinkInformation> ContainedFormLinks => QuestFragmentAliasCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestFragmentAliasCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestFragmentAliasCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestFragmentAliasCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -607,7 +607,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IQuestFragmentAlias :
         IQuestFragmentAliasGetter,
         ILoquiObjectSetter<IQuestFragmentAlias>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ScriptObjectProperty Property { get; set; }
         new Int16 Version { get; set; }
@@ -618,7 +618,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IQuestFragmentAliasGetter :
         ILoquiObject,
         ILoquiObject<IQuestFragmentAliasGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -1061,7 +1061,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            foreach (var item in obj.Scripts.WhereCastable<IScriptEntryGetter, ILinkedFormKeyContainerGetter>()
+            foreach (var item in obj.Scripts.WhereCastable<IScriptEntryGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);

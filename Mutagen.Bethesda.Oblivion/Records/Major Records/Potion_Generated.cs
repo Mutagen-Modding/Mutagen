@@ -664,7 +664,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GrupRecordType = Potion_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => PotionCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PotionCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PotionCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PotionCommon.Instance.RemapLinks(this, mapping);
         public Potion(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -751,7 +751,7 @@ namespace Mutagen.Bethesda.Oblivion
         IAItem,
         INamed,
         ILoquiObjectSetter<IPotionInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
@@ -773,7 +773,7 @@ namespace Mutagen.Bethesda.Oblivion
         IAItemGetter,
         INamedGetter,
         ILoquiObject<IPotionGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Potion_Registration.Instance;

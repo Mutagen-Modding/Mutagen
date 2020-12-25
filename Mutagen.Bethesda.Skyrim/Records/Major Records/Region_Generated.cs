@@ -785,7 +785,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = Region_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => RegionCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionCommon.Instance.RemapLinks(this, mapping);
         public Region(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -894,7 +894,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         IEmittance,
         ILoquiObjectSetter<IRegionInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new Color? MapColor { get; set; }
         new FormLinkNullable<IWorldspaceGetter> Worldspace { get; set; }
@@ -922,7 +922,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IEmittanceGetter,
         ILoquiObject<IRegionGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Region_Registration.Instance;

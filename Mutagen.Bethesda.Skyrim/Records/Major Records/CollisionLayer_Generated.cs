@@ -599,7 +599,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = CollisionLayer_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => CollisionLayerCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CollisionLayerCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CollisionLayerCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CollisionLayerCommon.Instance.RemapLinks(this, mapping);
         public CollisionLayer(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -702,7 +702,7 @@ namespace Mutagen.Bethesda.Skyrim
         ICollisionLayerGetter,
         ISkyrimMajorRecord,
         ILoquiObjectSetter<ICollisionLayerInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new TranslatedString Description { get; set; }
         new UInt32 Index { get; set; }
@@ -722,7 +722,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ICollisionLayerGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<ICollisionLayerGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => CollisionLayer_Registration.Instance;

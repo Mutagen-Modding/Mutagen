@@ -628,7 +628,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = ActorValueInformation_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => ActorValueInformationCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActorValueInformationCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActorValueInformationCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActorValueInformationCommon.Instance.RemapLinks(this, mapping);
         public ActorValueInformation(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -732,7 +732,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ITranslatedNamed,
         ILoquiObjectSetter<IActorValueInformationInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new TranslatedString? Name { get; set; }
         new TranslatedString? Description { get; set; }
@@ -753,7 +753,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         ITranslatedNamedGetter,
         ILoquiObject<IActorValueInformationGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => ActorValueInformation_Registration.Instance;

@@ -424,7 +424,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public IEnumerable<FormLinkInformation> ContainedFormLinks => DialogResponsesUnknownDataCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogResponsesUnknownDataCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogResponsesUnknownDataCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogResponsesUnknownDataCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -486,7 +486,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IDialogResponsesUnknownData :
         IDialogResponsesUnknownDataGetter,
         ILoquiObjectSetter<IDialogResponsesUnknownData>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new MemorySlice<Byte>? SCHR { get; set; }
         new FormLinkNullable<ISkyrimMajorRecordGetter> QNAM { get; set; }
@@ -496,7 +496,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IDialogResponsesUnknownDataGetter :
         ILoquiObject,
         ILoquiObject<IDialogResponsesUnknownDataGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

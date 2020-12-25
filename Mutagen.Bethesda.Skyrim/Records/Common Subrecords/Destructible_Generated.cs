@@ -487,7 +487,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public IEnumerable<FormLinkInformation> ContainedFormLinks => DestructibleCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DestructibleCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DestructibleCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DestructibleCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -549,7 +549,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IDestructible :
         IDestructibleGetter,
         ILoquiObjectSetter<IDestructible>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new DestructableData? Data { get; set; }
         new ExtendedList<DestructionStage> Stages { get; }
@@ -558,7 +558,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IDestructibleGetter :
         ILoquiObject,
         ILoquiObject<IDestructibleGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

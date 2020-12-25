@@ -425,7 +425,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = RankPlacement_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => RankPlacementCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RankPlacementCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RankPlacementCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RankPlacementCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -487,7 +487,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IRankPlacement :
         IRankPlacementGetter,
         ILoquiObjectSetter<IRankPlacement>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IFactionGetter> Faction { get; set; }
         new Byte Rank { get; set; }
@@ -497,7 +497,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IRankPlacementGetter :
         ILoquiObject,
         ILoquiObject<IRankPlacementGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

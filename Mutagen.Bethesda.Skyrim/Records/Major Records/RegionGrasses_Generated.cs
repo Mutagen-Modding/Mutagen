@@ -434,7 +434,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => RegionGrassesCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionGrassesCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionGrassesCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionGrassesCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -495,7 +495,7 @@ namespace Mutagen.Bethesda.Skyrim
         IRegionGrassesGetter,
         IRegionData,
         ILoquiObjectSetter<IRegionGrasses>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ExtendedList<RegionGrass>? Grasses { get; set; }
     }
@@ -503,7 +503,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IRegionGrassesGetter :
         IRegionDataGetter,
         ILoquiObject<IRegionGrassesGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => RegionGrasses_Registration.Instance;

@@ -736,7 +736,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = CameraPath_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => CameraPathCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CameraPathCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CameraPathCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CameraPathCommon.Instance.RemapLinks(this, mapping);
         public CameraPath(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -839,7 +839,7 @@ namespace Mutagen.Bethesda.Skyrim
         ICameraPathGetter,
         ISkyrimMajorRecord,
         ILoquiObjectSetter<ICameraPathInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ExtendedList<Condition> Conditions { get; }
         new ExtendedList<IFormLink<ICameraPathGetter>> RelatedPaths { get; }
@@ -858,7 +858,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ICameraPathGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<ICameraPathGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => CameraPath_Registration.Instance;
@@ -1428,7 +1428,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter>()
+            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);

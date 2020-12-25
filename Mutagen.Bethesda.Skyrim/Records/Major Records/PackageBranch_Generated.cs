@@ -907,7 +907,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = PackageBranch_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => PackageBranchCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageBranchCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageBranchCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageBranchCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -969,7 +969,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPackageBranch :
         IPackageBranchGetter,
         ILoquiObjectSetter<IPackageBranch>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new String BranchType { get; set; }
         new ExtendedList<Condition> Conditions { get; }
@@ -985,7 +985,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPackageBranchGetter :
         ILoquiObject,
         ILoquiObject<IPackageBranchGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -1542,7 +1542,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<FormLinkInformation> GetContainedFormLinks(IPackageBranchGetter obj)
         {
-            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter>()
+            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);

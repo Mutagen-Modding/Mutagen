@@ -577,7 +577,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = LeveledItem_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => LeveledItemCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledItemCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledItemCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledItemCommon.Instance.RemapLinks(this, mapping);
         public LeveledItem(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -684,7 +684,7 @@ namespace Mutagen.Bethesda.Skyrim
         IOutfitTarget,
         IObjectBounded,
         ILoquiObjectSetter<ILeveledItemInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ObjectBounds ObjectBounds { get; set; }
         new Byte ChanceNone { get; set; }
@@ -707,7 +707,7 @@ namespace Mutagen.Bethesda.Skyrim
         IOutfitTargetGetter,
         IObjectBoundedGetter,
         ILoquiObject<ILeveledItemGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => LeveledItem_Registration.Instance;
@@ -1250,7 +1250,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (obj.Entries.TryGet(out var EntriesItem))
             {
-                foreach (var item in EntriesItem.WhereCastable<ILeveledItemEntryGetter, ILinkedFormKeyContainerGetter>()
+                foreach (var item in EntriesItem.WhereCastable<ILeveledItemEntryGetter, IFormLinkContainerGetter>()
                     .SelectMany((f) => f.ContainedFormLinks))
                 {
                     yield return FormLinkInformation.Factory(item);

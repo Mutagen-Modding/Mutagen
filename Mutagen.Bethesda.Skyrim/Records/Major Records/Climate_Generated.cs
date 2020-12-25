@@ -805,7 +805,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = Climate_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => ClimateCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ClimateCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ClimateCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ClimateCommon.Instance.RemapLinks(this, mapping);
         public Climate(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -913,7 +913,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         IModeled,
         ILoquiObjectSetter<IClimateInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ExtendedList<WeatherType>? WeatherTypes { get; set; }
         new String? SunTexture { get; set; }
@@ -940,7 +940,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IModeledGetter,
         ILoquiObject<IClimateGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Climate_Registration.Instance;

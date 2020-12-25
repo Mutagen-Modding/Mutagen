@@ -855,7 +855,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = Grass_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => GrassCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GrassCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GrassCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GrassCommon.Instance.RemapLinks(this, mapping);
         public Grass(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -964,7 +964,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModeled,
         IObjectBounded,
         ILoquiObjectSetter<IGrassInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ObjectBounds ObjectBounds { get; set; }
         new Model? Model { get; set; }
@@ -996,7 +996,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModeledGetter,
         IObjectBoundedGetter,
         ILoquiObject<IGrassGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Grass_Registration.Instance;

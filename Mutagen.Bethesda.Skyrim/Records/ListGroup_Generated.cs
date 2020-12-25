@@ -103,7 +103,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType T_RecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => ListGroupCommon<T>.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ListGroupCommon<T>.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ListGroupCommon<T>.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ListGroupCommon<T>.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
@@ -200,7 +200,7 @@ namespace Mutagen.Bethesda.Skyrim
         IListGroupGetter<T>,
         IMajorRecordEnumerable,
         ILoquiObjectSetter<IListGroup<T>>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
         where T : class, ICellBlock, IBinaryItem
     {
         new GroupTypeEnum Type { get; set; }
@@ -213,7 +213,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject,
         IMajorRecordGetterEnumerable,
         ILoquiObject<IListGroupGetter<T>>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
         where T : class, ICellBlockGetter, IBinaryItem
     {

@@ -539,7 +539,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = QuestObjective_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => QuestObjectiveCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestObjectiveCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestObjectiveCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestObjectiveCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -601,7 +601,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IQuestObjective :
         IQuestObjectiveGetter,
         ILoquiObjectSetter<IQuestObjective>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new UInt16 Index { get; set; }
         new QuestObjective.Flag? Flags { get; set; }
@@ -612,7 +612,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IQuestObjectiveGetter :
         ILoquiObject,
         ILoquiObject<IQuestObjectiveGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -1061,7 +1061,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<FormLinkInformation> GetContainedFormLinks(IQuestObjectiveGetter obj)
         {
-            foreach (var item in obj.Targets.WhereCastable<IQuestObjectiveTargetGetter, ILinkedFormKeyContainerGetter>()
+            foreach (var item in obj.Targets.WhereCastable<IQuestObjectiveTargetGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);

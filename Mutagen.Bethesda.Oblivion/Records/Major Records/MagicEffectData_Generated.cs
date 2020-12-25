@@ -686,7 +686,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         public IEnumerable<FormLinkInformation> ContainedFormLinks => MagicEffectDataCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectDataCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectDataCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectDataCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -748,7 +748,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IMagicEffectData :
         IMagicEffectDataGetter,
         ILoquiObjectSetter<IMagicEffectData>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new MagicEffectData.VersioningBreaks Versioning { get; set; }
         new MagicEffect.MagicFlag Flags { get; set; }
@@ -766,7 +766,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IMagicEffectDataGetter :
         ILoquiObject,
         ILoquiObject<IMagicEffectDataGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

@@ -1602,7 +1602,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = Worldspace_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => WorldspaceCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceCommon.Instance.RemapLinks(this, mapping);
         public Worldspace(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -1747,7 +1747,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamed,
         IMajorRecordEnumerable,
         ILoquiObjectSetter<IWorldspaceInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ExtendedList<WorldspaceGridReference> LargeReferences { get; }
         new WorldspaceMaxHeight? MaxHeight { get; set; }
@@ -1799,7 +1799,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         IMajorRecordGetterEnumerable,
         ILoquiObject<IWorldspaceGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Worldspace_Registration.Instance;

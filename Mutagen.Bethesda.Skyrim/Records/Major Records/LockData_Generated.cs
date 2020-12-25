@@ -495,7 +495,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = LockData_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => LockDataCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LockDataCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LockDataCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LockDataCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -557,7 +557,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILockData :
         ILockDataGetter,
         ILoquiObjectSetter<ILockData>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new LockLevel Level { get; set; }
         new MemorySlice<Byte> Unused { get; set; }
@@ -569,7 +569,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILockDataGetter :
         ILoquiObject,
         ILoquiObject<ILockDataGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

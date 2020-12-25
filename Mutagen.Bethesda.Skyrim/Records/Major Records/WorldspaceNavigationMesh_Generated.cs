@@ -379,7 +379,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = WorldspaceNavigationMesh_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => WorldspaceNavigationMeshCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceNavigationMeshCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceNavigationMeshCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceNavigationMeshCommon.Instance.RemapLinks(this, mapping);
         public WorldspaceNavigationMesh(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -482,7 +482,7 @@ namespace Mutagen.Bethesda.Skyrim
         IWorldspaceNavigationMeshGetter,
         IANavigationMesh,
         ILoquiObjectSetter<IWorldspaceNavigationMeshInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new WorldspaceNavigationMeshData? Data { get; set; }
     }
@@ -497,7 +497,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IWorldspaceNavigationMeshGetter :
         IANavigationMeshGetter,
         ILoquiObject<IWorldspaceNavigationMeshGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => WorldspaceNavigationMesh_Registration.Instance;

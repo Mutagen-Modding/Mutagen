@@ -473,7 +473,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = ActivateParents_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => ActivateParentsCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActivateParentsCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActivateParentsCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActivateParentsCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -535,7 +535,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IActivateParents :
         IActivateParentsGetter,
         ILoquiObjectSetter<IActivateParents>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ActivateParents.Flag Flags { get; set; }
         new ExtendedList<ActivateParent> Parents { get; }
@@ -544,7 +544,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IActivateParentsGetter :
         ILoquiObject,
         ILoquiObject<IActivateParentsGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

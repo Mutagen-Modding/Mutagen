@@ -386,7 +386,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = ConditionGlobal_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => ConditionGlobalCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ConditionGlobalCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ConditionGlobalCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ConditionGlobalCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -447,7 +447,7 @@ namespace Mutagen.Bethesda.Skyrim
         IConditionGlobalGetter,
         ICondition,
         ILoquiObjectSetter<IConditionGlobal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IGlobalGetter> ComparisonValue { get; set; }
         new ConditionData Data { get; set; }
@@ -456,7 +456,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IConditionGlobalGetter :
         IConditionGetter,
         ILoquiObject<IConditionGlobalGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => ConditionGlobal_Registration.Instance;
@@ -895,7 +895,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
             yield return FormLinkInformation.Factory(obj.ComparisonValue);
-            if (obj.Data is ILinkedFormKeyContainerGetter DatalinkCont)
+            if (obj.Data is IFormLinkContainerGetter DatalinkCont)
             {
                 foreach (var item in DatalinkCont.ContainedFormLinks)
                 {

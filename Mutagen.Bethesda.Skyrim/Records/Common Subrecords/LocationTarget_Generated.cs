@@ -337,7 +337,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => LocationTargetCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationTargetCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationTargetCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationTargetCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -398,7 +398,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILocationTargetGetter,
         IALocationTarget,
         ILoquiObjectSetter<ILocationTarget>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<ILocationTargetableGetter> Link { get; set; }
     }
@@ -406,7 +406,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILocationTargetGetter :
         IALocationTargetGetter,
         ILoquiObject<ILocationTargetGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => LocationTarget_Registration.Instance;

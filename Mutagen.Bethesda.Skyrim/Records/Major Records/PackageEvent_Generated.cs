@@ -667,7 +667,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public IEnumerable<FormLinkInformation> ContainedFormLinks => PackageEventCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageEventCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageEventCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageEventCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -729,7 +729,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPackageEvent :
         IPackageEventGetter,
         ILoquiObjectSetter<IPackageEvent>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLinkNullable<IIdleAnimationGetter> Idle { get; set; }
         new MemorySlice<Byte>? SCHR { get; set; }
@@ -743,7 +743,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPackageEventGetter :
         ILoquiObject,
         ILoquiObject<IPackageEventGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -1254,7 +1254,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(obj.Idle);
             }
-            foreach (var item in obj.Topics.WhereCastable<IATopicReferenceGetter, ILinkedFormKeyContainerGetter>()
+            foreach (var item in obj.Topics.WhereCastable<IATopicReferenceGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);

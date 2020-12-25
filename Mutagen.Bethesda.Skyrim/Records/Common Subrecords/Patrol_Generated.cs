@@ -582,7 +582,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = Patrol_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => PatrolCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PatrolCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PatrolCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PatrolCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -644,7 +644,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPatrol :
         IPatrolGetter,
         ILoquiObjectSetter<IPatrol>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new Single IdleTime { get; set; }
         new FormLink<IIdleAnimationGetter> Idle { get; set; }
@@ -656,7 +656,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPatrolGetter :
         ILoquiObject,
         ILoquiObject<IPatrolGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -1116,7 +1116,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IEnumerable<FormLinkInformation> GetContainedFormLinks(IPatrolGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Idle);
-            foreach (var item in obj.Topics.WhereCastable<IATopicReferenceGetter, ILinkedFormKeyContainerGetter>()
+            foreach (var item in obj.Topics.WhereCastable<IATopicReferenceGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);

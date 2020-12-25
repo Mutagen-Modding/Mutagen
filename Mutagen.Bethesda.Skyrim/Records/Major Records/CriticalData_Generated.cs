@@ -616,7 +616,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         public IEnumerable<FormLinkInformation> ContainedFormLinks => CriticalDataCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CriticalDataCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CriticalDataCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CriticalDataCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -678,7 +678,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ICriticalData :
         ICriticalDataGetter,
         ILoquiObjectSetter<ICriticalData>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new CriticalData.VersioningBreaks Versioning { get; set; }
         new UInt16 Damage { get; set; }
@@ -694,7 +694,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ICriticalDataGetter :
         ILoquiObject,
         ILoquiObject<ICriticalDataGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

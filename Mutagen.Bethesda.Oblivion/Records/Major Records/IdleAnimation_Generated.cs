@@ -636,7 +636,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GrupRecordType = IdleAnimation_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => IdleAnimationCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IdleAnimationCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IdleAnimationCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IdleAnimationCommon.Instance.RemapLinks(this, mapping);
         public IdleAnimation(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -722,7 +722,7 @@ namespace Mutagen.Bethesda.Oblivion
         IIdleAnimationGetter,
         IOblivionMajorRecord,
         ILoquiObjectSetter<IIdleAnimationInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new Model? Model { get; set; }
         new ExtendedList<Condition> Conditions { get; }
@@ -740,7 +740,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IIdleAnimationGetter :
         IOblivionMajorRecordGetter,
         ILoquiObject<IIdleAnimationGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => IdleAnimation_Registration.Instance;

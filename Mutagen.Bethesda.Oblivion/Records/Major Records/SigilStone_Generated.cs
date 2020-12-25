@@ -631,7 +631,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GrupRecordType = SigilStone_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => SigilStoneCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SigilStoneCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SigilStoneCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SigilStoneCommon.Instance.RemapLinks(this, mapping);
         public SigilStone(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -718,7 +718,7 @@ namespace Mutagen.Bethesda.Oblivion
         IAItem,
         INamed,
         ILoquiObjectSetter<ISigilStoneInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
@@ -739,7 +739,7 @@ namespace Mutagen.Bethesda.Oblivion
         IAItemGetter,
         INamedGetter,
         ILoquiObject<ISigilStoneGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => SigilStone_Registration.Instance;

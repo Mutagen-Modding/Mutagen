@@ -403,7 +403,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public IEnumerable<FormLinkInformation> ContainedFormLinks => ScriptEffectCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptEffectCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptEffectCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptEffectCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -466,7 +466,7 @@ namespace Mutagen.Bethesda.Oblivion
         IScriptEffectGetter,
         INamed,
         ILoquiObjectSetter<IScriptEffect>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ScriptEffectData? Data { get; set; }
         new String? Name { get; set; }
@@ -476,7 +476,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject,
         INamedGetter,
         ILoquiObject<IScriptEffectGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

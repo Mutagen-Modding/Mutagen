@@ -425,7 +425,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = PerkPlacement_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => PerkPlacementCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkPlacementCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkPlacementCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkPlacementCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -487,7 +487,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPerkPlacement :
         IPerkPlacementGetter,
         ILoquiObjectSetter<IPerkPlacement>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IPerkGetter> Perk { get; set; }
         new Byte Rank { get; set; }
@@ -497,7 +497,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPerkPlacementGetter :
         ILoquiObject,
         ILoquiObject<IPerkPlacementGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

@@ -1054,7 +1054,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GrupRecordType = DialogItem_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => DialogItemCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogItemCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogItemCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogItemCommon.Instance.RemapLinks(this, mapping);
         public DialogItem(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -1140,7 +1140,7 @@ namespace Mutagen.Bethesda.Oblivion
         IDialogItemGetter,
         IOblivionMajorRecord,
         ILoquiObjectSetter<IDialogItemInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new DialogItemData? Data { get; set; }
         new FormLinkNullable<IQuestGetter> Quest { get; set; }
@@ -1164,7 +1164,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IDialogItemGetter :
         IOblivionMajorRecordGetter,
         ILoquiObject<IDialogItemGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => DialogItem_Registration.Instance;
@@ -1832,7 +1832,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.Script is ILinkedFormKeyContainerGetter ScriptlinkCont)
+            if (obj.Script is IFormLinkContainerGetter ScriptlinkCont)
             {
                 foreach (var item in ScriptlinkCont.ContainedFormLinks)
                 {

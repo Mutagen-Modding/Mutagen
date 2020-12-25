@@ -416,7 +416,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public IEnumerable<FormLinkInformation> ContainedFormLinks => LeveledNpcEntryCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledNpcEntryCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledNpcEntryCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledNpcEntryCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -478,7 +478,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILeveledNpcEntry :
         ILeveledNpcEntryGetter,
         ILoquiObjectSetter<ILeveledNpcEntry>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new LeveledNpcEntryData? Data { get; set; }
         new ExtraData? ExtraData { get; set; }
@@ -487,7 +487,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILeveledNpcEntryGetter :
         ILoquiObject,
         ILoquiObject<ILeveledNpcEntryGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -925,7 +925,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.ExtraData is ILinkedFormKeyContainerGetter ExtraDatalinkCont)
+            if (obj.ExtraData is IFormLinkContainerGetter ExtraDatalinkCont)
             {
                 foreach (var item in ExtraDatalinkCont.ContainedFormLinks)
                 {

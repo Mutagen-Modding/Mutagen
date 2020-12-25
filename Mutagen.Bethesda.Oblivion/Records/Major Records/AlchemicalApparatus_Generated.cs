@@ -514,7 +514,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GrupRecordType = AlchemicalApparatus_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => AlchemicalApparatusCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AlchemicalApparatusCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AlchemicalApparatusCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AlchemicalApparatusCommon.Instance.RemapLinks(this, mapping);
         public AlchemicalApparatus(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -601,7 +601,7 @@ namespace Mutagen.Bethesda.Oblivion
         IAItem,
         INamed,
         ILoquiObjectSetter<IAlchemicalApparatusInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
@@ -621,7 +621,7 @@ namespace Mutagen.Bethesda.Oblivion
         IAItemGetter,
         INamedGetter,
         ILoquiObject<IAlchemicalApparatusGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => AlchemicalApparatus_Registration.Instance;

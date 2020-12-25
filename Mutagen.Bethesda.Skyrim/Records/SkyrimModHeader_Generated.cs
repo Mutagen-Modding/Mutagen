@@ -963,7 +963,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = SkyrimModHeader_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => SkyrimModHeaderCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimModHeaderCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimModHeaderCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimModHeaderCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -1025,7 +1025,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ISkyrimModHeader :
         ISkyrimModHeaderGetter,
         ILoquiObjectSetter<ISkyrimModHeader>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new SkyrimModHeader.HeaderFlag Flags { get; set; }
         new UInt32 FormID { get; set; }
@@ -1046,7 +1046,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ISkyrimModHeaderGetter :
         ILoquiObject,
         ILoquiObject<ISkyrimModHeaderGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

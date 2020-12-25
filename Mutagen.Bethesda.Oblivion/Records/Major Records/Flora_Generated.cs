@@ -512,7 +512,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GrupRecordType = Flora_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => FloraCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FloraCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FloraCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FloraCommon.Instance.RemapLinks(this, mapping);
         public Flora(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -599,7 +599,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecord,
         INamed,
         ILoquiObjectSetter<IFloraInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
@@ -619,7 +619,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         INamedGetter,
         ILoquiObject<IFloraGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Flora_Registration.Instance;

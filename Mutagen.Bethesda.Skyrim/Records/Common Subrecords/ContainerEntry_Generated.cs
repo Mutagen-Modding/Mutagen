@@ -411,7 +411,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = ContainerEntry_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => ContainerEntryCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ContainerEntryCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ContainerEntryCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ContainerEntryCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -473,7 +473,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IContainerEntry :
         IContainerEntryGetter,
         ILoquiObjectSetter<IContainerEntry>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ContainerItem Item { get; set; }
         new ExtraData? Data { get; set; }
@@ -482,7 +482,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IContainerEntryGetter :
         ILoquiObject,
         ILoquiObject<IContainerEntryGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -898,7 +898,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.Data is ILinkedFormKeyContainerGetter DatalinkCont)
+            if (obj.Data is IFormLinkContainerGetter DatalinkCont)
             {
                 foreach (var item in DatalinkCont.ContainedFormLinks)
                 {

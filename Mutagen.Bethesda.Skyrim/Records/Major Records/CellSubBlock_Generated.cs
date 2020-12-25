@@ -566,7 +566,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = (RecordType)Cell.GrupRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => CellSubBlockCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellSubBlockCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellSubBlockCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellSubBlockCommon.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
@@ -663,7 +663,7 @@ namespace Mutagen.Bethesda.Skyrim
         ICellSubBlockGetter,
         IMajorRecordEnumerable,
         ILoquiObjectSetter<ICellSubBlock>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new Int32 BlockNumber { get; set; }
         new GroupTypeEnum GroupType { get; set; }
@@ -676,7 +676,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject,
         IMajorRecordGetterEnumerable,
         ILoquiObject<ICellSubBlockGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

@@ -460,7 +460,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = AcousticSpace_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => AcousticSpaceCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AcousticSpaceCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AcousticSpaceCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AcousticSpaceCommon.Instance.RemapLinks(this, mapping);
         public AcousticSpace(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -564,7 +564,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         IObjectBounded,
         ILoquiObjectSetter<IAcousticSpaceInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ObjectBounds ObjectBounds { get; set; }
         new FormLinkNullable<ISoundDescriptorGetter> AmbientSound { get; set; }
@@ -583,7 +583,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IObjectBoundedGetter,
         ILoquiObject<IAcousticSpaceGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => AcousticSpace_Registration.Instance;

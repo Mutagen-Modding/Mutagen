@@ -432,7 +432,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public IEnumerable<FormLinkInformation> ContainedFormLinks => NavmeshSetCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavmeshSetCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavmeshSetCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavmeshSetCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -494,7 +494,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface INavmeshSet :
         INavmeshSetGetter,
         ILoquiObjectSetter<INavmeshSet>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ExtendedList<IFormLink<IANavigationMeshGetter>> Navmeshes { get; }
     }
@@ -502,7 +502,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface INavmeshSetGetter :
         ILoquiObject,
         ILoquiObject<INavmeshSetGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

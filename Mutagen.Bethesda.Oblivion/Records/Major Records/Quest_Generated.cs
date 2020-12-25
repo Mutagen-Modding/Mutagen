@@ -819,7 +819,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GrupRecordType = Quest_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => QuestCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestCommon.Instance.RemapLinks(this, mapping);
         public Quest(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -906,7 +906,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecord,
         INamed,
         ILoquiObjectSetter<IQuestInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLinkNullable<IScriptGetter> Script { get; set; }
         new String? Name { get; set; }
@@ -928,7 +928,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         INamedGetter,
         ILoquiObject<IQuestGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Quest_Registration.Instance;
@@ -1535,7 +1535,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return FormLinkInformation.Factory(obj.Script);
             }
-            foreach (var item in obj.Stages.WhereCastable<IQuestStageGetter, ILinkedFormKeyContainerGetter>()
+            foreach (var item in obj.Stages.WhereCastable<IQuestStageGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);

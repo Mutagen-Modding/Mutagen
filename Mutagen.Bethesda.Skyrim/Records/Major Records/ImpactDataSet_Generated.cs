@@ -444,7 +444,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = ImpactDataSet_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => ImpactDataSetCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ImpactDataSetCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ImpactDataSetCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ImpactDataSetCommon.Instance.RemapLinks(this, mapping);
         public ImpactDataSet(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -547,7 +547,7 @@ namespace Mutagen.Bethesda.Skyrim
         IImpactDataSetGetter,
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IImpactDataSetInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ExtendedList<ImpactData> Impacts { get; }
     }
@@ -562,7 +562,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IImpactDataSetGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IImpactDataSetGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => ImpactDataSet_Registration.Instance;

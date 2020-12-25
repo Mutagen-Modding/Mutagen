@@ -584,7 +584,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = DualCastData_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => DualCastDataCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DualCastDataCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DualCastDataCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DualCastDataCommon.Instance.RemapLinks(this, mapping);
         public DualCastData(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -692,7 +692,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         IObjectBounded,
         ILoquiObjectSetter<IDualCastDataInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ObjectBounds ObjectBounds { get; set; }
         new FormLink<IProjectileGetter> Projectile { get; set; }
@@ -715,7 +715,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IObjectBoundedGetter,
         ILoquiObject<IDualCastDataGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => DualCastData_Registration.Instance;

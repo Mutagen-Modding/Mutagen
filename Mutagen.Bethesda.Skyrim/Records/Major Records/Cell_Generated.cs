@@ -1850,7 +1850,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = Cell_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => CellCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellCommon.Instance.RemapLinks(this, mapping);
         public Cell(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -1995,7 +1995,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamed,
         IMajorRecordEnumerable,
         ILoquiObjectSetter<ICellInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new TranslatedString? Name { get; set; }
         new Cell.Flag Flags { get; set; }
@@ -2050,7 +2050,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         IMajorRecordGetterEnumerable,
         ILoquiObject<ICellGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Cell_Registration.Instance;
@@ -3396,17 +3396,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            foreach (var item in obj.NavigationMeshes.WhereCastable<IANavigationMeshGetter, ILinkedFormKeyContainerGetter>()
+            foreach (var item in obj.NavigationMeshes.WhereCastable<IANavigationMeshGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.Persistent.WhereCastable<IPlacedGetter, ILinkedFormKeyContainerGetter>()
+            foreach (var item in obj.Persistent.WhereCastable<IPlacedGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.Temporary.WhereCastable<IPlacedGetter, ILinkedFormKeyContainerGetter>()
+            foreach (var item in obj.Temporary.WhereCastable<IPlacedGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);

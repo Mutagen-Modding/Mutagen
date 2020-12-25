@@ -97,7 +97,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType T_RecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => GroupCommon<T>.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GroupCommon<T>.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GroupCommon<T>.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GroupCommon<T>.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
@@ -194,7 +194,7 @@ namespace Mutagen.Bethesda.Oblivion
         IGroupGetter<T>,
         IMajorRecordEnumerable,
         ILoquiObjectSetter<IGroup<T>>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
         where T : class, IOblivionMajorRecordInternal, IBinaryItem
     {
         new GroupTypeEnum Type { get; set; }
@@ -206,7 +206,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject,
         IMajorRecordGetterEnumerable,
         ILoquiObject<IGroupGetter<T>>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
         where T : class, IOblivionMajorRecordGetter, IBinaryItem
     {
@@ -984,7 +984,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Mutagen
         public IEnumerable<FormLinkInformation> GetContainedFormLinks(IGroupGetter<T> obj)
         {
-            foreach (var item in obj.RecordCache.Items.WhereCastable<T, ILinkedFormKeyContainerGetter>()
+            foreach (var item in obj.RecordCache.Items.WhereCastable<T, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.ContainedFormLinks))
             {
                 yield return item;

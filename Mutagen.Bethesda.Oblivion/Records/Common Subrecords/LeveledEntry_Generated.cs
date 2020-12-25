@@ -95,7 +95,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GrupRecordType = LeveledEntry_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => LeveledEntryCommon<T>.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledEntryCommon<T>.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledEntryCommon<T>.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledEntryCommon<T>.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -157,7 +157,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILeveledEntry<T> :
         ILeveledEntryGetter<T>,
         ILoquiObjectSetter<ILeveledEntry<T>>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
         where T : class, IOblivionMajorRecordInternal, IBinaryItem
     {
         new Int16 Level { get; set; }
@@ -170,7 +170,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILeveledEntryGetter<out T> :
         ILoquiObject,
         ILoquiObject<ILeveledEntryGetter<T>>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
         where T : class, IOblivionMajorRecordGetter, IBinaryItem
     {

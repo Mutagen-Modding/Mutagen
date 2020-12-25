@@ -775,7 +775,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = DialogResponse_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => DialogResponseCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogResponseCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogResponseCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogResponseCommon.Instance.RemapLinks(this, mapping);
         [Flags]
         public enum TRDTDataType
         {
@@ -841,7 +841,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IDialogResponse :
         IDialogResponseGetter,
         ILoquiObjectSetter<IDialogResponse>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new Emotion Emotion { get; set; }
         new UInt32 EmotionValue { get; set; }
@@ -862,7 +862,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IDialogResponseGetter :
         ILoquiObject,
         ILoquiObject<IDialogResponseGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

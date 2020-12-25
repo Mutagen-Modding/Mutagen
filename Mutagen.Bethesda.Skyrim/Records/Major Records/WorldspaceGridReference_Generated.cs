@@ -473,7 +473,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = WorldspaceGridReference_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => WorldspaceGridReferenceCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceGridReferenceCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceGridReferenceCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceGridReferenceCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -535,7 +535,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IWorldspaceGridReference :
         IWorldspaceGridReferenceGetter,
         ILoquiObjectSetter<IWorldspaceGridReference>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new P2Int16 GridPosition { get; set; }
         new ExtendedList<WorldspaceReference> References { get; }
@@ -544,7 +544,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IWorldspaceGridReferenceGetter :
         ILoquiObject,
         ILoquiObject<IWorldspaceGridReferenceGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

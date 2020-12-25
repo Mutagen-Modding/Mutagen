@@ -717,7 +717,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = ScenePhase_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => ScenePhaseCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScenePhaseCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScenePhaseCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScenePhaseCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -779,7 +779,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IScenePhase :
         IScenePhaseGetter,
         ILoquiObjectSetter<IScenePhase>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new String? Name { get; set; }
         new ExtendedList<Condition> StartConditions { get; }
@@ -792,7 +792,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IScenePhaseGetter :
         ILoquiObject,
         ILoquiObject<IScenePhaseGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -1294,12 +1294,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<FormLinkInformation> GetContainedFormLinks(IScenePhaseGetter obj)
         {
-            foreach (var item in obj.StartConditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter>()
+            foreach (var item in obj.StartConditions.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.CompletionConditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter>()
+            foreach (var item in obj.CompletionConditions.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);

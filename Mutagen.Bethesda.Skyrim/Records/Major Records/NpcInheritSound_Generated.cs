@@ -338,7 +338,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = NpcInheritSound_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => NpcInheritSoundCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcInheritSoundCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcInheritSoundCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcInheritSoundCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -399,7 +399,7 @@ namespace Mutagen.Bethesda.Skyrim
         INpcInheritSoundGetter,
         IANpcSoundDefinition,
         ILoquiObjectSetter<INpcInheritSound>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLinkNullable<INpcGetter> InheritsSoundsFrom { get; set; }
     }
@@ -407,7 +407,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface INpcInheritSoundGetter :
         IANpcSoundDefinitionGetter,
         ILoquiObject<INpcInheritSoundGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => NpcInheritSound_Registration.Instance;

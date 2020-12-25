@@ -2901,7 +2901,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = Weather_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => WeatherCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherCommon.Instance.RemapLinks(this, mapping);
         public Weather(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -3018,7 +3018,7 @@ namespace Mutagen.Bethesda.Skyrim
         IWeatherGetter,
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IWeatherInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new String?[] CloudTextures { get; }
         new MemorySlice<Byte>? DNAM { get; set; }
@@ -3095,7 +3095,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IWeatherGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IWeatherGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Weather_Registration.Instance;

@@ -434,7 +434,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => RegionWeatherCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionWeatherCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionWeatherCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionWeatherCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -495,7 +495,7 @@ namespace Mutagen.Bethesda.Skyrim
         IRegionWeatherGetter,
         IRegionData,
         ILoquiObjectSetter<IRegionWeather>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ExtendedList<WeatherType>? Weathers { get; set; }
     }
@@ -503,7 +503,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IRegionWeatherGetter :
         IRegionDataGetter,
         ILoquiObject<IRegionWeatherGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => RegionWeather_Registration.Instance;

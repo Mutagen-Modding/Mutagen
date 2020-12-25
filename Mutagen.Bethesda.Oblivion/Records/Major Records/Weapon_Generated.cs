@@ -578,7 +578,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GrupRecordType = Weapon_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => WeaponCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeaponCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeaponCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeaponCommon.Instance.RemapLinks(this, mapping);
         public Weapon(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -665,7 +665,7 @@ namespace Mutagen.Bethesda.Oblivion
         IAItem,
         INamed,
         ILoquiObjectSetter<IWeaponInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
@@ -687,7 +687,7 @@ namespace Mutagen.Bethesda.Oblivion
         IAItemGetter,
         INamedGetter,
         ILoquiObject<IWeaponGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Weapon_Registration.Instance;

@@ -387,7 +387,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public IEnumerable<FormLinkInformation> ContainedFormLinks => OwnershipCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => OwnershipCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => OwnershipCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => OwnershipCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -449,7 +449,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IOwnership :
         IOwnershipGetter,
         ILoquiObjectSetter<IOwnership>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLinkNullable<IOwnerGetter> Owner { get; set; }
         new Int32? FactionRank { get; set; }
@@ -458,7 +458,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IOwnershipGetter :
         ILoquiObject,
         ILoquiObject<IOwnershipGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

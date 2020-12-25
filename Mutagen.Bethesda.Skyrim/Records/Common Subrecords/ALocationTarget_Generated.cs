@@ -317,7 +317,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public virtual IEnumerable<FormLinkInformation> ContainedFormLinks => ALocationTargetCommon.Instance.GetContainedFormLinks(this);
         protected virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ALocationTargetCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ALocationTargetCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ALocationTargetCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -355,14 +355,14 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IALocationTarget :
         IALocationTargetGetter,
         ILoquiObjectSetter<IALocationTarget>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
     }
 
     public partial interface IALocationTargetGetter :
         ILoquiObject,
         ILoquiObject<IALocationTargetGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

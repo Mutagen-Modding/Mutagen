@@ -448,7 +448,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = WeatherImageSpaces_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => WeatherImageSpacesCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherImageSpacesCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherImageSpacesCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherImageSpacesCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -510,7 +510,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IWeatherImageSpaces :
         IWeatherImageSpacesGetter,
         ILoquiObjectSetter<IWeatherImageSpaces>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IImageSpaceAdapterGetter> Sunrise { get; set; }
         new FormLink<IImageSpaceAdapterGetter> Day { get; set; }
@@ -521,7 +521,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IWeatherImageSpacesGetter :
         ILoquiObject,
         ILoquiObject<IWeatherImageSpacesGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

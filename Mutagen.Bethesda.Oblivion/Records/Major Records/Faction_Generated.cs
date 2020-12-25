@@ -658,7 +658,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GrupRecordType = Faction_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => FactionCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FactionCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FactionCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FactionCommon.Instance.RemapLinks(this, mapping);
         public Faction(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -746,7 +746,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOwner,
         INamed,
         ILoquiObjectSetter<IFactionInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new String? Name { get; set; }
         new ExtendedList<Relation> Relations { get; }
@@ -767,7 +767,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOwnerGetter,
         INamedGetter,
         ILoquiObject<IFactionGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Faction_Registration.Instance;

@@ -449,7 +449,7 @@ namespace Mutagen.Bethesda
         #region Mutagen
         public virtual IEnumerable<FormLinkInformation> ContainedFormLinks => MajorRecordCommon.Instance.GetContainedFormLinks(this);
         protected virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MajorRecordCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MajorRecordCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MajorRecordCommon.Instance.RemapLinks(this, mapping);
         public MajorRecord(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -547,7 +547,7 @@ namespace Mutagen.Bethesda
         IMajorRecordGetter,
         IMajorRecordEnumerable,
         ILoquiObjectSetter<IMajorRecordInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new Int32 MajorRecordFlagsRaw { get; set; }
         new UInt32 VersionControl { get; set; }
@@ -565,7 +565,7 @@ namespace Mutagen.Bethesda
         ILoquiObject,
         IMajorRecordGetterEnumerable,
         ILoquiObject<IMajorRecordGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

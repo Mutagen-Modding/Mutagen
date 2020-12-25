@@ -384,7 +384,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = APerkEntryPointEffect_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => APerkEntryPointEffectCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => APerkEntryPointEffectCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => APerkEntryPointEffectCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => APerkEntryPointEffectCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -421,7 +421,7 @@ namespace Mutagen.Bethesda.Skyrim
         IAPerkEntryPointEffectGetter,
         IAPerkEffect,
         ILoquiObjectSetter<IAPerkEntryPointEffect>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new APerkEntryPointEffect.EntryType EntryPoint { get; set; }
         new Byte PerkConditionTabCount { get; set; }
@@ -430,7 +430,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IAPerkEntryPointEffectGetter :
         IAPerkEffectGetter,
         ILoquiObject<IAPerkEntryPointEffectGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => APerkEntryPointEffect_Registration.Instance;

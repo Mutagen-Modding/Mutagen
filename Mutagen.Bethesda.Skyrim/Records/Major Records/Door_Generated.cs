@@ -662,7 +662,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = Door_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => DoorCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DoorCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DoorCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DoorCommon.Instance.RemapLinks(this, mapping);
         public Door(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -775,7 +775,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModeled,
         IObjectBounded,
         ILoquiObjectSetter<IDoorInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
@@ -807,7 +807,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModeledGetter,
         IObjectBoundedGetter,
         ILoquiObject<IDoorGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Door_Registration.Instance;
@@ -1398,7 +1398,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainerGetter VirtualMachineAdapterlinkCont)
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
             {
                 foreach (var item in VirtualMachineAdapterlinkCont.ContainedFormLinks)
                 {

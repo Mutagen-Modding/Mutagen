@@ -442,7 +442,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = FormList_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => FormListCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FormListCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FormListCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FormListCommon.Instance.RemapLinks(this, mapping);
         public FormList(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -548,7 +548,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILockList,
         IObjectId,
         ILoquiObjectSetter<IFormListInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ExtendedList<IFormLink<ISkyrimMajorRecordGetter>> Items { get; }
     }
@@ -566,7 +566,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILockListGetter,
         IObjectIdGetter,
         ILoquiObject<IFormListGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => FormList_Registration.Instance;

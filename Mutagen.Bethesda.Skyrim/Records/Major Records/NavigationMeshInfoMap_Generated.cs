@@ -562,7 +562,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = NavigationMeshInfoMap_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => NavigationMeshInfoMapCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavigationMeshInfoMapCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavigationMeshInfoMapCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavigationMeshInfoMapCommon.Instance.RemapLinks(this, mapping);
         public NavigationMeshInfoMap(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -665,7 +665,7 @@ namespace Mutagen.Bethesda.Skyrim
         INavigationMeshInfoMapGetter,
         ISkyrimMajorRecord,
         ILoquiObjectSetter<INavigationMeshInfoMapInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new UInt32? NavMeshVersion { get; set; }
         new ExtendedList<NavigationMapInfo> MapInfos { get; }
@@ -683,7 +683,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface INavigationMeshInfoMapGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<INavigationMeshInfoMapGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => NavigationMeshInfoMap_Registration.Instance;

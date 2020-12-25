@@ -1128,7 +1128,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = Faction_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => FactionCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FactionCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FactionCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FactionCommon.Instance.RemapLinks(this, mapping);
         public Faction(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -1235,7 +1235,7 @@ namespace Mutagen.Bethesda.Skyrim
         IRelatable,
         ITranslatedNamed,
         ILoquiObjectSetter<IFactionInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new TranslatedString? Name { get; set; }
         new ExtendedList<Relation> Relations { get; }
@@ -1269,7 +1269,7 @@ namespace Mutagen.Bethesda.Skyrim
         IRelatableGetter,
         ITranslatedNamedGetter,
         ILoquiObject<IFactionGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Faction_Registration.Instance;
@@ -2014,7 +2014,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(obj.MerchantContainer);
             }
-            if (obj.VendorLocation is ILinkedFormKeyContainerGetter VendorLocationlinkCont)
+            if (obj.VendorLocation is IFormLinkContainerGetter VendorLocationlinkCont)
             {
                 foreach (var item in VendorLocationlinkCont.ContainedFormLinks)
                 {
@@ -2023,7 +2023,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (obj.Conditions.TryGet(out var ConditionsItem))
             {
-                foreach (var item in ConditionsItem.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter>()
+                foreach (var item in ConditionsItem.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
                     .SelectMany((f) => f.ContainedFormLinks))
                 {
                     yield return FormLinkInformation.Factory(item);

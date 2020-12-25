@@ -442,7 +442,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = Outfit_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => OutfitCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => OutfitCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => OutfitCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => OutfitCommon.Instance.RemapLinks(this, mapping);
         public Outfit(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -545,7 +545,7 @@ namespace Mutagen.Bethesda.Skyrim
         IOutfitGetter,
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IOutfitInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ExtendedList<IFormLink<IOutfitTargetGetter>>? Items { get; set; }
     }
@@ -560,7 +560,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IOutfitGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IOutfitGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Outfit_Registration.Instance;

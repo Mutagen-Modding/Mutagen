@@ -357,7 +357,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = PerkEntryPointSelectSpell_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => PerkEntryPointSelectSpellCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkEntryPointSelectSpellCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkEntryPointSelectSpellCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkEntryPointSelectSpellCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -418,7 +418,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPerkEntryPointSelectSpellGetter,
         IAPerkEntryPointEffect,
         ILoquiObjectSetter<IPerkEntryPointSelectSpell>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<ISpellGetter> Spell { get; set; }
     }
@@ -426,7 +426,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPerkEntryPointSelectSpellGetter :
         IAPerkEntryPointEffectGetter,
         ILoquiObject<IPerkEntryPointSelectSpellGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => PerkEntryPointSelectSpell_Registration.Instance;

@@ -474,7 +474,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public IEnumerable<FormLinkInformation> ContainedFormLinks => MessageButtonCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MessageButtonCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MessageButtonCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MessageButtonCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -536,7 +536,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IMessageButton :
         IMessageButtonGetter,
         ILoquiObjectSetter<IMessageButton>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new TranslatedString? Text { get; set; }
         new ExtendedList<Condition> Conditions { get; }
@@ -545,7 +545,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IMessageButtonGetter :
         ILoquiObject,
         ILoquiObject<IMessageButtonGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -981,7 +981,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<FormLinkInformation> GetContainedFormLinks(IMessageButtonGetter obj)
         {
-            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter>()
+            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);

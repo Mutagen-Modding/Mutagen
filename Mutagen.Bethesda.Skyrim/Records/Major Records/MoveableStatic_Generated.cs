@@ -554,7 +554,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = MoveableStatic_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => MoveableStaticCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MoveableStaticCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MoveableStaticCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MoveableStaticCommon.Instance.RemapLinks(this, mapping);
         public MoveableStatic(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -667,7 +667,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModeled,
         IObjectBounded,
         ILoquiObjectSetter<IMoveableStaticInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ObjectBounds ObjectBounds { get; set; }
         new TranslatedString? Name { get; set; }
@@ -696,7 +696,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModeledGetter,
         IObjectBoundedGetter,
         ILoquiObject<IMoveableStaticGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => MoveableStatic_Registration.Instance;

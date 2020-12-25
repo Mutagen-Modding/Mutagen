@@ -470,7 +470,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GrupRecordType = PointToReferenceMapping_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => PointToReferenceMappingCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PointToReferenceMappingCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PointToReferenceMappingCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PointToReferenceMappingCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -532,7 +532,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IPointToReferenceMapping :
         IPointToReferenceMappingGetter,
         ILoquiObjectSetter<IPointToReferenceMapping>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IPlacedGetter> Reference { get; set; }
         new ExtendedList<Int16> Points { get; }
@@ -541,7 +541,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IPointToReferenceMappingGetter :
         ILoquiObject,
         ILoquiObject<IPointToReferenceMappingGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

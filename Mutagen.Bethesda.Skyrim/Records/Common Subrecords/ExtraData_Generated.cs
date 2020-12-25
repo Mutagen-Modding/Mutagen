@@ -391,7 +391,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = ExtraData_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => ExtraDataCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ExtraDataCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ExtraDataCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ExtraDataCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -453,7 +453,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IExtraData :
         IExtraDataGetter,
         ILoquiObjectSetter<IExtraData>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new OwnerTarget Owner { get; set; }
         new Single ItemCondition { get; set; }
@@ -462,7 +462,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IExtraDataGetter :
         ILoquiObject,
         ILoquiObject<IExtraDataGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -868,7 +868,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<FormLinkInformation> GetContainedFormLinks(IExtraDataGetter obj)
         {
-            if (obj.Owner is ILinkedFormKeyContainerGetter OwnerlinkCont)
+            if (obj.Owner is IFormLinkContainerGetter OwnerlinkCont)
             {
                 foreach (var item in OwnerlinkCont.ContainedFormLinks)
                 {

@@ -654,7 +654,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GrupRecordType = DialogTopic_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => DialogTopicCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogTopicCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogTopicCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogTopicCommon.Instance.RemapLinks(this, mapping);
         public DialogTopic(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -776,7 +776,7 @@ namespace Mutagen.Bethesda.Oblivion
         INamed,
         IMajorRecordEnumerable,
         ILoquiObjectSetter<IDialogTopicInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ExtendedList<IFormLink<IQuestGetter>> Quests { get; }
         new String? Name { get; set; }
@@ -797,7 +797,7 @@ namespace Mutagen.Bethesda.Oblivion
         INamedGetter,
         IMajorRecordGetterEnumerable,
         ILoquiObject<IDialogTopicGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => DialogTopic_Registration.Instance;

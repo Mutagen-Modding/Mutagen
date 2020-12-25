@@ -401,7 +401,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public IEnumerable<FormLinkInformation> ContainedFormLinks => RaceMovementTypeCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RaceMovementTypeCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RaceMovementTypeCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RaceMovementTypeCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -463,7 +463,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IRaceMovementType :
         IRaceMovementTypeGetter,
         ILoquiObjectSetter<IRaceMovementType>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLinkNullable<IMovementTypeGetter> MovementType { get; set; }
         new SpeedOverrides? Overrides { get; set; }
@@ -472,7 +472,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IRaceMovementTypeGetter :
         ILoquiObject,
         ILoquiObject<IRaceMovementTypeGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

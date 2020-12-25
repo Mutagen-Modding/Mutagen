@@ -465,7 +465,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => RegionSoundsCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionSoundsCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionSoundsCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionSoundsCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -526,7 +526,7 @@ namespace Mutagen.Bethesda.Skyrim
         IRegionSoundsGetter,
         IRegionData,
         ILoquiObjectSetter<IRegionSounds>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLinkNullable<IMusicTypeGetter> Music { get; set; }
         new ExtendedList<RegionSound>? Sounds { get; set; }
@@ -535,7 +535,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IRegionSoundsGetter :
         IRegionDataGetter,
         ILoquiObject<IRegionSoundsGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => RegionSounds_Registration.Instance;

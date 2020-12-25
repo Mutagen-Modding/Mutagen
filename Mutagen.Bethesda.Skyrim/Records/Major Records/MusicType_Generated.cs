@@ -552,7 +552,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = MusicType_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => MusicTypeCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MusicTypeCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MusicTypeCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MusicTypeCommon.Instance.RemapLinks(this, mapping);
         public MusicType(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -655,7 +655,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMusicTypeGetter,
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IMusicTypeInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new MusicType.Flag Flags { get; set; }
         new MusicTypeData? Data { get; set; }
@@ -673,7 +673,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IMusicTypeGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IMusicTypeGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => MusicType_Registration.Instance;

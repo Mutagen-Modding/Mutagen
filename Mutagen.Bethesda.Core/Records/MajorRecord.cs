@@ -26,7 +26,7 @@ namespace Mutagen.Bethesda
     }
 
     [DebuggerDisplay("{GetType().Name} {this.EditorID?.ToString()} {this.FormKey.ToString()}")]
-    public partial class MajorRecord : ILinkedFormKeyContainer
+    public partial class MajorRecord : IFormLinkContainer
     {
         #region EditorID
         public virtual String? EditorID { get; set; }

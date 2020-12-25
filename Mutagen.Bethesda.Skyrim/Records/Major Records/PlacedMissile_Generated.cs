@@ -392,7 +392,7 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly RecordType GrupRecordType = PlacedMissile_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => PlacedMissileCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedMissileCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedMissileCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedMissileCommon.Instance.RemapLinks(this, mapping);
         public PlacedMissile(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -495,7 +495,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPlacedMissileGetter,
         IAPlacedTrap,
         ILoquiObjectSetter<IPlacedMissileInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IProjectileGetter> Projectile { get; set; }
     }
@@ -510,7 +510,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPlacedMissileGetter :
         IAPlacedTrapGetter,
         ILoquiObject<IPlacedMissileGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => PlacedMissile_Registration.Instance;

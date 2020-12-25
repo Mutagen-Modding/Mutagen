@@ -858,7 +858,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = MiscItem_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => MiscItemCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MiscItemCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MiscItemCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MiscItemCommon.Instance.RemapLinks(this, mapping);
         public MiscItem(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -979,7 +979,7 @@ namespace Mutagen.Bethesda.Skyrim
         IWeightValue,
         IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<IMiscItemInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
@@ -1018,7 +1018,7 @@ namespace Mutagen.Bethesda.Skyrim
         IWeightValueGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IMiscItemGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => MiscItem_Registration.Instance;
@@ -1665,7 +1665,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainerGetter VirtualMachineAdapterlinkCont)
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
             {
                 foreach (var item in VirtualMachineAdapterlinkCont.ContainedFormLinks)
                 {

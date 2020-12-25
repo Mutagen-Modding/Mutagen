@@ -643,7 +643,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = Message_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => MessageCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MessageCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MessageCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MessageCommon.Instance.RemapLinks(this, mapping);
         public Message(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -747,7 +747,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ITranslatedNamed,
         ILoquiObjectSetter<IMessageInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new TranslatedString Description { get; set; }
         new TranslatedString? Name { get; set; }
@@ -769,7 +769,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         ITranslatedNamedGetter,
         ILoquiObject<IMessageGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Message_Registration.Instance;
@@ -1337,7 +1337,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(obj.Quest);
             }
-            foreach (var item in obj.MenuButtons.WhereCastable<IMessageButtonGetter, ILinkedFormKeyContainerGetter>()
+            foreach (var item in obj.MenuButtons.WhereCastable<IMessageButtonGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);

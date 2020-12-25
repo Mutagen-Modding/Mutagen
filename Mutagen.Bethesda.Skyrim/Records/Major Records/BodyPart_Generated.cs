@@ -1358,7 +1358,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = BodyPart_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => BodyPartCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BodyPartCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BodyPartCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BodyPartCommon.Instance.RemapLinks(this, mapping);
         [Flags]
         public enum BPNDDataType
         {
@@ -1425,7 +1425,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBodyPartGetter,
         ITranslatedNamedRequired,
         ILoquiObjectSetter<IBodyPart>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new TranslatedString Name { get; set; }
         new String? PoseMatching { get; set; }
@@ -1466,7 +1466,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject,
         ITranslatedNamedRequiredGetter,
         ILoquiObject<IBodyPartGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

@@ -392,7 +392,7 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly RecordType GrupRecordType = PlacedCone_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => PlacedConeCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedConeCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedConeCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedConeCommon.Instance.RemapLinks(this, mapping);
         public PlacedCone(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -495,7 +495,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPlacedConeGetter,
         IAPlacedTrap,
         ILoquiObjectSetter<IPlacedConeInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IProjectileGetter> Projectile { get; set; }
     }
@@ -510,7 +510,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPlacedConeGetter :
         IAPlacedTrapGetter,
         ILoquiObject<IPlacedConeGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => PlacedCone_Registration.Instance;

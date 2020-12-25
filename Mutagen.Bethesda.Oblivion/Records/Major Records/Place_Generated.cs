@@ -310,7 +310,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => PlaceCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlaceCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlaceCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlaceCommon.Instance.RemapLinks(this, mapping);
         public Place(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -407,7 +407,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecord,
         IMajorRecordEnumerable,
         ILoquiObjectSetter<IPlaceInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
     }
 
@@ -422,7 +422,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         IMajorRecordGetterEnumerable,
         ILoquiObject<IPlaceGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Place_Registration.Instance;

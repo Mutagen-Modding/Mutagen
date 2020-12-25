@@ -631,7 +631,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GrupRecordType = MagicEffect_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => MagicEffectCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectCommon.Instance.RemapLinks(this, mapping);
         public MagicEffect(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -718,7 +718,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecord,
         INamed,
         ILoquiObjectSetter<IMagicEffectInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new String? Name { get; set; }
         new String? Description { get; set; }
@@ -739,7 +739,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         INamedGetter,
         ILoquiObject<IMagicEffectGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => MagicEffect_Registration.Instance;

@@ -665,7 +665,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = AttackData_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => AttackDataCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AttackDataCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AttackDataCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AttackDataCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -727,7 +727,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IAttackData :
         IAttackDataGetter,
         ILoquiObjectSetter<IAttackData>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new Single DamageMult { get; set; }
         new Single Chance { get; set; }
@@ -745,7 +745,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IAttackDataGetter :
         ILoquiObject,
         ILoquiObject<IAttackDataGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

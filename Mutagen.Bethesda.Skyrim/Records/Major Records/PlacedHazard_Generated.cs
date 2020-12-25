@@ -392,7 +392,7 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly RecordType GrupRecordType = PlacedHazard_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => PlacedHazardCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedHazardCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedHazardCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedHazardCommon.Instance.RemapLinks(this, mapping);
         public PlacedHazard(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -495,7 +495,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPlacedHazardGetter,
         IAPlacedTrap,
         ILoquiObjectSetter<IPlacedHazardInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IHazardGetter> Hazard { get; set; }
     }
@@ -510,7 +510,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPlacedHazardGetter :
         IAPlacedTrapGetter,
         ILoquiObject<IPlacedHazardGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => PlacedHazard_Registration.Instance;

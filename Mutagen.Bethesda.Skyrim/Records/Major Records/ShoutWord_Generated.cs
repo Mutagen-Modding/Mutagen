@@ -417,7 +417,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = ShoutWord_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => ShoutWordCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ShoutWordCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ShoutWordCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ShoutWordCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -479,7 +479,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IShoutWord :
         IShoutWordGetter,
         ILoquiObjectSetter<IShoutWord>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IWordOfPowerGetter> Word { get; set; }
         new FormLink<ISpellGetter> Spell { get; set; }
@@ -489,7 +489,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IShoutWordGetter :
         ILoquiObject,
         ILoquiObject<IShoutWordGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

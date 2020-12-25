@@ -508,7 +508,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GrupRecordType = LeveledItem_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => LeveledItemCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledItemCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledItemCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledItemCommon.Instance.RemapLinks(this, mapping);
         public LeveledItem(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -594,7 +594,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILeveledItemGetter,
         IAItem,
         ILoquiObjectSetter<ILeveledItemInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new Byte? ChanceNone { get; set; }
         new LeveledFlag? Flags { get; set; }
@@ -611,7 +611,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILeveledItemGetter :
         IAItemGetter,
         ILoquiObject<ILeveledItemGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => LeveledItem_Registration.Instance;

@@ -570,7 +570,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GrupRecordType = LeveledCreature_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => LeveledCreatureCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledCreatureCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledCreatureCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledCreatureCommon.Instance.RemapLinks(this, mapping);
         public LeveledCreature(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -656,7 +656,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILeveledCreatureGetter,
         IANpcSpawn,
         ILoquiObjectSetter<ILeveledCreatureInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new Byte? ChanceNone { get; set; }
         new LeveledFlag? Flags { get; set; }
@@ -675,7 +675,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILeveledCreatureGetter :
         IANpcSpawnGetter,
         ILoquiObject<ILeveledCreatureGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => LeveledCreature_Registration.Instance;

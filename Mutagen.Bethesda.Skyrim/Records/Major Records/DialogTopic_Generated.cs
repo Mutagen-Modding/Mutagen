@@ -787,7 +787,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = DialogTopic_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => DialogTopicCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogTopicCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogTopicCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogTopicCommon.Instance.RemapLinks(this, mapping);
         public DialogTopic(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -931,7 +931,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamed,
         IMajorRecordEnumerable,
         ILoquiObjectSetter<IDialogTopicInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new TranslatedString? Name { get; set; }
         new Single Priority { get; set; }
@@ -960,7 +960,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         IMajorRecordGetterEnumerable,
         ILoquiObject<IDialogTopicGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => DialogTopic_Registration.Instance;

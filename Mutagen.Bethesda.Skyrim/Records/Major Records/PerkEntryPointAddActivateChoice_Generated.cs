@@ -430,7 +430,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = PerkEntryPointAddActivateChoice_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => PerkEntryPointAddActivateChoiceCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkEntryPointAddActivateChoiceCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkEntryPointAddActivateChoiceCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkEntryPointAddActivateChoiceCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -491,7 +491,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPerkEntryPointAddActivateChoiceGetter,
         IAPerkEntryPointEffect,
         ILoquiObjectSetter<IPerkEntryPointAddActivateChoice>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLinkNullable<ISpellGetter> Spell { get; set; }
         new TranslatedString? ButtonLabel { get; set; }
@@ -501,7 +501,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPerkEntryPointAddActivateChoiceGetter :
         IAPerkEntryPointEffectGetter,
         ILoquiObject<IPerkEntryPointAddActivateChoiceGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => PerkEntryPointAddActivateChoice_Registration.Instance;

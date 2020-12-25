@@ -434,7 +434,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => RegionObjectsCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionObjectsCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionObjectsCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionObjectsCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -495,7 +495,7 @@ namespace Mutagen.Bethesda.Skyrim
         IRegionObjectsGetter,
         IRegionData,
         ILoquiObjectSetter<IRegionObjects>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ExtendedList<RegionObject>? Objects { get; set; }
     }
@@ -503,7 +503,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IRegionObjectsGetter :
         IRegionDataGetter,
         ILoquiObject<IRegionObjectsGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => RegionObjects_Registration.Instance;

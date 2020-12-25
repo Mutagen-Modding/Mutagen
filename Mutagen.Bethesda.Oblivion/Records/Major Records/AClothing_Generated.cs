@@ -748,7 +748,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => AClothingCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AClothingCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AClothingCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AClothingCommon.Instance.RemapLinks(this, mapping);
         public AClothing(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -811,7 +811,7 @@ namespace Mutagen.Bethesda.Oblivion
         IAItem,
         INamed,
         ILoquiObjectSetter<IAClothingInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new String? Name { get; set; }
         new FormLinkNullable<IScriptGetter> Script { get; set; }
@@ -837,7 +837,7 @@ namespace Mutagen.Bethesda.Oblivion
         IAItemGetter,
         INamedGetter,
         ILoquiObject<IAClothingGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => AClothing_Registration.Instance;

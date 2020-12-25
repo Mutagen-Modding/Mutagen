@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda
     /// <summary>
     /// An interface for classes that contain FormKeys and can enumerate them.
     /// </summary>
-    public interface ILinkedFormKeyContainer : ILinkedFormKeyContainerGetter
+    public interface IFormLinkContainer : IFormLinkContainerGetter
     {
         /// <summary>
         /// Swaps out all links to point to new FormKeys
@@ -20,7 +20,7 @@ namespace Mutagen.Bethesda
     /// <summary>
     /// An interface for classes that contain FormKeys and can enumerate them.
     /// </summary>
-    public interface ILinkedFormKeyContainerGetter
+    public interface IFormLinkContainerGetter
     {
         /// <summary>
         /// Enumerable of all contained FormKeys

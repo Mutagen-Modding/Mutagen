@@ -559,7 +559,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = PreferredPathing_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => PreferredPathingCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PreferredPathingCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PreferredPathingCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PreferredPathingCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -621,7 +621,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPreferredPathing :
         IPreferredPathingGetter,
         ILoquiObjectSetter<IPreferredPathing>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ExtendedList<NavmeshSet> NavmeshSets { get; }
         new ExtendedList<NavmeshNode> NavmeshTree { get; }
@@ -630,7 +630,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPreferredPathingGetter :
         ILoquiObject,
         ILoquiObject<IPreferredPathingGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

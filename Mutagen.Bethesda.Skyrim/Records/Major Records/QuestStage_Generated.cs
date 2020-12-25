@@ -566,7 +566,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = QuestStage_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => QuestStageCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestStageCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestStageCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestStageCommon.Instance.RemapLinks(this, mapping);
         [Flags]
         public enum INDXDataType
         {
@@ -632,7 +632,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IQuestStage :
         IQuestStageGetter,
         ILoquiObjectSetter<IQuestStage>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new UInt16 Index { get; set; }
         new QuestStage.Flag Flags { get; set; }
@@ -644,7 +644,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IQuestStageGetter :
         ILoquiObject,
         ILoquiObject<IQuestStageGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

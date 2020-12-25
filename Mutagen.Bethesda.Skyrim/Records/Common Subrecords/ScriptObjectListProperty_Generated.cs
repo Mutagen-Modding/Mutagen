@@ -434,7 +434,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => ScriptObjectListPropertyCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptObjectListPropertyCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptObjectListPropertyCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptObjectListPropertyCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -495,7 +495,7 @@ namespace Mutagen.Bethesda.Skyrim
         IScriptObjectListPropertyGetter,
         IScriptProperty,
         ILoquiObjectSetter<IScriptObjectListProperty>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ExtendedList<ScriptObjectProperty> Objects { get; }
     }
@@ -503,7 +503,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IScriptObjectListPropertyGetter :
         IScriptPropertyGetter,
         ILoquiObject<IScriptObjectListPropertyGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => ScriptObjectListProperty_Registration.Instance;

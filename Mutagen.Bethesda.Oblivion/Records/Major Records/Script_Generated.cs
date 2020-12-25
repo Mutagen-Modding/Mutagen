@@ -367,7 +367,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GrupRecordType = Script_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => ScriptCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptCommon.Instance.RemapLinks(this, mapping);
         public Script(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -453,7 +453,7 @@ namespace Mutagen.Bethesda.Oblivion
         IScriptGetter,
         IOblivionMajorRecord,
         ILoquiObjectSetter<IScriptInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ScriptFields Fields { get; }
     }
@@ -469,7 +469,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IScriptGetter :
         IOblivionMajorRecordGetter,
         ILoquiObject<IScriptGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Script_Registration.Instance;
@@ -944,7 +944,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            if (obj.Fields is ILinkedFormKeyContainerGetter FieldslinkCont)
+            if (obj.Fields is IFormLinkContainerGetter FieldslinkCont)
             {
                 foreach (var item in FieldslinkCont.ContainedFormLinks)
                 {

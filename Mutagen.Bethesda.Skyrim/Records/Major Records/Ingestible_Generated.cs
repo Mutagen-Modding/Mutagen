@@ -1117,7 +1117,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = Ingestible_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => IngestibleCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IngestibleCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IngestibleCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IngestibleCommon.Instance.RemapLinks(this, mapping);
         public Ingestible(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -1235,7 +1235,7 @@ namespace Mutagen.Bethesda.Skyrim
         IWeightValue,
         IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<IIngestibleInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ObjectBounds ObjectBounds { get; set; }
         new TranslatedString? Name { get; set; }
@@ -1277,7 +1277,7 @@ namespace Mutagen.Bethesda.Skyrim
         IWeightValueGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IIngestibleGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Ingestible_Registration.Instance;

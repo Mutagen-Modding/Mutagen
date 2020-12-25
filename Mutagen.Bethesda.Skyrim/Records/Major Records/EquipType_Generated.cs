@@ -475,7 +475,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = EquipType_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => EquipTypeCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EquipTypeCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EquipTypeCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EquipTypeCommon.Instance.RemapLinks(this, mapping);
         public EquipType(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -578,7 +578,7 @@ namespace Mutagen.Bethesda.Skyrim
         IEquipTypeGetter,
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IEquipTypeInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ExtendedList<IFormLink<IEquipTypeGetter>>? SlotParents { get; set; }
         new Boolean? UseAllParents { get; set; }
@@ -594,7 +594,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IEquipTypeGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IEquipTypeGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => EquipType_Registration.Instance;

@@ -416,7 +416,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public IEnumerable<FormLinkInformation> ContainedFormLinks => ArmorModelCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorModelCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorModelCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorModelCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -480,7 +480,7 @@ namespace Mutagen.Bethesda.Skyrim
         IHasIcons,
         IModeled,
         ILoquiObjectSetter<IArmorModel>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new Model? Model { get; set; }
         new Icons? Icons { get; set; }
@@ -491,7 +491,7 @@ namespace Mutagen.Bethesda.Skyrim
         IHasIconsGetter,
         IModeledGetter,
         ILoquiObject<IArmorModelGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

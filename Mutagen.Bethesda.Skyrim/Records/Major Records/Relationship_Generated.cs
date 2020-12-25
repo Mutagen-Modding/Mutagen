@@ -544,7 +544,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = Relationship_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => RelationshipCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RelationshipCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RelationshipCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RelationshipCommon.Instance.RemapLinks(this, mapping);
         public Relationship(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -656,7 +656,7 @@ namespace Mutagen.Bethesda.Skyrim
         IRelationshipGetter,
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IRelationshipInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<INpcGetter> Parent { get; set; }
         new FormLink<INpcGetter> Child { get; set; }
@@ -681,7 +681,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IRelationshipGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IRelationshipGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Relationship_Registration.Instance;

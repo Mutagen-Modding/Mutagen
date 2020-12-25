@@ -535,7 +535,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = APerkEffect_Registration.TriggeringRecordType;
         public virtual IEnumerable<FormLinkInformation> ContainedFormLinks => APerkEffectCommon.Instance.GetContainedFormLinks(this);
         protected virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => APerkEffectCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => APerkEffectCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => APerkEffectCommon.Instance.RemapLinks(this, mapping);
         [Flags]
         public enum PRKEDataType
         {
@@ -577,7 +577,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IAPerkEffect :
         IAPerkEffectGetter,
         ILoquiObjectSetter<IAPerkEffect>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new Byte Rank { get; set; }
         new Byte Priority { get; set; }
@@ -588,7 +588,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IAPerkEffectGetter :
         ILoquiObject,
         ILoquiObject<IAPerkEffectGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -1023,7 +1023,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<FormLinkInformation> GetContainedFormLinks(IAPerkEffectGetter obj)
         {
-            foreach (var item in obj.Conditions.WhereCastable<IPerkConditionGetter, ILinkedFormKeyContainerGetter>()
+            foreach (var item in obj.Conditions.WhereCastable<IPerkConditionGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);

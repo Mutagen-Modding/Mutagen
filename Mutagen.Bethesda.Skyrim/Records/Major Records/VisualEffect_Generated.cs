@@ -451,7 +451,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = VisualEffect_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => VisualEffectCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => VisualEffectCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => VisualEffectCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => VisualEffectCommon.Instance.RemapLinks(this, mapping);
         public VisualEffect(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -558,7 +558,7 @@ namespace Mutagen.Bethesda.Skyrim
         IVisualEffectGetter,
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IVisualEffectInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IArtObjectGetter> EffectArt { get; set; }
         new FormLink<IEffectShaderGetter> Shader { get; set; }
@@ -576,7 +576,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IVisualEffectGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IVisualEffectGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => VisualEffect_Registration.Instance;

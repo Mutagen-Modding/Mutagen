@@ -713,7 +713,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GrupRecordType = Landscape_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => LandscapeCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LandscapeCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LandscapeCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LandscapeCommon.Instance.RemapLinks(this, mapping);
         public Landscape(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -800,7 +800,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecord,
         IPlaced,
         ILoquiObjectSetter<ILandscapeInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new MemorySlice<Byte>? DATA { get; set; }
         new MemorySlice<Byte>? VertexNormals { get; set; }
@@ -821,7 +821,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         IPlacedGetter,
         ILoquiObject<ILandscapeGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Landscape_Registration.Instance;

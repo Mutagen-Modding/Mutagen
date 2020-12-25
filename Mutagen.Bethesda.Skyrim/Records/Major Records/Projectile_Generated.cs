@@ -1368,7 +1368,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = Projectile_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => ProjectileCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ProjectileCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ProjectileCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ProjectileCommon.Instance.RemapLinks(this, mapping);
         public Projectile(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -1480,7 +1480,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPlacedTrapTarget,
         IObjectBounded,
         ILoquiObjectSetter<IProjectileInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ObjectBounds ObjectBounds { get; set; }
         new TranslatedString? Name { get; set; }
@@ -1529,7 +1529,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPlacedTrapTargetGetter,
         IObjectBoundedGetter,
         ILoquiObject<IProjectileGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Projectile_Registration.Instance;

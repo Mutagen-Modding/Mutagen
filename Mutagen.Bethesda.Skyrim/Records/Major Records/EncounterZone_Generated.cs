@@ -584,7 +584,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = EncounterZone_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => EncounterZoneCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EncounterZoneCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EncounterZoneCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EncounterZoneCommon.Instance.RemapLinks(this, mapping);
         public EncounterZone(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -692,7 +692,7 @@ namespace Mutagen.Bethesda.Skyrim
         IEncounterZoneGetter,
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IEncounterZoneInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IOwnerGetter> Owner { get; set; }
         new FormLink<ILocationGetter> Location { get; set; }
@@ -713,7 +713,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IEncounterZoneGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IEncounterZoneGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => EncounterZone_Registration.Instance;

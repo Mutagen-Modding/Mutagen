@@ -552,7 +552,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GrupRecordType = LandTexture_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => LandTextureCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LandTextureCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LandTextureCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LandTextureCommon.Instance.RemapLinks(this, mapping);
         public LandTexture(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -638,7 +638,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILandTextureGetter,
         IOblivionMajorRecord,
         ILoquiObjectSetter<ILandTextureInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new String? Icon { get; set; }
         new HavokData? Havok { get; set; }
@@ -656,7 +656,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILandTextureGetter :
         IOblivionMajorRecordGetter,
         ILoquiObject<ILandTextureGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => LandTexture_Registration.Instance;

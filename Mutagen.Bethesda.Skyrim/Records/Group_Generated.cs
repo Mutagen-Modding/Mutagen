@@ -100,7 +100,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType T_RecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => GroupCommon<T>.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GroupCommon<T>.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GroupCommon<T>.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GroupCommon<T>.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
@@ -197,7 +197,7 @@ namespace Mutagen.Bethesda.Skyrim
         IGroupGetter<T>,
         IMajorRecordEnumerable,
         ILoquiObjectSetter<IGroup<T>>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
         where T : class, ISkyrimMajorRecordInternal, IBinaryItem
     {
         new GroupTypeEnum Type { get; set; }
@@ -210,7 +210,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject,
         IMajorRecordGetterEnumerable,
         ILoquiObject<IGroupGetter<T>>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
         where T : class, ISkyrimMajorRecordGetter, IBinaryItem
     {
@@ -1000,7 +1000,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<FormLinkInformation> GetContainedFormLinks(IGroupGetter<T> obj)
         {
-            foreach (var item in obj.RecordCache.Items.WhereCastable<T, ILinkedFormKeyContainerGetter>()
+            foreach (var item in obj.RecordCache.Items.WhereCastable<T, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.ContainedFormLinks))
             {
                 yield return item;

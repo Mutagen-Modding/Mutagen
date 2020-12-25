@@ -2128,7 +2128,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = MagicEffect_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => MagicEffectCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectCommon.Instance.RemapLinks(this, mapping);
         public MagicEffect(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -2237,7 +2237,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamed,
         IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<IMagicEffectInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new TranslatedString? Name { get; set; }
@@ -2299,7 +2299,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IMagicEffectGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => MagicEffect_Registration.Instance;
@@ -3314,7 +3314,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainerGetter VirtualMachineAdapterlinkCont)
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
             {
                 foreach (var item in VirtualMachineAdapterlinkCont.ContainedFormLinks)
                 {
@@ -3358,7 +3358,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter>()
+            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);

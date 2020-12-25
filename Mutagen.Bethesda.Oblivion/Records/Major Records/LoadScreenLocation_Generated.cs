@@ -417,7 +417,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GrupRecordType = LoadScreenLocation_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => LoadScreenLocationCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LoadScreenLocationCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LoadScreenLocationCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LoadScreenLocationCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -479,7 +479,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILoadScreenLocation :
         ILoadScreenLocationGetter,
         ILoquiObjectSetter<ILoadScreenLocation>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IPlaceGetter> Direct { get; set; }
         new FormLink<IWorldspaceGetter> Indirect { get; set; }
@@ -489,7 +489,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILoadScreenLocationGetter :
         ILoquiObject,
         ILoquiObject<ILoadScreenLocationGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

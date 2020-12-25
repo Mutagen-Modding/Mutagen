@@ -476,7 +476,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = SoundMarker_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => SoundMarkerCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoundMarkerCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoundMarkerCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoundMarkerCommon.Instance.RemapLinks(this, mapping);
         public SoundMarker(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -582,7 +582,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISound,
         IObjectBounded,
         ILoquiObjectSetter<ISoundMarkerInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ObjectBounds ObjectBounds { get; set; }
         new MemorySlice<Byte>? FNAM { get; set; }
@@ -603,7 +603,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISoundGetter,
         IObjectBoundedGetter,
         ILoquiObject<ISoundMarkerGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => SoundMarker_Registration.Instance;

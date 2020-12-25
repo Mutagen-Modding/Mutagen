@@ -417,7 +417,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GrupRecordType = RelatedWaters_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => RelatedWatersCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RelatedWatersCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RelatedWatersCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RelatedWatersCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -479,7 +479,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IRelatedWaters :
         IRelatedWatersGetter,
         ILoquiObjectSetter<IRelatedWaters>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IWaterGetter> RelatedWaterDaytime { get; set; }
         new FormLink<IWaterGetter> RelatedWaterNighttime { get; set; }
@@ -489,7 +489,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IRelatedWatersGetter :
         ILoquiObject,
         ILoquiObject<IRelatedWatersGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

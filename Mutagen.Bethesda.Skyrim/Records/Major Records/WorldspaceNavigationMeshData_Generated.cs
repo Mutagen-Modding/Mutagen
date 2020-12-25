@@ -399,7 +399,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => WorldspaceNavigationMeshDataCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceNavigationMeshDataCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceNavigationMeshDataCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceNavigationMeshDataCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -460,7 +460,7 @@ namespace Mutagen.Bethesda.Skyrim
         IWorldspaceNavigationMeshDataGetter,
         IANavigationMeshData,
         ILoquiObjectSetter<IWorldspaceNavigationMeshData>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IWorldspaceGetter> Parent { get; set; }
         new P2Int16 Coordinates { get; set; }
@@ -469,7 +469,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IWorldspaceNavigationMeshDataGetter :
         IANavigationMeshDataGetter,
         ILoquiObject<IWorldspaceNavigationMeshDataGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => WorldspaceNavigationMeshData_Registration.Instance;

@@ -455,7 +455,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = DialogBranch_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => DialogBranchCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogBranchCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogBranchCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogBranchCommon.Instance.RemapLinks(this, mapping);
         public DialogBranch(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -558,7 +558,7 @@ namespace Mutagen.Bethesda.Skyrim
         IDialogBranchGetter,
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IDialogBranchInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IQuestGetter> Quest { get; set; }
         new Int32? TNAM { get; set; }
@@ -576,7 +576,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IDialogBranchGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IDialogBranchGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => DialogBranch_Registration.Instance;

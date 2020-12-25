@@ -981,7 +981,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = Ammunition_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => AmmunitionCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AmmunitionCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AmmunitionCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AmmunitionCommon.Instance.RemapLinks(this, mapping);
         public Ammunition(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -1102,7 +1102,7 @@ namespace Mutagen.Bethesda.Skyrim
         IWeightValue,
         IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<IAmmunitionInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ObjectBounds ObjectBounds { get; set; }
         new TranslatedString? Name { get; set; }
@@ -1144,7 +1144,7 @@ namespace Mutagen.Bethesda.Skyrim
         IWeightValueGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IAmmunitionGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Ammunition_Registration.Instance;

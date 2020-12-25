@@ -473,7 +473,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = PerkCondition_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => PerkConditionCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkConditionCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkConditionCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkConditionCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -535,7 +535,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPerkCondition :
         IPerkConditionGetter,
         ILoquiObjectSetter<IPerkCondition>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new Byte RunOnTabIndex { get; set; }
         new ExtendedList<Condition> Conditions { get; }
@@ -544,7 +544,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPerkConditionGetter :
         ILoquiObject,
         ILoquiObject<IPerkConditionGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -965,7 +965,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<FormLinkInformation> GetContainedFormLinks(IPerkConditionGetter obj)
         {
-            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter>()
+            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);

@@ -715,7 +715,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GrupRecordType = PathGrid_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => PathGridCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PathGridCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PathGridCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PathGridCommon.Instance.RemapLinks(this, mapping);
         public PathGrid(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -801,7 +801,7 @@ namespace Mutagen.Bethesda.Oblivion
         IPathGridGetter,
         IOblivionMajorRecord,
         ILoquiObjectSetter<IPathGridInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ExtendedList<PathGridPoint>? PointToPointConnections { get; set; }
         new MemorySlice<Byte>? PGAG { get; set; }
@@ -819,7 +819,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IPathGridGetter :
         IOblivionMajorRecordGetter,
         ILoquiObject<IPathGridGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => PathGrid_Registration.Instance;

@@ -3889,7 +3889,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = EffectShader_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => EffectShaderCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EffectShaderCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EffectShaderCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EffectShaderCommon.Instance.RemapLinks(this, mapping);
         public EffectShader(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -4000,7 +4000,7 @@ namespace Mutagen.Bethesda.Skyrim
         IEffectShaderGetter,
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IEffectShaderInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new String? FillTexture { get; set; }
         new String? ParticleShaderTexture { get; set; }
@@ -4120,7 +4120,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IEffectShaderGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IEffectShaderGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => EffectShader_Registration.Instance;

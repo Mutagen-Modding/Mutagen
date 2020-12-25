@@ -594,7 +594,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = IdleMarker_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => IdleMarkerCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IdleMarkerCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IdleMarkerCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IdleMarkerCommon.Instance.RemapLinks(this, mapping);
         public IdleMarker(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -704,7 +704,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectId,
         IObjectBounded,
         ILoquiObjectSetter<IIdleMarkerInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ObjectBounds ObjectBounds { get; set; }
         new IdleMarker.Flag? Flags { get; set; }
@@ -729,7 +729,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectIdGetter,
         IObjectBoundedGetter,
         ILoquiObject<IIdleMarkerGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => IdleMarker_Registration.Instance;

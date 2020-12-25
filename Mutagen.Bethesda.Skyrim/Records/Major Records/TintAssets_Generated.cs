@@ -571,7 +571,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public IEnumerable<FormLinkInformation> ContainedFormLinks => TintAssetsCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TintAssetsCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TintAssetsCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TintAssetsCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -633,7 +633,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ITintAssets :
         ITintAssetsGetter,
         ILoquiObjectSetter<ITintAssets>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new UInt16? Index { get; set; }
         new String? FileName { get; set; }
@@ -645,7 +645,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ITintAssetsGetter :
         ILoquiObject,
         ILoquiObject<ITintAssetsGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

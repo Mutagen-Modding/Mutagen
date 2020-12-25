@@ -1500,7 +1500,7 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly RecordType GrupRecordType = PlacedNpc_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => PlacedNpcCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedNpcCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedNpcCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedNpcCommon.Instance.RemapLinks(this, mapping);
         public PlacedNpc(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -1614,7 +1614,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPlacedSimple,
         ILocationTargetable,
         ILoquiObjectSetter<IPlacedNpcInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new FormLinkNullable<INpcGetter> Base { get; set; }
@@ -1666,7 +1666,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPlacedSimpleGetter,
         ILocationTargetableGetter,
         ILoquiObject<IPlacedNpcGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => PlacedNpc_Registration.Instance;
@@ -2597,7 +2597,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainerGetter VirtualMachineAdapterlinkCont)
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
             {
                 foreach (var item in VirtualMachineAdapterlinkCont.ContainedFormLinks)
                 {

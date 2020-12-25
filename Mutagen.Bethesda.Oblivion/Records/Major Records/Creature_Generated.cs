@@ -1714,7 +1714,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GrupRecordType = Creature_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => CreatureCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CreatureCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CreatureCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CreatureCommon.Instance.RemapLinks(this, mapping);
         public Creature(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -1801,7 +1801,7 @@ namespace Mutagen.Bethesda.Oblivion
         IANpc,
         INamed,
         ILoquiObjectSetter<ICreatureInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
@@ -1839,7 +1839,7 @@ namespace Mutagen.Bethesda.Oblivion
         IANpcGetter,
         INamedGetter,
         ILoquiObject<ICreatureGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Creature_Registration.Instance;

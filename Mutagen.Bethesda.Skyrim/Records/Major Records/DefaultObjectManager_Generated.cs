@@ -444,7 +444,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = DefaultObjectManager_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => DefaultObjectManagerCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DefaultObjectManagerCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DefaultObjectManagerCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DefaultObjectManagerCommon.Instance.RemapLinks(this, mapping);
         public DefaultObjectManager(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -547,7 +547,7 @@ namespace Mutagen.Bethesda.Skyrim
         IDefaultObjectManagerGetter,
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IDefaultObjectManagerInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ExtendedList<DefaultObject>? Objects { get; set; }
     }
@@ -562,7 +562,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IDefaultObjectManagerGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IDefaultObjectManagerGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => DefaultObjectManager_Registration.Instance;

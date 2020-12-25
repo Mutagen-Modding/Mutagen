@@ -392,7 +392,7 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly RecordType GrupRecordType = PlacedBarrier_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => PlacedBarrierCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedBarrierCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedBarrierCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedBarrierCommon.Instance.RemapLinks(this, mapping);
         public PlacedBarrier(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -495,7 +495,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPlacedBarrierGetter,
         IAPlacedTrap,
         ILoquiObjectSetter<IPlacedBarrierInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IProjectileGetter> Projectile { get; set; }
     }
@@ -510,7 +510,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPlacedBarrierGetter :
         IAPlacedTrapGetter,
         ILoquiObject<IPlacedBarrierGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => PlacedBarrier_Registration.Instance;

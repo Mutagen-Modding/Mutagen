@@ -652,7 +652,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => QuestAdapterCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestAdapterCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestAdapterCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestAdapterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -713,7 +713,7 @@ namespace Mutagen.Bethesda.Skyrim
         IQuestAdapterGetter,
         IAVirtualMachineAdapter,
         ILoquiObjectSetter<IQuestAdapter>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new QuestAdapter.VersioningBreaks Versioning { get; set; }
         new Byte Unknown { get; set; }
@@ -725,7 +725,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IQuestAdapterGetter :
         IAVirtualMachineAdapterGetter,
         ILoquiObject<IQuestAdapterGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => QuestAdapter_Registration.Instance;
@@ -1224,7 +1224,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            foreach (var item in obj.Aliases.WhereCastable<IQuestFragmentAliasGetter, ILinkedFormKeyContainerGetter>()
+            foreach (var item in obj.Aliases.WhereCastable<IQuestFragmentAliasGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);

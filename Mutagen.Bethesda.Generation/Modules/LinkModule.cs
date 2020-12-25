@@ -18,8 +18,8 @@ namespace Mutagen.Bethesda.Generation
         {
             if (await HasLinks(obj, includeBaseClass: false) != LinkCase.No)
             {
-                yield return (LoquiInterfaceType.IGetter, $"{nameof(ILinkedFormKeyContainerGetter)}");
-                yield return (LoquiInterfaceType.ISetter, $"{nameof(ILinkedFormKeyContainer)}");
+                yield return (LoquiInterfaceType.IGetter, $"{nameof(IFormLinkContainerGetter)}");
+                yield return (LoquiInterfaceType.ISetter, $"{nameof(IFormLinkContainer)}");
             }
         }
 
@@ -165,7 +165,7 @@ namespace Mutagen.Bethesda.Generation
                         var access = $"obj.{field.Name}";
                         if (subLinkCase == LinkCase.Maybe)
                         {
-                            fg.AppendLine($"if (obj.{field.Name} is {nameof(ILinkedFormKeyContainerGetter)} {field.Name}linkCont)");
+                            fg.AppendLine($"if (obj.{field.Name} is {nameof(IFormLinkContainerGetter)} {field.Name}linkCont)");
                             access = $"{field.Name}linkCont";
                         }
                         else if (loqui.Nullable)
@@ -179,7 +179,7 @@ namespace Mutagen.Bethesda.Generation
                         }
                         using (new BraceWrapper(fg, doIt: doBrace))
                         {
-                            fg.AppendLine($"foreach (var item in {access}.{nameof(ILinkedFormKeyContainerGetter.ContainedFormLinks)})");
+                            fg.AppendLine($"foreach (var item in {access}.{nameof(IFormLinkContainerGetter.ContainedFormLinks)})");
                             using (new BraceWrapper(fg))
                             {
                                 fg.AppendLine($"yield return item;");
@@ -205,13 +205,13 @@ namespace Mutagen.Bethesda.Generation
                                 switch (linktype)
                                 {
                                     case LinkCase.Yes:
-                                        subFg.AppendLine($"foreach (var item in {access}{filterNulls}.SelectMany(f => f.{nameof(ILinkedFormKeyContainerGetter.ContainedFormLinks)}))");
+                                        subFg.AppendLine($"foreach (var item in {access}{filterNulls}.SelectMany(f => f.{nameof(IFormLinkContainerGetter.ContainedFormLinks)}))");
                                         break;
                                     case LinkCase.Maybe:
-                                        subFg.AppendLine($"foreach (var item in {access}{filterNulls}.WhereCastable<{contLoqui.TypeName(getter: true)}, {nameof(ILinkedFormKeyContainerGetter)}>()");
+                                        subFg.AppendLine($"foreach (var item in {access}{filterNulls}.WhereCastable<{contLoqui.TypeName(getter: true)}, {nameof(IFormLinkContainerGetter)}>()");
                                         using (new DepthWrapper(subFg))
                                         {
-                                            subFg.AppendLine($".SelectMany((f) => f.{nameof(ILinkedFormKeyContainerGetter.ContainedFormLinks)}))");
+                                            subFg.AppendLine($".SelectMany((f) => f.{nameof(IFormLinkContainerGetter.ContainedFormLinks)}))");
                                         }
                                         break;
                                     default:
@@ -253,13 +253,13 @@ namespace Mutagen.Bethesda.Generation
                             switch (linktype)
                             {
                                 case LinkCase.Yes:
-                                    fg.AppendLine($"foreach (var item in obj.{field.Name}.Items.SelectMany(f => f.{nameof(ILinkedFormKeyContainerGetter.ContainedFormLinks)}))");
+                                    fg.AppendLine($"foreach (var item in obj.{field.Name}.Items.SelectMany(f => f.{nameof(IFormLinkContainerGetter.ContainedFormLinks)}))");
                                     break;
                                 case LinkCase.Maybe:
-                                    fg.AppendLine($"foreach (var item in obj.{field.Name}.Items.WhereCastable<{dictLoqui.TypeName(getter: true)}, {nameof(ILinkedFormKeyContainerGetter)}>()");
+                                    fg.AppendLine($"foreach (var item in obj.{field.Name}.Items.WhereCastable<{dictLoqui.TypeName(getter: true)}, {nameof(IFormLinkContainerGetter)}>()");
                                     using (new DepthWrapper(fg))
                                     {
-                                        fg.AppendLine($".SelectMany((f) => f.{nameof(ILinkedFormKeyContainerGetter.ContainedFormLinks)}))");
+                                        fg.AppendLine($".SelectMany((f) => f.{nameof(IFormLinkContainerGetter.ContainedFormLinks)}))");
                                     }
                                     break;
                                 default:
@@ -319,12 +319,12 @@ namespace Mutagen.Bethesda.Generation
 
         public static async Task GenerateInterfaceImplementation(ObjectGeneration obj, FileGeneration fg, bool getter)
         {
-            fg.AppendLine($"public{await obj.FunctionOverride(async (o) => obj.GetObjectType() == ObjectType.Mod || (await HasLinks(o, includeBaseClass: false)) != LinkCase.No)}IEnumerable<{nameof(FormLinkInformation)}> {nameof(ILinkedFormKeyContainerGetter.ContainedFormLinks)} => {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.GetContainedFormLinks(this);");
+            fg.AppendLine($"public{await obj.FunctionOverride(async (o) => obj.GetObjectType() == ObjectType.Mod || (await HasLinks(o, includeBaseClass: false)) != LinkCase.No)}IEnumerable<{nameof(FormLinkInformation)}> {nameof(IFormLinkContainerGetter.ContainedFormLinks)} => {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.GetContainedFormLinks(this);");
 
             if (!getter)
             {
-                fg.AppendLine($"protected{await obj.FunctionOverride(async (o) => obj.GetObjectType() == ObjectType.Mod || (await HasLinks(o, includeBaseClass: false)) != LinkCase.No)}void {nameof(ILinkedFormKeyContainer.RemapLinks)}(IReadOnlyDictionary<FormKey, FormKey> mapping) => {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.RemapLinks(this, mapping);");
-                fg.AppendLine($"void {nameof(ILinkedFormKeyContainer)}.{nameof(ILinkedFormKeyContainer.RemapLinks)}(IReadOnlyDictionary<FormKey, FormKey> mapping) => {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.RemapLinks(this, mapping);");
+                fg.AppendLine($"protected{await obj.FunctionOverride(async (o) => obj.GetObjectType() == ObjectType.Mod || (await HasLinks(o, includeBaseClass: false)) != LinkCase.No)}void {nameof(IFormLinkContainer.RemapLinks)}(IReadOnlyDictionary<FormKey, FormKey> mapping) => {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.RemapLinks(this, mapping);");
+                fg.AppendLine($"void {nameof(IFormLinkContainer)}.{nameof(IFormLinkContainer.RemapLinks)}(IReadOnlyDictionary<FormKey, FormKey> mapping) => {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.RemapLinks(this, mapping);");
             }
         }
     }

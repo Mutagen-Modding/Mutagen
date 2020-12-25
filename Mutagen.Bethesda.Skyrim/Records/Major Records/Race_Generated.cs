@@ -3732,7 +3732,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = Race_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => RaceCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RaceCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RaceCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RaceCommon.Instance.RemapLinks(this, mapping);
         public Race(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -3848,7 +3848,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamed,
         IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<IRaceInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new TranslatedString? Name { get; set; }
         new TranslatedString Description { get; set; }
@@ -3953,7 +3953,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IRaceGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Race_Registration.Instance;
@@ -5449,7 +5449,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (obj.SkeletalModel.TryGet(out var SkeletalModelItem))
             {
-                foreach (var item in SkeletalModelItem.NotNull().WhereCastable<ISimpleModelGetter, ILinkedFormKeyContainerGetter>()
+                foreach (var item in SkeletalModelItem.NotNull().WhereCastable<ISimpleModelGetter, IFormLinkContainerGetter>()
                     .SelectMany((f) => f.ContainedFormLinks))
                 {
                     yield return FormLinkInformation.Factory(item);

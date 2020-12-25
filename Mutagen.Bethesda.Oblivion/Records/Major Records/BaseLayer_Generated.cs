@@ -364,7 +364,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public IEnumerable<FormLinkInformation> ContainedFormLinks => BaseLayerCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BaseLayerCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BaseLayerCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BaseLayerCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -426,7 +426,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IBaseLayer :
         IBaseLayerGetter,
         ILoquiObjectSetter<IBaseLayer>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new LayerHeader? Header { get; set; }
     }
@@ -434,7 +434,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IBaseLayerGetter :
         ILoquiObject,
         ILoquiObject<IBaseLayerGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

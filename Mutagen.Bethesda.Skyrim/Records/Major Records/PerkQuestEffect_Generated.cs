@@ -423,7 +423,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = PerkQuestEffect_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => PerkQuestEffectCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkQuestEffectCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkQuestEffectCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkQuestEffectCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -484,7 +484,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPerkQuestEffectGetter,
         IAPerkEffect,
         ILoquiObjectSetter<IPerkQuestEffect>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IQuestGetter> Quest { get; set; }
         new Byte Stage { get; set; }
@@ -494,7 +494,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPerkQuestEffectGetter :
         IAPerkEffectGetter,
         ILoquiObject<IPerkQuestEffectGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => PerkQuestEffect_Registration.Instance;

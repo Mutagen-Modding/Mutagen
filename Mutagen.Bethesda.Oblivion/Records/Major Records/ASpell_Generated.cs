@@ -310,7 +310,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => ASpellCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ASpellCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ASpellCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ASpellCommon.Instance.RemapLinks(this, mapping);
         public ASpell(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -372,7 +372,7 @@ namespace Mutagen.Bethesda.Oblivion
         IASpellGetter,
         IOblivionMajorRecord,
         ILoquiObjectSetter<IASpellInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
     }
 
@@ -386,7 +386,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IASpellGetter :
         IOblivionMajorRecordGetter,
         ILoquiObject<IASpellGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => ASpell_Registration.Instance;

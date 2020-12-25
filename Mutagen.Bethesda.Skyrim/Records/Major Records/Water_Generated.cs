@@ -2588,7 +2588,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = Water_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => WaterCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WaterCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WaterCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WaterCommon.Instance.RemapLinks(this, mapping);
         public Water(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -2697,7 +2697,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ITranslatedNamed,
         ILoquiObjectSetter<IWaterInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new TranslatedString? Name { get; set; }
         new ExtendedList<String> UnusedNoisemaps { get; }
@@ -2780,7 +2780,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         ITranslatedNamedGetter,
         ILoquiObject<IWaterGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Water_Registration.Instance;

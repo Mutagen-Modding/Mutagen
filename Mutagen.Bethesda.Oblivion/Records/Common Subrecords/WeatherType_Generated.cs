@@ -385,7 +385,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public IEnumerable<FormLinkInformation> ContainedFormLinks => WeatherTypeCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherTypeCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherTypeCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherTypeCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -447,7 +447,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IWeatherType :
         IWeatherTypeGetter,
         ILoquiObjectSetter<IWeatherType>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IWeatherGetter> Weather { get; set; }
         new Int32 Chance { get; set; }
@@ -456,7 +456,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IWeatherTypeGetter :
         ILoquiObject,
         ILoquiObject<IWeatherTypeGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

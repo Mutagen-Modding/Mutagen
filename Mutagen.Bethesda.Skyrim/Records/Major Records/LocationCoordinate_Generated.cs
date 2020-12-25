@@ -469,7 +469,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public IEnumerable<FormLinkInformation> ContainedFormLinks => LocationCoordinateCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCoordinateCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCoordinateCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCoordinateCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -531,7 +531,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILocationCoordinate :
         ILocationCoordinateGetter,
         ILoquiObjectSetter<ILocationCoordinate>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IComplexLocationGetter> Location { get; set; }
         new ExtendedList<P2Int16> Coordinates { get; }
@@ -540,7 +540,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILocationCoordinateGetter :
         ILoquiObject,
         ILoquiObject<ILocationCoordinateGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

@@ -531,7 +531,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => GetEventDataCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GetEventDataCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GetEventDataCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GetEventDataCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -592,7 +592,7 @@ namespace Mutagen.Bethesda.Skyrim
         IGetEventDataGetter,
         IConditionData,
         ILoquiObjectSetter<IGetEventData>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new UInt16 Unknown2 { get; set; }
         new UInt16 EventFunction { get; set; }
@@ -606,7 +606,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IGetEventDataGetter :
         IConditionDataGetter,
         ILoquiObject<IGetEventDataGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => GetEventData_Registration.Instance;

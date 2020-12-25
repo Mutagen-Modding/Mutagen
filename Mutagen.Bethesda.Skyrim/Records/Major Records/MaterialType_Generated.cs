@@ -522,7 +522,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = MaterialType_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => MaterialTypeCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MaterialTypeCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MaterialTypeCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MaterialTypeCommon.Instance.RemapLinks(this, mapping);
         public MaterialType(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -625,7 +625,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMaterialTypeGetter,
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IMaterialTypeInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLinkNullable<IMaterialTypeGetter> Parent { get; set; }
         new String? Name { get; set; }
@@ -645,7 +645,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IMaterialTypeGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IMaterialTypeGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => MaterialType_Registration.Instance;

@@ -875,7 +875,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = Flora_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => FloraCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FloraCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FloraCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FloraCommon.Instance.RemapLinks(this, mapping);
         public Flora(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -983,7 +983,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBounded,
         IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<IFloraInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
@@ -1014,7 +1014,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundedGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IFloraGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Flora_Registration.Instance;
@@ -1665,7 +1665,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainerGetter VirtualMachineAdapterlinkCont)
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
             {
                 foreach (var item in VirtualMachineAdapterlinkCont.ContainedFormLinks)
                 {

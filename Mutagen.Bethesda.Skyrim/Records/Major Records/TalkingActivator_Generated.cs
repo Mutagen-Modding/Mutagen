@@ -785,7 +785,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = TalkingActivator_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => TalkingActivatorCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TalkingActivatorCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TalkingActivatorCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TalkingActivatorCommon.Instance.RemapLinks(this, mapping);
         public TalkingActivator(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -897,7 +897,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBounded,
         IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<ITalkingActivatorInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
@@ -929,7 +929,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundedGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<ITalkingActivatorGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => TalkingActivator_Registration.Instance;
@@ -1556,7 +1556,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainerGetter VirtualMachineAdapterlinkCont)
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
             {
                 foreach (var item in VirtualMachineAdapterlinkCont.ContainedFormLinks)
                 {

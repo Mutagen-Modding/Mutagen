@@ -417,7 +417,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = LayerHeader_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => LayerHeaderCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LayerHeaderCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LayerHeaderCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LayerHeaderCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -479,7 +479,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILayerHeader :
         ILayerHeaderGetter,
         ILoquiObjectSetter<ILayerHeader>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<ILandscapeTextureGetter> Texture { get; set; }
         new Quadrant Quadrant { get; set; }
@@ -489,7 +489,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILayerHeaderGetter :
         ILoquiObject,
         ILoquiObject<ILayerHeaderGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

@@ -349,7 +349,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => OblivionMajorRecordCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => OblivionMajorRecordCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => OblivionMajorRecordCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => OblivionMajorRecordCommon.Instance.RemapLinks(this, mapping);
         public OblivionMajorRecord(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -446,7 +446,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMajorRecord,
         IMajorRecordEnumerable,
         ILoquiObjectSetter<IOblivionMajorRecordInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new OblivionMajorRecord.OblivionMajorRecordFlag OblivionMajorRecordFlags { get; set; }
     }
@@ -462,7 +462,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMajorRecordGetter,
         IMajorRecordGetterEnumerable,
         ILoquiObject<IOblivionMajorRecordGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => OblivionMajorRecord_Registration.Instance;

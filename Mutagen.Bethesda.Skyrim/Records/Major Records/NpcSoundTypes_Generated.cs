@@ -423,7 +423,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => NpcSoundTypesCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcSoundTypesCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcSoundTypesCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcSoundTypesCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -484,7 +484,7 @@ namespace Mutagen.Bethesda.Skyrim
         INpcSoundTypesGetter,
         IANpcSoundDefinition,
         ILoquiObjectSetter<INpcSoundTypes>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ExtendedList<NpcSoundType> Types { get; }
     }
@@ -492,7 +492,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface INpcSoundTypesGetter :
         IANpcSoundDefinitionGetter,
         ILoquiObject<INpcSoundTypesGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => NpcSoundTypes_Registration.Instance;

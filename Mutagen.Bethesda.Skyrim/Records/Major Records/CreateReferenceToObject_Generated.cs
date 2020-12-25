@@ -479,7 +479,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = CreateReferenceToObject_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => CreateReferenceToObjectCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CreateReferenceToObjectCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CreateReferenceToObjectCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CreateReferenceToObjectCommon.Instance.RemapLinks(this, mapping);
         [Flags]
         public enum ALCADataType
         {
@@ -545,7 +545,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ICreateReferenceToObject :
         ICreateReferenceToObjectGetter,
         ILoquiObjectSetter<ICreateReferenceToObject>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<ISkyrimMajorRecordGetter> Object { get; set; }
         new Int16 AliasIndex { get; set; }
@@ -557,7 +557,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ICreateReferenceToObjectGetter :
         ILoquiObject,
         ILoquiObject<ICreateReferenceToObjectGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

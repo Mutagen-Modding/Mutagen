@@ -827,7 +827,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = ObjectEffect_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => ObjectEffectCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ObjectEffectCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ObjectEffectCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ObjectEffectCommon.Instance.RemapLinks(this, mapping);
         public ObjectEffect(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -938,7 +938,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamed,
         IObjectBounded,
         ILoquiObjectSetter<IObjectEffectInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ObjectBounds ObjectBounds { get; set; }
         new TranslatedString? Name { get; set; }
@@ -968,7 +968,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         IObjectBoundedGetter,
         ILoquiObject<IObjectEffectGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => ObjectEffect_Registration.Instance;

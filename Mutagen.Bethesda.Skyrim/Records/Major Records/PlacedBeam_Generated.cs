@@ -392,7 +392,7 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly RecordType GrupRecordType = PlacedBeam_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => PlacedBeamCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedBeamCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedBeamCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedBeamCommon.Instance.RemapLinks(this, mapping);
         public PlacedBeam(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -495,7 +495,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPlacedBeamGetter,
         IAPlacedTrap,
         ILoquiObjectSetter<IPlacedBeamInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IProjectileGetter> Projectile { get; set; }
     }
@@ -510,7 +510,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPlacedBeamGetter :
         IAPlacedTrapGetter,
         ILoquiObject<IPlacedBeamGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => PlacedBeam_Registration.Instance;

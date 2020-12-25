@@ -661,7 +661,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public IEnumerable<FormLinkInformation> ContainedFormLinks => ScriptFieldsCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptFieldsCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptFieldsCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptFieldsCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -723,7 +723,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IScriptFields :
         IScriptFieldsGetter,
         ILoquiObjectSetter<IScriptFields>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ScriptMetaSummary MetadataSummary { get; }
         new MemorySlice<Byte>? CompiledScript { get; set; }
@@ -735,7 +735,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IScriptFieldsGetter :
         ILoquiObject,
         ILoquiObject<IScriptFieldsGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -1221,7 +1221,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Mutagen
         public IEnumerable<FormLinkInformation> GetContainedFormLinks(IScriptFieldsGetter obj)
         {
-            foreach (var item in obj.References.WhereCastable<IAScriptReferenceGetter, ILinkedFormKeyContainerGetter>()
+            foreach (var item in obj.References.WhereCastable<IAScriptReferenceGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);

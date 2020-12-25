@@ -572,7 +572,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = DestructionStageData_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => DestructionStageDataCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DestructionStageDataCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DestructionStageDataCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DestructionStageDataCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -634,7 +634,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IDestructionStageData :
         IDestructionStageDataGetter,
         ILoquiObjectSetter<IDestructionStageData>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new Byte HealthPercent { get; set; }
         new Byte Index { get; set; }
@@ -649,7 +649,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IDestructionStageDataGetter :
         ILoquiObject,
         ILoquiObject<IDestructionStageDataGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

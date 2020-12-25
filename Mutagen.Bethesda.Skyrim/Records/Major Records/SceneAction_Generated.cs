@@ -983,7 +983,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = SceneAction_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => SceneActionCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SceneActionCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SceneActionCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SceneActionCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -1045,7 +1045,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ISceneAction :
         ISceneActionGetter,
         ILoquiObjectSetter<ISceneAction>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new SceneAction.TypeEnum Type { get; set; }
         new String? Name { get; set; }
@@ -1069,7 +1069,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ISceneActionGetter :
         ILoquiObject,
         ILoquiObject<ISceneActionGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

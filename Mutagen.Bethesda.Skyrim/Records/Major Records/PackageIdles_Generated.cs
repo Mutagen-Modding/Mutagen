@@ -501,7 +501,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = PackageIdles_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => PackageIdlesCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageIdlesCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageIdlesCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageIdlesCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -563,7 +563,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPackageIdles :
         IPackageIdlesGetter,
         ILoquiObjectSetter<IPackageIdles>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new PackageIdles.Types Type { get; set; }
         new Single TimerSetting { get; set; }
@@ -573,7 +573,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPackageIdlesGetter :
         ILoquiObject,
         ILoquiObject<IPackageIdlesGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

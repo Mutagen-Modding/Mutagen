@@ -416,7 +416,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public IEnumerable<FormLinkInformation> ContainedFormLinks => DoorTriangleCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DoorTriangleCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DoorTriangleCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DoorTriangleCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -478,7 +478,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IDoorTriangle :
         IDoorTriangleGetter,
         ILoquiObjectSetter<IDoorTriangle>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new Int16 TriangleBeforeDoor { get; set; }
         new Int32 Unknown { get; set; }
@@ -488,7 +488,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IDoorTriangleGetter :
         ILoquiObject,
         ILoquiObject<IDoorTriangleGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

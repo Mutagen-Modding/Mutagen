@@ -353,7 +353,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = PerkAbilityEffect_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => PerkAbilityEffectCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkAbilityEffectCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkAbilityEffectCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkAbilityEffectCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -414,7 +414,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPerkAbilityEffectGetter,
         IAPerkEffect,
         ILoquiObjectSetter<IPerkAbilityEffect>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<ISpellGetter> Ability { get; set; }
     }
@@ -422,7 +422,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPerkAbilityEffectGetter :
         IAPerkEffectGetter,
         ILoquiObject<IPerkAbilityEffectGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => PerkAbilityEffect_Registration.Instance;

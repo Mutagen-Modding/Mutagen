@@ -383,7 +383,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => SkyrimMajorRecordCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimMajorRecordCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimMajorRecordCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimMajorRecordCommon.Instance.RemapLinks(this, mapping);
         public SkyrimMajorRecord(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -497,7 +497,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMajorRecord,
         IMajorRecordEnumerable,
         ILoquiObjectSetter<ISkyrimMajorRecordInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new UInt16 FormVersion { get; set; }
         new UInt16 Version2 { get; set; }
@@ -514,7 +514,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMajorRecordGetter,
         IMajorRecordGetterEnumerable,
         ILoquiObject<ISkyrimMajorRecordGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => SkyrimMajorRecord_Registration.Instance;

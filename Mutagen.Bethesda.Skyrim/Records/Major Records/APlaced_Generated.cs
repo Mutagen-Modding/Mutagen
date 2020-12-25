@@ -312,7 +312,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => APlacedCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => APlacedCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => APlacedCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => APlacedCommon.Instance.RemapLinks(this, mapping);
         public APlaced(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -416,7 +416,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         IPlaced,
         ILoquiObjectSetter<IAPlacedInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
     }
 
@@ -431,7 +431,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IPlacedGetter,
         ILoquiObject<IAPlacedGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => APlaced_Registration.Instance;

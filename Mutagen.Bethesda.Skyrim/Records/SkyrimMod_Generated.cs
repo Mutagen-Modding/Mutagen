@@ -5962,7 +5962,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public IEnumerable<FormLinkInformation> ContainedFormLinks => SkyrimModCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimModCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimModCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimModCommon.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
@@ -6197,7 +6197,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ISkyrimMod>,
         IMod,
         IContextMod<ISkyrimMod>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new SkyrimModHeader ModHeader { get; }
         new Group<GameSetting> GameSettings { get; }
@@ -6322,7 +6322,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<ISkyrimModGetter>,
         IModGetter,
         IContextGetterMod<ISkyrimMod>,
-        ILinkedFormKeyContainerGetter
+        IFormLinkContainerGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -10313,371 +10313,371 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.GameSettings is ILinkedFormKeyContainerGetter GameSettingslinkCont)
+            if (obj.GameSettings is IFormLinkContainerGetter GameSettingslinkCont)
             {
                 foreach (var item in GameSettingslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Keywords is ILinkedFormKeyContainerGetter KeywordslinkCont)
+            if (obj.Keywords is IFormLinkContainerGetter KeywordslinkCont)
             {
                 foreach (var item in KeywordslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.LocationReferenceTypes is ILinkedFormKeyContainerGetter LocationReferenceTypeslinkCont)
+            if (obj.LocationReferenceTypes is IFormLinkContainerGetter LocationReferenceTypeslinkCont)
             {
                 foreach (var item in LocationReferenceTypeslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Actions is ILinkedFormKeyContainerGetter ActionslinkCont)
+            if (obj.Actions is IFormLinkContainerGetter ActionslinkCont)
             {
                 foreach (var item in ActionslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.TextureSets is ILinkedFormKeyContainerGetter TextureSetslinkCont)
+            if (obj.TextureSets is IFormLinkContainerGetter TextureSetslinkCont)
             {
                 foreach (var item in TextureSetslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Globals is ILinkedFormKeyContainerGetter GlobalslinkCont)
+            if (obj.Globals is IFormLinkContainerGetter GlobalslinkCont)
             {
                 foreach (var item in GlobalslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Classes is ILinkedFormKeyContainerGetter ClasseslinkCont)
+            if (obj.Classes is IFormLinkContainerGetter ClasseslinkCont)
             {
                 foreach (var item in ClasseslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Factions is ILinkedFormKeyContainerGetter FactionslinkCont)
+            if (obj.Factions is IFormLinkContainerGetter FactionslinkCont)
             {
                 foreach (var item in FactionslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.HeadParts is ILinkedFormKeyContainerGetter HeadPartslinkCont)
+            if (obj.HeadParts is IFormLinkContainerGetter HeadPartslinkCont)
             {
                 foreach (var item in HeadPartslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Hairs is ILinkedFormKeyContainerGetter HairslinkCont)
+            if (obj.Hairs is IFormLinkContainerGetter HairslinkCont)
             {
                 foreach (var item in HairslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Eyes is ILinkedFormKeyContainerGetter EyeslinkCont)
+            if (obj.Eyes is IFormLinkContainerGetter EyeslinkCont)
             {
                 foreach (var item in EyeslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Races is ILinkedFormKeyContainerGetter RaceslinkCont)
+            if (obj.Races is IFormLinkContainerGetter RaceslinkCont)
             {
                 foreach (var item in RaceslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.SoundMarkers is ILinkedFormKeyContainerGetter SoundMarkerslinkCont)
+            if (obj.SoundMarkers is IFormLinkContainerGetter SoundMarkerslinkCont)
             {
                 foreach (var item in SoundMarkerslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.AcousticSpaces is ILinkedFormKeyContainerGetter AcousticSpaceslinkCont)
+            if (obj.AcousticSpaces is IFormLinkContainerGetter AcousticSpaceslinkCont)
             {
                 foreach (var item in AcousticSpaceslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.MagicEffects is ILinkedFormKeyContainerGetter MagicEffectslinkCont)
+            if (obj.MagicEffects is IFormLinkContainerGetter MagicEffectslinkCont)
             {
                 foreach (var item in MagicEffectslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.LandscapeTextures is ILinkedFormKeyContainerGetter LandscapeTextureslinkCont)
+            if (obj.LandscapeTextures is IFormLinkContainerGetter LandscapeTextureslinkCont)
             {
                 foreach (var item in LandscapeTextureslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.ObjectEffects is ILinkedFormKeyContainerGetter ObjectEffectslinkCont)
+            if (obj.ObjectEffects is IFormLinkContainerGetter ObjectEffectslinkCont)
             {
                 foreach (var item in ObjectEffectslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Spells is ILinkedFormKeyContainerGetter SpellslinkCont)
+            if (obj.Spells is IFormLinkContainerGetter SpellslinkCont)
             {
                 foreach (var item in SpellslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Scrolls is ILinkedFormKeyContainerGetter ScrollslinkCont)
+            if (obj.Scrolls is IFormLinkContainerGetter ScrollslinkCont)
             {
                 foreach (var item in ScrollslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Activators is ILinkedFormKeyContainerGetter ActivatorslinkCont)
+            if (obj.Activators is IFormLinkContainerGetter ActivatorslinkCont)
             {
                 foreach (var item in ActivatorslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.TalkingActivators is ILinkedFormKeyContainerGetter TalkingActivatorslinkCont)
+            if (obj.TalkingActivators is IFormLinkContainerGetter TalkingActivatorslinkCont)
             {
                 foreach (var item in TalkingActivatorslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Armors is ILinkedFormKeyContainerGetter ArmorslinkCont)
+            if (obj.Armors is IFormLinkContainerGetter ArmorslinkCont)
             {
                 foreach (var item in ArmorslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Books is ILinkedFormKeyContainerGetter BookslinkCont)
+            if (obj.Books is IFormLinkContainerGetter BookslinkCont)
             {
                 foreach (var item in BookslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Containers is ILinkedFormKeyContainerGetter ContainerslinkCont)
+            if (obj.Containers is IFormLinkContainerGetter ContainerslinkCont)
             {
                 foreach (var item in ContainerslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Doors is ILinkedFormKeyContainerGetter DoorslinkCont)
+            if (obj.Doors is IFormLinkContainerGetter DoorslinkCont)
             {
                 foreach (var item in DoorslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Ingredients is ILinkedFormKeyContainerGetter IngredientslinkCont)
+            if (obj.Ingredients is IFormLinkContainerGetter IngredientslinkCont)
             {
                 foreach (var item in IngredientslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Lights is ILinkedFormKeyContainerGetter LightslinkCont)
+            if (obj.Lights is IFormLinkContainerGetter LightslinkCont)
             {
                 foreach (var item in LightslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.MiscItems is ILinkedFormKeyContainerGetter MiscItemslinkCont)
+            if (obj.MiscItems is IFormLinkContainerGetter MiscItemslinkCont)
             {
                 foreach (var item in MiscItemslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.AlchemicalApparatuses is ILinkedFormKeyContainerGetter AlchemicalApparatuseslinkCont)
+            if (obj.AlchemicalApparatuses is IFormLinkContainerGetter AlchemicalApparatuseslinkCont)
             {
                 foreach (var item in AlchemicalApparatuseslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Statics is ILinkedFormKeyContainerGetter StaticslinkCont)
+            if (obj.Statics is IFormLinkContainerGetter StaticslinkCont)
             {
                 foreach (var item in StaticslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.MoveableStatics is ILinkedFormKeyContainerGetter MoveableStaticslinkCont)
+            if (obj.MoveableStatics is IFormLinkContainerGetter MoveableStaticslinkCont)
             {
                 foreach (var item in MoveableStaticslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Grasses is ILinkedFormKeyContainerGetter GrasseslinkCont)
+            if (obj.Grasses is IFormLinkContainerGetter GrasseslinkCont)
             {
                 foreach (var item in GrasseslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Trees is ILinkedFormKeyContainerGetter TreeslinkCont)
+            if (obj.Trees is IFormLinkContainerGetter TreeslinkCont)
             {
                 foreach (var item in TreeslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Florae is ILinkedFormKeyContainerGetter FloraelinkCont)
+            if (obj.Florae is IFormLinkContainerGetter FloraelinkCont)
             {
                 foreach (var item in FloraelinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Furniture is ILinkedFormKeyContainerGetter FurniturelinkCont)
+            if (obj.Furniture is IFormLinkContainerGetter FurniturelinkCont)
             {
                 foreach (var item in FurniturelinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Weapons is ILinkedFormKeyContainerGetter WeaponslinkCont)
+            if (obj.Weapons is IFormLinkContainerGetter WeaponslinkCont)
             {
                 foreach (var item in WeaponslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Ammunitions is ILinkedFormKeyContainerGetter AmmunitionslinkCont)
+            if (obj.Ammunitions is IFormLinkContainerGetter AmmunitionslinkCont)
             {
                 foreach (var item in AmmunitionslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Npcs is ILinkedFormKeyContainerGetter NpcslinkCont)
+            if (obj.Npcs is IFormLinkContainerGetter NpcslinkCont)
             {
                 foreach (var item in NpcslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.LeveledNpcs is ILinkedFormKeyContainerGetter LeveledNpcslinkCont)
+            if (obj.LeveledNpcs is IFormLinkContainerGetter LeveledNpcslinkCont)
             {
                 foreach (var item in LeveledNpcslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Keys is ILinkedFormKeyContainerGetter KeyslinkCont)
+            if (obj.Keys is IFormLinkContainerGetter KeyslinkCont)
             {
                 foreach (var item in KeyslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Ingestibles is ILinkedFormKeyContainerGetter IngestibleslinkCont)
+            if (obj.Ingestibles is IFormLinkContainerGetter IngestibleslinkCont)
             {
                 foreach (var item in IngestibleslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.IdleMarkers is ILinkedFormKeyContainerGetter IdleMarkerslinkCont)
+            if (obj.IdleMarkers is IFormLinkContainerGetter IdleMarkerslinkCont)
             {
                 foreach (var item in IdleMarkerslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.ConstructibleObjects is ILinkedFormKeyContainerGetter ConstructibleObjectslinkCont)
+            if (obj.ConstructibleObjects is IFormLinkContainerGetter ConstructibleObjectslinkCont)
             {
                 foreach (var item in ConstructibleObjectslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Projectiles is ILinkedFormKeyContainerGetter ProjectileslinkCont)
+            if (obj.Projectiles is IFormLinkContainerGetter ProjectileslinkCont)
             {
                 foreach (var item in ProjectileslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Hazards is ILinkedFormKeyContainerGetter HazardslinkCont)
+            if (obj.Hazards is IFormLinkContainerGetter HazardslinkCont)
             {
                 foreach (var item in HazardslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.SoulGems is ILinkedFormKeyContainerGetter SoulGemslinkCont)
+            if (obj.SoulGems is IFormLinkContainerGetter SoulGemslinkCont)
             {
                 foreach (var item in SoulGemslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.LeveledItems is ILinkedFormKeyContainerGetter LeveledItemslinkCont)
+            if (obj.LeveledItems is IFormLinkContainerGetter LeveledItemslinkCont)
             {
                 foreach (var item in LeveledItemslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Weathers is ILinkedFormKeyContainerGetter WeatherslinkCont)
+            if (obj.Weathers is IFormLinkContainerGetter WeatherslinkCont)
             {
                 foreach (var item in WeatherslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Climates is ILinkedFormKeyContainerGetter ClimateslinkCont)
+            if (obj.Climates is IFormLinkContainerGetter ClimateslinkCont)
             {
                 foreach (var item in ClimateslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.ShaderParticleGeometries is ILinkedFormKeyContainerGetter ShaderParticleGeometrieslinkCont)
+            if (obj.ShaderParticleGeometries is IFormLinkContainerGetter ShaderParticleGeometrieslinkCont)
             {
                 foreach (var item in ShaderParticleGeometrieslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.VisualEffects is ILinkedFormKeyContainerGetter VisualEffectslinkCont)
+            if (obj.VisualEffects is IFormLinkContainerGetter VisualEffectslinkCont)
             {
                 foreach (var item in VisualEffectslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Regions is ILinkedFormKeyContainerGetter RegionslinkCont)
+            if (obj.Regions is IFormLinkContainerGetter RegionslinkCont)
             {
                 foreach (var item in RegionslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.NavigationMeshInfoMaps is ILinkedFormKeyContainerGetter NavigationMeshInfoMapslinkCont)
+            if (obj.NavigationMeshInfoMaps is IFormLinkContainerGetter NavigationMeshInfoMapslinkCont)
             {
                 foreach (var item in NavigationMeshInfoMapslinkCont.ContainedFormLinks)
                 {
@@ -10688,413 +10688,413 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.Worldspaces is ILinkedFormKeyContainerGetter WorldspaceslinkCont)
+            if (obj.Worldspaces is IFormLinkContainerGetter WorldspaceslinkCont)
             {
                 foreach (var item in WorldspaceslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.DialogTopics is ILinkedFormKeyContainerGetter DialogTopicslinkCont)
+            if (obj.DialogTopics is IFormLinkContainerGetter DialogTopicslinkCont)
             {
                 foreach (var item in DialogTopicslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Quests is ILinkedFormKeyContainerGetter QuestslinkCont)
+            if (obj.Quests is IFormLinkContainerGetter QuestslinkCont)
             {
                 foreach (var item in QuestslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.IdleAnimations is ILinkedFormKeyContainerGetter IdleAnimationslinkCont)
+            if (obj.IdleAnimations is IFormLinkContainerGetter IdleAnimationslinkCont)
             {
                 foreach (var item in IdleAnimationslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Packages is ILinkedFormKeyContainerGetter PackageslinkCont)
+            if (obj.Packages is IFormLinkContainerGetter PackageslinkCont)
             {
                 foreach (var item in PackageslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.CombatStyles is ILinkedFormKeyContainerGetter CombatStyleslinkCont)
+            if (obj.CombatStyles is IFormLinkContainerGetter CombatStyleslinkCont)
             {
                 foreach (var item in CombatStyleslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.LoadScreens is ILinkedFormKeyContainerGetter LoadScreenslinkCont)
+            if (obj.LoadScreens is IFormLinkContainerGetter LoadScreenslinkCont)
             {
                 foreach (var item in LoadScreenslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.LeveledSpells is ILinkedFormKeyContainerGetter LeveledSpellslinkCont)
+            if (obj.LeveledSpells is IFormLinkContainerGetter LeveledSpellslinkCont)
             {
                 foreach (var item in LeveledSpellslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.AnimatedObjects is ILinkedFormKeyContainerGetter AnimatedObjectslinkCont)
+            if (obj.AnimatedObjects is IFormLinkContainerGetter AnimatedObjectslinkCont)
             {
                 foreach (var item in AnimatedObjectslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Waters is ILinkedFormKeyContainerGetter WaterslinkCont)
+            if (obj.Waters is IFormLinkContainerGetter WaterslinkCont)
             {
                 foreach (var item in WaterslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.EffectShaders is ILinkedFormKeyContainerGetter EffectShaderslinkCont)
+            if (obj.EffectShaders is IFormLinkContainerGetter EffectShaderslinkCont)
             {
                 foreach (var item in EffectShaderslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Explosions is ILinkedFormKeyContainerGetter ExplosionslinkCont)
+            if (obj.Explosions is IFormLinkContainerGetter ExplosionslinkCont)
             {
                 foreach (var item in ExplosionslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Debris is ILinkedFormKeyContainerGetter DebrislinkCont)
+            if (obj.Debris is IFormLinkContainerGetter DebrislinkCont)
             {
                 foreach (var item in DebrislinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.ImageSpaces is ILinkedFormKeyContainerGetter ImageSpaceslinkCont)
+            if (obj.ImageSpaces is IFormLinkContainerGetter ImageSpaceslinkCont)
             {
                 foreach (var item in ImageSpaceslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.ImageSpaceAdapters is ILinkedFormKeyContainerGetter ImageSpaceAdapterslinkCont)
+            if (obj.ImageSpaceAdapters is IFormLinkContainerGetter ImageSpaceAdapterslinkCont)
             {
                 foreach (var item in ImageSpaceAdapterslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.FormLists is ILinkedFormKeyContainerGetter FormListslinkCont)
+            if (obj.FormLists is IFormLinkContainerGetter FormListslinkCont)
             {
                 foreach (var item in FormListslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Perks is ILinkedFormKeyContainerGetter PerkslinkCont)
+            if (obj.Perks is IFormLinkContainerGetter PerkslinkCont)
             {
                 foreach (var item in PerkslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.BodyParts is ILinkedFormKeyContainerGetter BodyPartslinkCont)
+            if (obj.BodyParts is IFormLinkContainerGetter BodyPartslinkCont)
             {
                 foreach (var item in BodyPartslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.AddonNodes is ILinkedFormKeyContainerGetter AddonNodeslinkCont)
+            if (obj.AddonNodes is IFormLinkContainerGetter AddonNodeslinkCont)
             {
                 foreach (var item in AddonNodeslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.ActorValueInformation is ILinkedFormKeyContainerGetter ActorValueInformationlinkCont)
+            if (obj.ActorValueInformation is IFormLinkContainerGetter ActorValueInformationlinkCont)
             {
                 foreach (var item in ActorValueInformationlinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.CameraShots is ILinkedFormKeyContainerGetter CameraShotslinkCont)
+            if (obj.CameraShots is IFormLinkContainerGetter CameraShotslinkCont)
             {
                 foreach (var item in CameraShotslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.CameraPaths is ILinkedFormKeyContainerGetter CameraPathslinkCont)
+            if (obj.CameraPaths is IFormLinkContainerGetter CameraPathslinkCont)
             {
                 foreach (var item in CameraPathslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.VoiceTypes is ILinkedFormKeyContainerGetter VoiceTypeslinkCont)
+            if (obj.VoiceTypes is IFormLinkContainerGetter VoiceTypeslinkCont)
             {
                 foreach (var item in VoiceTypeslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.MaterialTypes is ILinkedFormKeyContainerGetter MaterialTypeslinkCont)
+            if (obj.MaterialTypes is IFormLinkContainerGetter MaterialTypeslinkCont)
             {
                 foreach (var item in MaterialTypeslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Impacts is ILinkedFormKeyContainerGetter ImpactslinkCont)
+            if (obj.Impacts is IFormLinkContainerGetter ImpactslinkCont)
             {
                 foreach (var item in ImpactslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.ImpactDataSets is ILinkedFormKeyContainerGetter ImpactDataSetslinkCont)
+            if (obj.ImpactDataSets is IFormLinkContainerGetter ImpactDataSetslinkCont)
             {
                 foreach (var item in ImpactDataSetslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.ArmorAddons is ILinkedFormKeyContainerGetter ArmorAddonslinkCont)
+            if (obj.ArmorAddons is IFormLinkContainerGetter ArmorAddonslinkCont)
             {
                 foreach (var item in ArmorAddonslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.EncounterZones is ILinkedFormKeyContainerGetter EncounterZoneslinkCont)
+            if (obj.EncounterZones is IFormLinkContainerGetter EncounterZoneslinkCont)
             {
                 foreach (var item in EncounterZoneslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Locations is ILinkedFormKeyContainerGetter LocationslinkCont)
+            if (obj.Locations is IFormLinkContainerGetter LocationslinkCont)
             {
                 foreach (var item in LocationslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Messages is ILinkedFormKeyContainerGetter MessageslinkCont)
+            if (obj.Messages is IFormLinkContainerGetter MessageslinkCont)
             {
                 foreach (var item in MessageslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.DefaultObjectManagers is ILinkedFormKeyContainerGetter DefaultObjectManagerslinkCont)
+            if (obj.DefaultObjectManagers is IFormLinkContainerGetter DefaultObjectManagerslinkCont)
             {
                 foreach (var item in DefaultObjectManagerslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.LightingTemplates is ILinkedFormKeyContainerGetter LightingTemplateslinkCont)
+            if (obj.LightingTemplates is IFormLinkContainerGetter LightingTemplateslinkCont)
             {
                 foreach (var item in LightingTemplateslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.MusicTypes is ILinkedFormKeyContainerGetter MusicTypeslinkCont)
+            if (obj.MusicTypes is IFormLinkContainerGetter MusicTypeslinkCont)
             {
                 foreach (var item in MusicTypeslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Footsteps is ILinkedFormKeyContainerGetter FootstepslinkCont)
+            if (obj.Footsteps is IFormLinkContainerGetter FootstepslinkCont)
             {
                 foreach (var item in FootstepslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.FootstepSets is ILinkedFormKeyContainerGetter FootstepSetslinkCont)
+            if (obj.FootstepSets is IFormLinkContainerGetter FootstepSetslinkCont)
             {
                 foreach (var item in FootstepSetslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.StoryManagerBranchNodes is ILinkedFormKeyContainerGetter StoryManagerBranchNodeslinkCont)
+            if (obj.StoryManagerBranchNodes is IFormLinkContainerGetter StoryManagerBranchNodeslinkCont)
             {
                 foreach (var item in StoryManagerBranchNodeslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.StoryManagerQuestNodes is ILinkedFormKeyContainerGetter StoryManagerQuestNodeslinkCont)
+            if (obj.StoryManagerQuestNodes is IFormLinkContainerGetter StoryManagerQuestNodeslinkCont)
             {
                 foreach (var item in StoryManagerQuestNodeslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.StoryManagerEventNodes is ILinkedFormKeyContainerGetter StoryManagerEventNodeslinkCont)
+            if (obj.StoryManagerEventNodes is IFormLinkContainerGetter StoryManagerEventNodeslinkCont)
             {
                 foreach (var item in StoryManagerEventNodeslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.DialogBranches is ILinkedFormKeyContainerGetter DialogBrancheslinkCont)
+            if (obj.DialogBranches is IFormLinkContainerGetter DialogBrancheslinkCont)
             {
                 foreach (var item in DialogBrancheslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.MusicTracks is ILinkedFormKeyContainerGetter MusicTrackslinkCont)
+            if (obj.MusicTracks is IFormLinkContainerGetter MusicTrackslinkCont)
             {
                 foreach (var item in MusicTrackslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.DialogViews is ILinkedFormKeyContainerGetter DialogViewslinkCont)
+            if (obj.DialogViews is IFormLinkContainerGetter DialogViewslinkCont)
             {
                 foreach (var item in DialogViewslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.WordsOfPower is ILinkedFormKeyContainerGetter WordsOfPowerlinkCont)
+            if (obj.WordsOfPower is IFormLinkContainerGetter WordsOfPowerlinkCont)
             {
                 foreach (var item in WordsOfPowerlinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Shouts is ILinkedFormKeyContainerGetter ShoutslinkCont)
+            if (obj.Shouts is IFormLinkContainerGetter ShoutslinkCont)
             {
                 foreach (var item in ShoutslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.EquipTypes is ILinkedFormKeyContainerGetter EquipTypeslinkCont)
+            if (obj.EquipTypes is IFormLinkContainerGetter EquipTypeslinkCont)
             {
                 foreach (var item in EquipTypeslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Relationships is ILinkedFormKeyContainerGetter RelationshipslinkCont)
+            if (obj.Relationships is IFormLinkContainerGetter RelationshipslinkCont)
             {
                 foreach (var item in RelationshipslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Scenes is ILinkedFormKeyContainerGetter SceneslinkCont)
+            if (obj.Scenes is IFormLinkContainerGetter SceneslinkCont)
             {
                 foreach (var item in SceneslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.AssociationTypes is ILinkedFormKeyContainerGetter AssociationTypeslinkCont)
+            if (obj.AssociationTypes is IFormLinkContainerGetter AssociationTypeslinkCont)
             {
                 foreach (var item in AssociationTypeslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Outfits is ILinkedFormKeyContainerGetter OutfitslinkCont)
+            if (obj.Outfits is IFormLinkContainerGetter OutfitslinkCont)
             {
                 foreach (var item in OutfitslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.ArtObjects is ILinkedFormKeyContainerGetter ArtObjectslinkCont)
+            if (obj.ArtObjects is IFormLinkContainerGetter ArtObjectslinkCont)
             {
                 foreach (var item in ArtObjectslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.MaterialObjects is ILinkedFormKeyContainerGetter MaterialObjectslinkCont)
+            if (obj.MaterialObjects is IFormLinkContainerGetter MaterialObjectslinkCont)
             {
                 foreach (var item in MaterialObjectslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.MovementTypes is ILinkedFormKeyContainerGetter MovementTypeslinkCont)
+            if (obj.MovementTypes is IFormLinkContainerGetter MovementTypeslinkCont)
             {
                 foreach (var item in MovementTypeslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.SoundDescriptors is ILinkedFormKeyContainerGetter SoundDescriptorslinkCont)
+            if (obj.SoundDescriptors is IFormLinkContainerGetter SoundDescriptorslinkCont)
             {
                 foreach (var item in SoundDescriptorslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.DualCastData is ILinkedFormKeyContainerGetter DualCastDatalinkCont)
+            if (obj.DualCastData is IFormLinkContainerGetter DualCastDatalinkCont)
             {
                 foreach (var item in DualCastDatalinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.SoundCategories is ILinkedFormKeyContainerGetter SoundCategorieslinkCont)
+            if (obj.SoundCategories is IFormLinkContainerGetter SoundCategorieslinkCont)
             {
                 foreach (var item in SoundCategorieslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.SoundOutputModels is ILinkedFormKeyContainerGetter SoundOutputModelslinkCont)
+            if (obj.SoundOutputModels is IFormLinkContainerGetter SoundOutputModelslinkCont)
             {
                 foreach (var item in SoundOutputModelslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.CollisionLayers is ILinkedFormKeyContainerGetter CollisionLayerslinkCont)
+            if (obj.CollisionLayers is IFormLinkContainerGetter CollisionLayerslinkCont)
             {
                 foreach (var item in CollisionLayerslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Colors is ILinkedFormKeyContainerGetter ColorslinkCont)
+            if (obj.Colors is IFormLinkContainerGetter ColorslinkCont)
             {
                 foreach (var item in ColorslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.ReverbParameters is ILinkedFormKeyContainerGetter ReverbParameterslinkCont)
+            if (obj.ReverbParameters is IFormLinkContainerGetter ReverbParameterslinkCont)
             {
                 foreach (var item in ReverbParameterslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.VolumetricLightings is ILinkedFormKeyContainerGetter VolumetricLightingslinkCont)
+            if (obj.VolumetricLightings is IFormLinkContainerGetter VolumetricLightingslinkCont)
             {
                 foreach (var item in VolumetricLightingslinkCont.ContainedFormLinks)
                 {

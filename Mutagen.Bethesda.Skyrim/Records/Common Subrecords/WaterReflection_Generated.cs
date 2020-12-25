@@ -422,7 +422,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         public IEnumerable<FormLinkInformation> ContainedFormLinks => WaterReflectionCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WaterReflectionCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WaterReflectionCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WaterReflectionCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -484,7 +484,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IWaterReflection :
         IWaterReflectionGetter,
         ILoquiObjectSetter<IWaterReflection>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new WaterReflection.VersioningBreaks Versioning { get; set; }
         new FormLink<IPlacedObjectGetter> Water { get; set; }
@@ -494,7 +494,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IWaterReflectionGetter :
         ILoquiObject,
         ILoquiObject<IWaterReflectionGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

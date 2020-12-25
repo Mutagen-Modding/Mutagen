@@ -390,7 +390,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public IEnumerable<FormLinkInformation> ContainedFormLinks => LocationTargetRadiusCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationTargetRadiusCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationTargetRadiusCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationTargetRadiusCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -452,7 +452,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILocationTargetRadius :
         ILocationTargetRadiusGetter,
         ILoquiObjectSetter<ILocationTargetRadius>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ALocationTarget Target { get; set; }
         new UInt32 Radius { get; set; }
@@ -461,7 +461,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILocationTargetRadiusGetter :
         ILoquiObject,
         ILoquiObject<ILocationTargetRadiusGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -863,7 +863,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<FormLinkInformation> GetContainedFormLinks(ILocationTargetRadiusGetter obj)
         {
-            if (obj.Target is ILinkedFormKeyContainerGetter TargetlinkCont)
+            if (obj.Target is IFormLinkContainerGetter TargetlinkCont)
             {
                 foreach (var item in TargetlinkCont.ContainedFormLinks)
                 {

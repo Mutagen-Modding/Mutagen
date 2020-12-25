@@ -425,7 +425,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = Condition_Registration.TriggeringRecordType;
         public virtual IEnumerable<FormLinkInformation> ContainedFormLinks => ConditionCommon.Instance.GetContainedFormLinks(this);
         protected virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ConditionCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ConditionCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ConditionCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -463,7 +463,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ICondition :
         IConditionGetter,
         ILoquiObjectSetter<ICondition>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new CompareOperator CompareOperator { get; set; }
         new Condition.Flag Flags { get; set; }
@@ -473,7 +473,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IConditionGetter :
         ILoquiObject,
         ILoquiObject<IConditionGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

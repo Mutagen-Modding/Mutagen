@@ -935,7 +935,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = Perk_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => PerkCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkCommon.Instance.RemapLinks(this, mapping);
         public Perk(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -1049,7 +1049,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamed,
         IHasIcons,
         ILoquiObjectSetter<IPerkInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new PerkAdapter? VirtualMachineAdapter { get; set; }
         new TranslatedString? Name { get; set; }
@@ -1082,7 +1082,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         IHasIconsGetter,
         ILoquiObject<IPerkGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Perk_Registration.Instance;
@@ -1739,14 +1739,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainerGetter VirtualMachineAdapterlinkCont)
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
             {
                 foreach (var item in VirtualMachineAdapterlinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter>()
+            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);
@@ -1755,7 +1755,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(obj.NextPerk);
             }
-            foreach (var item in obj.Effects.WhereCastable<IAPerkEffectGetter, ILinkedFormKeyContainerGetter>()
+            foreach (var item in obj.Effects.WhereCastable<IAPerkEffectGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);

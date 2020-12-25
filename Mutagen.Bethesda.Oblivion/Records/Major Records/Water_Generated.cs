@@ -580,7 +580,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GrupRecordType = Water_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => WaterCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WaterCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WaterCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WaterCommon.Instance.RemapLinks(this, mapping);
         public Water(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -666,7 +666,7 @@ namespace Mutagen.Bethesda.Oblivion
         IWaterGetter,
         IOblivionMajorRecord,
         ILoquiObjectSetter<IWaterInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new String? Texture { get; set; }
         new Byte? Opacity { get; set; }
@@ -687,7 +687,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IWaterGetter :
         IOblivionMajorRecordGetter,
         ILoquiObject<IWaterGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Water_Registration.Instance;

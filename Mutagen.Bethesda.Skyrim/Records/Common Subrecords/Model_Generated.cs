@@ -435,7 +435,7 @@ namespace Mutagen.Bethesda.Skyrim
         public new static readonly RecordType GrupRecordType = Model_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => ModelCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ModelCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ModelCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ModelCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -496,7 +496,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModelGetter,
         ISimpleModel,
         ILoquiObjectSetter<IModel>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ExtendedList<AlternateTexture>? AlternateTextures { get; set; }
     }
@@ -504,7 +504,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IModelGetter :
         ISimpleModelGetter,
         ILoquiObject<IModelGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Model_Registration.Instance;

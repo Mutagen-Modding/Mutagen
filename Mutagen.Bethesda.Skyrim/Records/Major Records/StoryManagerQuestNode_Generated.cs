@@ -549,7 +549,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = StoryManagerQuestNode_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => StoryManagerQuestNodeCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => StoryManagerQuestNodeCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => StoryManagerQuestNodeCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => StoryManagerQuestNodeCommon.Instance.RemapLinks(this, mapping);
         public StoryManagerQuestNode(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -652,7 +652,7 @@ namespace Mutagen.Bethesda.Skyrim
         IStoryManagerQuestNodeGetter,
         IAStoryManagerNode,
         ILoquiObjectSetter<IStoryManagerQuestNodeInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new StoryManagerQuestNode.QuestFlag? Flags { get; set; }
         new UInt32? MaxConcurrentQuests { get; set; }
@@ -670,7 +670,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IStoryManagerQuestNodeGetter :
         IAStoryManagerNodeGetter,
         ILoquiObject<IStoryManagerQuestNodeGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => StoryManagerQuestNode_Registration.Instance;

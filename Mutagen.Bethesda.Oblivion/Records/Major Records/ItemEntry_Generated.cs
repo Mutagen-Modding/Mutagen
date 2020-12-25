@@ -388,7 +388,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GrupRecordType = ItemEntry_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => ItemEntryCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ItemEntryCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ItemEntryCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ItemEntryCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -450,7 +450,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IItemEntry :
         IItemEntryGetter,
         ILoquiObjectSetter<IItemEntry>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IAItemGetter> Item { get; set; }
         new Int32? Count { get; set; }
@@ -459,7 +459,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IItemEntryGetter :
         ILoquiObject,
         ILoquiObject<IItemEntryGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

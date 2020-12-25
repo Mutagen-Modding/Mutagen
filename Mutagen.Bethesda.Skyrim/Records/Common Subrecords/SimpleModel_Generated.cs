@@ -394,7 +394,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = SimpleModel_Registration.TriggeringRecordType;
         public virtual IEnumerable<FormLinkInformation> ContainedFormLinks => SimpleModelCommon.Instance.GetContainedFormLinks(this);
         protected virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SimpleModelCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SimpleModelCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SimpleModelCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -456,7 +456,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ISimpleModel :
         ISimpleModelGetter,
         ILoquiObjectSetter<ISimpleModel>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new String File { get; set; }
         new MemorySlice<Byte>? Data { get; set; }
@@ -465,7 +465,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ISimpleModelGetter :
         ILoquiObject,
         ILoquiObject<ISimpleModelGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

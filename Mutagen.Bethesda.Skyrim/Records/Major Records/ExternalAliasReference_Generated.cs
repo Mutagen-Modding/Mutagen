@@ -387,7 +387,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public IEnumerable<FormLinkInformation> ContainedFormLinks => ExternalAliasReferenceCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ExternalAliasReferenceCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ExternalAliasReferenceCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ExternalAliasReferenceCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -449,7 +449,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IExternalAliasReference :
         IExternalAliasReferenceGetter,
         ILoquiObjectSetter<IExternalAliasReference>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLinkNullable<IQuestGetter> Quest { get; set; }
         new Int32? AliasIndex { get; set; }
@@ -458,7 +458,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IExternalAliasReferenceGetter :
         ILoquiObject,
         ILoquiObject<IExternalAliasReferenceGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

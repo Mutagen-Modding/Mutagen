@@ -379,7 +379,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = CellNavigationMesh_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => CellNavigationMeshCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellNavigationMeshCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellNavigationMeshCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellNavigationMeshCommon.Instance.RemapLinks(this, mapping);
         public CellNavigationMesh(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -482,7 +482,7 @@ namespace Mutagen.Bethesda.Skyrim
         ICellNavigationMeshGetter,
         IANavigationMesh,
         ILoquiObjectSetter<ICellNavigationMeshInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new CellNavigationMeshData? Data { get; set; }
     }
@@ -497,7 +497,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ICellNavigationMeshGetter :
         IANavigationMeshGetter,
         ILoquiObject<ICellNavigationMeshGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => CellNavigationMesh_Registration.Instance;

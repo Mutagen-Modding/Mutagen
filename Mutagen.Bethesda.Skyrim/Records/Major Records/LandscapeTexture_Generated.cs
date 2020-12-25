@@ -661,7 +661,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = LandscapeTexture_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => LandscapeTextureCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LandscapeTextureCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LandscapeTextureCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LandscapeTextureCommon.Instance.RemapLinks(this, mapping);
         public LandscapeTexture(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -769,7 +769,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         IRegionTarget,
         ILoquiObjectSetter<ILandscapeTextureInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLinkNullable<ITextureSetGetter> TextureSet { get; set; }
         new FormLink<IMaterialTypeGetter> MaterialType { get; set; }
@@ -792,7 +792,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IRegionTargetGetter,
         ILoquiObject<ILandscapeTextureGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => LandscapeTexture_Registration.Instance;

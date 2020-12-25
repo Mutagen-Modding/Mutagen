@@ -1392,7 +1392,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = Quest_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => QuestCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestCommon.Instance.RemapLinks(this, mapping);
         public Quest(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -1500,7 +1500,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ITranslatedNamed,
         ILoquiObjectSetter<IQuestInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new QuestAdapter? VirtualMachineAdapter { get; set; }
         new TranslatedString? Name { get; set; }
@@ -1532,7 +1532,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         ITranslatedNamedGetter,
         ILoquiObject<IQuestGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Quest_Registration.Instance;
@@ -2297,7 +2297,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainerGetter VirtualMachineAdapterlinkCont)
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
             {
                 foreach (var item in VirtualMachineAdapterlinkCont.ContainedFormLinks)
                 {
@@ -2308,12 +2308,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.DialogConditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter>()
+            foreach (var item in obj.DialogConditions.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.UnusedConditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter>()
+            foreach (var item in obj.UnusedConditions.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);
@@ -2322,7 +2322,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.Objectives.WhereCastable<IQuestObjectiveGetter, ILinkedFormKeyContainerGetter>()
+            foreach (var item in obj.Objectives.WhereCastable<IQuestObjectiveGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);

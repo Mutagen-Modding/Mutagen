@@ -626,7 +626,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GrupRecordType = AIPackage_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => AIPackageCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AIPackageCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AIPackageCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AIPackageCommon.Instance.RemapLinks(this, mapping);
         public AIPackage(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -712,7 +712,7 @@ namespace Mutagen.Bethesda.Oblivion
         IAIPackageGetter,
         IOblivionMajorRecord,
         ILoquiObjectSetter<IAIPackageInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new AIPackageData? Data { get; set; }
         new AIPackageLocation? Location { get; set; }
@@ -731,7 +731,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IAIPackageGetter :
         IOblivionMajorRecordGetter,
         ILoquiObject<IAIPackageGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => AIPackage_Registration.Instance;

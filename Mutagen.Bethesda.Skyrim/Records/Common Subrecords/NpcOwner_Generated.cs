@@ -375,7 +375,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => NpcOwnerCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcOwnerCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcOwnerCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcOwnerCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -436,7 +436,7 @@ namespace Mutagen.Bethesda.Skyrim
         INpcOwnerGetter,
         IOwnerTarget,
         ILoquiObjectSetter<INpcOwner>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<INpcGetter> Npc { get; set; }
         new FormLink<IGlobalGetter> Global { get; set; }
@@ -445,7 +445,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface INpcOwnerGetter :
         IOwnerTargetGetter,
         ILoquiObject<INpcOwnerGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => NpcOwner_Registration.Instance;

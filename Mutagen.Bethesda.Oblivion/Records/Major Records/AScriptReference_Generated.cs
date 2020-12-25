@@ -317,7 +317,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public virtual IEnumerable<FormLinkInformation> ContainedFormLinks => AScriptReferenceCommon.Instance.GetContainedFormLinks(this);
         protected virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AScriptReferenceCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AScriptReferenceCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AScriptReferenceCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -355,14 +355,14 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IAScriptReference :
         IAScriptReferenceGetter,
         ILoquiObjectSetter<IAScriptReference>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
     }
 
     public partial interface IAScriptReferenceGetter :
         ILoquiObject,
         ILoquiObject<IAScriptReferenceGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

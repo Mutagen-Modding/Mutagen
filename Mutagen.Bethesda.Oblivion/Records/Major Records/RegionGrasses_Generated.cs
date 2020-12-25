@@ -430,7 +430,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GrupRecordType = RegionGrasses_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => RegionGrassesCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionGrassesCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionGrassesCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionGrassesCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -491,7 +491,7 @@ namespace Mutagen.Bethesda.Oblivion
         IRegionGrassesGetter,
         IRegionData,
         ILoquiObjectSetter<IRegionGrasses>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ExtendedList<IFormLink<IGrassGetter>>? Grasses { get; set; }
     }
@@ -499,7 +499,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IRegionGrassesGetter :
         IRegionDataGetter,
         ILoquiObject<IRegionGrassesGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => RegionGrasses_Registration.Instance;

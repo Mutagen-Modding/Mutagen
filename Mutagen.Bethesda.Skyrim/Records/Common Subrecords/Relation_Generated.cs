@@ -417,7 +417,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = Relation_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => RelationCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RelationCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RelationCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RelationCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -479,7 +479,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IRelation :
         IRelationGetter,
         ILoquiObjectSetter<IRelation>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IRelatableGetter> Target { get; set; }
         new Int32 Modifier { get; set; }
@@ -489,7 +489,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IRelationGetter :
         ILoquiObject,
         ILoquiObject<IRelationGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

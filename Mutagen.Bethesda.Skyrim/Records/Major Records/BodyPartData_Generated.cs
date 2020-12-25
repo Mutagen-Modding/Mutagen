@@ -490,7 +490,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = BodyPartData_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => BodyPartDataCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BodyPartDataCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BodyPartDataCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BodyPartDataCommon.Instance.RemapLinks(this, mapping);
         public BodyPartData(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -594,7 +594,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         IModeled,
         ILoquiObjectSetter<IBodyPartDataInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new Model? Model { get; set; }
         new ExtendedList<BodyPart> Parts { get; }
@@ -611,7 +611,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IModeledGetter,
         ILoquiObject<IBodyPartDataGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => BodyPartData_Registration.Instance;

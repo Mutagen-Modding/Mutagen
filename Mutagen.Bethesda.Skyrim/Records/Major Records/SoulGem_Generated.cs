@@ -911,7 +911,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = SoulGem_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => SoulGemCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoulGemCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoulGemCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoulGemCommon.Instance.RemapLinks(this, mapping);
         public SoulGem(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -1027,7 +1027,7 @@ namespace Mutagen.Bethesda.Skyrim
         IWeightValue,
         IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<ISoulGemInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ObjectBounds? ObjectBounds { get; set; }
         new TranslatedString? Name { get; set; }
@@ -1063,7 +1063,7 @@ namespace Mutagen.Bethesda.Skyrim
         IWeightValueGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<ISoulGemGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => SoulGem_Registration.Instance;

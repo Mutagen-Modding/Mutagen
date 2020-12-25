@@ -541,7 +541,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = Shout_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => ShoutCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ShoutCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ShoutCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ShoutCommon.Instance.RemapLinks(this, mapping);
         public Shout(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -651,7 +651,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectId,
         ITranslatedNamed,
         ILoquiObjectSetter<IShoutInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new TranslatedString? Name { get; set; }
         new FormLinkNullable<IStaticGetter> MenuDisplayObject { get; set; }
@@ -675,7 +675,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectIdGetter,
         ITranslatedNamedGetter,
         ILoquiObject<IShoutGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Shout_Registration.Instance;

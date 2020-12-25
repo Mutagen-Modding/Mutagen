@@ -2563,7 +2563,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = Location_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => LocationCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCommon.Instance.RemapLinks(this, mapping);
         public Location(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -2669,7 +2669,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamed,
         IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<ILocationInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ExtendedList<LocationReference>? ActorCellPersistentReferences { get; set; }
         new ExtendedList<LocationReference>? LocationCellPersistentReferences { get; set; }
@@ -2711,7 +2711,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<ILocationGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Location_Registration.Instance;

@@ -338,7 +338,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = TopicReference_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => TopicReferenceCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TopicReferenceCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TopicReferenceCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TopicReferenceCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -399,7 +399,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITopicReferenceGetter,
         IATopicReference,
         ILoquiObjectSetter<ITopicReference>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IDialogTopicGetter> Reference { get; set; }
     }
@@ -407,7 +407,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ITopicReferenceGetter :
         IATopicReferenceGetter,
         ILoquiObject<ITopicReferenceGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => TopicReference_Registration.Instance;

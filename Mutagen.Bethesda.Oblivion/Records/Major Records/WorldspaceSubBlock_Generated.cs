@@ -566,7 +566,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GrupRecordType = (RecordType)Cell.GrupRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => WorldspaceSubBlockCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceSubBlockCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceSubBlockCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceSubBlockCommon.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
@@ -663,7 +663,7 @@ namespace Mutagen.Bethesda.Oblivion
         IWorldspaceSubBlockGetter,
         IMajorRecordEnumerable,
         ILoquiObjectSetter<IWorldspaceSubBlock>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new Int16 BlockNumberY { get; set; }
         new Int16 BlockNumberX { get; set; }
@@ -676,7 +676,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject,
         IMajorRecordGetterEnumerable,
         ILoquiObject<IWorldspaceSubBlockGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

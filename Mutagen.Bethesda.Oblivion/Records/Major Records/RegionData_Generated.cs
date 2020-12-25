@@ -365,7 +365,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GrupRecordType = RegionData_Registration.TriggeringRecordType;
         public virtual IEnumerable<FormLinkInformation> ContainedFormLinks => RegionDataCommon.Instance.GetContainedFormLinks(this);
         protected virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionDataCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionDataCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionDataCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -403,7 +403,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IRegionData :
         IRegionDataGetter,
         ILoquiObjectSetter<IRegionData>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new RegionDataHeader? Header { get; set; }
     }
@@ -411,7 +411,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IRegionDataGetter :
         ILoquiObject,
         ILoquiObject<IRegionDataGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

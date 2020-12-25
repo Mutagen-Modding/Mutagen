@@ -1282,7 +1282,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => APlacedTrapCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => APlacedTrapCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => APlacedTrapCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => APlacedTrapCommon.Instance.RemapLinks(this, mapping);
         public APlacedTrap(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -1370,7 +1370,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedReference,
         IKeywordLinkedReference,
         ILoquiObjectSetter<IAPlacedTrapInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new FormLinkNullable<IEncounterZoneGetter> EncounterZone { get; set; }
@@ -1409,7 +1409,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedReferenceGetter,
         IKeywordLinkedReferenceGetter,
         ILoquiObject<IAPlacedTrapGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => APlacedTrap_Registration.Instance;
@@ -2259,7 +2259,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainerGetter VirtualMachineAdapterlinkCont)
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
             {
                 foreach (var item in VirtualMachineAdapterlinkCont.ContainedFormLinks)
                 {

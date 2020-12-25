@@ -548,7 +548,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = LeveledSpell_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => LeveledSpellCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledSpellCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledSpellCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledSpellCommon.Instance.RemapLinks(this, mapping);
         public LeveledSpell(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -653,7 +653,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISpellSpawn,
         IObjectBounded,
         ILoquiObjectSetter<ILeveledSpellInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ObjectBounds ObjectBounds { get; set; }
         new Byte? ChanceNone { get; set; }
@@ -673,7 +673,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISpellSpawnGetter,
         IObjectBoundedGetter,
         ILoquiObject<ILeveledSpellGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => LeveledSpell_Registration.Instance;
@@ -1257,7 +1257,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (obj.Entries.TryGet(out var EntriesItem))
             {
-                foreach (var item in EntriesItem.WhereCastable<ILeveledSpellEntryGetter, ILinkedFormKeyContainerGetter>()
+                foreach (var item in EntriesItem.WhereCastable<ILeveledSpellEntryGetter, IFormLinkContainerGetter>()
                     .SelectMany((f) => f.ContainedFormLinks))
                 {
                     yield return FormLinkInformation.Factory(item);

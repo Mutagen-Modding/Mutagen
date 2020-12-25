@@ -706,7 +706,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GrupRecordType = PlacedNpc_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => PlacedNpcCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedNpcCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedNpcCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedNpcCommon.Instance.RemapLinks(this, mapping);
         public PlacedNpc(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -793,7 +793,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecord,
         IPlaced,
         ILoquiObjectSetter<IPlacedNpcInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLinkNullable<INpcGetter> Base { get; set; }
         new MemorySlice<Byte>? XPCIFluff { get; set; }
@@ -818,7 +818,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         IPlacedGetter,
         ILoquiObject<IPlacedNpcGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => PlacedNpc_Registration.Instance;

@@ -809,7 +809,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GrupRecordType = Weather_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => WeatherCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherCommon.Instance.RemapLinks(this, mapping);
         public Weather(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -895,7 +895,7 @@ namespace Mutagen.Bethesda.Oblivion
         IWeatherGetter,
         IOblivionMajorRecord,
         ILoquiObjectSetter<IWeatherInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new String? TextureLowerLayer { get; set; }
         new String? TextureUpperLayer { get; set; }
@@ -917,7 +917,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IWeatherGetter :
         IOblivionMajorRecordGetter,
         ILoquiObject<IWeatherGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Weather_Registration.Instance;

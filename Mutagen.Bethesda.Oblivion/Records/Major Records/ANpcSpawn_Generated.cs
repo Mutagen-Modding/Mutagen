@@ -310,7 +310,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => ANpcSpawnCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ANpcSpawnCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ANpcSpawnCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ANpcSpawnCommon.Instance.RemapLinks(this, mapping);
         public ANpcSpawn(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -372,7 +372,7 @@ namespace Mutagen.Bethesda.Oblivion
         IANpcSpawnGetter,
         IOblivionMajorRecord,
         ILoquiObjectSetter<IANpcSpawnInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
     }
 
@@ -386,7 +386,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IANpcSpawnGetter :
         IOblivionMajorRecordGetter,
         ILoquiObject<IANpcSpawnGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => ANpcSpawn_Registration.Instance;

@@ -474,7 +474,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public IEnumerable<FormLinkInformation> ContainedFormLinks => CreatureSoundCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CreatureSoundCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CreatureSoundCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CreatureSoundCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -536,7 +536,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ICreatureSound :
         ICreatureSoundGetter,
         ILoquiObjectSetter<ICreatureSound>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new CreatureSound.CreatureSoundType? SoundType { get; set; }
         new ExtendedList<SoundItem> Sounds { get; }
@@ -545,7 +545,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ICreatureSoundGetter :
         ILoquiObject,
         ILoquiObject<ICreatureSoundGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

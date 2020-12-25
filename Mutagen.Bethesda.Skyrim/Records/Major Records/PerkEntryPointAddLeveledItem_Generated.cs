@@ -357,7 +357,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = PerkEntryPointAddLeveledItem_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => PerkEntryPointAddLeveledItemCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkEntryPointAddLeveledItemCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkEntryPointAddLeveledItemCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkEntryPointAddLeveledItemCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -418,7 +418,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPerkEntryPointAddLeveledItemGetter,
         IAPerkEntryPointEffect,
         ILoquiObjectSetter<IPerkEntryPointAddLeveledItem>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<ILeveledItemGetter> Item { get; set; }
     }
@@ -426,7 +426,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPerkEntryPointAddLeveledItemGetter :
         IAPerkEntryPointEffectGetter,
         ILoquiObject<IPerkEntryPointAddLeveledItemGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => PerkEntryPointAddLeveledItem_Registration.Instance;

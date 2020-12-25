@@ -1040,7 +1040,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = Spell_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => SpellCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SpellCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SpellCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SpellCommon.Instance.RemapLinks(this, mapping);
         public Spell(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -1153,7 +1153,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBounded,
         IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<ISpellInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ObjectBounds ObjectBounds { get; set; }
         new TranslatedString? Name { get; set; }
@@ -1190,7 +1190,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundedGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<ISpellGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Spell_Registration.Instance;

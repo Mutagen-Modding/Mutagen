@@ -172,7 +172,7 @@
     <Compile Include="Links\FormLink.cs" />
     <Compile Include="Links\IEDIDLink.cs" />
     <Compile Include="Links\ILink.cs" />
-    <Compile Include="Links\ILinkedFormKeyContainerGetter.cs" />
+    <Compile Include="Links\IFormLinkContainerGetter.cs" />
     <Compile Include="Utility\MasterReferenceReader.cs" />
     <Compile Include="Processing\ModDecompressor.cs" />
     <Compile Include="Load Order\ModListing.cs" />

@@ -417,7 +417,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = NavigationDoorLink_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => NavigationDoorLinkCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavigationDoorLinkCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavigationDoorLinkCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavigationDoorLinkCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -479,7 +479,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface INavigationDoorLink :
         INavigationDoorLinkGetter,
         ILoquiObjectSetter<INavigationDoorLink>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IANavigationMeshGetter> NavMesh { get; set; }
         new Int16 NavMeshTriangleIndex { get; set; }
@@ -489,7 +489,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface INavigationDoorLinkGetter :
         ILoquiObject,
         ILoquiObject<INavigationDoorLinkGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

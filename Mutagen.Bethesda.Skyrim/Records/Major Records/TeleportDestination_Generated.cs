@@ -448,7 +448,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = TeleportDestination_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => TeleportDestinationCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TeleportDestinationCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TeleportDestinationCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TeleportDestinationCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -511,7 +511,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITeleportDestinationGetter,
         IPositionRotation,
         ILoquiObjectSetter<ITeleportDestination>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IPlacedObjectGetter> Door { get; set; }
         new P3Float Position { get; set; }
@@ -523,7 +523,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject,
         IPositionRotationGetter,
         ILoquiObject<ITeleportDestinationGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

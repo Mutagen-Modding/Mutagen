@@ -478,7 +478,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public IEnumerable<FormLinkInformation> ContainedFormLinks => FurnitureMarkerCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FurnitureMarkerCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FurnitureMarkerCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FurnitureMarkerCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -540,7 +540,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IFurnitureMarker :
         IFurnitureMarkerGetter,
         ILoquiObjectSetter<IFurnitureMarker>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new Boolean Enabled { get; set; }
         new EntryPoints? DisabledEntryPoints { get; set; }
@@ -551,7 +551,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IFurnitureMarkerGetter :
         ILoquiObject,
         ILoquiObject<IFurnitureMarkerGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

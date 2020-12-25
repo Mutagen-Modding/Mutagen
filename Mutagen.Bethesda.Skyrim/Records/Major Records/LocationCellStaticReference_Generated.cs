@@ -447,7 +447,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public IEnumerable<FormLinkInformation> ContainedFormLinks => LocationCellStaticReferenceCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCellStaticReferenceCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCellStaticReferenceCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCellStaticReferenceCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -509,7 +509,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILocationCellStaticReference :
         ILocationCellStaticReferenceGetter,
         ILoquiObjectSetter<ILocationCellStaticReference>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<ILocationReferenceTypeGetter> LocationRefType { get; set; }
         new FormLink<ILinkedReferenceGetter> Marker { get; set; }
@@ -520,7 +520,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILocationCellStaticReferenceGetter :
         ILoquiObject,
         ILoquiObject<ILocationCellStaticReferenceGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

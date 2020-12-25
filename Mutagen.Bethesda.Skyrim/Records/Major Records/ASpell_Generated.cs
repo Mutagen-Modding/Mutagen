@@ -312,7 +312,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => ASpellCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ASpellCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ASpellCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ASpellCommon.Instance.RemapLinks(this, mapping);
         public ASpell(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -391,7 +391,7 @@ namespace Mutagen.Bethesda.Skyrim
         IASpellGetter,
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IASpellInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
     }
 
@@ -405,7 +405,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IASpellGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IASpellGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => ASpell_Registration.Instance;

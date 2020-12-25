@@ -417,7 +417,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GrupRecordType = TeleportDestination_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => TeleportDestinationCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TeleportDestinationCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TeleportDestinationCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TeleportDestinationCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -479,7 +479,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ITeleportDestination :
         ITeleportDestinationGetter,
         ILoquiObjectSetter<ITeleportDestination>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IPlacedGetter> Destination { get; set; }
         new P3Float Position { get; set; }
@@ -489,7 +489,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ITeleportDestinationGetter :
         ILoquiObject,
         ILoquiObject<ITeleportDestinationGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

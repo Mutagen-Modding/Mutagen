@@ -902,7 +902,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = FootstepSet_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => FootstepSetCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FootstepSetCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FootstepSetCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FootstepSetCommon.Instance.RemapLinks(this, mapping);
         public FootstepSet(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -1005,7 +1005,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFootstepSetGetter,
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IFootstepSetInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ExtendedList<IFormLink<IFootstepGetter>> WalkForwardFootsteps { get; }
         new ExtendedList<IFormLink<IFootstepGetter>> RunForwardFootsteps { get; }
@@ -1024,7 +1024,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IFootstepSetGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IFootstepSetGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => FootstepSet_Registration.Instance;

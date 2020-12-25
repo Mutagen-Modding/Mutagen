@@ -490,7 +490,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = SoundCategory_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => SoundCategoryCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoundCategoryCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoundCategoryCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoundCategoryCommon.Instance.RemapLinks(this, mapping);
         public SoundCategory(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -594,7 +594,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ITranslatedNamed,
         ILoquiObjectSetter<ISoundCategoryInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new TranslatedString? Name { get; set; }
         new SoundCategory.Flag? Flags { get; set; }
@@ -614,7 +614,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         ITranslatedNamedGetter,
         ILoquiObject<ISoundCategoryGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => SoundCategory_Registration.Instance;

@@ -337,7 +337,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => BookSpellCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BookSpellCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BookSpellCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BookSpellCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -398,7 +398,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBookSpellGetter,
         IBookTeachTarget,
         ILoquiObjectSetter<IBookSpell>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<ISpellGetter> Spell { get; set; }
     }
@@ -406,7 +406,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IBookSpellGetter :
         IBookTeachTargetGetter,
         ILoquiObject<IBookSpellGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => BookSpell_Registration.Instance;

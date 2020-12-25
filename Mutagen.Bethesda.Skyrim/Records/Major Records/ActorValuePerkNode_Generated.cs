@@ -705,7 +705,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = ActorValuePerkNode_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => ActorValuePerkNodeCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActorValuePerkNodeCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActorValuePerkNodeCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActorValuePerkNodeCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -767,7 +767,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IActorValuePerkNode :
         IActorValuePerkNodeGetter,
         ILoquiObjectSetter<IActorValuePerkNode>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IPerkGetter> Perk { get; set; }
         new MemorySlice<Byte>? FNAM { get; set; }
@@ -783,7 +783,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IActorValuePerkNodeGetter :
         ILoquiObject,
         ILoquiObject<IActorValuePerkNodeGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

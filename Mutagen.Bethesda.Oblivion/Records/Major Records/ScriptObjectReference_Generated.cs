@@ -338,7 +338,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GrupRecordType = ScriptObjectReference_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => ScriptObjectReferenceCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptObjectReferenceCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptObjectReferenceCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptObjectReferenceCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -399,7 +399,7 @@ namespace Mutagen.Bethesda.Oblivion
         IScriptObjectReferenceGetter,
         IAScriptReference,
         ILoquiObjectSetter<IScriptObjectReference>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IOblivionMajorRecordGetter> Reference { get; set; }
     }
@@ -407,7 +407,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IScriptObjectReferenceGetter :
         IAScriptReferenceGetter,
         ILoquiObject<IScriptObjectReferenceGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => ScriptObjectReference_Registration.Instance;

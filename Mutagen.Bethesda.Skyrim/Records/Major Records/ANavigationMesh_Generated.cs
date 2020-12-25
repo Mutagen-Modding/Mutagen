@@ -444,7 +444,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = ANavigationMesh_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => ANavigationMeshCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ANavigationMeshCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ANavigationMeshCommon.Instance.RemapLinks(this, mapping);
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ANavigationMeshCommon.Instance.RemapLinks(this, mapping);
         public ANavigationMesh(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -528,7 +528,7 @@ namespace Mutagen.Bethesda.Skyrim
         IANavigationMeshGetter,
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IANavigationMeshInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new MemorySlice<Byte>? ONAM { get; set; }
         new MemorySlice<Byte>? PNAM { get; set; }
@@ -549,7 +549,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IANavigationMeshGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IANavigationMeshGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => ANavigationMesh_Registration.Instance;
