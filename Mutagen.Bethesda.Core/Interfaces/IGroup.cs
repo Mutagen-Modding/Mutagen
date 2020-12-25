@@ -118,7 +118,7 @@ namespace Mutagen.Bethesda
         /// <param name="group">Group to add to</param>
         /// <param name="source">Source record to duplicate</param>
         /// <returns>Duplicated and added record</returns>
-        public static TMajor DuplicateIn<TMajor, TMajorGetter>(this IGroupCommon<TMajor> group, TMajorGetter source)
+        public static TMajor DuplicateInAsNewRecord<TMajor, TMajorGetter>(this IGroupCommon<TMajor> group, TMajorGetter source)
             where TMajor : IMajorRecordInternal, TMajorGetter
             where TMajorGetter : IMajorRecordGetter, IBinaryItem
         {
@@ -143,7 +143,7 @@ namespace Mutagen.Bethesda
         /// <param name="edid">EditorID to drive the FormID assignment off any persistance systems</param>
         /// <param name="source">Source record to duplicate</param>
         /// <returns>Duplicated and added record</returns>
-        public static TMajor DuplicateIn<TMajor, TMajorGetter>(this IGroupCommon<TMajor> group, string edid, TMajorGetter source)
+        public static TMajor DuplicateInAsNewRecord<TMajor, TMajorGetter>(this IGroupCommon<TMajor> group, string edid, TMajorGetter source)
             where TMajor : IMajorRecordInternal, TMajorGetter
             where TMajorGetter : IMajorRecordGetter, IBinaryItem
         {
