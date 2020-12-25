@@ -7072,390 +7072,390 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IOblivionModGetter obj,
             ILinkCache linkCache)
         {
-            foreach (var item in obj.GameSettings.EnumerateMajorRecords())
+            foreach (var item in obj.GameSettings)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, IGameSettingInternal, IGameSettingGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.GameSettings.GetOrAddAsOverride((IGameSettingGetter)r));
+                    getter: (m, r) => m.GameSettings.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.Globals.EnumerateMajorRecords())
+            foreach (var item in obj.Globals)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, IGlobalInternal, IGlobalGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Globals.GetOrAddAsOverride((IGlobalGetter)r));
+                    getter: (m, r) => m.Globals.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.Classes.EnumerateMajorRecords())
+            foreach (var item in obj.Classes)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, IClassInternal, IClassGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Classes.GetOrAddAsOverride((IClassGetter)r));
+                    getter: (m, r) => m.Classes.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.Factions.EnumerateMajorRecords())
+            foreach (var item in obj.Factions)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, IFactionInternal, IFactionGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Factions.GetOrAddAsOverride((IFactionGetter)r));
+                    getter: (m, r) => m.Factions.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.Hairs.EnumerateMajorRecords())
+            foreach (var item in obj.Hairs)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, IHairInternal, IHairGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Hairs.GetOrAddAsOverride((IHairGetter)r));
+                    getter: (m, r) => m.Hairs.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.Eyes.EnumerateMajorRecords())
+            foreach (var item in obj.Eyes)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, IEyeInternal, IEyeGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Eyes.GetOrAddAsOverride((IEyeGetter)r));
+                    getter: (m, r) => m.Eyes.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.Races.EnumerateMajorRecords())
+            foreach (var item in obj.Races)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, IRaceInternal, IRaceGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Races.GetOrAddAsOverride((IRaceGetter)r));
+                    getter: (m, r) => m.Races.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.Sounds.EnumerateMajorRecords())
+            foreach (var item in obj.Sounds)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, ISoundInternal, ISoundGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Sounds.GetOrAddAsOverride((ISoundGetter)r));
+                    getter: (m, r) => m.Sounds.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.Skills.EnumerateMajorRecords())
+            foreach (var item in obj.Skills)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, ISkillRecordInternal, ISkillRecordGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Skills.GetOrAddAsOverride((ISkillRecordGetter)r));
+                    getter: (m, r) => m.Skills.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.MagicEffects.EnumerateMajorRecords())
+            foreach (var item in obj.MagicEffects)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, IMagicEffectInternal, IMagicEffectGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.MagicEffects.GetOrAddAsOverride((IMagicEffectGetter)r));
+                    getter: (m, r) => m.MagicEffects.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.Scripts.EnumerateMajorRecords())
+            foreach (var item in obj.Scripts)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, IScriptInternal, IScriptGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Scripts.GetOrAddAsOverride((IScriptGetter)r));
+                    getter: (m, r) => m.Scripts.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.LandTextures.EnumerateMajorRecords())
+            foreach (var item in obj.LandTextures)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, ILandTextureInternal, ILandTextureGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.LandTextures.GetOrAddAsOverride((ILandTextureGetter)r));
+                    getter: (m, r) => m.LandTextures.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.Enchantments.EnumerateMajorRecords())
+            foreach (var item in obj.Enchantments)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, IEnchantmentInternal, IEnchantmentGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Enchantments.GetOrAddAsOverride((IEnchantmentGetter)r));
+                    getter: (m, r) => m.Enchantments.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.Spells.EnumerateMajorRecords())
+            foreach (var item in obj.Spells)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, ISpellUnleveledInternal, ISpellUnleveledGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Spells.GetOrAddAsOverride((ISpellUnleveledGetter)r));
+                    getter: (m, r) => m.Spells.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.Birthsigns.EnumerateMajorRecords())
+            foreach (var item in obj.Birthsigns)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, IBirthsignInternal, IBirthsignGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Birthsigns.GetOrAddAsOverride((IBirthsignGetter)r));
+                    getter: (m, r) => m.Birthsigns.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.Activators.EnumerateMajorRecords())
+            foreach (var item in obj.Activators)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, IActivatorInternal, IActivatorGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Activators.GetOrAddAsOverride((IActivatorGetter)r));
+                    getter: (m, r) => m.Activators.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.AlchemicalApparatus.EnumerateMajorRecords())
+            foreach (var item in obj.AlchemicalApparatus)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, IAlchemicalApparatusInternal, IAlchemicalApparatusGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.AlchemicalApparatus.GetOrAddAsOverride((IAlchemicalApparatusGetter)r));
+                    getter: (m, r) => m.AlchemicalApparatus.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.Armors.EnumerateMajorRecords())
+            foreach (var item in obj.Armors)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, IArmorInternal, IArmorGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Armors.GetOrAddAsOverride((IArmorGetter)r));
+                    getter: (m, r) => m.Armors.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.Books.EnumerateMajorRecords())
+            foreach (var item in obj.Books)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, IBookInternal, IBookGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Books.GetOrAddAsOverride((IBookGetter)r));
+                    getter: (m, r) => m.Books.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.Clothes.EnumerateMajorRecords())
+            foreach (var item in obj.Clothes)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, IClothingInternal, IClothingGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Clothes.GetOrAddAsOverride((IClothingGetter)r));
+                    getter: (m, r) => m.Clothes.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.Containers.EnumerateMajorRecords())
+            foreach (var item in obj.Containers)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, IContainerInternal, IContainerGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Containers.GetOrAddAsOverride((IContainerGetter)r));
+                    getter: (m, r) => m.Containers.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.Doors.EnumerateMajorRecords())
+            foreach (var item in obj.Doors)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, IDoorInternal, IDoorGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Doors.GetOrAddAsOverride((IDoorGetter)r));
+                    getter: (m, r) => m.Doors.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.Ingredients.EnumerateMajorRecords())
+            foreach (var item in obj.Ingredients)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, IIngredientInternal, IIngredientGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Ingredients.GetOrAddAsOverride((IIngredientGetter)r));
+                    getter: (m, r) => m.Ingredients.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.Lights.EnumerateMajorRecords())
+            foreach (var item in obj.Lights)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, ILightInternal, ILightGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Lights.GetOrAddAsOverride((ILightGetter)r));
+                    getter: (m, r) => m.Lights.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.Miscellaneous.EnumerateMajorRecords())
+            foreach (var item in obj.Miscellaneous)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, IMiscellaneousInternal, IMiscellaneousGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Miscellaneous.GetOrAddAsOverride((IMiscellaneousGetter)r));
+                    getter: (m, r) => m.Miscellaneous.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.Statics.EnumerateMajorRecords())
+            foreach (var item in obj.Statics)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, IStaticInternal, IStaticGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Statics.GetOrAddAsOverride((IStaticGetter)r));
+                    getter: (m, r) => m.Statics.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.Grasses.EnumerateMajorRecords())
+            foreach (var item in obj.Grasses)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, IGrassInternal, IGrassGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Grasses.GetOrAddAsOverride((IGrassGetter)r));
+                    getter: (m, r) => m.Grasses.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.Trees.EnumerateMajorRecords())
+            foreach (var item in obj.Trees)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, ITreeInternal, ITreeGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Trees.GetOrAddAsOverride((ITreeGetter)r));
+                    getter: (m, r) => m.Trees.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.Flora.EnumerateMajorRecords())
+            foreach (var item in obj.Flora)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, IFloraInternal, IFloraGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Flora.GetOrAddAsOverride((IFloraGetter)r));
+                    getter: (m, r) => m.Flora.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.Furniture.EnumerateMajorRecords())
+            foreach (var item in obj.Furniture)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, IFurnitureInternal, IFurnitureGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Furniture.GetOrAddAsOverride((IFurnitureGetter)r));
+                    getter: (m, r) => m.Furniture.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.Weapons.EnumerateMajorRecords())
+            foreach (var item in obj.Weapons)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, IWeaponInternal, IWeaponGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Weapons.GetOrAddAsOverride((IWeaponGetter)r));
+                    getter: (m, r) => m.Weapons.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.Ammunitions.EnumerateMajorRecords())
+            foreach (var item in obj.Ammunitions)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, IAmmunitionInternal, IAmmunitionGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Ammunitions.GetOrAddAsOverride((IAmmunitionGetter)r));
+                    getter: (m, r) => m.Ammunitions.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.Npcs.EnumerateMajorRecords())
+            foreach (var item in obj.Npcs)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, INpcInternal, INpcGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Npcs.GetOrAddAsOverride((INpcGetter)r));
+                    getter: (m, r) => m.Npcs.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.Creatures.EnumerateMajorRecords())
+            foreach (var item in obj.Creatures)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, ICreatureInternal, ICreatureGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Creatures.GetOrAddAsOverride((ICreatureGetter)r));
+                    getter: (m, r) => m.Creatures.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.LeveledCreatures.EnumerateMajorRecords())
+            foreach (var item in obj.LeveledCreatures)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, ILeveledCreatureInternal, ILeveledCreatureGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.LeveledCreatures.GetOrAddAsOverride((ILeveledCreatureGetter)r));
+                    getter: (m, r) => m.LeveledCreatures.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.SoulGems.EnumerateMajorRecords())
+            foreach (var item in obj.SoulGems)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, ISoulGemInternal, ISoulGemGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.SoulGems.GetOrAddAsOverride((ISoulGemGetter)r));
+                    getter: (m, r) => m.SoulGems.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.Keys.EnumerateMajorRecords())
+            foreach (var item in obj.Keys)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, IKeyInternal, IKeyGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Keys.GetOrAddAsOverride((IKeyGetter)r));
+                    getter: (m, r) => m.Keys.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.Potions.EnumerateMajorRecords())
+            foreach (var item in obj.Potions)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, IPotionInternal, IPotionGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Potions.GetOrAddAsOverride((IPotionGetter)r));
+                    getter: (m, r) => m.Potions.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.Subspaces.EnumerateMajorRecords())
+            foreach (var item in obj.Subspaces)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, ISubspaceInternal, ISubspaceGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Subspaces.GetOrAddAsOverride((ISubspaceGetter)r));
+                    getter: (m, r) => m.Subspaces.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.SigilStones.EnumerateMajorRecords())
+            foreach (var item in obj.SigilStones)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, ISigilStoneInternal, ISigilStoneGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.SigilStones.GetOrAddAsOverride((ISigilStoneGetter)r));
+                    getter: (m, r) => m.SigilStones.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.LeveledItems.EnumerateMajorRecords())
+            foreach (var item in obj.LeveledItems)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, ILeveledItemInternal, ILeveledItemGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.LeveledItems.GetOrAddAsOverride((ILeveledItemGetter)r));
+                    getter: (m, r) => m.LeveledItems.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.Weathers.EnumerateMajorRecords())
+            foreach (var item in obj.Weathers)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, IWeatherInternal, IWeatherGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Weathers.GetOrAddAsOverride((IWeatherGetter)r));
+                    getter: (m, r) => m.Weathers.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.Climates.EnumerateMajorRecords())
+            foreach (var item in obj.Climates)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, IClimateInternal, IClimateGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Climates.GetOrAddAsOverride((IClimateGetter)r));
+                    getter: (m, r) => m.Climates.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.Regions.EnumerateMajorRecords())
+            foreach (var item in obj.Regions)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, IRegionInternal, IRegionGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Regions.GetOrAddAsOverride((IRegionGetter)r));
+                    getter: (m, r) => m.Regions.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.Worldspaces.EnumerateMajorRecords())
+            foreach (var item in obj.Worldspaces)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, IWorldspaceInternal, IWorldspaceGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Worldspaces.GetOrAddAsOverride((IWorldspaceGetter)r));
+                    getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.DialogTopics.EnumerateMajorRecords())
+            foreach (var item in obj.DialogTopics)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, IDialogTopicInternal, IDialogTopicGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.DialogTopics.GetOrAddAsOverride((IDialogTopicGetter)r));
+                    getter: (m, r) => m.DialogTopics.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.Quests.EnumerateMajorRecords())
+            foreach (var item in obj.Quests)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, IQuestInternal, IQuestGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Quests.GetOrAddAsOverride((IQuestGetter)r));
+                    getter: (m, r) => m.Quests.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.IdleAnimations.EnumerateMajorRecords())
+            foreach (var item in obj.IdleAnimations)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, IIdleAnimationInternal, IIdleAnimationGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.IdleAnimations.GetOrAddAsOverride((IIdleAnimationGetter)r));
+                    getter: (m, r) => m.IdleAnimations.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.AIPackages.EnumerateMajorRecords())
+            foreach (var item in obj.AIPackages)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, IAIPackageInternal, IAIPackageGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.AIPackages.GetOrAddAsOverride((IAIPackageGetter)r));
+                    getter: (m, r) => m.AIPackages.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.CombatStyles.EnumerateMajorRecords())
+            foreach (var item in obj.CombatStyles)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, ICombatStyleInternal, ICombatStyleGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.CombatStyles.GetOrAddAsOverride((ICombatStyleGetter)r));
+                    getter: (m, r) => m.CombatStyles.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.LoadScreens.EnumerateMajorRecords())
+            foreach (var item in obj.LoadScreens)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, ILoadScreenInternal, ILoadScreenGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.LoadScreens.GetOrAddAsOverride((ILoadScreenGetter)r));
+                    getter: (m, r) => m.LoadScreens.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.LeveledSpells.EnumerateMajorRecords())
+            foreach (var item in obj.LeveledSpells)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, ILeveledSpellInternal, ILeveledSpellGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.LeveledSpells.GetOrAddAsOverride((ILeveledSpellGetter)r));
+                    getter: (m, r) => m.LeveledSpells.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.AnimatedObjects.EnumerateMajorRecords())
+            foreach (var item in obj.AnimatedObjects)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, IAnimatedObjectInternal, IAnimatedObjectGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.AnimatedObjects.GetOrAddAsOverride((IAnimatedObjectGetter)r));
+                    getter: (m, r) => m.AnimatedObjects.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.Waters.EnumerateMajorRecords())
+            foreach (var item in obj.Waters)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, IWaterInternal, IWaterGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Waters.GetOrAddAsOverride((IWaterGetter)r));
+                    getter: (m, r) => m.Waters.GetOrAddAsOverride(r));
             }
-            foreach (var item in obj.EffectShaders.EnumerateMajorRecords())
+            foreach (var item in obj.EffectShaders)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, IEffectShaderInternal, IEffectShaderGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.EffectShaders.GetOrAddAsOverride((IEffectShaderGetter)r));
+                    getter: (m, r) => m.EffectShaders.GetOrAddAsOverride(r));
             }
             foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
                 linkCache: linkCache,
@@ -7632,770 +7632,660 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IGameSettingGetter":
                 case "IGameSetting":
                 case "IGameSettingInternal":
-                    foreach (var item in obj.GameSettings.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.GameSettings)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, IGameSettingInternal, IGameSettingGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.GameSettings.GetOrAddAsOverride((IGameSettingGetter)r));
+                            getter: (m, r) => m.GameSettings.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "Global":
                 case "IGlobalGetter":
                 case "IGlobal":
                 case "IGlobalInternal":
-                    foreach (var item in obj.Globals.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Globals)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, IGlobalInternal, IGlobalGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Globals.GetOrAddAsOverride((IGlobalGetter)r));
+                            getter: (m, r) => m.Globals.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "Class":
                 case "IClassGetter":
                 case "IClass":
                 case "IClassInternal":
-                    foreach (var item in obj.Classes.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Classes)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, IClassInternal, IClassGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Classes.GetOrAddAsOverride((IClassGetter)r));
+                            getter: (m, r) => m.Classes.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "Faction":
                 case "IFactionGetter":
                 case "IFaction":
                 case "IFactionInternal":
-                    foreach (var item in obj.Factions.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Factions)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, IFactionInternal, IFactionGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Factions.GetOrAddAsOverride((IFactionGetter)r));
+                            getter: (m, r) => m.Factions.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "Hair":
                 case "IHairGetter":
                 case "IHair":
                 case "IHairInternal":
-                    foreach (var item in obj.Hairs.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Hairs)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, IHairInternal, IHairGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Hairs.GetOrAddAsOverride((IHairGetter)r));
+                            getter: (m, r) => m.Hairs.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "Eye":
                 case "IEyeGetter":
                 case "IEye":
                 case "IEyeInternal":
-                    foreach (var item in obj.Eyes.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Eyes)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, IEyeInternal, IEyeGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Eyes.GetOrAddAsOverride((IEyeGetter)r));
+                            getter: (m, r) => m.Eyes.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "Race":
                 case "IRaceGetter":
                 case "IRace":
                 case "IRaceInternal":
-                    foreach (var item in obj.Races.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Races)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, IRaceInternal, IRaceGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Races.GetOrAddAsOverride((IRaceGetter)r));
+                            getter: (m, r) => m.Races.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "Sound":
                 case "ISoundGetter":
                 case "ISound":
                 case "ISoundInternal":
-                    foreach (var item in obj.Sounds.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Sounds)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, ISoundInternal, ISoundGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Sounds.GetOrAddAsOverride((ISoundGetter)r));
+                            getter: (m, r) => m.Sounds.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "SkillRecord":
                 case "ISkillRecordGetter":
                 case "ISkillRecord":
                 case "ISkillRecordInternal":
-                    foreach (var item in obj.Skills.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Skills)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, ISkillRecordInternal, ISkillRecordGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Skills.GetOrAddAsOverride((ISkillRecordGetter)r));
+                            getter: (m, r) => m.Skills.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "MagicEffect":
                 case "IMagicEffectGetter":
                 case "IMagicEffect":
                 case "IMagicEffectInternal":
-                    foreach (var item in obj.MagicEffects.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.MagicEffects)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, IMagicEffectInternal, IMagicEffectGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.MagicEffects.GetOrAddAsOverride((IMagicEffectGetter)r));
+                            getter: (m, r) => m.MagicEffects.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "Script":
                 case "IScriptGetter":
                 case "IScript":
                 case "IScriptInternal":
-                    foreach (var item in obj.Scripts.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Scripts)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, IScriptInternal, IScriptGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Scripts.GetOrAddAsOverride((IScriptGetter)r));
+                            getter: (m, r) => m.Scripts.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "LandTexture":
                 case "ILandTextureGetter":
                 case "ILandTexture":
                 case "ILandTextureInternal":
-                    foreach (var item in obj.LandTextures.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.LandTextures)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, ILandTextureInternal, ILandTextureGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.LandTextures.GetOrAddAsOverride((ILandTextureGetter)r));
+                            getter: (m, r) => m.LandTextures.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "Enchantment":
                 case "IEnchantmentGetter":
                 case "IEnchantment":
                 case "IEnchantmentInternal":
-                    foreach (var item in obj.Enchantments.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Enchantments)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, IEnchantmentInternal, IEnchantmentGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Enchantments.GetOrAddAsOverride((IEnchantmentGetter)r));
+                            getter: (m, r) => m.Enchantments.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "SpellUnleveled":
                 case "ISpellUnleveledGetter":
                 case "ISpellUnleveled":
                 case "ISpellUnleveledInternal":
-                    foreach (var item in obj.Spells.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Spells)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, ISpellUnleveledInternal, ISpellUnleveledGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Spells.GetOrAddAsOverride((ISpellUnleveledGetter)r));
+                            getter: (m, r) => m.Spells.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "Birthsign":
                 case "IBirthsignGetter":
                 case "IBirthsign":
                 case "IBirthsignInternal":
-                    foreach (var item in obj.Birthsigns.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Birthsigns)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, IBirthsignInternal, IBirthsignGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Birthsigns.GetOrAddAsOverride((IBirthsignGetter)r));
+                            getter: (m, r) => m.Birthsigns.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "Activator":
                 case "IActivatorGetter":
                 case "IActivator":
                 case "IActivatorInternal":
-                    foreach (var item in obj.Activators.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Activators)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, IActivatorInternal, IActivatorGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Activators.GetOrAddAsOverride((IActivatorGetter)r));
+                            getter: (m, r) => m.Activators.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "AlchemicalApparatus":
                 case "IAlchemicalApparatusGetter":
                 case "IAlchemicalApparatus":
                 case "IAlchemicalApparatusInternal":
-                    foreach (var item in obj.AlchemicalApparatus.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.AlchemicalApparatus)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, IAlchemicalApparatusInternal, IAlchemicalApparatusGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.AlchemicalApparatus.GetOrAddAsOverride((IAlchemicalApparatusGetter)r));
+                            getter: (m, r) => m.AlchemicalApparatus.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "Armor":
                 case "IArmorGetter":
                 case "IArmor":
                 case "IArmorInternal":
-                    foreach (var item in obj.Armors.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Armors)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, IArmorInternal, IArmorGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Armors.GetOrAddAsOverride((IArmorGetter)r));
+                            getter: (m, r) => m.Armors.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "Book":
                 case "IBookGetter":
                 case "IBook":
                 case "IBookInternal":
-                    foreach (var item in obj.Books.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Books)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, IBookInternal, IBookGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Books.GetOrAddAsOverride((IBookGetter)r));
+                            getter: (m, r) => m.Books.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "Clothing":
                 case "IClothingGetter":
                 case "IClothing":
                 case "IClothingInternal":
-                    foreach (var item in obj.Clothes.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Clothes)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, IClothingInternal, IClothingGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Clothes.GetOrAddAsOverride((IClothingGetter)r));
+                            getter: (m, r) => m.Clothes.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "Container":
                 case "IContainerGetter":
                 case "IContainer":
                 case "IContainerInternal":
-                    foreach (var item in obj.Containers.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Containers)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, IContainerInternal, IContainerGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Containers.GetOrAddAsOverride((IContainerGetter)r));
+                            getter: (m, r) => m.Containers.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "Door":
                 case "IDoorGetter":
                 case "IDoor":
                 case "IDoorInternal":
-                    foreach (var item in obj.Doors.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Doors)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, IDoorInternal, IDoorGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Doors.GetOrAddAsOverride((IDoorGetter)r));
+                            getter: (m, r) => m.Doors.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "Ingredient":
                 case "IIngredientGetter":
                 case "IIngredient":
                 case "IIngredientInternal":
-                    foreach (var item in obj.Ingredients.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Ingredients)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, IIngredientInternal, IIngredientGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Ingredients.GetOrAddAsOverride((IIngredientGetter)r));
+                            getter: (m, r) => m.Ingredients.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "Light":
                 case "ILightGetter":
                 case "ILight":
                 case "ILightInternal":
-                    foreach (var item in obj.Lights.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Lights)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, ILightInternal, ILightGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Lights.GetOrAddAsOverride((ILightGetter)r));
+                            getter: (m, r) => m.Lights.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "Miscellaneous":
                 case "IMiscellaneousGetter":
                 case "IMiscellaneous":
                 case "IMiscellaneousInternal":
-                    foreach (var item in obj.Miscellaneous.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Miscellaneous)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, IMiscellaneousInternal, IMiscellaneousGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Miscellaneous.GetOrAddAsOverride((IMiscellaneousGetter)r));
+                            getter: (m, r) => m.Miscellaneous.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "Static":
                 case "IStaticGetter":
                 case "IStatic":
                 case "IStaticInternal":
-                    foreach (var item in obj.Statics.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Statics)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, IStaticInternal, IStaticGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Statics.GetOrAddAsOverride((IStaticGetter)r));
+                            getter: (m, r) => m.Statics.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "Grass":
                 case "IGrassGetter":
                 case "IGrass":
                 case "IGrassInternal":
-                    foreach (var item in obj.Grasses.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Grasses)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, IGrassInternal, IGrassGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Grasses.GetOrAddAsOverride((IGrassGetter)r));
+                            getter: (m, r) => m.Grasses.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "Tree":
                 case "ITreeGetter":
                 case "ITree":
                 case "ITreeInternal":
-                    foreach (var item in obj.Trees.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Trees)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, ITreeInternal, ITreeGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Trees.GetOrAddAsOverride((ITreeGetter)r));
+                            getter: (m, r) => m.Trees.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "Flora":
                 case "IFloraGetter":
                 case "IFlora":
                 case "IFloraInternal":
-                    foreach (var item in obj.Flora.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Flora)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, IFloraInternal, IFloraGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Flora.GetOrAddAsOverride((IFloraGetter)r));
+                            getter: (m, r) => m.Flora.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "Furniture":
                 case "IFurnitureGetter":
                 case "IFurniture":
                 case "IFurnitureInternal":
-                    foreach (var item in obj.Furniture.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Furniture)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, IFurnitureInternal, IFurnitureGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Furniture.GetOrAddAsOverride((IFurnitureGetter)r));
+                            getter: (m, r) => m.Furniture.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "Weapon":
                 case "IWeaponGetter":
                 case "IWeapon":
                 case "IWeaponInternal":
-                    foreach (var item in obj.Weapons.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Weapons)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, IWeaponInternal, IWeaponGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Weapons.GetOrAddAsOverride((IWeaponGetter)r));
+                            getter: (m, r) => m.Weapons.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "Ammunition":
                 case "IAmmunitionGetter":
                 case "IAmmunition":
                 case "IAmmunitionInternal":
-                    foreach (var item in obj.Ammunitions.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Ammunitions)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, IAmmunitionInternal, IAmmunitionGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Ammunitions.GetOrAddAsOverride((IAmmunitionGetter)r));
+                            getter: (m, r) => m.Ammunitions.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "Npc":
                 case "INpcGetter":
                 case "INpc":
                 case "INpcInternal":
-                    foreach (var item in obj.Npcs.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Npcs)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, INpcInternal, INpcGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Npcs.GetOrAddAsOverride((INpcGetter)r));
+                            getter: (m, r) => m.Npcs.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "Creature":
                 case "ICreatureGetter":
                 case "ICreature":
                 case "ICreatureInternal":
-                    foreach (var item in obj.Creatures.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Creatures)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, ICreatureInternal, ICreatureGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Creatures.GetOrAddAsOverride((ICreatureGetter)r));
+                            getter: (m, r) => m.Creatures.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "LeveledCreature":
                 case "ILeveledCreatureGetter":
                 case "ILeveledCreature":
                 case "ILeveledCreatureInternal":
-                    foreach (var item in obj.LeveledCreatures.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.LeveledCreatures)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, ILeveledCreatureInternal, ILeveledCreatureGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.LeveledCreatures.GetOrAddAsOverride((ILeveledCreatureGetter)r));
+                            getter: (m, r) => m.LeveledCreatures.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "SoulGem":
                 case "ISoulGemGetter":
                 case "ISoulGem":
                 case "ISoulGemInternal":
-                    foreach (var item in obj.SoulGems.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.SoulGems)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, ISoulGemInternal, ISoulGemGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.SoulGems.GetOrAddAsOverride((ISoulGemGetter)r));
+                            getter: (m, r) => m.SoulGems.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "Key":
                 case "IKeyGetter":
                 case "IKey":
                 case "IKeyInternal":
-                    foreach (var item in obj.Keys.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Keys)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, IKeyInternal, IKeyGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Keys.GetOrAddAsOverride((IKeyGetter)r));
+                            getter: (m, r) => m.Keys.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "Potion":
                 case "IPotionGetter":
                 case "IPotion":
                 case "IPotionInternal":
-                    foreach (var item in obj.Potions.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Potions)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, IPotionInternal, IPotionGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Potions.GetOrAddAsOverride((IPotionGetter)r));
+                            getter: (m, r) => m.Potions.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "Subspace":
                 case "ISubspaceGetter":
                 case "ISubspace":
                 case "ISubspaceInternal":
-                    foreach (var item in obj.Subspaces.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Subspaces)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, ISubspaceInternal, ISubspaceGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Subspaces.GetOrAddAsOverride((ISubspaceGetter)r));
+                            getter: (m, r) => m.Subspaces.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "SigilStone":
                 case "ISigilStoneGetter":
                 case "ISigilStone":
                 case "ISigilStoneInternal":
-                    foreach (var item in obj.SigilStones.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.SigilStones)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, ISigilStoneInternal, ISigilStoneGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.SigilStones.GetOrAddAsOverride((ISigilStoneGetter)r));
+                            getter: (m, r) => m.SigilStones.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "LeveledItem":
                 case "ILeveledItemGetter":
                 case "ILeveledItem":
                 case "ILeveledItemInternal":
-                    foreach (var item in obj.LeveledItems.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.LeveledItems)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, ILeveledItemInternal, ILeveledItemGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.LeveledItems.GetOrAddAsOverride((ILeveledItemGetter)r));
+                            getter: (m, r) => m.LeveledItems.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "Weather":
                 case "IWeatherGetter":
                 case "IWeather":
                 case "IWeatherInternal":
-                    foreach (var item in obj.Weathers.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Weathers)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, IWeatherInternal, IWeatherGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Weathers.GetOrAddAsOverride((IWeatherGetter)r));
+                            getter: (m, r) => m.Weathers.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "Climate":
                 case "IClimateGetter":
                 case "IClimate":
                 case "IClimateInternal":
-                    foreach (var item in obj.Climates.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Climates)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, IClimateInternal, IClimateGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Climates.GetOrAddAsOverride((IClimateGetter)r));
+                            getter: (m, r) => m.Climates.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "Region":
                 case "IRegionGetter":
                 case "IRegion":
                 case "IRegionInternal":
-                    foreach (var item in obj.Regions.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Regions)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, IRegionInternal, IRegionGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Regions.GetOrAddAsOverride((IRegionGetter)r));
+                            getter: (m, r) => m.Regions.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "Worldspace":
                 case "IWorldspaceGetter":
                 case "IWorldspace":
                 case "IWorldspaceInternal":
-                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Worldspaces)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, IWorldspaceInternal, IWorldspaceGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Worldspaces.GetOrAddAsOverride((IWorldspaceGetter)r));
+                            getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "DialogTopic":
                 case "IDialogTopicGetter":
                 case "IDialogTopic":
                 case "IDialogTopicInternal":
-                    foreach (var item in obj.DialogTopics.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.DialogTopics)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, IDialogTopicInternal, IDialogTopicGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.DialogTopics.GetOrAddAsOverride((IDialogTopicGetter)r));
+                            getter: (m, r) => m.DialogTopics.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "Quest":
                 case "IQuestGetter":
                 case "IQuest":
                 case "IQuestInternal":
-                    foreach (var item in obj.Quests.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Quests)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, IQuestInternal, IQuestGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Quests.GetOrAddAsOverride((IQuestGetter)r));
+                            getter: (m, r) => m.Quests.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "IdleAnimation":
                 case "IIdleAnimationGetter":
                 case "IIdleAnimation":
                 case "IIdleAnimationInternal":
-                    foreach (var item in obj.IdleAnimations.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.IdleAnimations)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, IIdleAnimationInternal, IIdleAnimationGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.IdleAnimations.GetOrAddAsOverride((IIdleAnimationGetter)r));
+                            getter: (m, r) => m.IdleAnimations.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "AIPackage":
                 case "IAIPackageGetter":
                 case "IAIPackage":
                 case "IAIPackageInternal":
-                    foreach (var item in obj.AIPackages.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.AIPackages)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, IAIPackageInternal, IAIPackageGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.AIPackages.GetOrAddAsOverride((IAIPackageGetter)r));
+                            getter: (m, r) => m.AIPackages.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "CombatStyle":
                 case "ICombatStyleGetter":
                 case "ICombatStyle":
                 case "ICombatStyleInternal":
-                    foreach (var item in obj.CombatStyles.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.CombatStyles)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, ICombatStyleInternal, ICombatStyleGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.CombatStyles.GetOrAddAsOverride((ICombatStyleGetter)r));
+                            getter: (m, r) => m.CombatStyles.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "LoadScreen":
                 case "ILoadScreenGetter":
                 case "ILoadScreen":
                 case "ILoadScreenInternal":
-                    foreach (var item in obj.LoadScreens.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.LoadScreens)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, ILoadScreenInternal, ILoadScreenGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.LoadScreens.GetOrAddAsOverride((ILoadScreenGetter)r));
+                            getter: (m, r) => m.LoadScreens.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "LeveledSpell":
                 case "ILeveledSpellGetter":
                 case "ILeveledSpell":
                 case "ILeveledSpellInternal":
-                    foreach (var item in obj.LeveledSpells.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.LeveledSpells)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, ILeveledSpellInternal, ILeveledSpellGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.LeveledSpells.GetOrAddAsOverride((ILeveledSpellGetter)r));
+                            getter: (m, r) => m.LeveledSpells.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "AnimatedObject":
                 case "IAnimatedObjectGetter":
                 case "IAnimatedObject":
                 case "IAnimatedObjectInternal":
-                    foreach (var item in obj.AnimatedObjects.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.AnimatedObjects)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, IAnimatedObjectInternal, IAnimatedObjectGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.AnimatedObjects.GetOrAddAsOverride((IAnimatedObjectGetter)r));
+                            getter: (m, r) => m.AnimatedObjects.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "Water":
                 case "IWaterGetter":
                 case "IWater":
                 case "IWaterInternal":
-                    foreach (var item in obj.Waters.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Waters)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, IWaterInternal, IWaterGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Waters.GetOrAddAsOverride((IWaterGetter)r));
+                            getter: (m, r) => m.Waters.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "EffectShader":
                 case "IEffectShaderGetter":
                 case "IEffectShader":
                 case "IEffectShaderInternal":
-                    foreach (var item in obj.EffectShaders.EnumerateMajorRecords(
-                        type: type,
-                        throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.EffectShaders)
                     {
-                        yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<IOblivionMod, IEffectShaderInternal, IEffectShaderGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.EffectShaders.GetOrAddAsOverride((IEffectShaderGetter)r));
+                            getter: (m, r) => m.EffectShaders.GetOrAddAsOverride(r));
                     }
                     yield break;
                 case "Cell":

@@ -695,29 +695,20 @@ namespace Mutagen.Bethesda.Generation
             if (field is GroupType group)
             {
                 if (blackList?.Contains(group.GetGroupTarget()) ?? false) return;
+
+                var groupTargetGetter = group.GetGroupTarget().Interface(getter: true, internalInterface: true);
+                var groupTargetSetter = group.GetGroupTarget().Interface(getter: false, internalInterface: true);
                 if (!hasTarget)
                 {
-                    using (var args = new ArgsWrapper(fieldGen,
-                        $"foreach (var item in obj.{field.Name}.EnumerateMajorRecords",
-                        suffixLine: ")")
-                    {
-                        SemiColon = false
-                    })
-                    {
-                        if (includeType)
-                        {
-                            args.AddPassArg("type");
-                            args.AddPassArg("throwIfUnknown");
-                        }
-                    }
+                    fieldGen.AppendLine($"foreach (var item in obj.{field.Name})");
                     using (new BraceWrapper(fieldGen))
                     {
                         using (var args = new ArgsWrapper(fieldGen,
-                            $"yield return new ModContext<{obj.Interface(getter: false)}, IMajorRecordCommon, IMajorRecordCommonGetter>"))
+                            $"yield return new ModContext<{obj.Interface(getter: false)}, {groupTargetSetter}, {groupTargetGetter}>"))
                         {
                             args.Add("modKey: obj.ModKey");
                             args.Add("record: item");
-                            args.Add($"getter: (m, r) => m.{group.Name}.GetOrAddAsOverride(({group.GetGroupTarget().Interface(getter: true, internalInterface: true)})r)");
+                            args.Add($"getter: (m, r) => m.{group.Name}.GetOrAddAsOverride(r)");
                         }
                     }
                 }

@@ -10,12 +10,12 @@ namespace Mutagen.Bethesda
         object? Record { get; }
     }
 
-    public interface IModContext<T> : IModContext
+    public interface IModContext<out T> : IModContext
     {
         new T Record { get; }
     }
 
-    public interface IModContext<TModSetter, TMajorSetter, TMajorGetter> : IModContext<TMajorGetter>
+    public interface IModContext<TModSetter, out TMajorSetter, out TMajorGetter> : IModContext<TMajorGetter>
         where TModSetter : IModGetter
         where TMajorSetter : IMajorRecordCommon, TMajorGetter
         where TMajorGetter : IMajorRecordCommonGetter
