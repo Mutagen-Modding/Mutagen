@@ -308,7 +308,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public override IEnumerable<FormLinkInformation> LinkFormKeys => PlaceCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => PlaceCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlaceCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlaceCommon.Instance.RemapLinks(this, mapping);
         public Place(FormKey formKey)
@@ -1161,9 +1161,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IPlaceGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IPlaceGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
@@ -1491,7 +1491,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> LinkFormKeys => PlaceCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => PlaceCommon.Instance.GetContainedFormLinks(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

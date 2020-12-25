@@ -542,7 +542,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Relationship_Registration.TriggeringRecordType;
-        public override IEnumerable<FormLinkInformation> LinkFormKeys => RelationshipCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => RelationshipCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RelationshipCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RelationshipCommon.Instance.RemapLinks(this, mapping);
         public Relationship(
@@ -1218,9 +1218,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IRelationshipGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IRelationshipGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
@@ -1633,7 +1633,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> LinkFormKeys => RelationshipCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => RelationshipCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RelationshipBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

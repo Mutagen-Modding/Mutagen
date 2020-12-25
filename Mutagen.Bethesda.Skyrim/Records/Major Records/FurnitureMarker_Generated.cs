@@ -476,7 +476,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public IEnumerable<FormLinkInformation> LinkFormKeys => FurnitureMarkerCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => FurnitureMarkerCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FurnitureMarkerCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FurnitureMarkerCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -987,7 +987,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IFurnitureMarkerGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IFurnitureMarkerGetter obj)
         {
             if (obj.MarkerKeyword.FormKeyNullable.HasValue)
             {
@@ -1277,7 +1277,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> LinkFormKeys => FurnitureMarkerCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => FurnitureMarkerCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => FurnitureMarkerBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

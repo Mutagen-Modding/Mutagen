@@ -420,7 +420,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             Break0 = 1
         }
-        public IEnumerable<FormLinkInformation> LinkFormKeys => LinkedReferencesCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => LinkedReferencesCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LinkedReferencesCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LinkedReferencesCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -908,7 +908,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(ILinkedReferencesGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ILinkedReferencesGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.KeywordOrReference);
             if (obj.Versioning.HasFlag(LinkedReferences.VersioningBreaks.Break0)) yield break;
@@ -1151,7 +1151,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> LinkFormKeys => LinkedReferencesCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => LinkedReferencesCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LinkedReferencesBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

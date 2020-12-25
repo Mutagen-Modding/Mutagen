@@ -954,7 +954,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = SoundDescriptor_Registration.TriggeringRecordType;
-        public override IEnumerable<FormLinkInformation> LinkFormKeys => SoundDescriptorCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => SoundDescriptorCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoundDescriptorCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoundDescriptorCommon.Instance.RemapLinks(this, mapping);
         public SoundDescriptor(
@@ -1746,9 +1746,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(ISoundDescriptorGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ISoundDescriptorGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
@@ -1765,7 +1765,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return FormLinkInformation.Factory(obj.OutputModel);
             }
             foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter>()
-                .SelectMany((f) => f.LinkFormKeys))
+                .SelectMany((f) => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -2364,7 +2364,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> LinkFormKeys => SoundDescriptorCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => SoundDescriptorCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SoundDescriptorBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

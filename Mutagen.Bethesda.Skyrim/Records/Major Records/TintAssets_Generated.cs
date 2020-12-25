@@ -569,7 +569,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public IEnumerable<FormLinkInformation> LinkFormKeys => TintAssetsCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => TintAssetsCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TintAssetsCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TintAssetsCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -1122,13 +1122,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(ITintAssetsGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ITintAssetsGetter obj)
         {
             if (obj.PresetDefault.FormKeyNullable.HasValue)
             {
                 yield return FormLinkInformation.Factory(obj.PresetDefault);
             }
-            foreach (var item in obj.Presets.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.Presets.SelectMany(f => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -1464,7 +1464,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> LinkFormKeys => TintAssetsCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => TintAssetsCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => TintAssetsBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

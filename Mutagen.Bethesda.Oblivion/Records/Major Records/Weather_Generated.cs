@@ -807,7 +807,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Weather_Registration.TriggeringRecordType;
-        public override IEnumerable<FormLinkInformation> LinkFormKeys => WeatherCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => WeatherCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherCommon.Instance.RemapLinks(this, mapping);
         public Weather(FormKey formKey)
@@ -1532,13 +1532,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IWeatherGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IWeatherGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
-            foreach (var item in obj.Sounds.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.Sounds.SelectMany(f => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -2159,7 +2159,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> LinkFormKeys => WeatherCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => WeatherCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => WeatherBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

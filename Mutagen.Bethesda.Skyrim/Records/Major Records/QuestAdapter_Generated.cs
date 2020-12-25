@@ -650,7 +650,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             Break0 = 1
         }
-        public override IEnumerable<FormLinkInformation> LinkFormKeys => QuestAdapterCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => QuestAdapterCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestAdapterCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestAdapterCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -1218,14 +1218,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IQuestAdapterGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IQuestAdapterGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
             foreach (var item in obj.Aliases.WhereCastable<IQuestFragmentAliasGetter, ILinkedFormKeyContainerGetter>()
-                .SelectMany((f) => f.LinkFormKeys))
+                .SelectMany((f) => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -1615,7 +1615,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> LinkFormKeys => QuestAdapterCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => QuestAdapterCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => QuestAdapterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

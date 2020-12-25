@@ -570,7 +570,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = DestructionStageData_Registration.TriggeringRecordType;
-        public IEnumerable<FormLinkInformation> LinkFormKeys => DestructionStageDataCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => DestructionStageDataCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DestructionStageDataCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DestructionStageDataCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -1113,7 +1113,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IDestructionStageDataGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IDestructionStageDataGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Explosion);
             yield return FormLinkInformation.Factory(obj.Debris);
@@ -1381,7 +1381,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> LinkFormKeys => DestructionStageDataCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => DestructionStageDataCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => DestructionStageDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

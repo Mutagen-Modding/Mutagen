@@ -533,7 +533,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = (RecordType)Cell.GrupRecordType;
-        public IEnumerable<FormLinkInformation> LinkFormKeys => CellSubBlockCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => CellSubBlockCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellSubBlockCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellSubBlockCommon.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
@@ -1421,9 +1421,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(ICellSubBlockGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ICellSubBlockGetter obj)
         {
-            foreach (var item in obj.Cells.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.Cells.SelectMany(f => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -1910,7 +1910,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> LinkFormKeys => CellSubBlockCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => CellSubBlockCommon.Instance.GetContainedFormLinks(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

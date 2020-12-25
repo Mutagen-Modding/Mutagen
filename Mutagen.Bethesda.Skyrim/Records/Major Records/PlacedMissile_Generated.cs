@@ -390,7 +390,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = PlacedMissile_Registration.TriggeringRecordType;
-        public override IEnumerable<FormLinkInformation> LinkFormKeys => PlacedMissileCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => PlacedMissileCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedMissileCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedMissileCommon.Instance.RemapLinks(this, mapping);
         public PlacedMissile(
@@ -1136,9 +1136,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IPlacedMissileGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IPlacedMissileGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
@@ -1534,7 +1534,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> LinkFormKeys => PlacedMissileCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => PlacedMissileCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PlacedMissileBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

@@ -384,7 +384,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = RaceRelation_Registration.TriggeringRecordType;
-        public IEnumerable<FormLinkInformation> LinkFormKeys => RaceRelationCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => RaceRelationCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RaceRelationCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RaceRelationCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -861,7 +861,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IRaceRelationGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IRaceRelationGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Race);
             yield break;
@@ -1085,7 +1085,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> LinkFormKeys => RaceRelationCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => RaceRelationCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => RaceRelationBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -969,7 +969,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IRegionAreaGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IRegionAreaGetter obj)
         {
             yield break;
         }

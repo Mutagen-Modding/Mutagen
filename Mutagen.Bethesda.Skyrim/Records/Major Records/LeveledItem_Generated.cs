@@ -575,7 +575,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = LeveledItem_Registration.TriggeringRecordType;
-        public override IEnumerable<FormLinkInformation> LinkFormKeys => LeveledItemCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => LeveledItemCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledItemCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledItemCommon.Instance.RemapLinks(this, mapping);
         public LeveledItem(
@@ -1238,9 +1238,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(ILeveledItemGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ILeveledItemGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
@@ -1251,7 +1251,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (obj.Entries.TryGet(out var EntriesItem))
             {
                 foreach (var item in EntriesItem.WhereCastable<ILeveledItemEntryGetter, ILinkedFormKeyContainerGetter>()
-                    .SelectMany((f) => f.LinkFormKeys))
+                    .SelectMany((f) => f.ContainedFormLinks))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -1723,7 +1723,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> LinkFormKeys => LeveledItemCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => LeveledItemCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LeveledItemBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

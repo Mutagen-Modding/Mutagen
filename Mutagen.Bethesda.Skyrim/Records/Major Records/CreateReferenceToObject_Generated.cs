@@ -477,7 +477,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = CreateReferenceToObject_Registration.TriggeringRecordType;
-        public IEnumerable<FormLinkInformation> LinkFormKeys => CreateReferenceToObjectCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => CreateReferenceToObjectCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CreateReferenceToObjectCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CreateReferenceToObjectCommon.Instance.RemapLinks(this, mapping);
         [Flags]
@@ -989,7 +989,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(ICreateReferenceToObjectGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ICreateReferenceToObjectGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Object);
             yield break;
@@ -1279,7 +1279,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> LinkFormKeys => CreateReferenceToObjectCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => CreateReferenceToObjectCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => CreateReferenceToObjectBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

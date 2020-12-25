@@ -1024,7 +1024,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public IEnumerable<FormLinkInformation> LinkFormKeys => HeadDataCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => HeadDataCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadDataCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadDataCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -1692,9 +1692,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IHeadDataGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IHeadDataGetter obj)
         {
-            foreach (var item in obj.HeadParts.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.HeadParts.SelectMany(f => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -1714,13 +1714,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(obj.DefaultFaceTexture);
             }
-            foreach (var item in obj.TintMasks.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.TintMasks.SelectMany(f => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);
             }
             if (obj.Model.TryGet(out var ModelItems))
             {
-                foreach (var item in ModelItems.LinkFormKeys)
+                foreach (var item in ModelItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
@@ -2256,7 +2256,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> LinkFormKeys => HeadDataCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => HeadDataCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => HeadDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

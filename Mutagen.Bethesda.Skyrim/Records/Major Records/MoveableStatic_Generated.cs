@@ -552,7 +552,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = MoveableStatic_Registration.TriggeringRecordType;
-        public override IEnumerable<FormLinkInformation> LinkFormKeys => MoveableStaticCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => MoveableStaticCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MoveableStaticCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MoveableStaticCommon.Instance.RemapLinks(this, mapping);
         public MoveableStatic(
@@ -1243,22 +1243,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IMoveableStaticGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IMoveableStaticGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.Model.TryGet(out var ModelItems))
             {
-                foreach (var item in ModelItems.LinkFormKeys)
+                foreach (var item in ModelItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
             if (obj.Destructible.TryGet(out var DestructibleItems))
             {
-                foreach (var item in DestructibleItems.LinkFormKeys)
+                foreach (var item in DestructibleItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
@@ -1761,7 +1761,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> LinkFormKeys => MoveableStaticCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => MoveableStaticCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => MoveableStaticBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

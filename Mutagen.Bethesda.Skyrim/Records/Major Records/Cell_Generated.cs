@@ -1848,7 +1848,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Cell_Registration.TriggeringRecordType;
-        public override IEnumerable<FormLinkInformation> LinkFormKeys => CellCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => CellCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellCommon.Instance.RemapLinks(this, mapping);
         public Cell(
@@ -3336,9 +3336,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(ICellGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ICellGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
@@ -3360,7 +3360,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (obj.Ownership.TryGet(out var OwnershipItems))
             {
-                foreach (var item in OwnershipItems.LinkFormKeys)
+                foreach (var item in OwnershipItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
@@ -3391,23 +3391,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (obj.Landscape.TryGet(out var LandscapeItems))
             {
-                foreach (var item in LandscapeItems.LinkFormKeys)
+                foreach (var item in LandscapeItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
             foreach (var item in obj.NavigationMeshes.WhereCastable<IANavigationMeshGetter, ILinkedFormKeyContainerGetter>()
-                .SelectMany((f) => f.LinkFormKeys))
+                .SelectMany((f) => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);
             }
             foreach (var item in obj.Persistent.WhereCastable<IPlacedGetter, ILinkedFormKeyContainerGetter>()
-                .SelectMany((f) => f.LinkFormKeys))
+                .SelectMany((f) => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);
             }
             foreach (var item in obj.Temporary.WhereCastable<IPlacedGetter, ILinkedFormKeyContainerGetter>()
-                .SelectMany((f) => f.LinkFormKeys))
+                .SelectMany((f) => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -5520,7 +5520,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> LinkFormKeys => CellCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => CellCommon.Instance.GetContainedFormLinks(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

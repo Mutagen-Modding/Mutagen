@@ -1498,7 +1498,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = PlacedNpc_Registration.TriggeringRecordType;
-        public override IEnumerable<FormLinkInformation> LinkFormKeys => PlacedNpcCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => PlacedNpcCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedNpcCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedNpcCommon.Instance.RemapLinks(this, mapping);
         public PlacedNpc(
@@ -2591,15 +2591,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IPlacedNpcGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IPlacedNpcGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.VirtualMachineAdapter is ILinkedFormKeyContainerGetter VirtualMachineAdapterlinkCont)
             {
-                foreach (var item in VirtualMachineAdapterlinkCont.LinkFormKeys)
+                foreach (var item in VirtualMachineAdapterlinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
@@ -2614,7 +2614,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (obj.Patrol.TryGet(out var PatrolItems))
             {
-                foreach (var item in PatrolItems.LinkFormKeys)
+                foreach (var item in PatrolItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
@@ -2623,13 +2623,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(obj.MerchantContainer);
             }
-            foreach (var item in obj.LinkedReferences.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.LinkedReferences.SelectMany(f => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);
             }
             if (obj.ActivateParents.TryGet(out var ActivateParentsItems))
             {
-                foreach (var item in ActivateParentsItems.LinkFormKeys)
+                foreach (var item in ActivateParentsItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
@@ -2655,14 +2655,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (obj.EnableParent.TryGet(out var EnableParentItems))
             {
-                foreach (var item in EnableParentItems.LinkFormKeys)
+                foreach (var item in EnableParentItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
             if (obj.Ownership.TryGet(out var OwnershipItems))
             {
-                foreach (var item in OwnershipItems.LinkFormKeys)
+                foreach (var item in OwnershipItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
@@ -3697,7 +3697,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> LinkFormKeys => PlacedNpcCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => PlacedNpcCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PlacedNpcBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

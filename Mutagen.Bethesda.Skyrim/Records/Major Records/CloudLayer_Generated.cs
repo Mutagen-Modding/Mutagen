@@ -1039,7 +1039,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(ICloudLayerGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ICloudLayerGetter obj)
         {
             yield break;
         }

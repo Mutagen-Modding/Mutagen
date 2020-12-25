@@ -964,7 +964,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = NavigationMapInfo_Registration.TriggeringRecordType;
-        public IEnumerable<FormLinkInformation> LinkFormKeys => NavigationMapInfoCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => NavigationMapInfoCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavigationMapInfoCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavigationMapInfoCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -1610,7 +1610,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(INavigationMapInfoGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(INavigationMapInfoGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.NavigationMesh);
             foreach (var item in obj.MergedTo)
@@ -1621,7 +1621,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.LinkedDoors.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.LinkedDoors.SelectMany(f => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -2068,7 +2068,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> LinkFormKeys => NavigationMapInfoCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => NavigationMapInfoCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => NavigationMapInfoBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

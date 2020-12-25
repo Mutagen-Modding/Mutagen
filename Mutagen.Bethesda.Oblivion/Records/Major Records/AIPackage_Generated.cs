@@ -624,7 +624,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = AIPackage_Registration.TriggeringRecordType;
-        public override IEnumerable<FormLinkInformation> LinkFormKeys => AIPackageCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => AIPackageCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AIPackageCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AIPackageCommon.Instance.RemapLinks(this, mapping);
         public AIPackage(FormKey formKey)
@@ -1290,15 +1290,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IAIPackageGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IAIPackageGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.Location.TryGet(out var LocationItems))
             {
-                foreach (var item in LocationItems.LinkFormKeys)
+                foreach (var item in LocationItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
@@ -1831,7 +1831,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> LinkFormKeys => AIPackageCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => AIPackageCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => AIPackageBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

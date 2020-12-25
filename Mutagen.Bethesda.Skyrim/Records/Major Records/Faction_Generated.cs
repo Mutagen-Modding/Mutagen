@@ -1126,7 +1126,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Faction_Registration.TriggeringRecordType;
-        public override IEnumerable<FormLinkInformation> LinkFormKeys => FactionCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => FactionCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FactionCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FactionCommon.Instance.RemapLinks(this, mapping);
         public Faction(
@@ -1972,13 +1972,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IFactionGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IFactionGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
-            foreach (var item in obj.Relations.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.Relations.SelectMany(f => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -2016,7 +2016,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (obj.VendorLocation is ILinkedFormKeyContainerGetter VendorLocationlinkCont)
             {
-                foreach (var item in VendorLocationlinkCont.LinkFormKeys)
+                foreach (var item in VendorLocationlinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
@@ -2024,7 +2024,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (obj.Conditions.TryGet(out var ConditionsItem))
             {
                 foreach (var item in ConditionsItem.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter>()
-                    .SelectMany((f) => f.LinkFormKeys))
+                    .SelectMany((f) => f.ContainedFormLinks))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -2792,7 +2792,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> LinkFormKeys => FactionCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => FactionCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => FactionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

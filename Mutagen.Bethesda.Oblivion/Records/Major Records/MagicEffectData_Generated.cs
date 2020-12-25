@@ -684,7 +684,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Break0 = 1
         }
-        public IEnumerable<FormLinkInformation> LinkFormKeys => MagicEffectDataCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => MagicEffectDataCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectDataCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectDataCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -1268,14 +1268,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IMagicEffectDataGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IMagicEffectDataGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Light);
             yield return FormLinkInformation.Factory(obj.EffectShader);
             if (obj.Versioning.HasFlag(MagicEffectData.VersioningBreaks.Break0)) yield break;
             if (obj.SubData.TryGet(out var SubDataItems))
             {
-                foreach (var item in SubDataItems.LinkFormKeys)
+                foreach (var item in SubDataItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
@@ -1607,7 +1607,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> LinkFormKeys => MagicEffectDataCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => MagicEffectDataCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => MagicEffectDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

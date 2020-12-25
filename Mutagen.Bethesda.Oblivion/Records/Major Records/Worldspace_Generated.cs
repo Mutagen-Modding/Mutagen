@@ -939,7 +939,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Worldspace_Registration.TriggeringRecordType;
-        public override IEnumerable<FormLinkInformation> LinkFormKeys => WorldspaceCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => WorldspaceCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceCommon.Instance.RemapLinks(this, mapping);
         public Worldspace(FormKey formKey)
@@ -2232,9 +2232,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IWorldspaceGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IWorldspaceGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
@@ -2252,12 +2252,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (obj.TopCell.TryGet(out var TopCellItems))
             {
-                foreach (var item in TopCellItems.LinkFormKeys)
+                foreach (var item in TopCellItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            foreach (var item in obj.SubCells.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.SubCells.SelectMany(f => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -3849,7 +3849,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> LinkFormKeys => WorldspaceCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => WorldspaceCommon.Instance.GetContainedFormLinks(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

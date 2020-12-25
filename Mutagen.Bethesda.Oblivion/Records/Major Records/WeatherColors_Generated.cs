@@ -933,7 +933,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IWeatherColorsGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IWeatherColorsGetter obj)
         {
             yield break;
         }

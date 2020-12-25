@@ -962,7 +962,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = ArmorAddon_Registration.TriggeringRecordType;
-        public override IEnumerable<FormLinkInformation> LinkFormKeys => ArmorAddonCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => ArmorAddonCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorAddonCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorAddonCommon.Instance.RemapLinks(this, mapping);
         public ArmorAddon(
@@ -1833,9 +1833,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IArmorAddonGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IArmorAddonGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
@@ -1845,14 +1845,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (obj.WorldModel.TryGet(out var WorldModelItem))
             {
-                foreach (var item in WorldModelItem.NotNull().SelectMany(f => f.LinkFormKeys))
+                foreach (var item in WorldModelItem.NotNull().SelectMany(f => f.ContainedFormLinks))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.FirstPersonModel.TryGet(out var FirstPersonModelItem))
             {
-                foreach (var item in FirstPersonModelItem.NotNull().SelectMany(f => f.LinkFormKeys))
+                foreach (var item in FirstPersonModelItem.NotNull().SelectMany(f => f.ContainedFormLinks))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -2581,7 +2581,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> LinkFormKeys => ArmorAddonCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => ArmorAddonCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ArmorAddonBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

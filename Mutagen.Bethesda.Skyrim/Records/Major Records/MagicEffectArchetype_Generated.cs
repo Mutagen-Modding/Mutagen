@@ -887,7 +887,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IMagicEffectArchetypeGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IMagicEffectArchetypeGetter obj)
         {
             yield break;
         }

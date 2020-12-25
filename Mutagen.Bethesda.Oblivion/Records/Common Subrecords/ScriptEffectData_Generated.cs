@@ -483,7 +483,7 @@ namespace Mutagen.Bethesda.Oblivion
             Break0 = 1,
             Break1 = 2
         }
-        public IEnumerable<FormLinkInformation> LinkFormKeys => ScriptEffectDataCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => ScriptEffectDataCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptEffectDataCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptEffectDataCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -993,7 +993,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IScriptEffectDataGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IScriptEffectDataGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Script);
             yield break;
@@ -1261,7 +1261,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> LinkFormKeys => ScriptEffectDataCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => ScriptEffectDataCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ScriptEffectDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

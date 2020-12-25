@@ -783,7 +783,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Region_Registration.TriggeringRecordType;
-        public override IEnumerable<FormLinkInformation> LinkFormKeys => RegionCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => RegionCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionCommon.Instance.RemapLinks(this, mapping);
         public Region(
@@ -1548,9 +1548,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IRegionGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IRegionGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
@@ -1560,28 +1560,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (obj.Objects.TryGet(out var ObjectsItems))
             {
-                foreach (var item in ObjectsItems.LinkFormKeys)
+                foreach (var item in ObjectsItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
             if (obj.Weather.TryGet(out var WeatherItems))
             {
-                foreach (var item in WeatherItems.LinkFormKeys)
+                foreach (var item in WeatherItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
             if (obj.Grasses.TryGet(out var GrassesItems))
             {
-                foreach (var item in GrassesItems.LinkFormKeys)
+                foreach (var item in GrassesItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
             if (obj.Sounds.TryGet(out var SoundsItems))
             {
-                foreach (var item in SoundsItems.LinkFormKeys)
+                foreach (var item in SoundsItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
@@ -2175,7 +2175,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> LinkFormKeys => RegionCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => RegionCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RegionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

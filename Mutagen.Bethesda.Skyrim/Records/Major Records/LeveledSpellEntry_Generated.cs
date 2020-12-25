@@ -414,7 +414,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public IEnumerable<FormLinkInformation> LinkFormKeys => LeveledSpellEntryCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => LeveledSpellEntryCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledSpellEntryCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledSpellEntryCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -916,18 +916,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(ILeveledSpellEntryGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ILeveledSpellEntryGetter obj)
         {
             if (obj.Data.TryGet(out var DataItems))
             {
-                foreach (var item in DataItems.LinkFormKeys)
+                foreach (var item in DataItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
             if (obj.ExtraData is ILinkedFormKeyContainerGetter ExtraDatalinkCont)
             {
-                foreach (var item in ExtraDatalinkCont.LinkFormKeys)
+                foreach (var item in ExtraDatalinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
@@ -1228,7 +1228,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> LinkFormKeys => LeveledSpellEntryCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => LeveledSpellEntryCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LeveledSpellEntryBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

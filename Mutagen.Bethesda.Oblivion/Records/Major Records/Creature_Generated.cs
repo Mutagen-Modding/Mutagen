@@ -1712,7 +1712,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Creature_Registration.TriggeringRecordType;
-        public override IEnumerable<FormLinkInformation> LinkFormKeys => CreatureCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => CreatureCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CreatureCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CreatureCommon.Instance.RemapLinks(this, mapping);
         public Creature(FormKey formKey)
@@ -2812,13 +2812,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(ICreatureGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ICreatureGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
-            foreach (var item in obj.Items.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.Items.SelectMany(f => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -2826,7 +2826,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.Factions.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.Factions.SelectMany(f => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -2850,7 +2850,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return FormLinkInformation.Factory(obj.InheritsSoundFrom);
             }
-            foreach (var item in obj.Sounds.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.Sounds.SelectMany(f => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -3921,7 +3921,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> LinkFormKeys => CreatureCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => CreatureCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => CreatureBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

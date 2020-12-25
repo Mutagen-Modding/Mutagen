@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda
         }
 
         #region NonImplemented IMod 
-        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.LinkFormKeys => throw new NotImplementedException();
+        IEnumerable<FormLinkInformation> ILinkedFormKeyContainerGetter.ContainedFormLinks => throw new NotImplementedException();
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => throw new NotImplementedException();
         IList<MasterReference> IMod.MasterReferences => throw new NotImplementedException();

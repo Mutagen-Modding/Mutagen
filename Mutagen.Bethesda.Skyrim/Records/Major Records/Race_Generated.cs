@@ -3730,7 +3730,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Race_Registration.TriggeringRecordType;
-        public override IEnumerable<FormLinkInformation> LinkFormKeys => RaceCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => RaceCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RaceCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RaceCommon.Instance.RemapLinks(this, mapping);
         public Race(
@@ -5423,9 +5423,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IRaceGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IRaceGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
@@ -5450,7 +5450,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (obj.SkeletalModel.TryGet(out var SkeletalModelItem))
             {
                 foreach (var item in SkeletalModelItem.NotNull().WhereCastable<ISimpleModelGetter, ILinkedFormKeyContainerGetter>()
-                    .SelectMany((f) => f.LinkFormKeys))
+                    .SelectMany((f) => f.ContainedFormLinks))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -5477,11 +5477,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(obj.AttackRace);
             }
-            foreach (var item in obj.Attacks.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.Attacks.SelectMany(f => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.BodyData.NotNull().SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.BodyData.NotNull().SelectMany(f => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -5503,7 +5503,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(obj.BodyPartData);
             }
-            foreach (var item in obj.BehaviorGraph.NotNull().SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.BehaviorGraph.NotNull().SelectMany(f => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -5527,7 +5527,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(obj.CloseLootSound);
             }
-            foreach (var item in obj.MovementTypes.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.MovementTypes.SelectMany(f => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -5565,7 +5565,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (obj.HeadData.TryGet(out var HeadDataItem))
             {
-                foreach (var item in HeadDataItem.NotNull().SelectMany(f => f.LinkFormKeys))
+                foreach (var item in HeadDataItem.NotNull().SelectMany(f => f.ContainedFormLinks))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -7530,7 +7530,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> LinkFormKeys => RaceCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => RaceCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

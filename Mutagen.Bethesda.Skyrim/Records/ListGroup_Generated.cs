@@ -101,7 +101,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType T_RecordType;
-        public IEnumerable<FormLinkInformation> LinkFormKeys => ListGroupCommon<T>.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => ListGroupCommon<T>.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ListGroupCommon<T>.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ListGroupCommon<T>.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
@@ -998,9 +998,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IListGroupGetter<T> obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IListGroupGetter<T> obj)
         {
-            foreach (var item in obj.Records.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.Records.SelectMany(f => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -1389,7 +1389,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> LinkFormKeys => ListGroupCommon<T>.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => ListGroupCommon<T>.Instance.GetContainedFormLinks(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

@@ -415,7 +415,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = NavigationDoorLink_Registration.TriggeringRecordType;
-        public IEnumerable<FormLinkInformation> LinkFormKeys => NavigationDoorLinkCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => NavigationDoorLinkCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavigationDoorLinkCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavigationDoorLinkCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -903,7 +903,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(INavigationDoorLinkGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(INavigationDoorLinkGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.NavMesh);
             yield break;
@@ -1133,7 +1133,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> LinkFormKeys => NavigationDoorLinkCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => NavigationDoorLinkCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => NavigationDoorLinkBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Internals
                     {
                         majAction(maj);
                     }
-                    foreach (var formKey in maj.LinkFormKeys)
+                    foreach (var formKey in maj.ContainedFormLinks)
                     {
                         foreach (var formLinkAction in _formLinkIterationActions)
                         {

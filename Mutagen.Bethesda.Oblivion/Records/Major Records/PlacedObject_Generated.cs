@@ -1197,7 +1197,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = PlacedObject_Registration.TriggeringRecordType;
-        public override IEnumerable<FormLinkInformation> LinkFormKeys => PlacedObjectCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => PlacedObjectCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedObjectCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedObjectCommon.Instance.RemapLinks(this, mapping);
         public PlacedObject(FormKey formKey)
@@ -2117,9 +2117,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IPlacedObjectGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IPlacedObjectGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
@@ -2129,14 +2129,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (obj.TeleportDestination.TryGet(out var TeleportDestinationItems))
             {
-                foreach (var item in TeleportDestinationItems.LinkFormKeys)
+                foreach (var item in TeleportDestinationItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
             if (obj.Lock.TryGet(out var LockItems))
             {
-                foreach (var item in LockItems.LinkFormKeys)
+                foreach (var item in LockItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
@@ -2151,7 +2151,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (obj.EnableParent.TryGet(out var EnableParentItems))
             {
-                foreach (var item in EnableParentItems.LinkFormKeys)
+                foreach (var item in EnableParentItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
@@ -3037,7 +3037,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> LinkFormKeys => PlacedObjectCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => PlacedObjectCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PlacedObjectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

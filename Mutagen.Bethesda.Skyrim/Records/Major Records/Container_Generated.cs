@@ -808,7 +808,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Container_Registration.TriggeringRecordType;
-        public override IEnumerable<FormLinkInformation> LinkFormKeys => ContainerCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => ContainerCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ContainerCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ContainerCommon.Instance.RemapLinks(this, mapping);
         public Container(
@@ -1582,22 +1582,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IContainerGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IContainerGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.VirtualMachineAdapter is ILinkedFormKeyContainerGetter VirtualMachineAdapterlinkCont)
             {
-                foreach (var item in VirtualMachineAdapterlinkCont.LinkFormKeys)
+                foreach (var item in VirtualMachineAdapterlinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
             if (obj.Model.TryGet(out var ModelItems))
             {
-                foreach (var item in ModelItems.LinkFormKeys)
+                foreach (var item in ModelItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
@@ -1605,14 +1605,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (obj.Items.TryGet(out var ItemsItem))
             {
                 foreach (var item in ItemsItem.WhereCastable<IContainerEntryGetter, ILinkedFormKeyContainerGetter>()
-                    .SelectMany((f) => f.LinkFormKeys))
+                    .SelectMany((f) => f.ContainedFormLinks))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.Destructible.TryGet(out var DestructibleItems))
             {
-                foreach (var item in DestructibleItems.LinkFormKeys)
+                foreach (var item in DestructibleItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
@@ -2256,7 +2256,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> LinkFormKeys => ContainerCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => ContainerCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ContainerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

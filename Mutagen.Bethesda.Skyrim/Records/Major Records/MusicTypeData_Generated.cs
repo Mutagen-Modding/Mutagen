@@ -856,7 +856,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IMusicTypeDataGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IMusicTypeDataGetter obj)
         {
             yield break;
         }

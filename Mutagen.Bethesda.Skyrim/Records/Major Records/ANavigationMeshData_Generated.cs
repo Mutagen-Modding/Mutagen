@@ -1046,7 +1046,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public virtual IEnumerable<FormLinkInformation> LinkFormKeys => ANavigationMeshDataCommon.Instance.GetLinkFormKeys(this);
+        public virtual IEnumerable<FormLinkInformation> ContainedFormLinks => ANavigationMeshDataCommon.Instance.GetContainedFormLinks(this);
         protected virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ANavigationMeshDataCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ANavigationMeshDataCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -1668,13 +1668,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IANavigationMeshDataGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IANavigationMeshDataGetter obj)
         {
-            foreach (var item in obj.EdgeLinks.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.EdgeLinks.SelectMany(f => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.DoorTriangles.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.DoorTriangles.SelectMany(f => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -2150,7 +2150,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public virtual IEnumerable<FormLinkInformation> LinkFormKeys => ANavigationMeshDataCommon.Instance.GetLinkFormKeys(this);
+        public virtual IEnumerable<FormLinkInformation> ContainedFormLinks => ANavigationMeshDataCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => ANavigationMeshDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

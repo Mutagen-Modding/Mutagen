@@ -1356,7 +1356,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = BodyPart_Registration.TriggeringRecordType;
-        public IEnumerable<FormLinkInformation> LinkFormKeys => BodyPartCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => BodyPartCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BodyPartCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BodyPartCommon.Instance.RemapLinks(this, mapping);
         [Flags]
@@ -2186,7 +2186,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IBodyPartGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IBodyPartGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.ExplodableDebris);
             yield return FormLinkInformation.Factory(obj.ExplodableExplosion);
@@ -2768,7 +2768,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> LinkFormKeys => BodyPartCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => BodyPartCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => BodyPartBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

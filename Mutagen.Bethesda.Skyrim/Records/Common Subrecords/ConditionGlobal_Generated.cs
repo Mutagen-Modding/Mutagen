@@ -384,7 +384,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = ConditionGlobal_Registration.TriggeringRecordType;
-        public override IEnumerable<FormLinkInformation> LinkFormKeys => ConditionGlobalCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => ConditionGlobalCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ConditionGlobalCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ConditionGlobalCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -888,16 +888,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IConditionGlobalGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IConditionGlobalGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
             yield return FormLinkInformation.Factory(obj.ComparisonValue);
             if (obj.Data is ILinkedFormKeyContainerGetter DatalinkCont)
             {
-                foreach (var item in DatalinkCont.LinkFormKeys)
+                foreach (var item in DatalinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
@@ -1205,7 +1205,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> LinkFormKeys => ConditionGlobalCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => ConditionGlobalCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ConditionGlobalBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

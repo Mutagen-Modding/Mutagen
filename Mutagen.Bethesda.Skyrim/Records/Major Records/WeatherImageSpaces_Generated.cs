@@ -446,7 +446,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = WeatherImageSpaces_Registration.TriggeringRecordType;
-        public IEnumerable<FormLinkInformation> LinkFormKeys => WeatherImageSpacesCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => WeatherImageSpacesCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherImageSpacesCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherImageSpacesCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -945,7 +945,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IWeatherImageSpacesGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IWeatherImageSpacesGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Sunrise);
             yield return FormLinkInformation.Factory(obj.Day);
@@ -1196,7 +1196,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> LinkFormKeys => WeatherImageSpacesCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => WeatherImageSpacesCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WeatherImageSpacesBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -906,7 +906,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IWorldspaceMaxHeightGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IWorldspaceMaxHeightGetter obj)
         {
             yield break;
         }

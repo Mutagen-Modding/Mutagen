@@ -504,7 +504,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = AVirtualMachineAdapter_Registration.TriggeringRecordType;
-        public virtual IEnumerable<FormLinkInformation> LinkFormKeys => AVirtualMachineAdapterCommon.Instance.GetLinkFormKeys(this);
+        public virtual IEnumerable<FormLinkInformation> ContainedFormLinks => AVirtualMachineAdapterCommon.Instance.GetContainedFormLinks(this);
         protected virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AVirtualMachineAdapterCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AVirtualMachineAdapterCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -977,10 +977,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IAVirtualMachineAdapterGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IAVirtualMachineAdapterGetter obj)
         {
             foreach (var item in obj.Scripts.WhereCastable<IScriptEntryGetter, ILinkedFormKeyContainerGetter>()
-                .SelectMany((f) => f.LinkFormKeys))
+                .SelectMany((f) => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -1248,7 +1248,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public virtual IEnumerable<FormLinkInformation> LinkFormKeys => AVirtualMachineAdapterCommon.Instance.GetLinkFormKeys(this);
+        public virtual IEnumerable<FormLinkInformation> ContainedFormLinks => AVirtualMachineAdapterCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => AVirtualMachineAdapterBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

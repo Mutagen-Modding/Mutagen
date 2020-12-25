@@ -415,7 +415,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = TeleportDestination_Registration.TriggeringRecordType;
-        public IEnumerable<FormLinkInformation> LinkFormKeys => TeleportDestinationCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => TeleportDestinationCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TeleportDestinationCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TeleportDestinationCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -903,7 +903,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(ITeleportDestinationGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ITeleportDestinationGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Destination);
             yield break;
@@ -1137,7 +1137,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> LinkFormKeys => TeleportDestinationCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => TeleportDestinationCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => TeleportDestinationBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

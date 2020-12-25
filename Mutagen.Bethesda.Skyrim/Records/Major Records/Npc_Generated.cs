@@ -2615,7 +2615,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Npc_Registration.TriggeringRecordType;
-        public override IEnumerable<FormLinkInformation> LinkFormKeys => NpcCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => NpcCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcCommon.Instance.RemapLinks(this, mapping);
         public Npc(
@@ -3936,20 +3936,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(INpcGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(INpcGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.VirtualMachineAdapter is ILinkedFormKeyContainerGetter VirtualMachineAdapterlinkCont)
             {
-                foreach (var item in VirtualMachineAdapterlinkCont.LinkFormKeys)
+                foreach (var item in VirtualMachineAdapterlinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            foreach (var item in obj.Factions.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.Factions.SelectMany(f => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -3975,7 +3975,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (obj.Destructible.TryGet(out var DestructibleItems))
             {
-                foreach (var item in DestructibleItems.LinkFormKeys)
+                foreach (var item in DestructibleItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
@@ -3992,7 +3992,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(obj.AttackRace);
             }
-            foreach (var item in obj.Attacks.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.Attacks.SelectMany(f => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -4014,7 +4014,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (obj.Perks.TryGet(out var PerksItem))
             {
-                foreach (var item in PerksItem.SelectMany(f => f.LinkFormKeys))
+                foreach (var item in PerksItem.SelectMany(f => f.ContainedFormLinks))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -4022,7 +4022,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (obj.Items.TryGet(out var ItemsItem))
             {
                 foreach (var item in ItemsItem.WhereCastable<IContainerEntryGetter, ILinkedFormKeyContainerGetter>()
-                    .SelectMany((f) => f.LinkFormKeys))
+                    .SelectMany((f) => f.ContainedFormLinks))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -4057,7 +4057,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (obj.Sound is ILinkedFormKeyContainerGetter SoundlinkCont)
             {
-                foreach (var item in SoundlinkCont.LinkFormKeys)
+                foreach (var item in SoundlinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
@@ -5646,7 +5646,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> LinkFormKeys => NpcCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => NpcCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => NpcBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

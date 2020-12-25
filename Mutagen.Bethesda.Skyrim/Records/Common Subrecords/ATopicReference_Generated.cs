@@ -316,7 +316,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = ATopicReference_Registration.TriggeringRecordType;
-        public virtual IEnumerable<FormLinkInformation> LinkFormKeys => ATopicReferenceCommon.Instance.GetLinkFormKeys(this);
+        public virtual IEnumerable<FormLinkInformation> ContainedFormLinks => ATopicReferenceCommon.Instance.GetContainedFormLinks(this);
         protected virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ATopicReferenceCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ATopicReferenceCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -739,7 +739,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IATopicReferenceGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IATopicReferenceGetter obj)
         {
             yield break;
         }
@@ -931,7 +931,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public virtual IEnumerable<FormLinkInformation> LinkFormKeys => ATopicReferenceCommon.Instance.GetLinkFormKeys(this);
+        public virtual IEnumerable<FormLinkInformation> ContainedFormLinks => ATopicReferenceCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => ATopicReferenceBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -557,7 +557,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = PreferredPathing_Registration.TriggeringRecordType;
-        public IEnumerable<FormLinkInformation> LinkFormKeys => PreferredPathingCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => PreferredPathingCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PreferredPathingCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PreferredPathingCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -1068,13 +1068,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IPreferredPathingGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IPreferredPathingGetter obj)
         {
-            foreach (var item in obj.NavmeshSets.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.NavmeshSets.SelectMany(f => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.NavmeshTree.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.NavmeshTree.SelectMany(f => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -1365,7 +1365,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> LinkFormKeys => PreferredPathingCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => PreferredPathingCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PreferredPathingBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

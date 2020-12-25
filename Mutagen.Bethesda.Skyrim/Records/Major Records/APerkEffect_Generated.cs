@@ -533,7 +533,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = APerkEffect_Registration.TriggeringRecordType;
-        public virtual IEnumerable<FormLinkInformation> LinkFormKeys => APerkEffectCommon.Instance.GetLinkFormKeys(this);
+        public virtual IEnumerable<FormLinkInformation> ContainedFormLinks => APerkEffectCommon.Instance.GetContainedFormLinks(this);
         protected virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => APerkEffectCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => APerkEffectCommon.Instance.RemapLinks(this, mapping);
         [Flags]
@@ -1021,10 +1021,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IAPerkEffectGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IAPerkEffectGetter obj)
         {
             foreach (var item in obj.Conditions.WhereCastable<IPerkConditionGetter, ILinkedFormKeyContainerGetter>()
-                .SelectMany((f) => f.LinkFormKeys))
+                .SelectMany((f) => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -1307,7 +1307,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public virtual IEnumerable<FormLinkInformation> LinkFormKeys => APerkEffectCommon.Instance.GetLinkFormKeys(this);
+        public virtual IEnumerable<FormLinkInformation> ContainedFormLinks => APerkEffectCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => APerkEffectBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

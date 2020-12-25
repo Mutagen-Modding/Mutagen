@@ -898,7 +898,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IAnimationChangeThresholdsGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IAnimationChangeThresholdsGetter obj)
         {
             yield break;
         }

@@ -560,7 +560,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = NavigationMeshInfoMap_Registration.TriggeringRecordType;
-        public override IEnumerable<FormLinkInformation> LinkFormKeys => NavigationMeshInfoMapCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => NavigationMeshInfoMapCommon.Instance.GetContainedFormLinks(this);
         protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavigationMeshInfoMapCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavigationMeshInfoMapCommon.Instance.RemapLinks(this, mapping);
         public NavigationMeshInfoMap(
@@ -1219,19 +1219,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(INavigationMeshInfoMapGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(INavigationMeshInfoMapGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
-            foreach (var item in obj.MapInfos.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.MapInfos.SelectMany(f => f.ContainedFormLinks))
             {
                 yield return FormLinkInformation.Factory(item);
             }
             if (obj.PreferredPathing.TryGet(out var PreferredPathingItems))
             {
-                foreach (var item in PreferredPathingItems.LinkFormKeys)
+                foreach (var item in PreferredPathingItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
@@ -1684,7 +1684,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> LinkFormKeys => NavigationMeshInfoMapCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => NavigationMeshInfoMapCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => NavigationMeshInfoMapBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

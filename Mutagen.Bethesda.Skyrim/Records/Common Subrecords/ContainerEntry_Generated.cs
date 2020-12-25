@@ -409,7 +409,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = ContainerEntry_Registration.TriggeringRecordType;
-        public IEnumerable<FormLinkInformation> LinkFormKeys => ContainerEntryCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => ContainerEntryCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ContainerEntryCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ContainerEntryCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -892,15 +892,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IContainerEntryGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IContainerEntryGetter obj)
         {
-            foreach (var item in obj.Item.LinkFormKeys)
+            foreach (var item in obj.Item.ContainedFormLinks)
             {
                 yield return item;
             }
             if (obj.Data is ILinkedFormKeyContainerGetter DatalinkCont)
             {
-                foreach (var item in DatalinkCont.LinkFormKeys)
+                foreach (var item in DatalinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
@@ -1194,7 +1194,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> LinkFormKeys => ContainerEntryCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => ContainerEntryCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ContainerEntryBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

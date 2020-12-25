@@ -1521,9 +1521,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IShaderParticleGeometryGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IShaderParticleGeometryGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }

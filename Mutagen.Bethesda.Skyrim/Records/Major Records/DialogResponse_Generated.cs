@@ -773,7 +773,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = DialogResponse_Registration.TriggeringRecordType;
-        public IEnumerable<FormLinkInformation> LinkFormKeys => DialogResponseCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => DialogResponseCommon.Instance.GetContainedFormLinks(this);
         protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogResponseCommon.Instance.RemapLinks(this, mapping);
         void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogResponseCommon.Instance.RemapLinks(this, mapping);
         [Flags]
@@ -1384,7 +1384,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetLinkFormKeys(IDialogResponseGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IDialogResponseGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Sound);
             if (obj.SpeakerIdleAnimation.FormKeyNullable.HasValue)
@@ -1783,7 +1783,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> LinkFormKeys => DialogResponseCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => DialogResponseCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => DialogResponseBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
