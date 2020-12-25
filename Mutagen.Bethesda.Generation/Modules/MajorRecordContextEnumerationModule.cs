@@ -247,6 +247,18 @@ namespace Mutagen.Bethesda.Generation
                 var fgCount = fg.Count;
                 var gameCategory = obj.GetObjectData().GameCategory;
                 Dictionary<object, FileGeneration> generationDict = new Dictionary<object, FileGeneration>();
+
+                bool doAdditionlDeepLogic = obj.Name != "ListGroup";
+                var typesWithDeepTargets = new List<TypeGeneration>();
+                if (doAdditionlDeepLogic)
+                {
+                    var deepRecordMapping = await MajorRecordModule.FindDeepRecords(obj);
+                    foreach (var deepRec in deepRecordMapping)
+                    {
+                        typesWithDeepTargets.AddRange(deepRec.Value);
+                    }
+                }
+
                 foreach (var field in obj.IterateFields())
                 {
                     FileGeneration fieldGen;
@@ -304,30 +316,8 @@ namespace Mutagen.Bethesda.Generation
                         fieldGen: fieldGen,
                         accessor: accessor,
                         getter: getter,
-                        includeType: false);
-                }
-
-                bool doAdditionlDeepLogic = obj.Name != "ListGroup";
-
-                if (doAdditionlDeepLogic)
-                {
-                    var deepRecordMapping = await MajorRecordModule.FindDeepRecords(obj);
-                    foreach (var deepRec in deepRecordMapping)
-                    {
-                        FileGeneration deepFg = generationDict.GetOrAdd(deepRec.Key);
-                        foreach (var field in deepRec.Value)
-                        {
-                            await ApplyIterationLines(
-                                obj: obj,
-                                field: field,
-                                fieldGen: deepFg,
-                                accessor: accessor,
-                                getter: getter,
-                                hasTarget: true,
-                                includeSelf: false,
-                                includeType: false);
-                        }
-                    }
+                        includeType: false,
+                        hasTarget: typesWithDeepTargets.Any(f => f.Name == field.Name));
                 }
 
                 foreach (var kv in generationDict)

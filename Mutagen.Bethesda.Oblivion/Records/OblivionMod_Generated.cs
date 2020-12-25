@@ -7387,12 +7387,36 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     record: item,
                     getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(r));
             }
+            foreach (var groupItem in obj.Worldspaces)
+            {
+                foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
+                    groupItem,
+                    linkCache: linkCache,
+                    modKey: obj.ModKey,
+                    parent: null,
+                    getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                {
+                    yield return item;
+                }
+            }
             foreach (var item in obj.DialogTopics)
             {
                 yield return new ModContext<IOblivionMod, IDialogTopicInternal, IDialogTopicGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getter: (m, r) => m.DialogTopics.GetOrAddAsOverride(r));
+            }
+            foreach (var groupItem in obj.DialogTopics)
+            {
+                foreach (var item in DialogTopicCommon.Instance.EnumerateMajorRecordContexts(
+                    groupItem,
+                    linkCache: linkCache,
+                    modKey: obj.ModKey,
+                    parent: null,
+                    getter: (m, r) => m.DialogTopics.GetOrAddAsOverride(linkCache.Resolve<IDialogTopicGetter>(r.FormKey))))
+                {
+                    yield return item;
+                }
             }
             foreach (var item in obj.Quests)
             {
@@ -7456,144 +7480,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     modKey: obj.ModKey,
                     record: item,
                     getter: (m, r) => m.EffectShaders.GetOrAddAsOverride(r));
-            }
-            foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
-                linkCache: linkCache,
-                modKey: obj.ModKey,
-                parent: null))
-            {
-                yield return item;
-            }
-            foreach (var groupItem in obj.Worldspaces)
-            {
-                foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
-                    groupItem,
-                    linkCache: linkCache,
-                    modKey: obj.ModKey,
-                    parent: null,
-                    getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
-                {
-                    yield return item;
-                }
-            }
-            foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
-                linkCache: linkCache,
-                modKey: obj.ModKey,
-                parent: null))
-            {
-                yield return item;
-            }
-            foreach (var groupItem in obj.Worldspaces)
-            {
-                foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
-                    groupItem,
-                    linkCache: linkCache,
-                    modKey: obj.ModKey,
-                    parent: null,
-                    getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
-                {
-                    yield return item;
-                }
-            }
-            foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
-                linkCache: linkCache,
-                modKey: obj.ModKey,
-                parent: null))
-            {
-                yield return item;
-            }
-            foreach (var groupItem in obj.Worldspaces)
-            {
-                foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
-                    groupItem,
-                    linkCache: linkCache,
-                    modKey: obj.ModKey,
-                    parent: null,
-                    getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
-                {
-                    yield return item;
-                }
-            }
-            foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
-                linkCache: linkCache,
-                modKey: obj.ModKey,
-                parent: null))
-            {
-                yield return item;
-            }
-            foreach (var groupItem in obj.Worldspaces)
-            {
-                foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
-                    groupItem,
-                    linkCache: linkCache,
-                    modKey: obj.ModKey,
-                    parent: null,
-                    getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
-                {
-                    yield return item;
-                }
-            }
-            foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
-                linkCache: linkCache,
-                modKey: obj.ModKey,
-                parent: null))
-            {
-                yield return item;
-            }
-            foreach (var groupItem in obj.Worldspaces)
-            {
-                foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
-                    groupItem,
-                    linkCache: linkCache,
-                    modKey: obj.ModKey,
-                    parent: null,
-                    getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
-                {
-                    yield return item;
-                }
-            }
-            foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
-                linkCache: linkCache,
-                modKey: obj.ModKey,
-                parent: null))
-            {
-                yield return item;
-            }
-            foreach (var groupItem in obj.Worldspaces)
-            {
-                foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
-                    groupItem,
-                    linkCache: linkCache,
-                    modKey: obj.ModKey,
-                    parent: null,
-                    getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
-                {
-                    yield return item;
-                }
-            }
-            foreach (var groupItem in obj.Worldspaces)
-            {
-                foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
-                    groupItem,
-                    linkCache: linkCache,
-                    modKey: obj.ModKey,
-                    parent: null,
-                    getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
-                {
-                    yield return item;
-                }
-            }
-            foreach (var groupItem in obj.DialogTopics)
-            {
-                foreach (var item in DialogTopicCommon.Instance.EnumerateMajorRecordContexts(
-                    groupItem,
-                    linkCache: linkCache,
-                    modKey: obj.ModKey,
-                    parent: null,
-                    getter: (m, r) => m.DialogTopics.GetOrAddAsOverride(linkCache.Resolve<IDialogTopicGetter>(r.FormKey))))
-                {
-                    yield return item;
-                }
             }
         }
         
