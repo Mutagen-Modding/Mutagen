@@ -32,6 +32,21 @@ namespace Mutagen.Bethesda.Oblivion
         internal static IEnumerable<IModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             this IListGroupGetter<ICellBlockGetter> cellBlocks,
             ILinkCache linkCache,
+            ModKey modKey,
+            IModContext? parent)
+        {
+            return EnumerateMajorRecordContexts(
+                cellBlocks,
+                linkCache,
+                type: typeof(IMajorRecordCommonGetter),
+                modKey: modKey,
+                parent: parent,
+                throwIfUnknown: true);
+        }
+
+        internal static IEnumerable<IModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+            this IListGroupGetter<ICellBlockGetter> cellBlocks,
+            ILinkCache linkCache,
             Type type,
             ModKey modKey,
             IModContext? parent,

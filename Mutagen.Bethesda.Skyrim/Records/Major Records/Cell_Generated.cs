@@ -3844,6 +3844,180 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IEnumerable<IModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             ICellGetter obj,
             ILinkCache linkCache,
+            ModKey modKey,
+            IModContext? parent,
+            Func<ISkyrimMod, ICellGetter, ICell> getter)
+        {
+            var curContext = new ModContext<ISkyrimMod, ICell, ICellGetter>(
+                modKey,
+                record: obj,
+                getter: getter,
+                parent: parent);
+            {
+                if (obj.Landscape.TryGet(out var CellLandscapeitem))
+                {
+                    yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        modKey: modKey,
+                        record: CellLandscapeitem,
+                        parent: curContext,
+                        getter: (m, r) =>
+                        {
+                            var baseRec = getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                            if (baseRec.Landscape != null) return baseRec.Landscape;
+                            var copy = (Landscape)((ILandscapeGetter)r).DeepCopy(ModContextExt.LandscapeCopyMask);
+                            baseRec.Landscape = copy;
+                            return copy;
+                        });
+                }
+            }
+            foreach (var subItem in obj.NavigationMeshes)
+            {
+                yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                    modKey: modKey,
+                    record: subItem,
+                    parent: curContext,
+                    getter: (m, r) =>
+                    {
+                        var copy = (ANavigationMesh)((IANavigationMeshGetter)r).DeepCopy();
+                        getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).NavigationMeshes.Add(copy);
+                        return copy;
+                    });
+            }
+            foreach (var subItem in obj.Persistent)
+            {
+                yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                    modKey: modKey,
+                    record: subItem,
+                    parent: curContext,
+                    getter: (m, r) =>
+                    {
+                        var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                        getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
+                        return copy;
+                    });
+            }
+            foreach (var subItem in obj.Temporary)
+            {
+                yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                    modKey: modKey,
+                    record: subItem,
+                    parent: curContext,
+                    getter: (m, r) =>
+                    {
+                        var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                        getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
+                        return copy;
+                    });
+            }
+            foreach (var subItem in obj.Persistent)
+            {
+                yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                    modKey: modKey,
+                    record: subItem,
+                    parent: curContext,
+                    getter: (m, r) =>
+                    {
+                        var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                        getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
+                        return copy;
+                    });
+            }
+            foreach (var subItem in obj.Temporary)
+            {
+                yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                    modKey: modKey,
+                    record: subItem,
+                    parent: curContext,
+                    getter: (m, r) =>
+                    {
+                        var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                        getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
+                        return copy;
+                    });
+            }
+            foreach (var subItem in obj.Persistent)
+            {
+                yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                    modKey: modKey,
+                    record: subItem,
+                    parent: curContext,
+                    getter: (m, r) =>
+                    {
+                        var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                        getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
+                        return copy;
+                    });
+            }
+            foreach (var subItem in obj.Temporary)
+            {
+                yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                    modKey: modKey,
+                    record: subItem,
+                    parent: curContext,
+                    getter: (m, r) =>
+                    {
+                        var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                        getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
+                        return copy;
+                    });
+            }
+            foreach (var subItem in obj.Persistent)
+            {
+                yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                    modKey: modKey,
+                    record: subItem,
+                    parent: curContext,
+                    getter: (m, r) =>
+                    {
+                        var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                        getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
+                        return copy;
+                    });
+            }
+            foreach (var subItem in obj.Temporary)
+            {
+                yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                    modKey: modKey,
+                    record: subItem,
+                    parent: curContext,
+                    getter: (m, r) =>
+                    {
+                        var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                        getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
+                        return copy;
+                    });
+            }
+            foreach (var subItem in obj.Persistent)
+            {
+                yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                    modKey: modKey,
+                    record: subItem,
+                    parent: curContext,
+                    getter: (m, r) =>
+                    {
+                        var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                        getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
+                        return copy;
+                    });
+            }
+            foreach (var subItem in obj.Temporary)
+            {
+                yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                    modKey: modKey,
+                    record: subItem,
+                    parent: curContext,
+                    getter: (m, r) =>
+                    {
+                        var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                        getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
+                        return copy;
+                    });
+            }
+        }
+        
+        public IEnumerable<IModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+            ICellGetter obj,
+            ILinkCache linkCache,
             Type type,
             ModKey modKey,
             IModContext? parent,
@@ -3857,6 +4031,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 parent: parent);
             switch (type.Name)
             {
+                case "IMajorRecordCommon":
+                case "IMajorRecord":
+                case "MajorRecord":
+                case "ISkyrimMajorRecord":
+                case "SkyrimMajorRecord":
+                    if (!Cell_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in this.EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        modKey: modKey,
+                        parent: parent,
+                        getter: getter))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IMajorRecordGetter":
+                case "IMajorRecordCommonGetter":
+                case "ISkyrimMajorRecordGetter":
+                    foreach (var item in this.EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        modKey: modKey,
+                        parent: parent,
+                        getter: getter))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "Landscape":
                 case "ILandscapeGetter":
                 case "ILandscape":

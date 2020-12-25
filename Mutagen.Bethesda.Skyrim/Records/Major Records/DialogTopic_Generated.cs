@@ -1950,6 +1950,33 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IEnumerable<IModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             IDialogTopicGetter obj,
             ILinkCache linkCache,
+            ModKey modKey,
+            IModContext? parent,
+            Func<ISkyrimMod, IDialogTopicGetter, IDialogTopic> getter)
+        {
+            var curContext = new ModContext<ISkyrimMod, IDialogTopic, IDialogTopicGetter>(
+                modKey,
+                record: obj,
+                getter: getter,
+                parent: parent);
+            foreach (var subItem in obj.Responses)
+            {
+                yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                    modKey: modKey,
+                    record: subItem,
+                    parent: curContext,
+                    getter: (m, r) =>
+                    {
+                        var copy = (DialogResponses)((IDialogResponsesGetter)r).DeepCopy();
+                        getter(m, linkCache.Resolve<IDialogTopicGetter>(obj.FormKey)).Responses.Add(copy);
+                        return copy;
+                    });
+            }
+        }
+        
+        public IEnumerable<IModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+            IDialogTopicGetter obj,
+            ILinkCache linkCache,
             Type type,
             ModKey modKey,
             IModContext? parent,
@@ -1963,6 +1990,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 parent: parent);
             switch (type.Name)
             {
+                case "IMajorRecordCommon":
+                case "IMajorRecord":
+                case "MajorRecord":
+                case "ISkyrimMajorRecord":
+                case "SkyrimMajorRecord":
+                    if (!DialogTopic_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in this.EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        modKey: modKey,
+                        parent: parent,
+                        getter: getter))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IMajorRecordGetter":
+                case "IMajorRecordCommonGetter":
+                case "ISkyrimMajorRecordGetter":
+                    foreach (var item in this.EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        modKey: modKey,
+                        parent: parent,
+                        getter: getter))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "DialogResponses":
                 case "IDialogResponsesGetter":
                 case "IDialogResponses":

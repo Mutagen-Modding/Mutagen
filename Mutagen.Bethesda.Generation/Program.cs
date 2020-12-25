@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "merable<ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommo";
+            string testString = "ach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).Enumera";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

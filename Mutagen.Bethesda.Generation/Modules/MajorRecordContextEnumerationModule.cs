@@ -110,6 +110,7 @@ namespace Mutagen.Bethesda.Generation
             LoquiType loquiType,
             Action<ArgsWrapper> addGetOrAddArg,
             string generic,
+            bool includeType,
             bool checkType,
             bool includeSelf = true)
         {
@@ -160,7 +161,7 @@ namespace Mutagen.Bethesda.Generation
                 return;
             }
             if (obj.IsListGroup()) return;
-            
+
             if (obj.IsTopLevelGroup())
             {
                 fg.AppendLine($"foreach (var item in {loquiAccessor}.EnumerateMajorRecords({(generic == null ? null : "type, throwIfUnknown: false")}))");
@@ -186,10 +187,16 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"obj: {loquiAccessor}");
                     args.AddPassArg("linkCache");
-                    args.AddPassArg("type");
+                    if (includeType)
+                    {
+                        args.AddPassArg("type");
+                    }
                     args.Add($"modKey: {(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}");
                     args.Add($"parent: {(obj.GetObjectType() == ObjectType.Mod ? "null" : "curContext")}");
-                    args.Add("throwIfUnknown: false");
+                    if (includeType)
+                    {
+                        args.Add("throwIfUnknown: false");
+                    }
                     addGetOrAddArg(args);
                 }
                 using (new BraceWrapper(fg))
@@ -208,6 +215,127 @@ namespace Mutagen.Bethesda.Generation
             if (obj.GetObjectType() == ObjectType.Group) return;
             if (await MajorRecordModule.HasMajorRecordsInTree(obj, includeBaseClass: false) == Case.No) return;
             var overrideStr = await obj.FunctionOverride(async c => await MajorRecordModule.HasMajorRecords(c, includeBaseClass: false, includeSelf: true) != Case.No);
+
+            using (var args = new FunctionWrapper(fg,
+                $"public{overrideStr}IEnumerable<IModContext<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts"))
+            {
+                args.Add($"{obj.Interface(getter: getter, internalInterface: true)} obj");
+                args.Add($"{nameof(ILinkCache)} linkCache");
+                if (obj.GetObjectType() != ObjectType.Mod)
+                {
+                    args.Add($"{nameof(ModKey)} modKey");
+                    args.Add($"IModContext? parent");
+                }
+                if (obj.GetObjectType() == ObjectType.Record)
+                {
+                    args.Add($"Func<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, {obj.Interface(getter: true)}, {obj.Interface(getter: false)}> getter");
+                }
+            }
+            using (new BraceWrapper(fg))
+            {
+                if (obj.GetObjectType() == ObjectType.Record)
+                {
+                    using (var args = new ArgsWrapper(fg,
+                        $"var curContext = new ModContext<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}>"))
+                    {
+                        args.Add($"{(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}");
+                        args.Add("record: obj");
+                        args.AddPassArg("getter");
+                        args.AddPassArg("parent");
+                    }
+                }
+                var fgCount = fg.Count;
+                var gameCategory = obj.GetObjectData().GameCategory;
+                Dictionary<object, FileGeneration> generationDict = new Dictionary<object, FileGeneration>();
+                foreach (var field in obj.IterateFields())
+                {
+                    FileGeneration fieldGen;
+                    if (field is LoquiType loqui)
+                    {
+                        if (loqui.TargetObjectGeneration.IsListGroup()) continue;
+                        var isMajorRecord = loqui.TargetObjectGeneration != null && await loqui.TargetObjectGeneration.IsMajorRecord();
+                        if (!isMajorRecord
+                            && await MajorRecordModule.HasMajorRecords(loqui, includeBaseClass: true) == Case.No)
+                        {
+                            continue;
+                        }
+
+                        if (loqui.TargetObjectGeneration.GetObjectType() == ObjectType.Group)
+                        {
+                            fieldGen = generationDict.GetOrAdd(loqui.GetGroupTarget());
+                        }
+                        else
+                        {
+                            fieldGen = generationDict.GetOrAdd(((object)loqui?.TargetObjectGeneration) ?? loqui);
+                        }
+                    }
+                    else if (field is ContainerType cont)
+                    {
+                        if (!(cont.SubTypeGeneration is LoquiType contLoqui)) continue;
+                        if (contLoqui.RefType == LoquiType.LoquiRefType.Generic)
+                        {
+                            fieldGen = generationDict.GetOrAdd("default:");
+                        }
+                        else
+                        {
+                            fieldGen = generationDict.GetOrAdd(((object)contLoqui?.TargetObjectGeneration) ?? contLoqui);
+                        }
+                    }
+                    else if (field is DictType dict)
+                    {
+                        if (dict.Mode != DictMode.KeyedValue) continue;
+                        if (!(dict.ValueTypeGen is LoquiType dictLoqui)) continue;
+                        if (dictLoqui.RefType == LoquiType.LoquiRefType.Generic)
+                        {
+                            fieldGen = generationDict.GetOrAdd("default:");
+                        }
+                        else
+                        {
+                            fieldGen = generationDict.GetOrAdd(((object)dictLoqui?.TargetObjectGeneration) ?? dictLoqui);
+                        }
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                    await ApplyIterationLines(
+                        obj: obj,
+                        field: field,
+                        fieldGen: fieldGen,
+                        accessor: accessor,
+                        getter: getter,
+                        includeType: false);
+                }
+
+                bool doAdditionlDeepLogic = obj.Name != "ListGroup";
+
+                if (doAdditionlDeepLogic)
+                {
+                    var deepRecordMapping = await MajorRecordModule.FindDeepRecords(obj);
+                    foreach (var deepRec in deepRecordMapping)
+                    {
+                        FileGeneration deepFg = generationDict.GetOrAdd(deepRec.Key);
+                        foreach (var field in deepRec.Value)
+                        {
+                            await ApplyIterationLines(
+                                obj: obj,
+                                field: field,
+                                fieldGen: deepFg,
+                                accessor: accessor,
+                                getter: getter,
+                                hasTarget: true,
+                                includeSelf: false,
+                                includeType: false);
+                        }
+                    }
+
+                    foreach (var kv in generationDict)
+                    {
+                        fg.AppendLines(kv.Value);
+                    }
+                }
+            }
+            fg.AppendLine();
 
             using (var args = new FunctionWrapper(fg,
                 $"public{overrideStr}IEnumerable<IModContext<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts"))
@@ -244,6 +372,76 @@ namespace Mutagen.Bethesda.Generation
                 using (new BraceWrapper(fg))
                 {
                     var gameCategory = obj.GetObjectData().GameCategory;
+                    fg.AppendLine($"case \"{nameof(IMajorRecordCommon)}\":");
+                    fg.AppendLine($"case \"{nameof(IMajorRecord)}\":");
+                    fg.AppendLine($"case \"{nameof(MajorRecord)}\":");
+                    if (gameCategory != null)
+                    {
+                        fg.AppendLine($"case \"I{gameCategory}MajorRecord\":");
+                        fg.AppendLine($"case \"{gameCategory}MajorRecord\":");
+                    }
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendLine($"if (!{obj.RegistrationName}.SetterType.IsAssignableFrom(obj.GetType())) yield break;");
+                        using (var args = new ArgsWrapper(fg,
+                            $"foreach (var item in this.EnumerateMajorRecordContexts",
+                            suffixLine: ")")
+                        {
+                            SemiColon = false
+                        })
+                        {
+                            args.Add("obj");
+                            args.AddPassArg("linkCache");
+                            if (obj.GetObjectType() != ObjectType.Mod)
+                            {
+                                args.AddPassArg("modKey");
+                                args.AddPassArg("parent");
+                            }
+                            if (obj.GetObjectType() == ObjectType.Record)
+                            {
+                                args.AddPassArg("getter");
+                            }
+                        }
+                        using (new BraceWrapper(fg))
+                        {
+                            fg.AppendLine("yield return item;");
+                        }
+                        fg.AppendLine("yield break;");
+                    }
+                    fg.AppendLine($"case \"{nameof(IMajorRecordGetter)}\":");
+                    fg.AppendLine($"case \"{nameof(IMajorRecordCommonGetter)}\":");
+                    if (gameCategory != null)
+                    {
+                        fg.AppendLine($"case \"I{gameCategory}MajorRecordGetter\":");
+                    }
+                    using (new DepthWrapper(fg))
+                    {
+                        using (var args = new ArgsWrapper(fg,
+                            $"foreach (var item in this.EnumerateMajorRecordContexts",
+                            suffixLine: ")")
+                        {
+                            SemiColon = false
+                        })
+                        {
+                            args.Add("obj");
+                            args.AddPassArg("linkCache");
+                            if (obj.GetObjectType() != ObjectType.Mod)
+                            {
+                                args.AddPassArg("modKey");
+                                args.AddPassArg("parent");
+                            }
+                            if (obj.GetObjectType() == ObjectType.Record)
+                            {
+                                args.AddPassArg("getter");
+                            }
+                        }
+                        using (new BraceWrapper(fg))
+                        {
+                            fg.AppendLine("yield return item;");
+                        }
+                        fg.AppendLine("yield break;");
+                    }
+
                     Dictionary<object, FileGeneration> generationDict = new Dictionary<object, FileGeneration>();
                     foreach (var field in obj.IterateFields())
                     {
@@ -296,7 +494,13 @@ namespace Mutagen.Bethesda.Generation
                         {
                             continue;
                         }
-                        await ApplyIterationLines(obj, field, fieldGen, accessor, getter);
+                        await ApplyIterationLines(
+                            obj: obj,
+                            field: field,
+                            fieldGen: fieldGen,
+                            accessor: accessor,
+                            getter: getter,
+                            includeType: true);
                     }
 
                     bool doAdditionlDeepLogic = obj.Name != "ListGroup";
@@ -309,7 +513,15 @@ namespace Mutagen.Bethesda.Generation
                             FileGeneration deepFg = generationDict.GetOrAdd(deepRec.Key);
                             foreach (var field in deepRec.Value)
                             {
-                                await ApplyIterationLines(obj, field, deepFg, accessor, getter, hasTarget: true, includeSelf: false);
+                                await ApplyIterationLines(
+                                    obj: obj,
+                                    field: field,
+                                    fieldGen: deepFg,
+                                    accessor: accessor,
+                                    getter: getter,
+                                    hasTarget: true,
+                                    includeSelf: false,
+                                    includeType: true);
                             }
                         }
 
@@ -417,7 +629,16 @@ namespace Mutagen.Bethesda.Generation
                                 }
                                 foreach (var deepObj in deepObjects)
                                 {
-                                    await ApplyIterationLines(obj, deepObj, subFg, accessor, getter, blackList: passedObjects, hasTarget: true, includeSelf: false);
+                                    await ApplyIterationLines(
+                                        obj: obj,
+                                        field: deepObj,
+                                        fieldGen: subFg,
+                                        accessor: accessor,
+                                        getter: getter,
+                                        blackList: passedObjects,
+                                        hasTarget: true,
+                                        includeSelf: false,
+                                        includeType: true);
                                 }
                                 if (!subFg.Empty)
                                 {
@@ -466,6 +687,7 @@ namespace Mutagen.Bethesda.Generation
             FileGeneration fieldGen,
             Accessor accessor,
             bool getter,
+            bool includeType,
             bool hasTarget = false,
             HashSet<ObjectGeneration> blackList = null,
             bool includeSelf = true)
@@ -482,8 +704,11 @@ namespace Mutagen.Bethesda.Generation
                         SemiColon = false
                     })
                     {
-                        args.AddPassArg("type");
-                        args.AddPassArg("throwIfUnknown");
+                        if (includeType)
+                        {
+                            args.AddPassArg("type");
+                            args.AddPassArg("throwIfUnknown");
+                        }
                     }
                     using (new BraceWrapper(fieldGen))
                     {
@@ -510,10 +735,13 @@ namespace Mutagen.Bethesda.Generation
                         {
                             args.Add("groupItem");
                             args.AddPassArg("linkCache");
-                            args.AddPassArg("type");
+                            if (includeType)
+                            {
+                                args.AddPassArg("type");
+                                args.AddPassArg("throwIfUnknown");
+                            }
                             args.Add($"modKey: {(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}");
                             args.Add($"parent: {(obj.GetObjectType() == ObjectType.Mod ? "null" : "curContext")}");
-                            args.AddPassArg("throwIfUnknown");
                             args.Add($"getter: (m, r) => m.{field.Name}.GetOrAddAsOverride(linkCache.Resolve<{group.GetGroupTarget().Interface(getter: true, internalInterface: true)}>(r.FormKey))");
                         }
                         using (new BraceWrapper(fieldGen))
@@ -529,7 +757,6 @@ namespace Mutagen.Bethesda.Generation
                 var fieldAccessor = loqui.Nullable ? $"{obj.ObjectName}{loqui.Name}item" : $"{accessor}.{loqui.Name}";
                 if (loqui.TargetObjectGeneration.IsListGroup())
                 { // List groups 
-
                     using (var args = new ArgsWrapper(fieldGen,
                         $"foreach (var item in obj.{field.Name}.EnumerateMajorRecordContexts",
                         suffixLine: ")")
@@ -538,10 +765,13 @@ namespace Mutagen.Bethesda.Generation
                     })
                     {
                         args.AddPassArg("linkCache");
-                        args.AddPassArg("type");
+                        if (includeType)
+                        {
+                            args.AddPassArg("type");
+                            args.AddPassArg("throwIfUnknown");
+                        }
                         args.Add($"modKey: {(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}");
                         args.Add($"parent: {(obj.GetObjectType() == ObjectType.Mod ? "null" : "curContext")}");
-                        args.AddPassArg("throwIfUnknown");
                     }
                     using (new BraceWrapper(fieldGen))
                     {
@@ -552,10 +782,11 @@ namespace Mutagen.Bethesda.Generation
                 var subFg = new FileGeneration();
                 await LoquiTypeHandler(
                     subFg,
-                    obj, 
+                    obj,
                     fieldAccessor,
-                    loqui, 
+                    loqui,
                     generic: "TMajor",
+                    includeType: includeType,
                     checkType: false,
                     includeSelf: includeSelf,
                     addGetOrAddArg: (args) =>
@@ -601,8 +832,11 @@ namespace Mutagen.Bethesda.Generation
                     {
                         if (await contLoqui.TargetObjectGeneration.IsMajorRecord())
                         {
-                            fieldGen.AppendLine($"if (type.IsAssignableFrom(typeof({contLoqui.GenericDef.Name})))");
-                            using (new BraceWrapper(fieldGen))
+                            if (includeType)
+                            {
+                                fieldGen.AppendLine($"if (type.IsAssignableFrom(typeof({contLoqui.GenericDef.Name})))");
+                            }
+                            using (new BraceWrapper(fieldGen, doIt: includeType))
                             {
                                 fieldGen.AppendLine($"yield return ({nameof(IMajorRecordCommonGetter)})item;");
                             }
@@ -623,7 +857,14 @@ namespace Mutagen.Bethesda.Generation
                         SemiColon = false
                     })
                     {
-                        args.AddPassArg("type");
+                        if (includeType)
+                        {
+                            args.AddPassArg("type");
+                        }
+                        else
+                        {
+                            args.Add($"type: typeof({nameof(IMajorRecordCommonGetter)})");
+                        }
                         args.Add($"modKey: {(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}");
                         args.Add($"parent: {(obj.GetObjectType() == ObjectType.Mod ? "null" : "curContext")}");
                         args.AddPassArg("linkCache");
@@ -650,11 +891,12 @@ namespace Mutagen.Bethesda.Generation
                                 {
                                     await LoquiTypeHandler(
                                         fieldGen,
-                                        obj, 
+                                        obj,
                                         $"subItem",
                                         contLoqui,
-                                        generic: "TMajor", 
-                                        checkType: true,
+                                        generic: "TMajor",
+                                        includeType: includeType,
+                                        checkType: includeType,
                                         addGetOrAddArg: (args) =>
                                         {
                                             args.Add(subFg =>

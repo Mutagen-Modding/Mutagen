@@ -3843,6 +3843,267 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IEnumerable<IModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             IWorldspaceGetter obj,
             ILinkCache linkCache,
+            ModKey modKey,
+            IModContext? parent,
+            Func<ISkyrimMod, IWorldspaceGetter, IWorldspace> getter)
+        {
+            var curContext = new ModContext<ISkyrimMod, IWorldspace, IWorldspaceGetter>(
+                modKey,
+                record: obj,
+                getter: getter,
+                parent: parent);
+            {
+                if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
+                {
+                    yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        modKey: modKey,
+                        record: WorldspaceTopCellitem,
+                        parent: curContext,
+                        getter: (m, r) =>
+                        {
+                            var baseRec = getter(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
+                            if (baseRec.TopCell != null) return baseRec.TopCell;
+                            var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
+                            baseRec.TopCell = copy;
+                            return copy;
+                        });
+                    foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
+                        obj: WorldspaceTopCellitem,
+                        linkCache: linkCache,
+                        modKey: modKey,
+                        parent: curContext,
+                        getter: (m, r) =>
+                        {
+                            var baseRec = getter(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
+                            if (baseRec.TopCell != null) return baseRec.TopCell;
+                            var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
+                            baseRec.TopCell = copy;
+                            return copy;
+                        }))
+                    {
+                        yield return item;
+                    }
+                }
+            }
+            foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
+                type: typeof(IMajorRecordCommonGetter),
+                modKey: modKey,
+                parent: curContext,
+                linkCache: linkCache,
+                throwIfUnknown: false,
+                worldspace: obj,
+                getter: getter))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
+                type: typeof(IMajorRecordCommonGetter),
+                modKey: modKey,
+                parent: curContext,
+                linkCache: linkCache,
+                throwIfUnknown: false,
+                worldspace: obj,
+                getter: getter))
+            {
+                yield return item;
+            }
+            {
+                if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
+                {
+                    foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
+                        obj: WorldspaceTopCellitem,
+                        linkCache: linkCache,
+                        modKey: modKey,
+                        parent: curContext,
+                        getter: (m, r) =>
+                        {
+                            var baseRec = getter(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
+                            if (baseRec.TopCell != null) return baseRec.TopCell;
+                            var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
+                            baseRec.TopCell = copy;
+                            return copy;
+                        }))
+                    {
+                        yield return item;
+                    }
+                }
+            }
+            foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
+                type: typeof(IMajorRecordCommonGetter),
+                modKey: modKey,
+                parent: curContext,
+                linkCache: linkCache,
+                throwIfUnknown: false,
+                worldspace: obj,
+                getter: getter))
+            {
+                yield return item;
+            }
+            {
+                if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
+                {
+                    foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
+                        obj: WorldspaceTopCellitem,
+                        linkCache: linkCache,
+                        modKey: modKey,
+                        parent: curContext,
+                        getter: (m, r) =>
+                        {
+                            var baseRec = getter(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
+                            if (baseRec.TopCell != null) return baseRec.TopCell;
+                            var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
+                            baseRec.TopCell = copy;
+                            return copy;
+                        }))
+                    {
+                        yield return item;
+                    }
+                }
+            }
+            foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
+                type: typeof(IMajorRecordCommonGetter),
+                modKey: modKey,
+                parent: curContext,
+                linkCache: linkCache,
+                throwIfUnknown: false,
+                worldspace: obj,
+                getter: getter))
+            {
+                yield return item;
+            }
+            {
+                if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
+                {
+                    foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
+                        obj: WorldspaceTopCellitem,
+                        linkCache: linkCache,
+                        modKey: modKey,
+                        parent: curContext,
+                        getter: (m, r) =>
+                        {
+                            var baseRec = getter(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
+                            if (baseRec.TopCell != null) return baseRec.TopCell;
+                            var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
+                            baseRec.TopCell = copy;
+                            return copy;
+                        }))
+                    {
+                        yield return item;
+                    }
+                }
+            }
+            foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
+                type: typeof(IMajorRecordCommonGetter),
+                modKey: modKey,
+                parent: curContext,
+                linkCache: linkCache,
+                throwIfUnknown: false,
+                worldspace: obj,
+                getter: getter))
+            {
+                yield return item;
+            }
+            {
+                if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
+                {
+                    foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
+                        obj: WorldspaceTopCellitem,
+                        linkCache: linkCache,
+                        modKey: modKey,
+                        parent: curContext,
+                        getter: (m, r) =>
+                        {
+                            var baseRec = getter(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
+                            if (baseRec.TopCell != null) return baseRec.TopCell;
+                            var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
+                            baseRec.TopCell = copy;
+                            return copy;
+                        }))
+                    {
+                        yield return item;
+                    }
+                }
+            }
+            foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
+                type: typeof(IMajorRecordCommonGetter),
+                modKey: modKey,
+                parent: curContext,
+                linkCache: linkCache,
+                throwIfUnknown: false,
+                worldspace: obj,
+                getter: getter))
+            {
+                yield return item;
+            }
+            {
+                if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
+                {
+                    foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
+                        obj: WorldspaceTopCellitem,
+                        linkCache: linkCache,
+                        modKey: modKey,
+                        parent: curContext,
+                        getter: (m, r) =>
+                        {
+                            var baseRec = getter(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
+                            if (baseRec.TopCell != null) return baseRec.TopCell;
+                            var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
+                            baseRec.TopCell = copy;
+                            return copy;
+                        }))
+                    {
+                        yield return item;
+                    }
+                }
+            }
+            foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
+                type: typeof(IMajorRecordCommonGetter),
+                modKey: modKey,
+                parent: curContext,
+                linkCache: linkCache,
+                throwIfUnknown: false,
+                worldspace: obj,
+                getter: getter))
+            {
+                yield return item;
+            }
+            {
+                if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
+                {
+                    foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
+                        obj: WorldspaceTopCellitem,
+                        linkCache: linkCache,
+                        modKey: modKey,
+                        parent: curContext,
+                        getter: (m, r) =>
+                        {
+                            var baseRec = getter(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
+                            if (baseRec.TopCell != null) return baseRec.TopCell;
+                            var copy = (Cell)((ICellGetter)r).DeepCopy(ModContextExt.CellCopyMask);
+                            baseRec.TopCell = copy;
+                            return copy;
+                        }))
+                    {
+                        yield return item;
+                    }
+                }
+            }
+            foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
+                type: typeof(IMajorRecordCommonGetter),
+                modKey: modKey,
+                parent: curContext,
+                linkCache: linkCache,
+                throwIfUnknown: false,
+                worldspace: obj,
+                getter: getter))
+            {
+                yield return item;
+            }
+        }
+        
+        public IEnumerable<IModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+            IWorldspaceGetter obj,
+            ILinkCache linkCache,
             Type type,
             ModKey modKey,
             IModContext? parent,
@@ -3856,6 +4117,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 parent: parent);
             switch (type.Name)
             {
+                case "IMajorRecordCommon":
+                case "IMajorRecord":
+                case "MajorRecord":
+                case "ISkyrimMajorRecord":
+                case "SkyrimMajorRecord":
+                    if (!Worldspace_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in this.EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        modKey: modKey,
+                        parent: parent,
+                        getter: getter))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IMajorRecordGetter":
+                case "IMajorRecordCommonGetter":
+                case "ISkyrimMajorRecordGetter":
+                    foreach (var item in this.EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        modKey: modKey,
+                        parent: parent,
+                        getter: getter))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "WorldspaceGridReference":
                 case "IWorldspaceGridReferenceGetter":
                 case "IWorldspaceGridReference":

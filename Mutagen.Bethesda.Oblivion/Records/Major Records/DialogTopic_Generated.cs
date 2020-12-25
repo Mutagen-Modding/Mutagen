@@ -1731,6 +1731,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IEnumerable<IModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             IDialogTopicGetter obj,
             ILinkCache linkCache,
+            ModKey modKey,
+            IModContext? parent,
+            Func<IOblivionMod, IDialogTopicGetter, IDialogTopic> getter)
+        {
+            var curContext = new ModContext<IOblivionMod, IDialogTopic, IDialogTopicGetter>(
+                modKey,
+                record: obj,
+                getter: getter,
+                parent: parent);
+            foreach (var subItem in obj.Items)
+            {
+                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                    modKey: modKey,
+                    record: subItem,
+                    parent: curContext,
+                    getter: (m, r) =>
+                    {
+                        var copy = (DialogItem)((IDialogItemGetter)r).DeepCopy();
+                        getter(m, linkCache.Resolve<IDialogTopicGetter>(obj.FormKey)).Items.Add(copy);
+                        return copy;
+                    });
+            }
+        }
+        
+        public IEnumerable<IModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+            IDialogTopicGetter obj,
+            ILinkCache linkCache,
             Type type,
             ModKey modKey,
             IModContext? parent,
@@ -1744,6 +1771,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 parent: parent);
             switch (type.Name)
             {
+                case "IMajorRecordCommon":
+                case "IMajorRecord":
+                case "MajorRecord":
+                case "IOblivionMajorRecord":
+                case "OblivionMajorRecord":
+                    if (!DialogTopic_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in this.EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        modKey: modKey,
+                        parent: parent,
+                        getter: getter))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IMajorRecordGetter":
+                case "IMajorRecordCommonGetter":
+                case "IOblivionMajorRecordGetter":
+                    foreach (var item in this.EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        modKey: modKey,
+                        parent: parent,
+                        getter: getter))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "DialogItem":
                 case "IDialogItemGetter":
                 case "IDialogItem":
