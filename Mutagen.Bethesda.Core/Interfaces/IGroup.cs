@@ -107,7 +107,7 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="editorID">Editor ID to assign the new record.</param>
         /// <returns>New record already added to the Group</returns>
-        TMajor AddNew(string editorID);
+        TMajor AddNew(string? editorID);
     }
 
     public static class GroupExt
@@ -140,10 +140,10 @@ namespace Mutagen.Bethesda
         /// Duplicates a given record (giving it a new FormID) adding it to the group and returning it.
         /// </summary>
         /// <param name="group">Group to add to</param>
-        /// <param name="edid">EditorID to drive the FormID assignment off any persistance systems</param>
         /// <param name="source">Source record to duplicate</param>
+        /// <param name="edid">EditorID to drive the FormID assignment off any persistance systems</param>
         /// <returns>Duplicated and added record</returns>
-        public static TMajor DuplicateInAsNewRecord<TMajor, TMajorGetter>(this IGroupCommon<TMajor> group, string edid, TMajorGetter source)
+        public static TMajor DuplicateInAsNewRecord<TMajor, TMajorGetter>(this IGroupCommon<TMajor> group, TMajorGetter source, string? edid)
             where TMajor : IMajorRecordInternal, TMajorGetter
             where TMajorGetter : IMajorRecordGetter, IBinaryItem
         {

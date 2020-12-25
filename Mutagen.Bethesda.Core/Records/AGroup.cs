@@ -101,7 +101,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public TMajor AddNew(string editorID)
+        public TMajor AddNew(string? editorID)
         {
             var ret = MajorRecordInstantiator<TMajor>.Activator(SourceMod.GetNextFormKey(editorID), _release);
             ret.EditorID = editorID;

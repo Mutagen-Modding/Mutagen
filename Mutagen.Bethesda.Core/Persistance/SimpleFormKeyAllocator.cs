@@ -60,11 +60,14 @@ namespace Mutagen.Bethesda.Persistance
             }
         }
 
-        public FormKey GetNextFormKey(string editorID)
+        public FormKey GetNextFormKey(string? editorID)
         {
-            lock (_cache)
+            if (editorID != null)
             {
-                if (_cache.TryGetValue(editorID, out var id)) return id;
+                lock (_cache)
+                {
+                    if (_cache.TryGetValue(editorID, out var id)) return id;
+                }
             }
             return GetNextFormKey();
         }

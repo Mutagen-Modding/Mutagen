@@ -91,8 +91,9 @@ namespace Mutagen.Bethesda
         /// </summary> 
         /// <param name="editorID">The target EditorID that may potentially be used for synchronization</param> 
         /// <returns>An unused FormKey</returns> 
-        public FormKey GetNextFormKey(string editorID)
+        public FormKey GetNextFormKey(string? editorID)
         {
+            if (editorID == null) return GetNextFormKey();
             return _allocator.GetNextFormKey(editorID);
         }
 
