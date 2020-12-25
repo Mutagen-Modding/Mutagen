@@ -62,8 +62,21 @@ namespace Mutagen.Bethesda
             this._linkInterfaces = LinkInterfaceMapping.InterfaceToObjectTypes(_gameCategory);
         }
 
-        private bool IsPastDepth(int depth) => depth >= this._listedOrder.Count;
-        private int PastDepth => this._listedOrder.Count + 1;
+        private bool ShouldStopQuery<T>(FormKey targetKey, DepthCache<T> cache)
+        {
+            if (cache.Depth >= this._listedOrder.Count)
+            {
+                return true;
+            }
+
+            // If we're going deeper than the originating mod of the target FormKey, we can stop
+            if (cache.PassedMods.Contains(targetKey.ModKey))
+            {
+                return true;
+            }
+
+            return false;
+        }
 
         /// <inheritdoc />
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
@@ -140,18 +153,19 @@ namespace Mutagen.Bethesda
                 {
                     return true;
                 }
-                if (IsPastDepth(cache.Depth))
+                if (ShouldStopQuery(formKey, cache))
                 {
                     majorRec = default!;
                     return false;
                 }
 
-                while (!IsPastDepth(cache.Depth))
+                while (!ShouldStopQuery(formKey, cache))
                 {
                     // Get next unprocessed mod
                     var targetIndex = this._listedOrder.Count - cache.Depth - 1;
                     var targetMod = this._listedOrder[targetIndex];
                     cache.Depth++;
+                    cache.PassedMods.Add(targetMod.ModKey);
 
                     void AddRecords(TModGetter mod, Type type)
                     {
@@ -285,18 +299,19 @@ namespace Mutagen.Bethesda
                 {
                     return true;
                 }
-                if (IsPastDepth(cache.Depth))
+                if (ShouldStopQuery(formKey, cache))
                 {
                     majorRec = default!;
                     return false;
                 }
 
-                while (!IsPastDepth(cache.Depth))
+                while (!ShouldStopQuery(formKey, cache))
                 {
                     // Get next unprocessed mod
                     var targetIndex = this._listedOrder.Count - cache.Depth - 1;
                     var targetMod = this._listedOrder[targetIndex];
                     cache.Depth++;
+                    cache.PassedMods.Add(targetMod.ModKey);
 
                     void AddRecords(TModGetter mod, Type type)
                     {
@@ -396,7 +411,7 @@ namespace Mutagen.Bethesda
             }
 
             int iteratedCount = list.Count;
-            bool more = !IsPastDepth(cache.Depth);
+            bool more = !ShouldStopQuery(formKey, cache);
 
             // While there's more depth to consider
             while (more)
@@ -411,6 +426,7 @@ namespace Mutagen.Bethesda
                         var targetIndex = this._listedOrder.Count - cache.Depth - 1;
                         var targetMod = this._listedOrder[targetIndex];
                         cache.Depth++;
+                        cache.PassedMods.Add(targetMod.ModKey);
 
                         void AddRecords(TModGetter mod, Type type)
                         {
@@ -443,7 +459,7 @@ namespace Mutagen.Bethesda
                         }
                     }
                     consideredDepth = cache.Depth;
-                    more = !IsPastDepth(cache.Depth);
+                    more = !ShouldStopQuery(formKey, cache);
                 }
                 
                 // Return any new data
@@ -507,7 +523,7 @@ namespace Mutagen.Bethesda
             }
 
             int iteratedCount = list.Count;
-            bool more = !IsPastDepth(cache.Depth);
+            bool more = !ShouldStopQuery(formKey, cache);
 
             // While there's more depth to consider
             while (more)
@@ -522,6 +538,7 @@ namespace Mutagen.Bethesda
                         var targetIndex = this._listedOrder.Count - cache.Depth - 1;
                         var targetMod = this._listedOrder[targetIndex];
                         cache.Depth++;
+                        cache.PassedMods.Add(targetMod.ModKey);
 
                         void AddRecords(TModGetter mod, Type type)
                         {
@@ -554,7 +571,7 @@ namespace Mutagen.Bethesda
                         }
                     }
                     consideredDepth = cache.Depth;
-                    more = !IsPastDepth(cache.Depth);
+                    more = !ShouldStopQuery(formKey, cache);
                 }
 
                 // Return any new data
@@ -577,6 +594,7 @@ namespace Mutagen.Bethesda
     internal class DepthCache<T>
     {
         private readonly Dictionary<FormKey, T> _dictionary = new Dictionary<FormKey, T>();
+        public HashSet<ModKey> PassedMods = new HashSet<ModKey>();
         public int Depth;
 
         public bool TryGetValue(FormKey key, [MaybeNullWhen(false)] out T value)
