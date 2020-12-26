@@ -1950,7 +1950,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 parent: parent);
             foreach (var subItem in obj.Responses)
             {
-                yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<ISkyrimMod, IDialogResponsesInternal, IDialogResponsesGetter>(
                     modKey: modKey,
                     record: subItem,
                     parent: curContext,
@@ -2016,7 +2016,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<ISkyrimMod, IDialogResponsesInternal, IDialogResponsesGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,

@@ -1731,7 +1731,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 parent: parent);
             foreach (var subItem in obj.Items)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, IDialogItemInternal, IDialogItemGetter>(
                     modKey: modKey,
                     record: subItem,
                     parent: curContext,
@@ -1797,7 +1797,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<IOblivionMod, IDialogItemInternal, IDialogItemGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,

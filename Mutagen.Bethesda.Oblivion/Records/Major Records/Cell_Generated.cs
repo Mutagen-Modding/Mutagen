@@ -3025,7 +3025,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (obj.PathGrid.TryGet(out var CellPathGriditem))
                 {
-                    yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                    yield return new ModContext<IOblivionMod, IPathGridInternal, IPathGridGetter>(
                         modKey: modKey,
                         record: CellPathGriditem,
                         parent: curContext,
@@ -3033,7 +3033,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         {
                             var baseRec = getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
                             if (baseRec.PathGrid != null) return baseRec.PathGrid;
-                            var copy = (PathGrid)((IPathGridGetter)r).DeepCopy(ModContextExt.PathGridCopyMask);
+                            var copy = r.DeepCopy(ModContextExt.PathGridCopyMask);
                             baseRec.PathGrid = copy;
                             return copy;
                         });
@@ -3042,7 +3042,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (obj.Landscape.TryGet(out var CellLandscapeitem))
                 {
-                    yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                    yield return new ModContext<IOblivionMod, ILandscapeInternal, ILandscapeGetter>(
                         modKey: modKey,
                         record: CellLandscapeitem,
                         parent: curContext,
@@ -3050,7 +3050,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         {
                             var baseRec = getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
                             if (baseRec.Landscape != null) return baseRec.Landscape;
-                            var copy = (Landscape)((ILandscapeGetter)r).DeepCopy(ModContextExt.LandscapeCopyMask);
+                            var copy = r.DeepCopy(ModContextExt.LandscapeCopyMask);
                             baseRec.Landscape = copy;
                             return copy;
                         });
@@ -3058,7 +3058,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var subItem in obj.Persistent)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, IPlaced, IPlacedGetter>(
                     modKey: modKey,
                     record: subItem,
                     parent: curContext,
@@ -3071,7 +3071,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var subItem in obj.Temporary)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, IPlaced, IPlacedGetter>(
                     modKey: modKey,
                     record: subItem,
                     parent: curContext,
@@ -3084,7 +3084,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var subItem in obj.VisibleWhenDistant)
             {
-                yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                yield return new ModContext<IOblivionMod, IPlaced, IPlacedGetter>(
                     modKey: modKey,
                     record: subItem,
                     parent: curContext,
@@ -3149,7 +3149,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         if (obj.PathGrid.TryGet(out var CellPathGriditem))
                         {
-                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<IOblivionMod, IPathGridInternal, IPathGridGetter>(
                                 modKey: modKey,
                                 record: CellPathGriditem,
                                 parent: curContext,
@@ -3157,7 +3157,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 {
                                     var baseRec = getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
                                     if (baseRec.PathGrid != null) return baseRec.PathGrid;
-                                    var copy = (PathGrid)((IPathGridGetter)r).DeepCopy(ModContextExt.PathGridCopyMask);
+                                    var copy = r.DeepCopy(ModContextExt.PathGridCopyMask);
                                     baseRec.PathGrid = copy;
                                     return copy;
                                 });
@@ -3171,7 +3171,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         if (obj.Landscape.TryGet(out var CellLandscapeitem))
                         {
-                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<IOblivionMod, ILandscapeInternal, ILandscapeGetter>(
                                 modKey: modKey,
                                 record: CellLandscapeitem,
                                 parent: curContext,
@@ -3179,7 +3179,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 {
                                     var baseRec = getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
                                     if (baseRec.Landscape != null) return baseRec.Landscape;
-                                    var copy = (Landscape)((ILandscapeGetter)r).DeepCopy(ModContextExt.LandscapeCopyMask);
+                                    var copy = r.DeepCopy(ModContextExt.LandscapeCopyMask);
                                     baseRec.Landscape = copy;
                                     return copy;
                                 });
@@ -3189,7 +3189,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<IOblivionMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
@@ -3205,7 +3205,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<IOblivionMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
@@ -3221,7 +3221,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<IOblivionMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
@@ -3240,7 +3240,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<IOblivionMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
@@ -3256,7 +3256,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<IOblivionMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
@@ -3272,7 +3272,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<IOblivionMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
@@ -3293,7 +3293,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<IOblivionMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
@@ -3309,7 +3309,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<IOblivionMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
@@ -3325,7 +3325,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<IOblivionMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
@@ -3346,7 +3346,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<IOblivionMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
@@ -3362,7 +3362,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<IOblivionMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
@@ -3378,7 +3378,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<IOblivionMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
@@ -3399,7 +3399,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<IOblivionMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
@@ -3415,7 +3415,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<IOblivionMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
@@ -3431,7 +3431,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<IOblivionMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,

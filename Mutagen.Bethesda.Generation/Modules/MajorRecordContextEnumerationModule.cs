@@ -125,7 +125,7 @@ namespace Mutagen.Bethesda.Generation
                 using (new BraceWrapper(fg, doIt: checkType))
                 {
                     using (var args = new ArgsWrapper(fg,
-                        $"yield return new ModContext<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, IMajorRecordCommon, IMajorRecordCommonGetter>"))
+                        $"yield return new ModContext<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, {loquiType.Interface(getter: false)}, {loquiType.Interface(getter: true)}>"))
                     {
                         args.Add($"modKey: {(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}");
                         args.Add($"record: {loquiAccessor}");
@@ -147,7 +147,7 @@ namespace Mutagen.Bethesda.Generation
                 using (new BraceWrapper(fg, doIt: checkType))
                 {
                     using (var args = new ArgsWrapper(fg,
-                        $"yield return new ModContext<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, IMajorRecordCommon, IMajorRecordCommonGetter>"))
+                        $"yield return new ModContext<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, {loquiType.Interface(getter: false, internalInterface: true)}, {loquiType.Interface(getter: true, internalInterface: true)}>"))
                     {
                         args.Add($"modKey: {(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}");
                         args.Add($"record: {loquiAccessor}");
@@ -168,11 +168,11 @@ namespace Mutagen.Bethesda.Generation
                 using (new BraceWrapper(fg))
                 {
                     using (var args = new ArgsWrapper(fg,
-                        $"yield return new ModContext<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, IMajorRecordCommon, IMajorRecordCommonGetter>"))
+                        $"yield return new ModContext<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, {loquiType.Interface(getter: false, internalInterface: true)}, {loquiType.Interface(getter: true, internalInterface: true)}>"))
                     {
                         args.Add($"modKey: {(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}");
                         args.Add("record: item");
-                        args.Add($"getOrAddAsOverride: (m, r) => m.{loquiType.Name}.GetOrAddAsOverride(({loquiType.GetGroupTarget().Interface(getter: true, internalInterface: true)})r)");
+                        args.Add($"getOrAddAsOverride: (m, r) => m.{loquiType.Name}.GetOrAddAsOverride(r)");
                     }
                 }
             }
@@ -779,7 +779,7 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 subFg.AppendLine($"var baseRec = getter(m, linkCache.Resolve<{obj.Interface(getter: true)}>(obj.FormKey));");
                                 subFg.AppendLine($"if (baseRec.{loqui.Name} != null) return baseRec.{loqui.Name};");
-                                subFg.AppendLine($"var copy = ({loqui.TypeName()})(({loqui.Interface(getter: true)})r).DeepCopy(ModContextExt.{loqui.TargetObjectGeneration.Name}CopyMask);");
+                                subFg.AppendLine($"var copy = r.DeepCopy(ModContextExt.{loqui.TargetObjectGeneration.Name}CopyMask);");
                                 subFg.AppendLine($"baseRec.{loqui.Name} = copy;");
                                 subFg.AppendLine($"return copy;");
                             }
