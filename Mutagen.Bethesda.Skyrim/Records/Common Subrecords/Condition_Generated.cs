@@ -424,8 +424,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = Condition_Registration.TriggeringRecordType;
         public virtual IEnumerable<FormLinkInformation> ContainedFormLinks => ConditionCommon.Instance.GetContainedFormLinks(this);
-        protected virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ConditionCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ConditionCommon.Instance.RemapLinks(this, mapping);
+        public virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ConditionSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -749,6 +748,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Unknown1 = new byte[3];
         }
         
+        #region Mutagen
+        public void RemapLinks(ICondition obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ICondition item,
@@ -884,7 +890,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IConditionGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

@@ -817,8 +817,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = Hazard_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => HazardCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HazardCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HazardCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HazardSetterCommon.Instance.RemapLinks(this, mapping);
         public Hazard(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -1270,6 +1269,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IHazardInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IHazard obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Model?.RemapLinks(mapping);
+            obj.ImageSpaceModifier = obj.ImageSpaceModifier.Relink(mapping);
+            obj.Spell = obj.Spell.Relink(mapping);
+            obj.Light = obj.Light.Relink(mapping);
+            obj.ImpactDataSet = obj.ImpactDataSet.Relink(mapping);
+            obj.Sound = obj.Sound.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IHazardInternal item,
@@ -1621,7 +1634,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IHazardGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public Hazard Duplicate(
             IHazardGetter item,

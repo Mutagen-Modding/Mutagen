@@ -837,6 +837,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IStoryManagerEventNodeInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IStoryManagerEventNode obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IStoryManagerEventNodeInternal item,
@@ -1141,7 +1149,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IStoryManagerEventNodeGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public StoryManagerEventNode Duplicate(
             IStoryManagerEventNodeGetter item,

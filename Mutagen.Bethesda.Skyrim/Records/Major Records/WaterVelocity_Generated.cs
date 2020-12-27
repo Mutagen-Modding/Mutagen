@@ -803,6 +803,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Unknown2 = new byte[20];
         }
         
+        #region Mutagen
+        public void RemapLinks(IWaterVelocity obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IWaterVelocity item,
@@ -953,7 +960,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IWaterVelocityGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

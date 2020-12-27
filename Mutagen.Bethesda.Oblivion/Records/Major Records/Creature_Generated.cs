@@ -1713,8 +1713,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public static readonly RecordType GrupRecordType = Creature_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => CreatureCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CreatureCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CreatureCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CreatureSetterCommon.Instance.RemapLinks(this, mapping);
         public Creature(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -2183,6 +2182,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (ICreatureInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(ICreature obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Items.RemapLinks(mapping);
+            obj.Spells.RemapLinks(mapping);
+            obj.Factions.RemapLinks(mapping);
+            obj.DeathItem = obj.DeathItem.Relink(mapping);
+            obj.Script = obj.Script.Relink(mapping);
+            obj.AIPackages.RemapLinks(mapping);
+            obj.CombatStyle = obj.CombatStyle.Relink(mapping);
+            obj.InheritsSoundFrom = obj.InheritsSoundFrom.Relink(mapping);
+            obj.Sounds.RemapLinks(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -2871,7 +2887,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(ICreatureGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public Creature Duplicate(
             ICreatureGetter item,

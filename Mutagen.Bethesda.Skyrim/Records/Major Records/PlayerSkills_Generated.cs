@@ -1194,6 +1194,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Unused2 = new byte[3];
         }
         
+        #region Mutagen
+        public void RemapLinks(IPlayerSkills obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IPlayerSkills item,
@@ -1415,7 +1422,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IPlayerSkillsGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

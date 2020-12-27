@@ -760,6 +760,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Restitution = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IHavokData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IHavokData item,
@@ -903,7 +910,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(IHavokDataGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

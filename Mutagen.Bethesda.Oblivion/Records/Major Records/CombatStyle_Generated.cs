@@ -786,6 +786,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ICombatStyleInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(ICombatStyle obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ICombatStyleInternal item,
@@ -1033,7 +1041,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(ICombatStyleGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public CombatStyle Duplicate(
             ICombatStyleGetter item,

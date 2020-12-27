@@ -441,8 +441,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = Outfit_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => OutfitCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => OutfitCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => OutfitCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => OutfitSetterCommon.Instance.RemapLinks(this, mapping);
         public Outfit(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -830,6 +829,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IOutfitInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IOutfit obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Items?.RemapLinks(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IOutfitInternal item,
@@ -1081,7 +1089,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IOutfitGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public Outfit Duplicate(
             IOutfitGetter item,

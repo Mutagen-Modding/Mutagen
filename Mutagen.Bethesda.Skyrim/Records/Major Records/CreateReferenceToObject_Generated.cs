@@ -478,8 +478,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = CreateReferenceToObject_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => CreateReferenceToObjectCommon.Instance.GetContainedFormLinks(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CreateReferenceToObjectCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CreateReferenceToObjectCommon.Instance.RemapLinks(this, mapping);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CreateReferenceToObjectSetterCommon.Instance.RemapLinks(this, mapping);
         [Flags]
         public enum ALCADataType
         {
@@ -839,6 +838,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ALCADataTypeState = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(ICreateReferenceToObject obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Object = obj.Object.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ICreateReferenceToObject item,
@@ -995,7 +1002,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(ICreateReferenceToObjectGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

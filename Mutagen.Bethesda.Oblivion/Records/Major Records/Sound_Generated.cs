@@ -773,6 +773,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ISoundInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(ISound obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ISoundInternal item,
@@ -1016,7 +1024,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(ISoundGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public Sound Duplicate(
             ISoundGetter item,

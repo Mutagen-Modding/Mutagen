@@ -1087,6 +1087,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.MasterReferences.Clear();
         }
         
+        #region Mutagen
+        public void RemapLinks(IOblivionModHeader obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IOblivionModHeader item,
@@ -1306,7 +1313,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(IOblivionModHeaderGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

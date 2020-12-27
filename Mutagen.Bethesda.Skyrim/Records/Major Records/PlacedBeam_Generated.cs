@@ -391,8 +391,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public new static readonly RecordType GrupRecordType = PlacedBeam_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => PlacedBeamCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedBeamCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedBeamCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedBeamSetterCommon.Instance.RemapLinks(this, mapping);
         public PlacedBeam(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -807,6 +806,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IPlacedBeamInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IPlacedBeam obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Projectile = obj.Projectile.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IPlacedBeamInternal item,
@@ -1160,7 +1168,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IPlacedBeamGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public PlacedBeam Duplicate(
             IPlacedBeamGetter item,

@@ -1053,8 +1053,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public static readonly RecordType GrupRecordType = DialogItem_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => DialogItemCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogItemCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogItemCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogItemSetterCommon.Instance.RemapLinks(this, mapping);
         public DialogItem(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -1456,6 +1455,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IDialogItemInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IDialogItem obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Quest = obj.Quest.Relink(mapping);
+            obj.PreviousTopic = obj.PreviousTopic.Relink(mapping);
+            obj.Topics.RemapLinks(mapping);
+            obj.Choices.RemapLinks(mapping);
+            obj.LinkFrom.RemapLinks(mapping);
+            obj.Script.RemapLinks(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IDialogItemInternal item,
@@ -1856,7 +1869,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(IDialogItemGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public DialogItem Duplicate(
             IDialogItemGetter item,

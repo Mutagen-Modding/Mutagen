@@ -906,8 +906,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = PackageBranch_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => PackageBranchCommon.Instance.GetContainedFormLinks(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageBranchCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageBranchCommon.Instance.RemapLinks(this, mapping);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageBranchSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -1279,6 +1278,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Unknown.Clear();
         }
         
+        #region Mutagen
+        public void RemapLinks(IPackageBranch obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Conditions.RemapLinks(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IPackageBranch item,
@@ -1550,7 +1557,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IPackageBranchGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

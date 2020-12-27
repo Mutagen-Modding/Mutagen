@@ -520,8 +520,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public static readonly RecordType GrupRecordType = Enchantment_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => EnchantmentCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EnchantmentCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EnchantmentCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EnchantmentSetterCommon.Instance.RemapLinks(this, mapping);
         public Enchantment(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -901,6 +900,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IEnchantmentInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IEnchantment obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Effects.RemapLinks(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IEnchantmentInternal item,
@@ -1172,7 +1180,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(IEnchantmentGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public Enchantment Duplicate(
             IEnchantmentGetter item,

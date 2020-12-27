@@ -415,8 +415,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public IEnumerable<FormLinkInformation> ContainedFormLinks => DoorTriangleCommon.Instance.GetContainedFormLinks(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DoorTriangleCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DoorTriangleCommon.Instance.RemapLinks(this, mapping);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DoorTriangleSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -763,6 +762,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Door = FormLink<IPlacedObjectGetter>.Null;
         }
         
+        #region Mutagen
+        public void RemapLinks(IDoorTriangle obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Door = obj.Door.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IDoorTriangle item,
@@ -904,7 +911,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IDoorTriangleGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

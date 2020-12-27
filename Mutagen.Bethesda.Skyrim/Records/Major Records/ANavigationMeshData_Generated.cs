@@ -1047,8 +1047,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public virtual IEnumerable<FormLinkInformation> ContainedFormLinks => ANavigationMeshDataCommon.Instance.GetContainedFormLinks(this);
-        protected virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ANavigationMeshDataCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ANavigationMeshDataCommon.Instance.RemapLinks(this, mapping);
+        public virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ANavigationMeshDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -1407,6 +1406,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.NavmeshGrid = new byte[0];
         }
         
+        #region Mutagen
+        public void RemapLinks(IANavigationMeshData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.EdgeLinks.RemapLinks(mapping);
+            obj.DoorTriangles.RemapLinks(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IANavigationMeshData item,
@@ -1681,7 +1689,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IANavigationMeshDataGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

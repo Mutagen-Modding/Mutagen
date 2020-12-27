@@ -1644,8 +1644,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public static readonly RecordType GrupRecordType = Npc_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => NpcCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcSetterCommon.Instance.RemapLinks(this, mapping);
         public Npc(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -2116,6 +2115,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (INpcInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(INpc obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Factions.RemapLinks(mapping);
+            obj.DeathItem = obj.DeathItem.Relink(mapping);
+            obj.Race = obj.Race.Relink(mapping);
+            obj.Spells.RemapLinks(mapping);
+            obj.Script = obj.Script.Relink(mapping);
+            obj.Items.RemapLinks(mapping);
+            obj.AIPackages.RemapLinks(mapping);
+            obj.Class = obj.Class.Relink(mapping);
+            obj.Hair = obj.Hair.Relink(mapping);
+            obj.Eyes?.RemapLinks(mapping);
+            obj.CombatStyle = obj.CombatStyle.Relink(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -2794,7 +2812,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(INpcGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public Npc Duplicate(
             INpcGetter item,

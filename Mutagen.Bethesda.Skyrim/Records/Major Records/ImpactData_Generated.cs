@@ -385,8 +385,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = ImpactData_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => ImpactDataCommon.Instance.GetContainedFormLinks(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ImpactDataCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ImpactDataCommon.Instance.RemapLinks(this, mapping);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ImpactDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -730,6 +729,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Impact = FormLink<IImpactGetter>.Null;
         }
         
+        #region Mutagen
+        public void RemapLinks(IImpactData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Material = obj.Material.Relink(mapping);
+            obj.Impact = obj.Impact.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IImpactData item,
@@ -868,7 +876,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IImpactDataGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

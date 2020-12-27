@@ -473,8 +473,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public IEnumerable<FormLinkInformation> ContainedFormLinks => NpcSoundTypeCommon.Instance.GetContainedFormLinks(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcSoundTypeCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcSoundTypeCommon.Instance.RemapLinks(this, mapping);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcSoundTypeSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -830,6 +829,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Sounds.Clear();
         }
         
+        #region Mutagen
+        public void RemapLinks(INpcSoundType obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Sounds.RemapLinks(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             INpcSoundType item,
@@ -989,7 +996,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(INpcSoundTypeGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

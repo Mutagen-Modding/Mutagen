@@ -827,6 +827,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IEyesInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IEyes obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IEyesInternal item,
@@ -1067,7 +1075,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IEyesGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public Eyes Duplicate(
             IEyesGetter item,

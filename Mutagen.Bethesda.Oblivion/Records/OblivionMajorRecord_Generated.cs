@@ -348,8 +348,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => OblivionMajorRecordCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => OblivionMajorRecordCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => OblivionMajorRecordCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => OblivionMajorRecordSetterCommon.Instance.RemapLinks(this, mapping);
         public OblivionMajorRecord(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -937,6 +936,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
+        public void RemapLinks(IOblivionMajorRecord obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
         public virtual IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IOblivionMajorRecordInternal obj)
         {
             foreach (var item in OblivionMajorRecordCommon.Instance.EnumerateMajorRecords(obj))
@@ -1169,7 +1173,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(IOblivionMajorRecordGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         public virtual IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(IOblivionMajorRecordGetter obj)
         {
             yield break;

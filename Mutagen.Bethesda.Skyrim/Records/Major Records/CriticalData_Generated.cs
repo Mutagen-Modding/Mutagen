@@ -615,8 +615,7 @@ namespace Mutagen.Bethesda.Skyrim
             Break0 = 1
         }
         public IEnumerable<FormLinkInformation> ContainedFormLinks => CriticalDataCommon.Instance.GetContainedFormLinks(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CriticalDataCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CriticalDataCommon.Instance.RemapLinks(this, mapping);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CriticalDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -988,6 +987,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Unused4 = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(ICriticalData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Effect = obj.Effect.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ICriticalData item,
@@ -1174,7 +1181,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(ICriticalDataGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

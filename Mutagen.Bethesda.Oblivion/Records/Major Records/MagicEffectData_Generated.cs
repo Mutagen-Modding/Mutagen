@@ -685,8 +685,7 @@ namespace Mutagen.Bethesda.Oblivion
             Break0 = 1
         }
         public IEnumerable<FormLinkInformation> ContainedFormLinks => MagicEffectDataCommon.Instance.GetContainedFormLinks(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectDataCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectDataCommon.Instance.RemapLinks(this, mapping);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -1066,6 +1065,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.SubData = null;
         }
         
+        #region Mutagen
+        public void RemapLinks(IMagicEffectData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Light = obj.Light.Relink(mapping);
+            obj.EffectShader = obj.EffectShader.Relink(mapping);
+            if (obj.Versioning.HasFlag(MagicEffectData.VersioningBreaks.Break0)) return;
+            obj.SubData?.RemapLinks(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IMagicEffectData item,
@@ -1283,7 +1293,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(IMagicEffectDataGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

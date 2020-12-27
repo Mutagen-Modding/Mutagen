@@ -422,8 +422,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public static readonly RecordType GrupRecordType = LayerHeader_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => LayerHeaderCommon.Instance.GetContainedFormLinks(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LayerHeaderCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LayerHeaderCommon.Instance.RemapLinks(this, mapping);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LayerHeaderSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -776,6 +775,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Quadrant = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(ILayerHeader obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Texture = obj.Texture.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ILayerHeaderInternal item,
@@ -920,7 +927,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(ILayerHeaderGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

@@ -1180,6 +1180,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Luck = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(ICreatureData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ICreatureData item,
@@ -1407,7 +1414,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(ICreatureDataGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

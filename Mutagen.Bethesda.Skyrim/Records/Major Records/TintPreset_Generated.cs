@@ -419,8 +419,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public IEnumerable<FormLinkInformation> ContainedFormLinks => TintPresetCommon.Instance.GetContainedFormLinks(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TintPresetCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TintPresetCommon.Instance.RemapLinks(this, mapping);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TintPresetSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -780,6 +779,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Index = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(ITintPreset obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Color = obj.Color.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ITintPreset item,
@@ -933,7 +940,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(ITintPresetGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

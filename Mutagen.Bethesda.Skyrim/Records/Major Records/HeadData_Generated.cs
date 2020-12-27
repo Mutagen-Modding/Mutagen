@@ -1025,8 +1025,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public IEnumerable<FormLinkInformation> ContainedFormLinks => HeadDataCommon.Instance.GetContainedFormLinks(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadDataCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadDataCommon.Instance.RemapLinks(this, mapping);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -1420,6 +1419,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Model = null;
         }
         
+        #region Mutagen
+        public void RemapLinks(IHeadData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.HeadParts.RemapLinks(mapping);
+            obj.RacePresets.RemapLinks(mapping);
+            obj.AvailableHairColors.RemapLinks(mapping);
+            obj.FaceDetails.RemapLinks(mapping);
+            obj.DefaultFaceTexture = obj.DefaultFaceTexture.Relink(mapping);
+            obj.TintMasks.RemapLinks(mapping);
+            obj.Model?.RemapLinks(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IHeadData item,
@@ -1728,7 +1741,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IHeadDataGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

@@ -660,8 +660,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = LandscapeTexture_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => LandscapeTextureCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LandscapeTextureCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LandscapeTextureCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LandscapeTextureSetterCommon.Instance.RemapLinks(this, mapping);
         public LandscapeTexture(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -1083,6 +1082,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (ILandscapeTextureInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(ILandscapeTexture obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.TextureSet = obj.TextureSet.Relink(mapping);
+            obj.MaterialType = obj.MaterialType.Relink(mapping);
+            obj.Grasses.RemapLinks(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ILandscapeTextureInternal item,
@@ -1388,7 +1398,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(ILandscapeTextureGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public LandscapeTexture Duplicate(
             ILandscapeTextureGetter item,

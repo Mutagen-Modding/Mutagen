@@ -654,8 +654,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public IEnumerable<FormLinkInformation> ContainedFormLinks => QuestLogEntryCommon.Instance.GetContainedFormLinks(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestLogEntryCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestLogEntryCommon.Instance.RemapLinks(this, mapping);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestLogEntrySetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -1035,6 +1034,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.QNAM = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IQuestLogEntry obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Conditions.RemapLinks(mapping);
+            obj.NextQuest = obj.NextQuest.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IQuestLogEntry item,
@@ -1250,7 +1258,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IQuestLogEntryGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

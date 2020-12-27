@@ -727,6 +727,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.UsesSkill = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IWorkbenchData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IWorkbenchData item,
@@ -867,7 +874,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IWorkbenchDataGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

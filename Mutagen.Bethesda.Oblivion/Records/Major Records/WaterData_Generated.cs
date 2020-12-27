@@ -1609,6 +1609,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Damage = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IWaterData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IWaterData item,
@@ -1920,7 +1927,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(IWaterDataGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

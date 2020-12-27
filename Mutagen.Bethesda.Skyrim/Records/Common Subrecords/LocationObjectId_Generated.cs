@@ -336,8 +336,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => LocationObjectIdCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationObjectIdCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationObjectIdCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationObjectIdSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -650,6 +649,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (ILocationObjectId)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(ILocationObjectId obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Link = obj.Link.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ILocationObjectId item,
@@ -822,7 +830,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(ILocationObjectIdGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

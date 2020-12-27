@@ -1284,8 +1284,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = Armor_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => ArmorCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorSetterCommon.Instance.RemapLinks(this, mapping);
         public Armor(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -1819,6 +1818,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IArmorInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IArmor obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
+            obj.ObjectEffect = obj.ObjectEffect.Relink(mapping);
+            obj.WorldModel?.RemapLinks(mapping);
+            obj.Destructible?.RemapLinks(mapping);
+            obj.PickUpSound = obj.PickUpSound.Relink(mapping);
+            obj.PutDownSound = obj.PutDownSound.Relink(mapping);
+            obj.EquipmentType = obj.EquipmentType.Relink(mapping);
+            obj.BashImpactDataSet = obj.BashImpactDataSet.Relink(mapping);
+            obj.AlternateBlockMaterial = obj.AlternateBlockMaterial.Relink(mapping);
+            obj.Race = obj.Race.Relink(mapping);
+            obj.Keywords?.RemapLinks(mapping);
+            obj.Armature.RemapLinks(mapping);
+            obj.TemplateArmor = obj.TemplateArmor.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IArmorInternal item,
@@ -2346,7 +2366,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IArmorGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public Armor Duplicate(
             IArmorGetter item,

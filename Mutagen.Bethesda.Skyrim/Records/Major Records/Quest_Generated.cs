@@ -1391,8 +1391,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = Quest_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => QuestCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestSetterCommon.Instance.RemapLinks(this, mapping);
         public Quest(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -1849,6 +1848,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IQuestInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IQuest obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
+            obj.TextDisplayGlobals.RemapLinks(mapping);
+            obj.DialogConditions.RemapLinks(mapping);
+            obj.UnusedConditions.RemapLinks(mapping);
+            obj.Stages.RemapLinks(mapping);
+            obj.Objectives.RemapLinks(mapping);
+            obj.Aliases.RemapLinks(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -2348,7 +2362,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IQuestGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public Quest Duplicate(
             IQuestGetter item,

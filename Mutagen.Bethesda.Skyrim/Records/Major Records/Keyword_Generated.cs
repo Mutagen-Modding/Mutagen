@@ -748,6 +748,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IKeywordInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IKeyword obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IKeywordInternal item,
@@ -978,7 +986,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IKeywordGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public Keyword Duplicate(
             IKeywordGetter item,

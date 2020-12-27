@@ -2562,8 +2562,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = Location_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => LocationCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationSetterCommon.Instance.RemapLinks(this, mapping);
         public Location(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -3052,6 +3051,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (ILocationInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(ILocation obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.ActorCellPersistentReferences?.RemapLinks(mapping);
+            obj.LocationCellPersistentReferences?.RemapLinks(mapping);
+            obj.ReferenceCellPersistentReferences?.RemapLinks(mapping);
+            obj.ActorCellUniques?.RemapLinks(mapping);
+            obj.LocationCellUniques?.RemapLinks(mapping);
+            obj.ReferenceCellUnique?.RemapLinks(mapping);
+            obj.ActorCellStaticReferences?.RemapLinks(mapping);
+            obj.LocationCellStaticReferences?.RemapLinks(mapping);
+            obj.ReferenceCellStaticReferences?.RemapLinks(mapping);
+            obj.ActorCellEncounterCell.RemapLinks(mapping);
+            obj.LocationCellEncounterCell.RemapLinks(mapping);
+            obj.ReferenceCellEncounterCell.RemapLinks(mapping);
+            obj.ActorCellMarkerReference?.RemapLinks(mapping);
+            obj.LocationCellMarkerReference?.RemapLinks(mapping);
+            obj.ActorCellEnablePoint?.RemapLinks(mapping);
+            obj.LocationCellEnablePoint?.RemapLinks(mapping);
+            obj.Keywords?.RemapLinks(mapping);
+            obj.ParentLocation = obj.ParentLocation.Relink(mapping);
+            obj.Music = obj.Music.Relink(mapping);
+            obj.UnreportedCrimeFaction = obj.UnreportedCrimeFaction.Relink(mapping);
+            obj.WorldLocationMarkerRef = obj.WorldLocationMarkerRef.Relink(mapping);
+            obj.HorseMarkerRef = obj.HorseMarkerRef.Relink(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -3892,7 +3921,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(ILocationGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public Location Duplicate(
             ILocationGetter item,

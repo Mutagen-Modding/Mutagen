@@ -2958,8 +2958,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public new static readonly RecordType GrupRecordType = PlacedObject_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => PlacedObjectCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedObjectCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedObjectCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedObjectSetterCommon.Instance.RemapLinks(this, mapping);
         public PlacedObject(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -3591,6 +3590,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IPlacedObjectInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IPlacedObject obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
+            obj.Base = obj.Base.Relink(mapping);
+            obj.Portals?.RemapLinks(mapping);
+            obj.LightingTemplate = obj.LightingTemplate.Relink(mapping);
+            obj.ImageSpace = obj.ImageSpace.Relink(mapping);
+            obj.LinkedRooms.RemapLinks(mapping);
+            obj.Reflections.RemapLinks(mapping);
+            obj.LitWater.RemapLinks(mapping);
+            obj.Emittance = obj.Emittance.Relink(mapping);
+            obj.TeleportDestination?.RemapLinks(mapping);
+            obj.TeleportMessageBox = obj.TeleportMessageBox.Relink(mapping);
+            obj.MultiboundReference = obj.MultiboundReference.Relink(mapping);
+            obj.XCZR = obj.XCZR.Relink(mapping);
+            obj.XCZC = obj.XCZC.Relink(mapping);
+            obj.SpawnContainer = obj.SpawnContainer.Relink(mapping);
+            obj.ActivateParents?.RemapLinks(mapping);
+            obj.LeveledItemBaseObject = obj.LeveledItemBaseObject.Relink(mapping);
+            obj.PersistentLocation = obj.PersistentLocation.Relink(mapping);
+            obj.Lock?.RemapLinks(mapping);
+            obj.EncounterZone = obj.EncounterZone.Relink(mapping);
+            obj.NavigationDoorLink?.RemapLinks(mapping);
+            obj.LocationRefTypes?.RemapLinks(mapping);
+            obj.Ownership?.RemapLinks(mapping);
+            obj.LocationReference = obj.LocationReference.Relink(mapping);
+            obj.EnableParent?.RemapLinks(mapping);
+            obj.LinkedReferences.RemapLinks(mapping);
+            obj.Patrol?.RemapLinks(mapping);
+            obj.AttachRef = obj.AttachRef.Relink(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -4709,7 +4744,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IPlacedObjectGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public PlacedObject Duplicate(
             IPlacedObjectGetter item,

@@ -955,8 +955,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = SoundDescriptor_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => SoundDescriptorCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoundDescriptorCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoundDescriptorCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoundDescriptorSetterCommon.Instance.RemapLinks(this, mapping);
         public SoundDescriptor(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -1402,6 +1401,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (ISoundDescriptorInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(ISoundDescriptor obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Category = obj.Category.Relink(mapping);
+            obj.AlternateSoundFor = obj.AlternateSoundFor.Relink(mapping);
+            obj.OutputModel = obj.OutputModel.Relink(mapping);
+            obj.Conditions.RemapLinks(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ISoundDescriptorInternal item,
@@ -1786,7 +1797,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(ISoundDescriptorGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public SoundDescriptor Duplicate(
             ISoundDescriptorGetter item,

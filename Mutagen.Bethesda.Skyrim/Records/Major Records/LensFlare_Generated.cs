@@ -692,6 +692,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (ILensFlareInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(ILensFlare obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ILensFlareInternal item,
@@ -911,7 +919,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(ILensFlareGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public LensFlare Duplicate(
             ILensFlareGetter item,

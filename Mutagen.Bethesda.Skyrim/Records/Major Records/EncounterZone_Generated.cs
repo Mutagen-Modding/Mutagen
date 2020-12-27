@@ -583,8 +583,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = EncounterZone_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => EncounterZoneCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EncounterZoneCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EncounterZoneCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EncounterZoneSetterCommon.Instance.RemapLinks(this, mapping);
         public EncounterZone(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -1001,6 +1000,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IEncounterZoneInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IEncounterZone obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Owner = obj.Owner.Relink(mapping);
+            obj.Location = obj.Location.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IEncounterZoneInternal item,
@@ -1271,7 +1280,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IEncounterZoneGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public EncounterZone Duplicate(
             IEncounterZoneGetter item,

@@ -1691,8 +1691,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public IEnumerable<FormLinkInformation> ContainedFormLinks => QuestAliasCommon.Instance.GetContainedFormLinks(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestAliasCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestAliasCommon.Instance.RemapLinks(this, mapping);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestAliasSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -2140,6 +2139,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.PackageData.Clear();
             item.VoiceTypes = FormLinkNullable<IAliasVoiceTypeGetter>.Null;
         }
+        
+        #region Mutagen
+        public void RemapLinks(IQuestAlias obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.SpecificLocation = obj.SpecificLocation.Relink(mapping);
+            obj.ForcedReference = obj.ForcedReference.Relink(mapping);
+            obj.UniqueActor = obj.UniqueActor.Relink(mapping);
+            obj.Location?.RemapLinks(mapping);
+            obj.External?.RemapLinks(mapping);
+            obj.CreateReferenceToObject?.RemapLinks(mapping);
+            obj.Conditions.RemapLinks(mapping);
+            obj.Keywords?.RemapLinks(mapping);
+            obj.Items?.RemapLinks(mapping);
+            obj.SpectatorOverridePackageList = obj.SpectatorOverridePackageList.Relink(mapping);
+            obj.ObserveDeadBodyOverridePackageList = obj.ObserveDeadBodyOverridePackageList.Relink(mapping);
+            obj.GuardWarnOverridePackageList = obj.GuardWarnOverridePackageList.Relink(mapping);
+            obj.CombatOverridePackageList = obj.CombatOverridePackageList.Relink(mapping);
+            obj.DisplayName = obj.DisplayName.Relink(mapping);
+            obj.Spells.RemapLinks(mapping);
+            obj.Factions.RemapLinks(mapping);
+            obj.PackageData.RemapLinks(mapping);
+            obj.VoiceTypes = obj.VoiceTypes.Relink(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -2681,7 +2705,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IQuestAliasGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

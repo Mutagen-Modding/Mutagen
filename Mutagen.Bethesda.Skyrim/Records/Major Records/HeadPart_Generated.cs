@@ -794,8 +794,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = HeadPart_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => HeadPartCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadPartCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadPartCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadPartSetterCommon.Instance.RemapLinks(this, mapping);
         public HeadPart(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -1232,6 +1231,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IHeadPartInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IHeadPart obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Model?.RemapLinks(mapping);
+            obj.ExtraParts.RemapLinks(mapping);
+            obj.TextureSet = obj.TextureSet.Relink(mapping);
+            obj.Color = obj.Color.Relink(mapping);
+            obj.ValidRaces = obj.ValidRaces.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IHeadPartInternal item,
@@ -1587,7 +1599,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IHeadPartGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public HeadPart Duplicate(
             IHeadPartGetter item,

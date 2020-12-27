@@ -391,8 +391,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public new static readonly RecordType GrupRecordType = PlacedFlame_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => PlacedFlameCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedFlameCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedFlameCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedFlameSetterCommon.Instance.RemapLinks(this, mapping);
         public PlacedFlame(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -807,6 +806,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IPlacedFlameInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IPlacedFlame obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Projectile = obj.Projectile.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IPlacedFlameInternal item,
@@ -1160,7 +1168,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IPlacedFlameGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public PlacedFlame Duplicate(
             IPlacedFlameGetter item,

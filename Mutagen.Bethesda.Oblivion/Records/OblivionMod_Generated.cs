@@ -3164,8 +3164,7 @@ namespace Mutagen.Bethesda.Oblivion
         partial void GetCustomRecordCount(Action<uint> setter);
 
         public IEnumerable<FormLinkInformation> ContainedFormLinks => OblivionModCommon.Instance.GetContainedFormLinks(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => OblivionModCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => OblivionModCommon.Instance.RemapLinks(this, mapping);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => OblivionModSetterCommon.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
@@ -4194,6 +4193,66 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
+        public void RemapLinks(IOblivionMod obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.GameSettings.RemapLinks(mapping);
+            obj.Globals.RemapLinks(mapping);
+            obj.Classes.RemapLinks(mapping);
+            obj.Factions.RemapLinks(mapping);
+            obj.Hairs.RemapLinks(mapping);
+            obj.Eyes.RemapLinks(mapping);
+            obj.Races.RemapLinks(mapping);
+            obj.Sounds.RemapLinks(mapping);
+            obj.Skills.RemapLinks(mapping);
+            obj.MagicEffects.RemapLinks(mapping);
+            obj.Scripts.RemapLinks(mapping);
+            obj.LandTextures.RemapLinks(mapping);
+            obj.Enchantments.RemapLinks(mapping);
+            obj.Spells.RemapLinks(mapping);
+            obj.Birthsigns.RemapLinks(mapping);
+            obj.Activators.RemapLinks(mapping);
+            obj.AlchemicalApparatus.RemapLinks(mapping);
+            obj.Armors.RemapLinks(mapping);
+            obj.Books.RemapLinks(mapping);
+            obj.Clothes.RemapLinks(mapping);
+            obj.Containers.RemapLinks(mapping);
+            obj.Doors.RemapLinks(mapping);
+            obj.Ingredients.RemapLinks(mapping);
+            obj.Lights.RemapLinks(mapping);
+            obj.Miscellaneous.RemapLinks(mapping);
+            obj.Statics.RemapLinks(mapping);
+            obj.Grasses.RemapLinks(mapping);
+            obj.Trees.RemapLinks(mapping);
+            obj.Flora.RemapLinks(mapping);
+            obj.Furniture.RemapLinks(mapping);
+            obj.Weapons.RemapLinks(mapping);
+            obj.Ammunitions.RemapLinks(mapping);
+            obj.Npcs.RemapLinks(mapping);
+            obj.Creatures.RemapLinks(mapping);
+            obj.LeveledCreatures.RemapLinks(mapping);
+            obj.SoulGems.RemapLinks(mapping);
+            obj.Keys.RemapLinks(mapping);
+            obj.Potions.RemapLinks(mapping);
+            obj.Subspaces.RemapLinks(mapping);
+            obj.SigilStones.RemapLinks(mapping);
+            obj.LeveledItems.RemapLinks(mapping);
+            obj.Weathers.RemapLinks(mapping);
+            obj.Climates.RemapLinks(mapping);
+            obj.Regions.RemapLinks(mapping);
+            obj.Cells.RemapLinks(mapping);
+            obj.Worldspaces.RemapLinks(mapping);
+            obj.DialogTopics.RemapLinks(mapping);
+            obj.Quests.RemapLinks(mapping);
+            obj.IdleAnimations.RemapLinks(mapping);
+            obj.AIPackages.RemapLinks(mapping);
+            obj.CombatStyles.RemapLinks(mapping);
+            obj.LoadScreens.RemapLinks(mapping);
+            obj.LeveledSpells.RemapLinks(mapping);
+            obj.AnimatedObjects.RemapLinks(mapping);
+            obj.Waters.RemapLinks(mapping);
+            obj.EffectShaders.RemapLinks(mapping);
+        }
+        
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IOblivionMod obj)
         {
             foreach (var item in OblivionModCommon.Instance.EnumerateMajorRecords(obj))
@@ -6160,7 +6219,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(IOblivionModGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(IOblivionModGetter obj)
         {
             foreach (var item in obj.GameSettings.EnumerateMajorRecords())

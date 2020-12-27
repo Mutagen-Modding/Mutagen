@@ -992,6 +992,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ITreeInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(ITree obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ITreeInternal item,
@@ -1290,7 +1298,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(ITreeGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public Tree Duplicate(
             ITreeGetter item,

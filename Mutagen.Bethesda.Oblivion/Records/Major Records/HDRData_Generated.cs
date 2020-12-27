@@ -1145,6 +1145,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.TreeDimmer = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IHDRData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IHDRData item,
@@ -1365,7 +1372,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(IHDRDataGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

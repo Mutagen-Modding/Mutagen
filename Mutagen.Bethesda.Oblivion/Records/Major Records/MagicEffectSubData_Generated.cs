@@ -539,8 +539,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public IEnumerable<FormLinkInformation> ContainedFormLinks => MagicEffectSubDataCommon.Instance.GetContainedFormLinks(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectSubDataCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectSubDataCommon.Instance.RemapLinks(this, mapping);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectSubDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -903,6 +902,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ConstantEffectBarterFactor = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IMagicEffectSubData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.EnchantEffect = obj.EnchantEffect.Relink(mapping);
+            obj.CastingSound = obj.CastingSound.Relink(mapping);
+            obj.BoltSound = obj.BoltSound.Relink(mapping);
+            obj.HitSound = obj.HitSound.Relink(mapping);
+            obj.AreaSound = obj.AreaSound.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IMagicEffectSubData item,
@@ -1076,7 +1087,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(IMagicEffectSubDataGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

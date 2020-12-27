@@ -385,8 +385,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public static readonly RecordType GrupRecordType = RaceRelation_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => RaceRelationCommon.Instance.GetContainedFormLinks(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RaceRelationCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RaceRelationCommon.Instance.RemapLinks(this, mapping);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RaceRelationSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -730,6 +729,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Modifier = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IRaceRelation obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Race = obj.Race.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IRaceRelation item,
@@ -867,7 +874,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(IRaceRelationGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

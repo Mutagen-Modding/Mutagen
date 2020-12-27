@@ -736,6 +736,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Type = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IFindMatchingRefNearAlias obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IFindMatchingRefNearAlias item,
@@ -878,7 +885,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IFindMatchingRefNearAliasGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

@@ -540,8 +540,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = Shout_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => ShoutCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ShoutCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ShoutCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ShoutSetterCommon.Instance.RemapLinks(this, mapping);
         public Shout(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -963,6 +962,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IShoutInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IShout obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.MenuDisplayObject = obj.MenuDisplayObject.Relink(mapping);
+            obj.WordsOfPower.RemapLinks(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IShoutInternal item,
@@ -1289,7 +1298,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IShoutGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public Shout Duplicate(
             IShoutGetter item,

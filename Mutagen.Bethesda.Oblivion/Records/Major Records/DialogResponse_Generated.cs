@@ -788,6 +788,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ActorNotes = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IDialogResponse obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IDialogResponse item,
@@ -945,7 +952,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(IDialogResponseGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

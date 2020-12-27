@@ -720,6 +720,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Flags = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IPackageRoot obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IPackageRoot item,
@@ -853,7 +860,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IPackageRootGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

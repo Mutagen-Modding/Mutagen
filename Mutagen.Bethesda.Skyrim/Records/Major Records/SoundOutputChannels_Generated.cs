@@ -788,6 +788,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Channel2.Clear();
         }
         
+        #region Mutagen
+        public void RemapLinks(ISoundOutputChannels obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ISoundOutputChannels item,
@@ -931,7 +938,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(ISoundOutputChannelsGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

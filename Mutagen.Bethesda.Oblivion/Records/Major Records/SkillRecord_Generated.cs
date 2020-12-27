@@ -995,6 +995,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ISkillRecordInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(ISkillRecord obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ISkillRecordInternal item,
@@ -1304,7 +1312,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(ISkillRecordGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public SkillRecord Duplicate(
             ISkillRecordGetter item,

@@ -2900,8 +2900,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = Weather_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => WeatherCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherSetterCommon.Instance.RemapLinks(this, mapping);
         public Weather(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -3550,6 +3549,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IWeatherInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IWeather obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Precipitation = obj.Precipitation.Relink(mapping);
+            obj.VisualEffect = obj.VisualEffect.Relink(mapping);
+            obj.Sounds.RemapLinks(mapping);
+            obj.SkyStatics.RemapLinks(mapping);
+            obj.ImageSpaces?.RemapLinks(mapping);
+            obj.VolumetricLighting?.RemapLinks(mapping);
+            obj.Aurora?.RemapLinks(mapping);
+            obj.SunGlareLensFlare = obj.SunGlareLensFlare.Relink(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -4381,7 +4396,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IWeatherGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public Weather Duplicate(
             IWeatherGetter item,

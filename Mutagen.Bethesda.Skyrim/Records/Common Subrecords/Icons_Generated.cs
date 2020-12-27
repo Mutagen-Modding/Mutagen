@@ -727,6 +727,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.SmallIconFilename = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IIcons obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IIcons item,
@@ -865,7 +872,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IIconsGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

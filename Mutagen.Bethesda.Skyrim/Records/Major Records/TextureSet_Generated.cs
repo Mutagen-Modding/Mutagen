@@ -1137,6 +1137,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (ITextureSetInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(ITextureSet obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ITextureSetInternal item,
@@ -1477,7 +1485,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(ITextureSetGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public TextureSet Duplicate(
             ITextureSetGetter item,

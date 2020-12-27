@@ -316,8 +316,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public virtual IEnumerable<FormLinkInformation> ContainedFormLinks => AScriptReferenceCommon.Instance.GetContainedFormLinks(this);
-        protected virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AScriptReferenceCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AScriptReferenceCommon.Instance.RemapLinks(this, mapping);
+        public virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AScriptReferenceSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -640,6 +639,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
         }
         
+        #region Mutagen
+        public void RemapLinks(IAScriptReference obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IAScriptReference item,
@@ -754,7 +760,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(IAScriptReferenceGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

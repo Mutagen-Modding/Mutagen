@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda
         IEquatable<FormLinkNullable<TMajorGetter>>,
         IEquatable<IFormLink<TMajorGetter>>,
         IEquatable<IFormLinkNullable<TMajorGetter>>
-       where TMajorGetter : class, IMajorRecordCommonGetter
+        where TMajorGetter : class, IMajorRecordCommonGetter
     {
         /// <summary>
         /// A readonly singleton representing an unlinked FormLink

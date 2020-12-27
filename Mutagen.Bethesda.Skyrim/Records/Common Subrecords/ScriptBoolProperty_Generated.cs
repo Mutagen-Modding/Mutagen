@@ -655,6 +655,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IScriptBoolProperty)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IScriptBoolProperty obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IScriptBoolProperty item,
@@ -830,7 +838,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IScriptBoolPropertyGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

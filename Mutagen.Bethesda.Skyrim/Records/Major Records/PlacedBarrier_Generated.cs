@@ -391,8 +391,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public new static readonly RecordType GrupRecordType = PlacedBarrier_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => PlacedBarrierCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedBarrierCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedBarrierCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedBarrierSetterCommon.Instance.RemapLinks(this, mapping);
         public PlacedBarrier(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -807,6 +806,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IPlacedBarrierInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IPlacedBarrier obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Projectile = obj.Projectile.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IPlacedBarrierInternal item,
@@ -1160,7 +1168,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IPlacedBarrierGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public PlacedBarrier Duplicate(
             IPlacedBarrierGetter item,

@@ -935,6 +935,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.RustleSpeed = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(ITreeData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ITreeData item,
@@ -1113,7 +1120,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(ITreeDataGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

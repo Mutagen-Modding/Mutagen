@@ -569,8 +569,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public static readonly RecordType GrupRecordType = LeveledCreature_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => LeveledCreatureCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledCreatureCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledCreatureCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledCreatureSetterCommon.Instance.RemapLinks(this, mapping);
         public LeveledCreature(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -961,6 +960,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ILeveledCreatureInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(ILeveledCreature obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Entries.RemapLinks(mapping);
+            obj.Script = obj.Script.Relink(mapping);
+            obj.Template = obj.Template.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ILeveledCreatureInternal item,
@@ -1294,7 +1304,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(ILeveledCreatureGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public LeveledCreature Duplicate(
             ILeveledCreatureGetter item,

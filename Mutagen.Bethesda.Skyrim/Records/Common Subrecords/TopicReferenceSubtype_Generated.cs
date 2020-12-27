@@ -647,6 +647,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (ITopicReferenceSubtype)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(ITopicReferenceSubtype obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ITopicReferenceSubtype item,
@@ -818,7 +826,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(ITopicReferenceSubtypeGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

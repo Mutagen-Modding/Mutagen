@@ -421,8 +421,7 @@ namespace Mutagen.Bethesda.Skyrim
             Break0 = 1
         }
         public IEnumerable<FormLinkInformation> ContainedFormLinks => WaterReflectionCommon.Instance.GetContainedFormLinks(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WaterReflectionCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WaterReflectionCommon.Instance.RemapLinks(this, mapping);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WaterReflectionSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -770,6 +769,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Type = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IWaterReflection obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Water = obj.Water.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IWaterReflection item,
@@ -914,7 +921,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IWaterReflectionGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

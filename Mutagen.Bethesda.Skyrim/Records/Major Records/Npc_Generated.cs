@@ -2616,8 +2616,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = Npc_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => NpcCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcSetterCommon.Instance.RemapLinks(this, mapping);
         public Npc(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -3207,6 +3206,45 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (INpcInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(INpc obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
+            obj.Factions.RemapLinks(mapping);
+            obj.DeathItem = obj.DeathItem.Relink(mapping);
+            obj.Voice = obj.Voice.Relink(mapping);
+            obj.Template = obj.Template.Relink(mapping);
+            obj.Race = obj.Race.Relink(mapping);
+            obj.ActorEffect?.RemapLinks(mapping);
+            obj.Destructible?.RemapLinks(mapping);
+            obj.WornArmor = obj.WornArmor.Relink(mapping);
+            obj.FarAwayModel = obj.FarAwayModel.Relink(mapping);
+            obj.AttackRace = obj.AttackRace.Relink(mapping);
+            obj.Attacks.RemapLinks(mapping);
+            obj.SpectatorOverridePackageList = obj.SpectatorOverridePackageList.Relink(mapping);
+            obj.ObserveDeadBodyOverridePackageList = obj.ObserveDeadBodyOverridePackageList.Relink(mapping);
+            obj.GuardWarnOverridePackageList = obj.GuardWarnOverridePackageList.Relink(mapping);
+            obj.CombatOverridePackageList = obj.CombatOverridePackageList.Relink(mapping);
+            obj.Perks?.RemapLinks(mapping);
+            obj.Items?.RemapLinks(mapping);
+            obj.Packages.RemapLinks(mapping);
+            obj.Keywords?.RemapLinks(mapping);
+            obj.Class = obj.Class.Relink(mapping);
+            obj.HeadParts.RemapLinks(mapping);
+            obj.HairColor = obj.HairColor.Relink(mapping);
+            obj.CombatStyle = obj.CombatStyle.Relink(mapping);
+            obj.GiftFilter = obj.GiftFilter.Relink(mapping);
+            obj.Sound?.RemapLinks(mapping);
+            obj.DefaultOutfit = obj.DefaultOutfit.Relink(mapping);
+            obj.SleepingOutfit = obj.SleepingOutfit.Relink(mapping);
+            obj.DefaultPackageList = obj.DefaultPackageList.Relink(mapping);
+            obj.CrimeFaction = obj.CrimeFaction.Relink(mapping);
+            obj.HeadTexture = obj.HeadTexture.Relink(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -4099,7 +4137,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(INpcGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public Npc Duplicate(
             INpcGetter item,

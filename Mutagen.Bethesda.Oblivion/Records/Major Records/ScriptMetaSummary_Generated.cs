@@ -828,6 +828,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Type = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IScriptMetaSummary obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IScriptMetaSummary item,
@@ -985,7 +992,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(IScriptMetaSummaryGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

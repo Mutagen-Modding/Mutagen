@@ -962,8 +962,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = SkyrimModHeader_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => SkyrimModHeaderCommon.Instance.GetContainedFormLinks(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimModHeaderCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimModHeaderCommon.Instance.RemapLinks(this, mapping);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimModHeaderSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -1355,6 +1354,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.INCC = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(ISkyrimModHeader obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.OverriddenForms?.RemapLinks(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ISkyrimModHeader item,
@@ -1642,7 +1649,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(ISkyrimModHeaderGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

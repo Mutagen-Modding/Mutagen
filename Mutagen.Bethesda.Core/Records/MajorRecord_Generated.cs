@@ -448,8 +448,7 @@ namespace Mutagen.Bethesda
 
         #region Mutagen
         public virtual IEnumerable<FormLinkInformation> ContainedFormLinks => MajorRecordCommon.Instance.GetContainedFormLinks(this);
-        protected virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MajorRecordCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MajorRecordCommon.Instance.RemapLinks(this, mapping);
+        public virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MajorRecordSetterCommon.Instance.RemapLinks(this, mapping);
         public MajorRecord(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -1069,6 +1068,10 @@ namespace Mutagen.Bethesda.Internals
         }
         
         #region Mutagen
+        public void RemapLinks(IMajorRecord obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
         public virtual IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IMajorRecordInternal obj)
         {
             foreach (var item in MajorRecordCommon.Instance.EnumerateMajorRecords(obj))
@@ -1270,7 +1273,6 @@ namespace Mutagen.Bethesda.Internals
             yield break;
         }
         
-        public void RemapLinks(IMajorRecordGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         public virtual IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(IMajorRecordGetter obj)
         {
             yield break;

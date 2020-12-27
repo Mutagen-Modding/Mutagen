@@ -5961,8 +5961,7 @@ namespace Mutagen.Bethesda.Skyrim
         partial void GetCustomRecordCount(Action<uint> setter);
 
         public IEnumerable<FormLinkInformation> ContainedFormLinks => SkyrimModCommon.Instance.GetContainedFormLinks(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimModCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimModCommon.Instance.RemapLinks(this, mapping);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimModSetterCommon.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
@@ -7292,6 +7291,124 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
+        public void RemapLinks(ISkyrimMod obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.ModHeader.RemapLinks(mapping);
+            obj.GameSettings.RemapLinks(mapping);
+            obj.Keywords.RemapLinks(mapping);
+            obj.LocationReferenceTypes.RemapLinks(mapping);
+            obj.Actions.RemapLinks(mapping);
+            obj.TextureSets.RemapLinks(mapping);
+            obj.Globals.RemapLinks(mapping);
+            obj.Classes.RemapLinks(mapping);
+            obj.Factions.RemapLinks(mapping);
+            obj.HeadParts.RemapLinks(mapping);
+            obj.Hairs.RemapLinks(mapping);
+            obj.Eyes.RemapLinks(mapping);
+            obj.Races.RemapLinks(mapping);
+            obj.SoundMarkers.RemapLinks(mapping);
+            obj.AcousticSpaces.RemapLinks(mapping);
+            obj.MagicEffects.RemapLinks(mapping);
+            obj.LandscapeTextures.RemapLinks(mapping);
+            obj.ObjectEffects.RemapLinks(mapping);
+            obj.Spells.RemapLinks(mapping);
+            obj.Scrolls.RemapLinks(mapping);
+            obj.Activators.RemapLinks(mapping);
+            obj.TalkingActivators.RemapLinks(mapping);
+            obj.Armors.RemapLinks(mapping);
+            obj.Books.RemapLinks(mapping);
+            obj.Containers.RemapLinks(mapping);
+            obj.Doors.RemapLinks(mapping);
+            obj.Ingredients.RemapLinks(mapping);
+            obj.Lights.RemapLinks(mapping);
+            obj.MiscItems.RemapLinks(mapping);
+            obj.AlchemicalApparatuses.RemapLinks(mapping);
+            obj.Statics.RemapLinks(mapping);
+            obj.MoveableStatics.RemapLinks(mapping);
+            obj.Grasses.RemapLinks(mapping);
+            obj.Trees.RemapLinks(mapping);
+            obj.Florae.RemapLinks(mapping);
+            obj.Furniture.RemapLinks(mapping);
+            obj.Weapons.RemapLinks(mapping);
+            obj.Ammunitions.RemapLinks(mapping);
+            obj.Npcs.RemapLinks(mapping);
+            obj.LeveledNpcs.RemapLinks(mapping);
+            obj.Keys.RemapLinks(mapping);
+            obj.Ingestibles.RemapLinks(mapping);
+            obj.IdleMarkers.RemapLinks(mapping);
+            obj.ConstructibleObjects.RemapLinks(mapping);
+            obj.Projectiles.RemapLinks(mapping);
+            obj.Hazards.RemapLinks(mapping);
+            obj.SoulGems.RemapLinks(mapping);
+            obj.LeveledItems.RemapLinks(mapping);
+            obj.Weathers.RemapLinks(mapping);
+            obj.Climates.RemapLinks(mapping);
+            obj.ShaderParticleGeometries.RemapLinks(mapping);
+            obj.VisualEffects.RemapLinks(mapping);
+            obj.Regions.RemapLinks(mapping);
+            obj.NavigationMeshInfoMaps.RemapLinks(mapping);
+            obj.Cells.RemapLinks(mapping);
+            obj.Worldspaces.RemapLinks(mapping);
+            obj.DialogTopics.RemapLinks(mapping);
+            obj.Quests.RemapLinks(mapping);
+            obj.IdleAnimations.RemapLinks(mapping);
+            obj.Packages.RemapLinks(mapping);
+            obj.CombatStyles.RemapLinks(mapping);
+            obj.LoadScreens.RemapLinks(mapping);
+            obj.LeveledSpells.RemapLinks(mapping);
+            obj.AnimatedObjects.RemapLinks(mapping);
+            obj.Waters.RemapLinks(mapping);
+            obj.EffectShaders.RemapLinks(mapping);
+            obj.Explosions.RemapLinks(mapping);
+            obj.Debris.RemapLinks(mapping);
+            obj.ImageSpaces.RemapLinks(mapping);
+            obj.ImageSpaceAdapters.RemapLinks(mapping);
+            obj.FormLists.RemapLinks(mapping);
+            obj.Perks.RemapLinks(mapping);
+            obj.BodyParts.RemapLinks(mapping);
+            obj.AddonNodes.RemapLinks(mapping);
+            obj.ActorValueInformation.RemapLinks(mapping);
+            obj.CameraShots.RemapLinks(mapping);
+            obj.CameraPaths.RemapLinks(mapping);
+            obj.VoiceTypes.RemapLinks(mapping);
+            obj.MaterialTypes.RemapLinks(mapping);
+            obj.Impacts.RemapLinks(mapping);
+            obj.ImpactDataSets.RemapLinks(mapping);
+            obj.ArmorAddons.RemapLinks(mapping);
+            obj.EncounterZones.RemapLinks(mapping);
+            obj.Locations.RemapLinks(mapping);
+            obj.Messages.RemapLinks(mapping);
+            obj.DefaultObjectManagers.RemapLinks(mapping);
+            obj.LightingTemplates.RemapLinks(mapping);
+            obj.MusicTypes.RemapLinks(mapping);
+            obj.Footsteps.RemapLinks(mapping);
+            obj.FootstepSets.RemapLinks(mapping);
+            obj.StoryManagerBranchNodes.RemapLinks(mapping);
+            obj.StoryManagerQuestNodes.RemapLinks(mapping);
+            obj.StoryManagerEventNodes.RemapLinks(mapping);
+            obj.DialogBranches.RemapLinks(mapping);
+            obj.MusicTracks.RemapLinks(mapping);
+            obj.DialogViews.RemapLinks(mapping);
+            obj.WordsOfPower.RemapLinks(mapping);
+            obj.Shouts.RemapLinks(mapping);
+            obj.EquipTypes.RemapLinks(mapping);
+            obj.Relationships.RemapLinks(mapping);
+            obj.Scenes.RemapLinks(mapping);
+            obj.AssociationTypes.RemapLinks(mapping);
+            obj.Outfits.RemapLinks(mapping);
+            obj.ArtObjects.RemapLinks(mapping);
+            obj.MaterialObjects.RemapLinks(mapping);
+            obj.MovementTypes.RemapLinks(mapping);
+            obj.SoundDescriptors.RemapLinks(mapping);
+            obj.DualCastData.RemapLinks(mapping);
+            obj.SoundCategories.RemapLinks(mapping);
+            obj.SoundOutputModels.RemapLinks(mapping);
+            obj.CollisionLayers.RemapLinks(mapping);
+            obj.Colors.RemapLinks(mapping);
+            obj.ReverbParameters.RemapLinks(mapping);
+            obj.VolumetricLightings.RemapLinks(mapping);
+        }
+        
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(ISkyrimMod obj)
         {
             foreach (var item in SkyrimModCommon.Instance.EnumerateMajorRecords(obj))
@@ -11104,7 +11221,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(ISkyrimModGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(ISkyrimModGetter obj)
         {
             foreach (var item in obj.GameSettings.EnumerateMajorRecords())

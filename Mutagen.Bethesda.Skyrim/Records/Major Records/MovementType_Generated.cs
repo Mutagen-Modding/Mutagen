@@ -1228,6 +1228,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IMovementTypeInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IMovementType obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IMovementTypeInternal item,
@@ -1557,7 +1565,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IMovementTypeGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public MovementType Duplicate(
             IMovementTypeGetter item,

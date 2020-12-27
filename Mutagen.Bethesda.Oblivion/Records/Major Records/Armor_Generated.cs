@@ -779,6 +779,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IArmorInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IArmor obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IArmorInternal item,
@@ -1121,7 +1129,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(IArmorGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public Armor Duplicate(
             IArmorGetter item,

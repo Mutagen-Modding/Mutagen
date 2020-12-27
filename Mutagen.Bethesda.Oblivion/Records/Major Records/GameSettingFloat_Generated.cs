@@ -728,6 +728,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IGameSettingFloatInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IGameSettingFloat obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IGameSettingFloatInternal item,
@@ -1000,7 +1008,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(IGameSettingFloatGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public GameSettingFloat Duplicate(
             IGameSettingFloatGetter item,

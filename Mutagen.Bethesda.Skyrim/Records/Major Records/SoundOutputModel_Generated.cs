@@ -1022,6 +1022,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (ISoundOutputModelInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(ISoundOutputModel obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ISoundOutputModelInternal item,
@@ -1330,7 +1338,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(ISoundOutputModelGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public SoundOutputModel Duplicate(
             ISoundOutputModelGetter item,

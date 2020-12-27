@@ -644,6 +644,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IBookSkill)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IBookSkill obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IBookSkill item,
@@ -819,7 +827,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IBookSkillGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

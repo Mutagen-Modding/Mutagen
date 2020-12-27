@@ -668,6 +668,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IAlphaLayer)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IAlphaLayer obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IAlphaLayer item,
@@ -846,7 +854,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(IAlphaLayerGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

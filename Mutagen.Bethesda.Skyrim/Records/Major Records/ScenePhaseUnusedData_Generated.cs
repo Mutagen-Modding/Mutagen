@@ -880,6 +880,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.SCRO = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IScenePhaseUnusedData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IScenePhaseUnusedData item,
@@ -1055,7 +1062,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IScenePhaseUnusedDataGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

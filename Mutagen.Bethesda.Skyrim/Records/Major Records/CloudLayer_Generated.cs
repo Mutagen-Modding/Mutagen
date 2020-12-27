@@ -862,6 +862,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Alphas = null;
         }
         
+        #region Mutagen
+        public void RemapLinks(ICloudLayer obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ICloudLayer item,
@@ -1044,7 +1051,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(ICloudLayerGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

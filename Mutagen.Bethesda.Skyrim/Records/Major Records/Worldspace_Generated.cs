@@ -1601,8 +1601,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = Worldspace_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => WorldspaceCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceSetterCommon.Instance.RemapLinks(this, mapping);
         public Worldspace(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -2376,6 +2375,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
+        public void RemapLinks(IWorldspace obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.LargeReferences.RemapLinks(mapping);
+            obj.InteriorLighting = obj.InteriorLighting.Relink(mapping);
+            obj.EncounterZone = obj.EncounterZone.Relink(mapping);
+            obj.Location = obj.Location.Relink(mapping);
+            obj.Parent?.RemapLinks(mapping);
+            obj.Climate = obj.Climate.Relink(mapping);
+            obj.Water = obj.Water.Relink(mapping);
+            obj.LodWater = obj.LodWater.Relink(mapping);
+            obj.CloudModel?.RemapLinks(mapping);
+            obj.Music = obj.Music.Relink(mapping);
+            obj.TopCell?.RemapLinks(mapping);
+            obj.SubCells.RemapLinks(mapping);
+        }
+        
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IWorldspaceInternal obj)
         {
             foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecords(obj))
@@ -3286,7 +3302,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IWorldspaceGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(IWorldspaceGetter obj)
         {
             if ((obj.TopCell != null))

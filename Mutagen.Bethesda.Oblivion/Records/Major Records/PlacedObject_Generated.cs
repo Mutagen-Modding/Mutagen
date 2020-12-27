@@ -1198,8 +1198,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public static readonly RecordType GrupRecordType = PlacedObject_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => PlacedObjectCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedObjectCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedObjectCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedObjectSetterCommon.Instance.RemapLinks(this, mapping);
         public PlacedObject(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -1662,6 +1661,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (IPlacedObjectInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IPlacedObject obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Base = obj.Base.Relink(mapping);
+            obj.TeleportDestination?.RemapLinks(mapping);
+            obj.Lock?.RemapLinks(mapping);
+            obj.Owner = obj.Owner.Relink(mapping);
+            obj.GlobalVariable = obj.GlobalVariable.Relink(mapping);
+            obj.EnableParent?.RemapLinks(mapping);
+            obj.Target = obj.Target.Relink(mapping);
+            obj.XRTM = obj.XRTM.Relink(mapping);
+            obj.ContainedSoul = obj.ContainedSoul.Relink(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -2185,7 +2201,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(IPlacedObjectGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public PlacedObject Duplicate(
             IPlacedObjectGetter item,

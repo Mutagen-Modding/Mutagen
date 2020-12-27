@@ -1585,6 +1585,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Stagger = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IWeaponData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IWeaponData item,
@@ -1893,7 +1900,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IWeaponDataGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

@@ -1281,8 +1281,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => APlacedTrapCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => APlacedTrapCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => APlacedTrapCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => APlacedTrapSetterCommon.Instance.RemapLinks(this, mapping);
         public APlacedTrap(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -1771,6 +1770,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IAPlacedTrapInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IAPlacedTrap obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
+            obj.EncounterZone = obj.EncounterZone.Relink(mapping);
+            obj.Ownership?.RemapLinks(mapping);
+            obj.Reflections.RemapLinks(mapping);
+            obj.LinkedReferences.RemapLinks(mapping);
+            obj.ActivateParents?.RemapLinks(mapping);
+            obj.EnableParent?.RemapLinks(mapping);
+            obj.Emittance = obj.Emittance.Relink(mapping);
+            obj.MultiBoundReference = obj.MultiBoundReference.Relink(mapping);
+            obj.LocationRefTypes?.RemapLinks(mapping);
+            obj.LocationReference = obj.LocationReference.Relink(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -2335,7 +2353,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IAPlacedTrapGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public virtual APlacedTrap Duplicate(
             IAPlacedTrapGetter item,

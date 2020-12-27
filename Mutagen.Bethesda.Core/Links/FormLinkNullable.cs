@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// FormKey of the target record.
         /// </summary>
-        public FormKey? FormKeyNullable { get; }
+        public FormKey? FormKeyNullable { get; private set; }
 
         /// <summary>
         /// Non null FormKey of the target record.  If null, it will instead return FormKey.Null.

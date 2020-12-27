@@ -799,6 +799,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IEyeInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IEye obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IEyeInternal item,
@@ -1049,7 +1057,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(IEyeGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public Eye Duplicate(
             IEyeGetter item,

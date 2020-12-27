@@ -446,8 +446,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public IEnumerable<FormLinkInformation> ContainedFormLinks => LocationCellStaticReferenceCommon.Instance.GetContainedFormLinks(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCellStaticReferenceCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCellStaticReferenceCommon.Instance.RemapLinks(this, mapping);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCellStaticReferenceSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -798,6 +797,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Grid = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(ILocationCellStaticReference obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.LocationRefType = obj.LocationRefType.Relink(mapping);
+            obj.Marker = obj.Marker.Relink(mapping);
+            obj.Location = obj.Location.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ILocationCellStaticReference item,
@@ -948,7 +957,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(ILocationCellStaticReferenceGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

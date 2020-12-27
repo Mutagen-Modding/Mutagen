@@ -725,6 +725,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ResetHours = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IDialogResponseFlags obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IDialogResponseFlags item,
@@ -861,7 +868,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IDialogResponseFlagsGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

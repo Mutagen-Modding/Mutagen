@@ -684,6 +684,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (ILocationFallback)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(ILocationFallback obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ILocationFallback item,
@@ -862,7 +870,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(ILocationFallbackGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

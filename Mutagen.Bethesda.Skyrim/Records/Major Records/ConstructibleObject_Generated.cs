@@ -655,8 +655,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = ConstructibleObject_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => ConstructibleObjectCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ConstructibleObjectCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ConstructibleObjectCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ConstructibleObjectSetterCommon.Instance.RemapLinks(this, mapping);
         public ConstructibleObject(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -1060,6 +1059,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IConstructibleObjectInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IConstructibleObject obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Items?.RemapLinks(mapping);
+            obj.Conditions.RemapLinks(mapping);
+            obj.CreatedObject = obj.CreatedObject.Relink(mapping);
+            obj.WorkbenchKeyword = obj.WorkbenchKeyword.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IConstructibleObjectInternal item,
@@ -1374,7 +1385,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IConstructibleObjectGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public ConstructibleObject Duplicate(
             IConstructibleObjectGetter item,

@@ -860,6 +860,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.FragmentName = string.Empty;
         }
         
+        #region Mutagen
+        public void RemapLinks(IQuestScriptFragment obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IQuestScriptFragment item,
@@ -1021,7 +1028,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IQuestScriptFragmentGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

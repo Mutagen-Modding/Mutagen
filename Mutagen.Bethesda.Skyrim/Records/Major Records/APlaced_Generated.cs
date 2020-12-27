@@ -311,8 +311,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => APlacedCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => APlacedCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => APlacedCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => APlacedSetterCommon.Instance.RemapLinks(this, mapping);
         public APlaced(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -736,6 +735,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IAPlacedInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IAPlaced obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IAPlacedInternal item,
@@ -955,7 +962,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IAPlacedGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public virtual APlaced Duplicate(
             IAPlacedGetter item,

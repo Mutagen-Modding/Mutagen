@@ -1175,8 +1175,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = DialogResponses_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => DialogResponsesCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogResponsesCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogResponsesCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogResponsesSetterCommon.Instance.RemapLinks(this, mapping);
         public DialogResponses(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -1634,6 +1633,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IDialogResponsesInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IDialogResponses obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
+            obj.Topic = obj.Topic.Relink(mapping);
+            obj.PreviousDialog = obj.PreviousDialog.Relink(mapping);
+            obj.LinkTo.RemapLinks(mapping);
+            obj.ResponseData = obj.ResponseData.Relink(mapping);
+            obj.Responses.RemapLinks(mapping);
+            obj.Conditions.RemapLinks(mapping);
+            obj.UnknownData.RemapLinks(mapping);
+            obj.Speaker = obj.Speaker.Relink(mapping);
+            obj.WalkAwayTopic = obj.WalkAwayTopic.Relink(mapping);
+            obj.AudioOutputOverride = obj.AudioOutputOverride.Relink(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -2103,7 +2121,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IDialogResponsesGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public DialogResponses Duplicate(
             IDialogResponsesGetter item,

@@ -447,8 +447,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = WeatherImageSpaces_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => WeatherImageSpacesCommon.Instance.GetContainedFormLinks(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherImageSpacesCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherImageSpacesCommon.Instance.RemapLinks(this, mapping);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherImageSpacesSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -800,6 +799,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Night = FormLink<IImageSpaceAdapterGetter>.Null;
         }
         
+        #region Mutagen
+        public void RemapLinks(IWeatherImageSpaces obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Sunrise = obj.Sunrise.Relink(mapping);
+            obj.Day = obj.Day.Relink(mapping);
+            obj.Sunset = obj.Sunset.Relink(mapping);
+            obj.Night = obj.Night.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IWeatherImageSpaces item,
@@ -954,7 +964,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IWeatherImageSpacesGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

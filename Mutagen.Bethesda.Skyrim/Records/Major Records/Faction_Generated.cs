@@ -1127,8 +1127,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = Faction_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => FactionCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FactionCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FactionCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FactionSetterCommon.Instance.RemapLinks(this, mapping);
         public Faction(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -1583,6 +1582,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IFactionInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IFaction obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Relations.RemapLinks(mapping);
+            obj.ExteriorJailMarker = obj.ExteriorJailMarker.Relink(mapping);
+            obj.FollowerWaitMarker = obj.FollowerWaitMarker.Relink(mapping);
+            obj.StolenGoodsContainer = obj.StolenGoodsContainer.Relink(mapping);
+            obj.PlayerInventoryContainer = obj.PlayerInventoryContainer.Relink(mapping);
+            obj.SharedCrimeFactionList = obj.SharedCrimeFactionList.Relink(mapping);
+            obj.JailOutfit = obj.JailOutfit.Relink(mapping);
+            obj.VendorBuySellList = obj.VendorBuySellList.Relink(mapping);
+            obj.MerchantContainer = obj.MerchantContainer.Relink(mapping);
+            obj.VendorLocation?.RemapLinks(mapping);
+            obj.Conditions?.RemapLinks(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -2046,7 +2064,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IFactionGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public Faction Duplicate(
             IFactionGetter item,

@@ -513,8 +513,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public static readonly RecordType GrupRecordType = Miscellaneous_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => MiscellaneousCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MiscellaneousCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MiscellaneousCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MiscellaneousSetterCommon.Instance.RemapLinks(this, mapping);
         public Miscellaneous(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -907,6 +906,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IMiscellaneousInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IMiscellaneous obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Script = obj.Script.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IMiscellaneousInternal item,
@@ -1231,7 +1239,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(IMiscellaneousGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public Miscellaneous Duplicate(
             IMiscellaneousGetter item,

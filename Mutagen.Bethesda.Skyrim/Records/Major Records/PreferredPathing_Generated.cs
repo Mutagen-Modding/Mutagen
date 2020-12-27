@@ -558,8 +558,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = PreferredPathing_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => PreferredPathingCommon.Instance.GetContainedFormLinks(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PreferredPathingCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PreferredPathingCommon.Instance.RemapLinks(this, mapping);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PreferredPathingSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -903,6 +902,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.NavmeshTree.Clear();
         }
         
+        #region Mutagen
+        public void RemapLinks(IPreferredPathing obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.NavmeshSets.RemapLinks(mapping);
+            obj.NavmeshTree.RemapLinks(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IPreferredPathing item,
@@ -1081,7 +1089,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IPreferredPathingGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

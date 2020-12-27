@@ -2127,8 +2127,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = MagicEffect_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => MagicEffectCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectSetterCommon.Instance.RemapLinks(this, mapping);
         public MagicEffect(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -2703,6 +2702,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IMagicEffectInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IMagicEffect obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
+            obj.MenuDisplayObject = obj.MenuDisplayObject.Relink(mapping);
+            obj.Keywords?.RemapLinks(mapping);
+            obj.CastingLight = obj.CastingLight.Relink(mapping);
+            obj.HitShader = obj.HitShader.Relink(mapping);
+            obj.EnchantShader = obj.EnchantShader.Relink(mapping);
+            obj.Projectile = obj.Projectile.Relink(mapping);
+            obj.Explosion = obj.Explosion.Relink(mapping);
+            obj.CastingArt = obj.CastingArt.Relink(mapping);
+            obj.HitEffectArt = obj.HitEffectArt.Relink(mapping);
+            obj.ImpactData = obj.ImpactData.Relink(mapping);
+            obj.DualCastArt = obj.DualCastArt.Relink(mapping);
+            obj.EnchantArt = obj.EnchantArt.Relink(mapping);
+            obj.Unknown2 = obj.Unknown2.Relink(mapping);
+            obj.Unknown3 = obj.Unknown3.Relink(mapping);
+            obj.EquipAbility = obj.EquipAbility.Relink(mapping);
+            obj.ImageSpaceModifier = obj.ImageSpaceModifier.Relink(mapping);
+            obj.PerkToApply = obj.PerkToApply.Relink(mapping);
+            obj.CounterEffects.RemapLinks(mapping);
+            obj.Sounds?.RemapLinks(mapping);
+            obj.Conditions.RemapLinks(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -3380,7 +3408,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IMagicEffectGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public MagicEffect Duplicate(
             IMagicEffectGetter item,

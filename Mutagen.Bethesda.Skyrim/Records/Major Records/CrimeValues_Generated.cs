@@ -1046,6 +1046,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Werewolf = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(ICrimeValues obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ICrimeValues item,
@@ -1245,7 +1252,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(ICrimeValuesGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

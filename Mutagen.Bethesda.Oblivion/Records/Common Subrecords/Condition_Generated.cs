@@ -964,6 +964,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ThirdParameter = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(ICondition obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ICondition item,
@@ -1142,7 +1149,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(IConditionGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

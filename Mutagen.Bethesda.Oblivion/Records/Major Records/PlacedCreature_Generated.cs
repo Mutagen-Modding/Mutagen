@@ -614,8 +614,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public static readonly RecordType GrupRecordType = PlacedCreature_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => PlacedCreatureCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedCreatureCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedCreatureCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedCreatureSetterCommon.Instance.RemapLinks(this, mapping);
         public PlacedCreature(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -1015,6 +1014,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IPlacedCreatureInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IPlacedCreature obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Base = obj.Base.Relink(mapping);
+            obj.Owner = obj.Owner.Relink(mapping);
+            obj.GlobalVariable = obj.GlobalVariable.Relink(mapping);
+            obj.EnableParent?.RemapLinks(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IPlacedCreatureInternal item,
@@ -1335,7 +1346,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(IPlacedCreatureGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public PlacedCreature Duplicate(
             IPlacedCreatureGetter item,

@@ -748,6 +748,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IGameSettingIntInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IGameSettingInt obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IGameSettingIntInternal item,
@@ -1024,7 +1032,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IGameSettingIntGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public GameSettingInt Duplicate(
             IGameSettingIntGetter item,

@@ -583,8 +583,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = DualCastData_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => DualCastDataCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DualCastDataCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DualCastDataCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DualCastDataSetterCommon.Instance.RemapLinks(this, mapping);
         public DualCastData(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -1006,6 +1005,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IDualCastDataInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IDualCastData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Projectile = obj.Projectile.Relink(mapping);
+            obj.Explosion = obj.Explosion.Relink(mapping);
+            obj.EffectShader = obj.EffectShader.Relink(mapping);
+            obj.HitEffectArt = obj.HitEffectArt.Relink(mapping);
+            obj.ImpactDataSet = obj.ImpactDataSet.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IDualCastDataInternal item,
@@ -1286,7 +1298,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IDualCastDataGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public DualCastData Duplicate(
             IDualCastDataGetter item,

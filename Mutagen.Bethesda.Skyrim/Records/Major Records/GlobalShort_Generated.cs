@@ -748,6 +748,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IGlobalShortInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IGlobalShort obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IGlobalShortInternal item,
@@ -1024,7 +1032,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IGlobalShortGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public GlobalShort Duplicate(
             IGlobalShortGetter item,

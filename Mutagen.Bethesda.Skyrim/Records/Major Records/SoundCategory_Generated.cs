@@ -489,8 +489,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = SoundCategory_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => SoundCategoryCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoundCategoryCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoundCategoryCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoundCategorySetterCommon.Instance.RemapLinks(this, mapping);
         public SoundCategory(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -896,6 +895,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (ISoundCategoryInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(ISoundCategory obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Parent = obj.Parent.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ISoundCategoryInternal item,
@@ -1170,7 +1178,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(ISoundCategoryGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public SoundCategory Duplicate(
             ISoundCategoryGetter item,

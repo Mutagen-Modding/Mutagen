@@ -958,6 +958,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Vertices.Clear();
         }
         
+        #region Mutagen
+        public void RemapLinks(IIslandData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IIslandData item,
@@ -1139,7 +1146,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IIslandDataGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

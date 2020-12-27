@@ -796,6 +796,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Quality = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IAlchemicalApparatusData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IAlchemicalApparatusData item,
@@ -946,7 +953,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(IAlchemicalApparatusDataGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

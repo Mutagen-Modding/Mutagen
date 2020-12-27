@@ -309,8 +309,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => ANpcSpawnCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ANpcSpawnCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ANpcSpawnCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ANpcSpawnSetterCommon.Instance.RemapLinks(this, mapping);
         public ANpcSpawn(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -664,6 +663,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IANpcSpawnInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IANpcSpawn obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IANpcSpawnInternal item,
@@ -875,7 +882,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(IANpcSpawnGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public virtual ANpcSpawn Duplicate(
             IANpcSpawnGetter item,

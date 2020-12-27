@@ -1849,8 +1849,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = Cell_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => CellCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellSetterCommon.Instance.RemapLinks(this, mapping);
         public Cell(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -2636,6 +2635,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
+        public void RemapLinks(ICell obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.LightingTemplate = obj.LightingTemplate.Relink(mapping);
+            obj.Regions?.RemapLinks(mapping);
+            obj.Location = obj.Location.Relink(mapping);
+            obj.Water = obj.Water.Relink(mapping);
+            obj.Ownership?.RemapLinks(mapping);
+            obj.LockList = obj.LockList.Relink(mapping);
+            obj.SkyAndWeatherFromRegion = obj.SkyAndWeatherFromRegion.Relink(mapping);
+            obj.AcousticSpace = obj.AcousticSpace.Relink(mapping);
+            obj.EncounterZone = obj.EncounterZone.Relink(mapping);
+            obj.Music = obj.Music.Relink(mapping);
+            obj.ImageSpace = obj.ImageSpace.Relink(mapping);
+            obj.Landscape?.RemapLinks(mapping);
+            obj.NavigationMeshes.RemapLinks(mapping);
+            obj.Persistent.RemapLinks(mapping);
+            obj.Temporary.RemapLinks(mapping);
+        }
+        
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(ICellInternal obj)
         {
             foreach (var item in CellCommon.Instance.EnumerateMajorRecords(obj))
@@ -3425,7 +3444,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(ICellGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(ICellGetter obj)
         {
             if ((obj.Landscape != null))

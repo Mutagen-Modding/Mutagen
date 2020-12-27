@@ -827,6 +827,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IDebrisInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IDebris obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IDebrisInternal item,
@@ -1070,7 +1078,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IDebrisGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public Debris Duplicate(
             IDebrisGetter item,

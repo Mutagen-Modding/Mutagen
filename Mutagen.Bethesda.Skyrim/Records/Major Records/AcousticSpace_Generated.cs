@@ -459,8 +459,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = AcousticSpace_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => AcousticSpaceCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AcousticSpaceCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AcousticSpaceCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AcousticSpaceSetterCommon.Instance.RemapLinks(this, mapping);
         public AcousticSpace(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -862,6 +861,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IAcousticSpaceInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IAcousticSpace obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.AmbientSound = obj.AmbientSound.Relink(mapping);
+            obj.UseSoundFromRegion = obj.UseSoundFromRegion.Relink(mapping);
+            obj.EnvironmentType = obj.EnvironmentType.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IAcousticSpaceInternal item,
@@ -1121,7 +1131,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IAcousticSpaceGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public AcousticSpace Duplicate(
             IAcousticSpaceGetter item,

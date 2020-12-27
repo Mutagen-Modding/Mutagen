@@ -1154,6 +1154,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IVolumetricLightingInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IVolumetricLighting obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IVolumetricLightingInternal item,
@@ -1505,7 +1513,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IVolumetricLightingGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public VolumetricLighting Duplicate(
             IVolumetricLightingGetter item,

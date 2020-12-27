@@ -795,6 +795,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Winter = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(ISeasonalIngredientProduction obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ISeasonalIngredientProduction item,
@@ -945,7 +952,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(ISeasonalIngredientProductionGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

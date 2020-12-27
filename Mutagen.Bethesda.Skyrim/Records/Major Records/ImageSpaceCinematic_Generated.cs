@@ -760,6 +760,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Contrast = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IImageSpaceCinematic obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IImageSpaceCinematic item,
@@ -903,7 +910,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IImageSpaceCinematicGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

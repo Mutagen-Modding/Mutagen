@@ -489,8 +489,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public static readonly RecordType GrupRecordType = SpellUnleveled_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => SpellUnleveledCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SpellUnleveledCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SpellUnleveledCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SpellUnleveledSetterCommon.Instance.RemapLinks(this, mapping);
         public SpellUnleveled(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -875,6 +874,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ISpellUnleveledInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(ISpellUnleveled obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Effects.RemapLinks(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ISpellUnleveledInternal item,
@@ -1225,7 +1233,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(ISpellUnleveledGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public SpellUnleveled Duplicate(
             ISpellUnleveledGetter item,

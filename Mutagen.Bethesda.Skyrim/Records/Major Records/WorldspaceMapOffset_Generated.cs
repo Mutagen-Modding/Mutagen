@@ -725,6 +725,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.CellOffset = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IWorldspaceMapOffset obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IWorldspaceMapOffset item,
@@ -861,7 +868,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IWorldspaceMapOffsetGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

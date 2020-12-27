@@ -852,8 +852,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = Impact_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => ImpactCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ImpactCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ImpactCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ImpactSetterCommon.Instance.RemapLinks(this, mapping);
         public Impact(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -1307,6 +1306,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IImpactInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IImpact obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Model?.RemapLinks(mapping);
+            obj.TextureSet = obj.TextureSet.Relink(mapping);
+            obj.SecondaryTextureSet = obj.SecondaryTextureSet.Relink(mapping);
+            obj.Sound1 = obj.Sound1.Relink(mapping);
+            obj.Sound2 = obj.Sound2.Relink(mapping);
+            obj.Hazard = obj.Hazard.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IImpactInternal item,
@@ -1681,7 +1694,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IImpactGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public Impact Duplicate(
             IImpactGetter item,

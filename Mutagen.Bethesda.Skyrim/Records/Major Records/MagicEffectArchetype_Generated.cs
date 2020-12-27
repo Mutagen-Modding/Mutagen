@@ -752,6 +752,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ActorValue = MagicEffectArchetype._ActorValue_Default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IMagicEffectArchetype obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IMagicEffectArchetypeInternal item,
@@ -892,7 +899,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IMagicEffectArchetypeGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

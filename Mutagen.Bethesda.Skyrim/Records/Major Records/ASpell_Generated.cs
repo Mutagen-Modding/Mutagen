@@ -311,8 +311,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => ASpellCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ASpellCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ASpellCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ASpellSetterCommon.Instance.RemapLinks(this, mapping);
         public ASpell(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -684,6 +683,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IASpellInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IASpell obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IASpellInternal item,
@@ -897,7 +904,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IASpellGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public virtual ASpell Duplicate(
             IASpellGetter item,

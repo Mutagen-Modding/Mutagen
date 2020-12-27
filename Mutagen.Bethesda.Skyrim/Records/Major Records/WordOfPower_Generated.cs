@@ -781,6 +781,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IWordOfPowerInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IWordOfPower obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IWordOfPowerInternal item,
@@ -1018,7 +1026,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IWordOfPowerGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public WordOfPower Duplicate(
             IWordOfPowerGetter item,

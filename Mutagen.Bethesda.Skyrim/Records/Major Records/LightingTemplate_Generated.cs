@@ -1680,6 +1680,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (ILightingTemplateInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(ILightingTemplate obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ILightingTemplateInternal item,
@@ -2082,7 +2090,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(ILightingTemplateGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public LightingTemplate Duplicate(
             ILightingTemplateGetter item,

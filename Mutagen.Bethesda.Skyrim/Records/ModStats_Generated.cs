@@ -761,6 +761,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.NextFormID = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IModStats obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IModStats item,
@@ -904,7 +911,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IModStatsGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

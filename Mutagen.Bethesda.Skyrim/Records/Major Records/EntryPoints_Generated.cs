@@ -720,6 +720,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Points = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IEntryPoints obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IEntryPoints item,
@@ -853,7 +860,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IEntryPointsGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

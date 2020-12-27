@@ -687,6 +687,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Data = new byte[32];
         }
         
+        #region Mutagen
+        public void RemapLinks(IMorph obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IMorph item,
@@ -813,7 +820,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IMorphGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

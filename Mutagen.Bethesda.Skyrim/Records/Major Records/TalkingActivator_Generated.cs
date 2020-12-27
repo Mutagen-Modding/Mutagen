@@ -784,8 +784,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = TalkingActivator_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => TalkingActivatorCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TalkingActivatorCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TalkingActivatorCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TalkingActivatorSetterCommon.Instance.RemapLinks(this, mapping);
         public TalkingActivator(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -1230,6 +1229,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (ITalkingActivatorInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(ITalkingActivator obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
+            obj.Model?.RemapLinks(mapping);
+            obj.Destructible?.RemapLinks(mapping);
+            obj.Keywords?.RemapLinks(mapping);
+            obj.LoopingSound = obj.LoopingSound.Relink(mapping);
+            obj.VoiceType = obj.VoiceType.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ITalkingActivatorInternal item,
@@ -1609,7 +1622,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(ITalkingActivatorGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public TalkingActivator Duplicate(
             ITalkingActivatorGetter item,

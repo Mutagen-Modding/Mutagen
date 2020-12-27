@@ -538,8 +538,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public static readonly RecordType GrupRecordType = Birthsign_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => BirthsignCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BirthsignCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BirthsignCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BirthsignSetterCommon.Instance.RemapLinks(this, mapping);
         public Birthsign(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -923,6 +922,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IBirthsignInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IBirthsign obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Spells.RemapLinks(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IBirthsignInternal item,
@@ -1201,7 +1209,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(IBirthsignGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public Birthsign Duplicate(
             IBirthsignGetter item,

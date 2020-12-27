@@ -735,8 +735,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = CameraPath_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => CameraPathCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CameraPathCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CameraPathCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CameraPathSetterCommon.Instance.RemapLinks(this, mapping);
         public CameraPath(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -1140,6 +1139,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (ICameraPathInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(ICameraPath obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Conditions.RemapLinks(mapping);
+            obj.RelatedPaths.RemapLinks(mapping);
+            obj.Shots.RemapLinks(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ICameraPathInternal item,
@@ -1458,7 +1468,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(ICameraPathGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public CameraPath Duplicate(
             ICameraPathGetter item,

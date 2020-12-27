@@ -963,8 +963,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = ArmorAddon_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => ArmorAddonCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorAddonCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorAddonCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorAddonSetterCommon.Instance.RemapLinks(this, mapping);
         public ArmorAddon(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -1464,6 +1463,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IArmorAddonInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IArmorAddon obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Race = obj.Race.Relink(mapping);
+            obj.WorldModel?.RemapLinks(mapping);
+            obj.FirstPersonModel?.RemapLinks(mapping);
+            obj.SkinTexture?.RemapLinks(mapping);
+            obj.TextureSwapList?.RemapLinks(mapping);
+            obj.AdditionalRaces.RemapLinks(mapping);
+            obj.FootstepSound = obj.FootstepSound.Relink(mapping);
+            obj.ArtObject = obj.ArtObject.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IArmorAddonInternal item,
@@ -1900,7 +1915,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IArmorAddonGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public ArmorAddon Duplicate(
             IArmorAddonGetter item,

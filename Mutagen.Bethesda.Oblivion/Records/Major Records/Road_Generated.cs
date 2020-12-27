@@ -807,6 +807,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IRoadInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IRoad obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IRoadInternal item,
@@ -1049,7 +1057,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(IRoadGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public Road Duplicate(
             IRoadGetter item,

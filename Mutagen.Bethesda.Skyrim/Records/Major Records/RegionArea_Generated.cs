@@ -818,6 +818,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.RegionPointListData = null;
         }
         
+        #region Mutagen
+        public void RemapLinks(IRegionArea obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IRegionArea item,
@@ -974,7 +981,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IRegionAreaGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

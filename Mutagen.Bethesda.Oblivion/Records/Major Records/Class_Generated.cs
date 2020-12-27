@@ -849,6 +849,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IClassInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IClass obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IClassInternal item,
@@ -1114,7 +1122,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(IClassGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public Class Duplicate(
             IClassGetter item,

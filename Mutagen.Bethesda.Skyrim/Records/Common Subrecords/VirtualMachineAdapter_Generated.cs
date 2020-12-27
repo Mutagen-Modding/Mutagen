@@ -614,6 +614,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IVirtualMachineAdapter)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IVirtualMachineAdapter obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IVirtualMachineAdapter item,
@@ -787,7 +795,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IVirtualMachineAdapterGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

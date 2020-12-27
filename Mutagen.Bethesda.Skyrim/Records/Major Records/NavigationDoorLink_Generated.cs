@@ -416,8 +416,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = NavigationDoorLink_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => NavigationDoorLinkCommon.Instance.GetContainedFormLinks(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavigationDoorLinkCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavigationDoorLinkCommon.Instance.RemapLinks(this, mapping);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavigationDoorLinkSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -765,6 +764,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Unused = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(INavigationDoorLink obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.NavMesh = obj.NavMesh.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             INavigationDoorLink item,
@@ -909,7 +916,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(INavigationDoorLinkGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

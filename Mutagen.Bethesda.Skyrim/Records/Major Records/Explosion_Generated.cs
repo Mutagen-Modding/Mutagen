@@ -1020,8 +1020,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = Explosion_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => ExplosionCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ExplosionCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ExplosionCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ExplosionSetterCommon.Instance.RemapLinks(this, mapping);
         public Explosion(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -1496,6 +1495,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IExplosionInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IExplosion obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
+            obj.Model?.RemapLinks(mapping);
+            obj.ObjectEffect = obj.ObjectEffect.Relink(mapping);
+            obj.ImageSpaceModifier = obj.ImageSpaceModifier.Relink(mapping);
+            obj.Light = obj.Light.Relink(mapping);
+            obj.Sound1 = obj.Sound1.Relink(mapping);
+            obj.Sound2 = obj.Sound2.Relink(mapping);
+            obj.ImpactDataSet = obj.ImpactDataSet.Relink(mapping);
+            obj.PlacedObject = obj.PlacedObject.Relink(mapping);
+            obj.SpawnProjectile = obj.SpawnProjectile.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IExplosionInternal item,
@@ -1903,7 +1920,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IExplosionGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public Explosion Duplicate(
             IExplosionGetter item,

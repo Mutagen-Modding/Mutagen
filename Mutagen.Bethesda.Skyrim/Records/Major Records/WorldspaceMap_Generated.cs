@@ -905,6 +905,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.CameraInitialPitch = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IWorldspaceMap obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IWorldspaceMap item,
@@ -1076,7 +1083,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IWorldspaceMapGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

@@ -692,6 +692,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IHairInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IHair obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IHairInternal item,
@@ -911,7 +919,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IHairGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public Hair Duplicate(
             IHairGetter item,

@@ -1041,6 +1041,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Color = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IDecal obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IDecal item,
@@ -1240,7 +1247,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IDecalGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

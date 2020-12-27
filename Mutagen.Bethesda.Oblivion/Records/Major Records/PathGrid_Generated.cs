@@ -714,8 +714,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public static readonly RecordType GrupRecordType = PathGrid_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => PathGridCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PathGridCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PathGridCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PathGridSetterCommon.Instance.RemapLinks(this, mapping);
         public PathGrid(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -1097,6 +1096,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IPathGridInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IPathGrid obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.PointToReferenceMappings.RemapLinks(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IPathGridInternal item,
@@ -1403,7 +1411,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(IPathGridGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public PathGrid Duplicate(
             IPathGridGetter item,

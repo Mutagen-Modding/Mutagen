@@ -474,8 +474,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = EquipType_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => EquipTypeCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EquipTypeCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EquipTypeCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EquipTypeSetterCommon.Instance.RemapLinks(this, mapping);
         public EquipType(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -867,6 +866,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IEquipTypeInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IEquipType obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.SlotParents?.RemapLinks(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IEquipTypeInternal item,
@@ -1129,7 +1137,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IEquipTypeGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public EquipType Duplicate(
             IEquipTypeGetter item,

@@ -1636,8 +1636,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = Package_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => PackageCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageSetterCommon.Instance.RemapLinks(this, mapping);
         public Package(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -2149,6 +2148,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IPackageInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IPackage obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
+            obj.Conditions.RemapLinks(mapping);
+            obj.IdleAnimations?.RemapLinks(mapping);
+            obj.CombatStyle = obj.CombatStyle.Relink(mapping);
+            obj.OwnerQuest = obj.OwnerQuest.Relink(mapping);
+            obj.PackageTemplate = obj.PackageTemplate.Relink(mapping);
+            obj.ProcedureTree.RemapLinks(mapping);
+            obj.OnBegin?.RemapLinks(mapping);
+            obj.OnEnd?.RemapLinks(mapping);
+            obj.OnChange?.RemapLinks(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -2730,7 +2747,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IPackageGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public Package Duplicate(
             IPackageGetter item,

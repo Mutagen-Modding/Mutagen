@@ -746,6 +746,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (ILocationReferenceTypeInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(ILocationReferenceType obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ILocationReferenceTypeInternal item,
@@ -976,7 +984,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(ILocationReferenceTypeGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public LocationReferenceType Duplicate(
             ILocationReferenceTypeGetter item,

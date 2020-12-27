@@ -2190,6 +2190,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.FLAP = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IPhoneme obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IPhoneme item,
@@ -2617,7 +2624,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IPhonemeGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

@@ -627,8 +627,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = ActorValueInformation_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => ActorValueInformationCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActorValueInformationCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActorValueInformationCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActorValueInformationSetterCommon.Instance.RemapLinks(this, mapping);
         public ActorValueInformation(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -1038,6 +1037,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IActorValueInformationInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IActorValueInformation obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.PerkTree.RemapLinks(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IActorValueInformationInternal item,
@@ -1344,7 +1352,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IActorValueInformationGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public ActorValueInformation Duplicate(
             IActorValueInformationGetter item,

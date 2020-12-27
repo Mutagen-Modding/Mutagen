@@ -1367,8 +1367,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = Projectile_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => ProjectileCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ProjectileCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ProjectileCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ProjectileSetterCommon.Instance.RemapLinks(this, mapping);
         public Projectile(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -1892,6 +1891,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IProjectileInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IProjectile obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Model?.RemapLinks(mapping);
+            obj.Destructible?.RemapLinks(mapping);
+            obj.Light = obj.Light.Relink(mapping);
+            obj.MuzzleFlash = obj.MuzzleFlash.Relink(mapping);
+            obj.Explosion = obj.Explosion.Relink(mapping);
+            obj.Sound = obj.Sound.Relink(mapping);
+            obj.CountdownSound = obj.CountdownSound.Relink(mapping);
+            obj.DisaleSound = obj.DisaleSound.Relink(mapping);
+            obj.DefaultWeaponSource = obj.DefaultWeaponSource.Relink(mapping);
+            obj.DecalData = obj.DecalData.Relink(mapping);
+            obj.CollisionLayer = obj.CollisionLayer.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IProjectileInternal item,
@@ -2382,7 +2400,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IProjectileGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public Projectile Duplicate(
             IProjectileGetter item,

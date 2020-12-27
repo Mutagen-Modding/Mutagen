@@ -504,8 +504,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => AStoryManagerNodeCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AStoryManagerNodeCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AStoryManagerNodeCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AStoryManagerNodeSetterCommon.Instance.RemapLinks(this, mapping);
         public AStoryManagerNode(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -893,6 +892,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IAStoryManagerNodeInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IAStoryManagerNode obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Parent = obj.Parent.Relink(mapping);
+            obj.PreviousSibling = obj.PreviousSibling.Relink(mapping);
+            obj.Conditions.RemapLinks(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IAStoryManagerNodeInternal item,
@@ -1157,7 +1167,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IAStoryManagerNodeGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public virtual AStoryManagerNode Duplicate(
             IAStoryManagerNodeGetter item,

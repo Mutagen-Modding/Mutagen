@@ -1499,8 +1499,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public new static readonly RecordType GrupRecordType = PlacedNpc_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => PlacedNpcCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedNpcCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedNpcCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedNpcSetterCommon.Instance.RemapLinks(this, mapping);
         public PlacedNpc(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -2025,6 +2024,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IPlacedNpcInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IPlacedNpc obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
+            obj.Base = obj.Base.Relink(mapping);
+            obj.EncounterZone = obj.EncounterZone.Relink(mapping);
+            obj.Patrol?.RemapLinks(mapping);
+            obj.MerchantContainer = obj.MerchantContainer.Relink(mapping);
+            obj.LinkedReferences.RemapLinks(mapping);
+            obj.ActivateParents?.RemapLinks(mapping);
+            obj.PersistentLocation = obj.PersistentLocation.Relink(mapping);
+            obj.LocationReference = obj.LocationReference.Relink(mapping);
+            obj.LocationRefTypes?.RemapLinks(mapping);
+            obj.Horse = obj.Horse.Relink(mapping);
+            obj.EnableParent?.RemapLinks(mapping);
+            obj.Ownership?.RemapLinks(mapping);
+            obj.Emittance = obj.Emittance.Relink(mapping);
+            obj.MultiboundReference = obj.MultiboundReference.Relink(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -2692,7 +2714,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IPlacedNpcGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public PlacedNpc Duplicate(
             IPlacedNpcGetter item,

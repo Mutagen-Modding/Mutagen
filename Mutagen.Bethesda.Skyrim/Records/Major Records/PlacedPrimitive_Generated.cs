@@ -796,6 +796,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Type = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IPlacedPrimitive obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IPlacedPrimitive item,
@@ -946,7 +953,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IPlacedPrimitiveGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

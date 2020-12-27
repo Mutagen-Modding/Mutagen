@@ -551,8 +551,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = MusicType_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => MusicTypeCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MusicTypeCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MusicTypeCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MusicTypeSetterCommon.Instance.RemapLinks(this, mapping);
         public MusicType(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -952,6 +951,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IMusicTypeInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IMusicType obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Tracks?.RemapLinks(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IMusicTypeInternal item,
@@ -1236,7 +1244,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IMusicTypeGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public MusicType Duplicate(
             IMusicTypeGetter item,

@@ -553,8 +553,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = MoveableStatic_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => MoveableStaticCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MoveableStaticCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MoveableStaticCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MoveableStaticSetterCommon.Instance.RemapLinks(this, mapping);
         public MoveableStatic(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -985,6 +984,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IMoveableStaticInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IMoveableStatic obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Model?.RemapLinks(mapping);
+            obj.Destructible?.RemapLinks(mapping);
+            obj.LoopingSound = obj.LoopingSound.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IMoveableStaticInternal item,
@@ -1284,7 +1294,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IMoveableStaticGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public MoveableStatic Duplicate(
             IMoveableStaticGetter item,

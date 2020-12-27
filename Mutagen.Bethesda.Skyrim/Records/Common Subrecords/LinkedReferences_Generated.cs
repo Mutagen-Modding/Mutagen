@@ -421,8 +421,7 @@ namespace Mutagen.Bethesda.Skyrim
             Break0 = 1
         }
         public IEnumerable<FormLinkInformation> ContainedFormLinks => LinkedReferencesCommon.Instance.GetContainedFormLinks(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LinkedReferencesCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LinkedReferencesCommon.Instance.RemapLinks(this, mapping);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LinkedReferencesSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -770,6 +769,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Reference = FormLink<ILinkedReferenceGetter>.Null;
         }
         
+        #region Mutagen
+        public void RemapLinks(ILinkedReferences obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.KeywordOrReference = obj.KeywordOrReference.Relink(mapping);
+            if (obj.Versioning.HasFlag(LinkedReferences.VersioningBreaks.Break0)) return;
+            obj.Reference = obj.Reference.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ILinkedReferences item,
@@ -916,7 +925,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(ILinkedReferencesGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

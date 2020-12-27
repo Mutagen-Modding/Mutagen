@@ -835,6 +835,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.BodyParts.Clear();
         }
         
+        #region Mutagen
+        public void RemapLinks(IBodyData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IBodyData item,
@@ -994,7 +1001,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(IBodyDataGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

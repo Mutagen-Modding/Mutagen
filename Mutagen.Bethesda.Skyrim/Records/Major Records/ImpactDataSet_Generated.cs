@@ -443,8 +443,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = ImpactDataSet_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => ImpactDataSetCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ImpactDataSetCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ImpactDataSetCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ImpactDataSetSetterCommon.Instance.RemapLinks(this, mapping);
         public ImpactDataSet(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -832,6 +831,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IImpactDataSetInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IImpactDataSet obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Impacts.RemapLinks(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IImpactDataSetInternal item,
@@ -1079,7 +1087,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IImpactDataSetGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public ImpactDataSet Duplicate(
             IImpactDataSetGetter item,

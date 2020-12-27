@@ -747,8 +747,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => AClothingCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AClothingCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AClothingCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AClothingSetterCommon.Instance.RemapLinks(this, mapping);
         public AClothing(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -1193,6 +1192,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IAClothingInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IAClothing obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Script = obj.Script.Relink(mapping);
+            obj.Enchantment = obj.Enchantment.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IAClothingInternal item,
@@ -1589,7 +1598,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(IAClothingGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public virtual AClothing Duplicate(
             IAClothingGetter item,

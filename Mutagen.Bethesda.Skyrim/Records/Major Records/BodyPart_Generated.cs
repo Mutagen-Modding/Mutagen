@@ -1357,8 +1357,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = BodyPart_Registration.TriggeringRecordType;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => BodyPartCommon.Instance.GetContainedFormLinks(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BodyPartCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BodyPartCommon.Instance.RemapLinks(this, mapping);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BodyPartSetterCommon.Instance.RemapLinks(this, mapping);
         [Flags]
         public enum BPNDDataType
         {
@@ -1832,6 +1831,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.BPNDDataTypeState = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IBodyPart obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.ExplodableDebris = obj.ExplodableDebris.Relink(mapping);
+            obj.ExplodableExplosion = obj.ExplodableExplosion.Relink(mapping);
+            obj.SeverableDebris = obj.SeverableDebris.Relink(mapping);
+            obj.SeverableExplosion = obj.SeverableExplosion.Relink(mapping);
+            obj.SeverableImpactData = obj.SeverableImpactData.Relink(mapping);
+            obj.ExplodableImpactData = obj.ExplodableImpactData.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IBodyPart item,
@@ -2197,7 +2209,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IBodyPartGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

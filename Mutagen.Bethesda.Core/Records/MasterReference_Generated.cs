@@ -724,6 +724,13 @@ namespace Mutagen.Bethesda.Internals
             item.FileSize = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IMasterReference obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IMasterReference item,
@@ -858,7 +865,6 @@ namespace Mutagen.Bethesda.Internals
             yield break;
         }
         
-        public void RemapLinks(IMasterReferenceGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

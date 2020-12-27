@@ -816,6 +816,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IColorRecordInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IColorRecord obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IColorRecordInternal item,
@@ -1060,7 +1068,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IColorRecordGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public ColorRecord Duplicate(
             IColorRecordGetter item,

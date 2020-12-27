@@ -901,8 +901,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public static readonly RecordType GrupRecordType = FootstepSet_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => FootstepSetCommon.Instance.GetContainedFormLinks(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FootstepSetCommon.Instance.RemapLinks(this, mapping);
-        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FootstepSetCommon.Instance.RemapLinks(this, mapping);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FootstepSetSetterCommon.Instance.RemapLinks(this, mapping);
         public FootstepSet(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -1306,6 +1305,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IFootstepSetInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IFootstepSet obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.WalkForwardFootsteps.RemapLinks(mapping);
+            obj.RunForwardFootsteps.RemapLinks(mapping);
+            obj.WalkForwardAlternateFootsteps.RemapLinks(mapping);
+            obj.RunForwardAlternateFootsteps.RemapLinks(mapping);
+            obj.WalkForwardAlternateFootsteps2.RemapLinks(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IFootstepSetInternal item,
@@ -1665,7 +1677,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IFootstepSetGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #region Duplicate
         public FootstepSet Duplicate(
             IFootstepSetGetter item,
