@@ -7077,315 +7077,360 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 yield return new ModContext<IOblivionMod, IGameSettingInternal, IGameSettingGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.GameSettings.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.GameSettings.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.GameSettings.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Globals)
             {
                 yield return new ModContext<IOblivionMod, IGlobalInternal, IGlobalGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Globals.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Globals.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Globals.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Classes)
             {
                 yield return new ModContext<IOblivionMod, IClassInternal, IClassGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Classes.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Classes.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Classes.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Factions)
             {
                 yield return new ModContext<IOblivionMod, IFactionInternal, IFactionGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Factions.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Factions.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Factions.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Hairs)
             {
                 yield return new ModContext<IOblivionMod, IHairInternal, IHairGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Hairs.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Hairs.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Hairs.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Eyes)
             {
                 yield return new ModContext<IOblivionMod, IEyeInternal, IEyeGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Eyes.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Eyes.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Eyes.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Races)
             {
                 yield return new ModContext<IOblivionMod, IRaceInternal, IRaceGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Races.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Races.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Races.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Sounds)
             {
                 yield return new ModContext<IOblivionMod, ISoundInternal, ISoundGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Sounds.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Sounds.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Sounds.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Skills)
             {
                 yield return new ModContext<IOblivionMod, ISkillRecordInternal, ISkillRecordGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Skills.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Skills.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Skills.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.MagicEffects)
             {
                 yield return new ModContext<IOblivionMod, IMagicEffectInternal, IMagicEffectGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.MagicEffects.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.MagicEffects.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.MagicEffects.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Scripts)
             {
                 yield return new ModContext<IOblivionMod, IScriptInternal, IScriptGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Scripts.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Scripts.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Scripts.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.LandTextures)
             {
                 yield return new ModContext<IOblivionMod, ILandTextureInternal, ILandTextureGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.LandTextures.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.LandTextures.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.LandTextures.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Enchantments)
             {
                 yield return new ModContext<IOblivionMod, IEnchantmentInternal, IEnchantmentGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Enchantments.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Enchantments.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Enchantments.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Spells)
             {
                 yield return new ModContext<IOblivionMod, ISpellUnleveledInternal, ISpellUnleveledGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Spells.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Spells.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Spells.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Birthsigns)
             {
                 yield return new ModContext<IOblivionMod, IBirthsignInternal, IBirthsignGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Birthsigns.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Birthsigns.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Birthsigns.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Activators)
             {
                 yield return new ModContext<IOblivionMod, IActivatorInternal, IActivatorGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Activators.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Activators.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Activators.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.AlchemicalApparatus)
             {
                 yield return new ModContext<IOblivionMod, IAlchemicalApparatusInternal, IAlchemicalApparatusGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.AlchemicalApparatus.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.AlchemicalApparatus.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.AlchemicalApparatus.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Armors)
             {
                 yield return new ModContext<IOblivionMod, IArmorInternal, IArmorGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Armors.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Armors.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Armors.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Books)
             {
                 yield return new ModContext<IOblivionMod, IBookInternal, IBookGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Books.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Books.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Books.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Clothes)
             {
                 yield return new ModContext<IOblivionMod, IClothingInternal, IClothingGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Clothes.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Clothes.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Clothes.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Containers)
             {
                 yield return new ModContext<IOblivionMod, IContainerInternal, IContainerGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Containers.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Containers.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Containers.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Doors)
             {
                 yield return new ModContext<IOblivionMod, IDoorInternal, IDoorGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Doors.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Doors.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Doors.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Ingredients)
             {
                 yield return new ModContext<IOblivionMod, IIngredientInternal, IIngredientGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Ingredients.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Ingredients.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Ingredients.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Lights)
             {
                 yield return new ModContext<IOblivionMod, ILightInternal, ILightGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Lights.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Lights.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Lights.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Miscellaneous)
             {
                 yield return new ModContext<IOblivionMod, IMiscellaneousInternal, IMiscellaneousGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Miscellaneous.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Miscellaneous.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Miscellaneous.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Statics)
             {
                 yield return new ModContext<IOblivionMod, IStaticInternal, IStaticGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Statics.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Statics.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Statics.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Grasses)
             {
                 yield return new ModContext<IOblivionMod, IGrassInternal, IGrassGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Grasses.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Grasses.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Grasses.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Trees)
             {
                 yield return new ModContext<IOblivionMod, ITreeInternal, ITreeGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Trees.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Trees.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Trees.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Flora)
             {
                 yield return new ModContext<IOblivionMod, IFloraInternal, IFloraGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Flora.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Flora.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Flora.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Furniture)
             {
                 yield return new ModContext<IOblivionMod, IFurnitureInternal, IFurnitureGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Furniture.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Furniture.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Furniture.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Weapons)
             {
                 yield return new ModContext<IOblivionMod, IWeaponInternal, IWeaponGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Weapons.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Weapons.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Weapons.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Ammunitions)
             {
                 yield return new ModContext<IOblivionMod, IAmmunitionInternal, IAmmunitionGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Ammunitions.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Ammunitions.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Ammunitions.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Npcs)
             {
                 yield return new ModContext<IOblivionMod, INpcInternal, INpcGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Npcs.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Npcs.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Npcs.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Creatures)
             {
                 yield return new ModContext<IOblivionMod, ICreatureInternal, ICreatureGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Creatures.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Creatures.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Creatures.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.LeveledCreatures)
             {
                 yield return new ModContext<IOblivionMod, ILeveledCreatureInternal, ILeveledCreatureGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.LeveledCreatures.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.LeveledCreatures.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.LeveledCreatures.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.SoulGems)
             {
                 yield return new ModContext<IOblivionMod, ISoulGemInternal, ISoulGemGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.SoulGems.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.SoulGems.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.SoulGems.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Keys)
             {
                 yield return new ModContext<IOblivionMod, IKeyInternal, IKeyGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Keys.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Keys.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Keys.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Potions)
             {
                 yield return new ModContext<IOblivionMod, IPotionInternal, IPotionGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Potions.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Potions.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Potions.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Subspaces)
             {
                 yield return new ModContext<IOblivionMod, ISubspaceInternal, ISubspaceGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Subspaces.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Subspaces.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Subspaces.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.SigilStones)
             {
                 yield return new ModContext<IOblivionMod, ISigilStoneInternal, ISigilStoneGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.SigilStones.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.SigilStones.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.SigilStones.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.LeveledItems)
             {
                 yield return new ModContext<IOblivionMod, ILeveledItemInternal, ILeveledItemGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.LeveledItems.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.LeveledItems.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.LeveledItems.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Weathers)
             {
                 yield return new ModContext<IOblivionMod, IWeatherInternal, IWeatherGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Weathers.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Weathers.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Weathers.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Climates)
             {
                 yield return new ModContext<IOblivionMod, IClimateInternal, IClimateGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Climates.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Climates.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Climates.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Regions)
             {
                 yield return new ModContext<IOblivionMod, IRegionInternal, IRegionGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Regions.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Regions.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Regions.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Worldspaces)
             {
                 yield return new ModContext<IOblivionMod, IWorldspaceInternal, IWorldspaceGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(r, e));
             }
             foreach (var groupItem in obj.Worldspaces)
             {
@@ -7394,7 +7439,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     linkCache: linkCache,
                     modKey: obj.ModKey,
                     parent: null,
-                    getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                    getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                    duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
                 {
                     yield return item;
                 }
@@ -7404,7 +7450,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 yield return new ModContext<IOblivionMod, IDialogTopicInternal, IDialogTopicGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.DialogTopics.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.DialogTopics.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.DialogTopics.DuplicateInAsNewRecord(r, e));
             }
             foreach (var groupItem in obj.DialogTopics)
             {
@@ -7413,7 +7460,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     linkCache: linkCache,
                     modKey: obj.ModKey,
                     parent: null,
-                    getter: (m, r) => m.DialogTopics.GetOrAddAsOverride(linkCache.Resolve<IDialogTopicGetter>(r.FormKey))))
+                    getOrAddAsOverride: (m, r) => m.DialogTopics.GetOrAddAsOverride(linkCache.Resolve<IDialogTopicGetter>(r.FormKey)),
+                    duplicateInto: (m, r, e) => m.DialogTopics.DuplicateInAsNewRecord(linkCache.Resolve<IDialogTopicGetter>(r.FormKey), e)))
                 {
                     yield return item;
                 }
@@ -7423,63 +7471,72 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 yield return new ModContext<IOblivionMod, IQuestInternal, IQuestGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Quests.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Quests.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Quests.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.IdleAnimations)
             {
                 yield return new ModContext<IOblivionMod, IIdleAnimationInternal, IIdleAnimationGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.IdleAnimations.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.IdleAnimations.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.IdleAnimations.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.AIPackages)
             {
                 yield return new ModContext<IOblivionMod, IAIPackageInternal, IAIPackageGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.AIPackages.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.AIPackages.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.AIPackages.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.CombatStyles)
             {
                 yield return new ModContext<IOblivionMod, ICombatStyleInternal, ICombatStyleGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.CombatStyles.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.CombatStyles.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.CombatStyles.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.LoadScreens)
             {
                 yield return new ModContext<IOblivionMod, ILoadScreenInternal, ILoadScreenGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.LoadScreens.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.LoadScreens.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.LoadScreens.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.LeveledSpells)
             {
                 yield return new ModContext<IOblivionMod, ILeveledSpellInternal, ILeveledSpellGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.LeveledSpells.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.LeveledSpells.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.LeveledSpells.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.AnimatedObjects)
             {
                 yield return new ModContext<IOblivionMod, IAnimatedObjectInternal, IAnimatedObjectGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.AnimatedObjects.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.AnimatedObjects.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.AnimatedObjects.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Waters)
             {
                 yield return new ModContext<IOblivionMod, IWaterInternal, IWaterGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Waters.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Waters.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Waters.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.EffectShaders)
             {
                 yield return new ModContext<IOblivionMod, IEffectShaderInternal, IEffectShaderGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.EffectShaders.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.EffectShaders.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.EffectShaders.DuplicateInAsNewRecord(r, e));
             }
         }
         
@@ -7523,7 +7580,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, IGameSettingInternal, IGameSettingGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.GameSettings.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.GameSettings.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.GameSettings.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Global":
@@ -7535,7 +7593,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, IGlobalInternal, IGlobalGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Globals.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Globals.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Globals.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Class":
@@ -7547,7 +7606,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, IClassInternal, IClassGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Classes.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Classes.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Classes.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Faction":
@@ -7559,7 +7619,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, IFactionInternal, IFactionGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Factions.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Factions.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Factions.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Hair":
@@ -7571,7 +7632,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, IHairInternal, IHairGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Hairs.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Hairs.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Hairs.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Eye":
@@ -7583,7 +7645,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, IEyeInternal, IEyeGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Eyes.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Eyes.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Eyes.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Race":
@@ -7595,7 +7658,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, IRaceInternal, IRaceGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Races.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Races.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Races.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Sound":
@@ -7607,7 +7671,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, ISoundInternal, ISoundGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Sounds.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Sounds.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Sounds.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "SkillRecord":
@@ -7619,7 +7684,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, ISkillRecordInternal, ISkillRecordGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Skills.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Skills.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Skills.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "MagicEffect":
@@ -7631,7 +7697,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, IMagicEffectInternal, IMagicEffectGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.MagicEffects.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.MagicEffects.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.MagicEffects.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Script":
@@ -7643,7 +7710,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, IScriptInternal, IScriptGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Scripts.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Scripts.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Scripts.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "LandTexture":
@@ -7655,7 +7723,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, ILandTextureInternal, ILandTextureGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.LandTextures.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.LandTextures.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.LandTextures.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Enchantment":
@@ -7667,7 +7736,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, IEnchantmentInternal, IEnchantmentGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Enchantments.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Enchantments.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Enchantments.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "SpellUnleveled":
@@ -7679,7 +7749,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, ISpellUnleveledInternal, ISpellUnleveledGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Spells.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Spells.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Spells.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Birthsign":
@@ -7691,7 +7762,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, IBirthsignInternal, IBirthsignGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Birthsigns.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Birthsigns.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Birthsigns.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Activator":
@@ -7703,7 +7775,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, IActivatorInternal, IActivatorGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Activators.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Activators.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Activators.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "AlchemicalApparatus":
@@ -7715,7 +7788,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, IAlchemicalApparatusInternal, IAlchemicalApparatusGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.AlchemicalApparatus.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.AlchemicalApparatus.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.AlchemicalApparatus.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Armor":
@@ -7727,7 +7801,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, IArmorInternal, IArmorGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Armors.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Armors.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Armors.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Book":
@@ -7739,7 +7814,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, IBookInternal, IBookGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Books.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Books.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Books.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Clothing":
@@ -7751,7 +7827,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, IClothingInternal, IClothingGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Clothes.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Clothes.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Clothes.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Container":
@@ -7763,7 +7840,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, IContainerInternal, IContainerGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Containers.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Containers.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Containers.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Door":
@@ -7775,7 +7853,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, IDoorInternal, IDoorGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Doors.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Doors.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Doors.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Ingredient":
@@ -7787,7 +7866,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, IIngredientInternal, IIngredientGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Ingredients.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Ingredients.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Ingredients.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Light":
@@ -7799,7 +7879,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, ILightInternal, ILightGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Lights.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Lights.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Lights.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Miscellaneous":
@@ -7811,7 +7892,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, IMiscellaneousInternal, IMiscellaneousGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Miscellaneous.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Miscellaneous.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Miscellaneous.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Static":
@@ -7823,7 +7905,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, IStaticInternal, IStaticGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Statics.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Statics.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Statics.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Grass":
@@ -7835,7 +7918,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, IGrassInternal, IGrassGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Grasses.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Grasses.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Grasses.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Tree":
@@ -7847,7 +7931,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, ITreeInternal, ITreeGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Trees.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Trees.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Trees.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Flora":
@@ -7859,7 +7944,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, IFloraInternal, IFloraGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Flora.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Flora.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Flora.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Furniture":
@@ -7871,7 +7957,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, IFurnitureInternal, IFurnitureGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Furniture.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Furniture.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Furniture.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Weapon":
@@ -7883,7 +7970,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, IWeaponInternal, IWeaponGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Weapons.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Weapons.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Weapons.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Ammunition":
@@ -7895,7 +7983,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, IAmmunitionInternal, IAmmunitionGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Ammunitions.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Ammunitions.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Ammunitions.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Npc":
@@ -7907,7 +7996,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, INpcInternal, INpcGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Npcs.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Npcs.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Npcs.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Creature":
@@ -7919,7 +8009,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, ICreatureInternal, ICreatureGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Creatures.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Creatures.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Creatures.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "LeveledCreature":
@@ -7931,7 +8022,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, ILeveledCreatureInternal, ILeveledCreatureGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.LeveledCreatures.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.LeveledCreatures.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.LeveledCreatures.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "SoulGem":
@@ -7943,7 +8035,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, ISoulGemInternal, ISoulGemGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.SoulGems.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.SoulGems.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.SoulGems.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Key":
@@ -7955,7 +8048,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, IKeyInternal, IKeyGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Keys.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Keys.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Keys.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Potion":
@@ -7967,7 +8061,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, IPotionInternal, IPotionGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Potions.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Potions.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Potions.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Subspace":
@@ -7979,7 +8074,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, ISubspaceInternal, ISubspaceGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Subspaces.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Subspaces.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Subspaces.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "SigilStone":
@@ -7991,7 +8087,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, ISigilStoneInternal, ISigilStoneGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.SigilStones.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.SigilStones.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.SigilStones.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "LeveledItem":
@@ -8003,7 +8100,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, ILeveledItemInternal, ILeveledItemGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.LeveledItems.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.LeveledItems.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.LeveledItems.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Weather":
@@ -8015,7 +8113,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, IWeatherInternal, IWeatherGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Weathers.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Weathers.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Weathers.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Climate":
@@ -8027,7 +8126,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, IClimateInternal, IClimateGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Climates.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Climates.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Climates.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Region":
@@ -8039,7 +8139,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, IRegionInternal, IRegionGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Regions.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Regions.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Regions.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Worldspace":
@@ -8051,7 +8152,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, IWorldspaceInternal, IWorldspaceGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "DialogTopic":
@@ -8063,7 +8165,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, IDialogTopicInternal, IDialogTopicGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.DialogTopics.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.DialogTopics.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.DialogTopics.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Quest":
@@ -8075,7 +8178,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, IQuestInternal, IQuestGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Quests.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Quests.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Quests.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "IdleAnimation":
@@ -8087,7 +8191,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, IIdleAnimationInternal, IIdleAnimationGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.IdleAnimations.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.IdleAnimations.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.IdleAnimations.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "AIPackage":
@@ -8099,7 +8204,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, IAIPackageInternal, IAIPackageGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.AIPackages.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.AIPackages.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.AIPackages.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "CombatStyle":
@@ -8111,7 +8217,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, ICombatStyleInternal, ICombatStyleGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.CombatStyles.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.CombatStyles.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.CombatStyles.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "LoadScreen":
@@ -8123,7 +8230,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, ILoadScreenInternal, ILoadScreenGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.LoadScreens.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.LoadScreens.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.LoadScreens.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "LeveledSpell":
@@ -8135,7 +8243,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, ILeveledSpellInternal, ILeveledSpellGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.LeveledSpells.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.LeveledSpells.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.LeveledSpells.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "AnimatedObject":
@@ -8147,7 +8256,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, IAnimatedObjectInternal, IAnimatedObjectGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.AnimatedObjects.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.AnimatedObjects.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.AnimatedObjects.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Water":
@@ -8159,7 +8269,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, IWaterInternal, IWaterGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Waters.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Waters.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Waters.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "EffectShader":
@@ -8171,7 +8282,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return new ModContext<IOblivionMod, IEffectShaderInternal, IEffectShaderGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.EffectShaders.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.EffectShaders.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.EffectShaders.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Cell":
@@ -8196,7 +8308,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             throwIfUnknown: throwIfUnknown,
                             modKey: obj.ModKey,
                             parent: null,
-                            getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
                         {
                             yield return item;
                         }
@@ -8224,7 +8337,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             throwIfUnknown: throwIfUnknown,
                             modKey: obj.ModKey,
                             parent: null,
-                            getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
                         {
                             yield return item;
                         }
@@ -8252,7 +8366,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             throwIfUnknown: throwIfUnknown,
                             modKey: obj.ModKey,
                             parent: null,
-                            getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
                         {
                             yield return item;
                         }
@@ -8280,7 +8395,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             throwIfUnknown: throwIfUnknown,
                             modKey: obj.ModKey,
                             parent: null,
-                            getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
                         {
                             yield return item;
                         }
@@ -8308,7 +8424,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             throwIfUnknown: throwIfUnknown,
                             modKey: obj.ModKey,
                             parent: null,
-                            getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
                         {
                             yield return item;
                         }
@@ -8336,7 +8453,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             throwIfUnknown: throwIfUnknown,
                             modKey: obj.ModKey,
                             parent: null,
-                            getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
                         {
                             yield return item;
                         }
@@ -8355,7 +8473,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             throwIfUnknown: throwIfUnknown,
                             modKey: obj.ModKey,
                             parent: null,
-                            getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
                         {
                             yield return item;
                         }
@@ -8374,7 +8493,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             throwIfUnknown: throwIfUnknown,
                             modKey: obj.ModKey,
                             parent: null,
-                            getter: (m, r) => m.DialogTopics.GetOrAddAsOverride(linkCache.Resolve<IDialogTopicGetter>(r.FormKey))))
+                            getOrAddAsOverride: (m, r) => m.DialogTopics.GetOrAddAsOverride(linkCache.Resolve<IDialogTopicGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e) => m.DialogTopics.DuplicateInAsNewRecord(linkCache.Resolve<IDialogTopicGetter>(r.FormKey), e)))
                         {
                             yield return item;
                         }
@@ -8422,7 +8542,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             throwIfUnknown: throwIfUnknown,
                             modKey: obj.ModKey,
                             parent: null,
-                            getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
                         {
                             yield return item;
                         }

@@ -109,6 +109,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor loquiAccessor,
             LoquiType loquiType,
             Action<ArgsWrapper> addGetOrAddArg,
+            Action<ArgsWrapper> duplicateInArg,
             string generic,
             bool includeType,
             bool checkType,
@@ -131,6 +132,7 @@ namespace Mutagen.Bethesda.Generation
                         args.Add($"record: {loquiAccessor}");
                         args.Add($"parent: curContext");
                         addGetOrAddArg(args);
+                        duplicateInArg(args);
                     }
                 }
                 return;
@@ -153,6 +155,7 @@ namespace Mutagen.Bethesda.Generation
                         args.Add($"record: {loquiAccessor}");
                         args.Add($"parent: curContext");
                         addGetOrAddArg(args);
+                        duplicateInArg(args);
                     }
                 }
             }
@@ -173,6 +176,7 @@ namespace Mutagen.Bethesda.Generation
                         args.Add($"modKey: {(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}");
                         args.Add("record: item");
                         args.Add($"getOrAddAsOverride: (m, r) => m.{loquiType.Name}.GetOrAddAsOverride(r)");
+                        args.Add($"duplicateInArg: (m, r, e) => m.{loquiType.Name}.DuplicateInAsNewRecord(r, e)");
                     }
                 }
             }
@@ -198,6 +202,7 @@ namespace Mutagen.Bethesda.Generation
                         args.Add("throwIfUnknown: false");
                     }
                     addGetOrAddArg(args);
+                    duplicateInArg(args);
                 }
                 using (new BraceWrapper(fg))
                 {
@@ -228,7 +233,8 @@ namespace Mutagen.Bethesda.Generation
                 }
                 if (obj.GetObjectType() == ObjectType.Record)
                 {
-                    args.Add($"Func<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, {obj.Interface(getter: true)}, {obj.Interface(getter: false)}> getter");
+                    args.Add($"Func<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, {obj.Interface(getter: true)}, {obj.Interface(getter: false)}> getOrAddAsOverride");
+                    args.Add($"Func<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, {obj.Interface(getter: true)}, string?, {obj.Interface(getter: false)}> duplicateInto");
                 }
             }
             using (new BraceWrapper(fg))
@@ -240,7 +246,8 @@ namespace Mutagen.Bethesda.Generation
                     {
                         args.Add($"{(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}");
                         args.Add("record: obj");
-                        args.AddPassArg("getter");
+                        args.AddPassArg("getOrAddAsOverride");
+                        args.AddPassArg("duplicateInto");
                         args.AddPassArg("parent");
                     }
                 }
@@ -341,7 +348,8 @@ namespace Mutagen.Bethesda.Generation
                 args.Add($"bool throwIfUnknown");
                 if (obj.GetObjectType() == ObjectType.Record)
                 {
-                    args.Add($"Func<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, {obj.Interface(getter: true)}, {obj.Interface(getter: false)}> getter");
+                    args.Add($"Func<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, {obj.Interface(getter: true)}, {obj.Interface(getter: false)}> getOrAddAsOverride");
+                    args.Add($"Func<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, {obj.Interface(getter: true)}, string?, {obj.Interface(getter: false)}> duplicateInto");
                 }
             }
             using (new BraceWrapper(fg))
@@ -353,7 +361,8 @@ namespace Mutagen.Bethesda.Generation
                     {
                         args.Add($"{(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}");
                         args.Add("record: obj");
-                        args.AddPassArg("getter");
+                        args.AddPassArg("getOrAddAsOverride");
+                        args.AddPassArg("duplicateInto");
                         args.AddPassArg("parent");
                     }
                 }
@@ -389,7 +398,8 @@ namespace Mutagen.Bethesda.Generation
                             }
                             if (obj.GetObjectType() == ObjectType.Record)
                             {
-                                args.AddPassArg("getter");
+                                args.AddPassArg("getOrAddAsOverride");
+                                args.AddPassArg("duplicateInto");
                             }
                         }
                         using (new BraceWrapper(fg))
@@ -422,7 +432,8 @@ namespace Mutagen.Bethesda.Generation
                             }
                             if (obj.GetObjectType() == ObjectType.Record)
                             {
-                                args.AddPassArg("getter");
+                                args.AddPassArg("getOrAddAsOverride");
+                                args.AddPassArg("duplicateInto");
                             }
                         }
                         using (new BraceWrapper(fg))
@@ -698,7 +709,8 @@ namespace Mutagen.Bethesda.Generation
                         {
                             args.Add("modKey: obj.ModKey");
                             args.Add("record: item");
-                            args.Add($"getter: (m, r) => m.{group.Name}.GetOrAddAsOverride(r)");
+                            args.Add($"getOrAddAsOverride: (m, r) => m.{group.Name}.GetOrAddAsOverride(r)");
+                            args.Add($"duplicateInto: (m, r, e) => m.{group.Name}.DuplicateInAsNewRecord(r, e)");
                         }
                     }
                 }
@@ -723,7 +735,8 @@ namespace Mutagen.Bethesda.Generation
                             }
                             args.Add($"modKey: {(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}");
                             args.Add($"parent: {(obj.GetObjectType() == ObjectType.Mod ? "null" : "curContext")}");
-                            args.Add($"getter: (m, r) => m.{field.Name}.GetOrAddAsOverride(linkCache.Resolve<{group.GetGroupTarget().Interface(getter: true, internalInterface: true)}>(r.FormKey))");
+                            args.Add($"getOrAddAsOverride: (m, r) => m.{field.Name}.GetOrAddAsOverride(linkCache.Resolve<{groupTargetGetter}>(r.FormKey))");
+                            args.Add($"duplicateInto: (m, r, e) => m.{field.Name}.DuplicateInAsNewRecord(linkCache.Resolve<{groupTargetGetter}>(r.FormKey), e)");
                         }
                         using (new BraceWrapper(fieldGen))
                         {
@@ -774,14 +787,28 @@ namespace Mutagen.Bethesda.Generation
                     {
                         args.Add(subFg =>
                         {
-                            subFg.AppendLine($"getter: (m, r) =>");
+                            subFg.AppendLine($"getOrAddAsOverride: (m, r) =>");
                             using (new BraceWrapper(subFg))
                             {
-                                subFg.AppendLine($"var baseRec = getter(m, linkCache.Resolve<{obj.Interface(getter: true)}>(obj.FormKey));");
+                                subFg.AppendLine($"var baseRec = getOrAddAsOverride(m, linkCache.Resolve<{obj.Interface(getter: true)}>(obj.FormKey));");
                                 subFg.AppendLine($"if (baseRec.{loqui.Name} != null) return baseRec.{loqui.Name};");
                                 subFg.AppendLine($"var copy = r.DeepCopy(ModContextExt.{loqui.TargetObjectGeneration.Name}CopyMask);");
                                 subFg.AppendLine($"baseRec.{loqui.Name} = copy;");
                                 subFg.AppendLine($"return copy;");
+                            }
+                        });
+                    },
+                    duplicateInArg: (args) =>
+                    {
+                        args.Add(subFg =>
+                        {
+                            subFg.AppendLine($"duplicateInto: (m, r, e) =>");
+                            using (new BraceWrapper(subFg))
+                            {
+                                subFg.AppendLine($"var baseRec = getOrAddAsOverride(m, linkCache.Resolve<{obj.Interface(getter: true)}>(obj.FormKey));");
+                                subFg.AppendLine($"var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.{loqui.TargetObjectGeneration.Name}CopyMask);");
+                                subFg.AppendLine($"baseRec.{loqui.Name} = dupRec;");
+                                subFg.AppendLine($"return dupRec;");
                             }
                         });
                     });
@@ -851,7 +878,8 @@ namespace Mutagen.Bethesda.Generation
                         args.AddPassArg("linkCache");
                         args.Add("throwIfUnknown: false");
                         args.Add("worldspace: obj");
-                        args.AddPassArg("getter");
+                        args.AddPassArg("getOrAddAsOverride");
+                        args.AddPassArg("duplicateInto");
                     }
                     using (new BraceWrapper(fieldGen))
                     {
@@ -882,12 +910,25 @@ namespace Mutagen.Bethesda.Generation
                                         {
                                             args.Add(subFg =>
                                             {
-                                                subFg.AppendLine($"getter: (m, r) =>");
+                                                subFg.AppendLine($"getOrAddAsOverride: (m, r) =>");
                                                 using (new BraceWrapper(subFg))
                                                 {
                                                     subFg.AppendLine($"var copy = ({contLoqui.TypeName()})(({contLoqui.Interface(getter: true)})r).DeepCopy();");
-                                                    subFg.AppendLine($"getter(m, linkCache.Resolve<{obj.Interface(getter: true)}>(obj.FormKey)).{cont.Name}.Add(copy);");
+                                                    subFg.AppendLine($"getOrAddAsOverride(m, linkCache.Resolve<{obj.Interface(getter: true)}>(obj.FormKey)).{cont.Name}.Add(copy);");
                                                     subFg.AppendLine($"return copy;");
+                                                }
+                                            });
+                                        },
+                                        duplicateInArg: (args) =>
+                                        {
+                                            args.Add(subFg =>
+                                            {
+                                                subFg.AppendLine($"duplicateInto: (m, r, e) =>");
+                                                using (new BraceWrapper(subFg))
+                                                {
+                                                    subFg.AppendLine($"var dup = ({contLoqui.TypeName()})(({contLoqui.Interface(getter: true)})r).Duplicate(m.GetNextFormKey(e));");
+                                                    subFg.AppendLine($"getOrAddAsOverride(m, linkCache.Resolve<{obj.Interface(getter: true)}>(obj.FormKey)).{cont.Name}.Add(dup);");
+                                                    subFg.AppendLine($"return dup;");
                                                 }
                                             });
                                         });

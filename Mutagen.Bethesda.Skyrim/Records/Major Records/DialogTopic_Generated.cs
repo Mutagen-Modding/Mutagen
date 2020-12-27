@@ -1952,12 +1952,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILinkCache linkCache,
             ModKey modKey,
             IModContext? parent,
-            Func<ISkyrimMod, IDialogTopicGetter, IDialogTopic> getter)
+            Func<ISkyrimMod, IDialogTopicGetter, IDialogTopic> getOrAddAsOverride,
+            Func<ISkyrimMod, IDialogTopicGetter, string?, IDialogTopic> duplicateInto)
         {
             var curContext = new ModContext<ISkyrimMod, IDialogTopic, IDialogTopicGetter>(
                 modKey,
                 record: obj,
-                getter: getter,
+                getOrAddAsOverride: getOrAddAsOverride,
+                duplicateInto: duplicateInto,
                 parent: parent);
             foreach (var subItem in obj.Responses)
             {
@@ -1965,11 +1967,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     modKey: modKey,
                     record: subItem,
                     parent: curContext,
-                    getter: (m, r) =>
+                    getOrAddAsOverride: (m, r) =>
                     {
                         var copy = (DialogResponses)((IDialogResponsesGetter)r).DeepCopy();
-                        getter(m, linkCache.Resolve<IDialogTopicGetter>(obj.FormKey)).Responses.Add(copy);
+                        getOrAddAsOverride(m, linkCache.Resolve<IDialogTopicGetter>(obj.FormKey)).Responses.Add(copy);
                         return copy;
+                    },
+                    duplicateInto: (m, r, e) =>
+                    {
+                        var dup = (DialogResponses)((IDialogResponsesGetter)r).Duplicate(m.GetNextFormKey(e));
+                        getOrAddAsOverride(m, linkCache.Resolve<IDialogTopicGetter>(obj.FormKey)).Responses.Add(dup);
+                        return dup;
                     });
             }
         }
@@ -1981,12 +1989,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ModKey modKey,
             IModContext? parent,
             bool throwIfUnknown,
-            Func<ISkyrimMod, IDialogTopicGetter, IDialogTopic> getter)
+            Func<ISkyrimMod, IDialogTopicGetter, IDialogTopic> getOrAddAsOverride,
+            Func<ISkyrimMod, IDialogTopicGetter, string?, IDialogTopic> duplicateInto)
         {
             var curContext = new ModContext<ISkyrimMod, IDialogTopic, IDialogTopicGetter>(
                 modKey,
                 record: obj,
-                getter: getter,
+                getOrAddAsOverride: getOrAddAsOverride,
+                duplicateInto: duplicateInto,
                 parent: parent);
             switch (type.Name)
             {
@@ -2001,7 +2011,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         linkCache: linkCache,
                         modKey: modKey,
                         parent: parent,
-                        getter: getter))
+                        getOrAddAsOverride: getOrAddAsOverride,
+                        duplicateInto: duplicateInto))
                     {
                         yield return item;
                     }
@@ -2014,7 +2025,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         linkCache: linkCache,
                         modKey: modKey,
                         parent: parent,
-                        getter: getter))
+                        getOrAddAsOverride: getOrAddAsOverride,
+                        duplicateInto: duplicateInto))
                     {
                         yield return item;
                     }
@@ -2031,11 +2043,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
-                                getter: (m, r) =>
+                                getOrAddAsOverride: (m, r) =>
                                 {
                                     var copy = (DialogResponses)((IDialogResponsesGetter)r).DeepCopy();
-                                    getter(m, linkCache.Resolve<IDialogTopicGetter>(obj.FormKey)).Responses.Add(copy);
+                                    getOrAddAsOverride(m, linkCache.Resolve<IDialogTopicGetter>(obj.FormKey)).Responses.Add(copy);
                                     return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (DialogResponses)((IDialogResponsesGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<IDialogTopicGetter>(obj.FormKey)).Responses.Add(dup);
+                                    return dup;
                                 });
                         }
                     }

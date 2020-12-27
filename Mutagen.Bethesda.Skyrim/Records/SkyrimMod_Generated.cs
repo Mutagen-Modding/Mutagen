@@ -13661,378 +13661,432 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return new ModContext<ISkyrimMod, IGameSettingInternal, IGameSettingGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.GameSettings.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.GameSettings.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.GameSettings.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Keywords)
             {
                 yield return new ModContext<ISkyrimMod, IKeywordInternal, IKeywordGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Keywords.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Keywords.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Keywords.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.LocationReferenceTypes)
             {
                 yield return new ModContext<ISkyrimMod, ILocationReferenceTypeInternal, ILocationReferenceTypeGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.LocationReferenceTypes.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.LocationReferenceTypes.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.LocationReferenceTypes.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Actions)
             {
                 yield return new ModContext<ISkyrimMod, IActionRecordInternal, IActionRecordGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Actions.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Actions.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Actions.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.TextureSets)
             {
                 yield return new ModContext<ISkyrimMod, ITextureSetInternal, ITextureSetGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.TextureSets.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.TextureSets.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.TextureSets.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Globals)
             {
                 yield return new ModContext<ISkyrimMod, IGlobalInternal, IGlobalGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Globals.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Globals.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Globals.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Classes)
             {
                 yield return new ModContext<ISkyrimMod, IClassInternal, IClassGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Classes.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Classes.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Classes.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Factions)
             {
                 yield return new ModContext<ISkyrimMod, IFactionInternal, IFactionGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Factions.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Factions.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Factions.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.HeadParts)
             {
                 yield return new ModContext<ISkyrimMod, IHeadPartInternal, IHeadPartGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.HeadParts.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.HeadParts.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.HeadParts.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Hairs)
             {
                 yield return new ModContext<ISkyrimMod, IHairInternal, IHairGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Hairs.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Hairs.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Hairs.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Eyes)
             {
                 yield return new ModContext<ISkyrimMod, IEyesInternal, IEyesGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Eyes.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Eyes.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Eyes.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Races)
             {
                 yield return new ModContext<ISkyrimMod, IRaceInternal, IRaceGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Races.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Races.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Races.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.SoundMarkers)
             {
                 yield return new ModContext<ISkyrimMod, ISoundMarkerInternal, ISoundMarkerGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.SoundMarkers.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.SoundMarkers.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.SoundMarkers.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.AcousticSpaces)
             {
                 yield return new ModContext<ISkyrimMod, IAcousticSpaceInternal, IAcousticSpaceGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.AcousticSpaces.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.AcousticSpaces.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.AcousticSpaces.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.MagicEffects)
             {
                 yield return new ModContext<ISkyrimMod, IMagicEffectInternal, IMagicEffectGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.MagicEffects.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.MagicEffects.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.MagicEffects.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.LandscapeTextures)
             {
                 yield return new ModContext<ISkyrimMod, ILandscapeTextureInternal, ILandscapeTextureGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.LandscapeTextures.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.LandscapeTextures.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.LandscapeTextures.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.ObjectEffects)
             {
                 yield return new ModContext<ISkyrimMod, IObjectEffectInternal, IObjectEffectGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.ObjectEffects.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.ObjectEffects.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.ObjectEffects.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Spells)
             {
                 yield return new ModContext<ISkyrimMod, ISpellInternal, ISpellGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Spells.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Spells.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Spells.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Scrolls)
             {
                 yield return new ModContext<ISkyrimMod, IScrollInternal, IScrollGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Scrolls.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Scrolls.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Scrolls.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Activators)
             {
                 yield return new ModContext<ISkyrimMod, IActivatorInternal, IActivatorGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Activators.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Activators.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Activators.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.TalkingActivators)
             {
                 yield return new ModContext<ISkyrimMod, ITalkingActivatorInternal, ITalkingActivatorGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.TalkingActivators.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.TalkingActivators.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.TalkingActivators.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Armors)
             {
                 yield return new ModContext<ISkyrimMod, IArmorInternal, IArmorGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Armors.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Armors.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Armors.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Books)
             {
                 yield return new ModContext<ISkyrimMod, IBookInternal, IBookGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Books.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Books.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Books.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Containers)
             {
                 yield return new ModContext<ISkyrimMod, IContainerInternal, IContainerGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Containers.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Containers.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Containers.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Doors)
             {
                 yield return new ModContext<ISkyrimMod, IDoorInternal, IDoorGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Doors.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Doors.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Doors.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Ingredients)
             {
                 yield return new ModContext<ISkyrimMod, IIngredientInternal, IIngredientGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Ingredients.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Ingredients.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Ingredients.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Lights)
             {
                 yield return new ModContext<ISkyrimMod, ILightInternal, ILightGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Lights.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Lights.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Lights.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.MiscItems)
             {
                 yield return new ModContext<ISkyrimMod, IMiscItemInternal, IMiscItemGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.MiscItems.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.MiscItems.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.MiscItems.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.AlchemicalApparatuses)
             {
                 yield return new ModContext<ISkyrimMod, IAlchemicalApparatusInternal, IAlchemicalApparatusGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.AlchemicalApparatuses.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.AlchemicalApparatuses.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.AlchemicalApparatuses.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Statics)
             {
                 yield return new ModContext<ISkyrimMod, IStaticInternal, IStaticGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Statics.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Statics.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Statics.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.MoveableStatics)
             {
                 yield return new ModContext<ISkyrimMod, IMoveableStaticInternal, IMoveableStaticGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.MoveableStatics.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.MoveableStatics.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.MoveableStatics.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Grasses)
             {
                 yield return new ModContext<ISkyrimMod, IGrassInternal, IGrassGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Grasses.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Grasses.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Grasses.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Trees)
             {
                 yield return new ModContext<ISkyrimMod, ITreeInternal, ITreeGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Trees.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Trees.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Trees.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Florae)
             {
                 yield return new ModContext<ISkyrimMod, IFloraInternal, IFloraGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Florae.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Florae.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Florae.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Furniture)
             {
                 yield return new ModContext<ISkyrimMod, IFurnitureInternal, IFurnitureGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Furniture.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Furniture.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Furniture.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Weapons)
             {
                 yield return new ModContext<ISkyrimMod, IWeaponInternal, IWeaponGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Weapons.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Weapons.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Weapons.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Ammunitions)
             {
                 yield return new ModContext<ISkyrimMod, IAmmunitionInternal, IAmmunitionGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Ammunitions.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Ammunitions.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Ammunitions.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Npcs)
             {
                 yield return new ModContext<ISkyrimMod, INpcInternal, INpcGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Npcs.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Npcs.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Npcs.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.LeveledNpcs)
             {
                 yield return new ModContext<ISkyrimMod, ILeveledNpcInternal, ILeveledNpcGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.LeveledNpcs.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.LeveledNpcs.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.LeveledNpcs.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Keys)
             {
                 yield return new ModContext<ISkyrimMod, IKeyInternal, IKeyGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Keys.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Keys.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Keys.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Ingestibles)
             {
                 yield return new ModContext<ISkyrimMod, IIngestibleInternal, IIngestibleGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Ingestibles.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Ingestibles.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Ingestibles.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.IdleMarkers)
             {
                 yield return new ModContext<ISkyrimMod, IIdleMarkerInternal, IIdleMarkerGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.IdleMarkers.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.IdleMarkers.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.IdleMarkers.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.ConstructibleObjects)
             {
                 yield return new ModContext<ISkyrimMod, IConstructibleObjectInternal, IConstructibleObjectGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.ConstructibleObjects.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.ConstructibleObjects.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.ConstructibleObjects.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Projectiles)
             {
                 yield return new ModContext<ISkyrimMod, IProjectileInternal, IProjectileGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Projectiles.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Projectiles.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Projectiles.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Hazards)
             {
                 yield return new ModContext<ISkyrimMod, IHazardInternal, IHazardGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Hazards.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Hazards.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Hazards.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.SoulGems)
             {
                 yield return new ModContext<ISkyrimMod, ISoulGemInternal, ISoulGemGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.SoulGems.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.SoulGems.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.SoulGems.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.LeveledItems)
             {
                 yield return new ModContext<ISkyrimMod, ILeveledItemInternal, ILeveledItemGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.LeveledItems.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.LeveledItems.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.LeveledItems.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Weathers)
             {
                 yield return new ModContext<ISkyrimMod, IWeatherInternal, IWeatherGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Weathers.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Weathers.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Weathers.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Climates)
             {
                 yield return new ModContext<ISkyrimMod, IClimateInternal, IClimateGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Climates.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Climates.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Climates.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.ShaderParticleGeometries)
             {
                 yield return new ModContext<ISkyrimMod, IShaderParticleGeometryInternal, IShaderParticleGeometryGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.ShaderParticleGeometries.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.ShaderParticleGeometries.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.ShaderParticleGeometries.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.VisualEffects)
             {
                 yield return new ModContext<ISkyrimMod, IVisualEffectInternal, IVisualEffectGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.VisualEffects.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.VisualEffects.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.VisualEffects.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Regions)
             {
                 yield return new ModContext<ISkyrimMod, IRegionInternal, IRegionGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Regions.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Regions.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Regions.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.NavigationMeshInfoMaps)
             {
                 yield return new ModContext<ISkyrimMod, INavigationMeshInfoMapInternal, INavigationMeshInfoMapGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.NavigationMeshInfoMaps.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.NavigationMeshInfoMaps.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.NavigationMeshInfoMaps.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Worldspaces)
             {
                 yield return new ModContext<ISkyrimMod, IWorldspaceInternal, IWorldspaceGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(r, e));
             }
             foreach (var groupItem in obj.Worldspaces)
             {
@@ -14041,7 +14095,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     linkCache: linkCache,
                     modKey: obj.ModKey,
                     parent: null,
-                    getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                    getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                    duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
                 {
                     yield return item;
                 }
@@ -14051,7 +14106,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return new ModContext<ISkyrimMod, IDialogTopicInternal, IDialogTopicGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.DialogTopics.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.DialogTopics.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.DialogTopics.DuplicateInAsNewRecord(r, e));
             }
             foreach (var groupItem in obj.DialogTopics)
             {
@@ -14060,7 +14116,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     linkCache: linkCache,
                     modKey: obj.ModKey,
                     parent: null,
-                    getter: (m, r) => m.DialogTopics.GetOrAddAsOverride(linkCache.Resolve<IDialogTopicGetter>(r.FormKey))))
+                    getOrAddAsOverride: (m, r) => m.DialogTopics.GetOrAddAsOverride(linkCache.Resolve<IDialogTopicGetter>(r.FormKey)),
+                    duplicateInto: (m, r, e) => m.DialogTopics.DuplicateInAsNewRecord(linkCache.Resolve<IDialogTopicGetter>(r.FormKey), e)))
                 {
                     yield return item;
                 }
@@ -14070,399 +14127,456 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return new ModContext<ISkyrimMod, IQuestInternal, IQuestGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Quests.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Quests.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Quests.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.IdleAnimations)
             {
                 yield return new ModContext<ISkyrimMod, IIdleAnimationInternal, IIdleAnimationGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.IdleAnimations.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.IdleAnimations.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.IdleAnimations.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Packages)
             {
                 yield return new ModContext<ISkyrimMod, IPackageInternal, IPackageGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Packages.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Packages.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Packages.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.CombatStyles)
             {
                 yield return new ModContext<ISkyrimMod, ICombatStyleInternal, ICombatStyleGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.CombatStyles.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.CombatStyles.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.CombatStyles.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.LoadScreens)
             {
                 yield return new ModContext<ISkyrimMod, ILoadScreenInternal, ILoadScreenGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.LoadScreens.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.LoadScreens.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.LoadScreens.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.LeveledSpells)
             {
                 yield return new ModContext<ISkyrimMod, ILeveledSpellInternal, ILeveledSpellGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.LeveledSpells.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.LeveledSpells.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.LeveledSpells.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.AnimatedObjects)
             {
                 yield return new ModContext<ISkyrimMod, IAnimatedObjectInternal, IAnimatedObjectGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.AnimatedObjects.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.AnimatedObjects.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.AnimatedObjects.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Waters)
             {
                 yield return new ModContext<ISkyrimMod, IWaterInternal, IWaterGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Waters.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Waters.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Waters.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.EffectShaders)
             {
                 yield return new ModContext<ISkyrimMod, IEffectShaderInternal, IEffectShaderGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.EffectShaders.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.EffectShaders.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.EffectShaders.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Explosions)
             {
                 yield return new ModContext<ISkyrimMod, IExplosionInternal, IExplosionGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Explosions.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Explosions.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Explosions.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Debris)
             {
                 yield return new ModContext<ISkyrimMod, IDebrisInternal, IDebrisGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Debris.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Debris.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Debris.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.ImageSpaces)
             {
                 yield return new ModContext<ISkyrimMod, IImageSpaceInternal, IImageSpaceGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.ImageSpaces.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.ImageSpaces.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.ImageSpaces.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.ImageSpaceAdapters)
             {
                 yield return new ModContext<ISkyrimMod, IImageSpaceAdapterInternal, IImageSpaceAdapterGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.ImageSpaceAdapters.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.ImageSpaceAdapters.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.ImageSpaceAdapters.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.FormLists)
             {
                 yield return new ModContext<ISkyrimMod, IFormListInternal, IFormListGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.FormLists.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.FormLists.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.FormLists.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Perks)
             {
                 yield return new ModContext<ISkyrimMod, IPerkInternal, IPerkGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Perks.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Perks.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Perks.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.BodyParts)
             {
                 yield return new ModContext<ISkyrimMod, IBodyPartDataInternal, IBodyPartDataGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.BodyParts.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.BodyParts.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.BodyParts.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.AddonNodes)
             {
                 yield return new ModContext<ISkyrimMod, IAddonNodeInternal, IAddonNodeGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.AddonNodes.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.AddonNodes.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.AddonNodes.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.ActorValueInformation)
             {
                 yield return new ModContext<ISkyrimMod, IActorValueInformationInternal, IActorValueInformationGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.ActorValueInformation.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.ActorValueInformation.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.ActorValueInformation.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.CameraShots)
             {
                 yield return new ModContext<ISkyrimMod, ICameraShotInternal, ICameraShotGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.CameraShots.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.CameraShots.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.CameraShots.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.CameraPaths)
             {
                 yield return new ModContext<ISkyrimMod, ICameraPathInternal, ICameraPathGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.CameraPaths.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.CameraPaths.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.CameraPaths.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.VoiceTypes)
             {
                 yield return new ModContext<ISkyrimMod, IVoiceTypeInternal, IVoiceTypeGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.VoiceTypes.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.VoiceTypes.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.VoiceTypes.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.MaterialTypes)
             {
                 yield return new ModContext<ISkyrimMod, IMaterialTypeInternal, IMaterialTypeGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.MaterialTypes.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.MaterialTypes.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.MaterialTypes.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Impacts)
             {
                 yield return new ModContext<ISkyrimMod, IImpactInternal, IImpactGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Impacts.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Impacts.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Impacts.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.ImpactDataSets)
             {
                 yield return new ModContext<ISkyrimMod, IImpactDataSetInternal, IImpactDataSetGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.ImpactDataSets.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.ImpactDataSets.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.ImpactDataSets.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.ArmorAddons)
             {
                 yield return new ModContext<ISkyrimMod, IArmorAddonInternal, IArmorAddonGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.ArmorAddons.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.ArmorAddons.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.ArmorAddons.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.EncounterZones)
             {
                 yield return new ModContext<ISkyrimMod, IEncounterZoneInternal, IEncounterZoneGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.EncounterZones.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.EncounterZones.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.EncounterZones.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Locations)
             {
                 yield return new ModContext<ISkyrimMod, ILocationInternal, ILocationGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Locations.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Locations.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Locations.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Messages)
             {
                 yield return new ModContext<ISkyrimMod, IMessageInternal, IMessageGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Messages.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Messages.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Messages.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.DefaultObjectManagers)
             {
                 yield return new ModContext<ISkyrimMod, IDefaultObjectManagerInternal, IDefaultObjectManagerGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.DefaultObjectManagers.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.DefaultObjectManagers.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.DefaultObjectManagers.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.LightingTemplates)
             {
                 yield return new ModContext<ISkyrimMod, ILightingTemplateInternal, ILightingTemplateGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.LightingTemplates.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.LightingTemplates.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.LightingTemplates.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.MusicTypes)
             {
                 yield return new ModContext<ISkyrimMod, IMusicTypeInternal, IMusicTypeGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.MusicTypes.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.MusicTypes.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.MusicTypes.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Footsteps)
             {
                 yield return new ModContext<ISkyrimMod, IFootstepInternal, IFootstepGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Footsteps.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Footsteps.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Footsteps.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.FootstepSets)
             {
                 yield return new ModContext<ISkyrimMod, IFootstepSetInternal, IFootstepSetGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.FootstepSets.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.FootstepSets.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.FootstepSets.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.StoryManagerBranchNodes)
             {
                 yield return new ModContext<ISkyrimMod, IStoryManagerBranchNodeInternal, IStoryManagerBranchNodeGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.StoryManagerBranchNodes.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.StoryManagerBranchNodes.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.StoryManagerBranchNodes.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.StoryManagerQuestNodes)
             {
                 yield return new ModContext<ISkyrimMod, IStoryManagerQuestNodeInternal, IStoryManagerQuestNodeGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.StoryManagerQuestNodes.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.StoryManagerQuestNodes.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.StoryManagerQuestNodes.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.StoryManagerEventNodes)
             {
                 yield return new ModContext<ISkyrimMod, IStoryManagerEventNodeInternal, IStoryManagerEventNodeGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.StoryManagerEventNodes.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.StoryManagerEventNodes.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.StoryManagerEventNodes.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.DialogBranches)
             {
                 yield return new ModContext<ISkyrimMod, IDialogBranchInternal, IDialogBranchGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.DialogBranches.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.DialogBranches.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.DialogBranches.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.MusicTracks)
             {
                 yield return new ModContext<ISkyrimMod, IMusicTrackInternal, IMusicTrackGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.MusicTracks.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.MusicTracks.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.MusicTracks.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.DialogViews)
             {
                 yield return new ModContext<ISkyrimMod, IDialogViewInternal, IDialogViewGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.DialogViews.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.DialogViews.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.DialogViews.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.WordsOfPower)
             {
                 yield return new ModContext<ISkyrimMod, IWordOfPowerInternal, IWordOfPowerGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.WordsOfPower.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.WordsOfPower.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.WordsOfPower.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Shouts)
             {
                 yield return new ModContext<ISkyrimMod, IShoutInternal, IShoutGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Shouts.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Shouts.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Shouts.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.EquipTypes)
             {
                 yield return new ModContext<ISkyrimMod, IEquipTypeInternal, IEquipTypeGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.EquipTypes.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.EquipTypes.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.EquipTypes.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Relationships)
             {
                 yield return new ModContext<ISkyrimMod, IRelationshipInternal, IRelationshipGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Relationships.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Relationships.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Relationships.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Scenes)
             {
                 yield return new ModContext<ISkyrimMod, ISceneInternal, ISceneGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Scenes.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Scenes.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Scenes.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.AssociationTypes)
             {
                 yield return new ModContext<ISkyrimMod, IAssociationTypeInternal, IAssociationTypeGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.AssociationTypes.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.AssociationTypes.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.AssociationTypes.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Outfits)
             {
                 yield return new ModContext<ISkyrimMod, IOutfitInternal, IOutfitGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Outfits.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Outfits.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Outfits.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.ArtObjects)
             {
                 yield return new ModContext<ISkyrimMod, IArtObjectInternal, IArtObjectGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.ArtObjects.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.ArtObjects.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.ArtObjects.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.MaterialObjects)
             {
                 yield return new ModContext<ISkyrimMod, IMaterialObjectInternal, IMaterialObjectGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.MaterialObjects.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.MaterialObjects.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.MaterialObjects.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.MovementTypes)
             {
                 yield return new ModContext<ISkyrimMod, IMovementTypeInternal, IMovementTypeGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.MovementTypes.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.MovementTypes.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.MovementTypes.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.SoundDescriptors)
             {
                 yield return new ModContext<ISkyrimMod, ISoundDescriptorInternal, ISoundDescriptorGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.SoundDescriptors.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.SoundDescriptors.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.SoundDescriptors.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.DualCastData)
             {
                 yield return new ModContext<ISkyrimMod, IDualCastDataInternal, IDualCastDataGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.DualCastData.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.DualCastData.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.DualCastData.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.SoundCategories)
             {
                 yield return new ModContext<ISkyrimMod, ISoundCategoryInternal, ISoundCategoryGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.SoundCategories.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.SoundCategories.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.SoundCategories.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.SoundOutputModels)
             {
                 yield return new ModContext<ISkyrimMod, ISoundOutputModelInternal, ISoundOutputModelGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.SoundOutputModels.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.SoundOutputModels.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.SoundOutputModels.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.CollisionLayers)
             {
                 yield return new ModContext<ISkyrimMod, ICollisionLayerInternal, ICollisionLayerGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.CollisionLayers.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.CollisionLayers.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.CollisionLayers.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.Colors)
             {
                 yield return new ModContext<ISkyrimMod, IColorRecordInternal, IColorRecordGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.Colors.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.Colors.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Colors.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.ReverbParameters)
             {
                 yield return new ModContext<ISkyrimMod, IReverbParametersInternal, IReverbParametersGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.ReverbParameters.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.ReverbParameters.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.ReverbParameters.DuplicateInAsNewRecord(r, e));
             }
             foreach (var item in obj.VolumetricLightings)
             {
                 yield return new ModContext<ISkyrimMod, IVolumetricLightingInternal, IVolumetricLightingGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getter: (m, r) => m.VolumetricLightings.GetOrAddAsOverride(r));
+                    getOrAddAsOverride: (m, r) => m.VolumetricLightings.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.VolumetricLightings.DuplicateInAsNewRecord(r, e));
             }
         }
         
@@ -14506,7 +14620,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IGameSettingInternal, IGameSettingGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.GameSettings.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.GameSettings.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.GameSettings.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Keyword":
@@ -14518,7 +14633,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IKeywordInternal, IKeywordGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Keywords.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Keywords.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Keywords.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "LocationReferenceType":
@@ -14530,7 +14646,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, ILocationReferenceTypeInternal, ILocationReferenceTypeGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.LocationReferenceTypes.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.LocationReferenceTypes.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.LocationReferenceTypes.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "ActionRecord":
@@ -14542,7 +14659,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IActionRecordInternal, IActionRecordGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Actions.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Actions.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Actions.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "TextureSet":
@@ -14554,7 +14672,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, ITextureSetInternal, ITextureSetGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.TextureSets.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.TextureSets.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.TextureSets.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Global":
@@ -14566,7 +14685,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IGlobalInternal, IGlobalGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Globals.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Globals.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Globals.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Class":
@@ -14578,7 +14698,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IClassInternal, IClassGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Classes.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Classes.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Classes.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Faction":
@@ -14590,7 +14711,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IFactionInternal, IFactionGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Factions.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Factions.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Factions.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "HeadPart":
@@ -14602,7 +14724,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IHeadPartInternal, IHeadPartGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.HeadParts.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.HeadParts.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.HeadParts.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Hair":
@@ -14614,7 +14737,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IHairInternal, IHairGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Hairs.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Hairs.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Hairs.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Eyes":
@@ -14626,7 +14750,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IEyesInternal, IEyesGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Eyes.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Eyes.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Eyes.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Race":
@@ -14638,7 +14763,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IRaceInternal, IRaceGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Races.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Races.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Races.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "SoundMarker":
@@ -14650,7 +14776,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, ISoundMarkerInternal, ISoundMarkerGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.SoundMarkers.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.SoundMarkers.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.SoundMarkers.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "AcousticSpace":
@@ -14662,7 +14789,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IAcousticSpaceInternal, IAcousticSpaceGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.AcousticSpaces.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.AcousticSpaces.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.AcousticSpaces.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "MagicEffect":
@@ -14674,7 +14802,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IMagicEffectInternal, IMagicEffectGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.MagicEffects.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.MagicEffects.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.MagicEffects.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "LandscapeTexture":
@@ -14686,7 +14815,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, ILandscapeTextureInternal, ILandscapeTextureGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.LandscapeTextures.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.LandscapeTextures.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.LandscapeTextures.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "ObjectEffect":
@@ -14698,7 +14828,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IObjectEffectInternal, IObjectEffectGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.ObjectEffects.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.ObjectEffects.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.ObjectEffects.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Spell":
@@ -14710,7 +14841,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, ISpellInternal, ISpellGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Spells.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Spells.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Spells.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Scroll":
@@ -14722,7 +14854,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IScrollInternal, IScrollGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Scrolls.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Scrolls.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Scrolls.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Activator":
@@ -14734,7 +14867,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IActivatorInternal, IActivatorGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Activators.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Activators.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Activators.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "TalkingActivator":
@@ -14746,7 +14880,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, ITalkingActivatorInternal, ITalkingActivatorGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.TalkingActivators.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.TalkingActivators.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.TalkingActivators.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Armor":
@@ -14758,7 +14893,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IArmorInternal, IArmorGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Armors.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Armors.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Armors.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Book":
@@ -14770,7 +14906,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IBookInternal, IBookGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Books.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Books.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Books.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Container":
@@ -14782,7 +14919,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IContainerInternal, IContainerGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Containers.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Containers.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Containers.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Door":
@@ -14794,7 +14932,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IDoorInternal, IDoorGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Doors.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Doors.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Doors.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Ingredient":
@@ -14806,7 +14945,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IIngredientInternal, IIngredientGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Ingredients.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Ingredients.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Ingredients.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Light":
@@ -14818,7 +14958,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, ILightInternal, ILightGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Lights.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Lights.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Lights.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "MiscItem":
@@ -14830,7 +14971,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IMiscItemInternal, IMiscItemGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.MiscItems.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.MiscItems.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.MiscItems.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "AlchemicalApparatus":
@@ -14842,7 +14984,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IAlchemicalApparatusInternal, IAlchemicalApparatusGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.AlchemicalApparatuses.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.AlchemicalApparatuses.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.AlchemicalApparatuses.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Static":
@@ -14854,7 +14997,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IStaticInternal, IStaticGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Statics.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Statics.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Statics.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "MoveableStatic":
@@ -14866,7 +15010,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IMoveableStaticInternal, IMoveableStaticGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.MoveableStatics.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.MoveableStatics.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.MoveableStatics.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Grass":
@@ -14878,7 +15023,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IGrassInternal, IGrassGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Grasses.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Grasses.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Grasses.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Tree":
@@ -14890,7 +15036,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, ITreeInternal, ITreeGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Trees.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Trees.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Trees.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Flora":
@@ -14902,7 +15049,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IFloraInternal, IFloraGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Florae.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Florae.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Florae.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Furniture":
@@ -14914,7 +15062,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IFurnitureInternal, IFurnitureGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Furniture.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Furniture.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Furniture.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Weapon":
@@ -14926,7 +15075,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IWeaponInternal, IWeaponGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Weapons.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Weapons.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Weapons.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Ammunition":
@@ -14938,7 +15088,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IAmmunitionInternal, IAmmunitionGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Ammunitions.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Ammunitions.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Ammunitions.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Npc":
@@ -14950,7 +15101,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, INpcInternal, INpcGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Npcs.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Npcs.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Npcs.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "LeveledNpc":
@@ -14962,7 +15114,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, ILeveledNpcInternal, ILeveledNpcGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.LeveledNpcs.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.LeveledNpcs.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.LeveledNpcs.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Key":
@@ -14974,7 +15127,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IKeyInternal, IKeyGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Keys.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Keys.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Keys.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Ingestible":
@@ -14986,7 +15140,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IIngestibleInternal, IIngestibleGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Ingestibles.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Ingestibles.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Ingestibles.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "IdleMarker":
@@ -14998,7 +15153,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IIdleMarkerInternal, IIdleMarkerGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.IdleMarkers.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.IdleMarkers.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.IdleMarkers.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "ConstructibleObject":
@@ -15010,7 +15166,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IConstructibleObjectInternal, IConstructibleObjectGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.ConstructibleObjects.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.ConstructibleObjects.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.ConstructibleObjects.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Projectile":
@@ -15022,7 +15179,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IProjectileInternal, IProjectileGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Projectiles.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Projectiles.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Projectiles.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Hazard":
@@ -15034,7 +15192,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IHazardInternal, IHazardGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Hazards.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Hazards.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Hazards.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "SoulGem":
@@ -15046,7 +15205,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, ISoulGemInternal, ISoulGemGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.SoulGems.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.SoulGems.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.SoulGems.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "LeveledItem":
@@ -15058,7 +15218,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, ILeveledItemInternal, ILeveledItemGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.LeveledItems.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.LeveledItems.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.LeveledItems.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Weather":
@@ -15070,7 +15231,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IWeatherInternal, IWeatherGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Weathers.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Weathers.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Weathers.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Climate":
@@ -15082,7 +15244,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IClimateInternal, IClimateGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Climates.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Climates.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Climates.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "ShaderParticleGeometry":
@@ -15094,7 +15257,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IShaderParticleGeometryInternal, IShaderParticleGeometryGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.ShaderParticleGeometries.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.ShaderParticleGeometries.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.ShaderParticleGeometries.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "VisualEffect":
@@ -15106,7 +15270,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IVisualEffectInternal, IVisualEffectGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.VisualEffects.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.VisualEffects.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.VisualEffects.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Region":
@@ -15118,7 +15283,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IRegionInternal, IRegionGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Regions.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Regions.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Regions.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "NavigationMeshInfoMap":
@@ -15130,7 +15296,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, INavigationMeshInfoMapInternal, INavigationMeshInfoMapGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.NavigationMeshInfoMaps.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.NavigationMeshInfoMaps.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.NavigationMeshInfoMaps.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Worldspace":
@@ -15142,7 +15309,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IWorldspaceInternal, IWorldspaceGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "DialogTopic":
@@ -15154,7 +15322,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IDialogTopicInternal, IDialogTopicGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.DialogTopics.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.DialogTopics.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.DialogTopics.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Quest":
@@ -15166,7 +15335,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IQuestInternal, IQuestGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Quests.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Quests.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Quests.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "IdleAnimation":
@@ -15178,7 +15348,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IIdleAnimationInternal, IIdleAnimationGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.IdleAnimations.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.IdleAnimations.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.IdleAnimations.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Package":
@@ -15190,7 +15361,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IPackageInternal, IPackageGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Packages.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Packages.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Packages.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "CombatStyle":
@@ -15202,7 +15374,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, ICombatStyleInternal, ICombatStyleGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.CombatStyles.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.CombatStyles.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.CombatStyles.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "LoadScreen":
@@ -15214,7 +15387,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, ILoadScreenInternal, ILoadScreenGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.LoadScreens.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.LoadScreens.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.LoadScreens.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "LeveledSpell":
@@ -15226,7 +15400,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, ILeveledSpellInternal, ILeveledSpellGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.LeveledSpells.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.LeveledSpells.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.LeveledSpells.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "AnimatedObject":
@@ -15238,7 +15413,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IAnimatedObjectInternal, IAnimatedObjectGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.AnimatedObjects.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.AnimatedObjects.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.AnimatedObjects.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Water":
@@ -15250,7 +15426,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IWaterInternal, IWaterGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Waters.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Waters.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Waters.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "EffectShader":
@@ -15262,7 +15439,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IEffectShaderInternal, IEffectShaderGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.EffectShaders.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.EffectShaders.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.EffectShaders.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Explosion":
@@ -15274,7 +15452,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IExplosionInternal, IExplosionGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Explosions.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Explosions.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Explosions.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Debris":
@@ -15286,7 +15465,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IDebrisInternal, IDebrisGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Debris.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Debris.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Debris.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "ImageSpace":
@@ -15298,7 +15478,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IImageSpaceInternal, IImageSpaceGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.ImageSpaces.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.ImageSpaces.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.ImageSpaces.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "ImageSpaceAdapter":
@@ -15310,7 +15491,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IImageSpaceAdapterInternal, IImageSpaceAdapterGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.ImageSpaceAdapters.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.ImageSpaceAdapters.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.ImageSpaceAdapters.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "FormList":
@@ -15322,7 +15504,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IFormListInternal, IFormListGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.FormLists.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.FormLists.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.FormLists.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Perk":
@@ -15334,7 +15517,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IPerkInternal, IPerkGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Perks.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Perks.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Perks.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "BodyPartData":
@@ -15346,7 +15530,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IBodyPartDataInternal, IBodyPartDataGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.BodyParts.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.BodyParts.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.BodyParts.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "AddonNode":
@@ -15358,7 +15543,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IAddonNodeInternal, IAddonNodeGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.AddonNodes.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.AddonNodes.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.AddonNodes.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "ActorValueInformation":
@@ -15370,7 +15556,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IActorValueInformationInternal, IActorValueInformationGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.ActorValueInformation.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.ActorValueInformation.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.ActorValueInformation.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "CameraShot":
@@ -15382,7 +15569,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, ICameraShotInternal, ICameraShotGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.CameraShots.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.CameraShots.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.CameraShots.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "CameraPath":
@@ -15394,7 +15582,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, ICameraPathInternal, ICameraPathGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.CameraPaths.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.CameraPaths.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.CameraPaths.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "VoiceType":
@@ -15406,7 +15595,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IVoiceTypeInternal, IVoiceTypeGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.VoiceTypes.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.VoiceTypes.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.VoiceTypes.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "MaterialType":
@@ -15418,7 +15608,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IMaterialTypeInternal, IMaterialTypeGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.MaterialTypes.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.MaterialTypes.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.MaterialTypes.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Impact":
@@ -15430,7 +15621,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IImpactInternal, IImpactGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Impacts.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Impacts.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Impacts.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "ImpactDataSet":
@@ -15442,7 +15634,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IImpactDataSetInternal, IImpactDataSetGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.ImpactDataSets.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.ImpactDataSets.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.ImpactDataSets.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "ArmorAddon":
@@ -15454,7 +15647,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IArmorAddonInternal, IArmorAddonGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.ArmorAddons.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.ArmorAddons.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.ArmorAddons.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "EncounterZone":
@@ -15466,7 +15660,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IEncounterZoneInternal, IEncounterZoneGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.EncounterZones.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.EncounterZones.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.EncounterZones.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Location":
@@ -15478,7 +15673,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, ILocationInternal, ILocationGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Locations.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Locations.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Locations.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Message":
@@ -15490,7 +15686,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IMessageInternal, IMessageGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Messages.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Messages.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Messages.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "DefaultObjectManager":
@@ -15502,7 +15699,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IDefaultObjectManagerInternal, IDefaultObjectManagerGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.DefaultObjectManagers.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.DefaultObjectManagers.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.DefaultObjectManagers.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "LightingTemplate":
@@ -15514,7 +15712,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, ILightingTemplateInternal, ILightingTemplateGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.LightingTemplates.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.LightingTemplates.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.LightingTemplates.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "MusicType":
@@ -15526,7 +15725,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IMusicTypeInternal, IMusicTypeGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.MusicTypes.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.MusicTypes.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.MusicTypes.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Footstep":
@@ -15538,7 +15738,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IFootstepInternal, IFootstepGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Footsteps.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Footsteps.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Footsteps.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "FootstepSet":
@@ -15550,7 +15751,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IFootstepSetInternal, IFootstepSetGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.FootstepSets.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.FootstepSets.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.FootstepSets.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "StoryManagerBranchNode":
@@ -15562,7 +15764,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IStoryManagerBranchNodeInternal, IStoryManagerBranchNodeGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.StoryManagerBranchNodes.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.StoryManagerBranchNodes.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.StoryManagerBranchNodes.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "StoryManagerQuestNode":
@@ -15574,7 +15777,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IStoryManagerQuestNodeInternal, IStoryManagerQuestNodeGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.StoryManagerQuestNodes.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.StoryManagerQuestNodes.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.StoryManagerQuestNodes.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "StoryManagerEventNode":
@@ -15586,7 +15790,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IStoryManagerEventNodeInternal, IStoryManagerEventNodeGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.StoryManagerEventNodes.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.StoryManagerEventNodes.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.StoryManagerEventNodes.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "DialogBranch":
@@ -15598,7 +15803,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IDialogBranchInternal, IDialogBranchGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.DialogBranches.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.DialogBranches.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.DialogBranches.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "MusicTrack":
@@ -15610,7 +15816,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IMusicTrackInternal, IMusicTrackGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.MusicTracks.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.MusicTracks.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.MusicTracks.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "DialogView":
@@ -15622,7 +15829,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IDialogViewInternal, IDialogViewGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.DialogViews.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.DialogViews.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.DialogViews.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "WordOfPower":
@@ -15634,7 +15842,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IWordOfPowerInternal, IWordOfPowerGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.WordsOfPower.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.WordsOfPower.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.WordsOfPower.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Shout":
@@ -15646,7 +15855,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IShoutInternal, IShoutGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Shouts.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Shouts.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Shouts.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "EquipType":
@@ -15658,7 +15868,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IEquipTypeInternal, IEquipTypeGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.EquipTypes.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.EquipTypes.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.EquipTypes.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Relationship":
@@ -15670,7 +15881,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IRelationshipInternal, IRelationshipGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Relationships.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Relationships.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Relationships.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Scene":
@@ -15682,7 +15894,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, ISceneInternal, ISceneGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Scenes.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Scenes.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Scenes.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "AssociationType":
@@ -15694,7 +15907,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IAssociationTypeInternal, IAssociationTypeGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.AssociationTypes.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.AssociationTypes.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.AssociationTypes.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Outfit":
@@ -15706,7 +15920,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IOutfitInternal, IOutfitGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Outfits.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Outfits.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Outfits.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "ArtObject":
@@ -15718,7 +15933,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IArtObjectInternal, IArtObjectGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.ArtObjects.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.ArtObjects.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.ArtObjects.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "MaterialObject":
@@ -15730,7 +15946,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IMaterialObjectInternal, IMaterialObjectGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.MaterialObjects.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.MaterialObjects.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.MaterialObjects.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "MovementType":
@@ -15742,7 +15959,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IMovementTypeInternal, IMovementTypeGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.MovementTypes.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.MovementTypes.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.MovementTypes.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "SoundDescriptor":
@@ -15754,7 +15972,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, ISoundDescriptorInternal, ISoundDescriptorGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.SoundDescriptors.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.SoundDescriptors.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.SoundDescriptors.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "DualCastData":
@@ -15766,7 +15985,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IDualCastDataInternal, IDualCastDataGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.DualCastData.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.DualCastData.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.DualCastData.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "SoundCategory":
@@ -15778,7 +15998,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, ISoundCategoryInternal, ISoundCategoryGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.SoundCategories.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.SoundCategories.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.SoundCategories.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "SoundOutputModel":
@@ -15790,7 +16011,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, ISoundOutputModelInternal, ISoundOutputModelGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.SoundOutputModels.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.SoundOutputModels.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.SoundOutputModels.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "CollisionLayer":
@@ -15802,7 +16024,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, ICollisionLayerInternal, ICollisionLayerGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.CollisionLayers.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.CollisionLayers.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.CollisionLayers.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "ColorRecord":
@@ -15814,7 +16037,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IColorRecordInternal, IColorRecordGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Colors.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.Colors.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Colors.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "ReverbParameters":
@@ -15826,7 +16050,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IReverbParametersInternal, IReverbParametersGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.ReverbParameters.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.ReverbParameters.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.ReverbParameters.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "VolumetricLighting":
@@ -15838,7 +16063,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return new ModContext<ISkyrimMod, IVolumetricLightingInternal, IVolumetricLightingGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.VolumetricLightings.GetOrAddAsOverride(r));
+                            getOrAddAsOverride: (m, r) => m.VolumetricLightings.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.VolumetricLightings.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Cell":
@@ -15863,7 +16089,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             throwIfUnknown: throwIfUnknown,
                             modKey: obj.ModKey,
                             parent: null,
-                            getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
                         {
                             yield return item;
                         }
@@ -15891,7 +16118,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             throwIfUnknown: throwIfUnknown,
                             modKey: obj.ModKey,
                             parent: null,
-                            getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
                         {
                             yield return item;
                         }
@@ -15919,7 +16147,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             throwIfUnknown: throwIfUnknown,
                             modKey: obj.ModKey,
                             parent: null,
-                            getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
                         {
                             yield return item;
                         }
@@ -15947,7 +16176,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             throwIfUnknown: throwIfUnknown,
                             modKey: obj.ModKey,
                             parent: null,
-                            getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
                         {
                             yield return item;
                         }
@@ -15975,7 +16205,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             throwIfUnknown: throwIfUnknown,
                             modKey: obj.ModKey,
                             parent: null,
-                            getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
                         {
                             yield return item;
                         }
@@ -16003,7 +16234,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             throwIfUnknown: throwIfUnknown,
                             modKey: obj.ModKey,
                             parent: null,
-                            getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
                         {
                             yield return item;
                         }
@@ -16031,7 +16263,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             throwIfUnknown: throwIfUnknown,
                             modKey: obj.ModKey,
                             parent: null,
-                            getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
                         {
                             yield return item;
                         }
@@ -16050,7 +16283,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             throwIfUnknown: throwIfUnknown,
                             modKey: obj.ModKey,
                             parent: null,
-                            getter: (m, r) => m.DialogTopics.GetOrAddAsOverride(linkCache.Resolve<IDialogTopicGetter>(r.FormKey))))
+                            getOrAddAsOverride: (m, r) => m.DialogTopics.GetOrAddAsOverride(linkCache.Resolve<IDialogTopicGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e) => m.DialogTopics.DuplicateInAsNewRecord(linkCache.Resolve<IDialogTopicGetter>(r.FormKey), e)))
                         {
                             yield return item;
                         }
@@ -16468,7 +16702,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             throwIfUnknown: throwIfUnknown,
                             modKey: obj.ModKey,
                             parent: null,
-                            getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
                         {
                             yield return item;
                         }
@@ -16504,7 +16739,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             throwIfUnknown: throwIfUnknown,
                             modKey: obj.ModKey,
                             parent: null,
-                            getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
                         {
                             yield return item;
                         }
@@ -16706,7 +16942,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             throwIfUnknown: throwIfUnknown,
                             modKey: obj.ModKey,
                             parent: null,
-                            getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
                         {
                             yield return item;
                         }
@@ -16839,7 +17076,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             throwIfUnknown: throwIfUnknown,
                             modKey: obj.ModKey,
                             parent: null,
-                            getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
                         {
                             yield return item;
                         }
@@ -16867,7 +17105,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             throwIfUnknown: throwIfUnknown,
                             modKey: obj.ModKey,
                             parent: null,
-                            getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
                         {
                             yield return item;
                         }
@@ -16895,7 +17134,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             throwIfUnknown: throwIfUnknown,
                             modKey: obj.ModKey,
                             parent: null,
-                            getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
                         {
                             yield return item;
                         }
@@ -16923,7 +17163,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             throwIfUnknown: throwIfUnknown,
                             modKey: obj.ModKey,
                             parent: null,
-                            getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
                         {
                             yield return item;
                         }
