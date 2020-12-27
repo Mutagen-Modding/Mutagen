@@ -42,13 +42,14 @@ namespace Mutagen.Bethesda
             Type = type;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return (obj is FormLinkInformation rhs) && Equals(rhs);
         }
 
-        public bool Equals(FormLinkInformation other)
+        public bool Equals(FormLinkInformation? other)
         {
+            if (other == null) return false;
             if (this.FormKey != other.FormKey) return false;
             if (this.Type != other.Type) return false;
             return true;

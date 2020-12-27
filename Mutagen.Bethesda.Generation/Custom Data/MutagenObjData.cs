@@ -7,6 +7,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+#if NET_5 
+using TaskCompletionSource = TaskCompletionSource; 
+#else 
+using TaskCompletionSource = Noggog.TaskCompletionSource;
+#endif
 
 namespace Mutagen.Bethesda.Generation
 {

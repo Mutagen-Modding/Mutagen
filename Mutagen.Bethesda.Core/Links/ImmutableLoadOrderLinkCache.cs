@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda
                 return false;
             }
 
-            DepthCache<IMajorRecordCommonGetter> cache;
+            DepthCache<IMajorRecordCommonGetter>? cache;
             lock (this._winningRecords)
             {
                 // Get cache object by type
@@ -254,7 +254,7 @@ namespace Mutagen.Bethesda
                 return false;
             }
 
-            DepthCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>> cache;
+            DepthCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>? cache;
             lock (this._winningContexts)
             {
                 // Get cache object by type
