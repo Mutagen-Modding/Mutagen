@@ -935,6 +935,17 @@ namespace Mutagen.Bethesda
                 throwIfUnknown: throwIfUnknown);
         }
 
+        public static MajorRecord Duplicate(
+            this IMajorRecordGetter item,
+            FormKey formKey,
+            MajorRecord.TranslationMask? copyMask = null)
+        {
+            return ((MajorRecordCommon)((IMajorRecordGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1299,6 +1310,17 @@ namespace Mutagen.Bethesda.Internals
                     }
             }
         }
+        
+        #region Duplicate
+        public virtual MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            throw new NotImplementedException();
+        }
+        
+        #endregion
         
         #endregion
         

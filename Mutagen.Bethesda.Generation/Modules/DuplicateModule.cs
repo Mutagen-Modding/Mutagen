@@ -1,5 +1,6 @@
 using Loqui;
 using Loqui.Generation;
+using Loqui.Internal;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -25,19 +26,21 @@ namespace Mutagen.Bethesda.Generation
             await base.GenerateInCommonMixin(obj, fg);
             if (!await obj.IsMajorRecord()) return;
             using (var args = new FunctionWrapper(fg,
-                $"public static {obj.ObjectName} Duplicate{obj.GetGenericTypes(MaskType.Normal, MaskType.NormalGetter, MaskType.Translation)}"))
+                $"public static {obj.ObjectName} Duplicate{obj.GetGenericTypes(MaskType.Normal, MaskType.NormalGetter)}"))
             {
-                args.Wheres.AddRange(obj.GenericTypeMaskWheres(LoquiInterfaceType.ISetter, MaskType.Normal, MaskType.NormalGetter, MaskType.Translation));
+                args.Wheres.AddRange(obj.GenericTypeMaskWheres(LoquiInterfaceType.IGetter, MaskType.Normal, MaskType.NormalGetter));
                 args.Add($"this {obj.Interface(obj.GetGenericTypes(MaskType.NormalGetter), getter: true, internalInterface: true)} item");
+                args.Add($"{nameof(FormKey)} formKey");
                 args.Add($"{obj.Mask(MaskType.Translation)}? copyMask = null");
             }
             using (new BraceWrapper(fg))
             {
                 using (var args = new ArgsWrapper(fg,
-                    $"return {obj.CommonClassInstance("item", LoquiInterfaceType.ISetter, CommonGenerics.Functions, MaskType.NormalGetter, MaskType.Translation)}.Duplicate{obj.GetGenericTypes(MaskType.Normal, MaskType.NormalGetter, MaskType.Translation)}"))
+                    $"return {obj.CommonClassInstance("item", LoquiInterfaceType.IGetter, CommonGenerics.Functions, MaskType.NormalGetter)}.Duplicate{obj.GetGenericTypes(MaskType.Normal, MaskType.NormalGetter, MaskType.Translation)}"))
                 {
                     args.AddPassArg("item");
-                    args.AddPassArg("copyMask");
+                    args.AddPassArg("formKey");
+                    args.Add("copyMask: copyMask?.GetCrystal()");
                 }
             }
             fg.AppendLine();
@@ -45,64 +48,51 @@ namespace Mutagen.Bethesda.Generation
 
         public override async Task GenerateInCommon(ObjectGeneration obj, FileGeneration fg, MaskTypeSet maskTypes)
         {
+            if (!maskTypes.Applicable(LoquiInterfaceType.IGetter, CommonGenerics.Class)) return;
             await base.GenerateInCommon(obj, fg, maskTypes);
             if (!await obj.IsMajorRecord()) return;
             using (new RegionWrapper(fg, "Duplicate"))
             {
                 using (var args = new FunctionWrapper(fg,
-                    $"public{obj.Virtual()}void Duplicate{obj.GetGenericTypes(MaskType.Normal, MaskType.NormalGetter)}"))
+                    $"public{obj.Virtual()}{obj.Name} Duplicate{obj.GetGenericTypes(MaskType.Normal, MaskType.NormalGetter)}"))
                 {
-                    args.Wheres.AddRange(obj.GenericTypeMaskWheres(LoquiInterfaceType.ISetter, MaskType.Normal, MaskType.NormalGetter));
-                    args.Add($"{obj.Interface(getter: false)} item");
-                    args.Add($"{obj.Interface(obj.GetGenericTypes(MaskType.NormalGetter), getter: true)} rhs");
+                    args.Wheres.AddRange(obj.GenericTypeMaskWheres(LoquiInterfaceType.IGetter, MaskType.Normal, MaskType.NormalGetter));
+                    args.Add($"{obj.Interface(getter: true)} item");
+                    args.Add($"{nameof(FormKey)} formKey");
                     args.Add($"TranslationCrystal? copyMask");
                 }
                 using (new BraceWrapper(fg))
                 {
-                    fg.AppendLine("var ")
+                    if (obj.Abstract)
+                    {
+                        fg.AppendLine("throw new NotImplementedException();");
+                    }
+                    else
+                    {
+                        fg.AppendLine($"var newRec = new {obj.Name}(formKey{(obj.GetObjectData().HasMultipleReleases ? $", default({obj.GetObjectData().GameCategory}Release)" : null)});");
+                        fg.AppendLine($"newRec.DeepCopyIn(item, default({nameof(ErrorMaskBuilder)}?), copyMask);");
+                        fg.AppendLine("return newRec;");
+                    }
                 }
                 fg.AppendLine();
 
                 foreach (var baseClass in obj.BaseClassTrail())
                 {
-                    if (baseClass.HasInternalGetInterface || baseClass.HasInternalSetInterface)
-                    {
-                        using (var args = new FunctionWrapper(fg,
-                            $"public override void Duplicate{baseClass.GetGenericTypes(MaskType.Normal, MaskType.NormalGetter)}"))
-                        {
-                            args.Wheres.AddRange(baseClass.GenericTypeMaskWheres(LoquiInterfaceType.ISetter, MaskType.Normal, MaskType.NormalGetter));
-                            args.Add($"{baseClass.Interface(getter: false, internalInterface: true)} item");
-                            args.Add($"{baseClass.Interface(baseClass.GetGenericTypes(MaskType.NormalGetter), getter: true, internalInterface: true)} rhs");
-                            args.Add($"TranslationCrystal? copyMask");
-                        }
-                        using (new BraceWrapper(fg))
-                        {
-                            using (var args = new ArgsWrapper(fg,
-                                $"this.Duplicate"))
-                            {
-                                args.Add($"item: ({obj.Interface(getter: false, internalInterface: true)})item");
-                                args.Add($"rhs: ({obj.Interface(baseClass.GetGenericTypes(MaskType.NormalGetter), getter: true, internalInterface: true)})rhs");
-                                args.AddPassArg("copyMask");
-                            }
-                        }
-                    }
-                    fg.AppendLine();
-
                     using (var args = new FunctionWrapper(fg,
-                        $"public override void Duplicate{baseClass.GetGenericTypes(MaskType.Normal, MaskType.NormalGetter)}"))
+                        $"public override {baseClass.Name} Duplicate{baseClass.GetGenericTypes(MaskType.Normal, MaskType.NormalGetter)}"))
                     {
-                        args.Wheres.AddRange(baseClass.GenericTypeMaskWheres(LoquiInterfaceType.ISetter, MaskType.Normal, MaskType.NormalGetter));
-                        args.Add($"{baseClass.Interface(getter: false)} item");
-                        args.Add($"{baseClass.Interface(baseClass.GetGenericTypes(MaskType.NormalGetter), getter: true)} rhs");
+                        args.Wheres.AddRange(baseClass.GenericTypeMaskWheres(LoquiInterfaceType.IGetter, MaskType.Normal, MaskType.NormalGetter));
+                        args.Add($"{baseClass.Interface(getter: true)} item");
+                        args.Add($"{nameof(FormKey)} formKey");
                         args.Add($"TranslationCrystal? copyMask");
                     }
                     using (new BraceWrapper(fg))
                     {
                         using (var args = new ArgsWrapper(fg,
-                            $"this.Duplicate"))
+                            $"return this.Duplicate"))
                         {
                             args.Add($"item: ({obj.Interface(getter: false)})item");
-                            args.Add($"rhs: ({obj.Interface(baseClass.GetGenericTypes(MaskType.NormalGetter), getter: true)})rhs");
+                            args.AddPassArg("formKey");
                             args.AddPassArg("copyMask");
                         }
                     }
