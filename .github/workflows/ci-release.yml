@@ -22,7 +22,9 @@ jobs:
       with:
         dotnet-version: 3.1.x
     - name: Install dependencies
-      run: dotnet restore
+      run: |
+        dotnet clean -c Release && dotnet nuget locals all --clear
+        dotnet restore
     - name: Build
       run: dotnet build -c Release --no-restore
     - name: Test
