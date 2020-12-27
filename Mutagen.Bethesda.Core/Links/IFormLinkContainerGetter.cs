@@ -62,6 +62,11 @@ namespace Mutagen.Bethesda
             return hash.ToHashCode();
         }
 
+        public override string ToString()
+        {
+            return $"({Type}) => {FormKey}";
+        }
+
         public static FormLinkInformation Factory<TMajorGetter>(IFormLink<TMajorGetter> link)
             where TMajorGetter : IMajorRecordCommonGetter
         {
