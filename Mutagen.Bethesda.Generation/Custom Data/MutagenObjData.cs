@@ -46,6 +46,8 @@ namespace Mutagen.Bethesda.Generation
         }
         public bool CustomRecordFallback;
         public bool UsesStringFiles = true;
+        // Hacky coincidental trick
+        public bool HasMultipleReleases => GameCategory?.HasFormVersion() ?? false;
 
         public MutagenObjData(ObjectGeneration objGen)
         {

@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda.Generation
                 $"public {obj.Name}"))
             {
                 args.Add($"{nameof(FormKey)} formKey");
-                if (obj.GetObjectData().GameCategory?.HasFormVersion() ?? false)
+                if (obj.GetObjectData().HasMultipleReleases)
                 {
                     args.Add($"{obj.GetObjectData().GameCategory}Release gameRelease");
                 }
@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.Generation
             using (new BraceWrapper(fg))
             {
                 fg.AppendLine("this.FormKey = formKey;");
-                if (obj.GetObjectData().GameCategory?.HasFormVersion() ?? false)
+                if (obj.GetObjectData().HasMultipleReleases)
                 {
                     fg.AppendLine("this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;");
                 }
