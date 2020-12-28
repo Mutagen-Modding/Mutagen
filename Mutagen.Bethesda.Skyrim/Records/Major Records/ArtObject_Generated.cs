@@ -444,12 +444,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = ArtObject_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => ArtObjectCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ArtObjectCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArtObjectCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArtObjectCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => ArtObjectCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArtObjectSetterCommon.Instance.RemapLinks(this, mapping);
         public ArtObject(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -554,7 +550,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModeled,
         IObjectBounded,
         ILoquiObjectSetter<IArtObjectInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ObjectBounds ObjectBounds { get; set; }
         new Model? Model { get; set; }
@@ -573,7 +569,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModeledGetter,
         IObjectBoundedGetter,
         ILoquiObject<IArtObjectGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => ArtObject_Registration.Instance;
@@ -697,6 +693,20 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
+
+        #region Mutagen
+        public static ArtObject Duplicate(
+            this IArtObjectGetter item,
+            FormKey formKey,
+            ArtObject.TranslationMask? copyMask = null)
+        {
+            return ((ArtObjectCommon)((IArtObjectGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
 
         #region Binary Translation
         public static void CopyInFromBinary(
@@ -834,6 +844,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IArtObjectInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IArtObject obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Model?.RemapLinks(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1078,15 +1097,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IArtObjectGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IArtObjectGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.Model.TryGet(out var ModelItems))
             {
-                foreach (var item in ModelItems.LinkFormKeys)
+                foreach (var item in ModelItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
@@ -1094,17 +1113,40 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IArtObjectGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(ArtObject obj, ArtObject rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public ArtObject Duplicate(
+            IArtObjectGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new ArtObject(getNextFormKey(), ((IArtObjectGetter)item).FormVersion);
-            ret.DeepCopyIn((ArtObject)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (ArtObject)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new ArtObject(formKey, default(SkyrimRelease));
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override SkyrimMajorRecord Duplicate(
+            ISkyrimMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IArtObject)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IArtObject)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         
@@ -1519,10 +1561,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => ArtObjectCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ArtObjectCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => ArtObjectCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ArtObjectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

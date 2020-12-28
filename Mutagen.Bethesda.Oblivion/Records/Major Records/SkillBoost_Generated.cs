@@ -720,6 +720,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Boost = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(ISkillBoost obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ISkillBoost item,
@@ -848,12 +855,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ISkillBoostGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ISkillBoostGetter obj)
         {
             yield break;
         }
         
-        public void RemapLinks(ISkillBoostGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

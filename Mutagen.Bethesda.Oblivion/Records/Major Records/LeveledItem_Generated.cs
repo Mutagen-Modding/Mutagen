@@ -506,12 +506,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = LeveledItem_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => LeveledItemCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LeveledItemCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledItemCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledItemCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => LeveledItemCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledItemSetterCommon.Instance.RemapLinks(this, mapping);
         public LeveledItem(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -597,7 +593,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILeveledItemGetter,
         IAItem,
         ILoquiObjectSetter<ILeveledItemInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new Byte? ChanceNone { get; set; }
         new LeveledFlag? Flags { get; set; }
@@ -614,7 +610,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILeveledItemGetter :
         IAItemGetter,
         ILoquiObject<ILeveledItemGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => LeveledItem_Registration.Instance;
@@ -738,6 +734,20 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
+
+        #region Mutagen
+        public static LeveledItem Duplicate(
+            this ILeveledItemGetter item,
+            FormKey formKey,
+            LeveledItem.TranslationMask? copyMask = null)
+        {
+            return ((LeveledItemCommon)((ILeveledItemGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
 
         #region Binary Translation
         public static void CopyInFromBinary(
@@ -879,6 +889,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (ILeveledItemInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(ILeveledItem obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Entries.RemapLinks(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1178,30 +1197,64 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ILeveledItemGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ILeveledItemGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
-            foreach (var item in obj.Entries.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.Entries.SelectMany(f => f.ContainedFormLinks))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
         
-        public void RemapLinks(ILeveledItemGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(LeveledItem obj, LeveledItem rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public LeveledItem Duplicate(
+            ILeveledItemGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new LeveledItem(getNextFormKey());
-            ret.DeepCopyIn((LeveledItem)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (LeveledItem)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new LeveledItem(formKey);
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override AItem Duplicate(
+            IAItemGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (ILeveledItem)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override OblivionMajorRecord Duplicate(
+            IOblivionMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (ILeveledItem)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (ILeveledItem)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         
@@ -1671,10 +1724,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => LeveledItemCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LeveledItemCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => LeveledItemCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LeveledItemBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

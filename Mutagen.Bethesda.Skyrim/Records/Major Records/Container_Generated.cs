@@ -808,12 +808,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Container_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => ContainerCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ContainerCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ContainerCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ContainerCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => ContainerCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ContainerSetterCommon.Instance.RemapLinks(this, mapping);
         public Container(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -929,7 +925,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModeled,
         IObjectBounded,
         ILoquiObjectSetter<IContainerInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
@@ -962,7 +958,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModeledGetter,
         IObjectBoundedGetter,
         ILoquiObject<IContainerGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Container_Registration.Instance;
@@ -1098,6 +1094,20 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
+
+        #region Mutagen
+        public static Container Duplicate(
+            this IContainerGetter item,
+            FormKey formKey,
+            Container.TranslationMask? copyMask = null)
+        {
+            return ((ContainerCommon)((IContainerGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
 
         #region Binary Translation
         public static void CopyInFromBinary(
@@ -1251,6 +1261,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IContainerInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IContainer obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
+            obj.Model?.RemapLinks(mapping);
+            obj.Items?.RemapLinks(mapping);
+            obj.Destructible?.RemapLinks(mapping);
+            obj.OpenSound = obj.OpenSound.Relink(mapping);
+            obj.CloseSound = obj.CloseSound.Relink(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1585,63 +1609,86 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IContainerGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IContainerGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
-            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainerGetter VirtualMachineAdapterlinkCont)
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
             {
-                foreach (var item in VirtualMachineAdapterlinkCont.LinkFormKeys)
+                foreach (var item in VirtualMachineAdapterlinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
             if (obj.Model.TryGet(out var ModelItems))
             {
-                foreach (var item in ModelItems.LinkFormKeys)
+                foreach (var item in ModelItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
             if (obj.Items.TryGet(out var ItemsItem))
             {
-                foreach (var item in ItemsItem.WhereCastable<IContainerEntryGetter, ILinkedFormKeyContainerGetter>()
-                    .SelectMany((f) => f.LinkFormKeys))
+                foreach (var item in ItemsItem.WhereCastable<IContainerEntryGetter, IFormLinkContainerGetter>()
+                    .SelectMany((f) => f.ContainedFormLinks))
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.Destructible.TryGet(out var DestructibleItems))
             {
-                foreach (var item in DestructibleItems.LinkFormKeys)
+                foreach (var item in DestructibleItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.OpenSound.FormKeyNullable.TryGet(out var OpenSoundKey))
+            if (obj.OpenSound.FormKeyNullable.HasValue)
             {
-                yield return OpenSoundKey;
+                yield return FormLinkInformation.Factory(obj.OpenSound);
             }
-            if (obj.CloseSound.FormKeyNullable.TryGet(out var CloseSoundKey))
+            if (obj.CloseSound.FormKeyNullable.HasValue)
             {
-                yield return CloseSoundKey;
+                yield return FormLinkInformation.Factory(obj.CloseSound);
             }
             yield break;
         }
         
-        public void RemapLinks(IContainerGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(Container obj, Container rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public Container Duplicate(
+            IContainerGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new Container(getNextFormKey(), ((IContainerGetter)item).FormVersion);
-            ret.DeepCopyIn((Container)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (Container)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new Container(formKey, default(SkyrimRelease));
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override SkyrimMajorRecord Duplicate(
+            ISkyrimMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IContainer)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IContainer)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         
@@ -2270,10 +2317,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => ContainerCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ContainerCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => ContainerCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ContainerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

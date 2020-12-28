@@ -1643,12 +1643,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Npc_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => NpcCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => NpcCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => NpcCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcSetterCommon.Instance.RemapLinks(this, mapping);
         public Npc(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -1736,7 +1732,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOwner,
         INamed,
         ILoquiObjectSetter<INpcInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
@@ -1775,7 +1771,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOwnerGetter,
         INamedGetter,
         ILoquiObject<INpcGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Npc_Registration.Instance;
@@ -1919,6 +1915,20 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
+
+        #region Mutagen
+        public static Npc Duplicate(
+            this INpcGetter item,
+            FormKey formKey,
+            Npc.TranslationMask? copyMask = null)
+        {
+            return ((NpcCommon)((INpcGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
 
         #region Binary Translation
         public static void CopyInFromBinary(
@@ -2105,6 +2115,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (INpcInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(INpc obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Factions.RemapLinks(mapping);
+            obj.DeathItem = obj.DeathItem.Relink(mapping);
+            obj.Race = obj.Race.Relink(mapping);
+            obj.Spells.RemapLinks(mapping);
+            obj.Script = obj.Script.Relink(mapping);
+            obj.Items.RemapLinks(mapping);
+            obj.AIPackages.RemapLinks(mapping);
+            obj.Class = obj.Class.Relink(mapping);
+            obj.Hair = obj.Hair.Relink(mapping);
+            obj.Eyes?.RemapLinks(mapping);
+            obj.CombatStyle = obj.CombatStyle.Relink(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -2727,73 +2756,118 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(INpcGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(INpcGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
-            foreach (var item in obj.Factions.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.Factions.SelectMany(f => f.ContainedFormLinks))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
-            if (obj.DeathItem.FormKeyNullable.TryGet(out var DeathItemKey))
+            if (obj.DeathItem.FormKeyNullable.HasValue)
             {
-                yield return DeathItemKey;
+                yield return FormLinkInformation.Factory(obj.DeathItem);
             }
-            if (obj.Race.FormKeyNullable.TryGet(out var RaceKey))
+            if (obj.Race.FormKeyNullable.HasValue)
             {
-                yield return RaceKey;
+                yield return FormLinkInformation.Factory(obj.Race);
             }
-            foreach (var item in obj.Spells.Select(f => f.FormKey))
+            foreach (var item in obj.Spells)
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
-            if (obj.Script.FormKeyNullable.TryGet(out var ScriptKey))
+            if (obj.Script.FormKeyNullable.HasValue)
             {
-                yield return ScriptKey;
+                yield return FormLinkInformation.Factory(obj.Script);
             }
-            foreach (var item in obj.Items.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.Items.SelectMany(f => f.ContainedFormLinks))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.AIPackages.Select(f => f.FormKey))
+            foreach (var item in obj.AIPackages)
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
-            if (obj.Class.FormKeyNullable.TryGet(out var ClassKey))
+            if (obj.Class.FormKeyNullable.HasValue)
             {
-                yield return ClassKey;
+                yield return FormLinkInformation.Factory(obj.Class);
             }
-            if (obj.Hair.FormKeyNullable.TryGet(out var HairKey))
+            if (obj.Hair.FormKeyNullable.HasValue)
             {
-                yield return HairKey;
+                yield return FormLinkInformation.Factory(obj.Hair);
             }
             if (obj.Eyes.TryGet(out var EyesItem))
             {
-                foreach (var item in EyesItem.Select(f => f.FormKey))
+                foreach (var item in EyesItem)
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.CombatStyle.FormKeyNullable.TryGet(out var CombatStyleKey))
+            if (obj.CombatStyle.FormKeyNullable.HasValue)
             {
-                yield return CombatStyleKey;
+                yield return FormLinkInformation.Factory(obj.CombatStyle);
             }
             yield break;
         }
         
-        public void RemapLinks(INpcGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(Npc obj, Npc rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public Npc Duplicate(
+            INpcGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new Npc(getNextFormKey());
-            ret.DeepCopyIn((Npc)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (Npc)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new Npc(formKey);
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override ANpc Duplicate(
+            IANpcGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (INpc)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override ANpcSpawn Duplicate(
+            IANpcSpawnGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (INpc)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override OblivionMajorRecord Duplicate(
+            IOblivionMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (INpc)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (INpc)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         
@@ -3843,10 +3917,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => NpcCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => NpcCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => NpcCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => NpcBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

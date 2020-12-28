@@ -365,12 +365,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Script_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => ScriptCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ScriptCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => ScriptCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptSetterCommon.Instance.RemapLinks(this, mapping);
         public Script(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -456,7 +452,7 @@ namespace Mutagen.Bethesda.Oblivion
         IScriptGetter,
         IOblivionMajorRecord,
         ILoquiObjectSetter<IScriptInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ScriptFields Fields { get; }
     }
@@ -472,7 +468,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IScriptGetter :
         IOblivionMajorRecordGetter,
         ILoquiObject<IScriptGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Script_Registration.Instance;
@@ -594,6 +590,20 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
+
+        #region Mutagen
+        public static Script Duplicate(
+            this IScriptGetter item,
+            FormKey formKey,
+            Script.TranslationMask? copyMask = null)
+        {
+            return ((ScriptCommon)((IScriptGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
 
         #region Binary Translation
         public static void CopyInFromBinary(
@@ -725,6 +735,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (IScriptInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IScript obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Fields.RemapLinks(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -941,15 +960,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IScriptGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IScriptGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
-            if (obj.Fields is ILinkedFormKeyContainerGetter FieldslinkCont)
+            if (obj.Fields is IFormLinkContainerGetter FieldslinkCont)
             {
-                foreach (var item in FieldslinkCont.LinkFormKeys)
+                foreach (var item in FieldslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
@@ -957,17 +976,40 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(IScriptGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(Script obj, Script rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public Script Duplicate(
+            IScriptGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new Script(getNextFormKey());
-            ret.DeepCopyIn((Script)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (Script)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new Script(formKey);
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override OblivionMajorRecord Duplicate(
+            IOblivionMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IScript)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IScript)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         
@@ -1328,10 +1370,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => ScriptCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ScriptCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => ScriptCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ScriptBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

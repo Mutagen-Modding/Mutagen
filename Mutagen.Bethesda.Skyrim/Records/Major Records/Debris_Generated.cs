@@ -680,6 +680,20 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
+        #region Mutagen
+        public static Debris Duplicate(
+            this IDebrisGetter item,
+            FormKey formKey,
+            Debris.TranslationMask? copyMask = null)
+        {
+            return ((DebrisCommon)((IDebrisGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
+
         #region Binary Translation
         public static void CopyInFromBinary(
             this IDebrisInternal item,
@@ -812,6 +826,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IDebrisInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IDebris obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1047,26 +1069,49 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IDebrisGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IDebrisGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
             yield break;
         }
         
-        public void RemapLinks(IDebrisGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(Debris obj, Debris rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public Debris Duplicate(
+            IDebrisGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new Debris(getNextFormKey(), ((IDebrisGetter)item).FormVersion);
-            ret.DeepCopyIn((Debris)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (Debris)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new Debris(formKey, default(SkyrimRelease));
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override SkyrimMajorRecord Duplicate(
+            ISkyrimMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IDebris)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IDebris)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         

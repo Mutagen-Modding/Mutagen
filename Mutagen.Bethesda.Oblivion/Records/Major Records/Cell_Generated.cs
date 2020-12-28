@@ -1379,12 +1379,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Cell_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => CellCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => CellCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => CellCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellSetterCommon.Instance.RemapLinks(this, mapping);
         public Cell(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -1506,7 +1502,7 @@ namespace Mutagen.Bethesda.Oblivion
         INamed,
         IMajorRecordEnumerable,
         ILoquiObjectSetter<ICellInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new String? Name { get; set; }
         new Cell.Flag? Flags { get; set; }
@@ -1543,7 +1539,7 @@ namespace Mutagen.Bethesda.Oblivion
         INamedGetter,
         IMajorRecordGetterEnumerable,
         ILoquiObject<ICellGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Cell_Registration.Instance;
@@ -1899,6 +1895,17 @@ namespace Mutagen.Bethesda.Oblivion
                 throwIfUnknown: throwIfUnknown);
         }
 
+        public static Cell Duplicate(
+            this ICellGetter item,
+            FormKey formKey,
+            Cell.TranslationMask? copyMask = null)
+        {
+            return ((CellCommon)((ICellGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
         #endregion
 
         #region Binary Translation
@@ -2079,6 +2086,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
+        public void RemapLinks(ICell obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Regions?.RemapLinks(mapping);
+            obj.Climate = obj.Climate.Relink(mapping);
+            obj.Water = obj.Water.Relink(mapping);
+            obj.Owner = obj.Owner.Relink(mapping);
+            obj.GlobalVariable = obj.GlobalVariable.Relink(mapping);
+            obj.PathGrid?.RemapLinks(mapping);
+            obj.Landscape?.RemapLinks(mapping);
+            obj.Persistent.RemapLinks(mapping);
+            obj.Temporary.RemapLinks(mapping);
+            obj.VisibleWhenDistant.RemapLinks(mapping);
+        }
+        
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(ICellInternal obj)
         {
             foreach (var item in CellCommon.Instance.EnumerateMajorRecords(obj))
@@ -2722,77 +2744,65 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ICellGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ICellGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.Regions.TryGet(out var RegionsItem))
             {
-                foreach (var item in RegionsItem.Select(f => f.FormKey))
+                foreach (var item in RegionsItem)
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.Climate.FormKeyNullable.TryGet(out var ClimateKey))
+            if (obj.Climate.FormKeyNullable.HasValue)
             {
-                yield return ClimateKey;
+                yield return FormLinkInformation.Factory(obj.Climate);
             }
-            if (obj.Water.FormKeyNullable.TryGet(out var WaterKey))
+            if (obj.Water.FormKeyNullable.HasValue)
             {
-                yield return WaterKey;
+                yield return FormLinkInformation.Factory(obj.Water);
             }
-            if (obj.Owner.FormKeyNullable.TryGet(out var OwnerKey))
+            if (obj.Owner.FormKeyNullable.HasValue)
             {
-                yield return OwnerKey;
+                yield return FormLinkInformation.Factory(obj.Owner);
             }
-            if (obj.GlobalVariable.FormKeyNullable.TryGet(out var GlobalVariableKey))
+            if (obj.GlobalVariable.FormKeyNullable.HasValue)
             {
-                yield return GlobalVariableKey;
+                yield return FormLinkInformation.Factory(obj.GlobalVariable);
             }
             if (obj.PathGrid.TryGet(out var PathGridItems))
             {
-                foreach (var item in PathGridItems.LinkFormKeys)
+                foreach (var item in PathGridItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
             if (obj.Landscape.TryGet(out var LandscapeItems))
             {
-                foreach (var item in LandscapeItems.LinkFormKeys)
+                foreach (var item in LandscapeItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            foreach (var item in obj.Persistent.WhereCastable<IPlacedGetter, ILinkedFormKeyContainerGetter>()
-                .SelectMany((f) => f.LinkFormKeys))
+            foreach (var item in obj.Persistent.WhereCastable<IPlacedGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.ContainedFormLinks))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.Temporary.WhereCastable<IPlacedGetter, ILinkedFormKeyContainerGetter>()
-                .SelectMany((f) => f.LinkFormKeys))
+            foreach (var item in obj.Temporary.WhereCastable<IPlacedGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.ContainedFormLinks))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.VisibleWhenDistant.WhereCastable<IPlacedGetter, ILinkedFormKeyContainerGetter>()
-                .SelectMany((f) => f.LinkFormKeys))
+            foreach (var item in obj.VisibleWhenDistant.WhereCastable<IPlacedGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.ContainedFormLinks))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
-        }
-        
-        public void RemapLinks(ICellGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(Cell obj, Cell rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
-        {
-            var ret = new Cell(getNextFormKey());
-            ret.DeepCopyIn((Cell)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (Cell)item, getNextFormKey, duplicatedRecords);
-            return ret;
         }
         
         public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(ICellGetter obj)
@@ -3027,19 +3037,173 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IEnumerable<IModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             ICellGetter obj,
             ILinkCache linkCache,
-            Type type,
             ModKey modKey,
             IModContext? parent,
-            bool throwIfUnknown,
-            Func<IOblivionMod, ICellGetter, ICell> getter)
+            Func<IOblivionMod, ICellGetter, ICell> getOrAddAsOverride,
+            Func<IOblivionMod, ICellGetter, string?, ICell> duplicateInto)
         {
             var curContext = new ModContext<IOblivionMod, ICell, ICellGetter>(
                 modKey,
                 record: obj,
-                getter: getter,
+                getOrAddAsOverride: getOrAddAsOverride,
+                duplicateInto: duplicateInto,
+                parent: parent);
+            {
+                if (obj.PathGrid.TryGet(out var CellPathGriditem))
+                {
+                    yield return new ModContext<IOblivionMod, IPathGridInternal, IPathGridGetter>(
+                        modKey: modKey,
+                        record: CellPathGriditem,
+                        parent: curContext,
+                        getOrAddAsOverride: (m, r) =>
+                        {
+                            var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                            if (baseRec.PathGrid != null) return baseRec.PathGrid;
+                            var copy = r.DeepCopy(ModContextExt.PathGridCopyMask);
+                            baseRec.PathGrid = copy;
+                            return copy;
+                        },
+                        duplicateInto: (m, r, e) =>
+                        {
+                            var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                            var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.PathGridCopyMask);
+                            baseRec.PathGrid = dupRec;
+                            return dupRec;
+                        });
+                }
+            }
+            {
+                if (obj.Landscape.TryGet(out var CellLandscapeitem))
+                {
+                    yield return new ModContext<IOblivionMod, ILandscapeInternal, ILandscapeGetter>(
+                        modKey: modKey,
+                        record: CellLandscapeitem,
+                        parent: curContext,
+                        getOrAddAsOverride: (m, r) =>
+                        {
+                            var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                            if (baseRec.Landscape != null) return baseRec.Landscape;
+                            var copy = r.DeepCopy(ModContextExt.LandscapeCopyMask);
+                            baseRec.Landscape = copy;
+                            return copy;
+                        },
+                        duplicateInto: (m, r, e) =>
+                        {
+                            var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                            var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.LandscapeCopyMask);
+                            baseRec.Landscape = dupRec;
+                            return dupRec;
+                        });
+                }
+            }
+            foreach (var subItem in obj.Persistent)
+            {
+                yield return new ModContext<IOblivionMod, IPlaced, IPlacedGetter>(
+                    modKey: modKey,
+                    record: subItem,
+                    parent: curContext,
+                    getOrAddAsOverride: (m, r) =>
+                    {
+                        var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                        getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
+                        return copy;
+                    },
+                    duplicateInto: (m, r, e) =>
+                    {
+                        var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                        getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(dup);
+                        return dup;
+                    });
+            }
+            foreach (var subItem in obj.Temporary)
+            {
+                yield return new ModContext<IOblivionMod, IPlaced, IPlacedGetter>(
+                    modKey: modKey,
+                    record: subItem,
+                    parent: curContext,
+                    getOrAddAsOverride: (m, r) =>
+                    {
+                        var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                        getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
+                        return copy;
+                    },
+                    duplicateInto: (m, r, e) =>
+                    {
+                        var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                        getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(dup);
+                        return dup;
+                    });
+            }
+            foreach (var subItem in obj.VisibleWhenDistant)
+            {
+                yield return new ModContext<IOblivionMod, IPlaced, IPlacedGetter>(
+                    modKey: modKey,
+                    record: subItem,
+                    parent: curContext,
+                    getOrAddAsOverride: (m, r) =>
+                    {
+                        var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                        getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).VisibleWhenDistant.Add(copy);
+                        return copy;
+                    },
+                    duplicateInto: (m, r, e) =>
+                    {
+                        var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                        getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).VisibleWhenDistant.Add(dup);
+                        return dup;
+                    });
+            }
+        }
+        
+        public IEnumerable<IModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+            ICellGetter obj,
+            ILinkCache linkCache,
+            Type type,
+            ModKey modKey,
+            IModContext? parent,
+            bool throwIfUnknown,
+            Func<IOblivionMod, ICellGetter, ICell> getOrAddAsOverride,
+            Func<IOblivionMod, ICellGetter, string?, ICell> duplicateInto)
+        {
+            var curContext = new ModContext<IOblivionMod, ICell, ICellGetter>(
+                modKey,
+                record: obj,
+                getOrAddAsOverride: getOrAddAsOverride,
+                duplicateInto: duplicateInto,
                 parent: parent);
             switch (type.Name)
             {
+                case "IMajorRecordCommon":
+                case "IMajorRecord":
+                case "MajorRecord":
+                case "IOblivionMajorRecord":
+                case "OblivionMajorRecord":
+                    if (!Cell_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in this.EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        modKey: modKey,
+                        parent: parent,
+                        getOrAddAsOverride: getOrAddAsOverride,
+                        duplicateInto: duplicateInto))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IMajorRecordGetter":
+                case "IMajorRecordCommonGetter":
+                case "IOblivionMajorRecordGetter":
+                    foreach (var item in this.EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        modKey: modKey,
+                        parent: parent,
+                        getOrAddAsOverride: getOrAddAsOverride,
+                        duplicateInto: duplicateInto))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "PathGrid":
                 case "IPathGridGetter":
                 case "IPathGrid":
@@ -3047,17 +3211,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         if (obj.PathGrid.TryGet(out var CellPathGriditem))
                         {
-                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<IOblivionMod, IPathGridInternal, IPathGridGetter>(
                                 modKey: modKey,
                                 record: CellPathGriditem,
                                 parent: curContext,
-                                getter: (m, r) =>
+                                getOrAddAsOverride: (m, r) =>
                                 {
-                                    var baseRec = getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
                                     if (baseRec.PathGrid != null) return baseRec.PathGrid;
-                                    var copy = (PathGrid)((IPathGridGetter)r).DeepCopy(ModContextExt.PathGridCopyMask);
+                                    var copy = r.DeepCopy(ModContextExt.PathGridCopyMask);
                                     baseRec.PathGrid = copy;
                                     return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.PathGridCopyMask);
+                                    baseRec.PathGrid = dupRec;
+                                    return dupRec;
                                 });
                         }
                     }
@@ -3069,17 +3240,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         if (obj.Landscape.TryGet(out var CellLandscapeitem))
                         {
-                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<IOblivionMod, ILandscapeInternal, ILandscapeGetter>(
                                 modKey: modKey,
                                 record: CellLandscapeitem,
                                 parent: curContext,
-                                getter: (m, r) =>
+                                getOrAddAsOverride: (m, r) =>
                                 {
-                                    var baseRec = getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
                                     if (baseRec.Landscape != null) return baseRec.Landscape;
-                                    var copy = (Landscape)((ILandscapeGetter)r).DeepCopy(ModContextExt.LandscapeCopyMask);
+                                    var copy = r.DeepCopy(ModContextExt.LandscapeCopyMask);
                                     baseRec.Landscape = copy;
                                     return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.LandscapeCopyMask);
+                                    baseRec.Landscape = dupRec;
+                                    return dupRec;
                                 });
                         }
                     }
@@ -3087,15 +3265,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<IOblivionMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
-                                getter: (m, r) =>
+                                getOrAddAsOverride: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
                                     return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(dup);
+                                    return dup;
                                 });
                         }
                     }
@@ -3103,15 +3287,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<IOblivionMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
-                                getter: (m, r) =>
+                                getOrAddAsOverride: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
                                     return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(dup);
+                                    return dup;
                                 });
                         }
                     }
@@ -3119,15 +3309,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<IOblivionMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
-                                getter: (m, r) =>
+                                getOrAddAsOverride: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).VisibleWhenDistant.Add(copy);
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).VisibleWhenDistant.Add(copy);
                                     return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).VisibleWhenDistant.Add(dup);
+                                    return dup;
                                 });
                         }
                     }
@@ -3138,15 +3334,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<IOblivionMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
-                                getter: (m, r) =>
+                                getOrAddAsOverride: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
                                     return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(dup);
+                                    return dup;
                                 });
                         }
                     }
@@ -3154,15 +3356,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<IOblivionMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
-                                getter: (m, r) =>
+                                getOrAddAsOverride: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
                                     return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(dup);
+                                    return dup;
                                 });
                         }
                     }
@@ -3170,15 +3378,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<IOblivionMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
-                                getter: (m, r) =>
+                                getOrAddAsOverride: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).VisibleWhenDistant.Add(copy);
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).VisibleWhenDistant.Add(copy);
                                     return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).VisibleWhenDistant.Add(dup);
+                                    return dup;
                                 });
                         }
                     }
@@ -3191,15 +3405,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<IOblivionMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
-                                getter: (m, r) =>
+                                getOrAddAsOverride: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
                                     return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(dup);
+                                    return dup;
                                 });
                         }
                     }
@@ -3207,15 +3427,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<IOblivionMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
-                                getter: (m, r) =>
+                                getOrAddAsOverride: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
                                     return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(dup);
+                                    return dup;
                                 });
                         }
                     }
@@ -3223,15 +3449,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<IOblivionMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
-                                getter: (m, r) =>
+                                getOrAddAsOverride: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).VisibleWhenDistant.Add(copy);
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).VisibleWhenDistant.Add(copy);
                                     return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).VisibleWhenDistant.Add(dup);
+                                    return dup;
                                 });
                         }
                     }
@@ -3244,15 +3476,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<IOblivionMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
-                                getter: (m, r) =>
+                                getOrAddAsOverride: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
                                     return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(dup);
+                                    return dup;
                                 });
                         }
                     }
@@ -3260,15 +3498,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<IOblivionMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
-                                getter: (m, r) =>
+                                getOrAddAsOverride: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
                                     return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(dup);
+                                    return dup;
                                 });
                         }
                     }
@@ -3276,15 +3520,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<IOblivionMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
-                                getter: (m, r) =>
+                                getOrAddAsOverride: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).VisibleWhenDistant.Add(copy);
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).VisibleWhenDistant.Add(copy);
                                     return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).VisibleWhenDistant.Add(dup);
+                                    return dup;
                                 });
                         }
                     }
@@ -3297,15 +3547,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<IOblivionMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
-                                getter: (m, r) =>
+                                getOrAddAsOverride: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
                                     return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(dup);
+                                    return dup;
                                 });
                         }
                     }
@@ -3313,15 +3569,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<IOblivionMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
-                                getter: (m, r) =>
+                                getOrAddAsOverride: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
                                     return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(dup);
+                                    return dup;
                                 });
                         }
                     }
@@ -3329,15 +3591,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<IOblivionMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
-                                getter: (m, r) =>
+                                getOrAddAsOverride: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).VisibleWhenDistant.Add(copy);
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).VisibleWhenDistant.Add(copy);
                                     return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).VisibleWhenDistant.Add(dup);
+                                    return dup;
                                 });
                         }
                     }
@@ -3353,6 +3621,52 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
             }
         }
+        
+        #region Duplicate
+        public Cell Duplicate(
+            ICellGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            var newRec = new Cell(formKey);
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
+        }
+        
+        public override Place Duplicate(
+            IPlaceGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (ICell)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override OblivionMajorRecord Duplicate(
+            IOblivionMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (ICell)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (ICell)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         
@@ -4127,10 +4441,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => CellCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => CellCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => CellCommon.Instance.GetContainedFormLinks(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

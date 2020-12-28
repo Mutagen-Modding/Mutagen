@@ -408,12 +408,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => EffectCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => EffectCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EffectCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EffectCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => EffectCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EffectSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -475,7 +471,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IEffect :
         IEffectGetter,
         ILoquiObjectSetter<IEffect>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new EffectData Data { get; set; }
         new ScriptEffect? ScriptEffect { get; set; }
@@ -484,7 +480,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IEffectGetter :
         ILoquiObject,
         ILoquiObject<IEffectGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -768,6 +764,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ScriptEffect = null;
         }
         
+        #region Mutagen
+        public void RemapLinks(IEffect obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Data.RemapLinks(mapping);
+            obj.ScriptEffect?.RemapLinks(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IEffect item,
@@ -905,15 +910,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IEffectGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IEffectGetter obj)
         {
-            foreach (var item in obj.Data.LinkFormKeys)
+            foreach (var item in obj.Data.ContainedFormLinks)
             {
                 yield return item;
             }
             if (obj.ScriptEffect.TryGet(out var ScriptEffectItems))
             {
-                foreach (var item in ScriptEffectItems.LinkFormKeys)
+                foreach (var item in ScriptEffectItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
@@ -921,7 +926,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(IEffectGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1238,10 +1242,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => EffectCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => EffectCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => EffectCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => EffectBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

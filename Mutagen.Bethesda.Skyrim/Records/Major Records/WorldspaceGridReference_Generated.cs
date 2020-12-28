@@ -471,12 +471,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = WorldspaceGridReference_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => WorldspaceGridReferenceCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => WorldspaceGridReferenceCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceGridReferenceCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceGridReferenceCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => WorldspaceGridReferenceCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceGridReferenceSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -538,7 +534,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IWorldspaceGridReference :
         IWorldspaceGridReferenceGetter,
         ILoquiObjectSetter<IWorldspaceGridReference>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new P2Int16 GridPosition { get; set; }
         new ExtendedList<WorldspaceReference> References { get; }
@@ -547,7 +543,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IWorldspaceGridReferenceGetter :
         ILoquiObject,
         ILoquiObject<IWorldspaceGridReferenceGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -820,6 +816,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.References.Clear();
         }
         
+        #region Mutagen
+        public void RemapLinks(IWorldspaceGridReference obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.References.RemapLinks(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IWorldspaceGridReference item,
@@ -968,16 +972,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IWorldspaceGridReferenceGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IWorldspaceGridReferenceGetter obj)
         {
-            foreach (var item in obj.References.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.References.SelectMany(f => f.ContainedFormLinks))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
         
-        public void RemapLinks(IWorldspaceGridReferenceGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1228,10 +1231,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => WorldspaceGridReferenceCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => WorldspaceGridReferenceCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => WorldspaceGridReferenceCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WorldspaceGridReferenceBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

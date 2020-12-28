@@ -388,12 +388,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => LocationTargetRadiusCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LocationTargetRadiusCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationTargetRadiusCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationTargetRadiusCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => LocationTargetRadiusCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationTargetRadiusSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -455,7 +451,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILocationTargetRadius :
         ILocationTargetRadiusGetter,
         ILoquiObjectSetter<ILocationTargetRadius>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ALocationTarget Target { get; set; }
         new UInt32 Radius { get; set; }
@@ -464,7 +460,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILocationTargetRadiusGetter :
         ILoquiObject,
         ILoquiObject<ILocationTargetRadiusGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -736,6 +732,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Radius = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(ILocationTargetRadius obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Target.RemapLinks(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ILocationTargetRadius item,
@@ -864,11 +868,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ILocationTargetRadiusGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ILocationTargetRadiusGetter obj)
         {
-            if (obj.Target is ILinkedFormKeyContainerGetter TargetlinkCont)
+            if (obj.Target is IFormLinkContainerGetter TargetlinkCont)
             {
-                foreach (var item in TargetlinkCont.LinkFormKeys)
+                foreach (var item in TargetlinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
@@ -876,7 +880,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(ILocationTargetRadiusGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1123,10 +1126,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => LocationTargetRadiusCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LocationTargetRadiusCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => LocationTargetRadiusCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LocationTargetRadiusBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

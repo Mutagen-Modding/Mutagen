@@ -764,6 +764,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Type = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IMapMarker obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IMapMarker item,
@@ -904,12 +911,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IMapMarkerGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IMapMarkerGetter obj)
         {
             yield break;
         }
         
-        public void RemapLinks(IMapMarkerGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

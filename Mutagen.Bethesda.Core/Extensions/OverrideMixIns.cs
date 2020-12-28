@@ -27,7 +27,7 @@ namespace Mutagen.Bethesda
         /// <returns>Enumerable of the most overridden version of each record of the given type, optionally including deleted ones</returns>
         public static IEnumerable<TMajor> WinningOverrides<TMod, TMajor>(
             this LoadOrder<TMod> loadOrder,
-            bool includeDeletedRecords = true)
+            bool includeDeletedRecords = false)
             where TMod : class, IModGetter
             where TMajor : class, IMajorRecordCommonGetter
         {
@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda
         public static IEnumerable<IMajorRecordCommonGetter> WinningOverrides<TMod>(
             this LoadOrder<TMod> loadOrder, 
             Type type,
-            bool includeDeletedRecords = true)
+            bool includeDeletedRecords = false)
             where TMod : class, IModGetter
         {
             return loadOrder.PriorityOrder.WinningOverrides(type, includeDeletedRecords: includeDeletedRecords);
@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda
         /// <returns>Enumerable of the most overridden version of each record of the given type, optionally including deleted ones</returns>
         public static IEnumerable<TMajor> WinningOverrides<TMajor>(
             this IEnumerable<IModListing<IModGetter>> modListings,
-            bool includeDeletedRecords = true)
+            bool includeDeletedRecords = false)
             where TMajor : class, IMajorRecordCommonGetter
         {
             return modListings
@@ -103,7 +103,7 @@ namespace Mutagen.Bethesda
         public static IEnumerable<IMajorRecordCommonGetter> WinningOverrides(
             this IEnumerable<IModListing<IModGetter>> modListings, 
             Type type,
-            bool includeDeletedRecords = true)
+            bool includeDeletedRecords = false)
         {
             return modListings
                 .Select(l => l.Mod)
@@ -128,7 +128,7 @@ namespace Mutagen.Bethesda
         /// <returns>Enumerable of the most overridden version of each record of the given type, optionally including deleted ones</returns>
         public static IEnumerable<TMajor> WinningOverrides<TMajor>(
             this IEnumerable<IModGetter> mods,
-            bool includeDeletedRecords = true)
+            bool includeDeletedRecords = false)
             where TMajor : class, IMajorRecordCommonGetter
         {
             var passedRecords = new HashSet<FormKey>();
@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda
         public static IEnumerable<IMajorRecordCommonGetter> WinningOverrides(
             this IEnumerable<IModGetter> mods,
             Type type,
-            bool includeDeletedRecords = true)
+            bool includeDeletedRecords = false)
         {
             var passedRecords = new HashSet<FormKey>();
             foreach (var mod in mods)
@@ -199,7 +199,7 @@ namespace Mutagen.Bethesda
         public static IEnumerable<IModContext<TMod, TSetter, TGetter>> WinningOverrideContexts<TMod, TModGetter, TSetter, TGetter>(
             this LoadOrder<TModGetter> loadOrder,
             ILinkCache linkCache,
-            bool includeDeletedRecords = true)
+            bool includeDeletedRecords = false)
             where TMod : class, IMod, TModGetter
             where TModGetter : class, IModGetter, IMajorRecordContextEnumerable<TMod>
             where TSetter : class, IMajorRecordCommon, TGetter
@@ -233,7 +233,7 @@ namespace Mutagen.Bethesda
             this LoadOrder<TModGetter> loadOrder,
             ILinkCache linkCache,
             Type type,
-            bool includeDeletedRecords = true)
+            bool includeDeletedRecords = false)
             where TMod : class, IMod, TModGetter
             where TModGetter : class, IModGetter, IMajorRecordContextEnumerable<TMod>
         {
@@ -264,7 +264,7 @@ namespace Mutagen.Bethesda
         public static IEnumerable<IModContext<TMod, TSetter, TGetter>> WinningOverrideContexts<TMod, TModGetter, TSetter, TGetter>(
             this IEnumerable<IModListing<TModGetter>> modListings,
             ILinkCache linkCache,
-            bool includeDeletedRecords = true)
+            bool includeDeletedRecords = false)
             where TMod : class, IMod, TModGetter
             where TModGetter : class, IModGetter, IMajorRecordContextEnumerable<TMod>
             where TSetter : class, IMajorRecordCommon, TGetter
@@ -301,7 +301,7 @@ namespace Mutagen.Bethesda
             this IEnumerable<IModListing<TModGetter>> modListings,
             ILinkCache linkCache,
             Type type,
-            bool includeDeletedRecords = true)
+            bool includeDeletedRecords = false)
             where TMod : class, IMod, TModGetter
             where TModGetter : class, IModGetter, IMajorRecordContextEnumerable<TMod>
         {
@@ -335,7 +335,7 @@ namespace Mutagen.Bethesda
         public static IEnumerable<IModContext<TMod, TSetter, TGetter>> WinningOverrideContexts<TMod, TModGetter, TSetter, TGetter>(
             this IEnumerable<TModGetter> mods,
             ILinkCache linkCache,
-            bool includeDeletedRecords = true)
+            bool includeDeletedRecords = false)
             where TMod : class, IMod, TModGetter
             where TModGetter : class, IModGetter, IMajorRecordContextEnumerable<TMod>
             where TSetter : class, IMajorRecordCommon, TGetter
@@ -378,7 +378,7 @@ namespace Mutagen.Bethesda
             this IEnumerable<TModGetter> mods,
             ILinkCache linkCache,
             Type type,
-            bool includeDeletedRecords = true)
+            bool includeDeletedRecords = false)
             where TMod : class, IMod, TModGetter
             where TModGetter : class, IModGetter, IMajorRecordContextEnumerable<TMod>
         {

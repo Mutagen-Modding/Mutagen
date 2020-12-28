@@ -315,12 +315,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected virtual IEnumerable<FormKey> LinkFormKeys => ANpcSoundDefinitionCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ANpcSoundDefinitionCommon.Instance.GetLinkFormKeys(this);
-        protected virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ANpcSoundDefinitionCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ANpcSoundDefinitionCommon.Instance.RemapLinks(this, mapping);
+        public virtual IEnumerable<FormLinkInformation> ContainedFormLinks => ANpcSoundDefinitionCommon.Instance.GetContainedFormLinks(this);
+        public virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ANpcSoundDefinitionSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -358,14 +354,14 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IANpcSoundDefinition :
         IANpcSoundDefinitionGetter,
         ILoquiObjectSetter<IANpcSoundDefinition>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
     }
 
     public partial interface IANpcSoundDefinitionGetter :
         ILoquiObject,
         ILoquiObject<IANpcSoundDefinitionGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -645,6 +641,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
         }
         
+        #region Mutagen
+        public void RemapLinks(IANpcSoundDefinition obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IANpcSoundDefinition item,
@@ -754,12 +757,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IANpcSoundDefinitionGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IANpcSoundDefinitionGetter obj)
         {
             yield break;
         }
         
-        public void RemapLinks(IANpcSoundDefinitionGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -940,10 +942,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected virtual IEnumerable<FormKey> LinkFormKeys => ANpcSoundDefinitionCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ANpcSoundDefinitionCommon.Instance.GetLinkFormKeys(this);
+        public virtual IEnumerable<FormLinkInformation> ContainedFormLinks => ANpcSoundDefinitionCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => ANpcSoundDefinitionBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

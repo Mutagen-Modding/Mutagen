@@ -851,12 +851,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Impact_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => ImpactCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ImpactCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ImpactCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ImpactCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => ImpactCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ImpactSetterCommon.Instance.RemapLinks(this, mapping);
         public Impact(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -964,7 +960,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         IModeled,
         ILoquiObjectSetter<IImpactInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new Model? Model { get; set; }
         new Single Duration { get; set; }
@@ -995,7 +991,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IModeledGetter,
         ILoquiObject<IImpactGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Impact_Registration.Instance;
@@ -1132,6 +1128,20 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
+
+        #region Mutagen
+        public static Impact Duplicate(
+            this IImpactGetter item,
+            FormKey formKey,
+            Impact.TranslationMask? copyMask = null)
+        {
+            return ((ImpactCommon)((IImpactGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
 
         #region Binary Translation
         public static void CopyInFromBinary(
@@ -1295,6 +1305,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IImpactInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IImpact obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Model?.RemapLinks(mapping);
+            obj.TextureSet = obj.TextureSet.Relink(mapping);
+            obj.SecondaryTextureSet = obj.SecondaryTextureSet.Relink(mapping);
+            obj.Sound1 = obj.Sound1.Relink(mapping);
+            obj.Sound2 = obj.Sound2.Relink(mapping);
+            obj.Hazard = obj.Hazard.Relink(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1634,53 +1658,76 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IImpactGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IImpactGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.Model.TryGet(out var ModelItems))
             {
-                foreach (var item in ModelItems.LinkFormKeys)
+                foreach (var item in ModelItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.TextureSet.FormKeyNullable.TryGet(out var TextureSetKey))
+            if (obj.TextureSet.FormKeyNullable.HasValue)
             {
-                yield return TextureSetKey;
+                yield return FormLinkInformation.Factory(obj.TextureSet);
             }
-            if (obj.SecondaryTextureSet.FormKeyNullable.TryGet(out var SecondaryTextureSetKey))
+            if (obj.SecondaryTextureSet.FormKeyNullable.HasValue)
             {
-                yield return SecondaryTextureSetKey;
+                yield return FormLinkInformation.Factory(obj.SecondaryTextureSet);
             }
-            if (obj.Sound1.FormKeyNullable.TryGet(out var Sound1Key))
+            if (obj.Sound1.FormKeyNullable.HasValue)
             {
-                yield return Sound1Key;
+                yield return FormLinkInformation.Factory(obj.Sound1);
             }
-            if (obj.Sound2.FormKeyNullable.TryGet(out var Sound2Key))
+            if (obj.Sound2.FormKeyNullable.HasValue)
             {
-                yield return Sound2Key;
+                yield return FormLinkInformation.Factory(obj.Sound2);
             }
-            if (obj.Hazard.FormKeyNullable.TryGet(out var HazardKey))
+            if (obj.Hazard.FormKeyNullable.HasValue)
             {
-                yield return HazardKey;
+                yield return FormLinkInformation.Factory(obj.Hazard);
             }
             yield break;
         }
         
-        public void RemapLinks(IImpactGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(Impact obj, Impact rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public Impact Duplicate(
+            IImpactGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new Impact(getNextFormKey(), ((IImpactGetter)item).FormVersion);
-            ret.DeepCopyIn((Impact)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (Impact)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new Impact(formKey, default(SkyrimRelease));
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override SkyrimMajorRecord Duplicate(
+            ISkyrimMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IImpact)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IImpact)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         
@@ -2254,10 +2301,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => ImpactCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ImpactCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => ImpactCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ImpactBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

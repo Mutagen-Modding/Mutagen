@@ -795,6 +795,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Mouth = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(INpcFaceParts obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             INpcFaceParts item,
@@ -940,12 +947,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(INpcFacePartsGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(INpcFacePartsGetter obj)
         {
             yield break;
         }
         
-        public void RemapLinks(INpcFacePartsGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

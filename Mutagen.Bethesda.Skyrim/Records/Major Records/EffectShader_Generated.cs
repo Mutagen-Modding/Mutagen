@@ -3887,12 +3887,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = EffectShader_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => EffectShaderCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => EffectShaderCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EffectShaderCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EffectShaderCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => EffectShaderCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EffectShaderSetterCommon.Instance.RemapLinks(this, mapping);
         public EffectShader(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -4003,7 +3999,7 @@ namespace Mutagen.Bethesda.Skyrim
         IEffectShaderGetter,
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IEffectShaderInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new String? FillTexture { get; set; }
         new String? ParticleShaderTexture { get; set; }
@@ -4123,7 +4119,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IEffectShaderGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IEffectShaderGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => EffectShader_Registration.Instance;
@@ -4350,6 +4346,20 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
+
+        #region Mutagen
+        public static EffectShader Duplicate(
+            this IEffectShaderGetter item,
+            FormKey formKey,
+            EffectShader.TranslationMask? copyMask = null)
+        {
+            return ((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
 
         #region Binary Translation
         public static void CopyInFromBinary(
@@ -4693,6 +4703,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IEffectShaderInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IEffectShader obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.AddonModels = obj.AddonModels.Relink(mapping);
+            obj.AmbientSound = obj.AmbientSound.Relink(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -5666,28 +5686,51 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IEffectShaderGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IEffectShaderGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
-            yield return obj.AddonModels.FormKey;
-            yield return obj.AmbientSound.FormKey;
+            yield return FormLinkInformation.Factory(obj.AddonModels);
+            yield return FormLinkInformation.Factory(obj.AmbientSound);
             yield break;
         }
         
-        public void RemapLinks(IEffectShaderGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(EffectShader obj, EffectShader rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public EffectShader Duplicate(
+            IEffectShaderGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new EffectShader(getNextFormKey(), ((IEffectShaderGetter)item).FormVersion);
-            ret.DeepCopyIn((EffectShader)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (EffectShader)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new EffectShader(formKey, default(SkyrimRelease));
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override SkyrimMajorRecord Duplicate(
+            ISkyrimMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IEffectShader)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IEffectShader)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         
@@ -6945,10 +6988,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => EffectShaderCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => EffectShaderCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => EffectShaderCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => EffectShaderBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

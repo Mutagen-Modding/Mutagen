@@ -712,6 +712,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IPerkEntryPointModifyValue)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IPerkEntryPointModifyValue obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IPerkEntryPointModifyValue item,
@@ -936,16 +944,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IPerkEntryPointModifyValueGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IPerkEntryPointModifyValueGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
             yield break;
         }
         
-        public void RemapLinks(IPerkEntryPointModifyValueGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

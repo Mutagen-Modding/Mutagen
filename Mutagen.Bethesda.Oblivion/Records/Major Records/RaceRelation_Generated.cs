@@ -384,12 +384,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = RaceRelation_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => RaceRelationCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => RaceRelationCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RaceRelationCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RaceRelationCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => RaceRelationCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RaceRelationSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -451,7 +447,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IRaceRelation :
         IRaceRelationGetter,
         ILoquiObjectSetter<IRaceRelation>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IRaceGetter> Race { get; set; }
         new Int32 Modifier { get; set; }
@@ -460,7 +456,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IRaceRelationGetter :
         ILoquiObject,
         ILoquiObject<IRaceRelationGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -733,6 +729,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Modifier = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IRaceRelation obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Race = obj.Race.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IRaceRelation item,
@@ -864,13 +868,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IRaceRelationGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IRaceRelationGetter obj)
         {
-            yield return obj.Race.FormKey;
+            yield return FormLinkInformation.Factory(obj.Race);
             yield break;
         }
         
-        public void RemapLinks(IRaceRelationGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1088,10 +1091,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => RaceRelationCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => RaceRelationCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => RaceRelationCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => RaceRelationBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

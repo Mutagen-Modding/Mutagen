@@ -760,6 +760,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.RotationSpeed = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IAnimationChangeThresholds obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IAnimationChangeThresholds item,
@@ -898,12 +905,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IAnimationChangeThresholdsGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IAnimationChangeThresholdsGetter obj)
         {
             yield break;
         }
         
-        public void RemapLinks(IAnimationChangeThresholdsGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

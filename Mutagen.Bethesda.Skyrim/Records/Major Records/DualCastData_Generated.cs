@@ -582,12 +582,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = DualCastData_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => DualCastDataCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => DualCastDataCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DualCastDataCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DualCastDataCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => DualCastDataCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DualCastDataSetterCommon.Instance.RemapLinks(this, mapping);
         public DualCastData(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -695,7 +691,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         IObjectBounded,
         ILoquiObjectSetter<IDualCastDataInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ObjectBounds ObjectBounds { get; set; }
         new FormLink<IProjectileGetter> Projectile { get; set; }
@@ -718,7 +714,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IObjectBoundedGetter,
         ILoquiObject<IDualCastDataGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => DualCastData_Registration.Instance;
@@ -847,6 +843,20 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
+
+        #region Mutagen
+        public static DualCastData Duplicate(
+            this IDualCastDataGetter item,
+            FormKey formKey,
+            DualCastData.TranslationMask? copyMask = null)
+        {
+            return ((DualCastDataCommon)((IDualCastDataGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
 
         #region Binary Translation
         public static void CopyInFromBinary(
@@ -994,6 +1004,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IDualCastDataInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IDualCastData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Projectile = obj.Projectile.Relink(mapping);
+            obj.Explosion = obj.Explosion.Relink(mapping);
+            obj.EffectShader = obj.EffectShader.Relink(mapping);
+            obj.HitEffectArt = obj.HitEffectArt.Relink(mapping);
+            obj.ImpactDataSet = obj.ImpactDataSet.Relink(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1261,31 +1284,54 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IDualCastDataGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IDualCastDataGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
-            yield return obj.Projectile.FormKey;
-            yield return obj.Explosion.FormKey;
-            yield return obj.EffectShader.FormKey;
-            yield return obj.HitEffectArt.FormKey;
-            yield return obj.ImpactDataSet.FormKey;
+            yield return FormLinkInformation.Factory(obj.Projectile);
+            yield return FormLinkInformation.Factory(obj.Explosion);
+            yield return FormLinkInformation.Factory(obj.EffectShader);
+            yield return FormLinkInformation.Factory(obj.HitEffectArt);
+            yield return FormLinkInformation.Factory(obj.ImpactDataSet);
             yield break;
         }
         
-        public void RemapLinks(IDualCastDataGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(DualCastData obj, DualCastData rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public DualCastData Duplicate(
+            IDualCastDataGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new DualCastData(getNextFormKey(), ((IDualCastDataGetter)item).FormVersion);
-            ret.DeepCopyIn((DualCastData)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (DualCastData)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new DualCastData(formKey, default(SkyrimRelease));
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override SkyrimMajorRecord Duplicate(
+            ISkyrimMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IDualCastData)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IDualCastData)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         
@@ -1726,10 +1772,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => DualCastDataCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => DualCastDataCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => DualCastDataCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => DualCastDataBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

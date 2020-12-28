@@ -477,12 +477,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = LeveledSpellEntryData_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => LeveledSpellEntryDataCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LeveledSpellEntryDataCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledSpellEntryDataCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledSpellEntryDataCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => LeveledSpellEntryDataCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledSpellEntryDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -544,7 +540,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILeveledSpellEntryData :
         ILeveledSpellEntryDataGetter,
         ILoquiObjectSetter<ILeveledSpellEntryData>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new Int16 Level { get; set; }
         new Int16 Unknown { get; set; }
@@ -556,7 +552,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILeveledSpellEntryDataGetter :
         ILoquiObject,
         ILoquiObject<ILeveledSpellEntryDataGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -838,6 +834,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Unknown2 = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(ILeveledSpellEntryData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Reference = obj.Reference.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ILeveledSpellEntryData item,
@@ -990,13 +994,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ILeveledSpellEntryDataGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ILeveledSpellEntryDataGetter obj)
         {
-            yield return obj.Reference.FormKey;
+            yield return FormLinkInformation.Factory(obj.Reference);
             yield break;
         }
         
-        public void RemapLinks(ILeveledSpellEntryDataGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1232,10 +1235,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => LeveledSpellEntryDataCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LeveledSpellEntryDataCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => LeveledSpellEntryDataCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LeveledSpellEntryDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -725,6 +725,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Type = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IAIPackageData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IAIPackageData item,
@@ -856,12 +863,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IAIPackageDataGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IAIPackageDataGetter obj)
         {
             yield break;
         }
         
-        public void RemapLinks(IAIPackageDataGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

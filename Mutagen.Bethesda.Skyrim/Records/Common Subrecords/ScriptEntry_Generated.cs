@@ -501,12 +501,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => ScriptEntryCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ScriptEntryCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptEntryCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptEntryCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => ScriptEntryCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptEntrySetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -568,7 +564,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IScriptEntry :
         IScriptEntryGetter,
         ILoquiObjectSetter<IScriptEntry>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new String Name { get; set; }
         new ScriptEntry.Flag Flags { get; set; }
@@ -578,7 +574,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IScriptEntryGetter :
         ILoquiObject,
         ILoquiObject<IScriptEntryGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -853,6 +849,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Properties.Clear();
         }
         
+        #region Mutagen
+        public void RemapLinks(IScriptEntry obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Properties.RemapLinks(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IScriptEntry item,
@@ -1005,17 +1009,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IScriptEntryGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IScriptEntryGetter obj)
         {
-            foreach (var item in obj.Properties.WhereCastable<IScriptPropertyGetter, ILinkedFormKeyContainerGetter>()
-                .SelectMany((f) => f.LinkFormKeys))
+            foreach (var item in obj.Properties.WhereCastable<IScriptPropertyGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.ContainedFormLinks))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
         
-        public void RemapLinks(IScriptEntryGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1243,10 +1246,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => ScriptEntryCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ScriptEntryCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => ScriptEntryCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ScriptEntryBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

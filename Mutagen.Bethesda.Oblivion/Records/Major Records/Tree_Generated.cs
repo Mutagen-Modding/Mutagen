@@ -838,6 +838,20 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
+        #region Mutagen
+        public static Tree Duplicate(
+            this ITreeGetter item,
+            FormKey formKey,
+            Tree.TranslationMask? copyMask = null)
+        {
+            return ((TreeCommon)((ITreeGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
+
         #region Binary Translation
         public static void CopyInFromBinary(
             this ITreeInternal item,
@@ -977,6 +991,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (ITreeInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(ITree obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1267,26 +1289,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ITreeGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ITreeGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
             yield break;
         }
         
-        public void RemapLinks(ITreeGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(Tree obj, Tree rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public Tree Duplicate(
+            ITreeGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new Tree(getNextFormKey());
-            ret.DeepCopyIn((Tree)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (Tree)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new Tree(formKey);
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override OblivionMajorRecord Duplicate(
+            IOblivionMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (ITree)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (ITree)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         

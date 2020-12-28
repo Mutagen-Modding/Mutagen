@@ -432,12 +432,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => RegionGrassesCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => RegionGrassesCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionGrassesCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionGrassesCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => RegionGrassesCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionGrassesSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -498,7 +494,7 @@ namespace Mutagen.Bethesda.Skyrim
         IRegionGrassesGetter,
         IRegionData,
         ILoquiObjectSetter<IRegionGrasses>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ExtendedList<RegionGrass>? Grasses { get; set; }
     }
@@ -506,7 +502,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IRegionGrassesGetter :
         IRegionDataGetter,
         ILoquiObject<IRegionGrassesGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => RegionGrasses_Registration.Instance;
@@ -764,6 +760,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IRegionGrasses)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IRegionGrasses obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Grasses?.RemapLinks(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IRegionGrasses item,
@@ -949,23 +954,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IRegionGrassesGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IRegionGrassesGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.Grasses.TryGet(out var GrassesItem))
             {
-                foreach (var item in GrassesItem.SelectMany(f => f.LinkFormKeys))
+                foreach (var item in GrassesItem.SelectMany(f => f.ContainedFormLinks))
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
             yield break;
         }
         
-        public void RemapLinks(IRegionGrassesGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1256,10 +1260,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => RegionGrassesCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => RegionGrassesCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => RegionGrassesCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RegionGrassesBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

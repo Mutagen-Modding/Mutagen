@@ -422,12 +422,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => DialogResponsesUnknownDataCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => DialogResponsesUnknownDataCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogResponsesUnknownDataCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogResponsesUnknownDataCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => DialogResponsesUnknownDataCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogResponsesUnknownDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -489,7 +485,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IDialogResponsesUnknownData :
         IDialogResponsesUnknownDataGetter,
         ILoquiObjectSetter<IDialogResponsesUnknownData>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new MemorySlice<Byte>? SCHR { get; set; }
         new FormLinkNullable<ISkyrimMajorRecordGetter> QNAM { get; set; }
@@ -499,7 +495,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IDialogResponsesUnknownDataGetter :
         ILoquiObject,
         ILoquiObject<IDialogResponsesUnknownDataGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -787,6 +783,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.NEXT = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IDialogResponsesUnknownData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.QNAM = obj.QNAM.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IDialogResponsesUnknownData item,
@@ -927,16 +931,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IDialogResponsesUnknownDataGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IDialogResponsesUnknownDataGetter obj)
         {
-            if (obj.QNAM.FormKeyNullable.TryGet(out var QNAMKey))
+            if (obj.QNAM.FormKeyNullable.HasValue)
             {
-                yield return QNAMKey;
+                yield return FormLinkInformation.Factory(obj.QNAM);
             }
             yield break;
         }
         
-        public void RemapLinks(IDialogResponsesUnknownDataGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1204,10 +1207,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => DialogResponsesUnknownDataCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => DialogResponsesUnknownDataCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => DialogResponsesUnknownDataCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => DialogResponsesUnknownDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

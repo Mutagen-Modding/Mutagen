@@ -547,6 +547,20 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
+        #region Mutagen
+        public static LensFlare Duplicate(
+            this ILensFlareGetter item,
+            FormKey formKey,
+            LensFlare.TranslationMask? copyMask = null)
+        {
+            return ((LensFlareCommon)((ILensFlareGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
+
         #region Binary Translation
         public static void CopyInFromBinary(
             this ILensFlareInternal item,
@@ -677,6 +691,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (ILensFlareInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(ILensFlare obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -888,26 +910,49 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ILensFlareGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ILensFlareGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
             yield break;
         }
         
-        public void RemapLinks(ILensFlareGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(LensFlare obj, LensFlare rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public LensFlare Duplicate(
+            ILensFlareGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new LensFlare(getNextFormKey(), ((ILensFlareGetter)item).FormVersion);
-            ret.DeepCopyIn((LensFlare)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (LensFlare)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new LensFlare(formKey, default(SkyrimRelease));
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override SkyrimMajorRecord Duplicate(
+            ISkyrimMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (ILensFlare)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (ILensFlare)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         

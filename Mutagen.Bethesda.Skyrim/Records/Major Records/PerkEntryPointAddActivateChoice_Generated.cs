@@ -428,12 +428,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = PerkEntryPointAddActivateChoice_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => PerkEntryPointAddActivateChoiceCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PerkEntryPointAddActivateChoiceCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkEntryPointAddActivateChoiceCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkEntryPointAddActivateChoiceCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => PerkEntryPointAddActivateChoiceCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkEntryPointAddActivateChoiceSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -494,7 +490,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPerkEntryPointAddActivateChoiceGetter,
         IAPerkEntryPointEffect,
         ILoquiObjectSetter<IPerkEntryPointAddActivateChoice>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLinkNullable<ISpellGetter> Spell { get; set; }
         new TranslatedString? ButtonLabel { get; set; }
@@ -504,7 +500,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPerkEntryPointAddActivateChoiceGetter :
         IAPerkEntryPointEffectGetter,
         ILoquiObject<IPerkEntryPointAddActivateChoiceGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => PerkEntryPointAddActivateChoice_Registration.Instance;
@@ -766,6 +762,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IPerkEntryPointAddActivateChoice)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IPerkEntryPointAddActivateChoice obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Spell = obj.Spell.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IPerkEntryPointAddActivateChoice item,
@@ -1001,20 +1006,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IPerkEntryPointAddActivateChoiceGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IPerkEntryPointAddActivateChoiceGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
-            if (obj.Spell.FormKeyNullable.TryGet(out var SpellKey))
+            if (obj.Spell.FormKeyNullable.HasValue)
             {
-                yield return SpellKey;
+                yield return FormLinkInformation.Factory(obj.Spell);
             }
             yield break;
         }
         
-        public void RemapLinks(IPerkEntryPointAddActivateChoiceGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1355,10 +1359,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => PerkEntryPointAddActivateChoiceCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PerkEntryPointAddActivateChoiceCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => PerkEntryPointAddActivateChoiceCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PerkEntryPointAddActivateChoiceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

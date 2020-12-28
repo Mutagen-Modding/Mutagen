@@ -5833,813 +5833,6 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
 
-        public Dictionary<FormKey, IMajorRecordCommon> CopyInDuplicate(
-            SkyrimMod rhs,
-            GroupMask? mask = null)
-        {
-            var duppedRecords = new List<(IMajorRecordCommon Record, FormKey OriginalFormKey)>();
-            if (mask?.GameSettings ?? true)
-            {
-                this.GameSettings.RecordCache.Set(
-                    rhs.GameSettings.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<GameSetting>());
-            }
-            if (mask?.Keywords ?? true)
-            {
-                this.Keywords.RecordCache.Set(
-                    rhs.Keywords.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Keyword>());
-            }
-            if (mask?.LocationReferenceTypes ?? true)
-            {
-                this.LocationReferenceTypes.RecordCache.Set(
-                    rhs.LocationReferenceTypes.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<LocationReferenceType>());
-            }
-            if (mask?.Actions ?? true)
-            {
-                this.Actions.RecordCache.Set(
-                    rhs.Actions.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<ActionRecord>());
-            }
-            if (mask?.TextureSets ?? true)
-            {
-                this.TextureSets.RecordCache.Set(
-                    rhs.TextureSets.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<TextureSet>());
-            }
-            if (mask?.Globals ?? true)
-            {
-                this.Globals.RecordCache.Set(
-                    rhs.Globals.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Global>());
-            }
-            if (mask?.Classes ?? true)
-            {
-                this.Classes.RecordCache.Set(
-                    rhs.Classes.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Class>());
-            }
-            if (mask?.Factions ?? true)
-            {
-                this.Factions.RecordCache.Set(
-                    rhs.Factions.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Faction>());
-            }
-            if (mask?.HeadParts ?? true)
-            {
-                this.HeadParts.RecordCache.Set(
-                    rhs.HeadParts.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<HeadPart>());
-            }
-            if (mask?.Hairs ?? true)
-            {
-                this.Hairs.RecordCache.Set(
-                    rhs.Hairs.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Hair>());
-            }
-            if (mask?.Eyes ?? true)
-            {
-                this.Eyes.RecordCache.Set(
-                    rhs.Eyes.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Eyes>());
-            }
-            if (mask?.Races ?? true)
-            {
-                this.Races.RecordCache.Set(
-                    rhs.Races.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Race>());
-            }
-            if (mask?.SoundMarkers ?? true)
-            {
-                this.SoundMarkers.RecordCache.Set(
-                    rhs.SoundMarkers.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<SoundMarker>());
-            }
-            if (mask?.AcousticSpaces ?? true)
-            {
-                this.AcousticSpaces.RecordCache.Set(
-                    rhs.AcousticSpaces.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<AcousticSpace>());
-            }
-            if (mask?.MagicEffects ?? true)
-            {
-                this.MagicEffects.RecordCache.Set(
-                    rhs.MagicEffects.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<MagicEffect>());
-            }
-            if (mask?.LandscapeTextures ?? true)
-            {
-                this.LandscapeTextures.RecordCache.Set(
-                    rhs.LandscapeTextures.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<LandscapeTexture>());
-            }
-            if (mask?.ObjectEffects ?? true)
-            {
-                this.ObjectEffects.RecordCache.Set(
-                    rhs.ObjectEffects.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<ObjectEffect>());
-            }
-            if (mask?.Spells ?? true)
-            {
-                this.Spells.RecordCache.Set(
-                    rhs.Spells.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Spell>());
-            }
-            if (mask?.Scrolls ?? true)
-            {
-                this.Scrolls.RecordCache.Set(
-                    rhs.Scrolls.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Scroll>());
-            }
-            if (mask?.Activators ?? true)
-            {
-                this.Activators.RecordCache.Set(
-                    rhs.Activators.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Activator>());
-            }
-            if (mask?.TalkingActivators ?? true)
-            {
-                this.TalkingActivators.RecordCache.Set(
-                    rhs.TalkingActivators.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<TalkingActivator>());
-            }
-            if (mask?.Armors ?? true)
-            {
-                this.Armors.RecordCache.Set(
-                    rhs.Armors.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Armor>());
-            }
-            if (mask?.Books ?? true)
-            {
-                this.Books.RecordCache.Set(
-                    rhs.Books.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Book>());
-            }
-            if (mask?.Containers ?? true)
-            {
-                this.Containers.RecordCache.Set(
-                    rhs.Containers.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Container>());
-            }
-            if (mask?.Doors ?? true)
-            {
-                this.Doors.RecordCache.Set(
-                    rhs.Doors.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Door>());
-            }
-            if (mask?.Ingredients ?? true)
-            {
-                this.Ingredients.RecordCache.Set(
-                    rhs.Ingredients.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Ingredient>());
-            }
-            if (mask?.Lights ?? true)
-            {
-                this.Lights.RecordCache.Set(
-                    rhs.Lights.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Light>());
-            }
-            if (mask?.MiscItems ?? true)
-            {
-                this.MiscItems.RecordCache.Set(
-                    rhs.MiscItems.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<MiscItem>());
-            }
-            if (mask?.AlchemicalApparatuses ?? true)
-            {
-                this.AlchemicalApparatuses.RecordCache.Set(
-                    rhs.AlchemicalApparatuses.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<AlchemicalApparatus>());
-            }
-            if (mask?.Statics ?? true)
-            {
-                this.Statics.RecordCache.Set(
-                    rhs.Statics.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Static>());
-            }
-            if (mask?.MoveableStatics ?? true)
-            {
-                this.MoveableStatics.RecordCache.Set(
-                    rhs.MoveableStatics.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<MoveableStatic>());
-            }
-            if (mask?.Grasses ?? true)
-            {
-                this.Grasses.RecordCache.Set(
-                    rhs.Grasses.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Grass>());
-            }
-            if (mask?.Trees ?? true)
-            {
-                this.Trees.RecordCache.Set(
-                    rhs.Trees.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Tree>());
-            }
-            if (mask?.Florae ?? true)
-            {
-                this.Florae.RecordCache.Set(
-                    rhs.Florae.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Flora>());
-            }
-            if (mask?.Furniture ?? true)
-            {
-                this.Furniture.RecordCache.Set(
-                    rhs.Furniture.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Furniture>());
-            }
-            if (mask?.Weapons ?? true)
-            {
-                this.Weapons.RecordCache.Set(
-                    rhs.Weapons.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Weapon>());
-            }
-            if (mask?.Ammunitions ?? true)
-            {
-                this.Ammunitions.RecordCache.Set(
-                    rhs.Ammunitions.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Ammunition>());
-            }
-            if (mask?.Npcs ?? true)
-            {
-                this.Npcs.RecordCache.Set(
-                    rhs.Npcs.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Npc>());
-            }
-            if (mask?.LeveledNpcs ?? true)
-            {
-                this.LeveledNpcs.RecordCache.Set(
-                    rhs.LeveledNpcs.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<LeveledNpc>());
-            }
-            if (mask?.Keys ?? true)
-            {
-                this.Keys.RecordCache.Set(
-                    rhs.Keys.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Key>());
-            }
-            if (mask?.Ingestibles ?? true)
-            {
-                this.Ingestibles.RecordCache.Set(
-                    rhs.Ingestibles.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Ingestible>());
-            }
-            if (mask?.IdleMarkers ?? true)
-            {
-                this.IdleMarkers.RecordCache.Set(
-                    rhs.IdleMarkers.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<IdleMarker>());
-            }
-            if (mask?.ConstructibleObjects ?? true)
-            {
-                this.ConstructibleObjects.RecordCache.Set(
-                    rhs.ConstructibleObjects.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<ConstructibleObject>());
-            }
-            if (mask?.Projectiles ?? true)
-            {
-                this.Projectiles.RecordCache.Set(
-                    rhs.Projectiles.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Projectile>());
-            }
-            if (mask?.Hazards ?? true)
-            {
-                this.Hazards.RecordCache.Set(
-                    rhs.Hazards.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Hazard>());
-            }
-            if (mask?.SoulGems ?? true)
-            {
-                this.SoulGems.RecordCache.Set(
-                    rhs.SoulGems.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<SoulGem>());
-            }
-            if (mask?.LeveledItems ?? true)
-            {
-                this.LeveledItems.RecordCache.Set(
-                    rhs.LeveledItems.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<LeveledItem>());
-            }
-            if (mask?.Weathers ?? true)
-            {
-                this.Weathers.RecordCache.Set(
-                    rhs.Weathers.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Weather>());
-            }
-            if (mask?.Climates ?? true)
-            {
-                this.Climates.RecordCache.Set(
-                    rhs.Climates.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Climate>());
-            }
-            if (mask?.ShaderParticleGeometries ?? true)
-            {
-                this.ShaderParticleGeometries.RecordCache.Set(
-                    rhs.ShaderParticleGeometries.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<ShaderParticleGeometry>());
-            }
-            if (mask?.VisualEffects ?? true)
-            {
-                this.VisualEffects.RecordCache.Set(
-                    rhs.VisualEffects.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<VisualEffect>());
-            }
-            if (mask?.Regions ?? true)
-            {
-                this.Regions.RecordCache.Set(
-                    rhs.Regions.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Region>());
-            }
-            if (mask?.NavigationMeshInfoMaps ?? true)
-            {
-                this.NavigationMeshInfoMaps.RecordCache.Set(
-                    rhs.NavigationMeshInfoMaps.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<NavigationMeshInfoMap>());
-            }
-            if (mask?.Cells ?? true)
-            {
-                this.Cells.Records.AddRange(
-                    rhs.Cells.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<CellBlock>());
-            }
-            if (mask?.Worldspaces ?? true)
-            {
-                this.Worldspaces.RecordCache.Set(
-                    rhs.Worldspaces.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Worldspace>());
-            }
-            if (mask?.DialogTopics ?? true)
-            {
-                this.DialogTopics.RecordCache.Set(
-                    rhs.DialogTopics.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<DialogTopic>());
-            }
-            if (mask?.Quests ?? true)
-            {
-                this.Quests.RecordCache.Set(
-                    rhs.Quests.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Quest>());
-            }
-            if (mask?.IdleAnimations ?? true)
-            {
-                this.IdleAnimations.RecordCache.Set(
-                    rhs.IdleAnimations.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<IdleAnimation>());
-            }
-            if (mask?.Packages ?? true)
-            {
-                this.Packages.RecordCache.Set(
-                    rhs.Packages.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Package>());
-            }
-            if (mask?.CombatStyles ?? true)
-            {
-                this.CombatStyles.RecordCache.Set(
-                    rhs.CombatStyles.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<CombatStyle>());
-            }
-            if (mask?.LoadScreens ?? true)
-            {
-                this.LoadScreens.RecordCache.Set(
-                    rhs.LoadScreens.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<LoadScreen>());
-            }
-            if (mask?.LeveledSpells ?? true)
-            {
-                this.LeveledSpells.RecordCache.Set(
-                    rhs.LeveledSpells.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<LeveledSpell>());
-            }
-            if (mask?.AnimatedObjects ?? true)
-            {
-                this.AnimatedObjects.RecordCache.Set(
-                    rhs.AnimatedObjects.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<AnimatedObject>());
-            }
-            if (mask?.Waters ?? true)
-            {
-                this.Waters.RecordCache.Set(
-                    rhs.Waters.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Water>());
-            }
-            if (mask?.EffectShaders ?? true)
-            {
-                this.EffectShaders.RecordCache.Set(
-                    rhs.EffectShaders.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<EffectShader>());
-            }
-            if (mask?.Explosions ?? true)
-            {
-                this.Explosions.RecordCache.Set(
-                    rhs.Explosions.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Explosion>());
-            }
-            if (mask?.Debris ?? true)
-            {
-                this.Debris.RecordCache.Set(
-                    rhs.Debris.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Debris>());
-            }
-            if (mask?.ImageSpaces ?? true)
-            {
-                this.ImageSpaces.RecordCache.Set(
-                    rhs.ImageSpaces.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<ImageSpace>());
-            }
-            if (mask?.ImageSpaceAdapters ?? true)
-            {
-                this.ImageSpaceAdapters.RecordCache.Set(
-                    rhs.ImageSpaceAdapters.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<ImageSpaceAdapter>());
-            }
-            if (mask?.FormLists ?? true)
-            {
-                this.FormLists.RecordCache.Set(
-                    rhs.FormLists.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<FormList>());
-            }
-            if (mask?.Perks ?? true)
-            {
-                this.Perks.RecordCache.Set(
-                    rhs.Perks.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Perk>());
-            }
-            if (mask?.BodyParts ?? true)
-            {
-                this.BodyParts.RecordCache.Set(
-                    rhs.BodyParts.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<BodyPartData>());
-            }
-            if (mask?.AddonNodes ?? true)
-            {
-                this.AddonNodes.RecordCache.Set(
-                    rhs.AddonNodes.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<AddonNode>());
-            }
-            if (mask?.ActorValueInformation ?? true)
-            {
-                this.ActorValueInformation.RecordCache.Set(
-                    rhs.ActorValueInformation.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<ActorValueInformation>());
-            }
-            if (mask?.CameraShots ?? true)
-            {
-                this.CameraShots.RecordCache.Set(
-                    rhs.CameraShots.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<CameraShot>());
-            }
-            if (mask?.CameraPaths ?? true)
-            {
-                this.CameraPaths.RecordCache.Set(
-                    rhs.CameraPaths.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<CameraPath>());
-            }
-            if (mask?.VoiceTypes ?? true)
-            {
-                this.VoiceTypes.RecordCache.Set(
-                    rhs.VoiceTypes.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<VoiceType>());
-            }
-            if (mask?.MaterialTypes ?? true)
-            {
-                this.MaterialTypes.RecordCache.Set(
-                    rhs.MaterialTypes.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<MaterialType>());
-            }
-            if (mask?.Impacts ?? true)
-            {
-                this.Impacts.RecordCache.Set(
-                    rhs.Impacts.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Impact>());
-            }
-            if (mask?.ImpactDataSets ?? true)
-            {
-                this.ImpactDataSets.RecordCache.Set(
-                    rhs.ImpactDataSets.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<ImpactDataSet>());
-            }
-            if (mask?.ArmorAddons ?? true)
-            {
-                this.ArmorAddons.RecordCache.Set(
-                    rhs.ArmorAddons.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<ArmorAddon>());
-            }
-            if (mask?.EncounterZones ?? true)
-            {
-                this.EncounterZones.RecordCache.Set(
-                    rhs.EncounterZones.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<EncounterZone>());
-            }
-            if (mask?.Locations ?? true)
-            {
-                this.Locations.RecordCache.Set(
-                    rhs.Locations.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Location>());
-            }
-            if (mask?.Messages ?? true)
-            {
-                this.Messages.RecordCache.Set(
-                    rhs.Messages.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Message>());
-            }
-            if (mask?.DefaultObjectManagers ?? true)
-            {
-                this.DefaultObjectManagers.RecordCache.Set(
-                    rhs.DefaultObjectManagers.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<DefaultObjectManager>());
-            }
-            if (mask?.LightingTemplates ?? true)
-            {
-                this.LightingTemplates.RecordCache.Set(
-                    rhs.LightingTemplates.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<LightingTemplate>());
-            }
-            if (mask?.MusicTypes ?? true)
-            {
-                this.MusicTypes.RecordCache.Set(
-                    rhs.MusicTypes.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<MusicType>());
-            }
-            if (mask?.Footsteps ?? true)
-            {
-                this.Footsteps.RecordCache.Set(
-                    rhs.Footsteps.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Footstep>());
-            }
-            if (mask?.FootstepSets ?? true)
-            {
-                this.FootstepSets.RecordCache.Set(
-                    rhs.FootstepSets.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<FootstepSet>());
-            }
-            if (mask?.StoryManagerBranchNodes ?? true)
-            {
-                this.StoryManagerBranchNodes.RecordCache.Set(
-                    rhs.StoryManagerBranchNodes.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<StoryManagerBranchNode>());
-            }
-            if (mask?.StoryManagerQuestNodes ?? true)
-            {
-                this.StoryManagerQuestNodes.RecordCache.Set(
-                    rhs.StoryManagerQuestNodes.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<StoryManagerQuestNode>());
-            }
-            if (mask?.StoryManagerEventNodes ?? true)
-            {
-                this.StoryManagerEventNodes.RecordCache.Set(
-                    rhs.StoryManagerEventNodes.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<StoryManagerEventNode>());
-            }
-            if (mask?.DialogBranches ?? true)
-            {
-                this.DialogBranches.RecordCache.Set(
-                    rhs.DialogBranches.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<DialogBranch>());
-            }
-            if (mask?.MusicTracks ?? true)
-            {
-                this.MusicTracks.RecordCache.Set(
-                    rhs.MusicTracks.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<MusicTrack>());
-            }
-            if (mask?.DialogViews ?? true)
-            {
-                this.DialogViews.RecordCache.Set(
-                    rhs.DialogViews.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<DialogView>());
-            }
-            if (mask?.WordsOfPower ?? true)
-            {
-                this.WordsOfPower.RecordCache.Set(
-                    rhs.WordsOfPower.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<WordOfPower>());
-            }
-            if (mask?.Shouts ?? true)
-            {
-                this.Shouts.RecordCache.Set(
-                    rhs.Shouts.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Shout>());
-            }
-            if (mask?.EquipTypes ?? true)
-            {
-                this.EquipTypes.RecordCache.Set(
-                    rhs.EquipTypes.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<EquipType>());
-            }
-            if (mask?.Relationships ?? true)
-            {
-                this.Relationships.RecordCache.Set(
-                    rhs.Relationships.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Relationship>());
-            }
-            if (mask?.Scenes ?? true)
-            {
-                this.Scenes.RecordCache.Set(
-                    rhs.Scenes.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Scene>());
-            }
-            if (mask?.AssociationTypes ?? true)
-            {
-                this.AssociationTypes.RecordCache.Set(
-                    rhs.AssociationTypes.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<AssociationType>());
-            }
-            if (mask?.Outfits ?? true)
-            {
-                this.Outfits.RecordCache.Set(
-                    rhs.Outfits.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Outfit>());
-            }
-            if (mask?.ArtObjects ?? true)
-            {
-                this.ArtObjects.RecordCache.Set(
-                    rhs.ArtObjects.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<ArtObject>());
-            }
-            if (mask?.MaterialObjects ?? true)
-            {
-                this.MaterialObjects.RecordCache.Set(
-                    rhs.MaterialObjects.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<MaterialObject>());
-            }
-            if (mask?.MovementTypes ?? true)
-            {
-                this.MovementTypes.RecordCache.Set(
-                    rhs.MovementTypes.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<MovementType>());
-            }
-            if (mask?.SoundDescriptors ?? true)
-            {
-                this.SoundDescriptors.RecordCache.Set(
-                    rhs.SoundDescriptors.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<SoundDescriptor>());
-            }
-            if (mask?.DualCastData ?? true)
-            {
-                this.DualCastData.RecordCache.Set(
-                    rhs.DualCastData.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<DualCastData>());
-            }
-            if (mask?.SoundCategories ?? true)
-            {
-                this.SoundCategories.RecordCache.Set(
-                    rhs.SoundCategories.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<SoundCategory>());
-            }
-            if (mask?.SoundOutputModels ?? true)
-            {
-                this.SoundOutputModels.RecordCache.Set(
-                    rhs.SoundOutputModels.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<SoundOutputModel>());
-            }
-            if (mask?.CollisionLayers ?? true)
-            {
-                this.CollisionLayers.RecordCache.Set(
-                    rhs.CollisionLayers.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<CollisionLayer>());
-            }
-            if (mask?.Colors ?? true)
-            {
-                this.Colors.RecordCache.Set(
-                    rhs.Colors.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<ColorRecord>());
-            }
-            if (mask?.ReverbParameters ?? true)
-            {
-                this.ReverbParameters.RecordCache.Set(
-                    rhs.ReverbParameters.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<ReverbParameters>());
-            }
-            if (mask?.VolumetricLightings ?? true)
-            {
-                this.VolumetricLightings.RecordCache.Set(
-                    rhs.VolumetricLightings.Records
-                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<VolumetricLighting>());
-            }
-            var router = new Dictionary<FormKey, IMajorRecordCommon>();
-            router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
-            var mapping = new Dictionary<FormKey, FormKey>();
-            var package = this.ToImmutableLinkCache();
-            foreach (var rec in router.Values)
-            {
-                rec.RemapLinks(mapping);
-            }
-            return router;
-        }
-
         public override void SyncRecordCount()
         {
             this.ModHeader.Stats.NumRecords = GetRecordCount();
@@ -6767,12 +5960,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void GetCustomRecordCount(Action<uint> setter);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => SkyrimModCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => SkyrimModCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimModCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimModCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => SkyrimModCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimModSetterCommon.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
@@ -7007,7 +6196,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ISkyrimMod>,
         IMod,
         IContextMod<ISkyrimMod>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new SkyrimModHeader ModHeader { get; }
         new Group<GameSetting> GameSettings { get; }
@@ -7132,7 +6321,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<ISkyrimModGetter>,
         IModGetter,
         IContextGetterMod<ISkyrimMod>,
-        ILinkedFormKeyContainerGetter
+        IFormLinkContainerGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -8102,6 +7291,124 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
+        public void RemapLinks(ISkyrimMod obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.ModHeader.RemapLinks(mapping);
+            obj.GameSettings.RemapLinks(mapping);
+            obj.Keywords.RemapLinks(mapping);
+            obj.LocationReferenceTypes.RemapLinks(mapping);
+            obj.Actions.RemapLinks(mapping);
+            obj.TextureSets.RemapLinks(mapping);
+            obj.Globals.RemapLinks(mapping);
+            obj.Classes.RemapLinks(mapping);
+            obj.Factions.RemapLinks(mapping);
+            obj.HeadParts.RemapLinks(mapping);
+            obj.Hairs.RemapLinks(mapping);
+            obj.Eyes.RemapLinks(mapping);
+            obj.Races.RemapLinks(mapping);
+            obj.SoundMarkers.RemapLinks(mapping);
+            obj.AcousticSpaces.RemapLinks(mapping);
+            obj.MagicEffects.RemapLinks(mapping);
+            obj.LandscapeTextures.RemapLinks(mapping);
+            obj.ObjectEffects.RemapLinks(mapping);
+            obj.Spells.RemapLinks(mapping);
+            obj.Scrolls.RemapLinks(mapping);
+            obj.Activators.RemapLinks(mapping);
+            obj.TalkingActivators.RemapLinks(mapping);
+            obj.Armors.RemapLinks(mapping);
+            obj.Books.RemapLinks(mapping);
+            obj.Containers.RemapLinks(mapping);
+            obj.Doors.RemapLinks(mapping);
+            obj.Ingredients.RemapLinks(mapping);
+            obj.Lights.RemapLinks(mapping);
+            obj.MiscItems.RemapLinks(mapping);
+            obj.AlchemicalApparatuses.RemapLinks(mapping);
+            obj.Statics.RemapLinks(mapping);
+            obj.MoveableStatics.RemapLinks(mapping);
+            obj.Grasses.RemapLinks(mapping);
+            obj.Trees.RemapLinks(mapping);
+            obj.Florae.RemapLinks(mapping);
+            obj.Furniture.RemapLinks(mapping);
+            obj.Weapons.RemapLinks(mapping);
+            obj.Ammunitions.RemapLinks(mapping);
+            obj.Npcs.RemapLinks(mapping);
+            obj.LeveledNpcs.RemapLinks(mapping);
+            obj.Keys.RemapLinks(mapping);
+            obj.Ingestibles.RemapLinks(mapping);
+            obj.IdleMarkers.RemapLinks(mapping);
+            obj.ConstructibleObjects.RemapLinks(mapping);
+            obj.Projectiles.RemapLinks(mapping);
+            obj.Hazards.RemapLinks(mapping);
+            obj.SoulGems.RemapLinks(mapping);
+            obj.LeveledItems.RemapLinks(mapping);
+            obj.Weathers.RemapLinks(mapping);
+            obj.Climates.RemapLinks(mapping);
+            obj.ShaderParticleGeometries.RemapLinks(mapping);
+            obj.VisualEffects.RemapLinks(mapping);
+            obj.Regions.RemapLinks(mapping);
+            obj.NavigationMeshInfoMaps.RemapLinks(mapping);
+            obj.Cells.RemapLinks(mapping);
+            obj.Worldspaces.RemapLinks(mapping);
+            obj.DialogTopics.RemapLinks(mapping);
+            obj.Quests.RemapLinks(mapping);
+            obj.IdleAnimations.RemapLinks(mapping);
+            obj.Packages.RemapLinks(mapping);
+            obj.CombatStyles.RemapLinks(mapping);
+            obj.LoadScreens.RemapLinks(mapping);
+            obj.LeveledSpells.RemapLinks(mapping);
+            obj.AnimatedObjects.RemapLinks(mapping);
+            obj.Waters.RemapLinks(mapping);
+            obj.EffectShaders.RemapLinks(mapping);
+            obj.Explosions.RemapLinks(mapping);
+            obj.Debris.RemapLinks(mapping);
+            obj.ImageSpaces.RemapLinks(mapping);
+            obj.ImageSpaceAdapters.RemapLinks(mapping);
+            obj.FormLists.RemapLinks(mapping);
+            obj.Perks.RemapLinks(mapping);
+            obj.BodyParts.RemapLinks(mapping);
+            obj.AddonNodes.RemapLinks(mapping);
+            obj.ActorValueInformation.RemapLinks(mapping);
+            obj.CameraShots.RemapLinks(mapping);
+            obj.CameraPaths.RemapLinks(mapping);
+            obj.VoiceTypes.RemapLinks(mapping);
+            obj.MaterialTypes.RemapLinks(mapping);
+            obj.Impacts.RemapLinks(mapping);
+            obj.ImpactDataSets.RemapLinks(mapping);
+            obj.ArmorAddons.RemapLinks(mapping);
+            obj.EncounterZones.RemapLinks(mapping);
+            obj.Locations.RemapLinks(mapping);
+            obj.Messages.RemapLinks(mapping);
+            obj.DefaultObjectManagers.RemapLinks(mapping);
+            obj.LightingTemplates.RemapLinks(mapping);
+            obj.MusicTypes.RemapLinks(mapping);
+            obj.Footsteps.RemapLinks(mapping);
+            obj.FootstepSets.RemapLinks(mapping);
+            obj.StoryManagerBranchNodes.RemapLinks(mapping);
+            obj.StoryManagerQuestNodes.RemapLinks(mapping);
+            obj.StoryManagerEventNodes.RemapLinks(mapping);
+            obj.DialogBranches.RemapLinks(mapping);
+            obj.MusicTracks.RemapLinks(mapping);
+            obj.DialogViews.RemapLinks(mapping);
+            obj.WordsOfPower.RemapLinks(mapping);
+            obj.Shouts.RemapLinks(mapping);
+            obj.EquipTypes.RemapLinks(mapping);
+            obj.Relationships.RemapLinks(mapping);
+            obj.Scenes.RemapLinks(mapping);
+            obj.AssociationTypes.RemapLinks(mapping);
+            obj.Outfits.RemapLinks(mapping);
+            obj.ArtObjects.RemapLinks(mapping);
+            obj.MaterialObjects.RemapLinks(mapping);
+            obj.MovementTypes.RemapLinks(mapping);
+            obj.SoundDescriptors.RemapLinks(mapping);
+            obj.DualCastData.RemapLinks(mapping);
+            obj.SoundCategories.RemapLinks(mapping);
+            obj.SoundOutputModels.RemapLinks(mapping);
+            obj.CollisionLayers.RemapLinks(mapping);
+            obj.Colors.RemapLinks(mapping);
+            obj.ReverbParameters.RemapLinks(mapping);
+            obj.VolumetricLightings.RemapLinks(mapping);
+        }
+        
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(ISkyrimMod obj)
         {
             foreach (var item in SkyrimModCommon.Instance.EnumerateMajorRecords(obj))
@@ -11117,796 +10424,796 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             streamDepositArray[targetIndex] = new CompositeReadStream(subStreams, resetPositions: true);
         }
         
-        public IEnumerable<FormKey> GetLinkFormKeys(ISkyrimModGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ISkyrimModGetter obj)
         {
-            foreach (var item in obj.ModHeader.LinkFormKeys)
+            foreach (var item in obj.ModHeader.ContainedFormLinks)
             {
                 yield return item;
             }
-            if (obj.GameSettings is ILinkedFormKeyContainerGetter GameSettingslinkCont)
+            if (obj.GameSettings is IFormLinkContainerGetter GameSettingslinkCont)
             {
-                foreach (var item in GameSettingslinkCont.LinkFormKeys)
+                foreach (var item in GameSettingslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Keywords is ILinkedFormKeyContainerGetter KeywordslinkCont)
+            if (obj.Keywords is IFormLinkContainerGetter KeywordslinkCont)
             {
-                foreach (var item in KeywordslinkCont.LinkFormKeys)
+                foreach (var item in KeywordslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.LocationReferenceTypes is ILinkedFormKeyContainerGetter LocationReferenceTypeslinkCont)
+            if (obj.LocationReferenceTypes is IFormLinkContainerGetter LocationReferenceTypeslinkCont)
             {
-                foreach (var item in LocationReferenceTypeslinkCont.LinkFormKeys)
+                foreach (var item in LocationReferenceTypeslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Actions is ILinkedFormKeyContainerGetter ActionslinkCont)
+            if (obj.Actions is IFormLinkContainerGetter ActionslinkCont)
             {
-                foreach (var item in ActionslinkCont.LinkFormKeys)
+                foreach (var item in ActionslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.TextureSets is ILinkedFormKeyContainerGetter TextureSetslinkCont)
+            if (obj.TextureSets is IFormLinkContainerGetter TextureSetslinkCont)
             {
-                foreach (var item in TextureSetslinkCont.LinkFormKeys)
+                foreach (var item in TextureSetslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Globals is ILinkedFormKeyContainerGetter GlobalslinkCont)
+            if (obj.Globals is IFormLinkContainerGetter GlobalslinkCont)
             {
-                foreach (var item in GlobalslinkCont.LinkFormKeys)
+                foreach (var item in GlobalslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Classes is ILinkedFormKeyContainerGetter ClasseslinkCont)
+            if (obj.Classes is IFormLinkContainerGetter ClasseslinkCont)
             {
-                foreach (var item in ClasseslinkCont.LinkFormKeys)
+                foreach (var item in ClasseslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Factions is ILinkedFormKeyContainerGetter FactionslinkCont)
+            if (obj.Factions is IFormLinkContainerGetter FactionslinkCont)
             {
-                foreach (var item in FactionslinkCont.LinkFormKeys)
+                foreach (var item in FactionslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.HeadParts is ILinkedFormKeyContainerGetter HeadPartslinkCont)
+            if (obj.HeadParts is IFormLinkContainerGetter HeadPartslinkCont)
             {
-                foreach (var item in HeadPartslinkCont.LinkFormKeys)
+                foreach (var item in HeadPartslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Hairs is ILinkedFormKeyContainerGetter HairslinkCont)
+            if (obj.Hairs is IFormLinkContainerGetter HairslinkCont)
             {
-                foreach (var item in HairslinkCont.LinkFormKeys)
+                foreach (var item in HairslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Eyes is ILinkedFormKeyContainerGetter EyeslinkCont)
+            if (obj.Eyes is IFormLinkContainerGetter EyeslinkCont)
             {
-                foreach (var item in EyeslinkCont.LinkFormKeys)
+                foreach (var item in EyeslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Races is ILinkedFormKeyContainerGetter RaceslinkCont)
+            if (obj.Races is IFormLinkContainerGetter RaceslinkCont)
             {
-                foreach (var item in RaceslinkCont.LinkFormKeys)
+                foreach (var item in RaceslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.SoundMarkers is ILinkedFormKeyContainerGetter SoundMarkerslinkCont)
+            if (obj.SoundMarkers is IFormLinkContainerGetter SoundMarkerslinkCont)
             {
-                foreach (var item in SoundMarkerslinkCont.LinkFormKeys)
+                foreach (var item in SoundMarkerslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.AcousticSpaces is ILinkedFormKeyContainerGetter AcousticSpaceslinkCont)
+            if (obj.AcousticSpaces is IFormLinkContainerGetter AcousticSpaceslinkCont)
             {
-                foreach (var item in AcousticSpaceslinkCont.LinkFormKeys)
+                foreach (var item in AcousticSpaceslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.MagicEffects is ILinkedFormKeyContainerGetter MagicEffectslinkCont)
+            if (obj.MagicEffects is IFormLinkContainerGetter MagicEffectslinkCont)
             {
-                foreach (var item in MagicEffectslinkCont.LinkFormKeys)
+                foreach (var item in MagicEffectslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.LandscapeTextures is ILinkedFormKeyContainerGetter LandscapeTextureslinkCont)
+            if (obj.LandscapeTextures is IFormLinkContainerGetter LandscapeTextureslinkCont)
             {
-                foreach (var item in LandscapeTextureslinkCont.LinkFormKeys)
+                foreach (var item in LandscapeTextureslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.ObjectEffects is ILinkedFormKeyContainerGetter ObjectEffectslinkCont)
+            if (obj.ObjectEffects is IFormLinkContainerGetter ObjectEffectslinkCont)
             {
-                foreach (var item in ObjectEffectslinkCont.LinkFormKeys)
+                foreach (var item in ObjectEffectslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Spells is ILinkedFormKeyContainerGetter SpellslinkCont)
+            if (obj.Spells is IFormLinkContainerGetter SpellslinkCont)
             {
-                foreach (var item in SpellslinkCont.LinkFormKeys)
+                foreach (var item in SpellslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Scrolls is ILinkedFormKeyContainerGetter ScrollslinkCont)
+            if (obj.Scrolls is IFormLinkContainerGetter ScrollslinkCont)
             {
-                foreach (var item in ScrollslinkCont.LinkFormKeys)
+                foreach (var item in ScrollslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Activators is ILinkedFormKeyContainerGetter ActivatorslinkCont)
+            if (obj.Activators is IFormLinkContainerGetter ActivatorslinkCont)
             {
-                foreach (var item in ActivatorslinkCont.LinkFormKeys)
+                foreach (var item in ActivatorslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.TalkingActivators is ILinkedFormKeyContainerGetter TalkingActivatorslinkCont)
+            if (obj.TalkingActivators is IFormLinkContainerGetter TalkingActivatorslinkCont)
             {
-                foreach (var item in TalkingActivatorslinkCont.LinkFormKeys)
+                foreach (var item in TalkingActivatorslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Armors is ILinkedFormKeyContainerGetter ArmorslinkCont)
+            if (obj.Armors is IFormLinkContainerGetter ArmorslinkCont)
             {
-                foreach (var item in ArmorslinkCont.LinkFormKeys)
+                foreach (var item in ArmorslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Books is ILinkedFormKeyContainerGetter BookslinkCont)
+            if (obj.Books is IFormLinkContainerGetter BookslinkCont)
             {
-                foreach (var item in BookslinkCont.LinkFormKeys)
+                foreach (var item in BookslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Containers is ILinkedFormKeyContainerGetter ContainerslinkCont)
+            if (obj.Containers is IFormLinkContainerGetter ContainerslinkCont)
             {
-                foreach (var item in ContainerslinkCont.LinkFormKeys)
+                foreach (var item in ContainerslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Doors is ILinkedFormKeyContainerGetter DoorslinkCont)
+            if (obj.Doors is IFormLinkContainerGetter DoorslinkCont)
             {
-                foreach (var item in DoorslinkCont.LinkFormKeys)
+                foreach (var item in DoorslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Ingredients is ILinkedFormKeyContainerGetter IngredientslinkCont)
+            if (obj.Ingredients is IFormLinkContainerGetter IngredientslinkCont)
             {
-                foreach (var item in IngredientslinkCont.LinkFormKeys)
+                foreach (var item in IngredientslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Lights is ILinkedFormKeyContainerGetter LightslinkCont)
+            if (obj.Lights is IFormLinkContainerGetter LightslinkCont)
             {
-                foreach (var item in LightslinkCont.LinkFormKeys)
+                foreach (var item in LightslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.MiscItems is ILinkedFormKeyContainerGetter MiscItemslinkCont)
+            if (obj.MiscItems is IFormLinkContainerGetter MiscItemslinkCont)
             {
-                foreach (var item in MiscItemslinkCont.LinkFormKeys)
+                foreach (var item in MiscItemslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.AlchemicalApparatuses is ILinkedFormKeyContainerGetter AlchemicalApparatuseslinkCont)
+            if (obj.AlchemicalApparatuses is IFormLinkContainerGetter AlchemicalApparatuseslinkCont)
             {
-                foreach (var item in AlchemicalApparatuseslinkCont.LinkFormKeys)
+                foreach (var item in AlchemicalApparatuseslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Statics is ILinkedFormKeyContainerGetter StaticslinkCont)
+            if (obj.Statics is IFormLinkContainerGetter StaticslinkCont)
             {
-                foreach (var item in StaticslinkCont.LinkFormKeys)
+                foreach (var item in StaticslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.MoveableStatics is ILinkedFormKeyContainerGetter MoveableStaticslinkCont)
+            if (obj.MoveableStatics is IFormLinkContainerGetter MoveableStaticslinkCont)
             {
-                foreach (var item in MoveableStaticslinkCont.LinkFormKeys)
+                foreach (var item in MoveableStaticslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Grasses is ILinkedFormKeyContainerGetter GrasseslinkCont)
+            if (obj.Grasses is IFormLinkContainerGetter GrasseslinkCont)
             {
-                foreach (var item in GrasseslinkCont.LinkFormKeys)
+                foreach (var item in GrasseslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Trees is ILinkedFormKeyContainerGetter TreeslinkCont)
+            if (obj.Trees is IFormLinkContainerGetter TreeslinkCont)
             {
-                foreach (var item in TreeslinkCont.LinkFormKeys)
+                foreach (var item in TreeslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Florae is ILinkedFormKeyContainerGetter FloraelinkCont)
+            if (obj.Florae is IFormLinkContainerGetter FloraelinkCont)
             {
-                foreach (var item in FloraelinkCont.LinkFormKeys)
+                foreach (var item in FloraelinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Furniture is ILinkedFormKeyContainerGetter FurniturelinkCont)
+            if (obj.Furniture is IFormLinkContainerGetter FurniturelinkCont)
             {
-                foreach (var item in FurniturelinkCont.LinkFormKeys)
+                foreach (var item in FurniturelinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Weapons is ILinkedFormKeyContainerGetter WeaponslinkCont)
+            if (obj.Weapons is IFormLinkContainerGetter WeaponslinkCont)
             {
-                foreach (var item in WeaponslinkCont.LinkFormKeys)
+                foreach (var item in WeaponslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Ammunitions is ILinkedFormKeyContainerGetter AmmunitionslinkCont)
+            if (obj.Ammunitions is IFormLinkContainerGetter AmmunitionslinkCont)
             {
-                foreach (var item in AmmunitionslinkCont.LinkFormKeys)
+                foreach (var item in AmmunitionslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Npcs is ILinkedFormKeyContainerGetter NpcslinkCont)
+            if (obj.Npcs is IFormLinkContainerGetter NpcslinkCont)
             {
-                foreach (var item in NpcslinkCont.LinkFormKeys)
+                foreach (var item in NpcslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.LeveledNpcs is ILinkedFormKeyContainerGetter LeveledNpcslinkCont)
+            if (obj.LeveledNpcs is IFormLinkContainerGetter LeveledNpcslinkCont)
             {
-                foreach (var item in LeveledNpcslinkCont.LinkFormKeys)
+                foreach (var item in LeveledNpcslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Keys is ILinkedFormKeyContainerGetter KeyslinkCont)
+            if (obj.Keys is IFormLinkContainerGetter KeyslinkCont)
             {
-                foreach (var item in KeyslinkCont.LinkFormKeys)
+                foreach (var item in KeyslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Ingestibles is ILinkedFormKeyContainerGetter IngestibleslinkCont)
+            if (obj.Ingestibles is IFormLinkContainerGetter IngestibleslinkCont)
             {
-                foreach (var item in IngestibleslinkCont.LinkFormKeys)
+                foreach (var item in IngestibleslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.IdleMarkers is ILinkedFormKeyContainerGetter IdleMarkerslinkCont)
+            if (obj.IdleMarkers is IFormLinkContainerGetter IdleMarkerslinkCont)
             {
-                foreach (var item in IdleMarkerslinkCont.LinkFormKeys)
+                foreach (var item in IdleMarkerslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.ConstructibleObjects is ILinkedFormKeyContainerGetter ConstructibleObjectslinkCont)
+            if (obj.ConstructibleObjects is IFormLinkContainerGetter ConstructibleObjectslinkCont)
             {
-                foreach (var item in ConstructibleObjectslinkCont.LinkFormKeys)
+                foreach (var item in ConstructibleObjectslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Projectiles is ILinkedFormKeyContainerGetter ProjectileslinkCont)
+            if (obj.Projectiles is IFormLinkContainerGetter ProjectileslinkCont)
             {
-                foreach (var item in ProjectileslinkCont.LinkFormKeys)
+                foreach (var item in ProjectileslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Hazards is ILinkedFormKeyContainerGetter HazardslinkCont)
+            if (obj.Hazards is IFormLinkContainerGetter HazardslinkCont)
             {
-                foreach (var item in HazardslinkCont.LinkFormKeys)
+                foreach (var item in HazardslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.SoulGems is ILinkedFormKeyContainerGetter SoulGemslinkCont)
+            if (obj.SoulGems is IFormLinkContainerGetter SoulGemslinkCont)
             {
-                foreach (var item in SoulGemslinkCont.LinkFormKeys)
+                foreach (var item in SoulGemslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.LeveledItems is ILinkedFormKeyContainerGetter LeveledItemslinkCont)
+            if (obj.LeveledItems is IFormLinkContainerGetter LeveledItemslinkCont)
             {
-                foreach (var item in LeveledItemslinkCont.LinkFormKeys)
+                foreach (var item in LeveledItemslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Weathers is ILinkedFormKeyContainerGetter WeatherslinkCont)
+            if (obj.Weathers is IFormLinkContainerGetter WeatherslinkCont)
             {
-                foreach (var item in WeatherslinkCont.LinkFormKeys)
+                foreach (var item in WeatherslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Climates is ILinkedFormKeyContainerGetter ClimateslinkCont)
+            if (obj.Climates is IFormLinkContainerGetter ClimateslinkCont)
             {
-                foreach (var item in ClimateslinkCont.LinkFormKeys)
+                foreach (var item in ClimateslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.ShaderParticleGeometries is ILinkedFormKeyContainerGetter ShaderParticleGeometrieslinkCont)
+            if (obj.ShaderParticleGeometries is IFormLinkContainerGetter ShaderParticleGeometrieslinkCont)
             {
-                foreach (var item in ShaderParticleGeometrieslinkCont.LinkFormKeys)
+                foreach (var item in ShaderParticleGeometrieslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.VisualEffects is ILinkedFormKeyContainerGetter VisualEffectslinkCont)
+            if (obj.VisualEffects is IFormLinkContainerGetter VisualEffectslinkCont)
             {
-                foreach (var item in VisualEffectslinkCont.LinkFormKeys)
+                foreach (var item in VisualEffectslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Regions is ILinkedFormKeyContainerGetter RegionslinkCont)
+            if (obj.Regions is IFormLinkContainerGetter RegionslinkCont)
             {
-                foreach (var item in RegionslinkCont.LinkFormKeys)
+                foreach (var item in RegionslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.NavigationMeshInfoMaps is ILinkedFormKeyContainerGetter NavigationMeshInfoMapslinkCont)
+            if (obj.NavigationMeshInfoMaps is IFormLinkContainerGetter NavigationMeshInfoMapslinkCont)
             {
-                foreach (var item in NavigationMeshInfoMapslinkCont.LinkFormKeys)
+                foreach (var item in NavigationMeshInfoMapslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            foreach (var item in obj.Cells.LinkFormKeys)
+            foreach (var item in obj.Cells.ContainedFormLinks)
             {
                 yield return item;
             }
-            if (obj.Worldspaces is ILinkedFormKeyContainerGetter WorldspaceslinkCont)
+            if (obj.Worldspaces is IFormLinkContainerGetter WorldspaceslinkCont)
             {
-                foreach (var item in WorldspaceslinkCont.LinkFormKeys)
+                foreach (var item in WorldspaceslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.DialogTopics is ILinkedFormKeyContainerGetter DialogTopicslinkCont)
+            if (obj.DialogTopics is IFormLinkContainerGetter DialogTopicslinkCont)
             {
-                foreach (var item in DialogTopicslinkCont.LinkFormKeys)
+                foreach (var item in DialogTopicslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Quests is ILinkedFormKeyContainerGetter QuestslinkCont)
+            if (obj.Quests is IFormLinkContainerGetter QuestslinkCont)
             {
-                foreach (var item in QuestslinkCont.LinkFormKeys)
+                foreach (var item in QuestslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.IdleAnimations is ILinkedFormKeyContainerGetter IdleAnimationslinkCont)
+            if (obj.IdleAnimations is IFormLinkContainerGetter IdleAnimationslinkCont)
             {
-                foreach (var item in IdleAnimationslinkCont.LinkFormKeys)
+                foreach (var item in IdleAnimationslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Packages is ILinkedFormKeyContainerGetter PackageslinkCont)
+            if (obj.Packages is IFormLinkContainerGetter PackageslinkCont)
             {
-                foreach (var item in PackageslinkCont.LinkFormKeys)
+                foreach (var item in PackageslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.CombatStyles is ILinkedFormKeyContainerGetter CombatStyleslinkCont)
+            if (obj.CombatStyles is IFormLinkContainerGetter CombatStyleslinkCont)
             {
-                foreach (var item in CombatStyleslinkCont.LinkFormKeys)
+                foreach (var item in CombatStyleslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.LoadScreens is ILinkedFormKeyContainerGetter LoadScreenslinkCont)
+            if (obj.LoadScreens is IFormLinkContainerGetter LoadScreenslinkCont)
             {
-                foreach (var item in LoadScreenslinkCont.LinkFormKeys)
+                foreach (var item in LoadScreenslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.LeveledSpells is ILinkedFormKeyContainerGetter LeveledSpellslinkCont)
+            if (obj.LeveledSpells is IFormLinkContainerGetter LeveledSpellslinkCont)
             {
-                foreach (var item in LeveledSpellslinkCont.LinkFormKeys)
+                foreach (var item in LeveledSpellslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.AnimatedObjects is ILinkedFormKeyContainerGetter AnimatedObjectslinkCont)
+            if (obj.AnimatedObjects is IFormLinkContainerGetter AnimatedObjectslinkCont)
             {
-                foreach (var item in AnimatedObjectslinkCont.LinkFormKeys)
+                foreach (var item in AnimatedObjectslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Waters is ILinkedFormKeyContainerGetter WaterslinkCont)
+            if (obj.Waters is IFormLinkContainerGetter WaterslinkCont)
             {
-                foreach (var item in WaterslinkCont.LinkFormKeys)
+                foreach (var item in WaterslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.EffectShaders is ILinkedFormKeyContainerGetter EffectShaderslinkCont)
+            if (obj.EffectShaders is IFormLinkContainerGetter EffectShaderslinkCont)
             {
-                foreach (var item in EffectShaderslinkCont.LinkFormKeys)
+                foreach (var item in EffectShaderslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Explosions is ILinkedFormKeyContainerGetter ExplosionslinkCont)
+            if (obj.Explosions is IFormLinkContainerGetter ExplosionslinkCont)
             {
-                foreach (var item in ExplosionslinkCont.LinkFormKeys)
+                foreach (var item in ExplosionslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Debris is ILinkedFormKeyContainerGetter DebrislinkCont)
+            if (obj.Debris is IFormLinkContainerGetter DebrislinkCont)
             {
-                foreach (var item in DebrislinkCont.LinkFormKeys)
+                foreach (var item in DebrislinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.ImageSpaces is ILinkedFormKeyContainerGetter ImageSpaceslinkCont)
+            if (obj.ImageSpaces is IFormLinkContainerGetter ImageSpaceslinkCont)
             {
-                foreach (var item in ImageSpaceslinkCont.LinkFormKeys)
+                foreach (var item in ImageSpaceslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.ImageSpaceAdapters is ILinkedFormKeyContainerGetter ImageSpaceAdapterslinkCont)
+            if (obj.ImageSpaceAdapters is IFormLinkContainerGetter ImageSpaceAdapterslinkCont)
             {
-                foreach (var item in ImageSpaceAdapterslinkCont.LinkFormKeys)
+                foreach (var item in ImageSpaceAdapterslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.FormLists is ILinkedFormKeyContainerGetter FormListslinkCont)
+            if (obj.FormLists is IFormLinkContainerGetter FormListslinkCont)
             {
-                foreach (var item in FormListslinkCont.LinkFormKeys)
+                foreach (var item in FormListslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Perks is ILinkedFormKeyContainerGetter PerkslinkCont)
+            if (obj.Perks is IFormLinkContainerGetter PerkslinkCont)
             {
-                foreach (var item in PerkslinkCont.LinkFormKeys)
+                foreach (var item in PerkslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.BodyParts is ILinkedFormKeyContainerGetter BodyPartslinkCont)
+            if (obj.BodyParts is IFormLinkContainerGetter BodyPartslinkCont)
             {
-                foreach (var item in BodyPartslinkCont.LinkFormKeys)
+                foreach (var item in BodyPartslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.AddonNodes is ILinkedFormKeyContainerGetter AddonNodeslinkCont)
+            if (obj.AddonNodes is IFormLinkContainerGetter AddonNodeslinkCont)
             {
-                foreach (var item in AddonNodeslinkCont.LinkFormKeys)
+                foreach (var item in AddonNodeslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.ActorValueInformation is ILinkedFormKeyContainerGetter ActorValueInformationlinkCont)
+            if (obj.ActorValueInformation is IFormLinkContainerGetter ActorValueInformationlinkCont)
             {
-                foreach (var item in ActorValueInformationlinkCont.LinkFormKeys)
+                foreach (var item in ActorValueInformationlinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.CameraShots is ILinkedFormKeyContainerGetter CameraShotslinkCont)
+            if (obj.CameraShots is IFormLinkContainerGetter CameraShotslinkCont)
             {
-                foreach (var item in CameraShotslinkCont.LinkFormKeys)
+                foreach (var item in CameraShotslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.CameraPaths is ILinkedFormKeyContainerGetter CameraPathslinkCont)
+            if (obj.CameraPaths is IFormLinkContainerGetter CameraPathslinkCont)
             {
-                foreach (var item in CameraPathslinkCont.LinkFormKeys)
+                foreach (var item in CameraPathslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.VoiceTypes is ILinkedFormKeyContainerGetter VoiceTypeslinkCont)
+            if (obj.VoiceTypes is IFormLinkContainerGetter VoiceTypeslinkCont)
             {
-                foreach (var item in VoiceTypeslinkCont.LinkFormKeys)
+                foreach (var item in VoiceTypeslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.MaterialTypes is ILinkedFormKeyContainerGetter MaterialTypeslinkCont)
+            if (obj.MaterialTypes is IFormLinkContainerGetter MaterialTypeslinkCont)
             {
-                foreach (var item in MaterialTypeslinkCont.LinkFormKeys)
+                foreach (var item in MaterialTypeslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Impacts is ILinkedFormKeyContainerGetter ImpactslinkCont)
+            if (obj.Impacts is IFormLinkContainerGetter ImpactslinkCont)
             {
-                foreach (var item in ImpactslinkCont.LinkFormKeys)
+                foreach (var item in ImpactslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.ImpactDataSets is ILinkedFormKeyContainerGetter ImpactDataSetslinkCont)
+            if (obj.ImpactDataSets is IFormLinkContainerGetter ImpactDataSetslinkCont)
             {
-                foreach (var item in ImpactDataSetslinkCont.LinkFormKeys)
+                foreach (var item in ImpactDataSetslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.ArmorAddons is ILinkedFormKeyContainerGetter ArmorAddonslinkCont)
+            if (obj.ArmorAddons is IFormLinkContainerGetter ArmorAddonslinkCont)
             {
-                foreach (var item in ArmorAddonslinkCont.LinkFormKeys)
+                foreach (var item in ArmorAddonslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.EncounterZones is ILinkedFormKeyContainerGetter EncounterZoneslinkCont)
+            if (obj.EncounterZones is IFormLinkContainerGetter EncounterZoneslinkCont)
             {
-                foreach (var item in EncounterZoneslinkCont.LinkFormKeys)
+                foreach (var item in EncounterZoneslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Locations is ILinkedFormKeyContainerGetter LocationslinkCont)
+            if (obj.Locations is IFormLinkContainerGetter LocationslinkCont)
             {
-                foreach (var item in LocationslinkCont.LinkFormKeys)
+                foreach (var item in LocationslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Messages is ILinkedFormKeyContainerGetter MessageslinkCont)
+            if (obj.Messages is IFormLinkContainerGetter MessageslinkCont)
             {
-                foreach (var item in MessageslinkCont.LinkFormKeys)
+                foreach (var item in MessageslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.DefaultObjectManagers is ILinkedFormKeyContainerGetter DefaultObjectManagerslinkCont)
+            if (obj.DefaultObjectManagers is IFormLinkContainerGetter DefaultObjectManagerslinkCont)
             {
-                foreach (var item in DefaultObjectManagerslinkCont.LinkFormKeys)
+                foreach (var item in DefaultObjectManagerslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.LightingTemplates is ILinkedFormKeyContainerGetter LightingTemplateslinkCont)
+            if (obj.LightingTemplates is IFormLinkContainerGetter LightingTemplateslinkCont)
             {
-                foreach (var item in LightingTemplateslinkCont.LinkFormKeys)
+                foreach (var item in LightingTemplateslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.MusicTypes is ILinkedFormKeyContainerGetter MusicTypeslinkCont)
+            if (obj.MusicTypes is IFormLinkContainerGetter MusicTypeslinkCont)
             {
-                foreach (var item in MusicTypeslinkCont.LinkFormKeys)
+                foreach (var item in MusicTypeslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Footsteps is ILinkedFormKeyContainerGetter FootstepslinkCont)
+            if (obj.Footsteps is IFormLinkContainerGetter FootstepslinkCont)
             {
-                foreach (var item in FootstepslinkCont.LinkFormKeys)
+                foreach (var item in FootstepslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.FootstepSets is ILinkedFormKeyContainerGetter FootstepSetslinkCont)
+            if (obj.FootstepSets is IFormLinkContainerGetter FootstepSetslinkCont)
             {
-                foreach (var item in FootstepSetslinkCont.LinkFormKeys)
+                foreach (var item in FootstepSetslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.StoryManagerBranchNodes is ILinkedFormKeyContainerGetter StoryManagerBranchNodeslinkCont)
+            if (obj.StoryManagerBranchNodes is IFormLinkContainerGetter StoryManagerBranchNodeslinkCont)
             {
-                foreach (var item in StoryManagerBranchNodeslinkCont.LinkFormKeys)
+                foreach (var item in StoryManagerBranchNodeslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.StoryManagerQuestNodes is ILinkedFormKeyContainerGetter StoryManagerQuestNodeslinkCont)
+            if (obj.StoryManagerQuestNodes is IFormLinkContainerGetter StoryManagerQuestNodeslinkCont)
             {
-                foreach (var item in StoryManagerQuestNodeslinkCont.LinkFormKeys)
+                foreach (var item in StoryManagerQuestNodeslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.StoryManagerEventNodes is ILinkedFormKeyContainerGetter StoryManagerEventNodeslinkCont)
+            if (obj.StoryManagerEventNodes is IFormLinkContainerGetter StoryManagerEventNodeslinkCont)
             {
-                foreach (var item in StoryManagerEventNodeslinkCont.LinkFormKeys)
+                foreach (var item in StoryManagerEventNodeslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.DialogBranches is ILinkedFormKeyContainerGetter DialogBrancheslinkCont)
+            if (obj.DialogBranches is IFormLinkContainerGetter DialogBrancheslinkCont)
             {
-                foreach (var item in DialogBrancheslinkCont.LinkFormKeys)
+                foreach (var item in DialogBrancheslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.MusicTracks is ILinkedFormKeyContainerGetter MusicTrackslinkCont)
+            if (obj.MusicTracks is IFormLinkContainerGetter MusicTrackslinkCont)
             {
-                foreach (var item in MusicTrackslinkCont.LinkFormKeys)
+                foreach (var item in MusicTrackslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.DialogViews is ILinkedFormKeyContainerGetter DialogViewslinkCont)
+            if (obj.DialogViews is IFormLinkContainerGetter DialogViewslinkCont)
             {
-                foreach (var item in DialogViewslinkCont.LinkFormKeys)
+                foreach (var item in DialogViewslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.WordsOfPower is ILinkedFormKeyContainerGetter WordsOfPowerlinkCont)
+            if (obj.WordsOfPower is IFormLinkContainerGetter WordsOfPowerlinkCont)
             {
-                foreach (var item in WordsOfPowerlinkCont.LinkFormKeys)
+                foreach (var item in WordsOfPowerlinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Shouts is ILinkedFormKeyContainerGetter ShoutslinkCont)
+            if (obj.Shouts is IFormLinkContainerGetter ShoutslinkCont)
             {
-                foreach (var item in ShoutslinkCont.LinkFormKeys)
+                foreach (var item in ShoutslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.EquipTypes is ILinkedFormKeyContainerGetter EquipTypeslinkCont)
+            if (obj.EquipTypes is IFormLinkContainerGetter EquipTypeslinkCont)
             {
-                foreach (var item in EquipTypeslinkCont.LinkFormKeys)
+                foreach (var item in EquipTypeslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Relationships is ILinkedFormKeyContainerGetter RelationshipslinkCont)
+            if (obj.Relationships is IFormLinkContainerGetter RelationshipslinkCont)
             {
-                foreach (var item in RelationshipslinkCont.LinkFormKeys)
+                foreach (var item in RelationshipslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Scenes is ILinkedFormKeyContainerGetter SceneslinkCont)
+            if (obj.Scenes is IFormLinkContainerGetter SceneslinkCont)
             {
-                foreach (var item in SceneslinkCont.LinkFormKeys)
+                foreach (var item in SceneslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.AssociationTypes is ILinkedFormKeyContainerGetter AssociationTypeslinkCont)
+            if (obj.AssociationTypes is IFormLinkContainerGetter AssociationTypeslinkCont)
             {
-                foreach (var item in AssociationTypeslinkCont.LinkFormKeys)
+                foreach (var item in AssociationTypeslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Outfits is ILinkedFormKeyContainerGetter OutfitslinkCont)
+            if (obj.Outfits is IFormLinkContainerGetter OutfitslinkCont)
             {
-                foreach (var item in OutfitslinkCont.LinkFormKeys)
+                foreach (var item in OutfitslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.ArtObjects is ILinkedFormKeyContainerGetter ArtObjectslinkCont)
+            if (obj.ArtObjects is IFormLinkContainerGetter ArtObjectslinkCont)
             {
-                foreach (var item in ArtObjectslinkCont.LinkFormKeys)
+                foreach (var item in ArtObjectslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.MaterialObjects is ILinkedFormKeyContainerGetter MaterialObjectslinkCont)
+            if (obj.MaterialObjects is IFormLinkContainerGetter MaterialObjectslinkCont)
             {
-                foreach (var item in MaterialObjectslinkCont.LinkFormKeys)
+                foreach (var item in MaterialObjectslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.MovementTypes is ILinkedFormKeyContainerGetter MovementTypeslinkCont)
+            if (obj.MovementTypes is IFormLinkContainerGetter MovementTypeslinkCont)
             {
-                foreach (var item in MovementTypeslinkCont.LinkFormKeys)
+                foreach (var item in MovementTypeslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.SoundDescriptors is ILinkedFormKeyContainerGetter SoundDescriptorslinkCont)
+            if (obj.SoundDescriptors is IFormLinkContainerGetter SoundDescriptorslinkCont)
             {
-                foreach (var item in SoundDescriptorslinkCont.LinkFormKeys)
+                foreach (var item in SoundDescriptorslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.DualCastData is ILinkedFormKeyContainerGetter DualCastDatalinkCont)
+            if (obj.DualCastData is IFormLinkContainerGetter DualCastDatalinkCont)
             {
-                foreach (var item in DualCastDatalinkCont.LinkFormKeys)
+                foreach (var item in DualCastDatalinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.SoundCategories is ILinkedFormKeyContainerGetter SoundCategorieslinkCont)
+            if (obj.SoundCategories is IFormLinkContainerGetter SoundCategorieslinkCont)
             {
-                foreach (var item in SoundCategorieslinkCont.LinkFormKeys)
+                foreach (var item in SoundCategorieslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.SoundOutputModels is ILinkedFormKeyContainerGetter SoundOutputModelslinkCont)
+            if (obj.SoundOutputModels is IFormLinkContainerGetter SoundOutputModelslinkCont)
             {
-                foreach (var item in SoundOutputModelslinkCont.LinkFormKeys)
+                foreach (var item in SoundOutputModelslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.CollisionLayers is ILinkedFormKeyContainerGetter CollisionLayerslinkCont)
+            if (obj.CollisionLayers is IFormLinkContainerGetter CollisionLayerslinkCont)
             {
-                foreach (var item in CollisionLayerslinkCont.LinkFormKeys)
+                foreach (var item in CollisionLayerslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Colors is ILinkedFormKeyContainerGetter ColorslinkCont)
+            if (obj.Colors is IFormLinkContainerGetter ColorslinkCont)
             {
-                foreach (var item in ColorslinkCont.LinkFormKeys)
+                foreach (var item in ColorslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.ReverbParameters is ILinkedFormKeyContainerGetter ReverbParameterslinkCont)
+            if (obj.ReverbParameters is IFormLinkContainerGetter ReverbParameterslinkCont)
             {
-                foreach (var item in ReverbParameterslinkCont.LinkFormKeys)
+                foreach (var item in ReverbParameterslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.VolumetricLightings is ILinkedFormKeyContainerGetter VolumetricLightingslinkCont)
+            if (obj.VolumetricLightings is IFormLinkContainerGetter VolumetricLightingslinkCont)
             {
-                foreach (var item in VolumetricLightingslinkCont.LinkFormKeys)
+                foreach (var item in VolumetricLightingslinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
@@ -11914,7 +11221,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(ISkyrimModGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(ISkyrimModGetter obj)
         {
             foreach (var item in obj.GameSettings.EnumerateMajorRecords())
@@ -14464,1367 +13770,2443 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public IEnumerable<IModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             ISkyrimModGetter obj,
+            ILinkCache linkCache)
+        {
+            foreach (var item in obj.GameSettings)
+            {
+                yield return new ModContext<ISkyrimMod, IGameSettingInternal, IGameSettingGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.GameSettings.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.GameSettings.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Keywords)
+            {
+                yield return new ModContext<ISkyrimMod, IKeywordInternal, IKeywordGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Keywords.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Keywords.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.LocationReferenceTypes)
+            {
+                yield return new ModContext<ISkyrimMod, ILocationReferenceTypeInternal, ILocationReferenceTypeGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.LocationReferenceTypes.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.LocationReferenceTypes.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Actions)
+            {
+                yield return new ModContext<ISkyrimMod, IActionRecordInternal, IActionRecordGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Actions.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Actions.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.TextureSets)
+            {
+                yield return new ModContext<ISkyrimMod, ITextureSetInternal, ITextureSetGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.TextureSets.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.TextureSets.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Globals)
+            {
+                yield return new ModContext<ISkyrimMod, IGlobalInternal, IGlobalGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Globals.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Globals.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Classes)
+            {
+                yield return new ModContext<ISkyrimMod, IClassInternal, IClassGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Classes.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Classes.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Factions)
+            {
+                yield return new ModContext<ISkyrimMod, IFactionInternal, IFactionGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Factions.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Factions.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.HeadParts)
+            {
+                yield return new ModContext<ISkyrimMod, IHeadPartInternal, IHeadPartGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.HeadParts.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.HeadParts.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Hairs)
+            {
+                yield return new ModContext<ISkyrimMod, IHairInternal, IHairGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Hairs.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Hairs.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Eyes)
+            {
+                yield return new ModContext<ISkyrimMod, IEyesInternal, IEyesGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Eyes.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Eyes.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Races)
+            {
+                yield return new ModContext<ISkyrimMod, IRaceInternal, IRaceGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Races.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Races.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.SoundMarkers)
+            {
+                yield return new ModContext<ISkyrimMod, ISoundMarkerInternal, ISoundMarkerGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.SoundMarkers.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.SoundMarkers.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.AcousticSpaces)
+            {
+                yield return new ModContext<ISkyrimMod, IAcousticSpaceInternal, IAcousticSpaceGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.AcousticSpaces.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.AcousticSpaces.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.MagicEffects)
+            {
+                yield return new ModContext<ISkyrimMod, IMagicEffectInternal, IMagicEffectGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.MagicEffects.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.MagicEffects.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.LandscapeTextures)
+            {
+                yield return new ModContext<ISkyrimMod, ILandscapeTextureInternal, ILandscapeTextureGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.LandscapeTextures.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.LandscapeTextures.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.ObjectEffects)
+            {
+                yield return new ModContext<ISkyrimMod, IObjectEffectInternal, IObjectEffectGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.ObjectEffects.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.ObjectEffects.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Spells)
+            {
+                yield return new ModContext<ISkyrimMod, ISpellInternal, ISpellGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Spells.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Spells.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Scrolls)
+            {
+                yield return new ModContext<ISkyrimMod, IScrollInternal, IScrollGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Scrolls.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Scrolls.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Activators)
+            {
+                yield return new ModContext<ISkyrimMod, IActivatorInternal, IActivatorGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Activators.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Activators.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.TalkingActivators)
+            {
+                yield return new ModContext<ISkyrimMod, ITalkingActivatorInternal, ITalkingActivatorGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.TalkingActivators.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.TalkingActivators.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Armors)
+            {
+                yield return new ModContext<ISkyrimMod, IArmorInternal, IArmorGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Armors.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Armors.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Books)
+            {
+                yield return new ModContext<ISkyrimMod, IBookInternal, IBookGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Books.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Books.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Containers)
+            {
+                yield return new ModContext<ISkyrimMod, IContainerInternal, IContainerGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Containers.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Containers.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Doors)
+            {
+                yield return new ModContext<ISkyrimMod, IDoorInternal, IDoorGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Doors.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Doors.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Ingredients)
+            {
+                yield return new ModContext<ISkyrimMod, IIngredientInternal, IIngredientGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Ingredients.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Ingredients.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Lights)
+            {
+                yield return new ModContext<ISkyrimMod, ILightInternal, ILightGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Lights.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Lights.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.MiscItems)
+            {
+                yield return new ModContext<ISkyrimMod, IMiscItemInternal, IMiscItemGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.MiscItems.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.MiscItems.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.AlchemicalApparatuses)
+            {
+                yield return new ModContext<ISkyrimMod, IAlchemicalApparatusInternal, IAlchemicalApparatusGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.AlchemicalApparatuses.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.AlchemicalApparatuses.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Statics)
+            {
+                yield return new ModContext<ISkyrimMod, IStaticInternal, IStaticGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Statics.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Statics.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.MoveableStatics)
+            {
+                yield return new ModContext<ISkyrimMod, IMoveableStaticInternal, IMoveableStaticGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.MoveableStatics.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.MoveableStatics.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Grasses)
+            {
+                yield return new ModContext<ISkyrimMod, IGrassInternal, IGrassGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Grasses.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Grasses.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Trees)
+            {
+                yield return new ModContext<ISkyrimMod, ITreeInternal, ITreeGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Trees.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Trees.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Florae)
+            {
+                yield return new ModContext<ISkyrimMod, IFloraInternal, IFloraGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Florae.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Florae.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Furniture)
+            {
+                yield return new ModContext<ISkyrimMod, IFurnitureInternal, IFurnitureGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Furniture.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Furniture.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Weapons)
+            {
+                yield return new ModContext<ISkyrimMod, IWeaponInternal, IWeaponGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Weapons.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Weapons.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Ammunitions)
+            {
+                yield return new ModContext<ISkyrimMod, IAmmunitionInternal, IAmmunitionGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Ammunitions.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Ammunitions.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Npcs)
+            {
+                yield return new ModContext<ISkyrimMod, INpcInternal, INpcGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Npcs.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Npcs.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.LeveledNpcs)
+            {
+                yield return new ModContext<ISkyrimMod, ILeveledNpcInternal, ILeveledNpcGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.LeveledNpcs.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.LeveledNpcs.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Keys)
+            {
+                yield return new ModContext<ISkyrimMod, IKeyInternal, IKeyGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Keys.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Keys.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Ingestibles)
+            {
+                yield return new ModContext<ISkyrimMod, IIngestibleInternal, IIngestibleGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Ingestibles.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Ingestibles.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.IdleMarkers)
+            {
+                yield return new ModContext<ISkyrimMod, IIdleMarkerInternal, IIdleMarkerGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.IdleMarkers.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.IdleMarkers.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.ConstructibleObjects)
+            {
+                yield return new ModContext<ISkyrimMod, IConstructibleObjectInternal, IConstructibleObjectGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.ConstructibleObjects.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.ConstructibleObjects.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Projectiles)
+            {
+                yield return new ModContext<ISkyrimMod, IProjectileInternal, IProjectileGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Projectiles.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Projectiles.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Hazards)
+            {
+                yield return new ModContext<ISkyrimMod, IHazardInternal, IHazardGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Hazards.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Hazards.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.SoulGems)
+            {
+                yield return new ModContext<ISkyrimMod, ISoulGemInternal, ISoulGemGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.SoulGems.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.SoulGems.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.LeveledItems)
+            {
+                yield return new ModContext<ISkyrimMod, ILeveledItemInternal, ILeveledItemGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.LeveledItems.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.LeveledItems.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Weathers)
+            {
+                yield return new ModContext<ISkyrimMod, IWeatherInternal, IWeatherGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Weathers.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Weathers.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Climates)
+            {
+                yield return new ModContext<ISkyrimMod, IClimateInternal, IClimateGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Climates.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Climates.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.ShaderParticleGeometries)
+            {
+                yield return new ModContext<ISkyrimMod, IShaderParticleGeometryInternal, IShaderParticleGeometryGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.ShaderParticleGeometries.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.ShaderParticleGeometries.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.VisualEffects)
+            {
+                yield return new ModContext<ISkyrimMod, IVisualEffectInternal, IVisualEffectGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.VisualEffects.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.VisualEffects.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Regions)
+            {
+                yield return new ModContext<ISkyrimMod, IRegionInternal, IRegionGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Regions.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Regions.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.NavigationMeshInfoMaps)
+            {
+                yield return new ModContext<ISkyrimMod, INavigationMeshInfoMapInternal, INavigationMeshInfoMapGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.NavigationMeshInfoMaps.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.NavigationMeshInfoMaps.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Worldspaces)
+            {
+                yield return new ModContext<ISkyrimMod, IWorldspaceInternal, IWorldspaceGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var groupItem in obj.Worldspaces)
+            {
+                foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
+                    groupItem,
+                    linkCache: linkCache,
+                    modKey: obj.ModKey,
+                    parent: null,
+                    getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                    duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.DialogTopics)
+            {
+                yield return new ModContext<ISkyrimMod, IDialogTopicInternal, IDialogTopicGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.DialogTopics.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.DialogTopics.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var groupItem in obj.DialogTopics)
+            {
+                foreach (var item in DialogTopicCommon.Instance.EnumerateMajorRecordContexts(
+                    groupItem,
+                    linkCache: linkCache,
+                    modKey: obj.ModKey,
+                    parent: null,
+                    getOrAddAsOverride: (m, r) => m.DialogTopics.GetOrAddAsOverride(linkCache.Resolve<IDialogTopicGetter>(r.FormKey)),
+                    duplicateInto: (m, r, e) => m.DialogTopics.DuplicateInAsNewRecord(linkCache.Resolve<IDialogTopicGetter>(r.FormKey), e)))
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.Quests)
+            {
+                yield return new ModContext<ISkyrimMod, IQuestInternal, IQuestGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Quests.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Quests.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.IdleAnimations)
+            {
+                yield return new ModContext<ISkyrimMod, IIdleAnimationInternal, IIdleAnimationGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.IdleAnimations.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.IdleAnimations.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Packages)
+            {
+                yield return new ModContext<ISkyrimMod, IPackageInternal, IPackageGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Packages.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Packages.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.CombatStyles)
+            {
+                yield return new ModContext<ISkyrimMod, ICombatStyleInternal, ICombatStyleGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.CombatStyles.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.CombatStyles.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.LoadScreens)
+            {
+                yield return new ModContext<ISkyrimMod, ILoadScreenInternal, ILoadScreenGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.LoadScreens.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.LoadScreens.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.LeveledSpells)
+            {
+                yield return new ModContext<ISkyrimMod, ILeveledSpellInternal, ILeveledSpellGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.LeveledSpells.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.LeveledSpells.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.AnimatedObjects)
+            {
+                yield return new ModContext<ISkyrimMod, IAnimatedObjectInternal, IAnimatedObjectGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.AnimatedObjects.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.AnimatedObjects.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Waters)
+            {
+                yield return new ModContext<ISkyrimMod, IWaterInternal, IWaterGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Waters.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Waters.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.EffectShaders)
+            {
+                yield return new ModContext<ISkyrimMod, IEffectShaderInternal, IEffectShaderGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.EffectShaders.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.EffectShaders.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Explosions)
+            {
+                yield return new ModContext<ISkyrimMod, IExplosionInternal, IExplosionGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Explosions.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Explosions.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Debris)
+            {
+                yield return new ModContext<ISkyrimMod, IDebrisInternal, IDebrisGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Debris.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Debris.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.ImageSpaces)
+            {
+                yield return new ModContext<ISkyrimMod, IImageSpaceInternal, IImageSpaceGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.ImageSpaces.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.ImageSpaces.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.ImageSpaceAdapters)
+            {
+                yield return new ModContext<ISkyrimMod, IImageSpaceAdapterInternal, IImageSpaceAdapterGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.ImageSpaceAdapters.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.ImageSpaceAdapters.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.FormLists)
+            {
+                yield return new ModContext<ISkyrimMod, IFormListInternal, IFormListGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.FormLists.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.FormLists.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Perks)
+            {
+                yield return new ModContext<ISkyrimMod, IPerkInternal, IPerkGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Perks.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Perks.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.BodyParts)
+            {
+                yield return new ModContext<ISkyrimMod, IBodyPartDataInternal, IBodyPartDataGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.BodyParts.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.BodyParts.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.AddonNodes)
+            {
+                yield return new ModContext<ISkyrimMod, IAddonNodeInternal, IAddonNodeGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.AddonNodes.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.AddonNodes.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.ActorValueInformation)
+            {
+                yield return new ModContext<ISkyrimMod, IActorValueInformationInternal, IActorValueInformationGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.ActorValueInformation.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.ActorValueInformation.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.CameraShots)
+            {
+                yield return new ModContext<ISkyrimMod, ICameraShotInternal, ICameraShotGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.CameraShots.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.CameraShots.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.CameraPaths)
+            {
+                yield return new ModContext<ISkyrimMod, ICameraPathInternal, ICameraPathGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.CameraPaths.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.CameraPaths.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.VoiceTypes)
+            {
+                yield return new ModContext<ISkyrimMod, IVoiceTypeInternal, IVoiceTypeGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.VoiceTypes.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.VoiceTypes.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.MaterialTypes)
+            {
+                yield return new ModContext<ISkyrimMod, IMaterialTypeInternal, IMaterialTypeGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.MaterialTypes.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.MaterialTypes.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Impacts)
+            {
+                yield return new ModContext<ISkyrimMod, IImpactInternal, IImpactGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Impacts.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Impacts.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.ImpactDataSets)
+            {
+                yield return new ModContext<ISkyrimMod, IImpactDataSetInternal, IImpactDataSetGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.ImpactDataSets.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.ImpactDataSets.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.ArmorAddons)
+            {
+                yield return new ModContext<ISkyrimMod, IArmorAddonInternal, IArmorAddonGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.ArmorAddons.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.ArmorAddons.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.EncounterZones)
+            {
+                yield return new ModContext<ISkyrimMod, IEncounterZoneInternal, IEncounterZoneGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.EncounterZones.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.EncounterZones.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Locations)
+            {
+                yield return new ModContext<ISkyrimMod, ILocationInternal, ILocationGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Locations.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Locations.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Messages)
+            {
+                yield return new ModContext<ISkyrimMod, IMessageInternal, IMessageGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Messages.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Messages.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.DefaultObjectManagers)
+            {
+                yield return new ModContext<ISkyrimMod, IDefaultObjectManagerInternal, IDefaultObjectManagerGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.DefaultObjectManagers.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.DefaultObjectManagers.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.LightingTemplates)
+            {
+                yield return new ModContext<ISkyrimMod, ILightingTemplateInternal, ILightingTemplateGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.LightingTemplates.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.LightingTemplates.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.MusicTypes)
+            {
+                yield return new ModContext<ISkyrimMod, IMusicTypeInternal, IMusicTypeGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.MusicTypes.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.MusicTypes.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Footsteps)
+            {
+                yield return new ModContext<ISkyrimMod, IFootstepInternal, IFootstepGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Footsteps.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Footsteps.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.FootstepSets)
+            {
+                yield return new ModContext<ISkyrimMod, IFootstepSetInternal, IFootstepSetGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.FootstepSets.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.FootstepSets.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.StoryManagerBranchNodes)
+            {
+                yield return new ModContext<ISkyrimMod, IStoryManagerBranchNodeInternal, IStoryManagerBranchNodeGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.StoryManagerBranchNodes.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.StoryManagerBranchNodes.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.StoryManagerQuestNodes)
+            {
+                yield return new ModContext<ISkyrimMod, IStoryManagerQuestNodeInternal, IStoryManagerQuestNodeGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.StoryManagerQuestNodes.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.StoryManagerQuestNodes.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.StoryManagerEventNodes)
+            {
+                yield return new ModContext<ISkyrimMod, IStoryManagerEventNodeInternal, IStoryManagerEventNodeGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.StoryManagerEventNodes.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.StoryManagerEventNodes.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.DialogBranches)
+            {
+                yield return new ModContext<ISkyrimMod, IDialogBranchInternal, IDialogBranchGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.DialogBranches.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.DialogBranches.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.MusicTracks)
+            {
+                yield return new ModContext<ISkyrimMod, IMusicTrackInternal, IMusicTrackGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.MusicTracks.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.MusicTracks.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.DialogViews)
+            {
+                yield return new ModContext<ISkyrimMod, IDialogViewInternal, IDialogViewGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.DialogViews.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.DialogViews.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.WordsOfPower)
+            {
+                yield return new ModContext<ISkyrimMod, IWordOfPowerInternal, IWordOfPowerGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.WordsOfPower.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.WordsOfPower.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Shouts)
+            {
+                yield return new ModContext<ISkyrimMod, IShoutInternal, IShoutGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Shouts.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Shouts.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.EquipTypes)
+            {
+                yield return new ModContext<ISkyrimMod, IEquipTypeInternal, IEquipTypeGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.EquipTypes.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.EquipTypes.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Relationships)
+            {
+                yield return new ModContext<ISkyrimMod, IRelationshipInternal, IRelationshipGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Relationships.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Relationships.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Scenes)
+            {
+                yield return new ModContext<ISkyrimMod, ISceneInternal, ISceneGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Scenes.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Scenes.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.AssociationTypes)
+            {
+                yield return new ModContext<ISkyrimMod, IAssociationTypeInternal, IAssociationTypeGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.AssociationTypes.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.AssociationTypes.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Outfits)
+            {
+                yield return new ModContext<ISkyrimMod, IOutfitInternal, IOutfitGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Outfits.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Outfits.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.ArtObjects)
+            {
+                yield return new ModContext<ISkyrimMod, IArtObjectInternal, IArtObjectGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.ArtObjects.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.ArtObjects.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.MaterialObjects)
+            {
+                yield return new ModContext<ISkyrimMod, IMaterialObjectInternal, IMaterialObjectGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.MaterialObjects.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.MaterialObjects.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.MovementTypes)
+            {
+                yield return new ModContext<ISkyrimMod, IMovementTypeInternal, IMovementTypeGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.MovementTypes.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.MovementTypes.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.SoundDescriptors)
+            {
+                yield return new ModContext<ISkyrimMod, ISoundDescriptorInternal, ISoundDescriptorGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.SoundDescriptors.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.SoundDescriptors.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.DualCastData)
+            {
+                yield return new ModContext<ISkyrimMod, IDualCastDataInternal, IDualCastDataGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.DualCastData.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.DualCastData.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.SoundCategories)
+            {
+                yield return new ModContext<ISkyrimMod, ISoundCategoryInternal, ISoundCategoryGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.SoundCategories.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.SoundCategories.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.SoundOutputModels)
+            {
+                yield return new ModContext<ISkyrimMod, ISoundOutputModelInternal, ISoundOutputModelGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.SoundOutputModels.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.SoundOutputModels.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.CollisionLayers)
+            {
+                yield return new ModContext<ISkyrimMod, ICollisionLayerInternal, ICollisionLayerGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.CollisionLayers.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.CollisionLayers.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.Colors)
+            {
+                yield return new ModContext<ISkyrimMod, IColorRecordInternal, IColorRecordGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Colors.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Colors.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.ReverbParameters)
+            {
+                yield return new ModContext<ISkyrimMod, IReverbParametersInternal, IReverbParametersGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.ReverbParameters.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.ReverbParameters.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.VolumetricLightings)
+            {
+                yield return new ModContext<ISkyrimMod, IVolumetricLightingInternal, IVolumetricLightingGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.VolumetricLightings.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.VolumetricLightings.DuplicateInAsNewRecord(r, e));
+            }
+        }
+        
+        public IEnumerable<IModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+            ISkyrimModGetter obj,
             ILinkCache linkCache,
             Type type,
             bool throwIfUnknown)
         {
             switch (type.Name)
             {
+                case "IMajorRecordCommon":
+                case "IMajorRecord":
+                case "MajorRecord":
+                case "ISkyrimMajorRecord":
+                case "SkyrimMajorRecord":
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in this.EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IMajorRecordGetter":
+                case "IMajorRecordCommonGetter":
+                case "ISkyrimMajorRecordGetter":
+                    foreach (var item in this.EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "GameSetting":
                 case "IGameSettingGetter":
                 case "IGameSetting":
                 case "IGameSettingInternal":
-                    foreach (var item in obj.GameSettings.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.GameSettings)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IGameSettingInternal, IGameSettingGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.GameSettings.GetOrAddAsOverride((IGameSettingGetter)r));
+                            getOrAddAsOverride: (m, r) => m.GameSettings.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.GameSettings.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Keyword":
                 case "IKeywordGetter":
                 case "IKeyword":
                 case "IKeywordInternal":
-                    foreach (var item in obj.Keywords.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Keywords)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IKeywordInternal, IKeywordGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Keywords.GetOrAddAsOverride((IKeywordGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Keywords.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Keywords.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "LocationReferenceType":
                 case "ILocationReferenceTypeGetter":
                 case "ILocationReferenceType":
                 case "ILocationReferenceTypeInternal":
-                    foreach (var item in obj.LocationReferenceTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.LocationReferenceTypes)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, ILocationReferenceTypeInternal, ILocationReferenceTypeGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.LocationReferenceTypes.GetOrAddAsOverride((ILocationReferenceTypeGetter)r));
+                            getOrAddAsOverride: (m, r) => m.LocationReferenceTypes.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.LocationReferenceTypes.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "ActionRecord":
                 case "IActionRecordGetter":
                 case "IActionRecord":
                 case "IActionRecordInternal":
-                    foreach (var item in obj.Actions.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Actions)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IActionRecordInternal, IActionRecordGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Actions.GetOrAddAsOverride((IActionRecordGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Actions.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Actions.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "TextureSet":
                 case "ITextureSetGetter":
                 case "ITextureSet":
                 case "ITextureSetInternal":
-                    foreach (var item in obj.TextureSets.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.TextureSets)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, ITextureSetInternal, ITextureSetGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.TextureSets.GetOrAddAsOverride((ITextureSetGetter)r));
+                            getOrAddAsOverride: (m, r) => m.TextureSets.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.TextureSets.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Global":
                 case "IGlobalGetter":
                 case "IGlobal":
                 case "IGlobalInternal":
-                    foreach (var item in obj.Globals.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Globals)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IGlobalInternal, IGlobalGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Globals.GetOrAddAsOverride((IGlobalGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Globals.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Globals.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Class":
                 case "IClassGetter":
                 case "IClass":
                 case "IClassInternal":
-                    foreach (var item in obj.Classes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Classes)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IClassInternal, IClassGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Classes.GetOrAddAsOverride((IClassGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Classes.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Classes.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Faction":
                 case "IFactionGetter":
                 case "IFaction":
                 case "IFactionInternal":
-                    foreach (var item in obj.Factions.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Factions)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IFactionInternal, IFactionGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Factions.GetOrAddAsOverride((IFactionGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Factions.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Factions.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "HeadPart":
                 case "IHeadPartGetter":
                 case "IHeadPart":
                 case "IHeadPartInternal":
-                    foreach (var item in obj.HeadParts.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.HeadParts)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IHeadPartInternal, IHeadPartGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.HeadParts.GetOrAddAsOverride((IHeadPartGetter)r));
+                            getOrAddAsOverride: (m, r) => m.HeadParts.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.HeadParts.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Hair":
                 case "IHairGetter":
                 case "IHair":
                 case "IHairInternal":
-                    foreach (var item in obj.Hairs.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Hairs)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IHairInternal, IHairGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Hairs.GetOrAddAsOverride((IHairGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Hairs.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Hairs.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Eyes":
                 case "IEyesGetter":
                 case "IEyes":
                 case "IEyesInternal":
-                    foreach (var item in obj.Eyes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Eyes)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IEyesInternal, IEyesGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Eyes.GetOrAddAsOverride((IEyesGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Eyes.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Eyes.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Race":
                 case "IRaceGetter":
                 case "IRace":
                 case "IRaceInternal":
-                    foreach (var item in obj.Races.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Races)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IRaceInternal, IRaceGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Races.GetOrAddAsOverride((IRaceGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Races.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Races.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "SoundMarker":
                 case "ISoundMarkerGetter":
                 case "ISoundMarker":
                 case "ISoundMarkerInternal":
-                    foreach (var item in obj.SoundMarkers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.SoundMarkers)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, ISoundMarkerInternal, ISoundMarkerGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.SoundMarkers.GetOrAddAsOverride((ISoundMarkerGetter)r));
+                            getOrAddAsOverride: (m, r) => m.SoundMarkers.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.SoundMarkers.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "AcousticSpace":
                 case "IAcousticSpaceGetter":
                 case "IAcousticSpace":
                 case "IAcousticSpaceInternal":
-                    foreach (var item in obj.AcousticSpaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.AcousticSpaces)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IAcousticSpaceInternal, IAcousticSpaceGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.AcousticSpaces.GetOrAddAsOverride((IAcousticSpaceGetter)r));
+                            getOrAddAsOverride: (m, r) => m.AcousticSpaces.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.AcousticSpaces.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "MagicEffect":
                 case "IMagicEffectGetter":
                 case "IMagicEffect":
                 case "IMagicEffectInternal":
-                    foreach (var item in obj.MagicEffects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.MagicEffects)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IMagicEffectInternal, IMagicEffectGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.MagicEffects.GetOrAddAsOverride((IMagicEffectGetter)r));
+                            getOrAddAsOverride: (m, r) => m.MagicEffects.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.MagicEffects.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "LandscapeTexture":
                 case "ILandscapeTextureGetter":
                 case "ILandscapeTexture":
                 case "ILandscapeTextureInternal":
-                    foreach (var item in obj.LandscapeTextures.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.LandscapeTextures)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, ILandscapeTextureInternal, ILandscapeTextureGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.LandscapeTextures.GetOrAddAsOverride((ILandscapeTextureGetter)r));
+                            getOrAddAsOverride: (m, r) => m.LandscapeTextures.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.LandscapeTextures.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "ObjectEffect":
                 case "IObjectEffectGetter":
                 case "IObjectEffect":
                 case "IObjectEffectInternal":
-                    foreach (var item in obj.ObjectEffects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.ObjectEffects)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IObjectEffectInternal, IObjectEffectGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.ObjectEffects.GetOrAddAsOverride((IObjectEffectGetter)r));
+                            getOrAddAsOverride: (m, r) => m.ObjectEffects.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.ObjectEffects.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Spell":
                 case "ISpellGetter":
                 case "ISpell":
                 case "ISpellInternal":
-                    foreach (var item in obj.Spells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Spells)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, ISpellInternal, ISpellGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Spells.GetOrAddAsOverride((ISpellGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Spells.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Spells.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Scroll":
                 case "IScrollGetter":
                 case "IScroll":
                 case "IScrollInternal":
-                    foreach (var item in obj.Scrolls.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Scrolls)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IScrollInternal, IScrollGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Scrolls.GetOrAddAsOverride((IScrollGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Scrolls.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Scrolls.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Activator":
                 case "IActivatorGetter":
                 case "IActivator":
                 case "IActivatorInternal":
-                    foreach (var item in obj.Activators.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Activators)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IActivatorInternal, IActivatorGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Activators.GetOrAddAsOverride((IActivatorGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Activators.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Activators.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "TalkingActivator":
                 case "ITalkingActivatorGetter":
                 case "ITalkingActivator":
                 case "ITalkingActivatorInternal":
-                    foreach (var item in obj.TalkingActivators.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.TalkingActivators)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, ITalkingActivatorInternal, ITalkingActivatorGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.TalkingActivators.GetOrAddAsOverride((ITalkingActivatorGetter)r));
+                            getOrAddAsOverride: (m, r) => m.TalkingActivators.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.TalkingActivators.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Armor":
                 case "IArmorGetter":
                 case "IArmor":
                 case "IArmorInternal":
-                    foreach (var item in obj.Armors.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Armors)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IArmorInternal, IArmorGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Armors.GetOrAddAsOverride((IArmorGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Armors.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Armors.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Book":
                 case "IBookGetter":
                 case "IBook":
                 case "IBookInternal":
-                    foreach (var item in obj.Books.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Books)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IBookInternal, IBookGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Books.GetOrAddAsOverride((IBookGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Books.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Books.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Container":
                 case "IContainerGetter":
                 case "IContainer":
                 case "IContainerInternal":
-                    foreach (var item in obj.Containers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Containers)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IContainerInternal, IContainerGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Containers.GetOrAddAsOverride((IContainerGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Containers.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Containers.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Door":
                 case "IDoorGetter":
                 case "IDoor":
                 case "IDoorInternal":
-                    foreach (var item in obj.Doors.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Doors)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IDoorInternal, IDoorGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Doors.GetOrAddAsOverride((IDoorGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Doors.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Doors.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Ingredient":
                 case "IIngredientGetter":
                 case "IIngredient":
                 case "IIngredientInternal":
-                    foreach (var item in obj.Ingredients.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Ingredients)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IIngredientInternal, IIngredientGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Ingredients.GetOrAddAsOverride((IIngredientGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Ingredients.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Ingredients.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Light":
                 case "ILightGetter":
                 case "ILight":
                 case "ILightInternal":
-                    foreach (var item in obj.Lights.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Lights)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, ILightInternal, ILightGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Lights.GetOrAddAsOverride((ILightGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Lights.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Lights.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "MiscItem":
                 case "IMiscItemGetter":
                 case "IMiscItem":
                 case "IMiscItemInternal":
-                    foreach (var item in obj.MiscItems.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.MiscItems)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IMiscItemInternal, IMiscItemGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.MiscItems.GetOrAddAsOverride((IMiscItemGetter)r));
+                            getOrAddAsOverride: (m, r) => m.MiscItems.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.MiscItems.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "AlchemicalApparatus":
                 case "IAlchemicalApparatusGetter":
                 case "IAlchemicalApparatus":
                 case "IAlchemicalApparatusInternal":
-                    foreach (var item in obj.AlchemicalApparatuses.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.AlchemicalApparatuses)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IAlchemicalApparatusInternal, IAlchemicalApparatusGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.AlchemicalApparatuses.GetOrAddAsOverride((IAlchemicalApparatusGetter)r));
+                            getOrAddAsOverride: (m, r) => m.AlchemicalApparatuses.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.AlchemicalApparatuses.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Static":
                 case "IStaticGetter":
                 case "IStatic":
                 case "IStaticInternal":
-                    foreach (var item in obj.Statics.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Statics)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IStaticInternal, IStaticGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Statics.GetOrAddAsOverride((IStaticGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Statics.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Statics.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "MoveableStatic":
                 case "IMoveableStaticGetter":
                 case "IMoveableStatic":
                 case "IMoveableStaticInternal":
-                    foreach (var item in obj.MoveableStatics.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.MoveableStatics)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IMoveableStaticInternal, IMoveableStaticGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.MoveableStatics.GetOrAddAsOverride((IMoveableStaticGetter)r));
+                            getOrAddAsOverride: (m, r) => m.MoveableStatics.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.MoveableStatics.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Grass":
                 case "IGrassGetter":
                 case "IGrass":
                 case "IGrassInternal":
-                    foreach (var item in obj.Grasses.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Grasses)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IGrassInternal, IGrassGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Grasses.GetOrAddAsOverride((IGrassGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Grasses.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Grasses.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Tree":
                 case "ITreeGetter":
                 case "ITree":
                 case "ITreeInternal":
-                    foreach (var item in obj.Trees.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Trees)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, ITreeInternal, ITreeGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Trees.GetOrAddAsOverride((ITreeGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Trees.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Trees.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Flora":
                 case "IFloraGetter":
                 case "IFlora":
                 case "IFloraInternal":
-                    foreach (var item in obj.Florae.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Florae)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IFloraInternal, IFloraGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Florae.GetOrAddAsOverride((IFloraGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Florae.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Florae.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Furniture":
                 case "IFurnitureGetter":
                 case "IFurniture":
                 case "IFurnitureInternal":
-                    foreach (var item in obj.Furniture.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Furniture)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IFurnitureInternal, IFurnitureGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Furniture.GetOrAddAsOverride((IFurnitureGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Furniture.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Furniture.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Weapon":
                 case "IWeaponGetter":
                 case "IWeapon":
                 case "IWeaponInternal":
-                    foreach (var item in obj.Weapons.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Weapons)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IWeaponInternal, IWeaponGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Weapons.GetOrAddAsOverride((IWeaponGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Weapons.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Weapons.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Ammunition":
                 case "IAmmunitionGetter":
                 case "IAmmunition":
                 case "IAmmunitionInternal":
-                    foreach (var item in obj.Ammunitions.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Ammunitions)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IAmmunitionInternal, IAmmunitionGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Ammunitions.GetOrAddAsOverride((IAmmunitionGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Ammunitions.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Ammunitions.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Npc":
                 case "INpcGetter":
                 case "INpc":
                 case "INpcInternal":
-                    foreach (var item in obj.Npcs.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Npcs)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, INpcInternal, INpcGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Npcs.GetOrAddAsOverride((INpcGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Npcs.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Npcs.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "LeveledNpc":
                 case "ILeveledNpcGetter":
                 case "ILeveledNpc":
                 case "ILeveledNpcInternal":
-                    foreach (var item in obj.LeveledNpcs.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.LeveledNpcs)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, ILeveledNpcInternal, ILeveledNpcGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.LeveledNpcs.GetOrAddAsOverride((ILeveledNpcGetter)r));
+                            getOrAddAsOverride: (m, r) => m.LeveledNpcs.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.LeveledNpcs.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Key":
                 case "IKeyGetter":
                 case "IKey":
                 case "IKeyInternal":
-                    foreach (var item in obj.Keys.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Keys)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IKeyInternal, IKeyGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Keys.GetOrAddAsOverride((IKeyGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Keys.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Keys.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Ingestible":
                 case "IIngestibleGetter":
                 case "IIngestible":
                 case "IIngestibleInternal":
-                    foreach (var item in obj.Ingestibles.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Ingestibles)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IIngestibleInternal, IIngestibleGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Ingestibles.GetOrAddAsOverride((IIngestibleGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Ingestibles.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Ingestibles.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "IdleMarker":
                 case "IIdleMarkerGetter":
                 case "IIdleMarker":
                 case "IIdleMarkerInternal":
-                    foreach (var item in obj.IdleMarkers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.IdleMarkers)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IIdleMarkerInternal, IIdleMarkerGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.IdleMarkers.GetOrAddAsOverride((IIdleMarkerGetter)r));
+                            getOrAddAsOverride: (m, r) => m.IdleMarkers.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.IdleMarkers.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "ConstructibleObject":
                 case "IConstructibleObjectGetter":
                 case "IConstructibleObject":
                 case "IConstructibleObjectInternal":
-                    foreach (var item in obj.ConstructibleObjects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.ConstructibleObjects)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IConstructibleObjectInternal, IConstructibleObjectGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.ConstructibleObjects.GetOrAddAsOverride((IConstructibleObjectGetter)r));
+                            getOrAddAsOverride: (m, r) => m.ConstructibleObjects.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.ConstructibleObjects.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Projectile":
                 case "IProjectileGetter":
                 case "IProjectile":
                 case "IProjectileInternal":
-                    foreach (var item in obj.Projectiles.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Projectiles)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IProjectileInternal, IProjectileGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Projectiles.GetOrAddAsOverride((IProjectileGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Projectiles.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Projectiles.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Hazard":
                 case "IHazardGetter":
                 case "IHazard":
                 case "IHazardInternal":
-                    foreach (var item in obj.Hazards.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Hazards)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IHazardInternal, IHazardGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Hazards.GetOrAddAsOverride((IHazardGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Hazards.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Hazards.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "SoulGem":
                 case "ISoulGemGetter":
                 case "ISoulGem":
                 case "ISoulGemInternal":
-                    foreach (var item in obj.SoulGems.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.SoulGems)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, ISoulGemInternal, ISoulGemGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.SoulGems.GetOrAddAsOverride((ISoulGemGetter)r));
+                            getOrAddAsOverride: (m, r) => m.SoulGems.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.SoulGems.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "LeveledItem":
                 case "ILeveledItemGetter":
                 case "ILeveledItem":
                 case "ILeveledItemInternal":
-                    foreach (var item in obj.LeveledItems.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.LeveledItems)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, ILeveledItemInternal, ILeveledItemGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.LeveledItems.GetOrAddAsOverride((ILeveledItemGetter)r));
+                            getOrAddAsOverride: (m, r) => m.LeveledItems.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.LeveledItems.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Weather":
                 case "IWeatherGetter":
                 case "IWeather":
                 case "IWeatherInternal":
-                    foreach (var item in obj.Weathers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Weathers)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IWeatherInternal, IWeatherGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Weathers.GetOrAddAsOverride((IWeatherGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Weathers.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Weathers.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Climate":
                 case "IClimateGetter":
                 case "IClimate":
                 case "IClimateInternal":
-                    foreach (var item in obj.Climates.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Climates)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IClimateInternal, IClimateGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Climates.GetOrAddAsOverride((IClimateGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Climates.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Climates.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "ShaderParticleGeometry":
                 case "IShaderParticleGeometryGetter":
                 case "IShaderParticleGeometry":
                 case "IShaderParticleGeometryInternal":
-                    foreach (var item in obj.ShaderParticleGeometries.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.ShaderParticleGeometries)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IShaderParticleGeometryInternal, IShaderParticleGeometryGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.ShaderParticleGeometries.GetOrAddAsOverride((IShaderParticleGeometryGetter)r));
+                            getOrAddAsOverride: (m, r) => m.ShaderParticleGeometries.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.ShaderParticleGeometries.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "VisualEffect":
                 case "IVisualEffectGetter":
                 case "IVisualEffect":
                 case "IVisualEffectInternal":
-                    foreach (var item in obj.VisualEffects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.VisualEffects)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IVisualEffectInternal, IVisualEffectGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.VisualEffects.GetOrAddAsOverride((IVisualEffectGetter)r));
+                            getOrAddAsOverride: (m, r) => m.VisualEffects.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.VisualEffects.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Region":
                 case "IRegionGetter":
                 case "IRegion":
                 case "IRegionInternal":
-                    foreach (var item in obj.Regions.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Regions)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IRegionInternal, IRegionGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Regions.GetOrAddAsOverride((IRegionGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Regions.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Regions.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "NavigationMeshInfoMap":
                 case "INavigationMeshInfoMapGetter":
                 case "INavigationMeshInfoMap":
                 case "INavigationMeshInfoMapInternal":
-                    foreach (var item in obj.NavigationMeshInfoMaps.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.NavigationMeshInfoMaps)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, INavigationMeshInfoMapInternal, INavigationMeshInfoMapGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.NavigationMeshInfoMaps.GetOrAddAsOverride((INavigationMeshInfoMapGetter)r));
+                            getOrAddAsOverride: (m, r) => m.NavigationMeshInfoMaps.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.NavigationMeshInfoMaps.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Worldspace":
                 case "IWorldspaceGetter":
                 case "IWorldspace":
                 case "IWorldspaceInternal":
-                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Worldspaces)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IWorldspaceInternal, IWorldspaceGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Worldspaces.GetOrAddAsOverride((IWorldspaceGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "DialogTopic":
                 case "IDialogTopicGetter":
                 case "IDialogTopic":
                 case "IDialogTopicInternal":
-                    foreach (var item in obj.DialogTopics.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.DialogTopics)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IDialogTopicInternal, IDialogTopicGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.DialogTopics.GetOrAddAsOverride((IDialogTopicGetter)r));
+                            getOrAddAsOverride: (m, r) => m.DialogTopics.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.DialogTopics.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Quest":
                 case "IQuestGetter":
                 case "IQuest":
                 case "IQuestInternal":
-                    foreach (var item in obj.Quests.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Quests)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IQuestInternal, IQuestGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Quests.GetOrAddAsOverride((IQuestGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Quests.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Quests.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "IdleAnimation":
                 case "IIdleAnimationGetter":
                 case "IIdleAnimation":
                 case "IIdleAnimationInternal":
-                    foreach (var item in obj.IdleAnimations.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.IdleAnimations)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IIdleAnimationInternal, IIdleAnimationGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.IdleAnimations.GetOrAddAsOverride((IIdleAnimationGetter)r));
+                            getOrAddAsOverride: (m, r) => m.IdleAnimations.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.IdleAnimations.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Package":
                 case "IPackageGetter":
                 case "IPackage":
                 case "IPackageInternal":
-                    foreach (var item in obj.Packages.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Packages)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IPackageInternal, IPackageGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Packages.GetOrAddAsOverride((IPackageGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Packages.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Packages.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "CombatStyle":
                 case "ICombatStyleGetter":
                 case "ICombatStyle":
                 case "ICombatStyleInternal":
-                    foreach (var item in obj.CombatStyles.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.CombatStyles)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, ICombatStyleInternal, ICombatStyleGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.CombatStyles.GetOrAddAsOverride((ICombatStyleGetter)r));
+                            getOrAddAsOverride: (m, r) => m.CombatStyles.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.CombatStyles.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "LoadScreen":
                 case "ILoadScreenGetter":
                 case "ILoadScreen":
                 case "ILoadScreenInternal":
-                    foreach (var item in obj.LoadScreens.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.LoadScreens)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, ILoadScreenInternal, ILoadScreenGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.LoadScreens.GetOrAddAsOverride((ILoadScreenGetter)r));
+                            getOrAddAsOverride: (m, r) => m.LoadScreens.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.LoadScreens.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "LeveledSpell":
                 case "ILeveledSpellGetter":
                 case "ILeveledSpell":
                 case "ILeveledSpellInternal":
-                    foreach (var item in obj.LeveledSpells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.LeveledSpells)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, ILeveledSpellInternal, ILeveledSpellGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.LeveledSpells.GetOrAddAsOverride((ILeveledSpellGetter)r));
+                            getOrAddAsOverride: (m, r) => m.LeveledSpells.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.LeveledSpells.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "AnimatedObject":
                 case "IAnimatedObjectGetter":
                 case "IAnimatedObject":
                 case "IAnimatedObjectInternal":
-                    foreach (var item in obj.AnimatedObjects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.AnimatedObjects)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IAnimatedObjectInternal, IAnimatedObjectGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.AnimatedObjects.GetOrAddAsOverride((IAnimatedObjectGetter)r));
+                            getOrAddAsOverride: (m, r) => m.AnimatedObjects.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.AnimatedObjects.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Water":
                 case "IWaterGetter":
                 case "IWater":
                 case "IWaterInternal":
-                    foreach (var item in obj.Waters.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Waters)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IWaterInternal, IWaterGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Waters.GetOrAddAsOverride((IWaterGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Waters.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Waters.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "EffectShader":
                 case "IEffectShaderGetter":
                 case "IEffectShader":
                 case "IEffectShaderInternal":
-                    foreach (var item in obj.EffectShaders.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.EffectShaders)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IEffectShaderInternal, IEffectShaderGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.EffectShaders.GetOrAddAsOverride((IEffectShaderGetter)r));
+                            getOrAddAsOverride: (m, r) => m.EffectShaders.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.EffectShaders.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Explosion":
                 case "IExplosionGetter":
                 case "IExplosion":
                 case "IExplosionInternal":
-                    foreach (var item in obj.Explosions.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Explosions)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IExplosionInternal, IExplosionGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Explosions.GetOrAddAsOverride((IExplosionGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Explosions.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Explosions.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Debris":
                 case "IDebrisGetter":
                 case "IDebris":
                 case "IDebrisInternal":
-                    foreach (var item in obj.Debris.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Debris)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IDebrisInternal, IDebrisGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Debris.GetOrAddAsOverride((IDebrisGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Debris.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Debris.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "ImageSpace":
                 case "IImageSpaceGetter":
                 case "IImageSpace":
                 case "IImageSpaceInternal":
-                    foreach (var item in obj.ImageSpaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.ImageSpaces)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IImageSpaceInternal, IImageSpaceGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.ImageSpaces.GetOrAddAsOverride((IImageSpaceGetter)r));
+                            getOrAddAsOverride: (m, r) => m.ImageSpaces.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.ImageSpaces.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "ImageSpaceAdapter":
                 case "IImageSpaceAdapterGetter":
                 case "IImageSpaceAdapter":
                 case "IImageSpaceAdapterInternal":
-                    foreach (var item in obj.ImageSpaceAdapters.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.ImageSpaceAdapters)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IImageSpaceAdapterInternal, IImageSpaceAdapterGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.ImageSpaceAdapters.GetOrAddAsOverride((IImageSpaceAdapterGetter)r));
+                            getOrAddAsOverride: (m, r) => m.ImageSpaceAdapters.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.ImageSpaceAdapters.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "FormList":
                 case "IFormListGetter":
                 case "IFormList":
                 case "IFormListInternal":
-                    foreach (var item in obj.FormLists.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.FormLists)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IFormListInternal, IFormListGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.FormLists.GetOrAddAsOverride((IFormListGetter)r));
+                            getOrAddAsOverride: (m, r) => m.FormLists.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.FormLists.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Perk":
                 case "IPerkGetter":
                 case "IPerk":
                 case "IPerkInternal":
-                    foreach (var item in obj.Perks.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Perks)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IPerkInternal, IPerkGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Perks.GetOrAddAsOverride((IPerkGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Perks.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Perks.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "BodyPartData":
                 case "IBodyPartDataGetter":
                 case "IBodyPartData":
                 case "IBodyPartDataInternal":
-                    foreach (var item in obj.BodyParts.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.BodyParts)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IBodyPartDataInternal, IBodyPartDataGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.BodyParts.GetOrAddAsOverride((IBodyPartDataGetter)r));
+                            getOrAddAsOverride: (m, r) => m.BodyParts.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.BodyParts.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "AddonNode":
                 case "IAddonNodeGetter":
                 case "IAddonNode":
                 case "IAddonNodeInternal":
-                    foreach (var item in obj.AddonNodes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.AddonNodes)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IAddonNodeInternal, IAddonNodeGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.AddonNodes.GetOrAddAsOverride((IAddonNodeGetter)r));
+                            getOrAddAsOverride: (m, r) => m.AddonNodes.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.AddonNodes.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "ActorValueInformation":
                 case "IActorValueInformationGetter":
                 case "IActorValueInformation":
                 case "IActorValueInformationInternal":
-                    foreach (var item in obj.ActorValueInformation.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.ActorValueInformation)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IActorValueInformationInternal, IActorValueInformationGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.ActorValueInformation.GetOrAddAsOverride((IActorValueInformationGetter)r));
+                            getOrAddAsOverride: (m, r) => m.ActorValueInformation.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.ActorValueInformation.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "CameraShot":
                 case "ICameraShotGetter":
                 case "ICameraShot":
                 case "ICameraShotInternal":
-                    foreach (var item in obj.CameraShots.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.CameraShots)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, ICameraShotInternal, ICameraShotGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.CameraShots.GetOrAddAsOverride((ICameraShotGetter)r));
+                            getOrAddAsOverride: (m, r) => m.CameraShots.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.CameraShots.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "CameraPath":
                 case "ICameraPathGetter":
                 case "ICameraPath":
                 case "ICameraPathInternal":
-                    foreach (var item in obj.CameraPaths.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.CameraPaths)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, ICameraPathInternal, ICameraPathGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.CameraPaths.GetOrAddAsOverride((ICameraPathGetter)r));
+                            getOrAddAsOverride: (m, r) => m.CameraPaths.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.CameraPaths.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "VoiceType":
                 case "IVoiceTypeGetter":
                 case "IVoiceType":
                 case "IVoiceTypeInternal":
-                    foreach (var item in obj.VoiceTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.VoiceTypes)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IVoiceTypeInternal, IVoiceTypeGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.VoiceTypes.GetOrAddAsOverride((IVoiceTypeGetter)r));
+                            getOrAddAsOverride: (m, r) => m.VoiceTypes.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.VoiceTypes.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "MaterialType":
                 case "IMaterialTypeGetter":
                 case "IMaterialType":
                 case "IMaterialTypeInternal":
-                    foreach (var item in obj.MaterialTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.MaterialTypes)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IMaterialTypeInternal, IMaterialTypeGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.MaterialTypes.GetOrAddAsOverride((IMaterialTypeGetter)r));
+                            getOrAddAsOverride: (m, r) => m.MaterialTypes.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.MaterialTypes.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Impact":
                 case "IImpactGetter":
                 case "IImpact":
                 case "IImpactInternal":
-                    foreach (var item in obj.Impacts.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Impacts)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IImpactInternal, IImpactGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Impacts.GetOrAddAsOverride((IImpactGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Impacts.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Impacts.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "ImpactDataSet":
                 case "IImpactDataSetGetter":
                 case "IImpactDataSet":
                 case "IImpactDataSetInternal":
-                    foreach (var item in obj.ImpactDataSets.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.ImpactDataSets)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IImpactDataSetInternal, IImpactDataSetGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.ImpactDataSets.GetOrAddAsOverride((IImpactDataSetGetter)r));
+                            getOrAddAsOverride: (m, r) => m.ImpactDataSets.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.ImpactDataSets.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "ArmorAddon":
                 case "IArmorAddonGetter":
                 case "IArmorAddon":
                 case "IArmorAddonInternal":
-                    foreach (var item in obj.ArmorAddons.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.ArmorAddons)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IArmorAddonInternal, IArmorAddonGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.ArmorAddons.GetOrAddAsOverride((IArmorAddonGetter)r));
+                            getOrAddAsOverride: (m, r) => m.ArmorAddons.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.ArmorAddons.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "EncounterZone":
                 case "IEncounterZoneGetter":
                 case "IEncounterZone":
                 case "IEncounterZoneInternal":
-                    foreach (var item in obj.EncounterZones.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.EncounterZones)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IEncounterZoneInternal, IEncounterZoneGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.EncounterZones.GetOrAddAsOverride((IEncounterZoneGetter)r));
+                            getOrAddAsOverride: (m, r) => m.EncounterZones.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.EncounterZones.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Location":
                 case "ILocationGetter":
                 case "ILocation":
                 case "ILocationInternal":
-                    foreach (var item in obj.Locations.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Locations)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, ILocationInternal, ILocationGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Locations.GetOrAddAsOverride((ILocationGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Locations.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Locations.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Message":
                 case "IMessageGetter":
                 case "IMessage":
                 case "IMessageInternal":
-                    foreach (var item in obj.Messages.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Messages)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IMessageInternal, IMessageGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Messages.GetOrAddAsOverride((IMessageGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Messages.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Messages.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "DefaultObjectManager":
                 case "IDefaultObjectManagerGetter":
                 case "IDefaultObjectManager":
                 case "IDefaultObjectManagerInternal":
-                    foreach (var item in obj.DefaultObjectManagers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.DefaultObjectManagers)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IDefaultObjectManagerInternal, IDefaultObjectManagerGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.DefaultObjectManagers.GetOrAddAsOverride((IDefaultObjectManagerGetter)r));
+                            getOrAddAsOverride: (m, r) => m.DefaultObjectManagers.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.DefaultObjectManagers.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "LightingTemplate":
                 case "ILightingTemplateGetter":
                 case "ILightingTemplate":
                 case "ILightingTemplateInternal":
-                    foreach (var item in obj.LightingTemplates.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.LightingTemplates)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, ILightingTemplateInternal, ILightingTemplateGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.LightingTemplates.GetOrAddAsOverride((ILightingTemplateGetter)r));
+                            getOrAddAsOverride: (m, r) => m.LightingTemplates.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.LightingTemplates.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "MusicType":
                 case "IMusicTypeGetter":
                 case "IMusicType":
                 case "IMusicTypeInternal":
-                    foreach (var item in obj.MusicTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.MusicTypes)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IMusicTypeInternal, IMusicTypeGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.MusicTypes.GetOrAddAsOverride((IMusicTypeGetter)r));
+                            getOrAddAsOverride: (m, r) => m.MusicTypes.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.MusicTypes.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Footstep":
                 case "IFootstepGetter":
                 case "IFootstep":
                 case "IFootstepInternal":
-                    foreach (var item in obj.Footsteps.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Footsteps)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IFootstepInternal, IFootstepGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Footsteps.GetOrAddAsOverride((IFootstepGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Footsteps.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Footsteps.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "FootstepSet":
                 case "IFootstepSetGetter":
                 case "IFootstepSet":
                 case "IFootstepSetInternal":
-                    foreach (var item in obj.FootstepSets.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.FootstepSets)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IFootstepSetInternal, IFootstepSetGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.FootstepSets.GetOrAddAsOverride((IFootstepSetGetter)r));
+                            getOrAddAsOverride: (m, r) => m.FootstepSets.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.FootstepSets.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "StoryManagerBranchNode":
                 case "IStoryManagerBranchNodeGetter":
                 case "IStoryManagerBranchNode":
                 case "IStoryManagerBranchNodeInternal":
-                    foreach (var item in obj.StoryManagerBranchNodes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.StoryManagerBranchNodes)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IStoryManagerBranchNodeInternal, IStoryManagerBranchNodeGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.StoryManagerBranchNodes.GetOrAddAsOverride((IStoryManagerBranchNodeGetter)r));
+                            getOrAddAsOverride: (m, r) => m.StoryManagerBranchNodes.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.StoryManagerBranchNodes.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "StoryManagerQuestNode":
                 case "IStoryManagerQuestNodeGetter":
                 case "IStoryManagerQuestNode":
                 case "IStoryManagerQuestNodeInternal":
-                    foreach (var item in obj.StoryManagerQuestNodes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.StoryManagerQuestNodes)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IStoryManagerQuestNodeInternal, IStoryManagerQuestNodeGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.StoryManagerQuestNodes.GetOrAddAsOverride((IStoryManagerQuestNodeGetter)r));
+                            getOrAddAsOverride: (m, r) => m.StoryManagerQuestNodes.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.StoryManagerQuestNodes.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "StoryManagerEventNode":
                 case "IStoryManagerEventNodeGetter":
                 case "IStoryManagerEventNode":
                 case "IStoryManagerEventNodeInternal":
-                    foreach (var item in obj.StoryManagerEventNodes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.StoryManagerEventNodes)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IStoryManagerEventNodeInternal, IStoryManagerEventNodeGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.StoryManagerEventNodes.GetOrAddAsOverride((IStoryManagerEventNodeGetter)r));
+                            getOrAddAsOverride: (m, r) => m.StoryManagerEventNodes.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.StoryManagerEventNodes.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "DialogBranch":
                 case "IDialogBranchGetter":
                 case "IDialogBranch":
                 case "IDialogBranchInternal":
-                    foreach (var item in obj.DialogBranches.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.DialogBranches)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IDialogBranchInternal, IDialogBranchGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.DialogBranches.GetOrAddAsOverride((IDialogBranchGetter)r));
+                            getOrAddAsOverride: (m, r) => m.DialogBranches.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.DialogBranches.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "MusicTrack":
                 case "IMusicTrackGetter":
                 case "IMusicTrack":
                 case "IMusicTrackInternal":
-                    foreach (var item in obj.MusicTracks.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.MusicTracks)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IMusicTrackInternal, IMusicTrackGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.MusicTracks.GetOrAddAsOverride((IMusicTrackGetter)r));
+                            getOrAddAsOverride: (m, r) => m.MusicTracks.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.MusicTracks.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "DialogView":
                 case "IDialogViewGetter":
                 case "IDialogView":
                 case "IDialogViewInternal":
-                    foreach (var item in obj.DialogViews.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.DialogViews)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IDialogViewInternal, IDialogViewGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.DialogViews.GetOrAddAsOverride((IDialogViewGetter)r));
+                            getOrAddAsOverride: (m, r) => m.DialogViews.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.DialogViews.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "WordOfPower":
                 case "IWordOfPowerGetter":
                 case "IWordOfPower":
                 case "IWordOfPowerInternal":
-                    foreach (var item in obj.WordsOfPower.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.WordsOfPower)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IWordOfPowerInternal, IWordOfPowerGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.WordsOfPower.GetOrAddAsOverride((IWordOfPowerGetter)r));
+                            getOrAddAsOverride: (m, r) => m.WordsOfPower.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.WordsOfPower.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Shout":
                 case "IShoutGetter":
                 case "IShout":
                 case "IShoutInternal":
-                    foreach (var item in obj.Shouts.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Shouts)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IShoutInternal, IShoutGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Shouts.GetOrAddAsOverride((IShoutGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Shouts.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Shouts.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "EquipType":
                 case "IEquipTypeGetter":
                 case "IEquipType":
                 case "IEquipTypeInternal":
-                    foreach (var item in obj.EquipTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.EquipTypes)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IEquipTypeInternal, IEquipTypeGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.EquipTypes.GetOrAddAsOverride((IEquipTypeGetter)r));
+                            getOrAddAsOverride: (m, r) => m.EquipTypes.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.EquipTypes.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Relationship":
                 case "IRelationshipGetter":
                 case "IRelationship":
                 case "IRelationshipInternal":
-                    foreach (var item in obj.Relationships.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Relationships)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IRelationshipInternal, IRelationshipGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Relationships.GetOrAddAsOverride((IRelationshipGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Relationships.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Relationships.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Scene":
                 case "ISceneGetter":
                 case "IScene":
                 case "ISceneInternal":
-                    foreach (var item in obj.Scenes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Scenes)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, ISceneInternal, ISceneGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Scenes.GetOrAddAsOverride((ISceneGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Scenes.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Scenes.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "AssociationType":
                 case "IAssociationTypeGetter":
                 case "IAssociationType":
                 case "IAssociationTypeInternal":
-                    foreach (var item in obj.AssociationTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.AssociationTypes)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IAssociationTypeInternal, IAssociationTypeGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.AssociationTypes.GetOrAddAsOverride((IAssociationTypeGetter)r));
+                            getOrAddAsOverride: (m, r) => m.AssociationTypes.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.AssociationTypes.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Outfit":
                 case "IOutfitGetter":
                 case "IOutfit":
                 case "IOutfitInternal":
-                    foreach (var item in obj.Outfits.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Outfits)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IOutfitInternal, IOutfitGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Outfits.GetOrAddAsOverride((IOutfitGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Outfits.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Outfits.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "ArtObject":
                 case "IArtObjectGetter":
                 case "IArtObject":
                 case "IArtObjectInternal":
-                    foreach (var item in obj.ArtObjects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.ArtObjects)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IArtObjectInternal, IArtObjectGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.ArtObjects.GetOrAddAsOverride((IArtObjectGetter)r));
+                            getOrAddAsOverride: (m, r) => m.ArtObjects.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.ArtObjects.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "MaterialObject":
                 case "IMaterialObjectGetter":
                 case "IMaterialObject":
                 case "IMaterialObjectInternal":
-                    foreach (var item in obj.MaterialObjects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.MaterialObjects)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IMaterialObjectInternal, IMaterialObjectGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.MaterialObjects.GetOrAddAsOverride((IMaterialObjectGetter)r));
+                            getOrAddAsOverride: (m, r) => m.MaterialObjects.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.MaterialObjects.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "MovementType":
                 case "IMovementTypeGetter":
                 case "IMovementType":
                 case "IMovementTypeInternal":
-                    foreach (var item in obj.MovementTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.MovementTypes)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IMovementTypeInternal, IMovementTypeGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.MovementTypes.GetOrAddAsOverride((IMovementTypeGetter)r));
+                            getOrAddAsOverride: (m, r) => m.MovementTypes.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.MovementTypes.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "SoundDescriptor":
                 case "ISoundDescriptorGetter":
                 case "ISoundDescriptor":
                 case "ISoundDescriptorInternal":
-                    foreach (var item in obj.SoundDescriptors.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.SoundDescriptors)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, ISoundDescriptorInternal, ISoundDescriptorGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.SoundDescriptors.GetOrAddAsOverride((ISoundDescriptorGetter)r));
+                            getOrAddAsOverride: (m, r) => m.SoundDescriptors.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.SoundDescriptors.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "DualCastData":
                 case "IDualCastDataGetter":
                 case "IDualCastData":
                 case "IDualCastDataInternal":
-                    foreach (var item in obj.DualCastData.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.DualCastData)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IDualCastDataInternal, IDualCastDataGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.DualCastData.GetOrAddAsOverride((IDualCastDataGetter)r));
+                            getOrAddAsOverride: (m, r) => m.DualCastData.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.DualCastData.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "SoundCategory":
                 case "ISoundCategoryGetter":
                 case "ISoundCategory":
                 case "ISoundCategoryInternal":
-                    foreach (var item in obj.SoundCategories.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.SoundCategories)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, ISoundCategoryInternal, ISoundCategoryGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.SoundCategories.GetOrAddAsOverride((ISoundCategoryGetter)r));
+                            getOrAddAsOverride: (m, r) => m.SoundCategories.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.SoundCategories.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "SoundOutputModel":
                 case "ISoundOutputModelGetter":
                 case "ISoundOutputModel":
                 case "ISoundOutputModelInternal":
-                    foreach (var item in obj.SoundOutputModels.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.SoundOutputModels)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, ISoundOutputModelInternal, ISoundOutputModelGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.SoundOutputModels.GetOrAddAsOverride((ISoundOutputModelGetter)r));
+                            getOrAddAsOverride: (m, r) => m.SoundOutputModels.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.SoundOutputModels.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "CollisionLayer":
                 case "ICollisionLayerGetter":
                 case "ICollisionLayer":
                 case "ICollisionLayerInternal":
-                    foreach (var item in obj.CollisionLayers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.CollisionLayers)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, ICollisionLayerInternal, ICollisionLayerGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.CollisionLayers.GetOrAddAsOverride((ICollisionLayerGetter)r));
+                            getOrAddAsOverride: (m, r) => m.CollisionLayers.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.CollisionLayers.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "ColorRecord":
                 case "IColorRecordGetter":
                 case "IColorRecord":
                 case "IColorRecordInternal":
-                    foreach (var item in obj.Colors.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Colors)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IColorRecordInternal, IColorRecordGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.Colors.GetOrAddAsOverride((IColorRecordGetter)r));
+                            getOrAddAsOverride: (m, r) => m.Colors.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Colors.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "ReverbParameters":
                 case "IReverbParametersGetter":
                 case "IReverbParameters":
                 case "IReverbParametersInternal":
-                    foreach (var item in obj.ReverbParameters.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.ReverbParameters)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IReverbParametersInternal, IReverbParametersGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.ReverbParameters.GetOrAddAsOverride((IReverbParametersGetter)r));
+                            getOrAddAsOverride: (m, r) => m.ReverbParameters.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.ReverbParameters.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "VolumetricLighting":
                 case "IVolumetricLightingGetter":
                 case "IVolumetricLighting":
                 case "IVolumetricLightingInternal":
-                    foreach (var item in obj.VolumetricLightings.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.VolumetricLightings)
                     {
-                        yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                        yield return new ModContext<ISkyrimMod, IVolumetricLightingInternal, IVolumetricLightingGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getter: (m, r) => m.VolumetricLightings.GetOrAddAsOverride((IVolumetricLightingGetter)r));
+                            getOrAddAsOverride: (m, r) => m.VolumetricLightings.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.VolumetricLightings.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
                 case "ICellInternal":
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        throwIfUnknown: throwIfUnknown,
+                        modKey: obj.ModKey,
+                        parent: null))
                     {
                         yield return item;
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
+                            groupItem,
+                            linkCache: linkCache,
+                            type: type,
+                            throwIfUnknown: throwIfUnknown,
+                            modKey: obj.ModKey,
+                            parent: null,
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
                         {
                             yield return item;
                         }
@@ -15834,13 +16216,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILandscapeGetter":
                 case "ILandscape":
                 case "ILandscapeInternal":
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        throwIfUnknown: throwIfUnknown,
+                        modKey: obj.ModKey,
+                        parent: null))
                     {
                         yield return item;
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
+                            groupItem,
+                            linkCache: linkCache,
+                            type: type,
+                            throwIfUnknown: throwIfUnknown,
+                            modKey: obj.ModKey,
+                            parent: null,
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
                         {
                             yield return item;
                         }
@@ -15850,13 +16245,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IANavigationMeshGetter":
                 case "IANavigationMesh":
                 case "IANavigationMeshInternal":
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        throwIfUnknown: throwIfUnknown,
+                        modKey: obj.ModKey,
+                        parent: null))
                     {
                         yield return item;
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
+                            groupItem,
+                            linkCache: linkCache,
+                            type: type,
+                            throwIfUnknown: throwIfUnknown,
+                            modKey: obj.ModKey,
+                            parent: null,
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
                         {
                             yield return item;
                         }
@@ -15866,13 +16274,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlacedNpcGetter":
                 case "IPlacedNpc":
                 case "IPlacedNpcInternal":
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        throwIfUnknown: throwIfUnknown,
+                        modKey: obj.ModKey,
+                        parent: null))
                     {
                         yield return item;
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
+                            groupItem,
+                            linkCache: linkCache,
+                            type: type,
+                            throwIfUnknown: throwIfUnknown,
+                            modKey: obj.ModKey,
+                            parent: null,
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
                         {
                             yield return item;
                         }
@@ -15882,13 +16303,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlacedObjectGetter":
                 case "IPlacedObject":
                 case "IPlacedObjectInternal":
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        throwIfUnknown: throwIfUnknown,
+                        modKey: obj.ModKey,
+                        parent: null))
                     {
                         yield return item;
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
+                            groupItem,
+                            linkCache: linkCache,
+                            type: type,
+                            throwIfUnknown: throwIfUnknown,
+                            modKey: obj.ModKey,
+                            parent: null,
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
                         {
                             yield return item;
                         }
@@ -15898,13 +16332,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IAPlacedGetter":
                 case "IAPlaced":
                 case "IAPlacedInternal":
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        throwIfUnknown: throwIfUnknown,
+                        modKey: obj.ModKey,
+                        parent: null))
                     {
                         yield return item;
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
+                            groupItem,
+                            linkCache: linkCache,
+                            type: type,
+                            throwIfUnknown: throwIfUnknown,
+                            modKey: obj.ModKey,
+                            parent: null,
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
                         {
                             yield return item;
                         }
@@ -15914,13 +16361,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IAPlacedTrapGetter":
                 case "IAPlacedTrap":
                 case "IAPlacedTrapInternal":
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        throwIfUnknown: throwIfUnknown,
+                        modKey: obj.ModKey,
+                        parent: null))
                     {
                         yield return item;
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
+                            groupItem,
+                            linkCache: linkCache,
+                            type: type,
+                            throwIfUnknown: throwIfUnknown,
+                            modKey: obj.ModKey,
+                            parent: null,
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
                         {
                             yield return item;
                         }
@@ -15932,7 +16392,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IDialogResponsesInternal":
                     foreach (var groupItem in obj.DialogTopics)
                     {
-                        foreach (var item in DialogTopicCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.DialogTopics.GetOrAddAsOverride(linkCache.Resolve<IDialogTopicGetter>(r.FormKey))))
+                        foreach (var item in DialogTopicCommon.Instance.EnumerateMajorRecordContexts(
+                            groupItem,
+                            linkCache: linkCache,
+                            type: type,
+                            throwIfUnknown: throwIfUnknown,
+                            modKey: obj.ModKey,
+                            parent: null,
+                            getOrAddAsOverride: (m, r) => m.DialogTopics.GetOrAddAsOverride(linkCache.Resolve<IDialogTopicGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e) => m.DialogTopics.DuplicateInAsNewRecord(linkCache.Resolve<IDialogTopicGetter>(r.FormKey), e)))
                         {
                             yield return item;
                         }
@@ -15941,11 +16409,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IIdleRelation":
                 case "IIdleRelationGetter":
                 {
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IActionRecordGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IActionRecordGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IIdleAnimationGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IIdleAnimationGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -15954,99 +16430,195 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IObjectId":
                 case "IObjectIdGetter":
                 {
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IActivatorGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IActivatorGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IAmmunitionGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IAmmunitionGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IArmorGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IBookGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IBookGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IContainerGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IContainerGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IDoorGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IDoorGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IFactionGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IFormListGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IFormListGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IFurnitureGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IFurnitureGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IIdleMarkerGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IIdleMarkerGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IIngestibleGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IIngestibleGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IKeyGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IKeyGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(ILightGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(ILightGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IMiscItemGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IMoveableStaticGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IMoveableStaticGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(INpcGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(INpcGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IProjectileGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IProjectileGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IScrollGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IScrollGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IShoutGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IShoutGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(ISoundMarkerGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(ISoundMarkerGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(ISpellGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(ISpellGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IStaticGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IStaticGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(ITextureSetGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(ITextureSetGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IWeaponGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -16055,55 +16627,107 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IItem":
                 case "IItemGetter":
                 {
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IAlchemicalApparatusGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IAlchemicalApparatusGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IAmmunitionGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IAmmunitionGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IArmorGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IBookGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IBookGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IIngestibleGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IIngestibleGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IIngredientGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IIngredientGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IKeyGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IKeyGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(ILeveledItemGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(ILightGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(ILightGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IMiscItemGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IScrollGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IScrollGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(ISoulGemGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(ISoulGemGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IWeaponGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -16112,11 +16736,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IOutfitTarget":
                 case "IOutfitTargetGetter":
                 {
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IArmorGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(ILeveledItemGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -16125,11 +16757,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IComplexLocation":
                 case "IComplexLocationGetter":
                 {
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IWorldspaceGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IWorldspaceGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        throwIfUnknown: throwIfUnknown,
+                        modKey: obj.ModKey,
+                        parent: null))
                     {
                         yield return item;
                     }
@@ -16138,7 +16779,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IDialog":
                 case "IDialogGetter":
                 {
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IDialogTopicGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IDialogTopicGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -16147,17 +16792,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILocationTargetable":
                 case "ILocationTargetableGetter":
                 {
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IDoorGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IDoorGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        throwIfUnknown: throwIfUnknown,
+                        modKey: obj.ModKey,
+                        parent: null))
                     {
                         yield return item;
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
+                            groupItem,
+                            linkCache: linkCache,
+                            type: type,
+                            throwIfUnknown: throwIfUnknown,
+                            modKey: obj.ModKey,
+                            parent: null,
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
                         {
                             yield return item;
                         }
@@ -16167,17 +16829,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IOwner":
                 case "IOwnerGetter":
                 {
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IFactionGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        throwIfUnknown: throwIfUnknown,
+                        modKey: obj.ModKey,
+                        parent: null))
                     {
                         yield return item;
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
+                            groupItem,
+                            linkCache: linkCache,
+                            type: type,
+                            throwIfUnknown: throwIfUnknown,
+                            modKey: obj.ModKey,
+                            parent: null,
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
                         {
                             yield return item;
                         }
@@ -16187,11 +16866,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IRelatable":
                 case "IRelatableGetter":
                 {
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IFactionGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IRaceGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IRaceGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -16200,23 +16887,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IRegionTarget":
                 case "IRegionTargetGetter":
                 {
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IFloraGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IFloraGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(ILandscapeTextureGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(ILandscapeTextureGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IMoveableStaticGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IMoveableStaticGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IStaticGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IStaticGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(ITreeGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(ITreeGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -16225,11 +16932,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IAliasVoiceType":
                 case "IAliasVoiceTypeGetter":
                 {
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IFormListGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IFormListGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(INpcGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(INpcGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -16238,11 +16953,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILockList":
                 case "ILockListGetter":
                 {
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IFormListGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IFormListGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(INpcGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(INpcGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -16251,11 +16974,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlacedTrapTarget":
                 case "IPlacedTrapTargetGetter":
                 {
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IHazardGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IHazardGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IProjectileGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IProjectileGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -16264,19 +16995,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IHarvestTarget":
                 case "IHarvestTargetGetter":
                 {
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IIngestibleGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IIngestibleGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IIngredientGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IIngredientGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(ILeveledItemGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IMiscItemGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -16285,17 +17032,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IKeywordLinkedReference":
                 case "IKeywordLinkedReferenceGetter":
                 {
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IKeywordGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IKeywordGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        throwIfUnknown: throwIfUnknown,
+                        modKey: obj.ModKey,
+                        parent: null))
                     {
                         yield return item;
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
+                            groupItem,
+                            linkCache: linkCache,
+                            type: type,
+                            throwIfUnknown: throwIfUnknown,
+                            modKey: obj.ModKey,
+                            parent: null,
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
                         {
                             yield return item;
                         }
@@ -16305,11 +17069,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "INpcSpawn":
                 case "INpcSpawnGetter":
                 {
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(ILeveledNpcGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(ILeveledNpcGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(INpcGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(INpcGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -16318,11 +17090,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ISpellSpawn":
                 case "ISpellSpawnGetter":
                 {
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(ILeveledSpellGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(ILeveledSpellGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(ISpellGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(ISpellGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -16331,11 +17111,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IEmittance":
                 case "IEmittanceGetter":
                 {
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(ILightGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(ILightGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IRegionGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IRegionGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -16344,11 +17132,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILocationRecord":
                 case "ILocationRecordGetter":
                 {
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(ILocationGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(ILocationGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(ILocationReferenceTypeGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(ILocationReferenceTypeGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -16357,11 +17153,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IEffectRecord":
                 case "IEffectRecordGetter":
                 {
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(IObjectEffectGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IObjectEffectGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(ISpellGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(ISpellGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -16370,13 +17174,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILinkedReference":
                 case "ILinkedReferenceGetter":
                 {
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        throwIfUnknown: throwIfUnknown,
+                        modKey: obj.ModKey,
+                        parent: null))
                     {
                         yield return item;
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
+                            groupItem,
+                            linkCache: linkCache,
+                            type: type,
+                            throwIfUnknown: throwIfUnknown,
+                            modKey: obj.ModKey,
+                            parent: null,
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
                         {
                             yield return item;
                         }
@@ -16386,13 +17203,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlaced":
                 case "IPlacedGetter":
                 {
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        throwIfUnknown: throwIfUnknown,
+                        modKey: obj.ModKey,
+                        parent: null))
                     {
                         yield return item;
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
+                            groupItem,
+                            linkCache: linkCache,
+                            type: type,
+                            throwIfUnknown: throwIfUnknown,
+                            modKey: obj.ModKey,
+                            parent: null,
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
                         {
                             yield return item;
                         }
@@ -16402,13 +17232,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlacedSimple":
                 case "IPlacedSimpleGetter":
                 {
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        throwIfUnknown: throwIfUnknown,
+                        modKey: obj.ModKey,
+                        parent: null))
                     {
                         yield return item;
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
+                            groupItem,
+                            linkCache: linkCache,
+                            type: type,
+                            throwIfUnknown: throwIfUnknown,
+                            modKey: obj.ModKey,
+                            parent: null,
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
                         {
                             yield return item;
                         }
@@ -16418,13 +17261,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlacedThing":
                 case "IPlacedThingGetter":
                 {
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown))
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        throwIfUnknown: throwIfUnknown,
+                        modKey: obj.ModKey,
+                        parent: null))
                     {
                         yield return item;
                     }
                     foreach (var groupItem in obj.Worldspaces)
                     {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(groupItem, linkCache, type, obj.ModKey, parent: null, throwIfUnknown: throwIfUnknown, getter: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey))))
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
+                            groupItem,
+                            linkCache: linkCache,
+                            type: type,
+                            throwIfUnknown: throwIfUnknown,
+                            modKey: obj.ModKey,
+                            parent: null,
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
                         {
                             yield return item;
                         }
@@ -16434,11 +17290,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ISound":
                 case "ISoundGetter":
                 {
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(ISoundDescriptorGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(ISoundDescriptorGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecordContexts(obj, linkCache, typeof(ISoundMarkerGetter), throwIfUnknown: throwIfUnknown))
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(ISoundMarkerGetter),
+                        throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -22147,10 +23011,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
         public bool CanUseLocalization => true;
         public bool UsingLocalization => this.ModHeader.Flags.HasFlag(SkyrimModHeader.HeaderFlag.Localized);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => SkyrimModCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => SkyrimModCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => SkyrimModCommon.Instance.GetContainedFormLinks(this);
         [DebuggerStepThrough]
         IEnumerable<IModContext<ISkyrimMod, TSetter, TGetter>> IMajorRecordContextEnumerable<ISkyrimMod>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]

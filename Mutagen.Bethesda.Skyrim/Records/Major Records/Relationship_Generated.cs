@@ -542,12 +542,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Relationship_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => RelationshipCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => RelationshipCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RelationshipCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RelationshipCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => RelationshipCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RelationshipSetterCommon.Instance.RemapLinks(this, mapping);
         public Relationship(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -659,7 +655,7 @@ namespace Mutagen.Bethesda.Skyrim
         IRelationshipGetter,
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IRelationshipInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<INpcGetter> Parent { get; set; }
         new FormLink<INpcGetter> Child { get; set; }
@@ -684,7 +680,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IRelationshipGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IRelationshipGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Relationship_Registration.Instance;
@@ -816,6 +812,20 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
+
+        #region Mutagen
+        public static Relationship Duplicate(
+            this IRelationshipGetter item,
+            FormKey formKey,
+            Relationship.TranslationMask? copyMask = null)
+        {
+            return ((RelationshipCommon)((IRelationshipGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
 
         #region Binary Translation
         public static void CopyInFromBinary(
@@ -961,6 +971,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IRelationshipInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IRelationship obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Parent = obj.Parent.Relink(mapping);
+            obj.Child = obj.Child.Relink(mapping);
+            obj.AssociationType = obj.AssociationType.Relink(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1221,29 +1242,52 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IRelationshipGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IRelationshipGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
-            yield return obj.Parent.FormKey;
-            yield return obj.Child.FormKey;
-            yield return obj.AssociationType.FormKey;
+            yield return FormLinkInformation.Factory(obj.Parent);
+            yield return FormLinkInformation.Factory(obj.Child);
+            yield return FormLinkInformation.Factory(obj.AssociationType);
             yield break;
         }
         
-        public void RemapLinks(IRelationshipGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(Relationship obj, Relationship rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public Relationship Duplicate(
+            IRelationshipGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new Relationship(getNextFormKey(), ((IRelationshipGetter)item).FormVersion);
-            ret.DeepCopyIn((Relationship)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (Relationship)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new Relationship(formKey, default(SkyrimRelease));
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override SkyrimMajorRecord Duplicate(
+            ISkyrimMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IRelationship)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IRelationship)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         
@@ -1647,10 +1691,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => RelationshipCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => RelationshipCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => RelationshipCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RelationshipBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

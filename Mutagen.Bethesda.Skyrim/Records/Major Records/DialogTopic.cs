@@ -167,14 +167,6 @@ namespace Mutagen.Bethesda.Skyrim
 
     namespace Internals
     {
-        public partial class DialogTopicCommon
-        {
-            partial void PostDuplicate(DialogTopic obj, DialogTopic rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
-            {
-                obj.Responses.SetTo(rhs.Responses.Select((dia) => (DialogResponses)dia.Duplicate(getNextFormKey, duplicatedRecords)));
-            }
-        }
-
         public partial class DialogTopicBinaryCreateTranslation
         {
             static partial void CustomBinaryEndImport(MutagenFrame frame, IDialogTopicInternal obj)

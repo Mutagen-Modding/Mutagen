@@ -474,12 +474,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = SoundMarker_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => SoundMarkerCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => SoundMarkerCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoundMarkerCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoundMarkerCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => SoundMarkerCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoundMarkerSetterCommon.Instance.RemapLinks(this, mapping);
         public SoundMarker(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -585,7 +581,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISound,
         IObjectBounded,
         ILoquiObjectSetter<ISoundMarkerInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ObjectBounds ObjectBounds { get; set; }
         new MemorySlice<Byte>? FNAM { get; set; }
@@ -606,7 +602,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISoundGetter,
         IObjectBoundedGetter,
         ILoquiObject<ISoundMarkerGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => SoundMarker_Registration.Instance;
@@ -731,6 +727,20 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
+
+        #region Mutagen
+        public static SoundMarker Duplicate(
+            this ISoundMarkerGetter item,
+            FormKey formKey,
+            SoundMarker.TranslationMask? copyMask = null)
+        {
+            return ((SoundMarkerCommon)((ISoundMarkerGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
 
         #region Binary Translation
         public static void CopyInFromBinary(
@@ -870,6 +880,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (ISoundMarkerInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(ISoundMarker obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.SoundDescriptor = obj.SoundDescriptor.Relink(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1117,30 +1136,53 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ISoundMarkerGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ISoundMarkerGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
-            if (obj.SoundDescriptor.FormKeyNullable.TryGet(out var SoundDescriptorKey))
+            if (obj.SoundDescriptor.FormKeyNullable.HasValue)
             {
-                yield return SoundDescriptorKey;
+                yield return FormLinkInformation.Factory(obj.SoundDescriptor);
             }
             yield break;
         }
         
-        public void RemapLinks(ISoundMarkerGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(SoundMarker obj, SoundMarker rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public SoundMarker Duplicate(
+            ISoundMarkerGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new SoundMarker(getNextFormKey(), ((ISoundMarkerGetter)item).FormVersion);
-            ret.DeepCopyIn((SoundMarker)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (SoundMarker)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new SoundMarker(formKey, default(SkyrimRelease));
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override SkyrimMajorRecord Duplicate(
+            ISkyrimMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (ISoundMarker)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (ISoundMarker)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         
@@ -1558,10 +1600,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => SoundMarkerCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => SoundMarkerCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => SoundMarkerCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SoundMarkerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

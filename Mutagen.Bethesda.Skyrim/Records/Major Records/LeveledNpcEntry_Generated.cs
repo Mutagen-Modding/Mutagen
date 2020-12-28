@@ -414,12 +414,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => LeveledNpcEntryCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LeveledNpcEntryCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledNpcEntryCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledNpcEntryCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => LeveledNpcEntryCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledNpcEntrySetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -481,7 +477,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILeveledNpcEntry :
         ILeveledNpcEntryGetter,
         ILoquiObjectSetter<ILeveledNpcEntry>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new LeveledNpcEntryData? Data { get; set; }
         new ExtraData? ExtraData { get; set; }
@@ -490,7 +486,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILeveledNpcEntryGetter :
         ILoquiObject,
         ILoquiObject<ILeveledNpcEntryGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -774,6 +770,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ExtraData = null;
         }
         
+        #region Mutagen
+        public void RemapLinks(ILeveledNpcEntry obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Data?.RemapLinks(mapping);
+            obj.ExtraData?.RemapLinks(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ILeveledNpcEntry item,
@@ -919,18 +924,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ILeveledNpcEntryGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ILeveledNpcEntryGetter obj)
         {
             if (obj.Data.TryGet(out var DataItems))
             {
-                foreach (var item in DataItems.LinkFormKeys)
+                foreach (var item in DataItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.ExtraData is ILinkedFormKeyContainerGetter ExtraDatalinkCont)
+            if (obj.ExtraData is IFormLinkContainerGetter ExtraDatalinkCont)
             {
-                foreach (var item in ExtraDatalinkCont.LinkFormKeys)
+                foreach (var item in ExtraDatalinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
@@ -938,7 +943,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(ILeveledNpcEntryGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1231,10 +1235,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => LeveledNpcEntryCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LeveledNpcEntryCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => LeveledNpcEntryCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LeveledNpcEntryBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

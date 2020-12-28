@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda
     /// <summary>
     /// An interface that Major Record objects implement to hook into the common systems
     /// </summary>
-    public interface IMajorRecordCommon : IMajorRecordCommonGetter, ILinkedFormKeyContainer
+    public interface IMajorRecordCommon : IMajorRecordCommonGetter, IFormLinkContainer
     {
         /// <summary>
         /// Marker of whether the content is compressed
@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda
     /// <summary>
     /// An interface that Major Record objects implement to hook into the common getter systems
     /// </summary>
-    public interface IMajorRecordCommonGetter : IDuplicatable, IFormVersionGetter, ILinkedFormKeyContainerGetter, ILoquiObject
+    public interface IMajorRecordCommonGetter : IFormVersionGetter, IFormLinkContainerGetter, ILoquiObject
     {
         /// <summary>
         /// The usually unique string identifier assigned to the Major Record
@@ -67,5 +67,13 @@ namespace Mutagen.Bethesda
         /// Form Version of the record
         /// </summary>
         new ushort? FormVersion { get; }
+    }
+
+    public static class IMajorRecordCommonGetterExt
+    {
+        public static FormLinkInformation ToFormLinkInformation(this IMajorRecordCommonGetter majorRec)
+        {
+            return FormLinkInformation.Factory(majorRec);
+        }
     }
 }

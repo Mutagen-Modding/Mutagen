@@ -832,6 +832,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Night.Clear();
         }
         
+        #region Mutagen
+        public void RemapLinks(IWeatherAmbientColorSet obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IWeatherAmbientColorSet item,
@@ -977,12 +984,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IWeatherAmbientColorSetGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IWeatherAmbientColorSetGetter obj)
         {
             yield break;
         }
         
-        public void RemapLinks(IWeatherAmbientColorSetGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

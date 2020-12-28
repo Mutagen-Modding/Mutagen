@@ -471,12 +471,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = ActivateParents_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => ActivateParentsCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ActivateParentsCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActivateParentsCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActivateParentsCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => ActivateParentsCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActivateParentsSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -538,7 +534,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IActivateParents :
         IActivateParentsGetter,
         ILoquiObjectSetter<IActivateParents>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ActivateParents.Flag Flags { get; set; }
         new ExtendedList<ActivateParent> Parents { get; }
@@ -547,7 +543,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IActivateParentsGetter :
         ILoquiObject,
         ILoquiObject<IActivateParentsGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -820,6 +816,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Parents.Clear();
         }
         
+        #region Mutagen
+        public void RemapLinks(IActivateParents obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Parents.RemapLinks(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IActivateParents item,
@@ -966,16 +970,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IActivateParentsGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IActivateParentsGetter obj)
         {
-            foreach (var item in obj.Parents.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.Parents.SelectMany(f => f.ContainedFormLinks))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
         
-        public void RemapLinks(IActivateParentsGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1251,10 +1254,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => ActivateParentsCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ActivateParentsCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => ActivateParentsCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ActivateParentsBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

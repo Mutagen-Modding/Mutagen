@@ -1174,12 +1174,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = DialogResponses_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => DialogResponsesCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => DialogResponsesCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogResponsesCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogResponsesCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => DialogResponsesCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogResponsesSetterCommon.Instance.RemapLinks(this, mapping);
         public DialogResponses(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -1288,7 +1284,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         IDialog,
         ILoquiObjectSetter<IDialogResponsesInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new DialogResponsesAdapter? VirtualMachineAdapter { get; set; }
         new MemorySlice<Byte>? DATA { get; set; }
@@ -1322,7 +1318,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IDialogGetter,
         ILoquiObject<IDialogResponsesGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => DialogResponses_Registration.Instance;
@@ -1462,6 +1458,20 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
+
+        #region Mutagen
+        public static DialogResponses Duplicate(
+            this IDialogResponsesGetter item,
+            FormKey formKey,
+            DialogResponses.TranslationMask? copyMask = null)
+        {
+            return ((DialogResponsesCommon)((IDialogResponsesGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
 
         #region Binary Translation
         public static void CopyInFromBinary(
@@ -1623,6 +1633,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IDialogResponsesInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IDialogResponses obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
+            obj.Topic = obj.Topic.Relink(mapping);
+            obj.PreviousDialog = obj.PreviousDialog.Relink(mapping);
+            obj.LinkTo.RemapLinks(mapping);
+            obj.ResponseData = obj.ResponseData.Relink(mapping);
+            obj.Responses.RemapLinks(mapping);
+            obj.Conditions.RemapLinks(mapping);
+            obj.UnknownData.RemapLinks(mapping);
+            obj.Speaker = obj.Speaker.Relink(mapping);
+            obj.WalkAwayTopic = obj.WalkAwayTopic.Relink(mapping);
+            obj.AudioOutputOverride = obj.AudioOutputOverride.Relink(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -2035,74 +2064,97 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IDialogResponsesGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IDialogResponsesGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
-            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainerGetter VirtualMachineAdapterlinkCont)
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
             {
-                foreach (var item in VirtualMachineAdapterlinkCont.LinkFormKeys)
+                foreach (var item in VirtualMachineAdapterlinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Topic.FormKeyNullable.TryGet(out var TopicKey))
+            if (obj.Topic.FormKeyNullable.HasValue)
             {
-                yield return TopicKey;
+                yield return FormLinkInformation.Factory(obj.Topic);
             }
-            if (obj.PreviousDialog.FormKeyNullable.TryGet(out var PreviousDialogKey))
+            if (obj.PreviousDialog.FormKeyNullable.HasValue)
             {
-                yield return PreviousDialogKey;
+                yield return FormLinkInformation.Factory(obj.PreviousDialog);
             }
-            foreach (var item in obj.LinkTo.Select(f => f.FormKey))
+            foreach (var item in obj.LinkTo)
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
-            if (obj.ResponseData.FormKeyNullable.TryGet(out var ResponseDataKey))
+            if (obj.ResponseData.FormKeyNullable.HasValue)
             {
-                yield return ResponseDataKey;
+                yield return FormLinkInformation.Factory(obj.ResponseData);
             }
-            foreach (var item in obj.Responses.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.Responses.SelectMany(f => f.ContainedFormLinks))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter>()
-                .SelectMany((f) => f.LinkFormKeys))
+            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.ContainedFormLinks))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.UnknownData.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.UnknownData.SelectMany(f => f.ContainedFormLinks))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
-            if (obj.Speaker.FormKeyNullable.TryGet(out var SpeakerKey))
+            if (obj.Speaker.FormKeyNullable.HasValue)
             {
-                yield return SpeakerKey;
+                yield return FormLinkInformation.Factory(obj.Speaker);
             }
-            if (obj.WalkAwayTopic.FormKeyNullable.TryGet(out var WalkAwayTopicKey))
+            if (obj.WalkAwayTopic.FormKeyNullable.HasValue)
             {
-                yield return WalkAwayTopicKey;
+                yield return FormLinkInformation.Factory(obj.WalkAwayTopic);
             }
-            if (obj.AudioOutputOverride.FormKeyNullable.TryGet(out var AudioOutputOverrideKey))
+            if (obj.AudioOutputOverride.FormKeyNullable.HasValue)
             {
-                yield return AudioOutputOverrideKey;
+                yield return FormLinkInformation.Factory(obj.AudioOutputOverride);
             }
             yield break;
         }
         
-        public void RemapLinks(IDialogResponsesGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(DialogResponses obj, DialogResponses rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public DialogResponses Duplicate(
+            IDialogResponsesGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new DialogResponses(getNextFormKey(), ((IDialogResponsesGetter)item).FormVersion);
-            ret.DeepCopyIn((DialogResponses)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (DialogResponses)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new DialogResponses(formKey, default(SkyrimRelease));
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override SkyrimMajorRecord Duplicate(
+            ISkyrimMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IDialogResponses)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IDialogResponses)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         
@@ -2838,10 +2890,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => DialogResponsesCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => DialogResponsesCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => DialogResponsesCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => DialogResponsesBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

@@ -421,12 +421,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => NpcSoundTypesCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => NpcSoundTypesCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcSoundTypesCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcSoundTypesCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => NpcSoundTypesCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcSoundTypesSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -487,7 +483,7 @@ namespace Mutagen.Bethesda.Skyrim
         INpcSoundTypesGetter,
         IANpcSoundDefinition,
         ILoquiObjectSetter<INpcSoundTypes>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ExtendedList<NpcSoundType> Types { get; }
     }
@@ -495,7 +491,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface INpcSoundTypesGetter :
         IANpcSoundDefinitionGetter,
         ILoquiObject<INpcSoundTypesGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => NpcSoundTypes_Registration.Instance;
@@ -752,6 +748,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (INpcSoundTypes)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(INpcSoundTypes obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Types.RemapLinks(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             INpcSoundTypes item,
@@ -932,20 +937,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(INpcSoundTypesGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(INpcSoundTypesGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
-            foreach (var item in obj.Types.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.Types.SelectMany(f => f.ContainedFormLinks))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
         
-        public void RemapLinks(INpcSoundTypesGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1220,10 +1224,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => NpcSoundTypesCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => NpcSoundTypesCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => NpcSoundTypesCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => NpcSoundTypesBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

@@ -1019,12 +1019,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Explosion_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => ExplosionCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ExplosionCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ExplosionCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ExplosionCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => ExplosionCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ExplosionSetterCommon.Instance.RemapLinks(this, mapping);
         public Explosion(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -1136,7 +1132,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamed,
         IObjectBounded,
         ILoquiObjectSetter<IExplosionInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
@@ -1172,7 +1168,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         IObjectBoundedGetter,
         ILoquiObject<IExplosionGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Explosion_Registration.Instance;
@@ -1313,6 +1309,20 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
+
+        #region Mutagen
+        public static Explosion Duplicate(
+            this IExplosionGetter item,
+            FormKey formKey,
+            Explosion.TranslationMask? copyMask = null)
+        {
+            return ((ExplosionCommon)((IExplosionGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
 
         #region Binary Translation
         public static void CopyInFromBinary(
@@ -1484,6 +1494,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IExplosionInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IExplosion obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
+            obj.Model?.RemapLinks(mapping);
+            obj.ObjectEffect = obj.ObjectEffect.Relink(mapping);
+            obj.ImageSpaceModifier = obj.ImageSpaceModifier.Relink(mapping);
+            obj.Light = obj.Light.Relink(mapping);
+            obj.Sound1 = obj.Sound1.Relink(mapping);
+            obj.Sound2 = obj.Sound2.Relink(mapping);
+            obj.ImpactDataSet = obj.ImpactDataSet.Relink(mapping);
+            obj.PlacedObject = obj.PlacedObject.Relink(mapping);
+            obj.SpawnProjectile = obj.SpawnProjectile.Relink(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1855,54 +1883,77 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IExplosionGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IExplosionGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
-            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainerGetter VirtualMachineAdapterlinkCont)
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
             {
-                foreach (var item in VirtualMachineAdapterlinkCont.LinkFormKeys)
+                foreach (var item in VirtualMachineAdapterlinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
             if (obj.Model.TryGet(out var ModelItems))
             {
-                foreach (var item in ModelItems.LinkFormKeys)
+                foreach (var item in ModelItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.ObjectEffect.FormKeyNullable.TryGet(out var ObjectEffectKey))
+            if (obj.ObjectEffect.FormKeyNullable.HasValue)
             {
-                yield return ObjectEffectKey;
+                yield return FormLinkInformation.Factory(obj.ObjectEffect);
             }
-            if (obj.ImageSpaceModifier.FormKeyNullable.TryGet(out var ImageSpaceModifierKey))
+            if (obj.ImageSpaceModifier.FormKeyNullable.HasValue)
             {
-                yield return ImageSpaceModifierKey;
+                yield return FormLinkInformation.Factory(obj.ImageSpaceModifier);
             }
-            yield return obj.Light.FormKey;
-            yield return obj.Sound1.FormKey;
-            yield return obj.Sound2.FormKey;
-            yield return obj.ImpactDataSet.FormKey;
-            yield return obj.PlacedObject.FormKey;
-            yield return obj.SpawnProjectile.FormKey;
+            yield return FormLinkInformation.Factory(obj.Light);
+            yield return FormLinkInformation.Factory(obj.Sound1);
+            yield return FormLinkInformation.Factory(obj.Sound2);
+            yield return FormLinkInformation.Factory(obj.ImpactDataSet);
+            yield return FormLinkInformation.Factory(obj.PlacedObject);
+            yield return FormLinkInformation.Factory(obj.SpawnProjectile);
             yield break;
         }
         
-        public void RemapLinks(IExplosionGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(Explosion obj, Explosion rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public Explosion Duplicate(
+            IExplosionGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new Explosion(getNextFormKey(), ((IExplosionGetter)item).FormVersion);
-            ret.DeepCopyIn((Explosion)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (Explosion)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new Explosion(formKey, default(SkyrimRelease));
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override SkyrimMajorRecord Duplicate(
+            ISkyrimMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IExplosion)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IExplosion)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         
@@ -2555,10 +2606,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => ExplosionCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ExplosionCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => ExplosionCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ExplosionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

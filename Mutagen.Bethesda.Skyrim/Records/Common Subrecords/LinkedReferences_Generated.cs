@@ -420,12 +420,8 @@ namespace Mutagen.Bethesda.Skyrim
         {
             Break0 = 1
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => LinkedReferencesCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LinkedReferencesCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LinkedReferencesCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LinkedReferencesCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => LinkedReferencesCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LinkedReferencesSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -487,7 +483,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILinkedReferences :
         ILinkedReferencesGetter,
         ILoquiObjectSetter<ILinkedReferences>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new LinkedReferences.VersioningBreaks Versioning { get; set; }
         new FormLink<IKeywordLinkedReferenceGetter> KeywordOrReference { get; set; }
@@ -497,7 +493,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILinkedReferencesGetter :
         ILoquiObject,
         ILoquiObject<ILinkedReferencesGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -773,6 +769,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Reference = FormLink<ILinkedReferenceGetter>.Null;
         }
         
+        #region Mutagen
+        public void RemapLinks(ILinkedReferences obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.KeywordOrReference = obj.KeywordOrReference.Relink(mapping);
+            if (obj.Versioning.HasFlag(LinkedReferences.VersioningBreaks.Break0)) return;
+            obj.Reference = obj.Reference.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ILinkedReferences item,
@@ -911,15 +917,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ILinkedReferencesGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ILinkedReferencesGetter obj)
         {
-            yield return obj.KeywordOrReference.FormKey;
+            yield return FormLinkInformation.Factory(obj.KeywordOrReference);
             if (obj.Versioning.HasFlag(LinkedReferences.VersioningBreaks.Break0)) yield break;
-            yield return obj.Reference.FormKey;
+            yield return FormLinkInformation.Factory(obj.Reference);
             yield break;
         }
         
-        public void RemapLinks(ILinkedReferencesGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1154,10 +1159,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => LinkedReferencesCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LinkedReferencesCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => LinkedReferencesCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LinkedReferencesBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

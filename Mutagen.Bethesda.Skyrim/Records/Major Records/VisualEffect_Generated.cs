@@ -449,12 +449,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = VisualEffect_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => VisualEffectCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => VisualEffectCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => VisualEffectCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => VisualEffectCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => VisualEffectCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => VisualEffectSetterCommon.Instance.RemapLinks(this, mapping);
         public VisualEffect(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -561,7 +557,7 @@ namespace Mutagen.Bethesda.Skyrim
         IVisualEffectGetter,
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IVisualEffectInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IArtObjectGetter> EffectArt { get; set; }
         new FormLink<IEffectShaderGetter> Shader { get; set; }
@@ -579,7 +575,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IVisualEffectGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IVisualEffectGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => VisualEffect_Registration.Instance;
@@ -704,6 +700,20 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
+
+        #region Mutagen
+        public static VisualEffect Duplicate(
+            this IVisualEffectGetter item,
+            FormKey formKey,
+            VisualEffect.TranslationMask? copyMask = null)
+        {
+            return ((VisualEffectCommon)((IVisualEffectGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
 
         #region Binary Translation
         public static void CopyInFromBinary(
@@ -843,6 +853,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IVisualEffectInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IVisualEffect obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.EffectArt = obj.EffectArt.Relink(mapping);
+            obj.Shader = obj.Shader.Relink(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1082,28 +1102,51 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IVisualEffectGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IVisualEffectGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
-            yield return obj.EffectArt.FormKey;
-            yield return obj.Shader.FormKey;
+            yield return FormLinkInformation.Factory(obj.EffectArt);
+            yield return FormLinkInformation.Factory(obj.Shader);
             yield break;
         }
         
-        public void RemapLinks(IVisualEffectGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(VisualEffect obj, VisualEffect rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public VisualEffect Duplicate(
+            IVisualEffectGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new VisualEffect(getNextFormKey(), ((IVisualEffectGetter)item).FormVersion);
-            ret.DeepCopyIn((VisualEffect)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (VisualEffect)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new VisualEffect(formKey, default(SkyrimRelease));
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override SkyrimMajorRecord Duplicate(
+            ISkyrimMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IVisualEffect)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IVisualEffect)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         
@@ -1482,10 +1525,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => VisualEffectCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => VisualEffectCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => VisualEffectCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => VisualEffectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

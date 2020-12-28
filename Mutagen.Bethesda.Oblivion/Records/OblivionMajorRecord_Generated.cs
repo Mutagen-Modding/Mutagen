@@ -347,12 +347,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => OblivionMajorRecordCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => OblivionMajorRecordCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => OblivionMajorRecordCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => OblivionMajorRecordCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => OblivionMajorRecordCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => OblivionMajorRecordSetterCommon.Instance.RemapLinks(this, mapping);
         public OblivionMajorRecord(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -449,7 +445,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMajorRecord,
         IMajorRecordEnumerable,
         ILoquiObjectSetter<IOblivionMajorRecordInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new OblivionMajorRecord.OblivionMajorRecordFlag OblivionMajorRecordFlags { get; set; }
     }
@@ -465,7 +461,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMajorRecordGetter,
         IMajorRecordGetterEnumerable,
         ILoquiObject<IOblivionMajorRecordGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => OblivionMajorRecord_Registration.Instance;
@@ -801,6 +797,17 @@ namespace Mutagen.Bethesda.Oblivion
                 throwIfUnknown: throwIfUnknown);
         }
 
+        public static OblivionMajorRecord Duplicate(
+            this IOblivionMajorRecordGetter item,
+            FormKey formKey,
+            OblivionMajorRecord.TranslationMask? copyMask = null)
+        {
+            return ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
         #endregion
 
         #region Binary Translation
@@ -929,6 +936,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
+        public void RemapLinks(IOblivionMajorRecord obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
         public virtual IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IOblivionMajorRecordInternal obj)
         {
             foreach (var item in OblivionMajorRecordCommon.Instance.EnumerateMajorRecords(obj))
@@ -1152,21 +1164,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IOblivionMajorRecordGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IOblivionMajorRecordGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
             yield break;
-        }
-        
-        public void RemapLinks(IOblivionMajorRecordGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(OblivionMajorRecord obj, OblivionMajorRecord rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
-        {
-            throw new NotImplementedException();
         }
         
         public virtual IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(IOblivionMajorRecordGetter obj)
@@ -1211,6 +1215,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
             }
         }
+        
+        #region Duplicate
+        public virtual OblivionMajorRecord Duplicate(
+            IOblivionMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            throw new NotImplementedException();
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IOblivionMajorRecord)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         
@@ -1470,10 +1496,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => OblivionMajorRecordCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => OblivionMajorRecordCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => OblivionMajorRecordCommon.Instance.GetContainedFormLinks(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

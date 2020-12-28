@@ -424,12 +424,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => StoryManagerQuestCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => StoryManagerQuestCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => StoryManagerQuestCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => StoryManagerQuestCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => StoryManagerQuestCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => StoryManagerQuestSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -491,7 +487,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IStoryManagerQuest :
         IStoryManagerQuestGetter,
         ILoquiObjectSetter<IStoryManagerQuest>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLinkNullable<IQuestGetter> Quest { get; set; }
         new MemorySlice<Byte>? FNAM { get; set; }
@@ -501,7 +497,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IStoryManagerQuestGetter :
         ILoquiObject,
         ILoquiObject<IStoryManagerQuestGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -789,6 +785,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.HoursUntilReset = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IStoryManagerQuest obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Quest = obj.Quest.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IStoryManagerQuest item,
@@ -933,16 +937,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IStoryManagerQuestGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IStoryManagerQuestGetter obj)
         {
-            if (obj.Quest.FormKeyNullable.TryGet(out var QuestKey))
+            if (obj.Quest.FormKeyNullable.HasValue)
             {
-                yield return QuestKey;
+                yield return FormLinkInformation.Factory(obj.Quest);
             }
             yield break;
         }
         
-        public void RemapLinks(IStoryManagerQuestGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1211,10 +1214,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => StoryManagerQuestCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => StoryManagerQuestCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => StoryManagerQuestCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => StoryManagerQuestBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

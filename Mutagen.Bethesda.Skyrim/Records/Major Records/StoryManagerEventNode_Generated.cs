@@ -678,6 +678,20 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
+        #region Mutagen
+        public static StoryManagerEventNode Duplicate(
+            this IStoryManagerEventNodeGetter item,
+            FormKey formKey,
+            StoryManagerEventNode.TranslationMask? copyMask = null)
+        {
+            return ((StoryManagerEventNodeCommon)((IStoryManagerEventNodeGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
+
         #region Binary Translation
         public static void CopyInFromBinary(
             this IStoryManagerEventNodeInternal item,
@@ -822,6 +836,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IStoryManagerEventNodeInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IStoryManagerEventNode obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1118,26 +1140,60 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IStoryManagerEventNodeGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IStoryManagerEventNodeGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
             yield break;
         }
         
-        public void RemapLinks(IStoryManagerEventNodeGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(StoryManagerEventNode obj, StoryManagerEventNode rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public StoryManagerEventNode Duplicate(
+            IStoryManagerEventNodeGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new StoryManagerEventNode(getNextFormKey(), ((IStoryManagerEventNodeGetter)item).FormVersion);
-            ret.DeepCopyIn((StoryManagerEventNode)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (StoryManagerEventNode)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new StoryManagerEventNode(formKey, default(SkyrimRelease));
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override AStoryManagerNode Duplicate(
+            IAStoryManagerNodeGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IStoryManagerEventNode)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override SkyrimMajorRecord Duplicate(
+            ISkyrimMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IStoryManagerEventNode)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IStoryManagerEventNode)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         

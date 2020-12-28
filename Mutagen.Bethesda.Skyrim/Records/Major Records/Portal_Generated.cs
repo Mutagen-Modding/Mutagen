@@ -383,12 +383,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => PortalCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PortalCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PortalCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PortalCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => PortalCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PortalSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -450,7 +446,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPortal :
         IPortalGetter,
         ILoquiObjectSetter<IPortal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IPlacedObjectGetter> Origin { get; set; }
         new FormLink<IPlacedObjectGetter> Destination { get; set; }
@@ -459,7 +455,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPortalGetter :
         ILoquiObject,
         ILoquiObject<IPortalGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -731,6 +727,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Destination = FormLink<IPlacedObjectGetter>.Null;
         }
         
+        #region Mutagen
+        public void RemapLinks(IPortal obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Origin = obj.Origin.Relink(mapping);
+            obj.Destination = obj.Destination.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IPortal item,
@@ -859,14 +864,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IPortalGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IPortalGetter obj)
         {
-            yield return obj.Origin.FormKey;
-            yield return obj.Destination.FormKey;
+            yield return FormLinkInformation.Factory(obj.Origin);
+            yield return FormLinkInformation.Factory(obj.Destination);
             yield break;
         }
         
-        public void RemapLinks(IPortalGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1082,10 +1086,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => PortalCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PortalCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => PortalCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PortalBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

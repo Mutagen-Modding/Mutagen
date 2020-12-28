@@ -655,6 +655,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IScriptIntProperty)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IScriptIntProperty obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IScriptIntProperty item,
@@ -821,16 +829,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IScriptIntPropertyGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IScriptIntPropertyGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
             yield break;
         }
         
-        public void RemapLinks(IScriptIntPropertyGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

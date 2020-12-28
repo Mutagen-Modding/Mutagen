@@ -377,12 +377,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = WorldspaceNavigationMesh_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => WorldspaceNavigationMeshCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => WorldspaceNavigationMeshCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceNavigationMeshCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceNavigationMeshCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => WorldspaceNavigationMeshCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceNavigationMeshSetterCommon.Instance.RemapLinks(this, mapping);
         public WorldspaceNavigationMesh(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -485,7 +481,7 @@ namespace Mutagen.Bethesda.Skyrim
         IWorldspaceNavigationMeshGetter,
         IANavigationMesh,
         ILoquiObjectSetter<IWorldspaceNavigationMeshInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new WorldspaceNavigationMeshData? Data { get; set; }
     }
@@ -500,7 +496,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IWorldspaceNavigationMeshGetter :
         IANavigationMeshGetter,
         ILoquiObject<IWorldspaceNavigationMeshGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => WorldspaceNavigationMesh_Registration.Instance;
@@ -622,6 +618,20 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
+
+        #region Mutagen
+        public static WorldspaceNavigationMesh Duplicate(
+            this IWorldspaceNavigationMeshGetter item,
+            FormKey formKey,
+            WorldspaceNavigationMesh.TranslationMask? copyMask = null)
+        {
+            return ((WorldspaceNavigationMeshCommon)((IWorldspaceNavigationMeshGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
 
         #region Binary Translation
         public static void CopyInFromBinary(
@@ -763,6 +773,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IWorldspaceNavigationMeshInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IWorldspaceNavigationMesh obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Data?.RemapLinks(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1041,15 +1060,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IWorldspaceNavigationMeshGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IWorldspaceNavigationMeshGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.Data.TryGet(out var DataItems))
             {
-                foreach (var item in DataItems.LinkFormKeys)
+                foreach (var item in DataItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
@@ -1057,17 +1076,51 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IWorldspaceNavigationMeshGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(WorldspaceNavigationMesh obj, WorldspaceNavigationMesh rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public WorldspaceNavigationMesh Duplicate(
+            IWorldspaceNavigationMeshGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new WorldspaceNavigationMesh(getNextFormKey(), ((IWorldspaceNavigationMeshGetter)item).FormVersion);
-            ret.DeepCopyIn((WorldspaceNavigationMesh)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (WorldspaceNavigationMesh)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new WorldspaceNavigationMesh(formKey, default(SkyrimRelease));
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override ANavigationMesh Duplicate(
+            IANavigationMeshGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IWorldspaceNavigationMesh)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override SkyrimMajorRecord Duplicate(
+            ISkyrimMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IWorldspaceNavigationMesh)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IWorldspaceNavigationMesh)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         
@@ -1437,10 +1490,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => WorldspaceNavigationMeshCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => WorldspaceNavigationMeshCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => WorldspaceNavigationMeshCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => WorldspaceNavigationMeshBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

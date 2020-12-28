@@ -442,12 +442,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = DefaultObjectManager_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => DefaultObjectManagerCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => DefaultObjectManagerCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DefaultObjectManagerCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DefaultObjectManagerCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => DefaultObjectManagerCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DefaultObjectManagerSetterCommon.Instance.RemapLinks(this, mapping);
         public DefaultObjectManager(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -550,7 +546,7 @@ namespace Mutagen.Bethesda.Skyrim
         IDefaultObjectManagerGetter,
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IDefaultObjectManagerInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ExtendedList<DefaultObject>? Objects { get; set; }
     }
@@ -565,7 +561,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IDefaultObjectManagerGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IDefaultObjectManagerGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => DefaultObjectManager_Registration.Instance;
@@ -687,6 +683,20 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
+
+        #region Mutagen
+        public static DefaultObjectManager Duplicate(
+            this IDefaultObjectManagerGetter item,
+            FormKey formKey,
+            DefaultObjectManager.TranslationMask? copyMask = null)
+        {
+            return ((DefaultObjectManagerCommon)((IDefaultObjectManagerGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
 
         #region Binary Translation
         public static void CopyInFromBinary(
@@ -820,6 +830,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IDefaultObjectManagerInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IDefaultObjectManager obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Objects?.RemapLinks(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1056,33 +1075,56 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IDefaultObjectManagerGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IDefaultObjectManagerGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.Objects.TryGet(out var ObjectsItem))
             {
-                foreach (var item in ObjectsItem.SelectMany(f => f.LinkFormKeys))
+                foreach (var item in ObjectsItem.SelectMany(f => f.ContainedFormLinks))
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
             yield break;
         }
         
-        public void RemapLinks(IDefaultObjectManagerGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(DefaultObjectManager obj, DefaultObjectManager rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public DefaultObjectManager Duplicate(
+            IDefaultObjectManagerGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new DefaultObjectManager(getNextFormKey(), ((IDefaultObjectManagerGetter)item).FormVersion);
-            ret.DeepCopyIn((DefaultObjectManager)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (DefaultObjectManager)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new DefaultObjectManager(formKey, default(SkyrimRelease));
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override SkyrimMajorRecord Duplicate(
+            ISkyrimMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IDefaultObjectManager)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IDefaultObjectManager)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         
@@ -1464,10 +1506,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => DefaultObjectManagerCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => DefaultObjectManagerCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => DefaultObjectManagerCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => DefaultObjectManagerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

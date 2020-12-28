@@ -594,6 +594,20 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
+        #region Mutagen
+        public static VoiceType Duplicate(
+            this IVoiceTypeGetter item,
+            FormKey formKey,
+            VoiceType.TranslationMask? copyMask = null)
+        {
+            return ((VoiceTypeCommon)((IVoiceTypeGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
+
         #region Binary Translation
         public static void CopyInFromBinary(
             this IVoiceTypeInternal item,
@@ -726,6 +740,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IVoiceTypeInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IVoiceType obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -944,26 +966,49 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IVoiceTypeGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IVoiceTypeGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
             yield break;
         }
         
-        public void RemapLinks(IVoiceTypeGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(VoiceType obj, VoiceType rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public VoiceType Duplicate(
+            IVoiceTypeGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new VoiceType(getNextFormKey(), ((IVoiceTypeGetter)item).FormVersion);
-            ret.DeepCopyIn((VoiceType)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (VoiceType)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new VoiceType(formKey, default(SkyrimRelease));
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override SkyrimMajorRecord Duplicate(
+            ISkyrimMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IVoiceType)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IVoiceType)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         

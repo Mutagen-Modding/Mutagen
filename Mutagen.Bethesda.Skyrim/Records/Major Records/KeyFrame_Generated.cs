@@ -720,6 +720,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Value = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IKeyFrame obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IKeyFrame item,
@@ -848,12 +855,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IKeyFrameGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IKeyFrameGetter obj)
         {
             yield break;
         }
         
-        public void RemapLinks(IKeyFrameGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

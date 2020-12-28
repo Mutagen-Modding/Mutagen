@@ -564,12 +564,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = (RecordType)Cell.GrupRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => WorldspaceSubBlockCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => WorldspaceSubBlockCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceSubBlockCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceSubBlockCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => WorldspaceSubBlockCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceSubBlockSetterCommon.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
@@ -666,7 +662,7 @@ namespace Mutagen.Bethesda.Oblivion
         IWorldspaceSubBlockGetter,
         IMajorRecordEnumerable,
         ILoquiObjectSetter<IWorldspaceSubBlock>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new Int16 BlockNumberY { get; set; }
         new Int16 BlockNumberX { get; set; }
@@ -679,7 +675,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject,
         IMajorRecordGetterEnumerable,
         ILoquiObject<IWorldspaceSubBlockGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -1177,6 +1173,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
+        public void RemapLinks(IWorldspaceSubBlock obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Items.RemapLinks(mapping);
+        }
+        
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IWorldspaceSubBlock obj)
         {
             foreach (var item in WorldspaceSubBlockCommon.Instance.EnumerateMajorRecords(obj))
@@ -1466,16 +1467,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IWorldspaceSubBlockGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IWorldspaceSubBlockGetter obj)
         {
-            foreach (var item in obj.Items.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.Items.SelectMany(f => f.ContainedFormLinks))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
         
-        public void RemapLinks(IWorldspaceSubBlockGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(IWorldspaceSubBlockGetter obj)
         {
             foreach (var subItem in obj.Items)
@@ -1961,10 +1961,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => WorldspaceSubBlockCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => WorldspaceSubBlockCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => WorldspaceSubBlockCommon.Instance.GetContainedFormLinks(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

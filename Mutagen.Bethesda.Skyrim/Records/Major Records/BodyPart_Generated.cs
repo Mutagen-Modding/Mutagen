@@ -1356,12 +1356,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = BodyPart_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => BodyPartCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => BodyPartCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BodyPartCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BodyPartCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => BodyPartCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BodyPartSetterCommon.Instance.RemapLinks(this, mapping);
         [Flags]
         public enum BPNDDataType
         {
@@ -1428,7 +1424,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBodyPartGetter,
         ITranslatedNamedRequired,
         ILoquiObjectSetter<IBodyPart>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new TranslatedString Name { get; set; }
         new String? PoseMatching { get; set; }
@@ -1469,7 +1465,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject,
         ITranslatedNamedRequiredGetter,
         ILoquiObject<IBodyPartGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -1835,6 +1831,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.BPNDDataTypeState = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IBodyPart obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.ExplodableDebris = obj.ExplodableDebris.Relink(mapping);
+            obj.ExplodableExplosion = obj.ExplodableExplosion.Relink(mapping);
+            obj.SeverableDebris = obj.SeverableDebris.Relink(mapping);
+            obj.SeverableExplosion = obj.SeverableExplosion.Relink(mapping);
+            obj.SeverableImpactData = obj.SeverableImpactData.Relink(mapping);
+            obj.ExplodableImpactData = obj.ExplodableImpactData.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IBodyPart item,
@@ -2189,18 +2198,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IBodyPartGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IBodyPartGetter obj)
         {
-            yield return obj.ExplodableDebris.FormKey;
-            yield return obj.ExplodableExplosion.FormKey;
-            yield return obj.SeverableDebris.FormKey;
-            yield return obj.SeverableExplosion.FormKey;
-            yield return obj.SeverableImpactData.FormKey;
-            yield return obj.ExplodableImpactData.FormKey;
+            yield return FormLinkInformation.Factory(obj.ExplodableDebris);
+            yield return FormLinkInformation.Factory(obj.ExplodableExplosion);
+            yield return FormLinkInformation.Factory(obj.SeverableDebris);
+            yield return FormLinkInformation.Factory(obj.SeverableExplosion);
+            yield return FormLinkInformation.Factory(obj.SeverableImpactData);
+            yield return FormLinkInformation.Factory(obj.ExplodableImpactData);
             yield break;
         }
         
-        public void RemapLinks(IBodyPartGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -2771,10 +2779,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => BodyPartCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => BodyPartCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => BodyPartCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => BodyPartBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

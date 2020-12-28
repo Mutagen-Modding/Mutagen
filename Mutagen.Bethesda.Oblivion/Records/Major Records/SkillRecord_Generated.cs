@@ -835,6 +835,20 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
+        #region Mutagen
+        public static SkillRecord Duplicate(
+            this ISkillRecordGetter item,
+            FormKey formKey,
+            SkillRecord.TranslationMask? copyMask = null)
+        {
+            return ((SkillRecordCommon)((ISkillRecordGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
+
         #region Binary Translation
         public static void CopyInFromBinary(
             this ISkillRecordInternal item,
@@ -980,6 +994,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (ISkillRecordInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(ISkillRecord obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1281,26 +1303,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ISkillRecordGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ISkillRecordGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
             yield break;
         }
         
-        public void RemapLinks(ISkillRecordGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(SkillRecord obj, SkillRecord rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public SkillRecord Duplicate(
+            ISkillRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new SkillRecord(getNextFormKey());
-            ret.DeepCopyIn((SkillRecord)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (SkillRecord)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new SkillRecord(formKey);
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override OblivionMajorRecord Duplicate(
+            IOblivionMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (ISkillRecord)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (ISkillRecord)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         

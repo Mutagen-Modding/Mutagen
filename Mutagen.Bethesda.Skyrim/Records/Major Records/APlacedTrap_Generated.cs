@@ -1280,12 +1280,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => APlacedTrapCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => APlacedTrapCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => APlacedTrapCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => APlacedTrapCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => APlacedTrapCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => APlacedTrapSetterCommon.Instance.RemapLinks(this, mapping);
         public APlacedTrap(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -1373,7 +1369,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedReference,
         IKeywordLinkedReference,
         ILoquiObjectSetter<IAPlacedTrapInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new FormLinkNullable<IEncounterZoneGetter> EncounterZone { get; set; }
@@ -1412,7 +1408,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedReferenceGetter,
         IKeywordLinkedReferenceGetter,
         ILoquiObject<IAPlacedTrapGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => APlacedTrap_Registration.Instance;
@@ -1554,6 +1550,20 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
+
+        #region Mutagen
+        public static APlacedTrap Duplicate(
+            this IAPlacedTrapGetter item,
+            FormKey formKey,
+            APlacedTrap.TranslationMask? copyMask = null)
+        {
+            return ((APlacedTrapCommon)((IAPlacedTrapGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
 
         #region Binary Translation
         public static void CopyInFromBinary(
@@ -1760,6 +1770,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IAPlacedTrapInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IAPlacedTrap obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
+            obj.EncounterZone = obj.EncounterZone.Relink(mapping);
+            obj.Ownership?.RemapLinks(mapping);
+            obj.Reflections.RemapLinks(mapping);
+            obj.LinkedReferences.RemapLinks(mapping);
+            obj.ActivateParents?.RemapLinks(mapping);
+            obj.EnableParent?.RemapLinks(mapping);
+            obj.Emittance = obj.Emittance.Relink(mapping);
+            obj.MultiBoundReference = obj.MultiBoundReference.Relink(mapping);
+            obj.LocationRefTypes?.RemapLinks(mapping);
+            obj.LocationReference = obj.LocationReference.Relink(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -2256,81 +2285,117 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IAPlacedTrapGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IAPlacedTrapGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
-            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainerGetter VirtualMachineAdapterlinkCont)
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
             {
-                foreach (var item in VirtualMachineAdapterlinkCont.LinkFormKeys)
+                foreach (var item in VirtualMachineAdapterlinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.EncounterZone.FormKeyNullable.TryGet(out var EncounterZoneKey))
+            if (obj.EncounterZone.FormKeyNullable.HasValue)
             {
-                yield return EncounterZoneKey;
+                yield return FormLinkInformation.Factory(obj.EncounterZone);
             }
             if (obj.Ownership.TryGet(out var OwnershipItems))
             {
-                foreach (var item in OwnershipItems.LinkFormKeys)
+                foreach (var item in OwnershipItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            foreach (var item in obj.Reflections.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.Reflections.SelectMany(f => f.ContainedFormLinks))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.LinkedReferences.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.LinkedReferences.SelectMany(f => f.ContainedFormLinks))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
             if (obj.ActivateParents.TryGet(out var ActivateParentsItems))
             {
-                foreach (var item in ActivateParentsItems.LinkFormKeys)
+                foreach (var item in ActivateParentsItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
             if (obj.EnableParent.TryGet(out var EnableParentItems))
             {
-                foreach (var item in EnableParentItems.LinkFormKeys)
+                foreach (var item in EnableParentItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Emittance.FormKeyNullable.TryGet(out var EmittanceKey))
+            if (obj.Emittance.FormKeyNullable.HasValue)
             {
-                yield return EmittanceKey;
+                yield return FormLinkInformation.Factory(obj.Emittance);
             }
-            if (obj.MultiBoundReference.FormKeyNullable.TryGet(out var MultiBoundReferenceKey))
+            if (obj.MultiBoundReference.FormKeyNullable.HasValue)
             {
-                yield return MultiBoundReferenceKey;
+                yield return FormLinkInformation.Factory(obj.MultiBoundReference);
             }
             if (obj.LocationRefTypes.TryGet(out var LocationRefTypesItem))
             {
-                foreach (var item in LocationRefTypesItem.Select(f => f.FormKey))
+                foreach (var item in LocationRefTypesItem)
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.LocationReference.FormKeyNullable.TryGet(out var LocationReferenceKey))
+            if (obj.LocationReference.FormKeyNullable.HasValue)
             {
-                yield return LocationReferenceKey;
+                yield return FormLinkInformation.Factory(obj.LocationReference);
             }
             yield break;
         }
         
-        public void RemapLinks(IAPlacedTrapGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(APlacedTrap obj, APlacedTrap rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public virtual APlacedTrap Duplicate(
+            IAPlacedTrapGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
             throw new NotImplementedException();
         }
+        
+        public override APlaced Duplicate(
+            IAPlacedGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IAPlacedTrap)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override SkyrimMajorRecord Duplicate(
+            ISkyrimMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IAPlacedTrap)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IAPlacedTrap)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         
@@ -3211,10 +3276,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => APlacedTrapCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => APlacedTrapCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => APlacedTrapCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => APlacedTrapBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

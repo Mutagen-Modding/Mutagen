@@ -725,6 +725,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Flags = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(ICellGrid obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ICellGrid item,
@@ -856,12 +863,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ICellGridGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ICellGridGetter obj)
         {
             yield break;
         }
         
-        public void RemapLinks(ICellGridGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

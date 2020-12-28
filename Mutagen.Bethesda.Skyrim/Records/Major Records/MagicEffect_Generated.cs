@@ -2126,12 +2126,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = MagicEffect_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => MagicEffectCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => MagicEffectCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => MagicEffectCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectSetterCommon.Instance.RemapLinks(this, mapping);
         public MagicEffect(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -2240,7 +2236,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamed,
         IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<IMagicEffectInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new TranslatedString? Name { get; set; }
@@ -2302,7 +2298,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IMagicEffectGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => MagicEffect_Registration.Instance;
@@ -2469,6 +2465,20 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
+
+        #region Mutagen
+        public static MagicEffect Duplicate(
+            this IMagicEffectGetter item,
+            FormKey formKey,
+            MagicEffect.TranslationMask? copyMask = null)
+        {
+            return ((MagicEffectCommon)((IMagicEffectGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
 
         #region Binary Translation
         public static void CopyInFromBinary(
@@ -2692,6 +2702,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IMagicEffectInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IMagicEffect obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
+            obj.MenuDisplayObject = obj.MenuDisplayObject.Relink(mapping);
+            obj.Keywords?.RemapLinks(mapping);
+            obj.CastingLight = obj.CastingLight.Relink(mapping);
+            obj.HitShader = obj.HitShader.Relink(mapping);
+            obj.EnchantShader = obj.EnchantShader.Relink(mapping);
+            obj.Projectile = obj.Projectile.Relink(mapping);
+            obj.Explosion = obj.Explosion.Relink(mapping);
+            obj.CastingArt = obj.CastingArt.Relink(mapping);
+            obj.HitEffectArt = obj.HitEffectArt.Relink(mapping);
+            obj.ImpactData = obj.ImpactData.Relink(mapping);
+            obj.DualCastArt = obj.DualCastArt.Relink(mapping);
+            obj.EnchantArt = obj.EnchantArt.Relink(mapping);
+            obj.Unknown2 = obj.Unknown2.Relink(mapping);
+            obj.Unknown3 = obj.Unknown3.Relink(mapping);
+            obj.EquipAbility = obj.EquipAbility.Relink(mapping);
+            obj.ImageSpaceModifier = obj.ImageSpaceModifier.Relink(mapping);
+            obj.PerkToApply = obj.PerkToApply.Relink(mapping);
+            obj.CounterEffects.RemapLinks(mapping);
+            obj.Sounds?.RemapLinks(mapping);
+            obj.Conditions.RemapLinks(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -3311,75 +3350,98 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IMagicEffectGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IMagicEffectGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
-            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainerGetter VirtualMachineAdapterlinkCont)
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
             {
-                foreach (var item in VirtualMachineAdapterlinkCont.LinkFormKeys)
+                foreach (var item in VirtualMachineAdapterlinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.MenuDisplayObject.FormKeyNullable.TryGet(out var MenuDisplayObjectKey))
+            if (obj.MenuDisplayObject.FormKeyNullable.HasValue)
             {
-                yield return MenuDisplayObjectKey;
+                yield return FormLinkInformation.Factory(obj.MenuDisplayObject);
             }
             if (obj.Keywords.TryGet(out var KeywordsItem))
             {
-                foreach (var item in KeywordsItem.Select(f => f.FormKey))
+                foreach (var item in KeywordsItem)
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
-            yield return obj.CastingLight.FormKey;
-            yield return obj.HitShader.FormKey;
-            yield return obj.EnchantShader.FormKey;
-            yield return obj.Projectile.FormKey;
-            yield return obj.Explosion.FormKey;
-            yield return obj.CastingArt.FormKey;
-            yield return obj.HitEffectArt.FormKey;
-            yield return obj.ImpactData.FormKey;
-            yield return obj.DualCastArt.FormKey;
-            yield return obj.EnchantArt.FormKey;
-            yield return obj.Unknown2.FormKey;
-            yield return obj.Unknown3.FormKey;
-            yield return obj.EquipAbility.FormKey;
-            yield return obj.ImageSpaceModifier.FormKey;
-            yield return obj.PerkToApply.FormKey;
-            foreach (var item in obj.CounterEffects.Select(f => f.FormKey))
+            yield return FormLinkInformation.Factory(obj.CastingLight);
+            yield return FormLinkInformation.Factory(obj.HitShader);
+            yield return FormLinkInformation.Factory(obj.EnchantShader);
+            yield return FormLinkInformation.Factory(obj.Projectile);
+            yield return FormLinkInformation.Factory(obj.Explosion);
+            yield return FormLinkInformation.Factory(obj.CastingArt);
+            yield return FormLinkInformation.Factory(obj.HitEffectArt);
+            yield return FormLinkInformation.Factory(obj.ImpactData);
+            yield return FormLinkInformation.Factory(obj.DualCastArt);
+            yield return FormLinkInformation.Factory(obj.EnchantArt);
+            yield return FormLinkInformation.Factory(obj.Unknown2);
+            yield return FormLinkInformation.Factory(obj.Unknown3);
+            yield return FormLinkInformation.Factory(obj.EquipAbility);
+            yield return FormLinkInformation.Factory(obj.ImageSpaceModifier);
+            yield return FormLinkInformation.Factory(obj.PerkToApply);
+            foreach (var item in obj.CounterEffects)
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
             if (obj.Sounds.TryGet(out var SoundsItem))
             {
-                foreach (var item in SoundsItem.SelectMany(f => f.LinkFormKeys))
+                foreach (var item in SoundsItem.SelectMany(f => f.ContainedFormLinks))
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
-            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter>()
-                .SelectMany((f) => f.LinkFormKeys))
+            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.ContainedFormLinks))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
         
-        public void RemapLinks(IMagicEffectGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(MagicEffect obj, MagicEffect rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public MagicEffect Duplicate(
+            IMagicEffectGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new MagicEffect(getNextFormKey(), ((IMagicEffectGetter)item).FormVersion);
-            ret.DeepCopyIn((MagicEffect)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (MagicEffect)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new MagicEffect(formKey, default(SkyrimRelease));
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override SkyrimMajorRecord Duplicate(
+            ISkyrimMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IMagicEffect)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IMagicEffect)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         
@@ -4401,10 +4463,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => MagicEffectCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => MagicEffectCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => MagicEffectCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => MagicEffectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

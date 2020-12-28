@@ -336,12 +336,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = TopicReference_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => TopicReferenceCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => TopicReferenceCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TopicReferenceCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TopicReferenceCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => TopicReferenceCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TopicReferenceSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -402,7 +398,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITopicReferenceGetter,
         IATopicReference,
         ILoquiObjectSetter<ITopicReference>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IDialogTopicGetter> Reference { get; set; }
     }
@@ -410,7 +406,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ITopicReferenceGetter :
         IATopicReferenceGetter,
         ILoquiObject<ITopicReferenceGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => TopicReference_Registration.Instance;
@@ -655,6 +651,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (ITopicReference)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(ITopicReference obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Reference = obj.Reference.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ITopicReference item,
@@ -817,17 +822,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ITopicReferenceGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ITopicReferenceGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
-            yield return obj.Reference.FormKey;
+            yield return FormLinkInformation.Factory(obj.Reference);
             yield break;
         }
         
-        public void RemapLinks(ITopicReferenceGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1045,10 +1049,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => TopicReferenceCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => TopicReferenceCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => TopicReferenceCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => TopicReferenceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

@@ -385,12 +385,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => ExternalAliasReferenceCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ExternalAliasReferenceCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ExternalAliasReferenceCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ExternalAliasReferenceCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => ExternalAliasReferenceCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ExternalAliasReferenceSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -452,7 +448,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IExternalAliasReference :
         IExternalAliasReferenceGetter,
         ILoquiObjectSetter<IExternalAliasReference>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLinkNullable<IQuestGetter> Quest { get; set; }
         new Int32? AliasIndex { get; set; }
@@ -461,7 +457,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IExternalAliasReferenceGetter :
         ILoquiObject,
         ILoquiObject<IExternalAliasReferenceGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -745,6 +741,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.AliasIndex = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IExternalAliasReference obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Quest = obj.Quest.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IExternalAliasReference item,
@@ -878,16 +882,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IExternalAliasReferenceGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IExternalAliasReferenceGetter obj)
         {
-            if (obj.Quest.FormKeyNullable.TryGet(out var QuestKey))
+            if (obj.Quest.FormKeyNullable.HasValue)
             {
-                yield return QuestKey;
+                yield return FormLinkInformation.Factory(obj.Quest);
             }
             yield break;
         }
         
-        public void RemapLinks(IExternalAliasReferenceGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1134,10 +1137,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => ExternalAliasReferenceCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ExternalAliasReferenceCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => ExternalAliasReferenceCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ExternalAliasReferenceBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

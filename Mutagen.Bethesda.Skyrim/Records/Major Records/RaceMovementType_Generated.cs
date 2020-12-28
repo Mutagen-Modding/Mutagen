@@ -399,12 +399,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => RaceMovementTypeCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => RaceMovementTypeCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RaceMovementTypeCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RaceMovementTypeCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => RaceMovementTypeCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RaceMovementTypeSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -466,7 +462,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IRaceMovementType :
         IRaceMovementTypeGetter,
         ILoquiObjectSetter<IRaceMovementType>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLinkNullable<IMovementTypeGetter> MovementType { get; set; }
         new SpeedOverrides? Overrides { get; set; }
@@ -475,7 +471,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IRaceMovementTypeGetter :
         ILoquiObject,
         ILoquiObject<IRaceMovementTypeGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -759,6 +755,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Overrides = null;
         }
         
+        #region Mutagen
+        public void RemapLinks(IRaceMovementType obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.MovementType = obj.MovementType.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IRaceMovementType item,
@@ -896,16 +900,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IRaceMovementTypeGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IRaceMovementTypeGetter obj)
         {
-            if (obj.MovementType.FormKeyNullable.TryGet(out var MovementTypeKey))
+            if (obj.MovementType.FormKeyNullable.HasValue)
             {
-                yield return MovementTypeKey;
+                yield return FormLinkInformation.Factory(obj.MovementType);
             }
             yield break;
         }
         
-        public void RemapLinks(IRaceMovementTypeGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1176,10 +1179,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => RaceMovementTypeCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => RaceMovementTypeCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => RaceMovementTypeCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => RaceMovementTypeBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

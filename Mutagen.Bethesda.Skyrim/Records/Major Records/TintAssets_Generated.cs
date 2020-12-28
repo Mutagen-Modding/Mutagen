@@ -569,12 +569,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => TintAssetsCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => TintAssetsCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TintAssetsCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TintAssetsCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => TintAssetsCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TintAssetsSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -636,7 +632,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ITintAssets :
         ITintAssetsGetter,
         ILoquiObjectSetter<ITintAssets>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new UInt16? Index { get; set; }
         new String? FileName { get; set; }
@@ -648,7 +644,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ITintAssetsGetter :
         ILoquiObject,
         ILoquiObject<ITintAssetsGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -946,6 +942,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Presets.Clear();
         }
         
+        #region Mutagen
+        public void RemapLinks(ITintAssets obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.PresetDefault = obj.PresetDefault.Relink(mapping);
+            obj.Presets.RemapLinks(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ITintAssets item,
@@ -1125,20 +1130,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ITintAssetsGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ITintAssetsGetter obj)
         {
-            if (obj.PresetDefault.FormKeyNullable.TryGet(out var PresetDefaultKey))
+            if (obj.PresetDefault.FormKeyNullable.HasValue)
             {
-                yield return PresetDefaultKey;
+                yield return FormLinkInformation.Factory(obj.PresetDefault);
             }
-            foreach (var item in obj.Presets.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.Presets.SelectMany(f => f.ContainedFormLinks))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
         
-        public void RemapLinks(ITintAssetsGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1467,10 +1471,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => TintAssetsCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => TintAssetsCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => TintAssetsCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => TintAssetsBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

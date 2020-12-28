@@ -760,6 +760,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ReverbSendPercent = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(ISoundOutputData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ISoundOutputData item,
@@ -898,12 +905,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ISoundOutputDataGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ISoundOutputDataGetter obj)
         {
             yield break;
         }
         
-        public void RemapLinks(ISoundOutputDataGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

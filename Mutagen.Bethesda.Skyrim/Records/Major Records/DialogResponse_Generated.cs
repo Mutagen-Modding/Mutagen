@@ -773,12 +773,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = DialogResponse_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => DialogResponseCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => DialogResponseCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogResponseCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogResponseCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => DialogResponseCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogResponseSetterCommon.Instance.RemapLinks(this, mapping);
         [Flags]
         public enum TRDTDataType
         {
@@ -844,7 +840,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IDialogResponse :
         IDialogResponseGetter,
         ILoquiObjectSetter<IDialogResponse>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new Emotion Emotion { get; set; }
         new UInt32 EmotionValue { get; set; }
@@ -865,7 +861,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IDialogResponseGetter :
         ILoquiObject,
         ILoquiObject<IDialogResponseGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -1174,6 +1170,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.TRDTDataTypeState = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IDialogResponse obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Sound = obj.Sound.Relink(mapping);
+            obj.SpeakerIdleAnimation = obj.SpeakerIdleAnimation.Relink(mapping);
+            obj.ListenerIdleAnimation = obj.ListenerIdleAnimation.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IDialogResponse item,
@@ -1387,21 +1393,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IDialogResponseGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IDialogResponseGetter obj)
         {
-            yield return obj.Sound.FormKey;
-            if (obj.SpeakerIdleAnimation.FormKeyNullable.TryGet(out var SpeakerIdleAnimationKey))
+            yield return FormLinkInformation.Factory(obj.Sound);
+            if (obj.SpeakerIdleAnimation.FormKeyNullable.HasValue)
             {
-                yield return SpeakerIdleAnimationKey;
+                yield return FormLinkInformation.Factory(obj.SpeakerIdleAnimation);
             }
-            if (obj.ListenerIdleAnimation.FormKeyNullable.TryGet(out var ListenerIdleAnimationKey))
+            if (obj.ListenerIdleAnimation.FormKeyNullable.HasValue)
             {
-                yield return ListenerIdleAnimationKey;
+                yield return FormLinkInformation.Factory(obj.ListenerIdleAnimation);
             }
             yield break;
         }
         
-        public void RemapLinks(IDialogResponseGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1786,10 +1791,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => DialogResponseCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => DialogResponseCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => DialogResponseCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => DialogResponseBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

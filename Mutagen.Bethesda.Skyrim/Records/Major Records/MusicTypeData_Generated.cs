@@ -725,6 +725,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.DuckingDecibel = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IMusicTypeData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IMusicTypeData item,
@@ -856,12 +863,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IMusicTypeDataGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IMusicTypeDataGetter obj)
         {
             yield break;
         }
         
-        public void RemapLinks(IMusicTypeDataGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

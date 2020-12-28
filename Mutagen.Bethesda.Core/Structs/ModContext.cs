@@ -10,17 +10,18 @@ namespace Mutagen.Bethesda
         object? Record { get; }
     }
 
-    public interface IModContext<T> : IModContext
+    public interface IModContext<out T> : IModContext
     {
         new T Record { get; }
     }
 
-    public interface IModContext<TModSetter, TMajorSetter, TMajorGetter> : IModContext<TMajorGetter>
+    public interface IModContext<TModSetter, out TMajorSetter, out TMajorGetter> : IModContext<TMajorGetter>
         where TModSetter : IModGetter
         where TMajorSetter : IMajorRecordCommon, TMajorGetter
         where TMajorGetter : IMajorRecordCommonGetter
     {
         TMajorSetter GetOrAddAsOverride(TModSetter mod);
+        TMajorSetter DuplicateIntoAsNewRecord(TModSetter mod, string? editorID = null);
         bool TryGetParentContext<TTargetMajorSetter, TTargetMajorGetter>([MaybeNullWhen(false)] out IModContext<TModSetter, TTargetMajorSetter, TTargetMajorGetter> parent)
             where TTargetMajorSetter : IMajorRecordCommon, TTargetMajorGetter
             where TTargetMajorGetter : IMajorRecordCommonGetter;
@@ -59,6 +60,7 @@ namespace Mutagen.Bethesda
         where TMajorGetter : IMajorRecordCommonGetter
     {
         private readonly Func<TModSetter, TMajorGetter, TMajorSetter> _getOrAddAsOverride;
+        private readonly Func<TModSetter, TMajorGetter, string?, TMajorSetter> _duplicateInto;
 
         /// <summary>
         /// The contained record
@@ -81,17 +83,20 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="modKey">ModKey the record is originating from</param>
         /// <param name="record">The record to wrap</param>
-        /// <param name="getter">Logic for how to navigate a mod and insert a copy of the wrapped record</param>
+        /// <param name="getOrAddAsOverride">Logic for how to navigate a mod and insert a copy of the wrapped record</param>
+        /// <param name="duplicateInto">Logic for how to navigate a mod and insert a duplicate of the wrapped record</param>
         /// <param name="parent">Optional parent context</param>
         public ModContext(
             ModKey modKey,
             TMajorGetter record,
-            Func<TModSetter, TMajorGetter, TMajorSetter> getter,
+            Func<TModSetter, TMajorGetter, TMajorSetter> getOrAddAsOverride,
+            Func<TModSetter, TMajorGetter, string?, TMajorSetter> duplicateInto,
             IModContext? parent = null)
         {
             ModKey = modKey;
             Record = record;
-            _getOrAddAsOverride = getter;
+            _getOrAddAsOverride = getOrAddAsOverride;
+            _duplicateInto = duplicateInto;
             Parent = parent;
         }
 
@@ -136,6 +141,11 @@ namespace Mutagen.Bethesda
             parent = default;
             return false;
         }
+
+        public TMajorSetter DuplicateIntoAsNewRecord(TModSetter mod, string? editorID = null)
+        {
+            return _duplicateInto(mod, this.Record, editorID);
+        }
     }
 
     public static class ModContextExt
@@ -172,6 +182,7 @@ namespace Mutagen.Bethesda
                 context.ModKey,
                 (RMajorGetter)context.Record,
                 (mod, rec) => (RMajorSetter)context.GetOrAddAsOverride(mod),
+                (mod, rec, edid) => (RMajorSetter)context.DuplicateIntoAsNewRecord(mod, edid),
                 context.Parent);
         }
     }

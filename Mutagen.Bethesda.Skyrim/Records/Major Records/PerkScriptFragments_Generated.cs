@@ -842,6 +842,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Fragments.Clear();
         }
         
+        #region Mutagen
+        public void RemapLinks(IPerkScriptFragments obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IPerkScriptFragments item,
@@ -994,12 +1001,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IPerkScriptFragmentsGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IPerkScriptFragmentsGetter obj)
         {
             yield break;
         }
         
-        public void RemapLinks(IPerkScriptFragmentsGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

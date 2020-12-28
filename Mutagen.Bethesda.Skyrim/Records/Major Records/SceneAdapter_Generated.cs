@@ -678,6 +678,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (ISceneAdapter)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(ISceneAdapter obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ISceneAdapter item,
@@ -857,16 +865,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ISceneAdapterGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ISceneAdapterGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
             yield break;
         }
         
-        public void RemapLinks(ISceneAdapterGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

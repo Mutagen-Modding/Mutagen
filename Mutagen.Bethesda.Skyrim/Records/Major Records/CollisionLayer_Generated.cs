@@ -597,12 +597,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = CollisionLayer_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => CollisionLayerCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => CollisionLayerCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CollisionLayerCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CollisionLayerCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => CollisionLayerCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CollisionLayerSetterCommon.Instance.RemapLinks(this, mapping);
         public CollisionLayer(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -705,7 +701,7 @@ namespace Mutagen.Bethesda.Skyrim
         ICollisionLayerGetter,
         ISkyrimMajorRecord,
         ILoquiObjectSetter<ICollisionLayerInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new TranslatedString Description { get; set; }
         new UInt32 Index { get; set; }
@@ -725,7 +721,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ICollisionLayerGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<ICollisionLayerGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => CollisionLayer_Registration.Instance;
@@ -852,6 +848,20 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
+
+        #region Mutagen
+        public static CollisionLayer Duplicate(
+            this ICollisionLayerGetter item,
+            FormKey formKey,
+            CollisionLayer.TranslationMask? copyMask = null)
+        {
+            return ((CollisionLayerCommon)((ICollisionLayerGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
 
         #region Binary Translation
         public static void CopyInFromBinary(
@@ -995,6 +1005,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (ICollisionLayerInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(ICollisionLayer obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.CollidesWith?.RemapLinks(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1266,33 +1285,56 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ICollisionLayerGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ICollisionLayerGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.CollidesWith.TryGet(out var CollidesWithItem))
             {
-                foreach (var item in CollidesWithItem.Select(f => f.FormKey))
+                foreach (var item in CollidesWithItem)
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
             yield break;
         }
         
-        public void RemapLinks(ICollisionLayerGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(CollisionLayer obj, CollisionLayer rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public CollisionLayer Duplicate(
+            ICollisionLayerGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new CollisionLayer(getNextFormKey(), ((ICollisionLayerGetter)item).FormVersion);
-            ret.DeepCopyIn((CollisionLayer)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (CollisionLayer)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new CollisionLayer(formKey, default(SkyrimRelease));
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override SkyrimMajorRecord Duplicate(
+            ISkyrimMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (ICollisionLayer)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (ICollisionLayer)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         
@@ -1753,10 +1795,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => CollisionLayerCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => CollisionLayerCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => CollisionLayerCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => CollisionLayerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

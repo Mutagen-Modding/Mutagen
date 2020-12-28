@@ -463,12 +463,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => RegionSoundsCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => RegionSoundsCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionSoundsCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionSoundsCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => RegionSoundsCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionSoundsSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -529,7 +525,7 @@ namespace Mutagen.Bethesda.Skyrim
         IRegionSoundsGetter,
         IRegionData,
         ILoquiObjectSetter<IRegionSounds>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLinkNullable<IMusicTypeGetter> Music { get; set; }
         new ExtendedList<RegionSound>? Sounds { get; set; }
@@ -538,7 +534,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IRegionSoundsGetter :
         IRegionDataGetter,
         ILoquiObject<IRegionSoundsGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => RegionSounds_Registration.Instance;
@@ -799,6 +795,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IRegionSounds)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IRegionSounds obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Music = obj.Music.Relink(mapping);
+            obj.Sounds?.RemapLinks(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IRegionSounds item,
@@ -991,27 +997,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IRegionSoundsGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IRegionSoundsGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
-            if (obj.Music.FormKeyNullable.TryGet(out var MusicKey))
+            if (obj.Music.FormKeyNullable.HasValue)
             {
-                yield return MusicKey;
+                yield return FormLinkInformation.Factory(obj.Music);
             }
             if (obj.Sounds.TryGet(out var SoundsItem))
             {
-                foreach (var item in SoundsItem.SelectMany(f => f.LinkFormKeys))
+                foreach (var item in SoundsItem.SelectMany(f => f.ContainedFormLinks))
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
             yield break;
         }
         
-        public void RemapLinks(IRegionSoundsGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1318,10 +1323,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => RegionSoundsCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => RegionSoundsCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => RegionSoundsCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RegionSoundsBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

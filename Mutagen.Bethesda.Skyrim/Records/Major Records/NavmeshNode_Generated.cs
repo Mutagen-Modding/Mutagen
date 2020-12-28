@@ -383,12 +383,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => NavmeshNodeCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => NavmeshNodeCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavmeshNodeCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavmeshNodeCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => NavmeshNodeCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavmeshNodeSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -450,7 +446,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface INavmeshNode :
         INavmeshNodeGetter,
         ILoquiObjectSetter<INavmeshNode>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IANavigationMeshGetter> NavMesh { get; set; }
         new UInt32 NodeIndex { get; set; }
@@ -459,7 +455,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface INavmeshNodeGetter :
         ILoquiObject,
         ILoquiObject<INavmeshNodeGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -731,6 +727,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.NodeIndex = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(INavmeshNode obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.NavMesh = obj.NavMesh.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             INavmeshNode item,
@@ -859,13 +863,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(INavmeshNodeGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(INavmeshNodeGetter obj)
         {
-            yield return obj.NavMesh.FormKey;
+            yield return FormLinkInformation.Factory(obj.NavMesh);
             yield break;
         }
         
-        public void RemapLinks(INavmeshNodeGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1077,10 +1080,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => NavmeshNodeCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => NavmeshNodeCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => NavmeshNodeCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => NavmeshNodeBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

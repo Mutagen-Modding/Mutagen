@@ -383,12 +383,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => RegionGrassCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => RegionGrassCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionGrassCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionGrassCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => RegionGrassCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionGrassSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -450,7 +446,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IRegionGrass :
         IRegionGrassGetter,
         ILoquiObjectSetter<IRegionGrass>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IGrassGetter> Grass { get; set; }
         new Int32 Unknown { get; set; }
@@ -459,7 +455,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IRegionGrassGetter :
         ILoquiObject,
         ILoquiObject<IRegionGrassGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -731,6 +727,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Unknown = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IRegionGrass obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Grass = obj.Grass.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IRegionGrass item,
@@ -859,13 +863,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IRegionGrassGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IRegionGrassGetter obj)
         {
-            yield return obj.Grass.FormKey;
+            yield return FormLinkInformation.Factory(obj.Grass);
             yield break;
         }
         
-        public void RemapLinks(IRegionGrassGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1077,10 +1080,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => RegionGrassCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => RegionGrassCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => RegionGrassCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => RegionGrassBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

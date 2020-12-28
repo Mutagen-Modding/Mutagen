@@ -978,6 +978,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.FlyingAttackChance = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(ICombatStyleFlight obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ICombatStyleFlight item,
@@ -1158,12 +1165,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ICombatStyleFlightGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ICombatStyleFlightGetter obj)
         {
             yield break;
         }
         
-        public void RemapLinks(ICombatStyleFlightGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

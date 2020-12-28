@@ -447,12 +447,8 @@ namespace Mutagen.Bethesda
         #endregion
 
         #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected virtual IEnumerable<FormKey> LinkFormKeys => MajorRecordCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => MajorRecordCommon.Instance.GetLinkFormKeys(this);
-        protected virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MajorRecordCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MajorRecordCommon.Instance.RemapLinks(this, mapping);
+        public virtual IEnumerable<FormLinkInformation> ContainedFormLinks => MajorRecordCommon.Instance.GetContainedFormLinks(this);
+        public virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MajorRecordSetterCommon.Instance.RemapLinks(this, mapping);
         public MajorRecord(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -550,7 +546,7 @@ namespace Mutagen.Bethesda
         IMajorRecordGetter,
         IMajorRecordEnumerable,
         ILoquiObjectSetter<IMajorRecordInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new Int32 MajorRecordFlagsRaw { get; set; }
         new UInt32 VersionControl { get; set; }
@@ -568,7 +564,7 @@ namespace Mutagen.Bethesda
         ILoquiObject,
         IMajorRecordGetterEnumerable,
         ILoquiObject<IMajorRecordGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -726,16 +722,6 @@ namespace Mutagen.Bethesda
         }
 
         #region Mutagen
-        public static IMajorRecordCommon Duplicate(
-            this MajorRecord item,
-            Func<FormKey> getNextFormKey,
-            IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords = null)
-        {
-            return ((MajorRecordCommon)((IMajorRecordGetter)item).CommonInstance()!).Duplicate(
-                item: item,
-                getNextFormKey: getNextFormKey,
-                duplicatedRecords: duplicatedRecords);
-        }
         [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(this IMajorRecordGetter obj)
         {
@@ -948,6 +934,17 @@ namespace Mutagen.Bethesda
                 throwIfUnknown: throwIfUnknown);
         }
 
+        public static MajorRecord Duplicate(
+            this IMajorRecordGetter item,
+            FormKey formKey,
+            MajorRecord.TranslationMask? copyMask = null)
+        {
+            return ((MajorRecordCommon)((IMajorRecordGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1071,6 +1068,10 @@ namespace Mutagen.Bethesda.Internals
         }
         
         #region Mutagen
+        public void RemapLinks(IMajorRecord obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
         public virtual IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IMajorRecordInternal obj)
         {
             foreach (var item in MajorRecordCommon.Instance.EnumerateMajorRecords(obj))
@@ -1267,17 +1268,9 @@ namespace Mutagen.Bethesda.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IMajorRecordGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IMajorRecordGetter obj)
         {
             yield break;
-        }
-        
-        public void RemapLinks(IMajorRecordGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(MajorRecord obj, MajorRecord rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public virtual IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
-        {
-            throw new NotImplementedException();
         }
         
         public virtual IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(IMajorRecordGetter obj)
@@ -1319,6 +1312,17 @@ namespace Mutagen.Bethesda.Internals
                     }
             }
         }
+        
+        #region Duplicate
+        public virtual MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            throw new NotImplementedException();
+        }
+        
+        #endregion
         
         #endregion
         
@@ -1605,10 +1609,7 @@ namespace Mutagen.Bethesda.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected virtual IEnumerable<FormKey> LinkFormKeys => MajorRecordCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => MajorRecordCommon.Instance.GetLinkFormKeys(this);
+        public virtual IEnumerable<FormLinkInformation> ContainedFormLinks => MajorRecordCommon.Instance.GetContainedFormLinks(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

@@ -107,7 +107,7 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="editorID">Editor ID to assign the new record.</param>
         /// <returns>New record already added to the Group</returns>
-        TMajor AddNew(string editorID);
+        TMajor AddNew(string? editorID);
     }
 
     public static class GroupExt
@@ -118,29 +118,47 @@ namespace Mutagen.Bethesda
         /// <param name="group">Group to add to</param>
         /// <param name="source">Source record to duplicate</param>
         /// <returns>Duplicated and added record</returns>
-        public static TMajor DuplicateIn<TMajor, TMajorGetter>(this IGroupCommon<TMajor> group, TMajorGetter source)
-            where TMajor : IMajorRecordCommon, TMajorGetter
-            where TMajorGetter : IMajorRecordCommonGetter, IBinaryItem, IDuplicatable
+        public static TMajor DuplicateInAsNewRecord<TMajor, TMajorGetter>(this IGroupCommon<TMajor> group, TMajorGetter source)
+            where TMajor : IMajorRecordInternal, TMajorGetter
+            where TMajorGetter : IMajorRecordGetter, IBinaryItem
         {
-            var ret = (TMajor)source.Duplicate(group.SourceMod.GetNextFormKey);
-            group.Add(ret);
-            return ret;
+            try
+            {
+                var newRec = group.AddNew();
+                var mask = OverrideMixIns.AddAsOverrideMasks.GetValueOrDefault(typeof(TMajor));
+                newRec.DeepCopyIn(source, mask as MajorRecord.TranslationMask);
+                group.RecordCache.Set(newRec);
+                return newRec;
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Factory(ex, source.FormKey, source.EditorID);
+            }
         }
 
         /// <summary>
         /// Duplicates a given record (giving it a new FormID) adding it to the group and returning it.
         /// </summary>
         /// <param name="group">Group to add to</param>
-        /// <param name="edid">EditorID to drive the FormID assignment off any persistance systems</param>
         /// <param name="source">Source record to duplicate</param>
+        /// <param name="edid">EditorID to drive the FormID assignment off any persistance systems</param>
         /// <returns>Duplicated and added record</returns>
-        public static TMajor DuplicateIn<TMajor, TMajorGetter>(this IGroupCommon<TMajor> group, string edid, TMajorGetter source)
-            where TMajor : IMajorRecordCommon, TMajorGetter
-            where TMajorGetter : IMajorRecordCommonGetter, IBinaryItem, IDuplicatable
+        public static TMajor DuplicateInAsNewRecord<TMajor, TMajorGetter>(this IGroupCommon<TMajor> group, TMajorGetter source, string? edid)
+            where TMajor : IMajorRecordInternal, TMajorGetter
+            where TMajorGetter : IMajorRecordGetter, IBinaryItem
         {
-            var ret = (TMajor)source.Duplicate(() => group.SourceMod.GetNextFormKey(edid));
-            group.Add(ret);
-            return ret;
+            try
+            {
+                var newRec = group.AddNew(edid);
+                var mask = OverrideMixIns.AddAsOverrideMasks.GetValueOrDefault(typeof(TMajor));
+                newRec.DeepCopyIn(source, mask as MajorRecord.TranslationMask);
+                group.RecordCache.Set(newRec);
+                return newRec;
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Factory(ex, source.FormKey, source.EditorID);
+            }
         }
 
         /// <summary>
@@ -155,7 +173,7 @@ namespace Mutagen.Bethesda
             this IGroupCommonGetter<TMajor> group, 
             FormKey formKey, 
             [MaybeNullWhen(false)] out TMajor record)
-            where TMajor : IMajorRecordCommonGetter, IBinaryItem, IDuplicatable
+            where TMajor : IMajorRecordCommonGetter, IBinaryItem
         {
             return group.RecordCache.TryGetValue(formKey, out record);
         }

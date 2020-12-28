@@ -881,12 +881,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = MusicTrack_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => MusicTrackCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => MusicTrackCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MusicTrackCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MusicTrackCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => MusicTrackCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MusicTrackSetterCommon.Instance.RemapLinks(this, mapping);
         public MusicTrack(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -989,7 +985,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMusicTrackGetter,
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IMusicTrackInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new MusicTrack.TypeEnum Type { get; set; }
         new Single? Duration { get; set; }
@@ -1012,7 +1008,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IMusicTrackGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IMusicTrackGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => MusicTrack_Registration.Instance;
@@ -1142,6 +1138,20 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
+
+        #region Mutagen
+        public static MusicTrack Duplicate(
+            this IMusicTrackGetter item,
+            FormKey formKey,
+            MusicTrack.TranslationMask? copyMask = null)
+        {
+            return ((MusicTrackCommon)((IMusicTrackGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
 
         #region Binary Translation
         public static void CopyInFromBinary(
@@ -1291,6 +1301,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IMusicTrackInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IMusicTrack obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Conditions?.RemapLinks(mapping);
+            obj.Tracks?.RemapLinks(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1643,41 +1663,64 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IMusicTrackGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IMusicTrackGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.Conditions.TryGet(out var ConditionsItem))
             {
-                foreach (var item in ConditionsItem.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter>()
-                    .SelectMany((f) => f.LinkFormKeys))
+                foreach (var item in ConditionsItem.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
+                    .SelectMany((f) => f.ContainedFormLinks))
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.Tracks.TryGet(out var TracksItem))
             {
-                foreach (var item in TracksItem.Select(f => f.FormKey))
+                foreach (var item in TracksItem)
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
             yield break;
         }
         
-        public void RemapLinks(IMusicTrackGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(MusicTrack obj, MusicTrack rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public MusicTrack Duplicate(
+            IMusicTrackGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new MusicTrack(getNextFormKey(), ((IMusicTrackGetter)item).FormVersion);
-            ret.DeepCopyIn((MusicTrack)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (MusicTrack)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new MusicTrack(formKey, default(SkyrimRelease));
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override SkyrimMajorRecord Duplicate(
+            ISkyrimMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IMusicTrack)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IMusicTrack)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         
@@ -2268,10 +2311,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => MusicTrackCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => MusicTrackCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => MusicTrackCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => MusicTrackBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

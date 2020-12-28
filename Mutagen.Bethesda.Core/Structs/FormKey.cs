@@ -2,6 +2,7 @@ using Mutagen.Bethesda.Internals;
 using Noggog;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
@@ -19,6 +20,7 @@ namespace Mutagen.Bethesda
     ///   - Cannot be misinterpreted to originate from the wrong Mod depending on context<br/>
     ///   - Remove the 255 limit while within code space.  On-disk formats still enforce 255 limit.<br/>
     /// </summary>
+    [DebuggerDisplay("{ToString()}")]
     public struct FormKey : IEquatable<FormKey>
     {
         /// <summary>

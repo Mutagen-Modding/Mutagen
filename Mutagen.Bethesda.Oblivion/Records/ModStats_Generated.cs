@@ -760,6 +760,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.NextFormID = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IModStats obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IModStats item,
@@ -898,12 +905,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IModStatsGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IModStatsGetter obj)
         {
             yield break;
         }
         
-        public void RemapLinks(IModStatsGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

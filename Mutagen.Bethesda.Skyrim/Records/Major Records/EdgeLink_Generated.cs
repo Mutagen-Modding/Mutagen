@@ -414,12 +414,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => EdgeLinkCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => EdgeLinkCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EdgeLinkCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EdgeLinkCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => EdgeLinkCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EdgeLinkSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -481,7 +477,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IEdgeLink :
         IEdgeLinkGetter,
         ILoquiObjectSetter<IEdgeLink>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new Int32 Unknown { get; set; }
         new FormLink<IANavigationMeshGetter> Mesh { get; set; }
@@ -491,7 +487,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IEdgeLinkGetter :
         ILoquiObject,
         ILoquiObject<IEdgeLinkGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -766,6 +762,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.TriangleIndex = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IEdgeLink obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Mesh = obj.Mesh.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IEdgeLink item,
@@ -901,13 +905,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IEdgeLinkGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IEdgeLinkGetter obj)
         {
-            yield return obj.Mesh.FormKey;
+            yield return FormLinkInformation.Factory(obj.Mesh);
             yield break;
         }
         
-        public void RemapLinks(IEdgeLinkGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1125,10 +1128,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => EdgeLinkCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => EdgeLinkCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => EdgeLinkCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => EdgeLinkBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

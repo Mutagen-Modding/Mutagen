@@ -414,12 +414,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => AlternateTextureCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => AlternateTextureCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AlternateTextureCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AlternateTextureCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => AlternateTextureCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AlternateTextureSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -481,7 +477,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IAlternateTexture :
         IAlternateTextureGetter,
         ILoquiObjectSetter<IAlternateTexture>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new String Name { get; set; }
         new FormLink<ITextureSetGetter> NewTexture { get; set; }
@@ -491,7 +487,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IAlternateTextureGetter :
         ILoquiObject,
         ILoquiObject<IAlternateTextureGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -766,6 +762,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Index = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IAlternateTexture obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.NewTexture = obj.NewTexture.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IAlternateTexture item,
@@ -901,13 +905,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IAlternateTextureGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IAlternateTextureGetter obj)
         {
-            yield return obj.NewTexture.FormKey;
+            yield return FormLinkInformation.Factory(obj.NewTexture);
             yield break;
         }
         
-        public void RemapLinks(IAlternateTextureGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1130,10 +1133,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => AlternateTextureCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => AlternateTextureCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => AlternateTextureCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => AlternateTextureBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

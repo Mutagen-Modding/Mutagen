@@ -384,12 +384,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = WeatherSound_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => WeatherSoundCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => WeatherSoundCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherSoundCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherSoundCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => WeatherSoundCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherSoundSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -451,7 +447,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IWeatherSound :
         IWeatherSoundGetter,
         ILoquiObjectSetter<IWeatherSound>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<ISoundGetter> Sound { get; set; }
         new WeatherSound.TypeEnum Type { get; set; }
@@ -460,7 +456,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IWeatherSoundGetter :
         ILoquiObject,
         ILoquiObject<IWeatherSoundGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -733,6 +729,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Type = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IWeatherSound obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Sound = obj.Sound.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IWeatherSound item,
@@ -864,13 +868,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IWeatherSoundGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IWeatherSoundGetter obj)
         {
-            yield return obj.Sound.FormKey;
+            yield return FormLinkInformation.Factory(obj.Sound);
             yield break;
         }
         
-        public void RemapLinks(IWeatherSoundGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1091,10 +1094,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => WeatherSoundCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => WeatherSoundCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => WeatherSoundCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WeatherSoundBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -446,12 +446,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = WeatherVolumetricLighting_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => WeatherVolumetricLightingCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => WeatherVolumetricLightingCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherVolumetricLightingCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherVolumetricLightingCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => WeatherVolumetricLightingCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherVolumetricLightingSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -513,7 +509,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IWeatherVolumetricLighting :
         IWeatherVolumetricLightingGetter,
         ILoquiObjectSetter<IWeatherVolumetricLighting>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IVolumetricLightingGetter> Sunrise { get; set; }
         new FormLink<IVolumetricLightingGetter> Day { get; set; }
@@ -524,7 +520,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IWeatherVolumetricLightingGetter :
         ILoquiObject,
         ILoquiObject<IWeatherVolumetricLightingGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -803,6 +799,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Night = FormLink<IVolumetricLightingGetter>.Null;
         }
         
+        #region Mutagen
+        public void RemapLinks(IWeatherVolumetricLighting obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Sunrise = obj.Sunrise.Relink(mapping);
+            obj.Day = obj.Day.Relink(mapping);
+            obj.Sunset = obj.Sunset.Relink(mapping);
+            obj.Night = obj.Night.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IWeatherVolumetricLighting item,
@@ -948,16 +955,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IWeatherVolumetricLightingGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IWeatherVolumetricLightingGetter obj)
         {
-            yield return obj.Sunrise.FormKey;
-            yield return obj.Day.FormKey;
-            yield return obj.Sunset.FormKey;
-            yield return obj.Night.FormKey;
+            yield return FormLinkInformation.Factory(obj.Sunrise);
+            yield return FormLinkInformation.Factory(obj.Day);
+            yield return FormLinkInformation.Factory(obj.Sunset);
+            yield return FormLinkInformation.Factory(obj.Night);
             yield break;
         }
         
-        public void RemapLinks(IWeatherVolumetricLightingGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1199,10 +1205,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => WeatherVolumetricLightingCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => WeatherVolumetricLightingCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => WeatherVolumetricLightingCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WeatherVolumetricLightingBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

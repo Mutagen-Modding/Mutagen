@@ -971,6 +971,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.FogClipDistance = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(ICellLighting obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ICellLighting item,
@@ -1151,12 +1158,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ICellLightingGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ICellLightingGetter obj)
         {
             yield break;
         }
         
-        public void RemapLinks(ICellLightingGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

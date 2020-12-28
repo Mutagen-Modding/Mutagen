@@ -720,6 +720,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Rotation = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(ILocation obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ILocation item,
@@ -848,12 +855,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ILocationGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ILocationGetter obj)
         {
             yield break;
         }
         
-        public void RemapLinks(ILocationGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

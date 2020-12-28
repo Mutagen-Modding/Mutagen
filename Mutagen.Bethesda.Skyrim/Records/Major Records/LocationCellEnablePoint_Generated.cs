@@ -414,12 +414,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => LocationCellEnablePointCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LocationCellEnablePointCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCellEnablePointCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCellEnablePointCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => LocationCellEnablePointCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCellEnablePointSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -481,7 +477,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILocationCellEnablePoint :
         ILocationCellEnablePointGetter,
         ILoquiObjectSetter<ILocationCellEnablePoint>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IPlacedGetter> Actor { get; set; }
         new FormLink<IPlacedGetter> Ref { get; set; }
@@ -491,7 +487,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILocationCellEnablePointGetter :
         ILoquiObject,
         ILoquiObject<ILocationCellEnablePointGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -766,6 +762,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Grid = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(ILocationCellEnablePoint obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Actor = obj.Actor.Relink(mapping);
+            obj.Ref = obj.Ref.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ILocationCellEnablePoint item,
@@ -901,14 +906,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ILocationCellEnablePointGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ILocationCellEnablePointGetter obj)
         {
-            yield return obj.Actor.FormKey;
-            yield return obj.Ref.FormKey;
+            yield return FormLinkInformation.Factory(obj.Actor);
+            yield return FormLinkInformation.Factory(obj.Ref);
             yield break;
         }
         
-        public void RemapLinks(ILocationCellEnablePointGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1135,10 +1139,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => LocationCellEnablePointCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LocationCellEnablePointCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => LocationCellEnablePointCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LocationCellEnablePointBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

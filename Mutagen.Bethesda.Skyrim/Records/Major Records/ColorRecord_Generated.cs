@@ -665,6 +665,20 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
+        #region Mutagen
+        public static ColorRecord Duplicate(
+            this IColorRecordGetter item,
+            FormKey formKey,
+            ColorRecord.TranslationMask? copyMask = null)
+        {
+            return ((ColorRecordCommon)((IColorRecordGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
+
         #region Binary Translation
         public static void CopyInFromBinary(
             this IColorRecordInternal item,
@@ -801,6 +815,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IColorRecordInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IColorRecord obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1037,26 +1059,49 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IColorRecordGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IColorRecordGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
             yield break;
         }
         
-        public void RemapLinks(IColorRecordGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(ColorRecord obj, ColorRecord rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public ColorRecord Duplicate(
+            IColorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new ColorRecord(getNextFormKey(), ((IColorRecordGetter)item).FormVersion);
-            ret.DeepCopyIn((ColorRecord)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (ColorRecord)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new ColorRecord(formKey, default(SkyrimRelease));
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override SkyrimMajorRecord Duplicate(
+            ISkyrimMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IColorRecord)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IColorRecord)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         

@@ -830,6 +830,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Duration = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IAIPackageSchedule obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IAIPackageSchedule item,
@@ -982,12 +989,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IAIPackageScheduleGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IAIPackageScheduleGetter obj)
         {
             yield break;
         }
         
-        public void RemapLinks(IAIPackageScheduleGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

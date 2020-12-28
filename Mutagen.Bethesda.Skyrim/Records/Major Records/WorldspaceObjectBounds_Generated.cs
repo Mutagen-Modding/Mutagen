@@ -732,6 +732,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Max = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IWorldspaceObjectBounds obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IWorldspaceObjectBounds item,
@@ -861,12 +868,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IWorldspaceObjectBoundsGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IWorldspaceObjectBoundsGetter obj)
         {
             yield break;
         }
         
-        public void RemapLinks(IWorldspaceObjectBoundsGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

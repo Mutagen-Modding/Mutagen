@@ -1848,12 +1848,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Cell_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => CellCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => CellCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => CellCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellSetterCommon.Instance.RemapLinks(this, mapping);
         public Cell(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -1998,7 +1994,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamed,
         IMajorRecordEnumerable,
         ILoquiObjectSetter<ICellInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new TranslatedString? Name { get; set; }
         new Cell.Flag Flags { get; set; }
@@ -2053,7 +2049,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         IMajorRecordGetterEnumerable,
         ILoquiObject<ICellGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Cell_Registration.Instance;
@@ -2426,6 +2422,17 @@ namespace Mutagen.Bethesda.Skyrim
                 throwIfUnknown: throwIfUnknown);
         }
 
+        public static Cell Duplicate(
+            this ICellGetter item,
+            FormKey formKey,
+            Cell.TranslationMask? copyMask = null)
+        {
+            return ((CellCommon)((ICellGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
         #endregion
 
         #region Binary Translation
@@ -2628,6 +2635,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
+        public void RemapLinks(ICell obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.LightingTemplate = obj.LightingTemplate.Relink(mapping);
+            obj.Regions?.RemapLinks(mapping);
+            obj.Location = obj.Location.Relink(mapping);
+            obj.Water = obj.Water.Relink(mapping);
+            obj.Ownership?.RemapLinks(mapping);
+            obj.LockList = obj.LockList.Relink(mapping);
+            obj.SkyAndWeatherFromRegion = obj.SkyAndWeatherFromRegion.Relink(mapping);
+            obj.AcousticSpace = obj.AcousticSpace.Relink(mapping);
+            obj.EncounterZone = obj.EncounterZone.Relink(mapping);
+            obj.Music = obj.Music.Relink(mapping);
+            obj.ImageSpace = obj.ImageSpace.Relink(mapping);
+            obj.Landscape?.RemapLinks(mapping);
+            obj.NavigationMeshes.RemapLinks(mapping);
+            obj.Persistent.RemapLinks(mapping);
+            obj.Temporary.RemapLinks(mapping);
+        }
+        
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(ICellInternal obj)
         {
             foreach (var item in CellCommon.Instance.EnumerateMajorRecords(obj))
@@ -3339,94 +3366,82 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ICellGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ICellGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
-            yield return obj.LightingTemplate.FormKey;
+            yield return FormLinkInformation.Factory(obj.LightingTemplate);
             if (obj.Regions.TryGet(out var RegionsItem))
             {
-                foreach (var item in RegionsItem.Select(f => f.FormKey))
+                foreach (var item in RegionsItem)
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.Location.FormKeyNullable.TryGet(out var LocationKey))
+            if (obj.Location.FormKeyNullable.HasValue)
             {
-                yield return LocationKey;
+                yield return FormLinkInformation.Factory(obj.Location);
             }
-            if (obj.Water.FormKeyNullable.TryGet(out var WaterKey))
+            if (obj.Water.FormKeyNullable.HasValue)
             {
-                yield return WaterKey;
+                yield return FormLinkInformation.Factory(obj.Water);
             }
             if (obj.Ownership.TryGet(out var OwnershipItems))
             {
-                foreach (var item in OwnershipItems.LinkFormKeys)
+                foreach (var item in OwnershipItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.LockList.FormKeyNullable.TryGet(out var LockListKey))
+            if (obj.LockList.FormKeyNullable.HasValue)
             {
-                yield return LockListKey;
+                yield return FormLinkInformation.Factory(obj.LockList);
             }
-            if (obj.SkyAndWeatherFromRegion.FormKeyNullable.TryGet(out var SkyAndWeatherFromRegionKey))
+            if (obj.SkyAndWeatherFromRegion.FormKeyNullable.HasValue)
             {
-                yield return SkyAndWeatherFromRegionKey;
+                yield return FormLinkInformation.Factory(obj.SkyAndWeatherFromRegion);
             }
-            if (obj.AcousticSpace.FormKeyNullable.TryGet(out var AcousticSpaceKey))
+            if (obj.AcousticSpace.FormKeyNullable.HasValue)
             {
-                yield return AcousticSpaceKey;
+                yield return FormLinkInformation.Factory(obj.AcousticSpace);
             }
-            if (obj.EncounterZone.FormKeyNullable.TryGet(out var EncounterZoneKey))
+            if (obj.EncounterZone.FormKeyNullable.HasValue)
             {
-                yield return EncounterZoneKey;
+                yield return FormLinkInformation.Factory(obj.EncounterZone);
             }
-            if (obj.Music.FormKeyNullable.TryGet(out var MusicKey))
+            if (obj.Music.FormKeyNullable.HasValue)
             {
-                yield return MusicKey;
+                yield return FormLinkInformation.Factory(obj.Music);
             }
-            if (obj.ImageSpace.FormKeyNullable.TryGet(out var ImageSpaceKey))
+            if (obj.ImageSpace.FormKeyNullable.HasValue)
             {
-                yield return ImageSpaceKey;
+                yield return FormLinkInformation.Factory(obj.ImageSpace);
             }
             if (obj.Landscape.TryGet(out var LandscapeItems))
             {
-                foreach (var item in LandscapeItems.LinkFormKeys)
+                foreach (var item in LandscapeItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            foreach (var item in obj.NavigationMeshes.WhereCastable<IANavigationMeshGetter, ILinkedFormKeyContainerGetter>()
-                .SelectMany((f) => f.LinkFormKeys))
+            foreach (var item in obj.NavigationMeshes.WhereCastable<IANavigationMeshGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.ContainedFormLinks))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.Persistent.WhereCastable<IPlacedGetter, ILinkedFormKeyContainerGetter>()
-                .SelectMany((f) => f.LinkFormKeys))
+            foreach (var item in obj.Persistent.WhereCastable<IPlacedGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.ContainedFormLinks))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.Temporary.WhereCastable<IPlacedGetter, ILinkedFormKeyContainerGetter>()
-                .SelectMany((f) => f.LinkFormKeys))
+            foreach (var item in obj.Temporary.WhereCastable<IPlacedGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.ContainedFormLinks))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
-        }
-        
-        public void RemapLinks(ICellGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(Cell obj, Cell rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
-        {
-            var ret = new Cell(getNextFormKey(), ((ICellGetter)item).FormVersion);
-            ret.DeepCopyIn((Cell)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (Cell)item, getNextFormKey, duplicatedRecords);
-            return ret;
         }
         
         public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(ICellGetter obj)
@@ -3847,19 +3862,149 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IEnumerable<IModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             ICellGetter obj,
             ILinkCache linkCache,
-            Type type,
             ModKey modKey,
             IModContext? parent,
-            bool throwIfUnknown,
-            Func<ISkyrimMod, ICellGetter, ICell> getter)
+            Func<ISkyrimMod, ICellGetter, ICell> getOrAddAsOverride,
+            Func<ISkyrimMod, ICellGetter, string?, ICell> duplicateInto)
         {
             var curContext = new ModContext<ISkyrimMod, ICell, ICellGetter>(
                 modKey,
                 record: obj,
-                getter: getter,
+                getOrAddAsOverride: getOrAddAsOverride,
+                duplicateInto: duplicateInto,
+                parent: parent);
+            {
+                if (obj.Landscape.TryGet(out var CellLandscapeitem))
+                {
+                    yield return new ModContext<ISkyrimMod, ILandscapeInternal, ILandscapeGetter>(
+                        modKey: modKey,
+                        record: CellLandscapeitem,
+                        parent: curContext,
+                        getOrAddAsOverride: (m, r) =>
+                        {
+                            var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                            if (baseRec.Landscape != null) return baseRec.Landscape;
+                            var copy = r.DeepCopy(ModContextExt.LandscapeCopyMask);
+                            baseRec.Landscape = copy;
+                            return copy;
+                        },
+                        duplicateInto: (m, r, e) =>
+                        {
+                            var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                            var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.LandscapeCopyMask);
+                            baseRec.Landscape = dupRec;
+                            return dupRec;
+                        });
+                }
+            }
+            foreach (var subItem in obj.NavigationMeshes)
+            {
+                yield return new ModContext<ISkyrimMod, IANavigationMeshInternal, IANavigationMeshGetter>(
+                    modKey: modKey,
+                    record: subItem,
+                    parent: curContext,
+                    getOrAddAsOverride: (m, r) =>
+                    {
+                        var copy = (ANavigationMesh)((IANavigationMeshGetter)r).DeepCopy();
+                        getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).NavigationMeshes.Add(copy);
+                        return copy;
+                    },
+                    duplicateInto: (m, r, e) =>
+                    {
+                        var dup = (ANavigationMesh)((IANavigationMeshGetter)r).Duplicate(m.GetNextFormKey(e));
+                        getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).NavigationMeshes.Add(dup);
+                        return dup;
+                    });
+            }
+            foreach (var subItem in obj.Persistent)
+            {
+                yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
+                    modKey: modKey,
+                    record: subItem,
+                    parent: curContext,
+                    getOrAddAsOverride: (m, r) =>
+                    {
+                        var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                        getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
+                        return copy;
+                    },
+                    duplicateInto: (m, r, e) =>
+                    {
+                        var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                        getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(dup);
+                        return dup;
+                    });
+            }
+            foreach (var subItem in obj.Temporary)
+            {
+                yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
+                    modKey: modKey,
+                    record: subItem,
+                    parent: curContext,
+                    getOrAddAsOverride: (m, r) =>
+                    {
+                        var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                        getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
+                        return copy;
+                    },
+                    duplicateInto: (m, r, e) =>
+                    {
+                        var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                        getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(dup);
+                        return dup;
+                    });
+            }
+        }
+        
+        public IEnumerable<IModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+            ICellGetter obj,
+            ILinkCache linkCache,
+            Type type,
+            ModKey modKey,
+            IModContext? parent,
+            bool throwIfUnknown,
+            Func<ISkyrimMod, ICellGetter, ICell> getOrAddAsOverride,
+            Func<ISkyrimMod, ICellGetter, string?, ICell> duplicateInto)
+        {
+            var curContext = new ModContext<ISkyrimMod, ICell, ICellGetter>(
+                modKey,
+                record: obj,
+                getOrAddAsOverride: getOrAddAsOverride,
+                duplicateInto: duplicateInto,
                 parent: parent);
             switch (type.Name)
             {
+                case "IMajorRecordCommon":
+                case "IMajorRecord":
+                case "MajorRecord":
+                case "ISkyrimMajorRecord":
+                case "SkyrimMajorRecord":
+                    if (!Cell_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in this.EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        modKey: modKey,
+                        parent: parent,
+                        getOrAddAsOverride: getOrAddAsOverride,
+                        duplicateInto: duplicateInto))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IMajorRecordGetter":
+                case "IMajorRecordCommonGetter":
+                case "ISkyrimMajorRecordGetter":
+                    foreach (var item in this.EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        modKey: modKey,
+                        parent: parent,
+                        getOrAddAsOverride: getOrAddAsOverride,
+                        duplicateInto: duplicateInto))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "Landscape":
                 case "ILandscapeGetter":
                 case "ILandscape":
@@ -3867,17 +4012,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (obj.Landscape.TryGet(out var CellLandscapeitem))
                         {
-                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<ISkyrimMod, ILandscapeInternal, ILandscapeGetter>(
                                 modKey: modKey,
                                 record: CellLandscapeitem,
                                 parent: curContext,
-                                getter: (m, r) =>
+                                getOrAddAsOverride: (m, r) =>
                                 {
-                                    var baseRec = getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
                                     if (baseRec.Landscape != null) return baseRec.Landscape;
-                                    var copy = (Landscape)((ILandscapeGetter)r).DeepCopy(ModContextExt.LandscapeCopyMask);
+                                    var copy = r.DeepCopy(ModContextExt.LandscapeCopyMask);
                                     baseRec.Landscape = copy;
                                     return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.LandscapeCopyMask);
+                                    baseRec.Landscape = dupRec;
+                                    return dupRec;
                                 });
                         }
                     }
@@ -3890,15 +4042,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<ISkyrimMod, IANavigationMeshInternal, IANavigationMeshGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
-                                getter: (m, r) =>
+                                getOrAddAsOverride: (m, r) =>
                                 {
                                     var copy = (ANavigationMesh)((IANavigationMeshGetter)r).DeepCopy();
-                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).NavigationMeshes.Add(copy);
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).NavigationMeshes.Add(copy);
                                     return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (ANavigationMesh)((IANavigationMeshGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).NavigationMeshes.Add(dup);
+                                    return dup;
                                 });
                         }
                     }
@@ -3909,15 +4067,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
-                                getter: (m, r) =>
+                                getOrAddAsOverride: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
                                     return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(dup);
+                                    return dup;
                                 });
                         }
                     }
@@ -3925,15 +4089,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
-                                getter: (m, r) =>
+                                getOrAddAsOverride: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
                                     return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(dup);
+                                    return dup;
                                 });
                         }
                     }
@@ -3946,15 +4116,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
-                                getter: (m, r) =>
+                                getOrAddAsOverride: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
                                     return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(dup);
+                                    return dup;
                                 });
                         }
                     }
@@ -3962,15 +4138,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
-                                getter: (m, r) =>
+                                getOrAddAsOverride: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
                                     return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(dup);
+                                    return dup;
                                 });
                         }
                     }
@@ -3983,15 +4165,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
-                                getter: (m, r) =>
+                                getOrAddAsOverride: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
                                     return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(dup);
+                                    return dup;
                                 });
                         }
                     }
@@ -3999,15 +4187,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
-                                getter: (m, r) =>
+                                getOrAddAsOverride: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
                                     return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(dup);
+                                    return dup;
                                 });
                         }
                     }
@@ -4020,15 +4214,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
-                                getter: (m, r) =>
+                                getOrAddAsOverride: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
                                     return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(dup);
+                                    return dup;
                                 });
                         }
                     }
@@ -4036,15 +4236,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
-                                getter: (m, r) =>
+                                getOrAddAsOverride: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
                                     return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(dup);
+                                    return dup;
                                 });
                         }
                     }
@@ -4057,15 +4263,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
-                                getter: (m, r) =>
+                                getOrAddAsOverride: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
                                     return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(dup);
+                                    return dup;
                                 });
                         }
                     }
@@ -4073,15 +4285,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
-                                getter: (m, r) =>
+                                getOrAddAsOverride: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
                                     return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(dup);
+                                    return dup;
                                 });
                         }
                     }
@@ -4093,15 +4311,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
-                                getter: (m, r) =>
+                                getOrAddAsOverride: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
                                     return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(dup);
+                                    return dup;
                                 });
                         }
                     }
@@ -4109,15 +4333,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
-                                getter: (m, r) =>
+                                getOrAddAsOverride: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
                                     return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(dup);
+                                    return dup;
                                 });
                         }
                     }
@@ -4130,15 +4360,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
-                                getter: (m, r) =>
+                                getOrAddAsOverride: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
                                     return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(dup);
+                                    return dup;
                                 });
                         }
                     }
@@ -4146,15 +4382,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
-                                getter: (m, r) =>
+                                getOrAddAsOverride: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
                                     return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(dup);
+                                    return dup;
                                 });
                         }
                     }
@@ -4167,15 +4409,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
-                                getter: (m, r) =>
+                                getOrAddAsOverride: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
                                     return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(dup);
+                                    return dup;
                                 });
                         }
                     }
@@ -4183,15 +4431,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
-                                getter: (m, r) =>
+                                getOrAddAsOverride: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
                                     return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(dup);
+                                    return dup;
                                 });
                         }
                     }
@@ -4204,15 +4458,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
-                                getter: (m, r) =>
+                                getOrAddAsOverride: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
                                     return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(dup);
+                                    return dup;
                                 });
                         }
                     }
@@ -4220,15 +4480,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
-                                getter: (m, r) =>
+                                getOrAddAsOverride: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
                                     return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(dup);
+                                    return dup;
                                 });
                         }
                     }
@@ -4241,15 +4507,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
-                                getter: (m, r) =>
+                                getOrAddAsOverride: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
                                     return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(dup);
+                                    return dup;
                                 });
                         }
                     }
@@ -4257,15 +4529,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
-                                getter: (m, r) =>
+                                getOrAddAsOverride: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
                                     return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(dup);
+                                    return dup;
                                 });
                         }
                     }
@@ -4278,15 +4556,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
-                                getter: (m, r) =>
+                                getOrAddAsOverride: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
                                     return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(dup);
+                                    return dup;
                                 });
                         }
                     }
@@ -4294,15 +4578,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
-                                getter: (m, r) =>
+                                getOrAddAsOverride: (m, r) =>
                                 {
                                     var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getter(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
                                     return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(dup);
+                                    return dup;
                                 });
                         }
                     }
@@ -4319,6 +4609,41 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
             }
         }
+        
+        #region Duplicate
+        public Cell Duplicate(
+            ICellGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            var newRec = new Cell(formKey, default(SkyrimRelease));
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
+        }
+        
+        public override SkyrimMajorRecord Duplicate(
+            ISkyrimMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (ICell)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (ICell)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         
@@ -5331,10 +5656,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => CellCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => CellCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => CellCommon.Instance.GetContainedFormLinks(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

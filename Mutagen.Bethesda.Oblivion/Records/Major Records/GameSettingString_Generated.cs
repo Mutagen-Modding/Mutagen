@@ -577,6 +577,20 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
+        #region Mutagen
+        public static GameSettingString Duplicate(
+            this IGameSettingStringGetter item,
+            FormKey formKey,
+            GameSettingString.TranslationMask? copyMask = null)
+        {
+            return ((GameSettingStringCommon)((IGameSettingStringGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
+
         #region Binary Translation
         public static void CopyInFromBinary(
             this IGameSettingStringInternal item,
@@ -713,6 +727,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (IGameSettingStringInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IGameSettingString obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -977,26 +999,60 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IGameSettingStringGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IGameSettingStringGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
             yield break;
         }
         
-        public void RemapLinks(IGameSettingStringGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(GameSettingString obj, GameSettingString rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public GameSettingString Duplicate(
+            IGameSettingStringGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new GameSettingString(getNextFormKey());
-            ret.DeepCopyIn((GameSettingString)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (GameSettingString)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new GameSettingString(formKey);
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override GameSetting Duplicate(
+            IGameSettingGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IGameSettingString)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override OblivionMajorRecord Duplicate(
+            IOblivionMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IGameSettingString)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IGameSettingString)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         

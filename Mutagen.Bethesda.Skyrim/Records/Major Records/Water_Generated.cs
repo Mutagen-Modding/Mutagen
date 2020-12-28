@@ -2586,12 +2586,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Water_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => WaterCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => WaterCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WaterCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WaterCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => WaterCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WaterSetterCommon.Instance.RemapLinks(this, mapping);
         public Water(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -2700,7 +2696,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ITranslatedNamed,
         ILoquiObjectSetter<IWaterInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new TranslatedString? Name { get; set; }
         new ExtendedList<String> UnusedNoisemaps { get; }
@@ -2783,7 +2779,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         ITranslatedNamedGetter,
         ILoquiObject<IWaterGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Water_Registration.Instance;
@@ -2972,6 +2968,20 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
+
+        #region Mutagen
+        public static Water Duplicate(
+            this IWaterGetter item,
+            FormKey formKey,
+            Water.TranslationMask? copyMask = null)
+        {
+            return ((WaterCommon)((IWaterGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
 
         #region Binary Translation
         public static void CopyInFromBinary(
@@ -3239,6 +3249,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IWaterInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IWater obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Material = obj.Material.Relink(mapping);
+            obj.OpenSound = obj.OpenSound.Relink(mapping);
+            obj.Spell = obj.Spell.Relink(mapping);
+            obj.ImageSpace = obj.ImageSpace.Relink(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -3987,42 +4009,65 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IWaterGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IWaterGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
-            if (obj.Material.FormKeyNullable.TryGet(out var MaterialKey))
+            if (obj.Material.FormKeyNullable.HasValue)
             {
-                yield return MaterialKey;
+                yield return FormLinkInformation.Factory(obj.Material);
             }
-            if (obj.OpenSound.FormKeyNullable.TryGet(out var OpenSoundKey))
+            if (obj.OpenSound.FormKeyNullable.HasValue)
             {
-                yield return OpenSoundKey;
+                yield return FormLinkInformation.Factory(obj.OpenSound);
             }
-            if (obj.Spell.FormKeyNullable.TryGet(out var SpellKey))
+            if (obj.Spell.FormKeyNullable.HasValue)
             {
-                yield return SpellKey;
+                yield return FormLinkInformation.Factory(obj.Spell);
             }
-            if (obj.ImageSpace.FormKeyNullable.TryGet(out var ImageSpaceKey))
+            if (obj.ImageSpace.FormKeyNullable.HasValue)
             {
-                yield return ImageSpaceKey;
+                yield return FormLinkInformation.Factory(obj.ImageSpace);
             }
             yield break;
         }
         
-        public void RemapLinks(IWaterGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(Water obj, Water rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public Water Duplicate(
+            IWaterGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new Water(getNextFormKey(), ((IWaterGetter)item).FormVersion);
-            ret.DeepCopyIn((Water)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (Water)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new Water(formKey, default(SkyrimRelease));
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override SkyrimMajorRecord Duplicate(
+            ISkyrimMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IWater)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IWater)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         
@@ -5067,10 +5112,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => WaterCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => WaterCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => WaterCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => WaterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

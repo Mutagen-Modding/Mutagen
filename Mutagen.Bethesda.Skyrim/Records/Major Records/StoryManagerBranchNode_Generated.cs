@@ -643,6 +643,20 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
+        #region Mutagen
+        public static StoryManagerBranchNode Duplicate(
+            this IStoryManagerBranchNodeGetter item,
+            FormKey formKey,
+            StoryManagerBranchNode.TranslationMask? copyMask = null)
+        {
+            return ((StoryManagerBranchNodeCommon)((IStoryManagerBranchNodeGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
+
         #region Binary Translation
         public static void CopyInFromBinary(
             this IStoryManagerBranchNodeInternal item,
@@ -785,6 +799,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IStoryManagerBranchNodeInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IStoryManagerBranchNode obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1070,26 +1092,60 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IStoryManagerBranchNodeGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IStoryManagerBranchNodeGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
             yield break;
         }
         
-        public void RemapLinks(IStoryManagerBranchNodeGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(StoryManagerBranchNode obj, StoryManagerBranchNode rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public StoryManagerBranchNode Duplicate(
+            IStoryManagerBranchNodeGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new StoryManagerBranchNode(getNextFormKey(), ((IStoryManagerBranchNodeGetter)item).FormVersion);
-            ret.DeepCopyIn((StoryManagerBranchNode)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (StoryManagerBranchNode)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new StoryManagerBranchNode(formKey, default(SkyrimRelease));
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override AStoryManagerNode Duplicate(
+            IAStoryManagerNodeGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IStoryManagerBranchNode)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override SkyrimMajorRecord Duplicate(
+            ISkyrimMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IStoryManagerBranchNode)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IStoryManagerBranchNode)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         

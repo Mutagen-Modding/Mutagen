@@ -895,6 +895,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.IsCover = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(INavmeshTriangle obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             INavmeshTriangle item,
@@ -1058,12 +1065,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(INavmeshTriangleGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(INavmeshTriangleGetter obj)
         {
             yield break;
         }
         
-        public void RemapLinks(INavmeshTriangleGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

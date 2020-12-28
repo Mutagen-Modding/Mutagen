@@ -472,12 +472,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => CreatureSoundCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => CreatureSoundCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CreatureSoundCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CreatureSoundCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => CreatureSoundCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CreatureSoundSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -539,7 +535,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ICreatureSound :
         ICreatureSoundGetter,
         ILoquiObjectSetter<ICreatureSound>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new CreatureSound.CreatureSoundType? SoundType { get; set; }
         new ExtendedList<SoundItem> Sounds { get; }
@@ -548,7 +544,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ICreatureSoundGetter :
         ILoquiObject,
         ILoquiObject<ICreatureSoundGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -833,6 +829,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Sounds.Clear();
         }
         
+        #region Mutagen
+        public void RemapLinks(ICreatureSound obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Sounds.RemapLinks(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ICreatureSound item,
@@ -983,16 +987,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ICreatureSoundGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ICreatureSoundGetter obj)
         {
-            foreach (var item in obj.Sounds.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.Sounds.SelectMany(f => f.ContainedFormLinks))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
         
-        public void RemapLinks(ICreatureSoundGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1270,10 +1273,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => CreatureSoundCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => CreatureSoundCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => CreatureSoundCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => CreatureSoundBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

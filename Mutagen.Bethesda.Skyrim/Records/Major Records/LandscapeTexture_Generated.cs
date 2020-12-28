@@ -659,12 +659,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = LandscapeTexture_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => LandscapeTextureCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LandscapeTextureCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LandscapeTextureCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LandscapeTextureCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => LandscapeTextureCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LandscapeTextureSetterCommon.Instance.RemapLinks(this, mapping);
         public LandscapeTexture(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -772,7 +768,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         IRegionTarget,
         ILoquiObjectSetter<ILandscapeTextureInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLinkNullable<ITextureSetGetter> TextureSet { get; set; }
         new FormLink<IMaterialTypeGetter> MaterialType { get; set; }
@@ -795,7 +791,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IRegionTargetGetter,
         ILoquiObject<ILandscapeTextureGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => LandscapeTexture_Registration.Instance;
@@ -924,6 +920,20 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
+
+        #region Mutagen
+        public static LandscapeTexture Duplicate(
+            this ILandscapeTextureGetter item,
+            FormKey formKey,
+            LandscapeTexture.TranslationMask? copyMask = null)
+        {
+            return ((LandscapeTextureCommon)((ILandscapeTextureGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
 
         #region Binary Translation
         public static void CopyInFromBinary(
@@ -1071,6 +1081,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (ILandscapeTextureInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(ILandscapeTexture obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.TextureSet = obj.TextureSet.Relink(mapping);
+            obj.MaterialType = obj.MaterialType.Relink(mapping);
+            obj.Grasses.RemapLinks(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1359,35 +1380,58 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ILandscapeTextureGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ILandscapeTextureGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
-            if (obj.TextureSet.FormKeyNullable.TryGet(out var TextureSetKey))
+            if (obj.TextureSet.FormKeyNullable.HasValue)
             {
-                yield return TextureSetKey;
+                yield return FormLinkInformation.Factory(obj.TextureSet);
             }
-            yield return obj.MaterialType.FormKey;
-            foreach (var item in obj.Grasses.Select(f => f.FormKey))
+            yield return FormLinkInformation.Factory(obj.MaterialType);
+            foreach (var item in obj.Grasses)
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
         
-        public void RemapLinks(ILandscapeTextureGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(LandscapeTexture obj, LandscapeTexture rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public LandscapeTexture Duplicate(
+            ILandscapeTextureGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new LandscapeTexture(getNextFormKey(), ((ILandscapeTextureGetter)item).FormVersion);
-            ret.DeepCopyIn((LandscapeTexture)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (LandscapeTexture)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new LandscapeTexture(formKey, default(SkyrimRelease));
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override SkyrimMajorRecord Duplicate(
+            ISkyrimMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (ILandscapeTexture)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (ILandscapeTexture)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         
@@ -1854,10 +1898,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => LandscapeTextureCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LandscapeTextureCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => LandscapeTextureCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LandscapeTextureBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

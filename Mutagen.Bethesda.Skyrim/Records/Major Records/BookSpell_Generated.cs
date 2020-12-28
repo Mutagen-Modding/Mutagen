@@ -335,12 +335,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => BookSpellCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => BookSpellCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BookSpellCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BookSpellCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => BookSpellCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BookSpellSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -401,7 +397,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBookSpellGetter,
         IBookTeachTarget,
         ILoquiObjectSetter<IBookSpell>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<ISpellGetter> Spell { get; set; }
     }
@@ -409,7 +405,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IBookSpellGetter :
         IBookTeachTargetGetter,
         ILoquiObject<IBookSpellGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => BookSpell_Registration.Instance;
@@ -653,6 +649,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IBookSpell)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IBookSpell obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Spell = obj.Spell.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IBookSpell item,
@@ -815,17 +820,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IBookSpellGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IBookSpellGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
-            yield return obj.Spell.FormKey;
+            yield return FormLinkInformation.Factory(obj.Spell);
             yield break;
         }
         
-        public void RemapLinks(IBookSpellGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1043,10 +1047,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => BookSpellCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => BookSpellCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => BookSpellCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => BookSpellBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

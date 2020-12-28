@@ -570,12 +570,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = DestructionStageData_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => DestructionStageDataCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => DestructionStageDataCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DestructionStageDataCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DestructionStageDataCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => DestructionStageDataCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DestructionStageDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -637,7 +633,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IDestructionStageData :
         IDestructionStageDataGetter,
         ILoquiObjectSetter<IDestructionStageData>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new Byte HealthPercent { get; set; }
         new Byte Index { get; set; }
@@ -652,7 +648,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IDestructionStageDataGetter :
         ILoquiObject,
         ILoquiObject<IDestructionStageDataGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -943,6 +939,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.DebrisCount = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IDestructionStageData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Explosion = obj.Explosion.Relink(mapping);
+            obj.Debris = obj.Debris.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IDestructionStageData item,
@@ -1116,14 +1121,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IDestructionStageDataGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IDestructionStageDataGetter obj)
         {
-            yield return obj.Explosion.FormKey;
-            yield return obj.Debris.FormKey;
+            yield return FormLinkInformation.Factory(obj.Explosion);
+            yield return FormLinkInformation.Factory(obj.Debris);
             yield break;
         }
         
-        public void RemapLinks(IDestructionStageDataGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1384,10 +1388,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => DestructionStageDataCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => DestructionStageDataCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => DestructionStageDataCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => DestructionStageDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

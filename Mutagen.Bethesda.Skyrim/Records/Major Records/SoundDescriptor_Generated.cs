@@ -954,12 +954,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = SoundDescriptor_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => SoundDescriptorCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => SoundDescriptorCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoundDescriptorCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoundDescriptorCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => SoundDescriptorCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoundDescriptorSetterCommon.Instance.RemapLinks(this, mapping);
         public SoundDescriptor(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -1067,7 +1063,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ISound,
         ILoquiObjectSetter<ISoundDescriptorInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new MemorySlice<Byte>? CNAM { get; set; }
         new FormLinkNullable<ISoundCategoryGetter> Category { get; set; }
@@ -1096,7 +1092,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         ISoundGetter,
         ILoquiObject<ISoundDescriptorGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => SoundDescriptor_Registration.Instance;
@@ -1231,6 +1227,20 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
+
+        #region Mutagen
+        public static SoundDescriptor Duplicate(
+            this ISoundDescriptorGetter item,
+            FormKey formKey,
+            SoundDescriptor.TranslationMask? copyMask = null)
+        {
+            return ((SoundDescriptorCommon)((ISoundDescriptorGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
 
         #region Binary Translation
         public static void CopyInFromBinary(
@@ -1390,6 +1400,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (ISoundDescriptorInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(ISoundDescriptor obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Category = obj.Category.Relink(mapping);
+            obj.AlternateSoundFor = obj.AlternateSoundFor.Relink(mapping);
+            obj.OutputModel = obj.OutputModel.Relink(mapping);
+            obj.Conditions.RemapLinks(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1749,43 +1771,66 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ISoundDescriptorGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ISoundDescriptorGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
-            if (obj.Category.FormKeyNullable.TryGet(out var CategoryKey))
+            if (obj.Category.FormKeyNullable.HasValue)
             {
-                yield return CategoryKey;
+                yield return FormLinkInformation.Factory(obj.Category);
             }
-            if (obj.AlternateSoundFor.FormKeyNullable.TryGet(out var AlternateSoundForKey))
+            if (obj.AlternateSoundFor.FormKeyNullable.HasValue)
             {
-                yield return AlternateSoundForKey;
+                yield return FormLinkInformation.Factory(obj.AlternateSoundFor);
             }
-            if (obj.OutputModel.FormKeyNullable.TryGet(out var OutputModelKey))
+            if (obj.OutputModel.FormKeyNullable.HasValue)
             {
-                yield return OutputModelKey;
+                yield return FormLinkInformation.Factory(obj.OutputModel);
             }
-            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter>()
-                .SelectMany((f) => f.LinkFormKeys))
+            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.ContainedFormLinks))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
         
-        public void RemapLinks(ISoundDescriptorGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(SoundDescriptor obj, SoundDescriptor rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public SoundDescriptor Duplicate(
+            ISoundDescriptorGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new SoundDescriptor(getNextFormKey(), ((ISoundDescriptorGetter)item).FormVersion);
-            ret.DeepCopyIn((SoundDescriptor)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (SoundDescriptor)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new SoundDescriptor(formKey, default(SkyrimRelease));
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override SkyrimMajorRecord Duplicate(
+            ISkyrimMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (ISoundDescriptor)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (ISoundDescriptor)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         
@@ -2378,10 +2423,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => SoundDescriptorCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => SoundDescriptorCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => SoundDescriptorCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SoundDescriptorBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

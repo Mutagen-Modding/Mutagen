@@ -1280,6 +1280,20 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
+        #region Mutagen
+        public static CombatStyle Duplicate(
+            this ICombatStyleGetter item,
+            FormKey formKey,
+            CombatStyle.TranslationMask? copyMask = null)
+        {
+            return ((CombatStyleCommon)((ICombatStyleGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
+
         #region Binary Translation
         public static void CopyInFromBinary(
             this ICombatStyleInternal item,
@@ -1444,6 +1458,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (ICombatStyleInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(ICombatStyle obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1810,26 +1832,49 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ICombatStyleGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ICombatStyleGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
             yield break;
         }
         
-        public void RemapLinks(ICombatStyleGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(CombatStyle obj, CombatStyle rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public CombatStyle Duplicate(
+            ICombatStyleGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new CombatStyle(getNextFormKey(), ((ICombatStyleGetter)item).FormVersion);
-            ret.DeepCopyIn((CombatStyle)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (CombatStyle)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new CombatStyle(formKey, default(SkyrimRelease));
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override SkyrimMajorRecord Duplicate(
+            ISkyrimMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (ICombatStyle)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (ICombatStyle)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         

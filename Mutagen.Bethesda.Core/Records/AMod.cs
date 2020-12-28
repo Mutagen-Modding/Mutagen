@@ -43,8 +43,8 @@ namespace Mutagen.Bethesda
         }
 
         #region NonImplemented IMod 
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => throw new NotImplementedException();
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
+        IEnumerable<FormLinkInformation> IFormLinkContainerGetter.ContainedFormLinks => throw new NotImplementedException();
+        void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => throw new NotImplementedException();
         IList<MasterReference> IMod.MasterReferences => throw new NotImplementedException();
         uint IMod.NextFormID { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
@@ -91,8 +91,9 @@ namespace Mutagen.Bethesda
         /// </summary> 
         /// <param name="editorID">The target EditorID that may potentially be used for synchronization</param> 
         /// <returns>An unused FormKey</returns> 
-        public FormKey GetNextFormKey(string editorID)
+        public FormKey GetNextFormKey(string? editorID)
         {
+            if (editorID == null) return GetNextFormKey();
             return _allocator.GetNextFormKey(editorID);
         }
 

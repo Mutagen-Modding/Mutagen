@@ -453,12 +453,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = DialogBranch_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => DialogBranchCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => DialogBranchCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogBranchCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogBranchCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => DialogBranchCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogBranchSetterCommon.Instance.RemapLinks(this, mapping);
         public DialogBranch(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -561,7 +557,7 @@ namespace Mutagen.Bethesda.Skyrim
         IDialogBranchGetter,
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IDialogBranchInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IQuestGetter> Quest { get; set; }
         new Int32? TNAM { get; set; }
@@ -579,7 +575,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IDialogBranchGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IDialogBranchGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => DialogBranch_Registration.Instance;
@@ -704,6 +700,20 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
+
+        #region Mutagen
+        public static DialogBranch Duplicate(
+            this IDialogBranchGetter item,
+            FormKey formKey,
+            DialogBranch.TranslationMask? copyMask = null)
+        {
+            return ((DialogBranchCommon)((IDialogBranchGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
 
         #region Binary Translation
         public static void CopyInFromBinary(
@@ -843,6 +853,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IDialogBranchInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IDialogBranch obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Quest = obj.Quest.Relink(mapping);
+            obj.StartingTopic = obj.StartingTopic.Relink(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1090,31 +1110,54 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IDialogBranchGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IDialogBranchGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
-            yield return obj.Quest.FormKey;
-            if (obj.StartingTopic.FormKeyNullable.TryGet(out var StartingTopicKey))
+            yield return FormLinkInformation.Factory(obj.Quest);
+            if (obj.StartingTopic.FormKeyNullable.HasValue)
             {
-                yield return StartingTopicKey;
+                yield return FormLinkInformation.Factory(obj.StartingTopic);
             }
             yield break;
         }
         
-        public void RemapLinks(IDialogBranchGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(DialogBranch obj, DialogBranch rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public DialogBranch Duplicate(
+            IDialogBranchGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new DialogBranch(getNextFormKey(), ((IDialogBranchGetter)item).FormVersion);
-            ret.DeepCopyIn((DialogBranch)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (DialogBranch)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new DialogBranch(formKey, default(SkyrimRelease));
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override SkyrimMajorRecord Duplicate(
+            ISkyrimMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IDialogBranch)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IDialogBranch)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         
@@ -1503,10 +1546,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => DialogBranchCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => DialogBranchCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => DialogBranchCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => DialogBranchBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

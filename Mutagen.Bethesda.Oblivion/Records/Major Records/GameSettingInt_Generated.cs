@@ -577,6 +577,20 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
+        #region Mutagen
+        public static GameSettingInt Duplicate(
+            this IGameSettingIntGetter item,
+            FormKey formKey,
+            GameSettingInt.TranslationMask? copyMask = null)
+        {
+            return ((GameSettingIntCommon)((IGameSettingIntGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
+
         #region Binary Translation
         public static void CopyInFromBinary(
             this IGameSettingIntInternal item,
@@ -713,6 +727,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (IGameSettingIntInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IGameSettingInt obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -977,26 +999,60 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IGameSettingIntGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IGameSettingIntGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
             yield break;
         }
         
-        public void RemapLinks(IGameSettingIntGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(GameSettingInt obj, GameSettingInt rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public GameSettingInt Duplicate(
+            IGameSettingIntGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new GameSettingInt(getNextFormKey());
-            ret.DeepCopyIn((GameSettingInt)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (GameSettingInt)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new GameSettingInt(formKey);
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override GameSetting Duplicate(
+            IGameSettingGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IGameSettingInt)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override OblivionMajorRecord Duplicate(
+            IOblivionMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IGameSettingInt)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IGameSettingInt)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         

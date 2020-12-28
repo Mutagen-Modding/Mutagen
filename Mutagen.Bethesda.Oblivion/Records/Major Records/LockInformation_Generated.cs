@@ -454,12 +454,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = LockInformation_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => LockInformationCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LockInformationCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LockInformationCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LockInformationCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => LockInformationCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LockInformationSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -521,7 +517,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILockInformation :
         ILockInformationGetter,
         ILoquiObjectSetter<ILockInformation>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new Byte LockLevel { get; set; }
         new MemorySlice<Byte> Unused { get; set; }
@@ -532,7 +528,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILockInformationGetter :
         ILoquiObject,
         ILoquiObject<ILockInformationGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -811,6 +807,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Flags = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(ILockInformation obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Key = obj.Key.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ILockInformation item,
@@ -956,13 +960,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ILockInformationGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ILockInformationGetter obj)
         {
-            yield return obj.Key.FormKey;
+            yield return FormLinkInformation.Factory(obj.Key);
             yield break;
         }
         
-        public void RemapLinks(ILockInformationGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1197,10 +1200,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => LockInformationCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LockInformationCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => LockInformationCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LockInformationBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -389,12 +389,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = ExtraData_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => ExtraDataCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ExtraDataCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ExtraDataCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ExtraDataCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => ExtraDataCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ExtraDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -456,7 +452,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IExtraData :
         IExtraDataGetter,
         ILoquiObjectSetter<IExtraData>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new OwnerTarget Owner { get; set; }
         new Single ItemCondition { get; set; }
@@ -465,7 +461,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IExtraDataGetter :
         ILoquiObject,
         ILoquiObject<IExtraDataGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -738,6 +734,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ItemCondition = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IExtraData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Owner.RemapLinks(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IExtraData item,
@@ -869,11 +873,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IExtraDataGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IExtraDataGetter obj)
         {
-            if (obj.Owner is ILinkedFormKeyContainerGetter OwnerlinkCont)
+            if (obj.Owner is IFormLinkContainerGetter OwnerlinkCont)
             {
-                foreach (var item in OwnerlinkCont.LinkFormKeys)
+                foreach (var item in OwnerlinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
@@ -881,7 +885,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IExtraDataGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1136,10 +1139,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => ExtraDataCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ExtraDataCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => ExtraDataCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ExtraDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

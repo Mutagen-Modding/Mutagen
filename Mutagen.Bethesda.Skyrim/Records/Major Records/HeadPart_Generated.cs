@@ -793,12 +793,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = HeadPart_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => HeadPartCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => HeadPartCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadPartCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadPartCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => HeadPartCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadPartSetterCommon.Instance.RemapLinks(this, mapping);
         public HeadPart(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -908,7 +904,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamed,
         IModeled,
         ILoquiObjectSetter<IHeadPartInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new TranslatedString? Name { get; set; }
         new Model? Model { get; set; }
@@ -937,7 +933,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         IModeledGetter,
         ILoquiObject<IHeadPartGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => HeadPart_Registration.Instance;
@@ -1071,6 +1067,20 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
+
+        #region Mutagen
+        public static HeadPart Duplicate(
+            this IHeadPartGetter item,
+            FormKey formKey,
+            HeadPart.TranslationMask? copyMask = null)
+        {
+            return ((HeadPartCommon)((IHeadPartGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
 
         #region Binary Translation
         public static void CopyInFromBinary(
@@ -1220,6 +1230,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IHeadPartInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IHeadPart obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Model?.RemapLinks(mapping);
+            obj.ExtraParts.RemapLinks(mapping);
+            obj.TextureSet = obj.TextureSet.Relink(mapping);
+            obj.Color = obj.Color.Relink(mapping);
+            obj.ValidRaces = obj.ValidRaces.Relink(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1544,49 +1567,72 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IHeadPartGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IHeadPartGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.Model.TryGet(out var ModelItems))
             {
-                foreach (var item in ModelItems.LinkFormKeys)
+                foreach (var item in ModelItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            foreach (var item in obj.ExtraParts.Select(f => f.FormKey))
+            foreach (var item in obj.ExtraParts)
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
-            if (obj.TextureSet.FormKeyNullable.TryGet(out var TextureSetKey))
+            if (obj.TextureSet.FormKeyNullable.HasValue)
             {
-                yield return TextureSetKey;
+                yield return FormLinkInformation.Factory(obj.TextureSet);
             }
-            if (obj.Color.FormKeyNullable.TryGet(out var ColorKey))
+            if (obj.Color.FormKeyNullable.HasValue)
             {
-                yield return ColorKey;
+                yield return FormLinkInformation.Factory(obj.Color);
             }
-            if (obj.ValidRaces.FormKeyNullable.TryGet(out var ValidRacesKey))
+            if (obj.ValidRaces.FormKeyNullable.HasValue)
             {
-                yield return ValidRacesKey;
+                yield return FormLinkInformation.Factory(obj.ValidRaces);
             }
             yield break;
         }
         
-        public void RemapLinks(IHeadPartGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(HeadPart obj, HeadPart rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public HeadPart Duplicate(
+            IHeadPartGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new HeadPart(getNextFormKey(), ((IHeadPartGetter)item).FormVersion);
-            ret.DeepCopyIn((HeadPart)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (HeadPart)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new HeadPart(formKey, default(SkyrimRelease));
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override SkyrimMajorRecord Duplicate(
+            ISkyrimMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IHeadPart)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IHeadPart)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         
@@ -2135,10 +2181,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => HeadPartCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => HeadPartCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => HeadPartCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => HeadPartBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

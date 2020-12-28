@@ -355,12 +355,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = PerkEntryPointAddLeveledItem_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => PerkEntryPointAddLeveledItemCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PerkEntryPointAddLeveledItemCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkEntryPointAddLeveledItemCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkEntryPointAddLeveledItemCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => PerkEntryPointAddLeveledItemCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkEntryPointAddLeveledItemSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -421,7 +417,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPerkEntryPointAddLeveledItemGetter,
         IAPerkEntryPointEffect,
         ILoquiObjectSetter<IPerkEntryPointAddLeveledItem>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<ILeveledItemGetter> Item { get; set; }
     }
@@ -429,7 +425,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPerkEntryPointAddLeveledItemGetter :
         IAPerkEntryPointEffectGetter,
         ILoquiObject<IPerkEntryPointAddLeveledItemGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => PerkEntryPointAddLeveledItem_Registration.Instance;
@@ -685,6 +681,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IPerkEntryPointAddLeveledItem)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IPerkEntryPointAddLeveledItem obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Item = obj.Item.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IPerkEntryPointAddLeveledItem item,
@@ -902,17 +907,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IPerkEntryPointAddLeveledItemGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IPerkEntryPointAddLeveledItemGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
-            yield return obj.Item.FormKey;
+            yield return FormLinkInformation.Factory(obj.Item);
             yield break;
         }
         
-        public void RemapLinks(IPerkEntryPointAddLeveledItemGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1167,10 +1171,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => PerkEntryPointAddLeveledItemCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PerkEntryPointAddLeveledItemCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => PerkEntryPointAddLeveledItemCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PerkEntryPointAddLeveledItemBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

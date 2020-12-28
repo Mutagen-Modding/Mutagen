@@ -1690,12 +1690,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => QuestAliasCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => QuestAliasCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestAliasCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestAliasCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => QuestAliasCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestAliasSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -1758,7 +1754,7 @@ namespace Mutagen.Bethesda.Skyrim
         IQuestAliasGetter,
         IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<IQuestAlias>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new UInt32 ID { get; set; }
         new QuestAlias.TypeEnum Type { get; set; }
@@ -1791,7 +1787,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IQuestAliasGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -2143,6 +2139,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.PackageData.Clear();
             item.VoiceTypes = FormLinkNullable<IAliasVoiceTypeGetter>.Null;
         }
+        
+        #region Mutagen
+        public void RemapLinks(IQuestAlias obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.SpecificLocation = obj.SpecificLocation.Relink(mapping);
+            obj.ForcedReference = obj.ForcedReference.Relink(mapping);
+            obj.UniqueActor = obj.UniqueActor.Relink(mapping);
+            obj.Location?.RemapLinks(mapping);
+            obj.External?.RemapLinks(mapping);
+            obj.CreateReferenceToObject?.RemapLinks(mapping);
+            obj.Conditions.RemapLinks(mapping);
+            obj.Keywords?.RemapLinks(mapping);
+            obj.Items?.RemapLinks(mapping);
+            obj.SpectatorOverridePackageList = obj.SpectatorOverridePackageList.Relink(mapping);
+            obj.ObserveDeadBodyOverridePackageList = obj.ObserveDeadBodyOverridePackageList.Relink(mapping);
+            obj.GuardWarnOverridePackageList = obj.GuardWarnOverridePackageList.Relink(mapping);
+            obj.CombatOverridePackageList = obj.CombatOverridePackageList.Relink(mapping);
+            obj.DisplayName = obj.DisplayName.Relink(mapping);
+            obj.Spells.RemapLinks(mapping);
+            obj.Factions.RemapLinks(mapping);
+            obj.PackageData.RemapLinks(mapping);
+            obj.VoiceTypes = obj.VoiceTypes.Relink(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -2590,101 +2611,100 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IQuestAliasGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IQuestAliasGetter obj)
         {
-            if (obj.SpecificLocation.FormKeyNullable.TryGet(out var SpecificLocationKey))
+            if (obj.SpecificLocation.FormKeyNullable.HasValue)
             {
-                yield return SpecificLocationKey;
+                yield return FormLinkInformation.Factory(obj.SpecificLocation);
             }
-            if (obj.ForcedReference.FormKeyNullable.TryGet(out var ForcedReferenceKey))
+            if (obj.ForcedReference.FormKeyNullable.HasValue)
             {
-                yield return ForcedReferenceKey;
+                yield return FormLinkInformation.Factory(obj.ForcedReference);
             }
-            if (obj.UniqueActor.FormKeyNullable.TryGet(out var UniqueActorKey))
+            if (obj.UniqueActor.FormKeyNullable.HasValue)
             {
-                yield return UniqueActorKey;
+                yield return FormLinkInformation.Factory(obj.UniqueActor);
             }
             if (obj.Location.TryGet(out var LocationItems))
             {
-                foreach (var item in LocationItems.LinkFormKeys)
+                foreach (var item in LocationItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
             if (obj.External.TryGet(out var ExternalItems))
             {
-                foreach (var item in ExternalItems.LinkFormKeys)
+                foreach (var item in ExternalItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
             if (obj.CreateReferenceToObject.TryGet(out var CreateReferenceToObjectItems))
             {
-                foreach (var item in CreateReferenceToObjectItems.LinkFormKeys)
+                foreach (var item in CreateReferenceToObjectItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter>()
-                .SelectMany((f) => f.LinkFormKeys))
+            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.ContainedFormLinks))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
             if (obj.Keywords.TryGet(out var KeywordsItem))
             {
-                foreach (var item in KeywordsItem.Select(f => f.FormKey))
+                foreach (var item in KeywordsItem)
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.Items.TryGet(out var ItemsItem))
             {
-                foreach (var item in ItemsItem.WhereCastable<IContainerEntryGetter, ILinkedFormKeyContainerGetter>()
-                    .SelectMany((f) => f.LinkFormKeys))
+                foreach (var item in ItemsItem.WhereCastable<IContainerEntryGetter, IFormLinkContainerGetter>()
+                    .SelectMany((f) => f.ContainedFormLinks))
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.SpectatorOverridePackageList.FormKeyNullable.TryGet(out var SpectatorOverridePackageListKey))
+            if (obj.SpectatorOverridePackageList.FormKeyNullable.HasValue)
             {
-                yield return SpectatorOverridePackageListKey;
+                yield return FormLinkInformation.Factory(obj.SpectatorOverridePackageList);
             }
-            if (obj.ObserveDeadBodyOverridePackageList.FormKeyNullable.TryGet(out var ObserveDeadBodyOverridePackageListKey))
+            if (obj.ObserveDeadBodyOverridePackageList.FormKeyNullable.HasValue)
             {
-                yield return ObserveDeadBodyOverridePackageListKey;
+                yield return FormLinkInformation.Factory(obj.ObserveDeadBodyOverridePackageList);
             }
-            if (obj.GuardWarnOverridePackageList.FormKeyNullable.TryGet(out var GuardWarnOverridePackageListKey))
+            if (obj.GuardWarnOverridePackageList.FormKeyNullable.HasValue)
             {
-                yield return GuardWarnOverridePackageListKey;
+                yield return FormLinkInformation.Factory(obj.GuardWarnOverridePackageList);
             }
-            if (obj.CombatOverridePackageList.FormKeyNullable.TryGet(out var CombatOverridePackageListKey))
+            if (obj.CombatOverridePackageList.FormKeyNullable.HasValue)
             {
-                yield return CombatOverridePackageListKey;
+                yield return FormLinkInformation.Factory(obj.CombatOverridePackageList);
             }
-            if (obj.DisplayName.FormKeyNullable.TryGet(out var DisplayNameKey))
+            if (obj.DisplayName.FormKeyNullable.HasValue)
             {
-                yield return DisplayNameKey;
+                yield return FormLinkInformation.Factory(obj.DisplayName);
             }
-            foreach (var item in obj.Spells.Select(f => f.FormKey))
+            foreach (var item in obj.Spells)
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.Factions.Select(f => f.FormKey))
+            foreach (var item in obj.Factions)
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.PackageData.Select(f => f.FormKey))
+            foreach (var item in obj.PackageData)
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
-            if (obj.VoiceTypes.FormKeyNullable.TryGet(out var VoiceTypesKey))
+            if (obj.VoiceTypes.FormKeyNullable.HasValue)
             {
-                yield return VoiceTypesKey;
+                yield return FormLinkInformation.Factory(obj.VoiceTypes);
             }
             yield break;
         }
         
-        public void RemapLinks(IQuestAliasGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -3643,10 +3663,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => QuestAliasCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => QuestAliasCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => QuestAliasCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => QuestAliasBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

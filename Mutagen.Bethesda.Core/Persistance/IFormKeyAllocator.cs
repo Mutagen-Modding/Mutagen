@@ -20,6 +20,6 @@ namespace Mutagen.Bethesda
         /// The EditorID can be used to provide persistance syncronization by the implementation.
         /// </summary>
         /// <returns>An unused FormKey</returns>
-        FormKey GetNextFormKey(string editorID);
+        FormKey GetNextFormKey(string? editorID);
     }
 }

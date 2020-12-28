@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFrameworks>net5.0;netcoreapp3.1</TargetFrameworks>
     <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
@@ -22,10 +22,10 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Loqui" Version="1.5.16" />
+    <PackageReference Include="Loqui" Version="2.1.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.6.8" />
-    <PackageReference Include="NuGetizer" Version="0.4.11">
+    <PackageReference Include="Noggog.CSharpExt" Version="2.2.0" />
+    <PackageReference Include="NuGetizer" Version="0.6.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

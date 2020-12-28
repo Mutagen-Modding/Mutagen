@@ -668,6 +668,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IAlphaLayer)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IAlphaLayer obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IAlphaLayer item,
@@ -837,16 +845,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IAlphaLayerGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IAlphaLayerGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
             yield break;
         }
         
-        public void RemapLinks(IAlphaLayerGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

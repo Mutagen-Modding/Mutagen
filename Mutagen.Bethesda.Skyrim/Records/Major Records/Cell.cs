@@ -65,14 +65,6 @@ namespace Mutagen.Bethesda.Skyrim
 
     namespace Internals
     {
-        public partial class CellCommon
-        {
-            partial void PostDuplicate(Cell obj, Cell rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
-            {
-                obj.Temporary.SetTo(new ExtendedList<IPlaced>(rhs.Temporary.Select((i) => (IPlaced)i.Duplicate(getNextFormKey, duplicatedRecords))));
-            }
-        }
-
         public partial class CellBinaryCreateTranslation
         {
             static partial void CustomBinaryEndImport(MutagenFrame frame, ICellInternal obj)

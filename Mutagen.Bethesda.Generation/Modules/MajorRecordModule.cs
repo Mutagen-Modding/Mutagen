@@ -20,36 +20,6 @@ namespace Mutagen.Bethesda.Generation
             await base.LoadWrapup(obj);
         }
 
-        public override async Task GenerateInCommon(ObjectGeneration obj, FileGeneration fg, MaskTypeSet maskTypes)
-        {
-            if (!await obj.IsMajorRecord()) return;
-            if (!maskTypes.Applicable(LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)) return;
-            //ToDo
-            // Modify to getter interface after copy is refactored
-            fg.AppendLine($"partial void PostDuplicate({obj.Name} obj, {obj.ObjectName} rhs, Func<FormKey> getNextFormKey, IList<({nameof(IMajorRecordCommon)} Record, FormKey OriginalFormKey)>? duplicatedRecords);");
-            fg.AppendLine();
-
-            fg.AppendLine($"public{obj.FunctionOverride()}{nameof(IMajorRecordCommon)} Duplicate({nameof(IMajorRecordCommonGetter)} item, Func<FormKey> getNextFormKey, IList<({nameof(IMajorRecordCommon)} Record, FormKey OriginalFormKey)>? duplicatedRecords)");
-            using (new BraceWrapper(fg))
-            {
-                if (obj.Abstract)
-                {
-                    fg.AppendLine($"throw new {nameof(NotImplementedException)}();");
-                }
-                else
-                {
-                    fg.AppendLine($"var ret = new {obj.Name}(getNextFormKey(){((obj.GetObjectData().GameCategory?.HasFormVersion() ?? false) ? $", (({obj.Interface(getter: true)})item).FormVersion" : string.Empty)});");
-                    //ToDo
-                    // Modify to getter interface after copy is refactored
-                    fg.AppendLine($"ret.DeepCopyIn(({obj.ObjectName})item);");
-                    fg.AppendLine("duplicatedRecords?.Add((ret, item.FormKey));");
-                    fg.AppendLine($"PostDuplicate(ret, ({obj.ObjectName})item, getNextFormKey, duplicatedRecords);");
-                    fg.AppendLine("return ret;");
-                }
-            }
-            fg.AppendLine();
-        }
-
         public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
         {
             await base.GenerateInClass(obj, fg);
@@ -58,7 +28,7 @@ namespace Mutagen.Bethesda.Generation
                 $"public {obj.Name}"))
             {
                 args.Add($"{nameof(FormKey)} formKey");
-                if (obj.GetObjectData().GameCategory?.HasFormVersion() ?? false)
+                if (obj.GetObjectData().HasMultipleReleases)
                 {
                     args.Add($"{obj.GetObjectData().GameCategory}Release gameRelease");
                 }
@@ -66,7 +36,7 @@ namespace Mutagen.Bethesda.Generation
             using (new BraceWrapper(fg))
             {
                 fg.AppendLine("this.FormKey = formKey;");
-                if (obj.GetObjectData().GameCategory?.HasFormVersion() ?? false)
+                if (obj.GetObjectData().HasMultipleReleases)
                 {
                     fg.AppendLine("this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;");
                 }
@@ -143,31 +113,6 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine("this.EditorID = editorID;");
             }
             fg.AppendLine();
-        }
-
-        public override async Task GenerateInCommonMixin(ObjectGeneration obj, FileGeneration fg)
-        {
-            if (!await obj.IsMajorRecord()) return;
-            if (!obj.IsTopClass) return;
-            using (var args = new FunctionWrapper(fg,
-                $"public static {nameof(IMajorRecordCommon)} {nameof(IDuplicatable.Duplicate)}"))
-            {
-                //ToDo
-                // Modify to getter interface after copy is refactored
-                args.Add($"this {obj.ObjectName} item");
-                args.Add("Func<FormKey> getNextFormKey");
-                args.Add($"IList<({nameof(IMajorRecordCommon)} Record, FormKey OriginalFormKey)>? duplicatedRecords = null");
-            }
-            using (new BraceWrapper(fg))
-            {
-                using (var args = new ArgsWrapper(fg,
-                     $"return {obj.CommonClassInstance("item", LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.{nameof(IDuplicatable.Duplicate)}"))
-                {
-                    args.AddPassArg("item");
-                    args.AddPassArg("getNextFormKey");
-                    args.AddPassArg("duplicatedRecords");
-                }
-            }
         }
 
         public static async Task<Case> HasMajorRecordsInTree(ObjectGeneration obj, bool includeBaseClass, GenericSpecification specifications = null)

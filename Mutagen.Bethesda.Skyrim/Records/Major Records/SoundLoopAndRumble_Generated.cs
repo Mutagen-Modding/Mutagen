@@ -795,6 +795,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.RumbleValues = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(ISoundLoopAndRumble obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ISoundLoopAndRumble item,
@@ -940,12 +947,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ISoundLoopAndRumbleGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ISoundLoopAndRumbleGetter obj)
         {
             yield break;
         }
         
-        public void RemapLinks(ISoundLoopAndRumbleGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

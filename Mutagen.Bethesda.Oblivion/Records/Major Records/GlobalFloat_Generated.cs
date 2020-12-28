@@ -577,6 +577,20 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
+        #region Mutagen
+        public static GlobalFloat Duplicate(
+            this IGlobalFloatGetter item,
+            FormKey formKey,
+            GlobalFloat.TranslationMask? copyMask = null)
+        {
+            return ((GlobalFloatCommon)((IGlobalFloatGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
+
         #region Binary Translation
         public static void CopyInFromBinary(
             this IGlobalFloatInternal item,
@@ -713,6 +727,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (IGlobalFloatInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IGlobalFloat obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -977,26 +999,60 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IGlobalFloatGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IGlobalFloatGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
             yield break;
         }
         
-        public void RemapLinks(IGlobalFloatGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(GlobalFloat obj, GlobalFloat rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public GlobalFloat Duplicate(
+            IGlobalFloatGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new GlobalFloat(getNextFormKey());
-            ret.DeepCopyIn((GlobalFloat)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (GlobalFloat)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new GlobalFloat(formKey);
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override Global Duplicate(
+            IGlobalGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IGlobalFloat)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override OblivionMajorRecord Duplicate(
+            IOblivionMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IGlobalFloat)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IGlobalFloat)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         

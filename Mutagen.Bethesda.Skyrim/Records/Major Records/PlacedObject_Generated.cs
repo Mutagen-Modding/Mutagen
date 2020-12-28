@@ -2957,12 +2957,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = PlacedObject_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => PlacedObjectCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PlacedObjectCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedObjectCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedObjectCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => PlacedObjectCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedObjectSetterCommon.Instance.RemapLinks(this, mapping);
         public PlacedObject(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -3071,7 +3067,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPlacedThing,
         ILocationTargetable,
         ILoquiObjectSetter<IPlacedObjectInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new FormLinkNullable<ISkyrimMajorRecordGetter> Base { get; set; }
@@ -3149,7 +3145,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPlacedThingGetter,
         ILocationTargetableGetter,
         ILoquiObject<IPlacedObjectGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => PlacedObject_Registration.Instance;
@@ -3328,6 +3324,20 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
+
+        #region Mutagen
+        public static PlacedObject Duplicate(
+            this IPlacedObjectGetter item,
+            FormKey formKey,
+            PlacedObject.TranslationMask? copyMask = null)
+        {
+            return ((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
 
         #region Binary Translation
         public static void CopyInFromBinary(
@@ -3580,6 +3590,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IPlacedObjectInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IPlacedObject obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
+            obj.Base = obj.Base.Relink(mapping);
+            obj.Portals?.RemapLinks(mapping);
+            obj.LightingTemplate = obj.LightingTemplate.Relink(mapping);
+            obj.ImageSpace = obj.ImageSpace.Relink(mapping);
+            obj.LinkedRooms.RemapLinks(mapping);
+            obj.Reflections.RemapLinks(mapping);
+            obj.LitWater.RemapLinks(mapping);
+            obj.Emittance = obj.Emittance.Relink(mapping);
+            obj.TeleportDestination?.RemapLinks(mapping);
+            obj.TeleportMessageBox = obj.TeleportMessageBox.Relink(mapping);
+            obj.MultiboundReference = obj.MultiboundReference.Relink(mapping);
+            obj.XCZR = obj.XCZR.Relink(mapping);
+            obj.XCZC = obj.XCZC.Relink(mapping);
+            obj.SpawnContainer = obj.SpawnContainer.Relink(mapping);
+            obj.ActivateParents?.RemapLinks(mapping);
+            obj.LeveledItemBaseObject = obj.LeveledItemBaseObject.Relink(mapping);
+            obj.PersistentLocation = obj.PersistentLocation.Relink(mapping);
+            obj.Lock?.RemapLinks(mapping);
+            obj.EncounterZone = obj.EncounterZone.Relink(mapping);
+            obj.NavigationDoorLink?.RemapLinks(mapping);
+            obj.LocationRefTypes?.RemapLinks(mapping);
+            obj.Ownership?.RemapLinks(mapping);
+            obj.LocationReference = obj.LocationReference.Relink(mapping);
+            obj.EnableParent?.RemapLinks(mapping);
+            obj.LinkedReferences.RemapLinks(mapping);
+            obj.Patrol?.RemapLinks(mapping);
+            obj.AttachRef = obj.AttachRef.Relink(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -4547,168 +4593,202 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IPlacedObjectGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IPlacedObjectGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
-            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainerGetter VirtualMachineAdapterlinkCont)
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
             {
-                foreach (var item in VirtualMachineAdapterlinkCont.LinkFormKeys)
+                foreach (var item in VirtualMachineAdapterlinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.Base.FormKeyNullable.TryGet(out var BaseKey))
+            if (obj.Base.FormKeyNullable.HasValue)
             {
-                yield return BaseKey;
+                yield return FormLinkInformation.Factory(obj.Base);
             }
             if (obj.Portals.TryGet(out var PortalsItem))
             {
-                foreach (var item in PortalsItem.SelectMany(f => f.LinkFormKeys))
+                foreach (var item in PortalsItem.SelectMany(f => f.ContainedFormLinks))
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.LightingTemplate.FormKeyNullable.TryGet(out var LightingTemplateKey))
+            if (obj.LightingTemplate.FormKeyNullable.HasValue)
             {
-                yield return LightingTemplateKey;
+                yield return FormLinkInformation.Factory(obj.LightingTemplate);
             }
-            if (obj.ImageSpace.FormKeyNullable.TryGet(out var ImageSpaceKey))
+            if (obj.ImageSpace.FormKeyNullable.HasValue)
             {
-                yield return ImageSpaceKey;
+                yield return FormLinkInformation.Factory(obj.ImageSpace);
             }
-            foreach (var item in obj.LinkedRooms.Select(f => f.FormKey))
+            foreach (var item in obj.LinkedRooms)
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.Reflections.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.Reflections.SelectMany(f => f.ContainedFormLinks))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.LitWater.Select(f => f.FormKey))
+            foreach (var item in obj.LitWater)
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
-            if (obj.Emittance.FormKeyNullable.TryGet(out var EmittanceKey))
+            if (obj.Emittance.FormKeyNullable.HasValue)
             {
-                yield return EmittanceKey;
+                yield return FormLinkInformation.Factory(obj.Emittance);
             }
             if (obj.TeleportDestination.TryGet(out var TeleportDestinationItems))
             {
-                foreach (var item in TeleportDestinationItems.LinkFormKeys)
+                foreach (var item in TeleportDestinationItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.TeleportMessageBox.FormKeyNullable.TryGet(out var TeleportMessageBoxKey))
+            if (obj.TeleportMessageBox.FormKeyNullable.HasValue)
             {
-                yield return TeleportMessageBoxKey;
+                yield return FormLinkInformation.Factory(obj.TeleportMessageBox);
             }
-            if (obj.MultiboundReference.FormKeyNullable.TryGet(out var MultiboundReferenceKey))
+            if (obj.MultiboundReference.FormKeyNullable.HasValue)
             {
-                yield return MultiboundReferenceKey;
+                yield return FormLinkInformation.Factory(obj.MultiboundReference);
             }
-            if (obj.XCZR.FormKeyNullable.TryGet(out var XCZRKey))
+            if (obj.XCZR.FormKeyNullable.HasValue)
             {
-                yield return XCZRKey;
+                yield return FormLinkInformation.Factory(obj.XCZR);
             }
-            if (obj.XCZC.FormKeyNullable.TryGet(out var XCZCKey))
+            if (obj.XCZC.FormKeyNullable.HasValue)
             {
-                yield return XCZCKey;
+                yield return FormLinkInformation.Factory(obj.XCZC);
             }
-            if (obj.SpawnContainer.FormKeyNullable.TryGet(out var SpawnContainerKey))
+            if (obj.SpawnContainer.FormKeyNullable.HasValue)
             {
-                yield return SpawnContainerKey;
+                yield return FormLinkInformation.Factory(obj.SpawnContainer);
             }
             if (obj.ActivateParents.TryGet(out var ActivateParentsItems))
             {
-                foreach (var item in ActivateParentsItems.LinkFormKeys)
+                foreach (var item in ActivateParentsItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.LeveledItemBaseObject.FormKeyNullable.TryGet(out var LeveledItemBaseObjectKey))
+            if (obj.LeveledItemBaseObject.FormKeyNullable.HasValue)
             {
-                yield return LeveledItemBaseObjectKey;
+                yield return FormLinkInformation.Factory(obj.LeveledItemBaseObject);
             }
-            if (obj.PersistentLocation.FormKeyNullable.TryGet(out var PersistentLocationKey))
+            if (obj.PersistentLocation.FormKeyNullable.HasValue)
             {
-                yield return PersistentLocationKey;
+                yield return FormLinkInformation.Factory(obj.PersistentLocation);
             }
             if (obj.Lock.TryGet(out var LockItems))
             {
-                foreach (var item in LockItems.LinkFormKeys)
+                foreach (var item in LockItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.EncounterZone.FormKeyNullable.TryGet(out var EncounterZoneKey))
+            if (obj.EncounterZone.FormKeyNullable.HasValue)
             {
-                yield return EncounterZoneKey;
+                yield return FormLinkInformation.Factory(obj.EncounterZone);
             }
             if (obj.NavigationDoorLink.TryGet(out var NavigationDoorLinkItems))
             {
-                foreach (var item in NavigationDoorLinkItems.LinkFormKeys)
+                foreach (var item in NavigationDoorLinkItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
             if (obj.LocationRefTypes.TryGet(out var LocationRefTypesItem))
             {
-                foreach (var item in LocationRefTypesItem.Select(f => f.FormKey))
+                foreach (var item in LocationRefTypesItem)
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.Ownership.TryGet(out var OwnershipItems))
             {
-                foreach (var item in OwnershipItems.LinkFormKeys)
+                foreach (var item in OwnershipItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.LocationReference.FormKeyNullable.TryGet(out var LocationReferenceKey))
+            if (obj.LocationReference.FormKeyNullable.HasValue)
             {
-                yield return LocationReferenceKey;
+                yield return FormLinkInformation.Factory(obj.LocationReference);
             }
             if (obj.EnableParent.TryGet(out var EnableParentItems))
             {
-                foreach (var item in EnableParentItems.LinkFormKeys)
+                foreach (var item in EnableParentItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            foreach (var item in obj.LinkedReferences.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.LinkedReferences.SelectMany(f => f.ContainedFormLinks))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
             if (obj.Patrol.TryGet(out var PatrolItems))
             {
-                foreach (var item in PatrolItems.LinkFormKeys)
+                foreach (var item in PatrolItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.AttachRef.FormKeyNullable.TryGet(out var AttachRefKey))
+            if (obj.AttachRef.FormKeyNullable.HasValue)
             {
-                yield return AttachRefKey;
+                yield return FormLinkInformation.Factory(obj.AttachRef);
             }
             yield break;
         }
         
-        public void RemapLinks(IPlacedObjectGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(PlacedObject obj, PlacedObject rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public PlacedObject Duplicate(
+            IPlacedObjectGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new PlacedObject(getNextFormKey(), ((IPlacedObjectGetter)item).FormVersion);
-            ret.DeepCopyIn((PlacedObject)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (PlacedObject)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new PlacedObject(formKey, default(SkyrimRelease));
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override APlaced Duplicate(
+            IAPlacedGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IPlacedObject)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override SkyrimMajorRecord Duplicate(
+            ISkyrimMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IPlacedObject)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IPlacedObject)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         
@@ -6541,10 +6621,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => PlacedObjectCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PlacedObjectCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => PlacedObjectCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PlacedObjectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

@@ -1486,6 +1486,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.W = null;
         }
         
+        #region Mutagen
+        public void RemapLinks(IFaceFxPhonemes obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IFaceFxPhonemes item,
@@ -1847,12 +1854,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IFaceFxPhonemesGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IFaceFxPhonemesGetter obj)
         {
             yield break;
         }
         
-        public void RemapLinks(IFaceFxPhonemesGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

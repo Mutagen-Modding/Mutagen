@@ -684,6 +684,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (INoOwner)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(INoOwner obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             INoOwner item,
@@ -853,16 +861,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(INoOwnerGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(INoOwnerGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
             yield break;
         }
         
-        public void RemapLinks(INoOwnerGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

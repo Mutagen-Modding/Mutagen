@@ -608,6 +608,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IMagicEffectGuideArchetypeInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IMagicEffectGuideArchetype obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IMagicEffectGuideArchetypeInternal item,
@@ -769,12 +776,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IMagicEffectGuideArchetypeGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IMagicEffectGuideArchetypeGetter obj)
         {
             yield break;
         }
         
-        public void RemapLinks(IMagicEffectGuideArchetypeGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

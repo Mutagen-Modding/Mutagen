@@ -423,12 +423,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = RankPlacement_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => RankPlacementCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => RankPlacementCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RankPlacementCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RankPlacementCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => RankPlacementCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RankPlacementSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -490,7 +486,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IRankPlacement :
         IRankPlacementGetter,
         ILoquiObjectSetter<IRankPlacement>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IFactionGetter> Faction { get; set; }
         new Byte Rank { get; set; }
@@ -500,7 +496,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IRankPlacementGetter :
         ILoquiObject,
         ILoquiObject<IRankPlacementGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -776,6 +772,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Fluff = new byte[3];
         }
         
+        #region Mutagen
+        public void RemapLinks(IRankPlacement obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Faction = obj.Faction.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IRankPlacement item,
@@ -914,13 +918,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IRankPlacementGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IRankPlacementGetter obj)
         {
-            yield return obj.Faction.FormKey;
+            yield return FormLinkInformation.Factory(obj.Faction);
             yield break;
         }
         
-        public void RemapLinks(IRankPlacementGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1146,10 +1149,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => RankPlacementCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => RankPlacementCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => RankPlacementCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => RankPlacementBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

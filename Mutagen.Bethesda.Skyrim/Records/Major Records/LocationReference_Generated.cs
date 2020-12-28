@@ -414,12 +414,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => LocationReferenceCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LocationReferenceCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationReferenceCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationReferenceCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => LocationReferenceCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationReferenceSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -481,7 +477,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILocationReference :
         ILocationReferenceGetter,
         ILoquiObjectSetter<ILocationReference>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<ILinkedReferenceGetter> Actor { get; set; }
         new FormLink<IComplexLocationGetter> Location { get; set; }
@@ -491,7 +487,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILocationReferenceGetter :
         ILoquiObject,
         ILoquiObject<ILocationReferenceGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -766,6 +762,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Grid = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(ILocationReference obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Actor = obj.Actor.Relink(mapping);
+            obj.Location = obj.Location.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ILocationReference item,
@@ -901,14 +906,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ILocationReferenceGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ILocationReferenceGetter obj)
         {
-            yield return obj.Actor.FormKey;
-            yield return obj.Location.FormKey;
+            yield return FormLinkInformation.Factory(obj.Actor);
+            yield return FormLinkInformation.Factory(obj.Location);
             yield break;
         }
         
-        public void RemapLinks(ILocationReferenceGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1135,10 +1139,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => LocationReferenceCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LocationReferenceCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => LocationReferenceCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LocationReferenceBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

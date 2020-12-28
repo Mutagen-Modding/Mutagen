@@ -1046,12 +1046,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected virtual IEnumerable<FormKey> LinkFormKeys => ANavigationMeshDataCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ANavigationMeshDataCommon.Instance.GetLinkFormKeys(this);
-        protected virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ANavigationMeshDataCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ANavigationMeshDataCommon.Instance.RemapLinks(this, mapping);
+        public virtual IEnumerable<FormLinkInformation> ContainedFormLinks => ANavigationMeshDataCommon.Instance.GetContainedFormLinks(this);
+        public virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ANavigationMeshDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -1089,7 +1085,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IANavigationMeshData :
         IANavigationMeshDataGetter,
         ILoquiObjectSetter<IANavigationMeshData>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new UInt32 NavmeshVersion { get; set; }
         new UInt32 Magic { get; set; }
@@ -1108,7 +1104,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IANavigationMeshDataGetter :
         ILoquiObject,
         ILoquiObject<IANavigationMeshDataGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -1410,6 +1406,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.NavmeshGrid = new byte[0];
         }
         
+        #region Mutagen
+        public void RemapLinks(IANavigationMeshData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.EdgeLinks.RemapLinks(mapping);
+            obj.DoorTriangles.RemapLinks(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IANavigationMeshData item,
@@ -1671,20 +1676,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IANavigationMeshDataGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IANavigationMeshDataGetter obj)
         {
-            foreach (var item in obj.EdgeLinks.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.EdgeLinks.SelectMany(f => f.ContainedFormLinks))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.DoorTriangles.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.DoorTriangles.SelectMany(f => f.ContainedFormLinks))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
         
-        public void RemapLinks(IANavigationMeshDataGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -2153,10 +2157,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected virtual IEnumerable<FormKey> LinkFormKeys => ANavigationMeshDataCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ANavigationMeshDataCommon.Instance.GetLinkFormKeys(this);
+        public virtual IEnumerable<FormLinkInformation> ContainedFormLinks => ANavigationMeshDataCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => ANavigationMeshDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

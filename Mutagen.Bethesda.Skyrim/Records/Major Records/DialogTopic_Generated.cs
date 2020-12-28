@@ -785,12 +785,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = DialogTopic_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => DialogTopicCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => DialogTopicCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogTopicCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogTopicCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => DialogTopicCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogTopicSetterCommon.Instance.RemapLinks(this, mapping);
         public DialogTopic(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -934,7 +930,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamed,
         IMajorRecordEnumerable,
         ILoquiObjectSetter<IDialogTopicInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new TranslatedString? Name { get; set; }
         new Single Priority { get; set; }
@@ -963,7 +959,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedGetter,
         IMajorRecordGetterEnumerable,
         ILoquiObject<IDialogTopicGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => DialogTopic_Registration.Instance;
@@ -1310,6 +1306,17 @@ namespace Mutagen.Bethesda.Skyrim
                 throwIfUnknown: throwIfUnknown);
         }
 
+        public static DialogTopic Duplicate(
+            this IDialogTopicGetter item,
+            FormKey formKey,
+            DialogTopic.TranslationMask? copyMask = null)
+        {
+            return ((DialogTopicCommon)((IDialogTopicGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1468,6 +1475,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
+        public void RemapLinks(IDialogTopic obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Branch = obj.Branch.Relink(mapping);
+            obj.Quest = obj.Quest.Relink(mapping);
+            obj.Responses.RemapLinks(mapping);
+        }
+        
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IDialogTopicInternal obj)
         {
             foreach (var item in DialogTopicCommon.Instance.EnumerateMajorRecords(obj))
@@ -1851,37 +1866,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IDialogTopicGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IDialogTopicGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
-            if (obj.Branch.FormKeyNullable.TryGet(out var BranchKey))
+            if (obj.Branch.FormKeyNullable.HasValue)
             {
-                yield return BranchKey;
+                yield return FormLinkInformation.Factory(obj.Branch);
             }
-            if (obj.Quest.FormKeyNullable.TryGet(out var QuestKey))
+            if (obj.Quest.FormKeyNullable.HasValue)
             {
-                yield return QuestKey;
+                yield return FormLinkInformation.Factory(obj.Quest);
             }
-            foreach (var item in obj.Responses.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.Responses.SelectMany(f => f.ContainedFormLinks))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
-        }
-        
-        public void RemapLinks(IDialogTopicGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(DialogTopic obj, DialogTopic rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
-        {
-            var ret = new DialogTopic(getNextFormKey(), ((IDialogTopicGetter)item).FormVersion);
-            ret.DeepCopyIn((DialogTopic)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (DialogTopic)item, getNextFormKey, duplicatedRecords);
-            return ret;
         }
         
         public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(IDialogTopicGetter obj)
@@ -1953,19 +1956,87 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IEnumerable<IModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             IDialogTopicGetter obj,
             ILinkCache linkCache,
-            Type type,
             ModKey modKey,
             IModContext? parent,
-            bool throwIfUnknown,
-            Func<ISkyrimMod, IDialogTopicGetter, IDialogTopic> getter)
+            Func<ISkyrimMod, IDialogTopicGetter, IDialogTopic> getOrAddAsOverride,
+            Func<ISkyrimMod, IDialogTopicGetter, string?, IDialogTopic> duplicateInto)
         {
             var curContext = new ModContext<ISkyrimMod, IDialogTopic, IDialogTopicGetter>(
                 modKey,
                 record: obj,
-                getter: getter,
+                getOrAddAsOverride: getOrAddAsOverride,
+                duplicateInto: duplicateInto,
+                parent: parent);
+            foreach (var subItem in obj.Responses)
+            {
+                yield return new ModContext<ISkyrimMod, IDialogResponsesInternal, IDialogResponsesGetter>(
+                    modKey: modKey,
+                    record: subItem,
+                    parent: curContext,
+                    getOrAddAsOverride: (m, r) =>
+                    {
+                        var copy = (DialogResponses)((IDialogResponsesGetter)r).DeepCopy();
+                        getOrAddAsOverride(m, linkCache.Resolve<IDialogTopicGetter>(obj.FormKey)).Responses.Add(copy);
+                        return copy;
+                    },
+                    duplicateInto: (m, r, e) =>
+                    {
+                        var dup = (DialogResponses)((IDialogResponsesGetter)r).Duplicate(m.GetNextFormKey(e));
+                        getOrAddAsOverride(m, linkCache.Resolve<IDialogTopicGetter>(obj.FormKey)).Responses.Add(dup);
+                        return dup;
+                    });
+            }
+        }
+        
+        public IEnumerable<IModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+            IDialogTopicGetter obj,
+            ILinkCache linkCache,
+            Type type,
+            ModKey modKey,
+            IModContext? parent,
+            bool throwIfUnknown,
+            Func<ISkyrimMod, IDialogTopicGetter, IDialogTopic> getOrAddAsOverride,
+            Func<ISkyrimMod, IDialogTopicGetter, string?, IDialogTopic> duplicateInto)
+        {
+            var curContext = new ModContext<ISkyrimMod, IDialogTopic, IDialogTopicGetter>(
+                modKey,
+                record: obj,
+                getOrAddAsOverride: getOrAddAsOverride,
+                duplicateInto: duplicateInto,
                 parent: parent);
             switch (type.Name)
             {
+                case "IMajorRecordCommon":
+                case "IMajorRecord":
+                case "MajorRecord":
+                case "ISkyrimMajorRecord":
+                case "SkyrimMajorRecord":
+                    if (!DialogTopic_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in this.EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        modKey: modKey,
+                        parent: parent,
+                        getOrAddAsOverride: getOrAddAsOverride,
+                        duplicateInto: duplicateInto))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IMajorRecordGetter":
+                case "IMajorRecordCommonGetter":
+                case "ISkyrimMajorRecordGetter":
+                    foreach (var item in this.EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        modKey: modKey,
+                        parent: parent,
+                        getOrAddAsOverride: getOrAddAsOverride,
+                        duplicateInto: duplicateInto))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "DialogResponses":
                 case "IDialogResponsesGetter":
                 case "IDialogResponses":
@@ -1974,15 +2045,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<ISkyrimMod, IDialogResponsesInternal, IDialogResponsesGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
-                                getter: (m, r) =>
+                                getOrAddAsOverride: (m, r) =>
                                 {
                                     var copy = (DialogResponses)((IDialogResponsesGetter)r).DeepCopy();
-                                    getter(m, linkCache.Resolve<IDialogTopicGetter>(obj.FormKey)).Responses.Add(copy);
+                                    getOrAddAsOverride(m, linkCache.Resolve<IDialogTopicGetter>(obj.FormKey)).Responses.Add(copy);
                                     return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (DialogResponses)((IDialogResponsesGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<IDialogTopicGetter>(obj.FormKey)).Responses.Add(dup);
+                                    return dup;
                                 });
                         }
                     }
@@ -1998,6 +2075,41 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
             }
         }
+        
+        #region Duplicate
+        public DialogTopic Duplicate(
+            IDialogTopicGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            var newRec = new DialogTopic(formKey, default(SkyrimRelease));
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
+        }
+        
+        public override SkyrimMajorRecord Duplicate(
+            ISkyrimMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IDialogTopic)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IDialogTopic)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         
@@ -2537,10 +2649,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => DialogTopicCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => DialogTopicCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => DialogTopicCommon.Instance.GetContainedFormLinks(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

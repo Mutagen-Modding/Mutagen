@@ -520,12 +520,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = MaterialType_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => MaterialTypeCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => MaterialTypeCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MaterialTypeCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MaterialTypeCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => MaterialTypeCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MaterialTypeSetterCommon.Instance.RemapLinks(this, mapping);
         public MaterialType(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -628,7 +624,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMaterialTypeGetter,
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IMaterialTypeInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLinkNullable<IMaterialTypeGetter> Parent { get; set; }
         new String? Name { get; set; }
@@ -648,7 +644,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IMaterialTypeGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IMaterialTypeGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => MaterialType_Registration.Instance;
@@ -775,6 +771,20 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
+
+        #region Mutagen
+        public static MaterialType Duplicate(
+            this IMaterialTypeGetter item,
+            FormKey formKey,
+            MaterialType.TranslationMask? copyMask = null)
+        {
+            return ((MaterialTypeCommon)((IMaterialTypeGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
 
         #region Binary Translation
         public static void CopyInFromBinary(
@@ -918,6 +928,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IMaterialTypeInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IMaterialType obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Parent = obj.Parent.Relink(mapping);
+            obj.HavokImpactDataSet = obj.HavokImpactDataSet.Relink(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1187,34 +1207,57 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IMaterialTypeGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IMaterialTypeGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
-            if (obj.Parent.FormKeyNullable.TryGet(out var ParentKey))
+            if (obj.Parent.FormKeyNullable.HasValue)
             {
-                yield return ParentKey;
+                yield return FormLinkInformation.Factory(obj.Parent);
             }
-            if (obj.HavokImpactDataSet.FormKeyNullable.TryGet(out var HavokImpactDataSetKey))
+            if (obj.HavokImpactDataSet.FormKeyNullable.HasValue)
             {
-                yield return HavokImpactDataSetKey;
+                yield return FormLinkInformation.Factory(obj.HavokImpactDataSet);
             }
             yield break;
         }
         
-        public void RemapLinks(IMaterialTypeGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(MaterialType obj, MaterialType rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public MaterialType Duplicate(
+            IMaterialTypeGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new MaterialType(getNextFormKey(), ((IMaterialTypeGetter)item).FormVersion);
-            ret.DeepCopyIn((MaterialType)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (MaterialType)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new MaterialType(formKey, default(SkyrimRelease));
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override SkyrimMajorRecord Duplicate(
+            ISkyrimMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IMaterialType)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IMaterialType)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         
@@ -1635,10 +1678,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => MaterialTypeCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => MaterialTypeCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => MaterialTypeCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => MaterialTypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

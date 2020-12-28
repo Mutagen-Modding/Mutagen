@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFrameworks>net5.0;netstandard2.1</TargetFrameworks>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Noggog</Authors>
@@ -97,9 +97,6 @@
       <DependentUpon>Book.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Cell.cs">
-      <DependentUpon>Cell.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\CellBlock.cs">
       <DependentUpon>Cell.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\CellSubBlock.cs">
@@ -928,9 +925,9 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Loqui" Version="1.5.16" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.6.8" />
-    <PackageReference Include="NuGetizer" Version="0.4.11">
+    <PackageReference Include="Loqui" Version="2.1.1" />
+    <PackageReference Include="Noggog.CSharpExt" Version="2.2.0" />
+    <PackageReference Include="NuGetizer" Version="0.6.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

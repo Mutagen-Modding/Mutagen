@@ -21,12 +21,12 @@ namespace Mutagen.Bethesda
         
     }
 
-    public partial interface IMajorRecordGetter : IMajorRecordCommonGetter, IDuplicatable
+    public partial interface IMajorRecordGetter : IMajorRecordCommonGetter
     {
     }
 
     [DebuggerDisplay("{GetType().Name} {this.EditorID?.ToString()} {this.FormKey.ToString()}")]
-    public partial class MajorRecord : ILinkedFormKeyContainer
+    public partial class MajorRecord : IFormLinkContainer
     {
         #region EditorID
         public virtual String? EditorID { get; set; }
@@ -61,11 +61,6 @@ namespace Mutagen.Bethesda
         protected abstract ushort? FormVersionAbstract { get; }
         ushort? IMajorRecordCommonGetter.FormVersion => FormVersionAbstract;
         ushort? IFormVersionGetter.FormVersion => FormVersionAbstract;
-
-        object IDuplicatable.Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecordTracker)
-        {
-            return this.Duplicate(getNextFormKey, duplicatedRecordTracker);
-        }
 
         public virtual bool Disable()
         {
@@ -106,10 +101,5 @@ namespace Mutagen.Bethesda.Internals
         protected abstract ushort? FormVersionAbstract { get; }
         ushort? IMajorRecordCommonGetter.FormVersion => FormVersionAbstract;
         ushort? IFormVersionGetter.FormVersion => FormVersionAbstract;
-
-        object IDuplicatable.Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecordTracker)
-        {
-            return ((MajorRecordCommon)this.CommonInstance()).Duplicate(this, getNextFormKey, duplicatedRecordTracker);
-        }
     }
 }

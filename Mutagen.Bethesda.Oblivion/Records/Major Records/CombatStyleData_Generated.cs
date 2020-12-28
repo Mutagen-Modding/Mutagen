@@ -1971,6 +1971,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.RushingAttackDistanceMult = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(ICombatStyleData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ICombatStyleData item,
@@ -2347,12 +2354,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ICombatStyleDataGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ICombatStyleDataGetter obj)
         {
             yield break;
         }
         
-        public void RemapLinks(ICombatStyleDataGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

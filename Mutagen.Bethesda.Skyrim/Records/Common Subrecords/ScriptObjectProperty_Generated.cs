@@ -409,12 +409,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => ScriptObjectPropertyCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ScriptObjectPropertyCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptObjectPropertyCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptObjectPropertyCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => ScriptObjectPropertyCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptObjectPropertySetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -475,7 +471,7 @@ namespace Mutagen.Bethesda.Skyrim
         IScriptObjectPropertyGetter,
         IScriptProperty,
         ILoquiObjectSetter<IScriptObjectProperty>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<ISkyrimMajorRecordGetter> Object { get; set; }
         new Int16 Alias { get; set; }
@@ -485,7 +481,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IScriptObjectPropertyGetter :
         IScriptPropertyGetter,
         ILoquiObject<IScriptObjectPropertyGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => ScriptObjectProperty_Registration.Instance;
@@ -737,6 +733,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IScriptObjectProperty)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IScriptObjectProperty obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Object = obj.Object.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IScriptObjectProperty item,
@@ -917,17 +922,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IScriptObjectPropertyGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IScriptObjectPropertyGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
-            yield return obj.Object.FormKey;
+            yield return FormLinkInformation.Factory(obj.Object);
             yield break;
         }
         
-        public void RemapLinks(IScriptObjectPropertyGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1163,10 +1167,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => ScriptObjectPropertyCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ScriptObjectPropertyCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => ScriptObjectPropertyCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ScriptObjectPropertyBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

@@ -682,6 +682,20 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
+        #region Mutagen
+        public static AssociationType Duplicate(
+            this IAssociationTypeGetter item,
+            FormKey formKey,
+            AssociationType.TranslationMask? copyMask = null)
+        {
+            return ((AssociationTypeCommon)((IAssociationTypeGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
+
         #region Binary Translation
         public static void CopyInFromBinary(
             this IAssociationTypeInternal item,
@@ -818,6 +832,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IAssociationTypeInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IAssociationType obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1066,26 +1088,49 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IAssociationTypeGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IAssociationTypeGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
             yield break;
         }
         
-        public void RemapLinks(IAssociationTypeGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(AssociationType obj, AssociationType rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public AssociationType Duplicate(
+            IAssociationTypeGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new AssociationType(getNextFormKey(), ((IAssociationTypeGetter)item).FormVersion);
-            ret.DeepCopyIn((AssociationType)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (AssociationType)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new AssociationType(formKey, default(SkyrimRelease));
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override SkyrimMajorRecord Duplicate(
+            ISkyrimMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IAssociationType)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IAssociationType)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         

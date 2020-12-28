@@ -742,6 +742,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.EventData = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IFindMatchingRefFromEvent obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IFindMatchingRefFromEvent item,
@@ -879,12 +886,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IFindMatchingRefFromEventGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IFindMatchingRefFromEventGetter obj)
         {
             yield break;
         }
         
-        public void RemapLinks(IFindMatchingRefFromEventGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

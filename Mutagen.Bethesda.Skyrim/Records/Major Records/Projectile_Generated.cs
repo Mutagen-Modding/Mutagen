@@ -1366,12 +1366,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Projectile_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => ProjectileCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ProjectileCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ProjectileCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ProjectileCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => ProjectileCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ProjectileSetterCommon.Instance.RemapLinks(this, mapping);
         public Projectile(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -1483,7 +1479,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPlacedTrapTarget,
         IObjectBounded,
         ILoquiObjectSetter<IProjectileInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ObjectBounds ObjectBounds { get; set; }
         new TranslatedString? Name { get; set; }
@@ -1532,7 +1528,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPlacedTrapTargetGetter,
         IObjectBoundedGetter,
         ILoquiObject<IProjectileGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Projectile_Registration.Instance;
@@ -1685,6 +1681,20 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
+
+        #region Mutagen
+        public static Projectile Duplicate(
+            this IProjectileGetter item,
+            FormKey formKey,
+            Projectile.TranslationMask? copyMask = null)
+        {
+            return ((ProjectileCommon)((IProjectileGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
 
         #region Binary Translation
         public static void CopyInFromBinary(
@@ -1880,6 +1890,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IProjectileInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IProjectile obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Model?.RemapLinks(mapping);
+            obj.Destructible?.RemapLinks(mapping);
+            obj.Light = obj.Light.Relink(mapping);
+            obj.MuzzleFlash = obj.MuzzleFlash.Relink(mapping);
+            obj.Explosion = obj.Explosion.Relink(mapping);
+            obj.Sound = obj.Sound.Relink(mapping);
+            obj.CountdownSound = obj.CountdownSound.Relink(mapping);
+            obj.DisaleSound = obj.DisaleSound.Relink(mapping);
+            obj.DefaultWeaponSource = obj.DefaultWeaponSource.Relink(mapping);
+            obj.DecalData = obj.DecalData.Relink(mapping);
+            obj.CollisionLayer = obj.CollisionLayer.Relink(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -2339,49 +2368,72 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IProjectileGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IProjectileGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.Model.TryGet(out var ModelItems))
             {
-                foreach (var item in ModelItems.LinkFormKeys)
+                foreach (var item in ModelItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
             if (obj.Destructible.TryGet(out var DestructibleItems))
             {
-                foreach (var item in DestructibleItems.LinkFormKeys)
+                foreach (var item in DestructibleItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            yield return obj.Light.FormKey;
-            yield return obj.MuzzleFlash.FormKey;
-            yield return obj.Explosion.FormKey;
-            yield return obj.Sound.FormKey;
-            yield return obj.CountdownSound.FormKey;
-            yield return obj.DisaleSound.FormKey;
-            yield return obj.DefaultWeaponSource.FormKey;
-            yield return obj.DecalData.FormKey;
-            yield return obj.CollisionLayer.FormKey;
+            yield return FormLinkInformation.Factory(obj.Light);
+            yield return FormLinkInformation.Factory(obj.MuzzleFlash);
+            yield return FormLinkInformation.Factory(obj.Explosion);
+            yield return FormLinkInformation.Factory(obj.Sound);
+            yield return FormLinkInformation.Factory(obj.CountdownSound);
+            yield return FormLinkInformation.Factory(obj.DisaleSound);
+            yield return FormLinkInformation.Factory(obj.DefaultWeaponSource);
+            yield return FormLinkInformation.Factory(obj.DecalData);
+            yield return FormLinkInformation.Factory(obj.CollisionLayer);
             yield break;
         }
         
-        public void RemapLinks(IProjectileGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(Projectile obj, Projectile rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public Projectile Duplicate(
+            IProjectileGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new Projectile(getNextFormKey(), ((IProjectileGetter)item).FormVersion);
-            ret.DeepCopyIn((Projectile)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (Projectile)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new Projectile(formKey, default(SkyrimRelease));
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override SkyrimMajorRecord Duplicate(
+            ISkyrimMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IProjectile)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IProjectile)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         
@@ -3144,10 +3196,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => ProjectileCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ProjectileCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => ProjectileCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ProjectileBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

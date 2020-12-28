@@ -795,6 +795,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Flags = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IEnchantmentData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IEnchantmentData item,
@@ -940,12 +947,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IEnchantmentDataGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IEnchantmentDataGetter obj)
         {
             yield break;
         }
         
-        public void RemapLinks(IEnchantmentDataGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

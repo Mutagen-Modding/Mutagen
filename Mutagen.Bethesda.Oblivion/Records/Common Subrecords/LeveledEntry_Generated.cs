@@ -93,12 +93,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = LeveledEntry_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => LeveledEntryCommon<T>.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LeveledEntryCommon<T>.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledEntryCommon<T>.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledEntryCommon<T>.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => LeveledEntryCommon<T>.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledEntrySetterCommon<T>.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -160,7 +156,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILeveledEntry<T> :
         ILeveledEntryGetter<T>,
         ILoquiObjectSetter<ILeveledEntry<T>>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
         where T : class, IOblivionMajorRecordInternal, IBinaryItem
     {
         new Int16 Level { get; set; }
@@ -173,7 +169,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILeveledEntryGetter<out T> :
         ILoquiObject,
         ILoquiObject<ILeveledEntryGetter<T>>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
         where T : class, IOblivionMajorRecordGetter, IBinaryItem
     {
@@ -510,6 +506,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Unknown2 = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(ILeveledEntry<T> obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Reference = obj.Reference.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ILeveledEntry<T> item,
@@ -672,13 +676,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ILeveledEntryGetter<T> obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ILeveledEntryGetter<T> obj)
         {
-            yield return obj.Reference.FormKey;
+            yield return FormLinkInformation.Factory(obj.Reference);
             yield break;
         }
         
-        public void RemapLinks(ILeveledEntryGetter<T> obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -930,10 +933,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => LeveledEntryCommon<T>.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LeveledEntryCommon<T>.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => LeveledEntryCommon<T>.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LeveledEntryBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

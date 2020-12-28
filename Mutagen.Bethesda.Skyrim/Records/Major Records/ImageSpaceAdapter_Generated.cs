@@ -7308,6 +7308,20 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
+        #region Mutagen
+        public static ImageSpaceAdapter Duplicate(
+            this IImageSpaceAdapterGetter item,
+            FormKey formKey,
+            ImageSpaceAdapter.TranslationMask? copyMask = null)
+        {
+            return ((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
+
         #region Binary Translation
         public static void CopyInFromBinary(
             this IImageSpaceAdapterInternal item,
@@ -7560,6 +7574,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IImageSpaceAdapterInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IImageSpaceAdapter obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -9188,26 +9210,49 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IImageSpaceAdapterGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IImageSpaceAdapterGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
             yield break;
         }
         
-        public void RemapLinks(IImageSpaceAdapterGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(ImageSpaceAdapter obj, ImageSpaceAdapter rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public ImageSpaceAdapter Duplicate(
+            IImageSpaceAdapterGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new ImageSpaceAdapter(getNextFormKey(), ((IImageSpaceAdapterGetter)item).FormVersion);
-            ret.DeepCopyIn((ImageSpaceAdapter)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (ImageSpaceAdapter)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new ImageSpaceAdapter(formKey, default(SkyrimRelease));
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override SkyrimMajorRecord Duplicate(
+            ISkyrimMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IImageSpaceAdapter)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IImageSpaceAdapter)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         

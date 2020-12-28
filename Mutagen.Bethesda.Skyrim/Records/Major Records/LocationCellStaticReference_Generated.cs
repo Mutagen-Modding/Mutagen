@@ -445,12 +445,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => LocationCellStaticReferenceCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LocationCellStaticReferenceCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCellStaticReferenceCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCellStaticReferenceCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => LocationCellStaticReferenceCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCellStaticReferenceSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -512,7 +508,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILocationCellStaticReference :
         ILocationCellStaticReferenceGetter,
         ILoquiObjectSetter<ILocationCellStaticReference>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<ILocationReferenceTypeGetter> LocationRefType { get; set; }
         new FormLink<ILinkedReferenceGetter> Marker { get; set; }
@@ -523,7 +519,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILocationCellStaticReferenceGetter :
         ILoquiObject,
         ILoquiObject<ILocationCellStaticReferenceGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -801,6 +797,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Grid = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(ILocationCellStaticReference obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.LocationRefType = obj.LocationRefType.Relink(mapping);
+            obj.Marker = obj.Marker.Relink(mapping);
+            obj.Location = obj.Location.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ILocationCellStaticReference item,
@@ -943,15 +949,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ILocationCellStaticReferenceGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ILocationCellStaticReferenceGetter obj)
         {
-            yield return obj.LocationRefType.FormKey;
-            yield return obj.Marker.FormKey;
-            yield return obj.Location.FormKey;
+            yield return FormLinkInformation.Factory(obj.LocationRefType);
+            yield return FormLinkInformation.Factory(obj.Marker);
+            yield return FormLinkInformation.Factory(obj.Location);
             yield break;
         }
         
-        public void RemapLinks(ILocationCellStaticReferenceGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1188,10 +1193,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => LocationCellStaticReferenceCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LocationCellStaticReferenceCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => LocationCellStaticReferenceCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LocationCellStaticReferenceBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

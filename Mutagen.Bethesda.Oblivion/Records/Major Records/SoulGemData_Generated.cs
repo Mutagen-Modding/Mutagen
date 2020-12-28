@@ -725,6 +725,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Weight = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(ISoulGemData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ISoulGemData item,
@@ -856,12 +863,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ISoulGemDataGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ISoulGemDataGetter obj)
         {
             yield break;
         }
         
-        public void RemapLinks(ISoulGemDataGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

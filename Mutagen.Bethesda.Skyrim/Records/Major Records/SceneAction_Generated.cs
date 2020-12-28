@@ -981,12 +981,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = SceneAction_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => SceneActionCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => SceneActionCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SceneActionCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SceneActionCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => SceneActionCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SceneActionSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -1048,7 +1044,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ISceneAction :
         ISceneActionGetter,
         ILoquiObjectSetter<ISceneAction>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new SceneAction.TypeEnum Type { get; set; }
         new String? Name { get; set; }
@@ -1072,7 +1068,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ISceneActionGetter :
         ILoquiObject,
         ILoquiObject<ISceneActionGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -1390,6 +1386,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Unused = null;
         }
         
+        #region Mutagen
+        public void RemapLinks(ISceneAction obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Packages.RemapLinks(mapping);
+            obj.Topic = obj.Topic.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ISceneAction item,
@@ -1701,20 +1706,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ISceneActionGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ISceneActionGetter obj)
         {
-            foreach (var item in obj.Packages.Select(f => f.FormKey))
+            foreach (var item in obj.Packages)
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
-            if (obj.Topic.FormKeyNullable.TryGet(out var TopicKey))
+            if (obj.Topic.FormKeyNullable.HasValue)
             {
-                yield return TopicKey;
+                yield return FormLinkInformation.Factory(obj.Topic);
             }
             yield break;
         }
         
-        public void RemapLinks(ISceneActionGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -2251,10 +2255,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => SceneActionCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => SceneActionCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => SceneActionCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => SceneActionBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -1024,12 +1024,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => HeadDataCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => HeadDataCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadDataCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadDataCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => HeadDataCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -1092,7 +1088,7 @@ namespace Mutagen.Bethesda.Skyrim
         IHeadDataGetter,
         IModeled,
         ILoquiObjectSetter<IHeadData>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ExtendedList<HeadPartReference> HeadParts { get; }
         new AvailableMorphs? AvailableMorphs { get; set; }
@@ -1108,7 +1104,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject,
         IModeledGetter,
         ILoquiObject<IHeadDataGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -1423,6 +1419,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Model = null;
         }
         
+        #region Mutagen
+        public void RemapLinks(IHeadData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.HeadParts.RemapLinks(mapping);
+            obj.RacePresets.RemapLinks(mapping);
+            obj.AvailableHairColors.RemapLinks(mapping);
+            obj.FaceDetails.RemapLinks(mapping);
+            obj.DefaultFaceTexture = obj.DefaultFaceTexture.Relink(mapping);
+            obj.TintMasks.RemapLinks(mapping);
+            obj.Model?.RemapLinks(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IHeadData item,
@@ -1695,35 +1705,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IHeadDataGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IHeadDataGetter obj)
         {
-            foreach (var item in obj.HeadParts.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.HeadParts.SelectMany(f => f.ContainedFormLinks))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.RacePresets.Select(f => f.FormKey))
+            foreach (var item in obj.RacePresets)
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.AvailableHairColors.Select(f => f.FormKey))
+            foreach (var item in obj.AvailableHairColors)
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.FaceDetails.Select(f => f.FormKey))
+            foreach (var item in obj.FaceDetails)
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
-            if (obj.DefaultFaceTexture.FormKeyNullable.TryGet(out var DefaultFaceTextureKey))
+            if (obj.DefaultFaceTexture.FormKeyNullable.HasValue)
             {
-                yield return DefaultFaceTextureKey;
+                yield return FormLinkInformation.Factory(obj.DefaultFaceTexture);
             }
-            foreach (var item in obj.TintMasks.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.TintMasks.SelectMany(f => f.ContainedFormLinks))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
             if (obj.Model.TryGet(out var ModelItems))
             {
-                foreach (var item in ModelItems.LinkFormKeys)
+                foreach (var item in ModelItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
@@ -1731,7 +1741,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IHeadDataGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -2259,10 +2268,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => HeadDataCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => HeadDataCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => HeadDataCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => HeadDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

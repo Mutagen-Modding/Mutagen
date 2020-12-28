@@ -409,12 +409,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = ContainerEntry_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => ContainerEntryCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ContainerEntryCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ContainerEntryCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ContainerEntryCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => ContainerEntryCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ContainerEntrySetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -476,7 +472,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IContainerEntry :
         IContainerEntryGetter,
         ILoquiObjectSetter<IContainerEntry>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ContainerItem Item { get; set; }
         new ExtraData? Data { get; set; }
@@ -485,7 +481,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IContainerEntryGetter :
         ILoquiObject,
         ILoquiObject<IContainerEntryGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -758,6 +754,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Data = null;
         }
         
+        #region Mutagen
+        public void RemapLinks(IContainerEntry obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Item.RemapLinks(mapping);
+            obj.Data?.RemapLinks(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IContainerEntry item,
@@ -895,15 +900,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IContainerEntryGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IContainerEntryGetter obj)
         {
-            foreach (var item in obj.Item.LinkFormKeys)
+            foreach (var item in obj.Item.ContainedFormLinks)
             {
                 yield return item;
             }
-            if (obj.Data is ILinkedFormKeyContainerGetter DatalinkCont)
+            if (obj.Data is IFormLinkContainerGetter DatalinkCont)
             {
-                foreach (var item in DatalinkCont.LinkFormKeys)
+                foreach (var item in DatalinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
@@ -911,7 +916,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IContainerEntryGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1197,10 +1201,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => ContainerEntryCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ContainerEntryCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => ContainerEntryCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ContainerEntryBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

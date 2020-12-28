@@ -906,6 +906,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Sky = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IImageSpaceDepthOfField obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IImageSpaceDepthOfField item,
@@ -1072,12 +1079,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IImageSpaceDepthOfFieldGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IImageSpaceDepthOfFieldGetter obj)
         {
             yield break;
         }
         
-        public void RemapLinks(IImageSpaceDepthOfFieldGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

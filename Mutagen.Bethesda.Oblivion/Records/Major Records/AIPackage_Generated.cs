@@ -624,12 +624,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = AIPackage_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => AIPackageCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => AIPackageCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AIPackageCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AIPackageCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => AIPackageCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AIPackageSetterCommon.Instance.RemapLinks(this, mapping);
         public AIPackage(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -715,7 +711,7 @@ namespace Mutagen.Bethesda.Oblivion
         IAIPackageGetter,
         IOblivionMajorRecord,
         ILoquiObjectSetter<IAIPackageInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new AIPackageData? Data { get; set; }
         new AIPackageLocation? Location { get; set; }
@@ -734,7 +730,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IAIPackageGetter :
         IOblivionMajorRecordGetter,
         ILoquiObject<IAIPackageGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => AIPackage_Registration.Instance;
@@ -860,6 +856,20 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
+
+        #region Mutagen
+        public static AIPackage Duplicate(
+            this IAIPackageGetter item,
+            FormKey formKey,
+            AIPackage.TranslationMask? copyMask = null)
+        {
+            return ((AIPackageCommon)((IAIPackageGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
 
         #region Binary Translation
         public static void CopyInFromBinary(
@@ -1000,6 +1010,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (IAIPackageInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IAIPackage obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Location?.RemapLinks(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1293,15 +1312,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IAIPackageGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IAIPackageGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.Location.TryGet(out var LocationItems))
             {
-                foreach (var item in LocationItems.LinkFormKeys)
+                foreach (var item in LocationItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
@@ -1309,17 +1328,40 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(IAIPackageGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(AIPackage obj, AIPackage rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public AIPackage Duplicate(
+            IAIPackageGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new AIPackage(getNextFormKey());
-            ret.DeepCopyIn((AIPackage)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (AIPackage)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new AIPackage(formKey);
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override OblivionMajorRecord Duplicate(
+            IOblivionMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IAIPackage)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IAIPackage)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         
@@ -1845,10 +1887,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => AIPackageCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => AIPackageCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => AIPackageCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => AIPackageBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

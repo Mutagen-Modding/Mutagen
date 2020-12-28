@@ -652,12 +652,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = DialogTopic_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => DialogTopicCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => DialogTopicCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogTopicCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogTopicCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => DialogTopicCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogTopicSetterCommon.Instance.RemapLinks(this, mapping);
         public DialogTopic(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -779,7 +775,7 @@ namespace Mutagen.Bethesda.Oblivion
         INamed,
         IMajorRecordEnumerable,
         ILoquiObjectSetter<IDialogTopicInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ExtendedList<IFormLink<IQuestGetter>> Quests { get; }
         new String? Name { get; set; }
@@ -800,7 +796,7 @@ namespace Mutagen.Bethesda.Oblivion
         INamedGetter,
         IMajorRecordGetterEnumerable,
         ILoquiObject<IDialogTopicGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => DialogTopic_Registration.Instance;
@@ -1140,6 +1136,17 @@ namespace Mutagen.Bethesda.Oblivion
                 throwIfUnknown: throwIfUnknown);
         }
 
+        public static DialogTopic Duplicate(
+            this IDialogTopicGetter item,
+            FormKey formKey,
+            DialogTopic.TranslationMask? copyMask = null)
+        {
+            return ((DialogTopicCommon)((IDialogTopicGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
         #endregion
 
         #region Binary Translation
@@ -1283,6 +1290,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
+        public void RemapLinks(IDialogTopic obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Quests.RemapLinks(mapping);
+            obj.Items.RemapLinks(mapping);
+        }
+        
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IDialogTopicInternal obj)
         {
             foreach (var item in DialogTopicCommon.Instance.EnumerateMajorRecords(obj))
@@ -1636,33 +1650,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IDialogTopicGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IDialogTopicGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
-            foreach (var item in obj.Quests.Select(f => f.FormKey))
+            foreach (var item in obj.Quests)
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.Items.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.Items.SelectMany(f => f.ContainedFormLinks))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
-        }
-        
-        public void RemapLinks(IDialogTopicGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(DialogTopic obj, DialogTopic rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
-        {
-            var ret = new DialogTopic(getNextFormKey());
-            ret.DeepCopyIn((DialogTopic)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (DialogTopic)item, getNextFormKey, duplicatedRecords);
-            return ret;
         }
         
         public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(IDialogTopicGetter obj)
@@ -1734,19 +1736,87 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IEnumerable<IModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             IDialogTopicGetter obj,
             ILinkCache linkCache,
-            Type type,
             ModKey modKey,
             IModContext? parent,
-            bool throwIfUnknown,
-            Func<IOblivionMod, IDialogTopicGetter, IDialogTopic> getter)
+            Func<IOblivionMod, IDialogTopicGetter, IDialogTopic> getOrAddAsOverride,
+            Func<IOblivionMod, IDialogTopicGetter, string?, IDialogTopic> duplicateInto)
         {
             var curContext = new ModContext<IOblivionMod, IDialogTopic, IDialogTopicGetter>(
                 modKey,
                 record: obj,
-                getter: getter,
+                getOrAddAsOverride: getOrAddAsOverride,
+                duplicateInto: duplicateInto,
+                parent: parent);
+            foreach (var subItem in obj.Items)
+            {
+                yield return new ModContext<IOblivionMod, IDialogItemInternal, IDialogItemGetter>(
+                    modKey: modKey,
+                    record: subItem,
+                    parent: curContext,
+                    getOrAddAsOverride: (m, r) =>
+                    {
+                        var copy = (DialogItem)((IDialogItemGetter)r).DeepCopy();
+                        getOrAddAsOverride(m, linkCache.Resolve<IDialogTopicGetter>(obj.FormKey)).Items.Add(copy);
+                        return copy;
+                    },
+                    duplicateInto: (m, r, e) =>
+                    {
+                        var dup = (DialogItem)((IDialogItemGetter)r).Duplicate(m.GetNextFormKey(e));
+                        getOrAddAsOverride(m, linkCache.Resolve<IDialogTopicGetter>(obj.FormKey)).Items.Add(dup);
+                        return dup;
+                    });
+            }
+        }
+        
+        public IEnumerable<IModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+            IDialogTopicGetter obj,
+            ILinkCache linkCache,
+            Type type,
+            ModKey modKey,
+            IModContext? parent,
+            bool throwIfUnknown,
+            Func<IOblivionMod, IDialogTopicGetter, IDialogTopic> getOrAddAsOverride,
+            Func<IOblivionMod, IDialogTopicGetter, string?, IDialogTopic> duplicateInto)
+        {
+            var curContext = new ModContext<IOblivionMod, IDialogTopic, IDialogTopicGetter>(
+                modKey,
+                record: obj,
+                getOrAddAsOverride: getOrAddAsOverride,
+                duplicateInto: duplicateInto,
                 parent: parent);
             switch (type.Name)
             {
+                case "IMajorRecordCommon":
+                case "IMajorRecord":
+                case "MajorRecord":
+                case "IOblivionMajorRecord":
+                case "OblivionMajorRecord":
+                    if (!DialogTopic_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in this.EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        modKey: modKey,
+                        parent: parent,
+                        getOrAddAsOverride: getOrAddAsOverride,
+                        duplicateInto: duplicateInto))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IMajorRecordGetter":
+                case "IMajorRecordCommonGetter":
+                case "IOblivionMajorRecordGetter":
+                    foreach (var item in this.EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        modKey: modKey,
+                        parent: parent,
+                        getOrAddAsOverride: getOrAddAsOverride,
+                        duplicateInto: duplicateInto))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "DialogItem":
                 case "IDialogItemGetter":
                 case "IDialogItem":
@@ -1755,15 +1825,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>(
+                            yield return new ModContext<IOblivionMod, IDialogItemInternal, IDialogItemGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
-                                getter: (m, r) =>
+                                getOrAddAsOverride: (m, r) =>
                                 {
                                     var copy = (DialogItem)((IDialogItemGetter)r).DeepCopy();
-                                    getter(m, linkCache.Resolve<IDialogTopicGetter>(obj.FormKey)).Items.Add(copy);
+                                    getOrAddAsOverride(m, linkCache.Resolve<IDialogTopicGetter>(obj.FormKey)).Items.Add(copy);
                                     return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (DialogItem)((IDialogItemGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<IDialogTopicGetter>(obj.FormKey)).Items.Add(dup);
+                                    return dup;
                                 });
                         }
                     }
@@ -1779,6 +1855,41 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
             }
         }
+        
+        #region Duplicate
+        public DialogTopic Duplicate(
+            IDialogTopicGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            var newRec = new DialogTopic(formKey);
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
+        }
+        
+        public override OblivionMajorRecord Duplicate(
+            IOblivionMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IDialogTopic)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IDialogTopic)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         
@@ -2238,10 +2349,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => DialogTopicCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => DialogTopicCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => DialogTopicCommon.Instance.GetContainedFormLinks(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

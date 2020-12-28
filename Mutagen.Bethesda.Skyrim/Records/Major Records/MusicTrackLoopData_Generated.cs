@@ -760,6 +760,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Count = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IMusicTrackLoopData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IMusicTrackLoopData item,
@@ -898,12 +905,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IMusicTrackLoopDataGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IMusicTrackLoopDataGetter obj)
         {
             yield break;
         }
         
-        public void RemapLinks(IMusicTrackLoopDataGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

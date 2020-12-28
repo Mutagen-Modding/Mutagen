@@ -1286,12 +1286,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Scroll_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => ScrollCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ScrollCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScrollCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScrollCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => ScrollCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScrollSetterCommon.Instance.RemapLinks(this, mapping);
         public Scroll(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -1409,7 +1405,7 @@ namespace Mutagen.Bethesda.Skyrim
         IWeightValue,
         IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<IScrollInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ObjectBounds ObjectBounds { get; set; }
         new TranslatedString? Name { get; set; }
@@ -1454,7 +1450,7 @@ namespace Mutagen.Bethesda.Skyrim
         IWeightValueGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IScrollGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Scroll_Registration.Instance;
@@ -1599,6 +1595,20 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
+
+        #region Mutagen
+        public static Scroll Duplicate(
+            this IScrollGetter item,
+            FormKey formKey,
+            Scroll.TranslationMask? copyMask = null)
+        {
+            return ((ScrollCommon)((IScrollGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
 
         #region Binary Translation
         public static void CopyInFromBinary(
@@ -1778,6 +1788,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IScrollInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IScroll obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Keywords?.RemapLinks(mapping);
+            obj.MenuDisplayObject = obj.MenuDisplayObject.Relink(mapping);
+            obj.EquipmentType = obj.EquipmentType.Relink(mapping);
+            obj.Model?.RemapLinks(mapping);
+            obj.Destructible?.RemapLinks(mapping);
+            obj.PickUpSound = obj.PickUpSound.Relink(mapping);
+            obj.PutDownSound = obj.PutDownSound.Relink(mapping);
+            obj.HalfCostPerk = obj.HalfCostPerk.Relink(mapping);
+            obj.Effects.RemapLinks(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -2216,68 +2243,91 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IScrollGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IScrollGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.Keywords.TryGet(out var KeywordsItem))
             {
-                foreach (var item in KeywordsItem.Select(f => f.FormKey))
+                foreach (var item in KeywordsItem)
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.MenuDisplayObject.FormKeyNullable.TryGet(out var MenuDisplayObjectKey))
+            if (obj.MenuDisplayObject.FormKeyNullable.HasValue)
             {
-                yield return MenuDisplayObjectKey;
+                yield return FormLinkInformation.Factory(obj.MenuDisplayObject);
             }
-            if (obj.EquipmentType.FormKeyNullable.TryGet(out var EquipmentTypeKey))
+            if (obj.EquipmentType.FormKeyNullable.HasValue)
             {
-                yield return EquipmentTypeKey;
+                yield return FormLinkInformation.Factory(obj.EquipmentType);
             }
             if (obj.Model.TryGet(out var ModelItems))
             {
-                foreach (var item in ModelItems.LinkFormKeys)
+                foreach (var item in ModelItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
             if (obj.Destructible.TryGet(out var DestructibleItems))
             {
-                foreach (var item in DestructibleItems.LinkFormKeys)
+                foreach (var item in DestructibleItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.PickUpSound.FormKeyNullable.TryGet(out var PickUpSoundKey))
+            if (obj.PickUpSound.FormKeyNullable.HasValue)
             {
-                yield return PickUpSoundKey;
+                yield return FormLinkInformation.Factory(obj.PickUpSound);
             }
-            if (obj.PutDownSound.FormKeyNullable.TryGet(out var PutDownSoundKey))
+            if (obj.PutDownSound.FormKeyNullable.HasValue)
             {
-                yield return PutDownSoundKey;
+                yield return FormLinkInformation.Factory(obj.PutDownSound);
             }
-            yield return obj.HalfCostPerk.FormKey;
-            foreach (var item in obj.Effects.SelectMany(f => f.LinkFormKeys))
+            yield return FormLinkInformation.Factory(obj.HalfCostPerk);
+            foreach (var item in obj.Effects.SelectMany(f => f.ContainedFormLinks))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
         
-        public void RemapLinks(IScrollGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(Scroll obj, Scroll rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public Scroll Duplicate(
+            IScrollGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new Scroll(getNextFormKey(), ((IScrollGetter)item).FormVersion);
-            ret.DeepCopyIn((Scroll)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (Scroll)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new Scroll(formKey, default(SkyrimRelease));
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override SkyrimMajorRecord Duplicate(
+            ISkyrimMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IScroll)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IScroll)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         
@@ -3045,10 +3095,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => ScrollCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ScrollCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => ScrollCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ScrollBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

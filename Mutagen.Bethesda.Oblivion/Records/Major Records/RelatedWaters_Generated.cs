@@ -415,12 +415,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = RelatedWaters_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => RelatedWatersCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => RelatedWatersCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RelatedWatersCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RelatedWatersCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => RelatedWatersCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RelatedWatersSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -482,7 +478,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IRelatedWaters :
         IRelatedWatersGetter,
         ILoquiObjectSetter<IRelatedWaters>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IWaterGetter> RelatedWaterDaytime { get; set; }
         new FormLink<IWaterGetter> RelatedWaterNighttime { get; set; }
@@ -492,7 +488,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IRelatedWatersGetter :
         ILoquiObject,
         ILoquiObject<IRelatedWatersGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -768,6 +764,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.RelatedWaterUnderwater = FormLink<IWaterGetter>.Null;
         }
         
+        #region Mutagen
+        public void RemapLinks(IRelatedWaters obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.RelatedWaterDaytime = obj.RelatedWaterDaytime.Relink(mapping);
+            obj.RelatedWaterNighttime = obj.RelatedWaterNighttime.Relink(mapping);
+            obj.RelatedWaterUnderwater = obj.RelatedWaterUnderwater.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IRelatedWaters item,
@@ -906,15 +912,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IRelatedWatersGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IRelatedWatersGetter obj)
         {
-            yield return obj.RelatedWaterDaytime.FormKey;
-            yield return obj.RelatedWaterNighttime.FormKey;
-            yield return obj.RelatedWaterUnderwater.FormKey;
+            yield return FormLinkInformation.Factory(obj.RelatedWaterDaytime);
+            yield return FormLinkInformation.Factory(obj.RelatedWaterNighttime);
+            yield return FormLinkInformation.Factory(obj.RelatedWaterUnderwater);
             yield break;
         }
         
-        public void RemapLinks(IRelatedWatersGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1146,10 +1151,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => RelatedWatersCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => RelatedWatersCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => RelatedWatersCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => RelatedWatersBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

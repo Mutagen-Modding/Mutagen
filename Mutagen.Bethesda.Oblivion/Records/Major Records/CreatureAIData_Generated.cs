@@ -900,6 +900,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.MaximumTrainingLevel = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(ICreatureAIData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ICreatureAIData item,
@@ -1066,12 +1073,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ICreatureAIDataGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ICreatureAIDataGetter obj)
         {
             yield break;
         }
         
-        public void RemapLinks(ICreatureAIDataGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

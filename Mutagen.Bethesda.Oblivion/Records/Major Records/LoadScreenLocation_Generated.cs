@@ -415,12 +415,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = LoadScreenLocation_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => LoadScreenLocationCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LoadScreenLocationCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LoadScreenLocationCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LoadScreenLocationCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => LoadScreenLocationCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LoadScreenLocationSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -482,7 +478,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILoadScreenLocation :
         ILoadScreenLocationGetter,
         ILoquiObjectSetter<ILoadScreenLocation>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IPlaceGetter> Direct { get; set; }
         new FormLink<IWorldspaceGetter> Indirect { get; set; }
@@ -492,7 +488,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILoadScreenLocationGetter :
         ILoquiObject,
         ILoquiObject<ILoadScreenLocationGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -768,6 +764,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.GridPoint = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(ILoadScreenLocation obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Direct = obj.Direct.Relink(mapping);
+            obj.Indirect = obj.Indirect.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ILoadScreenLocation item,
@@ -906,14 +911,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ILoadScreenLocationGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ILoadScreenLocationGetter obj)
         {
-            yield return obj.Direct.FormKey;
-            yield return obj.Indirect.FormKey;
+            yield return FormLinkInformation.Factory(obj.Direct);
+            yield return FormLinkInformation.Factory(obj.Indirect);
             yield break;
         }
         
-        public void RemapLinks(ILoadScreenLocationGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1143,10 +1147,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => LoadScreenLocationCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LoadScreenLocationCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => LoadScreenLocationCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LoadScreenLocationBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

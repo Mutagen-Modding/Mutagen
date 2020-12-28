@@ -752,6 +752,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ISoundDataExtendedInternal)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(ISoundDataExtended obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ISoundDataExtendedInternal item,
@@ -939,12 +946,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ISoundDataExtendedGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ISoundDataExtendedGetter obj)
         {
             yield break;
         }
         
-        public void RemapLinks(ISoundDataExtendedGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

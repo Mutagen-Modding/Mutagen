@@ -962,12 +962,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = ArmorAddon_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => ArmorAddonCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ArmorAddonCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorAddonCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorAddonCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => ArmorAddonCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorAddonSetterCommon.Instance.RemapLinks(this, mapping);
         public ArmorAddon(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -1074,7 +1070,7 @@ namespace Mutagen.Bethesda.Skyrim
         IArmorAddonGetter,
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IArmorAddonInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new BodyTemplate? BodyTemplate { get; set; }
         new FormLinkNullable<IRaceGetter> Race { get; set; }
@@ -1110,7 +1106,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IArmorAddonGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IArmorAddonGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => ArmorAddon_Registration.Instance;
@@ -1247,6 +1243,20 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
+
+        #region Mutagen
+        public static ArmorAddon Duplicate(
+            this IArmorAddonGetter item,
+            FormKey formKey,
+            ArmorAddon.TranslationMask? copyMask = null)
+        {
+            return ((ArmorAddonCommon)((IArmorAddonGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
 
         #region Binary Translation
         public static void CopyInFromBinary(
@@ -1452,6 +1462,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IArmorAddonInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IArmorAddon obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Race = obj.Race.Relink(mapping);
+            obj.WorldModel?.RemapLinks(mapping);
+            obj.FirstPersonModel?.RemapLinks(mapping);
+            obj.SkinTexture?.RemapLinks(mapping);
+            obj.TextureSwapList?.RemapLinks(mapping);
+            obj.AdditionalRaces.RemapLinks(mapping);
+            obj.FootstepSound = obj.FootstepSound.Relink(mapping);
+            obj.ArtObject = obj.ArtObject.Relink(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1836,70 +1862,93 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IArmorAddonGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IArmorAddonGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
-            if (obj.Race.FormKeyNullable.TryGet(out var RaceKey))
+            if (obj.Race.FormKeyNullable.HasValue)
             {
-                yield return RaceKey;
+                yield return FormLinkInformation.Factory(obj.Race);
             }
             if (obj.WorldModel.TryGet(out var WorldModelItem))
             {
-                foreach (var item in WorldModelItem.NotNull().SelectMany(f => f.LinkFormKeys))
+                foreach (var item in WorldModelItem.NotNull().SelectMany(f => f.ContainedFormLinks))
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.FirstPersonModel.TryGet(out var FirstPersonModelItem))
             {
-                foreach (var item in FirstPersonModelItem.NotNull().SelectMany(f => f.LinkFormKeys))
+                foreach (var item in FirstPersonModelItem.NotNull().SelectMany(f => f.ContainedFormLinks))
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.SkinTexture.TryGet(out var SkinTextureItem))
             {
-                foreach (var item in SkinTextureItem.Select(f => f.FormKeyNullable).NotNull())
+                foreach (var item in SkinTextureItem.NotNull())
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.TextureSwapList.TryGet(out var TextureSwapListItem))
             {
-                foreach (var item in TextureSwapListItem.Select(f => f.FormKeyNullable).NotNull())
+                foreach (var item in TextureSwapListItem.NotNull())
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
-            foreach (var item in obj.AdditionalRaces.Select(f => f.FormKey))
+            foreach (var item in obj.AdditionalRaces)
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
-            if (obj.FootstepSound.FormKeyNullable.TryGet(out var FootstepSoundKey))
+            if (obj.FootstepSound.FormKeyNullable.HasValue)
             {
-                yield return FootstepSoundKey;
+                yield return FormLinkInformation.Factory(obj.FootstepSound);
             }
-            if (obj.ArtObject.FormKeyNullable.TryGet(out var ArtObjectKey))
+            if (obj.ArtObject.FormKeyNullable.HasValue)
             {
-                yield return ArtObjectKey;
+                yield return FormLinkInformation.Factory(obj.ArtObject);
             }
             yield break;
         }
         
-        public void RemapLinks(IArmorAddonGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(ArmorAddon obj, ArmorAddon rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public ArmorAddon Duplicate(
+            IArmorAddonGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new ArmorAddon(getNextFormKey(), ((IArmorAddonGetter)item).FormVersion);
-            ret.DeepCopyIn((ArmorAddon)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (ArmorAddon)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new ArmorAddon(formKey, default(SkyrimRelease));
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override SkyrimMajorRecord Duplicate(
+            ISkyrimMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IArmorAddon)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IArmorAddon)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         
@@ -2595,10 +2644,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => ArmorAddonCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ArmorAddonCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => ArmorAddonCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ArmorAddonBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

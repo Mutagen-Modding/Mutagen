@@ -961,12 +961,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = SkyrimModHeader_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => SkyrimModHeaderCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => SkyrimModHeaderCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimModHeaderCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimModHeaderCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => SkyrimModHeaderCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimModHeaderSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -1028,7 +1024,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ISkyrimModHeader :
         ISkyrimModHeaderGetter,
         ILoquiObjectSetter<ISkyrimModHeader>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new SkyrimModHeader.HeaderFlag Flags { get; set; }
         new UInt32 FormID { get; set; }
@@ -1049,7 +1045,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ISkyrimModHeaderGetter :
         ILoquiObject,
         ILoquiObject<ISkyrimModHeaderGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -1358,6 +1354,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.INCC = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(ISkyrimModHeader obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.OverriddenForms?.RemapLinks(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ISkyrimModHeader item,
@@ -1633,19 +1637,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ISkyrimModHeaderGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ISkyrimModHeaderGetter obj)
         {
             if (obj.OverriddenForms.TryGet(out var OverriddenFormsItem))
             {
-                foreach (var item in OverriddenFormsItem.Select(f => f.FormKey))
+                foreach (var item in OverriddenFormsItem)
                 {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
             yield break;
         }
         
-        public void RemapLinks(ISkyrimModHeaderGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -2149,10 +2152,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => SkyrimModHeaderCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => SkyrimModHeaderCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => SkyrimModHeaderCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => SkyrimModHeaderBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

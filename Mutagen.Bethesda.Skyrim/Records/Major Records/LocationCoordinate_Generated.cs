@@ -467,12 +467,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => LocationCoordinateCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LocationCoordinateCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCoordinateCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCoordinateCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => LocationCoordinateCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCoordinateSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -534,7 +530,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILocationCoordinate :
         ILocationCoordinateGetter,
         ILoquiObjectSetter<ILocationCoordinate>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IComplexLocationGetter> Location { get; set; }
         new ExtendedList<P2Int16> Coordinates { get; }
@@ -543,7 +539,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILocationCoordinateGetter :
         ILoquiObject,
         ILoquiObject<ILocationCoordinateGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -815,6 +811,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Coordinates.Clear();
         }
         
+        #region Mutagen
+        public void RemapLinks(ILocationCoordinate obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Location = obj.Location.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ILocationCoordinate item,
@@ -960,13 +964,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ILocationCoordinateGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ILocationCoordinateGetter obj)
         {
-            yield return obj.Location.FormKey;
+            yield return FormLinkInformation.Factory(obj.Location);
             yield break;
         }
         
-        public void RemapLinks(ILocationCoordinateGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1209,10 +1212,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => LocationCoordinateCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LocationCoordinateCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => LocationCoordinateCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LocationCoordinateBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -547,12 +547,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = StoryManagerQuestNode_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => StoryManagerQuestNodeCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => StoryManagerQuestNodeCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => StoryManagerQuestNodeCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => StoryManagerQuestNodeCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => StoryManagerQuestNodeCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => StoryManagerQuestNodeSetterCommon.Instance.RemapLinks(this, mapping);
         public StoryManagerQuestNode(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -655,7 +651,7 @@ namespace Mutagen.Bethesda.Skyrim
         IStoryManagerQuestNodeGetter,
         IAStoryManagerNode,
         ILoquiObjectSetter<IStoryManagerQuestNodeInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new StoryManagerQuestNode.QuestFlag? Flags { get; set; }
         new UInt32? MaxConcurrentQuests { get; set; }
@@ -673,7 +669,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IStoryManagerQuestNodeGetter :
         IAStoryManagerNodeGetter,
         ILoquiObject<IStoryManagerQuestNodeGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => StoryManagerQuestNode_Registration.Instance;
@@ -798,6 +794,20 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
+
+        #region Mutagen
+        public static StoryManagerQuestNode Duplicate(
+            this IStoryManagerQuestNodeGetter item,
+            FormKey formKey,
+            StoryManagerQuestNode.TranslationMask? copyMask = null)
+        {
+            return ((StoryManagerQuestNodeCommon)((IStoryManagerQuestNodeGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
 
         #region Binary Translation
         public static void CopyInFromBinary(
@@ -945,6 +955,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IStoryManagerQuestNodeInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IStoryManagerQuestNode obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.Quests.RemapLinks(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1265,30 +1284,64 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IStoryManagerQuestNodeGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IStoryManagerQuestNodeGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
-            foreach (var item in obj.Quests.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.Quests.SelectMany(f => f.ContainedFormLinks))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
         
-        public void RemapLinks(IStoryManagerQuestNodeGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(StoryManagerQuestNode obj, StoryManagerQuestNode rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public StoryManagerQuestNode Duplicate(
+            IStoryManagerQuestNodeGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new StoryManagerQuestNode(getNextFormKey(), ((IStoryManagerQuestNodeGetter)item).FormVersion);
-            ret.DeepCopyIn((StoryManagerQuestNode)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (StoryManagerQuestNode)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new StoryManagerQuestNode(formKey, default(SkyrimRelease));
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override AStoryManagerNode Duplicate(
+            IAStoryManagerNodeGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IStoryManagerQuestNode)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override SkyrimMajorRecord Duplicate(
+            ISkyrimMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IStoryManagerQuestNode)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IStoryManagerQuestNode)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         
@@ -1752,10 +1805,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => StoryManagerQuestNodeCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => StoryManagerQuestNodeCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => StoryManagerQuestNodeCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => StoryManagerQuestNodeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

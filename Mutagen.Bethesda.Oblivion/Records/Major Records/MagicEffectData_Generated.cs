@@ -684,12 +684,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Break0 = 1
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => MagicEffectDataCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => MagicEffectDataCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectDataCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectDataCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => MagicEffectDataCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -751,7 +747,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IMagicEffectData :
         IMagicEffectDataGetter,
         ILoquiObjectSetter<IMagicEffectData>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new MagicEffectData.VersioningBreaks Versioning { get; set; }
         new MagicEffect.MagicFlag Flags { get; set; }
@@ -769,7 +765,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IMagicEffectDataGetter :
         ILoquiObject,
         ILoquiObject<IMagicEffectDataGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -1069,6 +1065,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.SubData = null;
         }
         
+        #region Mutagen
+        public void RemapLinks(IMagicEffectData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Light = obj.Light.Relink(mapping);
+            obj.EffectShader = obj.EffectShader.Relink(mapping);
+            if (obj.Versioning.HasFlag(MagicEffectData.VersioningBreaks.Break0)) return;
+            obj.SubData?.RemapLinks(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IMagicEffectData item,
@@ -1271,14 +1278,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IMagicEffectDataGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IMagicEffectDataGetter obj)
         {
-            yield return obj.Light.FormKey;
-            yield return obj.EffectShader.FormKey;
+            yield return FormLinkInformation.Factory(obj.Light);
+            yield return FormLinkInformation.Factory(obj.EffectShader);
             if (obj.Versioning.HasFlag(MagicEffectData.VersioningBreaks.Break0)) yield break;
             if (obj.SubData.TryGet(out var SubDataItems))
             {
-                foreach (var item in SubDataItems.LinkFormKeys)
+                foreach (var item in SubDataItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
@@ -1286,7 +1293,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(IMagicEffectDataGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1610,10 +1616,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => MagicEffectDataCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => MagicEffectDataCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => MagicEffectDataCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => MagicEffectDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda.Internals
     public class ModHeaderWriteLogic
     {
         private readonly List<Action<IMajorRecordCommonGetter>> _recordIterationActions = new List<Action<IMajorRecordCommonGetter>>();
-        private readonly List<Action<FormKey, FormKey>> _formLinkIterationActions = new List<Action<FormKey, FormKey>>();
+        private readonly List<Action<FormKey, FormLinkInformation>> _formLinkIterationActions = new List<Action<FormKey, FormLinkInformation>>();
         private readonly BinaryWriteParameters _params;
 
         private readonly ModKey _modKey;
@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Internals
                     {
                         majAction(maj);
                     }
-                    foreach (var formKey in maj.LinkFormKeys)
+                    foreach (var formKey in maj.ContainedFormLinks)
                     {
                         foreach (var formLinkAction in _formLinkIterationActions)
                         {
@@ -130,7 +130,7 @@ namespace Mutagen.Bethesda.Internals
                     break;
                 case BinaryWriteParameters.MastersListContentOption.Iterate:
                     _recordIterationActions.Add(maj => _modKeys[maj.FormKey.ModKey] = maj.FormKey);
-                    _formLinkIterationActions.Add((maj, formLink) => _modKeys[formLink.ModKey] = maj);
+                    _formLinkIterationActions.Add((maj, formLink) => _modKeys[formLink.FormKey.ModKey] = maj);
                     break;
                 default:
                     throw new NotImplementedException();

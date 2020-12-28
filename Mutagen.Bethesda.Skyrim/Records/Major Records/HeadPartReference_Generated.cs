@@ -385,12 +385,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => HeadPartReferenceCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => HeadPartReferenceCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadPartReferenceCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadPartReferenceCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => HeadPartReferenceCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadPartReferenceSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -452,7 +448,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IHeadPartReference :
         IHeadPartReferenceGetter,
         ILoquiObjectSetter<IHeadPartReference>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new Int32? Number { get; set; }
         new FormLinkNullable<IHeadPartGetter> Head { get; set; }
@@ -461,7 +457,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IHeadPartReferenceGetter :
         ILoquiObject,
         ILoquiObject<IHeadPartReferenceGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -745,6 +741,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Head = FormLinkNullable<IHeadPartGetter>.Null;
         }
         
+        #region Mutagen
+        public void RemapLinks(IHeadPartReference obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Head = obj.Head.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IHeadPartReference item,
@@ -878,16 +882,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IHeadPartReferenceGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IHeadPartReferenceGetter obj)
         {
-            if (obj.Head.FormKeyNullable.TryGet(out var HeadKey))
+            if (obj.Head.FormKeyNullable.HasValue)
             {
-                yield return HeadKey;
+                yield return FormLinkInformation.Factory(obj.Head);
             }
             yield break;
         }
         
-        public void RemapLinks(IHeadPartReferenceGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1134,10 +1137,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => HeadPartReferenceCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => HeadPartReferenceCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => HeadPartReferenceCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => HeadPartReferenceBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

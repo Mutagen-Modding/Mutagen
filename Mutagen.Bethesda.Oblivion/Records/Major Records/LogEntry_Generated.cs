@@ -551,12 +551,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => LogEntryCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LogEntryCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LogEntryCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LogEntryCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => LogEntryCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LogEntrySetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -618,7 +614,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILogEntry :
         ILogEntryGetter,
         ILoquiObjectSetter<ILogEntry>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new LogEntry.Flag? Flags { get; set; }
         new ExtendedList<Condition> Conditions { get; }
@@ -629,7 +625,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILogEntryGetter :
         ILoquiObject,
         ILoquiObject<ILogEntryGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -923,6 +919,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ResultScript = null;
         }
         
+        #region Mutagen
+        public void RemapLinks(ILogEntry obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.ResultScript?.RemapLinks(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ILogEntry item,
@@ -1099,11 +1103,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ILogEntryGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ILogEntryGetter obj)
         {
-            if (obj.ResultScript is ILinkedFormKeyContainerGetter ResultScriptlinkCont)
+            if (obj.ResultScript is IFormLinkContainerGetter ResultScriptlinkCont)
             {
-                foreach (var item in ResultScriptlinkCont.LinkFormKeys)
+                foreach (var item in ResultScriptlinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
@@ -1111,7 +1115,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        public void RemapLinks(ILogEntryGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1449,10 +1452,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => LogEntryCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LogEntryCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => LogEntryCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LogEntryBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

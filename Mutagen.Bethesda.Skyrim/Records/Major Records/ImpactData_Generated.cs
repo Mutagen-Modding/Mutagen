@@ -384,12 +384,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = ImpactData_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => ImpactDataCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ImpactDataCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ImpactDataCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ImpactDataCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => ImpactDataCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ImpactDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -451,7 +447,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IImpactData :
         IImpactDataGetter,
         ILoquiObjectSetter<IImpactData>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IMaterialTypeGetter> Material { get; set; }
         new FormLink<IImpactGetter> Impact { get; set; }
@@ -460,7 +456,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IImpactDataGetter :
         ILoquiObject,
         ILoquiObject<IImpactDataGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -733,6 +729,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Impact = FormLink<IImpactGetter>.Null;
         }
         
+        #region Mutagen
+        public void RemapLinks(IImpactData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Material = obj.Material.Relink(mapping);
+            obj.Impact = obj.Impact.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IImpactData item,
@@ -864,14 +869,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IImpactDataGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IImpactDataGetter obj)
         {
-            yield return obj.Material.FormKey;
-            yield return obj.Impact.FormKey;
+            yield return FormLinkInformation.Factory(obj.Material);
+            yield return FormLinkInformation.Factory(obj.Impact);
             yield break;
         }
         
-        public void RemapLinks(IImpactDataGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1093,10 +1097,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => ImpactDataCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ImpactDataCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => ImpactDataCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ImpactDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

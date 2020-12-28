@@ -446,12 +446,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = WeatherImageSpaces_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => WeatherImageSpacesCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => WeatherImageSpacesCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherImageSpacesCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherImageSpacesCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => WeatherImageSpacesCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherImageSpacesSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -513,7 +509,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IWeatherImageSpaces :
         IWeatherImageSpacesGetter,
         ILoquiObjectSetter<IWeatherImageSpaces>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IImageSpaceAdapterGetter> Sunrise { get; set; }
         new FormLink<IImageSpaceAdapterGetter> Day { get; set; }
@@ -524,7 +520,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IWeatherImageSpacesGetter :
         ILoquiObject,
         ILoquiObject<IWeatherImageSpacesGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -803,6 +799,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Night = FormLink<IImageSpaceAdapterGetter>.Null;
         }
         
+        #region Mutagen
+        public void RemapLinks(IWeatherImageSpaces obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Sunrise = obj.Sunrise.Relink(mapping);
+            obj.Day = obj.Day.Relink(mapping);
+            obj.Sunset = obj.Sunset.Relink(mapping);
+            obj.Night = obj.Night.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IWeatherImageSpaces item,
@@ -948,16 +955,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IWeatherImageSpacesGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IWeatherImageSpacesGetter obj)
         {
-            yield return obj.Sunrise.FormKey;
-            yield return obj.Day.FormKey;
-            yield return obj.Sunset.FormKey;
-            yield return obj.Night.FormKey;
+            yield return FormLinkInformation.Factory(obj.Sunrise);
+            yield return FormLinkInformation.Factory(obj.Day);
+            yield return FormLinkInformation.Factory(obj.Sunset);
+            yield return FormLinkInformation.Factory(obj.Night);
             yield break;
         }
         
-        public void RemapLinks(IWeatherImageSpacesGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1199,10 +1205,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => WeatherImageSpacesCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => WeatherImageSpacesCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => WeatherImageSpacesCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WeatherImageSpacesBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

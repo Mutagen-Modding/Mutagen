@@ -477,12 +477,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = CreateReferenceToObject_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => CreateReferenceToObjectCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => CreateReferenceToObjectCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CreateReferenceToObjectCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CreateReferenceToObjectCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => CreateReferenceToObjectCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CreateReferenceToObjectSetterCommon.Instance.RemapLinks(this, mapping);
         [Flags]
         public enum ALCADataType
         {
@@ -548,7 +544,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ICreateReferenceToObject :
         ICreateReferenceToObjectGetter,
         ILoquiObjectSetter<ICreateReferenceToObject>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<ISkyrimMajorRecordGetter> Object { get; set; }
         new Int16 AliasIndex { get; set; }
@@ -560,7 +556,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ICreateReferenceToObjectGetter :
         ILoquiObject,
         ILoquiObject<ICreateReferenceToObjectGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -842,6 +838,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ALCADataTypeState = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(ICreateReferenceToObject obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Object = obj.Object.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ICreateReferenceToObject item,
@@ -992,13 +996,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ICreateReferenceToObjectGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ICreateReferenceToObjectGetter obj)
         {
-            yield return obj.Object.FormKey;
+            yield return FormLinkInformation.Factory(obj.Object);
             yield break;
         }
         
-        public void RemapLinks(ICreateReferenceToObjectGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1282,10 +1285,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => CreateReferenceToObjectCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => CreateReferenceToObjectCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => CreateReferenceToObjectCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => CreateReferenceToObjectBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

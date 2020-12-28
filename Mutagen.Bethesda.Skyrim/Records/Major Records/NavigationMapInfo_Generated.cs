@@ -964,12 +964,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = NavigationMapInfo_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => NavigationMapInfoCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => NavigationMapInfoCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavigationMapInfoCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavigationMapInfoCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => NavigationMapInfoCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavigationMapInfoSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -1031,7 +1027,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface INavigationMapInfo :
         INavigationMapInfoGetter,
         ILoquiObjectSetter<INavigationMapInfo>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IANavigationMeshGetter> NavigationMesh { get; set; }
         new Int32 Unknown { get; set; }
@@ -1050,7 +1046,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface INavigationMapInfoGetter :
         ILoquiObject,
         ILoquiObject<INavigationMapInfoGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -1353,6 +1349,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ParentCell = FormLink<ICellGetter>.Null;
         }
         
+        #region Mutagen
+        public void RemapLinks(INavigationMapInfo obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.NavigationMesh = obj.NavigationMesh.Relink(mapping);
+            obj.MergedTo.RemapLinks(mapping);
+            obj.PreferredMerges.RemapLinks(mapping);
+            obj.LinkedDoors.RemapLinks(mapping);
+            obj.ParentWorldspace = obj.ParentWorldspace.Relink(mapping);
+            obj.ParentCell = obj.ParentCell.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             INavigationMapInfo item,
@@ -1613,27 +1622,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(INavigationMapInfoGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(INavigationMapInfoGetter obj)
         {
-            yield return obj.NavigationMesh.FormKey;
-            foreach (var item in obj.MergedTo.Select(f => f.FormKey))
+            yield return FormLinkInformation.Factory(obj.NavigationMesh);
+            foreach (var item in obj.MergedTo)
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.PreferredMerges.Select(f => f.FormKey))
+            foreach (var item in obj.PreferredMerges)
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.LinkedDoors.SelectMany(f => f.LinkFormKeys))
+            foreach (var item in obj.LinkedDoors.SelectMany(f => f.ContainedFormLinks))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
-            yield return obj.ParentWorldspace.FormKey;
-            yield return obj.ParentCell.FormKey;
+            yield return FormLinkInformation.Factory(obj.ParentWorldspace);
+            yield return FormLinkInformation.Factory(obj.ParentCell);
             yield break;
         }
         
-        public void RemapLinks(INavigationMapInfoGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -2071,10 +2079,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => NavigationMapInfoCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => NavigationMapInfoCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => NavigationMapInfoCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => NavigationMapInfoBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

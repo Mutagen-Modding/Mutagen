@@ -414,12 +414,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => LocationCellUniqueCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LocationCellUniqueCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCellUniqueCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCellUniqueCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => LocationCellUniqueCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCellUniqueSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -481,7 +477,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILocationCellUnique :
         ILocationCellUniqueGetter,
         ILoquiObjectSetter<ILocationCellUnique>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<INpcGetter> Actor { get; set; }
         new FormLink<IPlacedNpcGetter> Ref { get; set; }
@@ -491,7 +487,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILocationCellUniqueGetter :
         ILoquiObject,
         ILoquiObject<ILocationCellUniqueGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -766,6 +762,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Location = FormLink<ILocationGetter>.Null;
         }
         
+        #region Mutagen
+        public void RemapLinks(ILocationCellUnique obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Actor = obj.Actor.Relink(mapping);
+            obj.Ref = obj.Ref.Relink(mapping);
+            obj.Location = obj.Location.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ILocationCellUnique item,
@@ -901,15 +907,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ILocationCellUniqueGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ILocationCellUniqueGetter obj)
         {
-            yield return obj.Actor.FormKey;
-            yield return obj.Ref.FormKey;
-            yield return obj.Location.FormKey;
+            yield return FormLinkInformation.Factory(obj.Actor);
+            yield return FormLinkInformation.Factory(obj.Ref);
+            yield return FormLinkInformation.Factory(obj.Location);
             yield break;
         }
         
-        public void RemapLinks(ILocationCellUniqueGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1135,10 +1140,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => LocationCellUniqueCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => LocationCellUniqueCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => LocationCellUniqueCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LocationCellUniqueBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

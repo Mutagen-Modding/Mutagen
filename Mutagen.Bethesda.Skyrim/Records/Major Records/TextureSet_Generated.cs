@@ -970,6 +970,20 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask);
         }
 
+        #region Mutagen
+        public static TextureSet Duplicate(
+            this ITextureSetGetter item,
+            FormKey formKey,
+            TextureSet.TranslationMask? copyMask = null)
+        {
+            return ((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
+
         #region Binary Translation
         public static void CopyInFromBinary(
             this ITextureSetInternal item,
@@ -1122,6 +1136,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (ITextureSetInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(ITextureSet obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -1454,26 +1476,49 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ITextureSetGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ITextureSetGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
             yield break;
         }
         
-        public void RemapLinks(ITextureSetGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(TextureSet obj, TextureSet rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public TextureSet Duplicate(
+            ITextureSetGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new TextureSet(getNextFormKey(), ((ITextureSetGetter)item).FormVersion);
-            ret.DeepCopyIn((TextureSet)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (TextureSet)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new TextureSet(formKey, default(SkyrimRelease));
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override SkyrimMajorRecord Duplicate(
+            ISkyrimMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (ITextureSet)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (ITextureSet)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         

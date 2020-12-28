@@ -762,6 +762,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Damage = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IWeaponBasicStats obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IWeaponBasicStats item,
@@ -900,12 +907,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IWeaponBasicStatsGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IWeaponBasicStatsGetter obj)
         {
             yield break;
         }
         
-        public void RemapLinks(IWeaponBasicStatsGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

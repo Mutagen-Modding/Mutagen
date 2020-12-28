@@ -381,12 +381,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => SkyrimMajorRecordCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => SkyrimMajorRecordCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimMajorRecordCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimMajorRecordCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => SkyrimMajorRecordCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimMajorRecordSetterCommon.Instance.RemapLinks(this, mapping);
         public SkyrimMajorRecord(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -500,7 +496,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMajorRecord,
         IMajorRecordEnumerable,
         ILoquiObjectSetter<ISkyrimMajorRecordInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new UInt16 FormVersion { get; set; }
         new UInt16 Version2 { get; set; }
@@ -517,7 +513,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMajorRecordGetter,
         IMajorRecordGetterEnumerable,
         ILoquiObject<ISkyrimMajorRecordGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => SkyrimMajorRecord_Registration.Instance;
@@ -854,6 +850,17 @@ namespace Mutagen.Bethesda.Skyrim
                 throwIfUnknown: throwIfUnknown);
         }
 
+        public static SkyrimMajorRecord Duplicate(
+            this ISkyrimMajorRecordGetter item,
+            FormKey formKey,
+            SkyrimMajorRecord.TranslationMask? copyMask = null)
+        {
+            return ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
         #endregion
 
         #region Binary Translation
@@ -984,6 +991,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
+        public void RemapLinks(ISkyrimMajorRecord obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+        }
+        
         public virtual IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(ISkyrimMajorRecordInternal obj)
         {
             foreach (var item in SkyrimMajorRecordCommon.Instance.EnumerateMajorRecords(obj))
@@ -1214,21 +1226,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ISkyrimMajorRecordGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ISkyrimMajorRecordGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
             yield break;
-        }
-        
-        public void RemapLinks(ISkyrimMajorRecordGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(SkyrimMajorRecord obj, SkyrimMajorRecord rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
-        {
-            throw new NotImplementedException();
         }
         
         public virtual IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(ISkyrimMajorRecordGetter obj)
@@ -1273,6 +1277,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
             }
         }
+        
+        #region Duplicate
+        public virtual SkyrimMajorRecord Duplicate(
+            ISkyrimMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            throw new NotImplementedException();
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (ISkyrimMajorRecord)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         
@@ -1540,10 +1566,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => SkyrimMajorRecordCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => SkyrimMajorRecordCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => SkyrimMajorRecordCommon.Instance.GetContainedFormLinks(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

@@ -657,12 +657,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => FunctionConditionDataCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => FunctionConditionDataCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FunctionConditionDataCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FunctionConditionDataCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => FunctionConditionDataCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FunctionConditionDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -723,7 +719,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFunctionConditionDataGetter,
         IConditionData,
         ILoquiObjectSetter<IFunctionConditionData>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new UInt16 Function { get; set; }
         new UInt16 Unknown2 { get; set; }
@@ -741,7 +737,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IFunctionConditionDataGetter :
         IConditionDataGetter,
         ILoquiObject<IFunctionConditionDataGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => FunctionConditionData_Registration.Instance;
@@ -1015,6 +1011,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IFunctionConditionData)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(IFunctionConditionData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.ParameterOneRecord = obj.ParameterOneRecord.Relink(mapping);
+            obj.ParameterTwoRecord = obj.ParameterTwoRecord.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IFunctionConditionData item,
@@ -1255,18 +1261,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IFunctionConditionDataGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IFunctionConditionDataGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
-            yield return obj.ParameterOneRecord.FormKey;
-            yield return obj.ParameterTwoRecord.FormKey;
+            yield return FormLinkInformation.Factory(obj.ParameterOneRecord);
+            yield return FormLinkInformation.Factory(obj.ParameterTwoRecord);
             yield break;
         }
         
-        public void RemapLinks(IFunctionConditionDataGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1545,10 +1550,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => FunctionConditionDataCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => FunctionConditionDataCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => FunctionConditionDataCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => FunctionConditionDataBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

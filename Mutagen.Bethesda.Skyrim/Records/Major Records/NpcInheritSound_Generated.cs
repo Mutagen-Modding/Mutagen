@@ -336,12 +336,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = NpcInheritSound_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => NpcInheritSoundCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => NpcInheritSoundCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcInheritSoundCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcInheritSoundCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => NpcInheritSoundCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcInheritSoundSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -402,7 +398,7 @@ namespace Mutagen.Bethesda.Skyrim
         INpcInheritSoundGetter,
         IANpcSoundDefinition,
         ILoquiObjectSetter<INpcInheritSound>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLinkNullable<INpcGetter> InheritsSoundsFrom { get; set; }
     }
@@ -410,7 +406,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface INpcInheritSoundGetter :
         IANpcSoundDefinitionGetter,
         ILoquiObject<INpcInheritSoundGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => NpcInheritSound_Registration.Instance;
@@ -655,6 +651,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (INpcInheritSound)item);
         }
         
+        #region Mutagen
+        public void RemapLinks(INpcInheritSound obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.InheritsSoundsFrom = obj.InheritsSoundsFrom.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             INpcInheritSound item,
@@ -818,20 +823,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(INpcInheritSoundGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(INpcInheritSoundGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
-            if (obj.InheritsSoundsFrom.FormKeyNullable.TryGet(out var InheritsSoundsFromKey))
+            if (obj.InheritsSoundsFrom.FormKeyNullable.HasValue)
             {
-                yield return InheritsSoundsFromKey;
+                yield return FormLinkInformation.Factory(obj.InheritsSoundsFrom);
             }
             yield break;
         }
         
-        public void RemapLinks(INpcInheritSoundGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1075,10 +1079,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => NpcInheritSoundCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => NpcInheritSoundCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => NpcInheritSoundCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => NpcInheritSoundBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

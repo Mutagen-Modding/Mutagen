@@ -703,12 +703,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = ActorValuePerkNode_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => ActorValuePerkNodeCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ActorValuePerkNodeCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActorValuePerkNodeCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActorValuePerkNodeCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => ActorValuePerkNodeCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActorValuePerkNodeSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -770,7 +766,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IActorValuePerkNode :
         IActorValuePerkNodeGetter,
         ILoquiObjectSetter<IActorValuePerkNode>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLink<IPerkGetter> Perk { get; set; }
         new MemorySlice<Byte>? FNAM { get; set; }
@@ -786,7 +782,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IActorValuePerkNodeGetter :
         ILoquiObject,
         ILoquiObject<IActorValuePerkNodeGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -1080,6 +1076,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Index = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(IActorValuePerkNode obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Perk = obj.Perk.Relink(mapping);
+            obj.AssociatedSkill = obj.AssociatedSkill.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IActorValuePerkNode item,
@@ -1299,17 +1304,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IActorValuePerkNodeGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IActorValuePerkNodeGetter obj)
         {
-            yield return obj.Perk.FormKey;
-            if (obj.AssociatedSkill.FormKeyNullable.TryGet(out var AssociatedSkillKey))
+            yield return FormLinkInformation.Factory(obj.Perk);
+            if (obj.AssociatedSkill.FormKeyNullable.HasValue)
             {
-                yield return AssociatedSkillKey;
+                yield return FormLinkInformation.Factory(obj.AssociatedSkill);
             }
             yield break;
         }
         
-        public void RemapLinks(IActorValuePerkNodeGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1679,10 +1683,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => ActorValuePerkNodeCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => ActorValuePerkNodeCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => ActorValuePerkNodeCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ActorValuePerkNodeBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

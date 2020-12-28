@@ -726,6 +726,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.End = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(ILinkedReferenceColor obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ILinkedReferenceColor item,
@@ -857,12 +864,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ILinkedReferenceColorGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ILinkedReferenceColorGetter obj)
         {
             yield break;
         }
         
-        public void RemapLinks(ILinkedReferenceColorGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

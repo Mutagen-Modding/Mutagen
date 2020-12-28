@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFrameworks>net5.0;netstandard2.1</TargetFrameworks>
     <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
@@ -21,14 +21,14 @@
   <ItemGroup>
     <PackageReference Include="Compression.BSA" Version="2.2.1.1" />
     <PackageReference Include="DotNetZip" Version="1.15.0" />
-    <PackageReference Include="DynamicData" Version="6.17.14" />
+    <PackageReference Include="DynamicData" Version="7.1.1" />
     <PackageReference Include="GitInfo" Version="2.1.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Loqui" Version="1.5.16" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.6.8" />
-    <PackageReference Include="NuGetizer" Version="0.4.11">
+    <PackageReference Include="Loqui" Version="2.1.1" />
+    <PackageReference Include="Noggog.CSharpExt" Version="2.2.0" />
+    <PackageReference Include="NuGetizer" Version="0.6.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -65,11 +65,11 @@
     <Compile Include="Extensions\FormLinkListMixIn.cs" />
     <Compile Include="Extensions\GameCategoryExt.cs" />
     <Compile Include="Extensions\ModKeyExt.cs" />
+    <Compile Include="Extensions\RemappingMixIn.cs" />
     <Compile Include="Extensions\RemoveExt.cs" />
     <Compile Include="Extensions\LoadOrderExt.cs" />
     <Compile Include="Extensions\GameReleaseExt.cs" />
     <Compile Include="Interfaces\Aspect\IKeywordCommon.cs" />
-    <Compile Include="Interfaces\IDuplicatable.cs" />
     <Compile Include="Interfaces\IGameSettingCommon.cs" />
     <Compile Include="Interfaces\IGroup.cs" />
     <Compile Include="Interfaces\Aspect\IKeyworded.cs" />
@@ -173,7 +173,7 @@
     <Compile Include="Links\FormLink.cs" />
     <Compile Include="Links\IEDIDLink.cs" />
     <Compile Include="Links\ILink.cs" />
-    <Compile Include="Links\ILinkedFormKeyContainerGetter.cs" />
+    <Compile Include="Links\IFormLinkContainerGetter.cs" />
     <Compile Include="Utility\MasterReferenceReader.cs" />
     <Compile Include="Processing\ModDecompressor.cs" />
     <Compile Include="Load Order\ModListing.cs" />

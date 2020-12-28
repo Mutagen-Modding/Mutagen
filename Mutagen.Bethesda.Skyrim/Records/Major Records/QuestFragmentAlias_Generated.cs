@@ -543,12 +543,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => QuestFragmentAliasCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => QuestFragmentAliasCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestFragmentAliasCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestFragmentAliasCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => QuestFragmentAliasCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestFragmentAliasSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -610,7 +606,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IQuestFragmentAlias :
         IQuestFragmentAliasGetter,
         ILoquiObjectSetter<IQuestFragmentAlias>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new ScriptObjectProperty Property { get; set; }
         new Int16 Version { get; set; }
@@ -621,7 +617,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IQuestFragmentAliasGetter :
         ILoquiObject,
         ILoquiObject<IQuestFragmentAliasGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -899,6 +895,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Scripts.Clear();
         }
         
+        #region Mutagen
+        public void RemapLinks(IQuestFragmentAlias obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Property.RemapLinks(mapping);
+            obj.Scripts.RemapLinks(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IQuestFragmentAlias item,
@@ -1058,21 +1063,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IQuestFragmentAliasGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IQuestFragmentAliasGetter obj)
         {
-            foreach (var item in obj.Property.LinkFormKeys)
+            foreach (var item in obj.Property.ContainedFormLinks)
             {
                 yield return item;
             }
-            foreach (var item in obj.Scripts.WhereCastable<IScriptEntryGetter, ILinkedFormKeyContainerGetter>()
-                .SelectMany((f) => f.LinkFormKeys))
+            foreach (var item in obj.Scripts.WhereCastable<IScriptEntryGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.ContainedFormLinks))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
         
-        public void RemapLinks(IQuestFragmentAliasGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1372,10 +1376,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => QuestFragmentAliasCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => QuestFragmentAliasCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => QuestFragmentAliasCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => QuestFragmentAliasBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

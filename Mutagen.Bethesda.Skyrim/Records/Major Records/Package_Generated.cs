@@ -1635,12 +1635,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Package_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => PackageCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PackageCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => PackageCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageSetterCommon.Instance.RemapLinks(this, mapping);
         public Package(
             FormKey formKey,
             SkyrimRelease gameRelease)
@@ -1751,7 +1747,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPackageGetter,
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IPackageInternal>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new PackageAdapter? VirtualMachineAdapter { get; set; }
         new Package.Flag Flags { get; set; }
@@ -1796,7 +1792,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPackageGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IPackageGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Package_Registration.Instance;
@@ -1947,6 +1943,20 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
+
+        #region Mutagen
+        public static Package Duplicate(
+            this IPackageGetter item,
+            FormKey formKey,
+            Package.TranslationMask? copyMask = null)
+        {
+            return ((PackageCommon)((IPackageGetter)item).CommonInstance()!).Duplicate(
+                item: item,
+                formKey: formKey,
+                copyMask: copyMask?.GetCrystal());
+        }
+
+        #endregion
 
         #region Binary Translation
         public static void CopyInFromBinary(
@@ -2138,6 +2148,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Clear(item: (IPackageInternal)item);
         }
+        
+        #region Mutagen
+        public void RemapLinks(IPackage obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
+            obj.Conditions.RemapLinks(mapping);
+            obj.IdleAnimations?.RemapLinks(mapping);
+            obj.CombatStyle = obj.CombatStyle.Relink(mapping);
+            obj.OwnerQuest = obj.OwnerQuest.Relink(mapping);
+            obj.PackageTemplate = obj.PackageTemplate.Relink(mapping);
+            obj.ProcedureTree.RemapLinks(mapping);
+            obj.OnBegin?.RemapLinks(mapping);
+            obj.OnEnd?.RemapLinks(mapping);
+            obj.OnChange?.RemapLinks(mapping);
+        }
+        
+        #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
@@ -2656,62 +2684,62 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IPackageGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IPackageGetter obj)
         {
-            foreach (var item in base.GetLinkFormKeys(obj))
+            foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
             }
-            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainerGetter VirtualMachineAdapterlinkCont)
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
             {
-                foreach (var item in VirtualMachineAdapterlinkCont.LinkFormKeys)
+                foreach (var item in VirtualMachineAdapterlinkCont.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainerGetter>()
-                .SelectMany((f) => f.LinkFormKeys))
+            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.ContainedFormLinks))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
             if (obj.IdleAnimations.TryGet(out var IdleAnimationsItems))
             {
-                foreach (var item in IdleAnimationsItems.LinkFormKeys)
+                foreach (var item in IdleAnimationsItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
-            if (obj.CombatStyle.FormKeyNullable.TryGet(out var CombatStyleKey))
+            if (obj.CombatStyle.FormKeyNullable.HasValue)
             {
-                yield return CombatStyleKey;
+                yield return FormLinkInformation.Factory(obj.CombatStyle);
             }
-            if (obj.OwnerQuest.FormKeyNullable.TryGet(out var OwnerQuestKey))
+            if (obj.OwnerQuest.FormKeyNullable.HasValue)
             {
-                yield return OwnerQuestKey;
+                yield return FormLinkInformation.Factory(obj.OwnerQuest);
             }
-            yield return obj.PackageTemplate.FormKey;
-            foreach (var item in obj.ProcedureTree.WhereCastable<IPackageBranchGetter, ILinkedFormKeyContainerGetter>()
-                .SelectMany((f) => f.LinkFormKeys))
+            yield return FormLinkInformation.Factory(obj.PackageTemplate);
+            foreach (var item in obj.ProcedureTree.WhereCastable<IPackageBranchGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.ContainedFormLinks))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
             if (obj.OnBegin.TryGet(out var OnBeginItems))
             {
-                foreach (var item in OnBeginItems.LinkFormKeys)
+                foreach (var item in OnBeginItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
             if (obj.OnEnd.TryGet(out var OnEndItems))
             {
-                foreach (var item in OnEndItems.LinkFormKeys)
+                foreach (var item in OnEndItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
             }
             if (obj.OnChange.TryGet(out var OnChangeItems))
             {
-                foreach (var item in OnChangeItems.LinkFormKeys)
+                foreach (var item in OnChangeItems.ContainedFormLinks)
                 {
                     yield return item;
                 }
@@ -2719,17 +2747,40 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IPackageGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(Package obj, Package rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        #region Duplicate
+        public Package Duplicate(
+            IPackageGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
         {
-            var ret = new Package(getNextFormKey(), ((IPackageGetter)item).FormVersion);
-            ret.DeepCopyIn((Package)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (Package)item, getNextFormKey, duplicatedRecords);
-            return ret;
+            var newRec = new Package(formKey, default(SkyrimRelease));
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
+        
+        public override SkyrimMajorRecord Duplicate(
+            ISkyrimMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IPackage)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        public override MajorRecord Duplicate(
+            IMajorRecordGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IPackage)item,
+                formKey: formKey,
+                copyMask: copyMask);
+        }
+        
+        #endregion
         
         #endregion
         
@@ -3599,10 +3650,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => PackageCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => PackageCommon.Instance.GetLinkFormKeys(this);
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => PackageCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PackageBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

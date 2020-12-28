@@ -418,12 +418,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => TintPresetCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => TintPresetCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TintPresetCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TintPresetCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => TintPresetCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TintPresetSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -485,7 +481,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ITintPreset :
         ITintPresetGetter,
         ILoquiObjectSetter<ITintPreset>,
-        ILinkedFormKeyContainer
+        IFormLinkContainer
     {
         new FormLinkNullable<IColorRecordGetter> Color { get; set; }
         new Single? DefaultValue { get; set; }
@@ -495,7 +491,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ITintPresetGetter :
         ILoquiObject,
         ILoquiObject<ITintPresetGetter>,
-        ILinkedFormKeyContainerGetter,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -783,6 +779,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Index = default;
         }
         
+        #region Mutagen
+        public void RemapLinks(ITintPreset obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            obj.Color = obj.Color.Relink(mapping);
+        }
+        
+        #endregion
+        
         #region Binary Translation
         public virtual void CopyInFromBinary(
             ITintPreset item,
@@ -927,16 +931,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ITintPresetGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ITintPresetGetter obj)
         {
-            if (obj.Color.FormKeyNullable.TryGet(out var ColorKey))
+            if (obj.Color.FormKeyNullable.HasValue)
             {
-                yield return ColorKey;
+                yield return FormLinkInformation.Factory(obj.Color);
             }
             yield break;
         }
         
-        public void RemapLinks(ITintPresetGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1198,10 +1201,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => TintPresetCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainerGetter.LinkFormKeys => TintPresetCommon.Instance.GetLinkFormKeys(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => TintPresetCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => TintPresetBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
