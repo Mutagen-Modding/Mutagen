@@ -28,6 +28,9 @@ using System.Text;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
+    /// <summary>
+    /// Implemented by: [GlobalInt, GlobalShort, GlobalFloat]
+    /// </summary>
     public abstract partial class Global :
         OblivionMajorRecord,
         IGlobalInternal,
@@ -366,6 +369,9 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [GlobalInt, GlobalShort, GlobalFloat]
+    /// </summary>
     public partial interface IGlobal :
         IGlobalGetter,
         IOblivionMajorRecord,
@@ -380,6 +386,9 @@ namespace Mutagen.Bethesda.Oblivion
     {
     }
 
+    /// <summary>
+    /// Implemented by: [GlobalInt, GlobalShort, GlobalFloat]
+    /// </summary>
     public partial interface IGlobalGetter :
         IOblivionMajorRecordGetter,
         ILoquiObject<IGlobalGetter>,

@@ -27,6 +27,9 @@ using System.Text;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
+    /// <summary>
+    /// Implemented by: [VirtualMachineAdapter, DialogResponsesAdapter, PackageAdapter, PerkAdapter, QuestAdapter, SceneAdapter]
+    /// </summary>
     public abstract partial class AVirtualMachineAdapter :
         IAVirtualMachineAdapter,
         ILoquiObjectSetter<AVirtualMachineAdapter>,
@@ -540,6 +543,9 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [VirtualMachineAdapter, DialogResponsesAdapter, PackageAdapter, PerkAdapter, QuestAdapter, SceneAdapter]
+    /// </summary>
     public partial interface IAVirtualMachineAdapter :
         IAVirtualMachineAdapterGetter,
         ILoquiObjectSetter<IAVirtualMachineAdapter>,
@@ -550,6 +556,9 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<ScriptEntry> Scripts { get; }
     }
 
+    /// <summary>
+    /// Implemented by: [VirtualMachineAdapter, DialogResponsesAdapter, PackageAdapter, PerkAdapter, QuestAdapter, SceneAdapter]
+    /// </summary>
     public partial interface IAVirtualMachineAdapterGetter :
         ILoquiObject,
         ILoquiObject<IAVirtualMachineAdapterGetter>,

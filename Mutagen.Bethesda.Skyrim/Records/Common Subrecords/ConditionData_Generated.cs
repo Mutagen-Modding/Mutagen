@@ -26,6 +26,9 @@ using System.Text;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
+    /// <summary>
+    /// Implemented by: [FunctionConditionData, GetEventData]
+    /// </summary>
     public abstract partial class ConditionData :
         IConditionData,
         ILoquiObjectSetter<ConditionData>,
@@ -351,6 +354,9 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [FunctionConditionData, GetEventData]
+    /// </summary>
     public partial interface IConditionData :
         IConditionDataGetter,
         ILoquiObjectSetter<IConditionData>,
@@ -358,6 +364,9 @@ namespace Mutagen.Bethesda.Skyrim
     {
     }
 
+    /// <summary>
+    /// Implemented by: [FunctionConditionData, GetEventData]
+    /// </summary>
     public partial interface IConditionDataGetter :
         ILoquiObject,
         ILoquiObject<IConditionDataGetter>,

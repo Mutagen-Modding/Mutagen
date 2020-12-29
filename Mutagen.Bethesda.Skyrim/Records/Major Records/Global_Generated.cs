@@ -28,6 +28,9 @@ using System.Text;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
+    /// <summary>
+    /// Implemented by: [GlobalInt, GlobalShort, GlobalFloat]
+    /// </summary>
     public abstract partial class Global :
         SkyrimMajorRecord,
         IGlobalInternal,
@@ -390,6 +393,9 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [GlobalInt, GlobalShort, GlobalFloat]
+    /// </summary>
     public partial interface IGlobal :
         IGlobalGetter,
         ISkyrimMajorRecord,
@@ -408,6 +414,9 @@ namespace Mutagen.Bethesda.Skyrim
     {
     }
 
+    /// <summary>
+    /// Implemented by: [GlobalInt, GlobalShort, GlobalFloat]
+    /// </summary>
     public partial interface IGlobalGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IGlobalGetter>,

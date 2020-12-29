@@ -28,6 +28,9 @@ using System.Text;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
+    /// <summary>
+    /// Implemented by: [Cell, Worldspace]
+    /// </summary>
     public abstract partial class Place :
         OblivionMajorRecord,
         IPlaceInternal,
@@ -401,6 +404,9 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [Cell, Worldspace]
+    /// </summary>
     public partial interface IPlace :
         IPlaceGetter,
         IOblivionMajorRecord,
@@ -417,6 +423,9 @@ namespace Mutagen.Bethesda.Oblivion
     {
     }
 
+    /// <summary>
+    /// Implemented by: [Cell, Worldspace]
+    /// </summary>
     public partial interface IPlaceGetter :
         IOblivionMajorRecordGetter,
         IMajorRecordGetterEnumerable,

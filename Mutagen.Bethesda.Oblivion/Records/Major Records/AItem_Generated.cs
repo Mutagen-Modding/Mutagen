@@ -28,6 +28,9 @@ using System.Text;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
+    /// <summary>
+    /// Implemented by: [AClothing, AlchemicalApparatus, Ammunition, Book, Ingredient, Key, LeveledItem, Light, Miscellaneous, Potion, SigilStone, SoulGem, Weapon]
+    /// </summary>
     public abstract partial class AItem :
         OblivionMajorRecord,
         IAItemInternal,
@@ -367,6 +370,9 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [AClothing, AlchemicalApparatus, Ammunition, Book, Ingredient, Key, LeveledItem, Light, Miscellaneous, Potion, SigilStone, SoulGem, Weapon]
+    /// </summary>
     public partial interface IAItem :
         IAItemGetter,
         IOblivionMajorRecord,
@@ -382,6 +388,9 @@ namespace Mutagen.Bethesda.Oblivion
     {
     }
 
+    /// <summary>
+    /// Implemented by: [AClothing, AlchemicalApparatus, Ammunition, Book, Ingredient, Key, LeveledItem, Light, Miscellaneous, Potion, SigilStone, SoulGem, Weapon]
+    /// </summary>
     public partial interface IAItemGetter :
         IOblivionMajorRecordGetter,
         ILoquiObject<IAItemGetter>,

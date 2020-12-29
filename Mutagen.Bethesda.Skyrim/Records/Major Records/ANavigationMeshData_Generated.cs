@@ -27,6 +27,9 @@ using System.Text;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
+    /// <summary>
+    /// Implemented by: [WorldspaceNavigationMeshData, CellNavigationMeshData]
+    /// </summary>
     public abstract partial class ANavigationMeshData :
         IANavigationMeshData,
         ILoquiObjectSetter<ANavigationMeshData>,
@@ -1082,6 +1085,9 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [WorldspaceNavigationMeshData, CellNavigationMeshData]
+    /// </summary>
     public partial interface IANavigationMeshData :
         IANavigationMeshDataGetter,
         ILoquiObjectSetter<IANavigationMeshData>,
@@ -1101,6 +1107,9 @@ namespace Mutagen.Bethesda.Skyrim
         new MemorySlice<Byte> NavmeshGrid { get; set; }
     }
 
+    /// <summary>
+    /// Implemented by: [WorldspaceNavigationMeshData, CellNavigationMeshData]
+    /// </summary>
     public partial interface IANavigationMeshDataGetter :
         ILoquiObject,
         ILoquiObject<IANavigationMeshDataGetter>,

@@ -26,6 +26,9 @@ using System.Text;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
+    /// <summary>
+    /// Implemented by: [NpcInheritSound, NpcSoundTypes]
+    /// </summary>
     public abstract partial class ANpcSoundDefinition :
         IANpcSoundDefinition,
         ILoquiObjectSetter<ANpcSoundDefinition>,
@@ -351,6 +354,9 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [NpcInheritSound, NpcSoundTypes]
+    /// </summary>
     public partial interface IANpcSoundDefinition :
         IANpcSoundDefinitionGetter,
         ILoquiObjectSetter<IANpcSoundDefinition>,
@@ -358,6 +364,9 @@ namespace Mutagen.Bethesda.Skyrim
     {
     }
 
+    /// <summary>
+    /// Implemented by: [NpcInheritSound, NpcSoundTypes]
+    /// </summary>
     public partial interface IANpcSoundDefinitionGetter :
         ILoquiObject,
         ILoquiObject<IANpcSoundDefinitionGetter>,

@@ -26,6 +26,9 @@ using System.Text;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
+    /// <summary>
+    /// Implemented by: [PackageTargetSpecificReference, PackageTargetObjectID, PackageTargetObjectType, PackageTargetReference, PackageTargetAlias, PackageTargetUnknown, PackageTargetSelf]
+    /// </summary>
     public abstract partial class APackageTarget :
         IAPackageTarget,
         ILoquiObjectSetter<APackageTarget>,
@@ -382,6 +385,9 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [PackageTargetSpecificReference, PackageTargetObjectID, PackageTargetObjectType, PackageTargetReference, PackageTargetAlias, PackageTargetUnknown, PackageTargetSelf]
+    /// </summary>
     public partial interface IAPackageTarget :
         IAPackageTargetGetter,
         ILoquiObjectSetter<IAPackageTarget>,
@@ -390,6 +396,9 @@ namespace Mutagen.Bethesda.Skyrim
         new Int32 CountOrDistance { get; set; }
     }
 
+    /// <summary>
+    /// Implemented by: [PackageTargetSpecificReference, PackageTargetObjectID, PackageTargetObjectType, PackageTargetReference, PackageTargetAlias, PackageTargetUnknown, PackageTargetSelf]
+    /// </summary>
     public partial interface IAPackageTargetGetter :
         ILoquiObject,
         ILoquiObject<IAPackageTargetGetter>,

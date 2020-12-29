@@ -27,6 +27,9 @@ using System.Text;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
+    /// <summary>
+    /// Implemented by: [AlphaLayer]
+    /// </summary>
     public partial class BaseLayer :
         IBaseLayer,
         ILoquiObjectSetter<BaseLayer>,
@@ -422,6 +425,9 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [AlphaLayer]
+    /// </summary>
     public partial interface IBaseLayer :
         IBaseLayerGetter,
         ILoquiObjectSetter<IBaseLayer>,
@@ -430,6 +436,9 @@ namespace Mutagen.Bethesda.Oblivion
         new LayerHeader? Header { get; set; }
     }
 
+    /// <summary>
+    /// Implemented by: [AlphaLayer]
+    /// </summary>
     public partial interface IBaseLayerGetter :
         ILoquiObject,
         ILoquiObject<IBaseLayerGetter>,

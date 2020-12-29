@@ -26,6 +26,9 @@ using System.Text;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
+    /// <summary>
+    /// Implemented by: [Model]
+    /// </summary>
     public partial class SimpleModel :
         ISimpleModel,
         ILoquiObjectSetter<SimpleModel>,
@@ -452,6 +455,9 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [Model]
+    /// </summary>
     public partial interface ISimpleModel :
         ISimpleModelGetter,
         ILoquiObjectSetter<ISimpleModel>,
@@ -461,6 +467,9 @@ namespace Mutagen.Bethesda.Skyrim
         new MemorySlice<Byte>? Data { get; set; }
     }
 
+    /// <summary>
+    /// Implemented by: [Model]
+    /// </summary>
     public partial interface ISimpleModelGetter :
         ILoquiObject,
         ILoquiObject<ISimpleModelGetter>,

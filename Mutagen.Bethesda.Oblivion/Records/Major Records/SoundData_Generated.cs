@@ -26,6 +26,9 @@ using System.Text;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
+    /// <summary>
+    /// Implemented by: [SoundDataExtended]
+    /// </summary>
     public partial class SoundData :
         ISoundDataInternal,
         ILoquiObjectSetter<SoundData>,
@@ -494,6 +497,9 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [SoundDataExtended]
+    /// </summary>
     public partial interface ISoundData :
         ISoundDataInternalGetter,
         ILoquiObjectSetter<ISoundDataInternal>
@@ -510,6 +516,9 @@ namespace Mutagen.Bethesda.Oblivion
     {
     }
 
+    /// <summary>
+    /// Implemented by: [SoundDataExtended]
+    /// </summary>
     public partial interface ISoundDataGetter :
         ILoquiObject,
         ILoquiObject<ISoundDataInternalGetter>,

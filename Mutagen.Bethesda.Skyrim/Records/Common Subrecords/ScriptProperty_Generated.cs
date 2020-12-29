@@ -26,6 +26,9 @@ using System.Text;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
+    /// <summary>
+    /// Implemented by: [ScriptObjectProperty, ScriptStringProperty, ScriptIntProperty, ScriptFloatProperty, ScriptBoolProperty, ScriptObjectListProperty, ScriptStringListProperty, ScriptIntListProperty, ScriptFloatListProperty, ScriptBoolListProperty]
+    /// </summary>
     public partial class ScriptProperty :
         IScriptProperty,
         ILoquiObjectSetter<ScriptProperty>,
@@ -443,6 +446,9 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [ScriptObjectProperty, ScriptStringProperty, ScriptIntProperty, ScriptFloatProperty, ScriptBoolProperty, ScriptObjectListProperty, ScriptStringListProperty, ScriptIntListProperty, ScriptFloatListProperty, ScriptBoolListProperty]
+    /// </summary>
     public partial interface IScriptProperty :
         IScriptPropertyGetter,
         ILoquiObjectSetter<IScriptProperty>,
@@ -452,6 +458,9 @@ namespace Mutagen.Bethesda.Skyrim
         new ScriptProperty.Flag Flags { get; set; }
     }
 
+    /// <summary>
+    /// Implemented by: [ScriptObjectProperty, ScriptStringProperty, ScriptIntProperty, ScriptFloatProperty, ScriptBoolProperty, ScriptObjectListProperty, ScriptStringListProperty, ScriptIntListProperty, ScriptFloatListProperty, ScriptBoolListProperty]
+    /// </summary>
     public partial interface IScriptPropertyGetter :
         ILoquiObject,
         ILoquiObject<IScriptPropertyGetter>,

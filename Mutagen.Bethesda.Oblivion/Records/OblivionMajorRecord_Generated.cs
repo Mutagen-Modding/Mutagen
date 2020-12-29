@@ -27,6 +27,9 @@ using System.Text;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
+    /// <summary>
+    /// Implemented by: [Activator, AIPackage, AItem, AnimatedObject, ANpcSpawn, ASpell, Birthsign, Class, Climate, CombatStyle, Container, DialogTopic, DialogItem, Door, EffectShader, Enchantment, Eye, Faction, Flora, Furniture, GameSetting, Global, Grass, Hair, IdleAnimation, Landscape, LandTexture, LoadScreen, MagicEffect, PathGrid, Place, PlacedCreature, PlacedNpc, PlacedObject, Quest, Race, Region, Road, Script, SkillRecord, Sound, Static, Subspace, Tree, Water, Weather]
+    /// </summary>
     public abstract partial class OblivionMajorRecord :
         MajorRecord,
         IOblivionMajorRecordInternal,
@@ -440,6 +443,9 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [Activator, AIPackage, AItem, AnimatedObject, ANpcSpawn, ASpell, Birthsign, Class, Climate, CombatStyle, Container, DialogTopic, DialogItem, Door, EffectShader, Enchantment, Eye, Faction, Flora, Furniture, GameSetting, Global, Grass, Hair, IdleAnimation, Landscape, LandTexture, LoadScreen, MagicEffect, PathGrid, Place, PlacedCreature, PlacedNpc, PlacedObject, Quest, Race, Region, Road, Script, SkillRecord, Sound, Static, Subspace, Tree, Water, Weather]
+    /// </summary>
     public partial interface IOblivionMajorRecord :
         IOblivionMajorRecordGetter,
         IMajorRecord,
@@ -457,6 +463,9 @@ namespace Mutagen.Bethesda.Oblivion
     {
     }
 
+    /// <summary>
+    /// Implemented by: [Activator, AIPackage, AItem, AnimatedObject, ANpcSpawn, ASpell, Birthsign, Class, Climate, CombatStyle, Container, DialogTopic, DialogItem, Door, EffectShader, Enchantment, Eye, Faction, Flora, Furniture, GameSetting, Global, Grass, Hair, IdleAnimation, Landscape, LandTexture, LoadScreen, MagicEffect, PathGrid, Place, PlacedCreature, PlacedNpc, PlacedObject, Quest, Race, Region, Road, Script, SkillRecord, Sound, Static, Subspace, Tree, Water, Weather]
+    /// </summary>
     public partial interface IOblivionMajorRecordGetter :
         IMajorRecordGetter,
         IMajorRecordGetterEnumerable,

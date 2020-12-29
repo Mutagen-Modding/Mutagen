@@ -28,6 +28,9 @@ using System.Text;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
+    /// <summary>
+    /// Implemented by: [SpellLeveled, SpellUnleveled]
+    /// </summary>
     public abstract partial class Spell :
         ASpell,
         ISpellInternal,
@@ -414,6 +417,9 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [SpellLeveled, SpellUnleveled]
+    /// </summary>
     public partial interface ISpell :
         ISpellGetter,
         IASpell,
@@ -431,6 +437,9 @@ namespace Mutagen.Bethesda.Oblivion
     {
     }
 
+    /// <summary>
+    /// Implemented by: [SpellLeveled, SpellUnleveled]
+    /// </summary>
     public partial interface ISpellGetter :
         IASpellGetter,
         INamedGetter,

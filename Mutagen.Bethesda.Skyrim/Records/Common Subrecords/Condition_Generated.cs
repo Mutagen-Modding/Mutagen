@@ -26,6 +26,9 @@ using System.Text;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
+    /// <summary>
+    /// Implemented by: [ConditionGlobal, ConditionFloat]
+    /// </summary>
     public abstract partial class Condition :
         ICondition,
         ILoquiObjectSetter<Condition>,
@@ -459,6 +462,9 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [ConditionGlobal, ConditionFloat]
+    /// </summary>
     public partial interface ICondition :
         IConditionGetter,
         ILoquiObjectSetter<ICondition>,
@@ -469,6 +475,9 @@ namespace Mutagen.Bethesda.Skyrim
         new MemorySlice<Byte> Unknown1 { get; set; }
     }
 
+    /// <summary>
+    /// Implemented by: [ConditionGlobal, ConditionFloat]
+    /// </summary>
     public partial interface IConditionGetter :
         ILoquiObject,
         ILoquiObject<IConditionGetter>,

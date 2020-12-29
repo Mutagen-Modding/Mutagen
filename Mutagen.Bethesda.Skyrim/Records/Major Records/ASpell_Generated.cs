@@ -28,6 +28,9 @@ using System.Text;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
+    /// <summary>
+    /// Implemented by: [LeveledSpell, Shout, Spell]
+    /// </summary>
     public abstract partial class ASpell :
         SkyrimMajorRecord,
         IASpellInternal,
@@ -386,6 +389,9 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [LeveledSpell, Shout, Spell]
+    /// </summary>
     public partial interface IASpell :
         IASpellGetter,
         ISkyrimMajorRecord,
@@ -401,6 +407,9 @@ namespace Mutagen.Bethesda.Skyrim
     {
     }
 
+    /// <summary>
+    /// Implemented by: [LeveledSpell, Shout, Spell]
+    /// </summary>
     public partial interface IASpellGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IASpellGetter>,

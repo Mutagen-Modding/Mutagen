@@ -26,6 +26,9 @@ using System.Text;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
+    /// <summary>
+    /// Implemented by: [NpcOwner, FactionOwner, NoOwner]
+    /// </summary>
     public abstract partial class OwnerTarget :
         IOwnerTarget,
         ILoquiObjectSetter<OwnerTarget>,
@@ -351,6 +354,9 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [NpcOwner, FactionOwner, NoOwner]
+    /// </summary>
     public partial interface IOwnerTarget :
         IOwnerTargetGetter,
         ILoquiObjectSetter<IOwnerTarget>,
@@ -358,6 +364,9 @@ namespace Mutagen.Bethesda.Skyrim
     {
     }
 
+    /// <summary>
+    /// Implemented by: [NpcOwner, FactionOwner, NoOwner]
+    /// </summary>
     public partial interface IOwnerTargetGetter :
         ILoquiObject,
         ILoquiObject<IOwnerTargetGetter>,

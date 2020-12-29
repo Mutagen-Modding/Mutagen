@@ -25,6 +25,9 @@ using System.Text;
 namespace Mutagen.Bethesda
 {
     #region Class
+    /// <summary>
+    /// Implemented by: [OblivionMajorRecord, SkyrimMajorRecord]
+    /// </summary>
     public abstract partial class MajorRecord :
         IMajorRecordInternal,
         ILoquiObjectSetter<MajorRecord>,
@@ -542,6 +545,9 @@ namespace Mutagen.Bethesda
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [OblivionMajorRecord, SkyrimMajorRecord]
+    /// </summary>
     public partial interface IMajorRecord :
         IMajorRecordGetter,
         IMajorRecordEnumerable,
@@ -560,6 +566,9 @@ namespace Mutagen.Bethesda
         new FormKey FormKey { get; set; }
     }
 
+    /// <summary>
+    /// Implemented by: [OblivionMajorRecord, SkyrimMajorRecord]
+    /// </summary>
     public partial interface IMajorRecordGetter :
         ILoquiObject,
         IMajorRecordGetterEnumerable,
