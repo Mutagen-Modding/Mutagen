@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net5.0;netstandard2.1</TargetFrameworks>
@@ -239,6 +239,7 @@
     <Compile Include="Records\MasterReference_Generated.cs">
       <DependentUpon>MasterReference.xml</DependentUpon>
     </Compile>
+    <Compile Include="Extensions\GameCategoryHelper_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mutagen.Bethesda.Kernel\Mutagen.Bethesda.Kernel.csproj" />
