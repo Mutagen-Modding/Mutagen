@@ -10,10 +10,10 @@ namespace Mutagen.Bethesda
             switch (typeof(TMod).Name)
             {
                 case "IOblivionMod":
-                case "IOblivionGetterMod":
+                case "IOblivionModGetter":
                     return GameCategory.Oblivion;
                 case "ISkyrimMod":
-                case "ISkyrimGetterMod":
+                case "ISkyrimModGetter":
                     return GameCategory.Skyrim;
                 default:
                 {

@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Generation
                             foreach (var cat in EnumExt.GetValues<GameCategory>())
                             {
                                 fg.AppendLine($"case \"I{cat}Mod\":");
-                                fg.AppendLine($"case \"I{cat}GetterMod\":");
+                                fg.AppendLine($"case \"I{cat}ModGetter\":");
                                 using (new DepthWrapper(fg))
                                 {
                                     fg.AppendLine($"return {nameof(GameCategory)}.{cat};");
