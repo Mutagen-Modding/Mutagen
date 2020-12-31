@@ -703,5 +703,212 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.Equal($"*{Utility.PluginModKey.FileName}", lines[1]);
             Assert.Equal($"{Utility.PluginModKey2.FileName}", lines[2]);
         }
+
+        #region HasMod
+        [Fact]
+        public void HasMod_Empty()
+        {
+            Enumerable.Empty<LoadOrderListing>()
+                .HasMod(Utility.LightMasterModKey)
+                .Should().BeFalse();
+        }
+
+        [Fact]
+        public void HasMod_Typical()
+        {
+            var listings = new LoadOrderListing[]
+            {
+                new LoadOrderListing(Utility.LightMasterModKey, true),
+                new LoadOrderListing(Utility.LightMasterModKey2, false),
+                new LoadOrderListing(Utility.LightMasterModKey3, true),
+            };
+            listings
+                .HasMod(Utility.LightMasterModKey)
+                .Should().BeTrue();
+            listings
+                .HasMod(Utility.LightMasterModKey2)
+                .Should().BeTrue();
+            listings
+                .HasMod(Utility.LightMasterModKey3)
+                .Should().BeTrue();
+            listings
+                .HasMod(Utility.LightMasterModKey4)
+                .Should().BeFalse();
+        }
+
+        [Fact]
+        public void HasMod_Enabled()
+        {
+            var listings = new LoadOrderListing[]
+            {
+                new LoadOrderListing(Utility.LightMasterModKey, true),
+                new LoadOrderListing(Utility.LightMasterModKey2, false),
+                new LoadOrderListing(Utility.LightMasterModKey3, true),
+            };
+            listings
+                .HasMod(Utility.LightMasterModKey, enabled: true)
+                .Should().BeTrue();
+            listings
+                .HasMod(Utility.LightMasterModKey, enabled: false)
+                .Should().BeFalse();
+            listings
+                .HasMod(Utility.LightMasterModKey2, enabled: false)
+                .Should().BeTrue();
+            listings
+                .HasMod(Utility.LightMasterModKey2, enabled: true)
+                .Should().BeFalse();
+            listings
+                .HasMod(Utility.LightMasterModKey3, enabled: true)
+                .Should().BeTrue();
+            listings
+                .HasMod(Utility.LightMasterModKey3, enabled: false)
+                .Should().BeFalse();
+        }
+
+        [Fact]
+        public void HasMods_EmptyListings()
+        {
+            Enumerable.Empty<LoadOrderListing>()
+                .HasMods(Utility.LightMasterModKey, Utility.LightMasterModKey2)
+                .Should().BeFalse();
+        }
+
+        [Fact]
+        public void HasMods_EmptyInput()
+        {
+            Enumerable.Empty<LoadOrderListing>()
+                .HasMods()
+                .Should().BeTrue();
+        }
+
+        [Fact]
+        public void HasMods_Single()
+        {
+            var listings = new LoadOrderListing[]
+            {
+                new LoadOrderListing(Utility.LightMasterModKey, true),
+                new LoadOrderListing(Utility.LightMasterModKey2, false),
+                new LoadOrderListing(Utility.LightMasterModKey3, true),
+            };
+            listings
+                .HasMods(Utility.LightMasterModKey)
+                .Should().BeTrue();
+            listings
+                .HasMods(Utility.LightMasterModKey2)
+                .Should().BeTrue();
+            listings
+                .HasMods(Utility.LightMasterModKey3)
+                .Should().BeTrue();
+            listings
+                .HasMods(Utility.LightMasterModKey4)
+                .Should().BeFalse();
+        }
+
+        [Fact]
+        public void HasMods_Typical()
+        {
+            var listings = new LoadOrderListing[]
+            {
+                new LoadOrderListing(Utility.LightMasterModKey, true),
+                new LoadOrderListing(Utility.LightMasterModKey2, false),
+                new LoadOrderListing(Utility.LightMasterModKey3, true),
+            };
+            listings
+                .HasMods(Utility.LightMasterModKey, Utility.LightMasterModKey2, Utility.LightMasterModKey3)
+                .Should().BeTrue();
+            listings
+                .HasMods(Utility.LightMasterModKey, Utility.LightMasterModKey2)
+                .Should().BeTrue();
+            listings
+                .HasMods(Utility.LightMasterModKey, Utility.LightMasterModKey2, Utility.LightMasterModKey4)
+                .Should().BeFalse();
+        }
+
+        [Fact]
+        public void HasMods_Enabled_EmptyListings()
+        {
+            Enumerable.Empty<LoadOrderListing>()
+                .HasMods(true, Utility.LightMasterModKey, Utility.LightMasterModKey2)
+                .Should().BeFalse();
+            Enumerable.Empty<LoadOrderListing>()
+                .HasMods(false, Utility.LightMasterModKey, Utility.LightMasterModKey2)
+                .Should().BeFalse();
+        }
+
+        [Fact]
+        public void HasMods_Enabled_EmptyInput()
+        {
+            Enumerable.Empty<LoadOrderListing>()
+                .HasMods(true)
+                .Should().BeTrue();
+            Enumerable.Empty<LoadOrderListing>()
+                .HasMods(false)
+                .Should().BeTrue();
+        }
+
+        [Fact]
+        public void HasMods_Enabled_Single()
+        {
+            var listings = new LoadOrderListing[]
+            {
+                new LoadOrderListing(Utility.LightMasterModKey, true),
+                new LoadOrderListing(Utility.LightMasterModKey2, false),
+                new LoadOrderListing(Utility.LightMasterModKey3, true),
+            };
+            listings
+                .HasMods(true, Utility.LightMasterModKey)
+                .Should().BeTrue();
+            listings
+                .HasMods(false, Utility.LightMasterModKey)
+                .Should().BeFalse();
+            listings
+                .HasMods(false, Utility.LightMasterModKey2)
+                .Should().BeTrue();
+            listings
+                .HasMods(true, Utility.LightMasterModKey2)
+                .Should().BeFalse();
+            listings
+                .HasMods(true, Utility.LightMasterModKey3)
+                .Should().BeTrue();
+            listings
+                .HasMods(false, Utility.LightMasterModKey3)
+                .Should().BeFalse();
+            listings
+                .HasMods(true, Utility.LightMasterModKey4)
+                .Should().BeFalse();
+            listings
+                .HasMods(false, Utility.LightMasterModKey4)
+                .Should().BeFalse();
+        }
+
+        [Fact]
+        public void HasMods_Enabled_Typical()
+        {
+            var listings = new LoadOrderListing[]
+            {
+                new LoadOrderListing(Utility.LightMasterModKey, true),
+                new LoadOrderListing(Utility.LightMasterModKey2, false),
+                new LoadOrderListing(Utility.LightMasterModKey3, true),
+            };
+            listings
+                .HasMods(
+                    true,
+                    Utility.LightMasterModKey, Utility.LightMasterModKey3)
+                .Should().BeTrue();
+            listings
+                .HasMods(false, Utility.LightMasterModKey2)
+                .Should().BeTrue();
+            listings
+                .HasMods(
+                    true,
+                    Utility.LightMasterModKey, Utility.LightMasterModKey2, Utility.LightMasterModKey3)
+                .Should().BeFalse();
+            listings
+                .HasMods(
+                    true,
+                    Utility.LightMasterModKey, Utility.LightMasterModKey2, Utility.LightMasterModKey4)
+                .Should().BeFalse();
+        }
+        #endregion
     }
 }

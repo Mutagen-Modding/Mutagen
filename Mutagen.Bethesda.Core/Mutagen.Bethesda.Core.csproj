@@ -64,6 +64,7 @@
     <Compile Include="Extensions\EnumerableExt.cs" />
     <Compile Include="Extensions\FormLinkListMixIn.cs" />
     <Compile Include="Extensions\GameCategoryExt.cs" />
+    <Compile Include="Extensions\HasModsMixIn.cs" />
     <Compile Include="Extensions\ModKeyExt.cs" />
     <Compile Include="Extensions\RemappingMixIn.cs" />
     <Compile Include="Extensions\RemoveExt.cs" />
