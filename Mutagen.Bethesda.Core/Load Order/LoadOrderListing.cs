@@ -6,27 +6,19 @@ using System.Text;
 namespace Mutagen.Bethesda
 {
     [DebuggerDisplay("LoadOrderListing {ToString()}")]
-    public class LoadOrderListing 
+    public record LoadOrderListing
     {
-        public ModKey ModKey { get; set; }
-        public bool Enabled { get; set; }
+        public ModKey ModKey { get; init; }
+        public bool Enabled { get; init; }
+
+        public LoadOrderListing()
+        {
+        }
 
         public LoadOrderListing(ModKey modKey, bool enabled)
         {
             ModKey = modKey;
             Enabled = enabled;
-        }
-
-        public override bool Equals(object? obj)
-        {
-            return obj is LoadOrderListing listing &&
-                ModKey.Equals(listing.ModKey) &&
-                Enabled == listing.Enabled;
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(ModKey, Enabled);
         }
 
         public override string ToString()
