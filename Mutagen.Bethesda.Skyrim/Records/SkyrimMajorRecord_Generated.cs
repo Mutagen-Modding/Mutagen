@@ -27,6 +27,9 @@ using System.Text;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
+    /// <summary>
+    /// Implemented by: [AcousticSpace, ActionRecord, Activator, ActorValueInformation, AddonNode, AlchemicalApparatus, Ammunition, AnimatedObject, Armor, ArmorAddon, ArtObject, ASpell, AssociationType, BodyPartData, Book, CameraPath, CameraShot, Cell, Class, Climate, CollisionLayer, ColorRecord, CombatStyle, ConstructibleObject, Container, Debris, DefaultObjectManager, DialogBranch, DialogResponses, DialogTopic, DialogView, Door, DualCastData, EffectShader, EncounterZone, EquipType, Explosion, Eyes, Faction, Flora, Footstep, FootstepSet, FormList, Furniture, GameSetting, Global, Grass, Hair, Hazard, HeadPart, IdleAnimation, IdleMarker, ImageSpace, ImageSpaceAdapter, Impact, ImpactDataSet, Ingestible, Ingredient, Key, Keyword, Landscape, LandscapeTexture, LensFlare, LeveledItem, LeveledNpc, Light, LightingTemplate, LoadScreen, Location, LocationReferenceType, MagicEffect, MaterialObject, MaterialType, Message, MiscItem, MoveableStatic, MovementType, MusicTrack, MusicType, ANavigationMesh, NavigationMeshInfoMap, Npc, ObjectEffect, Outfit, Package, Perk, APlaced, Projectile, Quest, Race, Region, Relationship, ReverbParameters, Scene, Scroll, ShaderParticleGeometry, SoulGem, SoundCategory, SoundDescriptor, SoundMarker, SoundOutputModel, Static, AStoryManagerNode, TalkingActivator, TextureSet, Tree, VisualEffect, VoiceType, VolumetricLighting, Water, Weapon, Weather, WordOfPower, Worldspace]
+    /// </summary>
     public abstract partial class SkyrimMajorRecord :
         MajorRecord,
         ISkyrimMajorRecordInternal,
@@ -491,6 +494,9 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [AcousticSpace, ActionRecord, Activator, ActorValueInformation, AddonNode, AlchemicalApparatus, Ammunition, AnimatedObject, Armor, ArmorAddon, ArtObject, ASpell, AssociationType, BodyPartData, Book, CameraPath, CameraShot, Cell, Class, Climate, CollisionLayer, ColorRecord, CombatStyle, ConstructibleObject, Container, Debris, DefaultObjectManager, DialogBranch, DialogResponses, DialogTopic, DialogView, Door, DualCastData, EffectShader, EncounterZone, EquipType, Explosion, Eyes, Faction, Flora, Footstep, FootstepSet, FormList, Furniture, GameSetting, Global, Grass, Hair, Hazard, HeadPart, IdleAnimation, IdleMarker, ImageSpace, ImageSpaceAdapter, Impact, ImpactDataSet, Ingestible, Ingredient, Key, Keyword, Landscape, LandscapeTexture, LensFlare, LeveledItem, LeveledNpc, Light, LightingTemplate, LoadScreen, Location, LocationReferenceType, MagicEffect, MaterialObject, MaterialType, Message, MiscItem, MoveableStatic, MovementType, MusicTrack, MusicType, ANavigationMesh, NavigationMeshInfoMap, Npc, ObjectEffect, Outfit, Package, Perk, APlaced, Projectile, Quest, Race, Region, Relationship, ReverbParameters, Scene, Scroll, ShaderParticleGeometry, SoulGem, SoundCategory, SoundDescriptor, SoundMarker, SoundOutputModel, Static, AStoryManagerNode, TalkingActivator, TextureSet, Tree, VisualEffect, VoiceType, VolumetricLighting, Water, Weapon, Weather, WordOfPower, Worldspace]
+    /// </summary>
     public partial interface ISkyrimMajorRecord :
         ISkyrimMajorRecordGetter,
         IMajorRecord,
@@ -509,6 +515,9 @@ namespace Mutagen.Bethesda.Skyrim
     {
     }
 
+    /// <summary>
+    /// Implemented by: [AcousticSpace, ActionRecord, Activator, ActorValueInformation, AddonNode, AlchemicalApparatus, Ammunition, AnimatedObject, Armor, ArmorAddon, ArtObject, ASpell, AssociationType, BodyPartData, Book, CameraPath, CameraShot, Cell, Class, Climate, CollisionLayer, ColorRecord, CombatStyle, ConstructibleObject, Container, Debris, DefaultObjectManager, DialogBranch, DialogResponses, DialogTopic, DialogView, Door, DualCastData, EffectShader, EncounterZone, EquipType, Explosion, Eyes, Faction, Flora, Footstep, FootstepSet, FormList, Furniture, GameSetting, Global, Grass, Hair, Hazard, HeadPart, IdleAnimation, IdleMarker, ImageSpace, ImageSpaceAdapter, Impact, ImpactDataSet, Ingestible, Ingredient, Key, Keyword, Landscape, LandscapeTexture, LensFlare, LeveledItem, LeveledNpc, Light, LightingTemplate, LoadScreen, Location, LocationReferenceType, MagicEffect, MaterialObject, MaterialType, Message, MiscItem, MoveableStatic, MovementType, MusicTrack, MusicType, ANavigationMesh, NavigationMeshInfoMap, Npc, ObjectEffect, Outfit, Package, Perk, APlaced, Projectile, Quest, Race, Region, Relationship, ReverbParameters, Scene, Scroll, ShaderParticleGeometry, SoulGem, SoundCategory, SoundDescriptor, SoundMarker, SoundOutputModel, Static, AStoryManagerNode, TalkingActivator, TextureSet, Tree, VisualEffect, VoiceType, VolumetricLighting, Water, Weapon, Weather, WordOfPower, Worldspace]
+    /// </summary>
     public partial interface ISkyrimMajorRecordGetter :
         IMajorRecordGetter,
         IMajorRecordGetterEnumerable,

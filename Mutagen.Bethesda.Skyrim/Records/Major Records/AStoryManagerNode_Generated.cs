@@ -28,6 +28,9 @@ using System.Text;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
+    /// <summary>
+    /// Implemented by: [StoryManagerBranchNode, StoryManagerQuestNode, StoryManagerEventNode]
+    /// </summary>
     public abstract partial class AStoryManagerNode :
         SkyrimMajorRecord,
         IAStoryManagerNodeInternal,
@@ -579,6 +582,9 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [StoryManagerBranchNode, StoryManagerQuestNode, StoryManagerEventNode]
+    /// </summary>
     public partial interface IAStoryManagerNode :
         IAStoryManagerNodeGetter,
         ISkyrimMajorRecord,
@@ -597,6 +603,9 @@ namespace Mutagen.Bethesda.Skyrim
     {
     }
 
+    /// <summary>
+    /// Implemented by: [StoryManagerBranchNode, StoryManagerQuestNode, StoryManagerEventNode]
+    /// </summary>
     public partial interface IAStoryManagerNodeGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IAStoryManagerNodeGetter>,

@@ -28,6 +28,9 @@ using System.Text;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
+    /// <summary>
+    /// Implemented by: [Armor, Clothing]
+    /// </summary>
     public abstract partial class AClothing :
         AItem,
         IAClothingInternal,
@@ -805,6 +808,9 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [Armor, Clothing]
+    /// </summary>
     public partial interface IAClothing :
         IAClothingGetter,
         IAItem,
@@ -832,6 +838,9 @@ namespace Mutagen.Bethesda.Oblivion
     {
     }
 
+    /// <summary>
+    /// Implemented by: [Armor, Clothing]
+    /// </summary>
     public partial interface IAClothingGetter :
         IAItemGetter,
         INamedGetter,

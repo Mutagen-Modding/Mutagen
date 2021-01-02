@@ -26,6 +26,9 @@ using System.Text;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
+    /// <summary>
+    /// Implemented by: [ScriptVariableReference, ScriptObjectReference]
+    /// </summary>
     public abstract partial class AScriptReference :
         IAScriptReference,
         ILoquiObjectSetter<AScriptReference>,
@@ -351,6 +354,9 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [ScriptVariableReference, ScriptObjectReference]
+    /// </summary>
     public partial interface IAScriptReference :
         IAScriptReferenceGetter,
         ILoquiObjectSetter<IAScriptReference>,
@@ -358,6 +364,9 @@ namespace Mutagen.Bethesda.Oblivion
     {
     }
 
+    /// <summary>
+    /// Implemented by: [ScriptVariableReference, ScriptObjectReference]
+    /// </summary>
     public partial interface IAScriptReferenceGetter :
         ILoquiObject,
         ILoquiObject<IAScriptReferenceGetter>,

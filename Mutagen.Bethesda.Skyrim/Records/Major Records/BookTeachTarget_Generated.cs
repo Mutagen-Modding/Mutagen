@@ -26,6 +26,9 @@ using System.Text;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
+    /// <summary>
+    /// Implemented by: [BookSkill, BookSpell, BookTeachesNothing]
+    /// </summary>
     public abstract partial class BookTeachTarget :
         IBookTeachTarget,
         ILoquiObjectSetter<BookTeachTarget>,
@@ -351,6 +354,9 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [BookSkill, BookSpell, BookTeachesNothing]
+    /// </summary>
     public partial interface IBookTeachTarget :
         IBookTeachTargetGetter,
         ILoquiObjectSetter<IBookTeachTarget>,
@@ -358,6 +364,9 @@ namespace Mutagen.Bethesda.Skyrim
     {
     }
 
+    /// <summary>
+    /// Implemented by: [BookSkill, BookSpell, BookTeachesNothing]
+    /// </summary>
     public partial interface IBookTeachTargetGetter :
         ILoquiObject,
         ILoquiObject<IBookTeachTargetGetter>,

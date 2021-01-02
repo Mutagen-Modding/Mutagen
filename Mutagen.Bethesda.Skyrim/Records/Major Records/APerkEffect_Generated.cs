@@ -27,6 +27,9 @@ using System.Text;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
+    /// <summary>
+    /// Implemented by: [PerkQuestEffect, PerkAbilityEffect, APerkEntryPointEffect]
+    /// </summary>
     public abstract partial class APerkEffect :
         IAPerkEffect,
         ILoquiObjectSetter<APerkEffect>,
@@ -573,6 +576,9 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [PerkQuestEffect, PerkAbilityEffect, APerkEntryPointEffect]
+    /// </summary>
     public partial interface IAPerkEffect :
         IAPerkEffectGetter,
         ILoquiObjectSetter<IAPerkEffect>,
@@ -584,6 +590,9 @@ namespace Mutagen.Bethesda.Skyrim
         new APerkEffect.PRKEDataType PRKEDataTypeState { get; set; }
     }
 
+    /// <summary>
+    /// Implemented by: [PerkQuestEffect, PerkAbilityEffect, APerkEntryPointEffect]
+    /// </summary>
     public partial interface IAPerkEffectGetter :
         ILoquiObject,
         ILoquiObject<IAPerkEffectGetter>,

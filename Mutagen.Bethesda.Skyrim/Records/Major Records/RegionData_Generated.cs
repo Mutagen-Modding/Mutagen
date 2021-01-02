@@ -27,6 +27,9 @@ using System.Text;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
+    /// <summary>
+    /// Implemented by: [RegionSounds, RegionMap, RegionObjects, RegionWeather, RegionGrasses, RegionLand]
+    /// </summary>
     public abstract partial class RegionData :
         IRegionData,
         ILoquiObjectSetter<RegionData>,
@@ -450,6 +453,9 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [RegionSounds, RegionMap, RegionObjects, RegionWeather, RegionGrasses, RegionLand]
+    /// </summary>
     public partial interface IRegionData :
         IRegionDataGetter,
         IHasIcons,
@@ -460,6 +466,9 @@ namespace Mutagen.Bethesda.Skyrim
         new Icons? Icons { get; set; }
     }
 
+    /// <summary>
+    /// Implemented by: [RegionSounds, RegionMap, RegionObjects, RegionWeather, RegionGrasses, RegionLand]
+    /// </summary>
     public partial interface IRegionDataGetter :
         ILoquiObject,
         IHasIconsGetter,

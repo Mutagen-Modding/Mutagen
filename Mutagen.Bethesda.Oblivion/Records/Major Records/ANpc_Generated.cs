@@ -28,6 +28,9 @@ using System.Text;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
+    /// <summary>
+    /// Implemented by: [Creature, Npc]
+    /// </summary>
     public abstract partial class ANpc :
         ANpcSpawn,
         IANpcInternal,
@@ -367,6 +370,9 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [Creature, Npc]
+    /// </summary>
     public partial interface IANpc :
         IANpcGetter,
         IANpcSpawn,
@@ -382,6 +388,9 @@ namespace Mutagen.Bethesda.Oblivion
     {
     }
 
+    /// <summary>
+    /// Implemented by: [Creature, Npc]
+    /// </summary>
     public partial interface IANpcGetter :
         IANpcSpawnGetter,
         ILoquiObject<IANpcGetter>,

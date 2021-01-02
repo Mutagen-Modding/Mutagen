@@ -28,6 +28,9 @@ using System.Text;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
+    /// <summary>
+    /// Implemented by: [GameSettingInt, GameSettingFloat, GameSettingString]
+    /// </summary>
     public abstract partial class GameSetting :
         OblivionMajorRecord,
         IGameSettingInternal,
@@ -366,6 +369,9 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [GameSettingInt, GameSettingFloat, GameSettingString]
+    /// </summary>
     public partial interface IGameSetting :
         IGameSettingGetter,
         IOblivionMajorRecord,
@@ -380,6 +386,9 @@ namespace Mutagen.Bethesda.Oblivion
     {
     }
 
+    /// <summary>
+    /// Implemented by: [GameSettingInt, GameSettingFloat, GameSettingString]
+    /// </summary>
     public partial interface IGameSettingGetter :
         IOblivionMajorRecordGetter,
         ILoquiObject<IGameSettingGetter>,

@@ -26,6 +26,9 @@ using System.Text;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
+    /// <summary>
+    /// Implemented by: [PackageDataBool, PackageDataInt, PackageDataFloat, PackageDataObjectList, PackageDataLocation, PackageDataTarget, PackageDataTopic]
+    /// </summary>
     public partial class APackageData :
         IAPackageData,
         ILoquiObjectSetter<APackageData>,
@@ -447,6 +450,9 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [PackageDataBool, PackageDataInt, PackageDataFloat, PackageDataObjectList, PackageDataLocation, PackageDataTarget, PackageDataTopic]
+    /// </summary>
     public partial interface IAPackageData :
         IAPackageDataGetter,
         ILoquiObjectSetter<IAPackageData>,
@@ -456,6 +462,9 @@ namespace Mutagen.Bethesda.Skyrim
         new APackageData.Flag? Flags { get; set; }
     }
 
+    /// <summary>
+    /// Implemented by: [PackageDataBool, PackageDataInt, PackageDataFloat, PackageDataObjectList, PackageDataLocation, PackageDataTarget, PackageDataTopic]
+    /// </summary>
     public partial interface IAPackageDataGetter :
         ILoquiObject,
         ILoquiObject<IAPackageDataGetter>,

@@ -28,6 +28,9 @@ using System.Text;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
+    /// <summary>
+    /// Implemented by: [WorldspaceNavigationMesh, CellNavigationMesh]
+    /// </summary>
     public abstract partial class ANavigationMesh :
         SkyrimMajorRecord,
         IANavigationMeshInternal,
@@ -523,6 +526,9 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [WorldspaceNavigationMesh, CellNavigationMesh]
+    /// </summary>
     public partial interface IANavigationMesh :
         IANavigationMeshGetter,
         ISkyrimMajorRecord,
@@ -545,6 +551,9 @@ namespace Mutagen.Bethesda.Skyrim
     {
     }
 
+    /// <summary>
+    /// Implemented by: [WorldspaceNavigationMesh, CellNavigationMesh]
+    /// </summary>
     public partial interface IANavigationMeshGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IANavigationMeshGetter>,

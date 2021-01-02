@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net5.0;netstandard2.1</TargetFrameworks>
@@ -26,8 +26,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Loqui" Version="2.1.1" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.2.0" />
+    <PackageReference Include="Loqui" Version="2.3.0" />
+    <PackageReference Include="Noggog.CSharpExt" Version="2.3.0" />
     <PackageReference Include="NuGetizer" Version="0.6.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -64,6 +64,7 @@
     <Compile Include="Extensions\EnumerableExt.cs" />
     <Compile Include="Extensions\FormLinkListMixIn.cs" />
     <Compile Include="Extensions\GameCategoryExt.cs" />
+    <Compile Include="Extensions\HasModsMixIn.cs" />
     <Compile Include="Extensions\ModKeyExt.cs" />
     <Compile Include="Extensions\RemappingMixIn.cs" />
     <Compile Include="Extensions\RemoveExt.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="Interfaces\Aspect\ITranslatedNamed.cs" />
     <Compile Include="Interfaces\Aspect\ITranslatedNamedRequired.cs" />
     <Compile Include="Interfaces\LinkInterfaceMapping.cs" />
+    <Compile Include="IsExternalInit.cs" />
     <Compile Include="Links\ImmutableModLinkCache.cs" />
     <Compile Include="Links\FormLinkNullable.cs" />
     <Compile Include="Links\IFormLink.cs" />
@@ -239,6 +241,7 @@
     <Compile Include="Records\MasterReference_Generated.cs">
       <DependentUpon>MasterReference.xml</DependentUpon>
     </Compile>
+    <Compile Include="Extensions\GameCategoryHelper_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mutagen.Bethesda.Kernel\Mutagen.Bethesda.Kernel.csproj" />

@@ -15,5 +15,15 @@ namespace Mutagen.Bethesda
                 _ => throw new NotImplementedException(),
             };
         }
+
+        public static GameRelease DefaultRelease(this GameCategory gameCategory)
+        {
+            return gameCategory switch
+            {
+                GameCategory.Oblivion => GameRelease.Oblivion,
+                GameCategory.Skyrim => GameRelease.SkyrimSE,
+                _ => throw new NotImplementedException(),
+            };
+        }
     }
 }

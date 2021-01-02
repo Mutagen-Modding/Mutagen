@@ -27,6 +27,9 @@ using System.Text;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
+    /// <summary>
+    /// Implemented by: [PerkEntryPointModifyValue, PerkEntryPointAddRangeToValue, PerkEntryPointModifyActorValue, PerkEntryPointAbsoluteValue, PerkEntryPointAddLeveledItem, PerkEntryPointAddActivateChoice, PerkEntryPointSelectSpell, PerkEntryPointSelectText, PerkEntryPointSetText]
+    /// </summary>
     public abstract partial class APerkEntryPointEffect :
         APerkEffect,
         IAPerkEntryPointEffect,
@@ -416,6 +419,9 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [PerkEntryPointModifyValue, PerkEntryPointAddRangeToValue, PerkEntryPointModifyActorValue, PerkEntryPointAbsoluteValue, PerkEntryPointAddLeveledItem, PerkEntryPointAddActivateChoice, PerkEntryPointSelectSpell, PerkEntryPointSelectText, PerkEntryPointSetText]
+    /// </summary>
     public partial interface IAPerkEntryPointEffect :
         IAPerkEntryPointEffectGetter,
         IAPerkEffect,
@@ -426,6 +432,9 @@ namespace Mutagen.Bethesda.Skyrim
         new Byte PerkConditionTabCount { get; set; }
     }
 
+    /// <summary>
+    /// Implemented by: [PerkEntryPointModifyValue, PerkEntryPointAddRangeToValue, PerkEntryPointModifyActorValue, PerkEntryPointAbsoluteValue, PerkEntryPointAddLeveledItem, PerkEntryPointAddActivateChoice, PerkEntryPointSelectSpell, PerkEntryPointSelectText, PerkEntryPointSetText]
+    /// </summary>
     public partial interface IAPerkEntryPointEffectGetter :
         IAPerkEffectGetter,
         ILoquiObject<IAPerkEntryPointEffectGetter>,

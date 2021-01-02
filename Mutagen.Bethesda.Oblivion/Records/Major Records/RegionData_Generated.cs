@@ -27,6 +27,9 @@ using System.Text;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
+    /// <summary>
+    /// Implemented by: [RegionObjects, RegionMap, RegionGrasses, RegionSounds, RegionWeather]
+    /// </summary>
     public abstract partial class RegionData :
         IRegionData,
         ILoquiObjectSetter<RegionData>,
@@ -399,6 +402,9 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [RegionObjects, RegionMap, RegionGrasses, RegionSounds, RegionWeather]
+    /// </summary>
     public partial interface IRegionData :
         IRegionDataGetter,
         ILoquiObjectSetter<IRegionData>,
@@ -407,6 +413,9 @@ namespace Mutagen.Bethesda.Oblivion
         new RegionDataHeader? Header { get; set; }
     }
 
+    /// <summary>
+    /// Implemented by: [RegionObjects, RegionMap, RegionGrasses, RegionSounds, RegionWeather]
+    /// </summary>
     public partial interface IRegionDataGetter :
         ILoquiObject,
         ILoquiObject<IRegionDataGetter>,

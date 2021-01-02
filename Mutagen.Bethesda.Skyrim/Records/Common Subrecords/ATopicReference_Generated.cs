@@ -26,6 +26,9 @@ using System.Text;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
+    /// <summary>
+    /// Implemented by: [TopicReference, TopicReferenceSubtype]
+    /// </summary>
     public abstract partial class ATopicReference :
         IATopicReference,
         ILoquiObjectSetter<ATopicReference>,
@@ -352,6 +355,9 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [TopicReference, TopicReferenceSubtype]
+    /// </summary>
     public partial interface IATopicReference :
         IATopicReferenceGetter,
         ILoquiObjectSetter<IATopicReference>,
@@ -359,6 +365,9 @@ namespace Mutagen.Bethesda.Skyrim
     {
     }
 
+    /// <summary>
+    /// Implemented by: [TopicReference, TopicReferenceSubtype]
+    /// </summary>
     public partial interface IATopicReferenceGetter :
         ILoquiObject,
         ILoquiObject<IATopicReferenceGetter>,

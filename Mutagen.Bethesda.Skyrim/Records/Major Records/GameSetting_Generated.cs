@@ -28,6 +28,9 @@ using System.Text;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
+    /// <summary>
+    /// Implemented by: [GameSettingInt, GameSettingFloat, GameSettingString, GameSettingBool]
+    /// </summary>
     public abstract partial class GameSetting :
         SkyrimMajorRecord,
         IGameSettingInternal,
@@ -385,6 +388,9 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [GameSettingInt, GameSettingFloat, GameSettingString, GameSettingBool]
+    /// </summary>
     public partial interface IGameSetting :
         IGameSettingGetter,
         ISkyrimMajorRecord,
@@ -399,6 +405,9 @@ namespace Mutagen.Bethesda.Skyrim
     {
     }
 
+    /// <summary>
+    /// Implemented by: [GameSettingInt, GameSettingFloat, GameSettingString, GameSettingBool]
+    /// </summary>
     public partial interface IGameSettingGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IGameSettingGetter>,

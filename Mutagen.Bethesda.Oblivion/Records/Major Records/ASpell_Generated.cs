@@ -28,6 +28,9 @@ using System.Text;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
+    /// <summary>
+    /// Implemented by: [LeveledSpell, Spell]
+    /// </summary>
     public abstract partial class ASpell :
         OblivionMajorRecord,
         IASpellInternal,
@@ -367,6 +370,9 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [LeveledSpell, Spell]
+    /// </summary>
     public partial interface IASpell :
         IASpellGetter,
         IOblivionMajorRecord,
@@ -382,6 +388,9 @@ namespace Mutagen.Bethesda.Oblivion
     {
     }
 
+    /// <summary>
+    /// Implemented by: [LeveledSpell, Spell]
+    /// </summary>
     public partial interface IASpellGetter :
         IOblivionMajorRecordGetter,
         ILoquiObject<IASpellGetter>,

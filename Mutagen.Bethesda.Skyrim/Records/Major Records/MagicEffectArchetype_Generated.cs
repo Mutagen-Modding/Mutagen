@@ -26,6 +26,9 @@ using System.Text;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
+    /// <summary>
+    /// Implemented by: [MagicEffectLightArchetype, MagicEffectBoundArchetype, MagicEffectNpcArchetype, MagicEffectGuideArchetype, MagicEffectSpawnHazardArchetype, MagicEffectSpellArchetype, MagicEffectWerewolfArchetype, MagicEffectVampireArchetype, MagicEffectEnchantmentArchetype, MagicEffectKeywordArchetype]
+    /// </summary>
     public partial class MagicEffectArchetype :
         IMagicEffectArchetypeInternal,
         ILoquiObjectSetter<MagicEffectArchetype>,
@@ -461,6 +464,9 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [MagicEffectLightArchetype, MagicEffectBoundArchetype, MagicEffectNpcArchetype, MagicEffectGuideArchetype, MagicEffectSpawnHazardArchetype, MagicEffectSpellArchetype, MagicEffectWerewolfArchetype, MagicEffectVampireArchetype, MagicEffectEnchantmentArchetype, MagicEffectKeywordArchetype]
+    /// </summary>
     public partial interface IMagicEffectArchetype :
         IMagicEffectArchetypeGetter,
         ILoquiObjectSetter<IMagicEffectArchetypeInternal>
@@ -476,6 +482,9 @@ namespace Mutagen.Bethesda.Skyrim
         new MagicEffectArchetype.TypeEnum Type { get; set; }
     }
 
+    /// <summary>
+    /// Implemented by: [MagicEffectLightArchetype, MagicEffectBoundArchetype, MagicEffectNpcArchetype, MagicEffectGuideArchetype, MagicEffectSpawnHazardArchetype, MagicEffectSpellArchetype, MagicEffectWerewolfArchetype, MagicEffectVampireArchetype, MagicEffectEnchantmentArchetype, MagicEffectKeywordArchetype]
+    /// </summary>
     public partial interface IMagicEffectArchetypeGetter :
         ILoquiObject,
         ILoquiObject<IMagicEffectArchetypeGetter>,

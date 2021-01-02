@@ -27,6 +27,9 @@ using System.Text;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
+    /// <summary>
+    /// Implemented by: [SceneScriptFragments]
+    /// </summary>
     public partial class ScriptFragments :
         IScriptFragments,
         ILoquiObjectSetter<ScriptFragments>,
@@ -531,6 +534,9 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [SceneScriptFragments]
+    /// </summary>
     public partial interface IScriptFragments :
         IScriptFragmentsGetter,
         ILoquiObjectSetter<IScriptFragments>
@@ -541,6 +547,9 @@ namespace Mutagen.Bethesda.Skyrim
         new ScriptFragment? OnEnd { get; set; }
     }
 
+    /// <summary>
+    /// Implemented by: [SceneScriptFragments]
+    /// </summary>
     public partial interface IScriptFragmentsGetter :
         ILoquiObject,
         ILoquiObject<IScriptFragmentsGetter>,

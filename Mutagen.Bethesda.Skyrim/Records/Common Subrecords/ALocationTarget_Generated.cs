@@ -26,6 +26,9 @@ using System.Text;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
+    /// <summary>
+    /// Implemented by: [LocationTarget, LocationCell, LocationObjectId, LocationObjectType, LocationKeyword, LocationFallback]
+    /// </summary>
     public abstract partial class ALocationTarget :
         IALocationTarget,
         ILoquiObjectSetter<ALocationTarget>,
@@ -351,6 +354,9 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [LocationTarget, LocationCell, LocationObjectId, LocationObjectType, LocationKeyword, LocationFallback]
+    /// </summary>
     public partial interface IALocationTarget :
         IALocationTargetGetter,
         ILoquiObjectSetter<IALocationTarget>,
@@ -358,6 +364,9 @@ namespace Mutagen.Bethesda.Skyrim
     {
     }
 
+    /// <summary>
+    /// Implemented by: [LocationTarget, LocationCell, LocationObjectId, LocationObjectType, LocationKeyword, LocationFallback]
+    /// </summary>
     public partial interface IALocationTargetGetter :
         ILoquiObject,
         ILoquiObject<IALocationTargetGetter>,

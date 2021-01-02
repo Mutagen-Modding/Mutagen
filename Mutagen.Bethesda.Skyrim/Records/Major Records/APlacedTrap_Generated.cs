@@ -28,6 +28,9 @@ using System.Text;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
+    /// <summary>
+    /// Implemented by: [PlacedArrow, PlacedBeam, PlacedFlame, PlacedCone, PlacedBarrier, PlacedTrap, PlacedHazard, PlacedMissile]
+    /// </summary>
     public abstract partial class APlacedTrap :
         APlaced,
         IAPlacedTrapInternal,
@@ -1361,6 +1364,9 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [PlacedArrow, PlacedBeam, PlacedFlame, PlacedCone, PlacedBarrier, PlacedTrap, PlacedHazard, PlacedMissile]
+    /// </summary>
     public partial interface IAPlacedTrap :
         IAPlacedTrapGetter,
         IAPlaced,
@@ -1401,6 +1407,9 @@ namespace Mutagen.Bethesda.Skyrim
     {
     }
 
+    /// <summary>
+    /// Implemented by: [PlacedArrow, PlacedBeam, PlacedFlame, PlacedCone, PlacedBarrier, PlacedTrap, PlacedHazard, PlacedMissile]
+    /// </summary>
     public partial interface IAPlacedTrapGetter :
         IAPlacedGetter,
         IPlacedGetter,

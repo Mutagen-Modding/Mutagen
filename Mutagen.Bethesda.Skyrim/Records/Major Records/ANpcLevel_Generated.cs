@@ -26,6 +26,9 @@ using System.Text;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
+    /// <summary>
+    /// Implemented by: [NpcLevel, PcLevelMult]
+    /// </summary>
     public abstract partial class ANpcLevel :
         IANpcLevel,
         ILoquiObjectSetter<ANpcLevel>,
@@ -346,12 +349,18 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [NpcLevel, PcLevelMult]
+    /// </summary>
     public partial interface IANpcLevel :
         IANpcLevelGetter,
         ILoquiObjectSetter<IANpcLevel>
     {
     }
 
+    /// <summary>
+    /// Implemented by: [NpcLevel, PcLevelMult]
+    /// </summary>
     public partial interface IANpcLevelGetter :
         ILoquiObject,
         ILoquiObject<IANpcLevelGetter>,

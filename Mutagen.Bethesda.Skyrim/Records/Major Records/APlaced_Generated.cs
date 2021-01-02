@@ -28,6 +28,9 @@ using System.Text;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
+    /// <summary>
+    /// Implemented by: [PlacedNpc, PlacedObject, APlacedTrap]
+    /// </summary>
     public partial class APlaced :
         SkyrimMajorRecord,
         IAPlacedInternal,
@@ -410,6 +413,9 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Implemented by: [PlacedNpc, PlacedObject, APlacedTrap]
+    /// </summary>
     public partial interface IAPlaced :
         IAPlacedGetter,
         ISkyrimMajorRecord,
@@ -426,6 +432,9 @@ namespace Mutagen.Bethesda.Skyrim
     {
     }
 
+    /// <summary>
+    /// Implemented by: [PlacedNpc, PlacedObject, APlacedTrap]
+    /// </summary>
     public partial interface IAPlacedGetter :
         ISkyrimMajorRecordGetter,
         IPlacedGetter,
