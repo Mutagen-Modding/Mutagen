@@ -298,7 +298,7 @@ namespace Mutagen.Bethesda.Binary
                         stream: stream,
                         constants: package.MetaData.Constants.SubConstants,
                         trigger: subrecordType,
-                        skipHeader: true));
+                        skipHeader: skipHeader));
             }
         }
 
