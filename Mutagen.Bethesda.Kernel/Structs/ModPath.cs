@@ -52,7 +52,14 @@ namespace Mutagen.Bethesda
 
         public override string ToString()
         {
-            return $"{ModKey} => {Path}";
+            if (string.IsNullOrWhiteSpace(Path))
+            {
+                return ModKey.ToString();
+            }
+            else
+            {
+                return $"{ModKey} => {Path}";
+            }
         }
 
         public override bool Equals(object? obj)
