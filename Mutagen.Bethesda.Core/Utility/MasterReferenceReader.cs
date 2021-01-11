@@ -67,11 +67,11 @@ namespace Mutagen.Bethesda.Internals
                 var modKey = master.Master;
                 if (this._masterIndices.ContainsKey(modKey))
                 {
-                    throw new ArgumentException($"Masters list cannot contain duplicate entries: {modKey}");
+                    throw new ArgumentException($"{CurrentMod} masters list cannot contain duplicate entries: {modKey}");
                 }
                 if (index >= 0xFE)
                 {
-                    throw new ArgumentException($"Too many masters on masters list");
+                    throw new ArgumentException($"{CurrentMod} has too many masters on masters list");
                 }
                 if (modKey == this.CurrentMod)
                 {
