@@ -21,6 +21,7 @@ namespace Mutagen.Bethesda
             Loqui.Initialization.SpinUp(new ProtocolDefinition_Bethesda());
             Mutagen.Bethesda.Oblivion.WarmupOblivion.Init();
             Mutagen.Bethesda.Skyrim.WarmupSkyrim.Init();
+            Mutagen.Bethesda.Fallout4.WarmupFallout4.Init();
         }
         static partial void InitCustom();
     }

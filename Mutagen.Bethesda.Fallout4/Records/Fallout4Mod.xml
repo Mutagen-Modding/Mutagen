@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Fallout4Mod" objType="Mod" ctorPermission="protected" GUID="9cae6baa-1084-4862-ae0a-07c79b9f2a3a" ID="19">
+    <Fields>
+      <RefDirect name="ModHeader" refName="Fallout4ModHeader" singleton="true" />
+      <Group name="GameSettings" refName="GameSetting" />
+      <Group name="Keywords" refName="Keyword" />
+    </Fields>
+    <GameReleaseOptions>Fallout4</GameReleaseOptions>
+  </Object>
+</Loqui>

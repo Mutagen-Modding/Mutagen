@@ -132,6 +132,28 @@ namespace Mutagen.Bethesda.Binary
         /// </summary> 
         public static readonly GameConstants SkyrimVR = new GameConstants(SkyrimLE, GameRelease.SkyrimVR);
 
+        /// <summary> 
+        /// Readonly singleton of Fallout4 game constants 
+        /// </summary> 
+        public static readonly GameConstants Fallout4 = new GameConstants(
+            release: GameRelease.Fallout4,
+            modHeaderLength: 24,
+            modHeaderFluffLength: 16,
+            groupConstants: new RecordHeaderConstants(
+                ObjectType.Group,
+                headerLength: 24,
+                lengthLength: 4),
+            majorConstants: new MajorRecordConstants(
+                headerLength: 24,
+                lengthLength: 4,
+                flagsLoc: 8,
+                formIDloc: 12,
+                formVersionLoc: 20),
+            subConstants: new RecordHeaderConstants(
+                ObjectType.Subrecord,
+                headerLength: 6,
+                lengthLength: 2));
+
         #region Header Factories 
         public ModHeader ModHeader(ReadOnlyMemorySlice<byte> span) => new ModHeader(this, span);
 
@@ -249,6 +271,8 @@ namespace Mutagen.Bethesda.Binary
                     return SkyrimSE;
                 case GameRelease.SkyrimVR:
                     return SkyrimVR;
+                case GameRelease.Fallout4:
+                    return Fallout4;
                 default:
                     throw new NotImplementedException();
             }

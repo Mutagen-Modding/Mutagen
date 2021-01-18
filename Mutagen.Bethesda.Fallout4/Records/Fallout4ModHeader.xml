@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Fallout4ModHeader" recordType="TES4" objType="Record" GUID="84816323-6afc-412f-a0ef-8dff92fbb30b" ID="20">
+    <Fields>
+      <Enum name="Flags" enumName="Fallout4ModHeader.HeaderFlag" byteLength="4" />
+      <UInt32 name="FormID" />
+      <Int32 name="Version" />
+      <UInt16 name="FormVersion" />
+      <UInt16 name="Version2" />
+      <RefDirect name="Stats" refName="ModStats" nullable="False" />
+      <ByteArray name="TypeOffsets" recordType="OFST" />
+      <ByteArray name="Deleted" recordType="DELE" />
+      <String name="Author" recordType="CNAM" maxLength="512" />
+      <String name="Description" recordType="SNAM" maxLength="512" />
+      <RefList name="MasterReferences" refName="Bethesda.MasterReference" nullable="False" binary="Custom" binaryOverlay="Normal" />
+      <List name="OverriddenForms" recordType="ONAM" overflowRecordType="XXXX">
+        <FormLink refName="Fallout4MajorRecord" />
+      </List>
+      <Int32 name="INTV" recordType="INTV" />
+      <Int32 name="INCC" recordType="INCC" />
+    </Fields>
+  </Object>
+  <Object name="ModStats" recordType="HEDR" objType="Subrecord" GUID="4011569e-322f-4e65-b436-d7c6667be637" ID="21">
+    <Fields>
+      <Float name="Version" default="1.7f" />
+      <UInt32 name="NumRecords" />
+      <UInt32 name="NextFormID" />
+    </Fields>
+  </Object>
+</Loqui>

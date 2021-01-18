@@ -16,6 +16,7 @@ namespace Mutagen.Bethesda
             "Dawnguard.esm",
             "HearthFires.esm",
             "Dragonborn.esm",
+            "Fallout4.esm",
         };
 
         public static IEnumerable<ModKey> GetListings(GameRelease release)

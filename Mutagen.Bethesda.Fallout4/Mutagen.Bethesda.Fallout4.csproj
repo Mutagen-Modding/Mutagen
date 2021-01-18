@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net5.0;netstandard2.1</TargetFrameworks>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Authors>Noggog</Authors>
+    <Company>Mutagen</Company>
+    <Product>Mutagen</Product>
+    <Description>A C# library for manipulating, creating, and analyzing Fallout4 mods</Description>
+    <Copyright>2020</Copyright>
+    <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/Noggog/Mutagen</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Noggog/Mutagen</RepositoryUrl>
+    <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>Mutagen.Bethesda.Fallout4.xml</DocumentationFile>
+    <DebugType>embedded</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Constants.cs" />
+    <Compile Include="Records\Group.cs">
+      <DependentUpon>Group.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GameSetting.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GameSettingBool.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GameSettingFloat.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GameSettingInt.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GameSettingString.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Fallout4ModHeader.cs">
+      <DependentUpon>Fallout4ModHeader.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\ProtocolDefinition_Fallout4.cs" />
+    <Compile Include="Records\Fallout4MajorRecord.cs">
+      <DependentUpon>Fallout4MajorRecord.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Fallout4Mod.cs">
+      <DependentUpon>Fallout4Mod.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Group_Generated.cs">
+      <DependentUpon>Group.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\ModStats_Generated.cs">
+      <DependentUpon>Fallout4ModHeader.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Fallout4MajorRecord_Generated.cs">
+      <DependentUpon>Fallout4MajorRecord.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Fallout4Mod_Generated.cs">
+      <DependentUpon>Fallout4Mod.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GameSetting_Generated.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GameSettingInt_Generated.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GameSettingFloat_Generated.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GameSettingString_Generated.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GameSettingBool_Generated.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="WarmupFallout4_Generated.cs" />
+    <Compile Include="Records\RecordTypes_Generated.cs" />
+    <Compile Include="Records\RecordTypeInts_Generated.cs" />
+    <Compile Include="Records\Fallout4ModHeader_Generated.cs">
+      <DependentUpon>Fallout4ModHeader.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\TypeSolidifier_Generated.cs" />
+    <Compile Include="Records\LinkCacheMixIns_Generated.cs" />
+    <Compile Include="Records\Major Records\Keyword_Generated.cs">
+      <DependentUpon>Keyword.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\IKeywordLinkedReference_Generated.cs" />
+    <Compile Include="Interfaces\LinkInterfaceMapping_Generated.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="GitInfo" Version="2.1.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Loqui" Version="2.3.1" />
+    <PackageReference Include="Noggog.CSharpExt" Version="2.4.0" />
+    <PackageReference Include="NuGetizer" Version="0.6.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />
+  </ItemGroup>
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\mutagen.bethesda.Fallout4&quot;" />
+  </Target>
+</Project>

@@ -19,6 +19,7 @@ namespace Mutagen.Bethesda
                 GameRelease.SkyrimLE => "Skyrim/Plugins.txt",
                 GameRelease.SkyrimSE => "Skyrim Special Edition/Plugins.txt",
                 GameRelease.SkyrimVR => "Skyrim VR/Plugins.txt",
+                GameRelease.Fallout4 => "Fallout4/Plugins.txt",
                 _ => throw new NotImplementedException()
             };
         }

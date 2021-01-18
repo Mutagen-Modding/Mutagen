@@ -128,6 +128,20 @@ namespace Mutagen.Bethesda.Generation
                     new FileInfo(Path.Combine(proto.GenerationFolder.FullName, "../Mutagen.Bethesda.Skyrim.csproj")));
             }
 
+            if (ShouldRun("Fallout4"))
+            {
+                var proto = gen.AddProtocol(
+                new ProtocolGeneration(
+                    gen,
+                    new ProtocolKey("Fallout4"),
+                    new DirectoryInfo("../../../../Mutagen.Bethesda.Fallout4/Records"))
+                {
+                    DefaultNamespace = "Mutagen.Bethesda.Fallout4",
+                });
+                proto.AddProjectToModify(
+                    new FileInfo(Path.Combine(proto.GenerationFolder.FullName, "../Mutagen.Bethesda.Fallout4.csproj")));
+            }
+
             gen.Generate().Wait();
         }
     }

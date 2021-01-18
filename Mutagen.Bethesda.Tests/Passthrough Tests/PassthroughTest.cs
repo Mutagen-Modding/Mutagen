@@ -327,6 +327,7 @@ namespace Mutagen.Bethesda.Tests
                 GameRelease.SkyrimLE => new SkyrimPassthroughTest(passthroughSettings, GameRelease.SkyrimLE),
                 GameRelease.SkyrimSE => new SkyrimPassthroughTest(passthroughSettings, GameRelease.SkyrimSE),
                 GameRelease.SkyrimVR => new SkyrimPassthroughTest(passthroughSettings, GameRelease.SkyrimVR),
+                GameRelease.Fallout4 => new SkyrimPassthroughTest(passthroughSettings, GameRelease.Fallout4),
                 _ => throw new NotImplementedException(),
             };
         }
