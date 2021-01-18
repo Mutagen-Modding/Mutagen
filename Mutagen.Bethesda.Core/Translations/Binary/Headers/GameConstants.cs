@@ -9,12 +9,12 @@ namespace Mutagen.Bethesda.Binary
     /// <summary> 
     /// Reference for all the alignment and length constants related to a specific game 
     /// </summary> 
-    public class GameConstants
+    public record GameConstants
     {
         /// <summary> 
         /// Associated game type 
         /// </summary> 
-        public GameRelease Release { get; }
+        public GameRelease Release { get; init; }
 
         /// <summary> 
         /// Length of the Mod header's metadata, excluding content 
@@ -66,18 +66,6 @@ namespace Mutagen.Bethesda.Binary
             SubConstants = subConstants;
         }
 
-        public GameConstants(
-            GameConstants rhs,
-            GameRelease releaseOverride)
-        {
-            Release = releaseOverride;
-            ModHeaderLength = rhs.ModHeaderLength;
-            ModHeaderFluffLength = rhs.ModHeaderFluffLength;
-            GroupConstants = rhs.GroupConstants;
-            MajorConstants = rhs.MajorConstants;
-            SubConstants = rhs.SubConstants;
-        }
-
         /// <summary> 
         /// Readonly singleton of Oblivion game constants 
         /// </summary> 
@@ -125,12 +113,12 @@ namespace Mutagen.Bethesda.Binary
         /// <summary> 
         /// Readonly singleton of Skyrim SE game constants 
         /// </summary> 
-        public static readonly GameConstants SkyrimSE = new GameConstants(SkyrimLE, GameRelease.SkyrimSE);
+        public static readonly GameConstants SkyrimSE = SkyrimLE with { Release = GameRelease.SkyrimSE };
 
         /// <summary> 
         /// Readonly singleton of Skyrim SE game constants 
         /// </summary> 
-        public static readonly GameConstants SkyrimVR = new GameConstants(SkyrimLE, GameRelease.SkyrimVR);
+        public static readonly GameConstants SkyrimVR = SkyrimLE with { Release = GameRelease.SkyrimVR };
 
         /// <summary> 
         /// Readonly singleton of Fallout4 game constants 
