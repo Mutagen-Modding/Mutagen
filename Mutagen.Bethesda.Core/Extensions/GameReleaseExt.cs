@@ -27,7 +27,7 @@ namespace Mutagen.Bethesda
                 GameRelease.SkyrimLE => 43,
                 GameRelease.SkyrimSE => 44,
                 GameRelease.SkyrimVR => 44,
-                GameRelease.Fallout4 => default,
+                GameRelease.Fallout4 => 131,
                 _ => throw new NotImplementedException(),
             };
         }

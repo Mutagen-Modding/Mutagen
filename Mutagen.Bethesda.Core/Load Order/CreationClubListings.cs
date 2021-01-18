@@ -18,7 +18,6 @@ namespace Mutagen.Bethesda
                 case GameCategory.Oblivion:
                     throw new ArgumentException();
                 case GameCategory.Skyrim:
-                    return Path.Combine(Path.GetDirectoryName(dataPath.Path)!, $"{category}.ccc");
                 case GameCategory.Fallout4:
                     return Path.Combine(Path.GetDirectoryName(dataPath.Path)!, $"{category}.ccc");
                 default:
