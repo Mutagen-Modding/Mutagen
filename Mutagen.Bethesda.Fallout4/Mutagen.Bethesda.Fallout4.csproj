@@ -22,6 +22,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
+    <Compile Include="Enums\GroupTypeEnum.cs" />
     <Compile Include="Records\Group.cs">
       <DependentUpon>Group.xml</DependentUpon>
     </Compile>

@@ -34,6 +34,7 @@
     <Compile Include="Enums\Confidence.cs" />
     <Compile Include="Enums\EquipType.cs" />
     <Compile Include="Enums\FavorLevel.cs" />
+    <Compile Include="Enums\GroupTypeEnum.cs" />
     <Compile Include="Enums\Level.cs" />
     <Compile Include="Enums\LockLevel.cs" />
     <Compile Include="Enums\Mood.cs" />

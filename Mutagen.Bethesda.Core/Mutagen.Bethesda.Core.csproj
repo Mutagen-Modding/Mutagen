@@ -169,7 +169,6 @@
     <Compile Include="Processing\ModRecordAligner.cs" />
     <Compile Include="Translations\Binary\BinaryStringUtility.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="Enums\GroupTypeEnum.cs" />
     <Compile Include="Extensions\IBinaryStreamExt.cs" />
     <Compile Include="Streams\IMutagenReadStream.cs" />
     <Compile Include="Links\EDIDLink.cs" />
