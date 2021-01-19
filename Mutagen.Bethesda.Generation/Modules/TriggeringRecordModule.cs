@@ -710,8 +710,7 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine($"public static readonly {nameof(RecordType)} {Mutagen.Bethesda.Internals.Constants.GrupRecordTypeMember} = (RecordType){grupLoqui.TargetObjectGeneration.Name}.{Mutagen.Bethesda.Internals.Constants.GrupRecordTypeMember};");
                 }
             }
-            else if (await obj.IsSingleTriggerSource()
-                && !(await obj.IsMajorRecord()))
+            else if (await obj.IsSingleTriggerSource())
             {
                 await obj.IsSingleTriggerSource();
                 fg.AppendLine($"public{obj.NewOverride(b => !b.Abstract)}static readonly {nameof(RecordType)} {Mutagen.Bethesda.Internals.Constants.GrupRecordTypeMember} = {obj.RegistrationName}.{Mutagen.Bethesda.Internals.Constants.TriggeringRecordTypeMember};");
