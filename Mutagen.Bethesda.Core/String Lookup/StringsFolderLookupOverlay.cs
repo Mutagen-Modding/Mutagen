@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda
                             dict[lang] = new Lazy<IStringsLookup>(() => new StringsLookupOverlay(file.FullName, type), LazyThreadSafetyMode.ExecutionAndPublication);
                         }
                     }
-                    foreach (var bsaFile in Directory.EnumerateFiles(dataPath, "*.bsa"))
+                    foreach (var bsaFile in Archive.GetApplicableArchivePaths(release, dataPath, modKey))
                     {
                         try
                         {
