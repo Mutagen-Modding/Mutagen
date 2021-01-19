@@ -1,3 +1,4 @@
+using Mutagen.Bethesda.Ba2;
 using Mutagen.Bethesda.Bsa;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,7 @@ namespace Mutagen.Bethesda
                 case GameRelease.SkyrimVR:
                     return new BsaWrapper(path);
                 case GameRelease.Fallout4:
-                    throw new NotImplementedException();
+                    return new Ba2Wrapper(path);
                 default:
                     throw new NotImplementedException();
             }
