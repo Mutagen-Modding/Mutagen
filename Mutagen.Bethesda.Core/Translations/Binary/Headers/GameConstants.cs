@@ -151,7 +151,10 @@ namespace Mutagen.Bethesda.Binary
                     CellGroupTypes: new[] { 2, 4 },
                     CellSubGroupTypes: new[] { 3, 5 }),
                 topic: new GroupTopicConstants(7),
-                hasSubGroups: new int[] { 1, 2, 4, 6, 7, 10 }),
+                hasSubGroups: new int[] { 1, 2, 4, 6, 7, 10 })
+            {
+                Quest = new GroupQuestConstants(10)
+            },
             majorConstants: new MajorRecordConstants(
                 headerLength: 24,
                 lengthLength: 4,

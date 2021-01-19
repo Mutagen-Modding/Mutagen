@@ -234,13 +234,13 @@ namespace Mutagen.Bethesda
                     var targetRec = majorRecordMeta.RecordType;
                     if (targetRec != grupRec)
                     {
-                        if (IsSubLevelGRUP(frame.GetGroup(checkIsGroup: false)))
+                        var grup = frame.GetGroup(checkIsGroup: false);
+                        if (IsSubLevelGRUP(grup))
                         {
                             parentGroupLocations.Push(grupLoc);
                             HandleSubLevelGRUP(
                                 frame: frame,
                                 fileLocs: fileLocs,
-                                recordType: grupRec,
                                 parentGroupLocations: parentGroupLocations,
                                 interest: interest);
                             parentGroupLocations.Pop();
@@ -294,7 +294,6 @@ namespace Mutagen.Bethesda
         private static void HandleSubLevelGRUP(
             MutagenFrame frame,
             FileLocationConstructor fileLocs,
-            RecordType recordType,
             RecordInterest? interest,
             Stack<long> parentGroupLocations)
         {
@@ -317,7 +316,8 @@ namespace Mutagen.Bethesda
                 parentGroupLocations.Pop();
             }
             else if (grupType == frame.MetaData.Constants.GroupConstants.World.TopGroupType
-                || grupType == frame.MetaData.Constants.GroupConstants.Topic?.TopGroupType)
+                || grupType == frame.MetaData.Constants.GroupConstants.Topic?.TopGroupType
+                || grupType == frame.MetaData.Constants.GroupConstants.Quest?.TopGroupType)
             {
                 ParseTopLevelGRUP(
                     reader: frame.Reader,

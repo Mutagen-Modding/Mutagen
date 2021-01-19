@@ -48,12 +48,14 @@
     <Compile Include="Exceptions\DidNotMatchException.cs" />
     <Compile Include="Exceptions\MoreDataException.cs" />
     <Compile Include="Exceptions\UnexpectedlyMoreData.cs" />
+    <Compile Include="Passthrough Tests\Fallout4PassthroughTest.cs" />
     <Compile Include="Processing\BinaryFileProcessor.cs" />
     <Compile Include="ComparisonStream.cs" />
     <Compile Include="FlattenedMod_Tests.cs" />
     <Compile Include="Processing\ModRecordAligner.cs" />
     <Compile Include="Processing\OblivionProcessor.cs" />
     <Compile Include="Processing\Processor.cs" />
+    <Compile Include="Processing\Fallout4Processor.cs" />
     <Compile Include="Processing\SkyrimProcessor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Passthrough Tests\OtherTests.cs" />
