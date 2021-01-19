@@ -14,8 +14,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public const int MAST = 0x5453414D;
         public const int OFST = 0x5453464F;
         public const int ONAM = 0x4D414E4F;
+        public const int SCRN = 0x4E524353;
         public const int SNAM = 0x4D414E53;
         public const int TES4 = 0x34534554;
+        public const int TNAM = 0x4D414E54;
         public const int XXXX = 0x58585858;
     }
 }

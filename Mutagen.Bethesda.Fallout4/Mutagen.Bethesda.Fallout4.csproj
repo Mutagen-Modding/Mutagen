@@ -91,6 +91,9 @@
     </Compile>
     <Compile Include="Interfaces\IKeywordLinkedReference_Generated.cs" />
     <Compile Include="Interfaces\LinkInterfaceMapping_Generated.cs" />
+    <Compile Include="Records\TransientType_Generated.cs">
+      <DependentUpon>Fallout4ModHeader.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.1.2">

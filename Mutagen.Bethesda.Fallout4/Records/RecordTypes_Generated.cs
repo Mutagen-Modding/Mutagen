@@ -14,8 +14,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly RecordType MAST = new RecordType(0x5453414D);
         public static readonly RecordType OFST = new RecordType(0x5453464F);
         public static readonly RecordType ONAM = new RecordType(0x4D414E4F);
+        public static readonly RecordType SCRN = new RecordType(0x4E524353);
         public static readonly RecordType SNAM = new RecordType(0x4D414E53);
         public static readonly RecordType TES4 = new RecordType(0x34534554);
+        public static readonly RecordType TNAM = new RecordType(0x4D414E54);
         public static readonly RecordType XXXX = new RecordType(0x58585858);
     }
 }

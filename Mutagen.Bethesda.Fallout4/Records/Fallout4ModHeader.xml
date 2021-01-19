@@ -16,7 +16,9 @@
       <List name="OverriddenForms" recordType="ONAM" overflowRecordType="XXXX">
         <FormLink refName="Fallout4MajorRecord" />
       </List>
-      <Int32 name="INTV" recordType="INTV" />
+      <ByteArray name="Screenshot" recordType="SCRN" />
+      <RefList name="TransientTypes" refName="TransientType" />
+      <ByteArray name="INTV" recordType="INTV" />
       <Int32 name="INCC" recordType="INCC" />
     </Fields>
   </Object>
@@ -25,6 +27,14 @@
       <Float name="Version" default="1.7f" />
       <UInt32 name="NumRecords" />
       <UInt32 name="NextFormID" />
+    </Fields>
+  </Object>
+  <Object name="TransientType" recordType="TNAM" objType="Subrecord" GUID="8585f14c-55ea-4087-8212-937bdd6064a0" ID="30">
+    <Fields>
+      <UInt32 name="FormType" />
+      <List name="Links">
+        <FormLink refName="Fallout4MajorRecord" />
+      </List>
     </Fields>
   </Object>
 </Loqui>

@@ -121,10 +121,41 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #endregion
-        #region INTV
-        public Int32? INTV { get; set; }
+        #region Screenshot
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Int32? IFallout4ModHeaderGetter.INTV => this.INTV;
+        protected MemorySlice<Byte>? _Screenshot;
+        public MemorySlice<Byte>? Screenshot
+        {
+            get => this._Screenshot;
+            set => this._Screenshot = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IFallout4ModHeaderGetter.Screenshot => this.Screenshot;
+        #endregion
+        #region TransientTypes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<TransientType> _TransientTypes = new ExtendedList<TransientType>();
+        public ExtendedList<TransientType> TransientTypes
+        {
+            get => this._TransientTypes;
+            protected set => this._TransientTypes = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<ITransientTypeGetter> IFallout4ModHeaderGetter.TransientTypes => _TransientTypes;
+        #endregion
+
+        #endregion
+        #region INTV
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _INTV;
+        public MemorySlice<Byte>? INTV
+        {
+            get => this._INTV;
+            set => this._INTV = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IFallout4ModHeaderGetter.INTV => this.INTV;
         #endregion
         #region INCC
         public Int32? INCC { get; set; }
@@ -181,6 +212,8 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Description = initialValue;
                 this.MasterReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>());
                 this.OverriddenForms = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Screenshot = initialValue;
+                this.TransientTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TransientType.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, TransientType.Mask<TItem>?>>());
                 this.INTV = initialValue;
                 this.INCC = initialValue;
             }
@@ -198,6 +231,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Description,
                 TItem MasterReferences,
                 TItem OverriddenForms,
+                TItem Screenshot,
+                TItem TransientTypes,
                 TItem INTV,
                 TItem INCC)
             {
@@ -213,6 +248,8 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Description = Description;
                 this.MasterReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>?>(MasterReferences, Enumerable.Empty<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>());
                 this.OverriddenForms = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(OverriddenForms, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Screenshot = Screenshot;
+                this.TransientTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TransientType.Mask<TItem>?>>?>(TransientTypes, Enumerable.Empty<MaskItemIndexed<TItem, TransientType.Mask<TItem>?>>());
                 this.INTV = INTV;
                 this.INCC = INCC;
             }
@@ -238,6 +275,8 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem Description;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>?>? MasterReferences;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? OverriddenForms;
+            public TItem Screenshot;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TransientType.Mask<TItem>?>>?>? TransientTypes;
             public TItem INTV;
             public TItem INCC;
             #endregion
@@ -264,6 +303,8 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Description, rhs.Description)) return false;
                 if (!object.Equals(this.MasterReferences, rhs.MasterReferences)) return false;
                 if (!object.Equals(this.OverriddenForms, rhs.OverriddenForms)) return false;
+                if (!object.Equals(this.Screenshot, rhs.Screenshot)) return false;
+                if (!object.Equals(this.TransientTypes, rhs.TransientTypes)) return false;
                 if (!object.Equals(this.INTV, rhs.INTV)) return false;
                 if (!object.Equals(this.INCC, rhs.INCC)) return false;
                 return true;
@@ -283,6 +324,8 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Description);
                 hash.Add(this.MasterReferences);
                 hash.Add(this.OverriddenForms);
+                hash.Add(this.Screenshot);
+                hash.Add(this.TransientTypes);
                 hash.Add(this.INTV);
                 hash.Add(this.INCC);
                 return hash.ToHashCode();
@@ -330,6 +373,19 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
+                if (!eval(this.Screenshot)) return false;
+                if (this.TransientTypes != null)
+                {
+                    if (!eval(this.TransientTypes.Overall)) return false;
+                    if (this.TransientTypes.Specific != null)
+                    {
+                        foreach (var item in this.TransientTypes.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 if (!eval(this.INTV)) return false;
                 if (!eval(this.INCC)) return false;
                 return true;
@@ -373,6 +429,19 @@ namespace Mutagen.Bethesda.Fallout4
                         foreach (var item in this.OverriddenForms.Specific)
                         {
                             if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Screenshot)) return true;
+                if (this.TransientTypes != null)
+                {
+                    if (eval(this.TransientTypes.Overall)) return true;
+                    if (this.TransientTypes.Specific != null)
+                    {
+                        foreach (var item in this.TransientTypes.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
@@ -428,6 +497,22 @@ namespace Mutagen.Bethesda.Fallout4
                         {
                             R mask = eval(item.Item.Value);
                             l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.Screenshot = eval(this.Screenshot);
+                if (TransientTypes != null)
+                {
+                    obj.TransientTypes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, TransientType.Mask<R>?>>?>(eval(this.TransientTypes.Overall), Enumerable.Empty<MaskItemIndexed<R, TransientType.Mask<R>?>>());
+                    if (TransientTypes.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, TransientType.Mask<R>?>>();
+                        obj.TransientTypes.Specific = l;
+                        foreach (var item in TransientTypes.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, TransientType.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, TransientType.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
                         }
                     }
                 }
@@ -541,6 +626,33 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                         fg.AppendLine("]");
                     }
+                    if (printMask?.Screenshot ?? true)
+                    {
+                        fg.AppendItem(Screenshot, "Screenshot");
+                    }
+                    if ((printMask?.TransientTypes?.Overall ?? true)
+                        && TransientTypes.TryGet(out var TransientTypesItem))
+                    {
+                        fg.AppendLine("TransientTypes =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(TransientTypesItem.Overall);
+                            if (TransientTypesItem.Specific != null)
+                            {
+                                foreach (var subItem in TransientTypesItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
                     if (printMask?.INTV ?? true)
                     {
                         fg.AppendItem(INTV, "INTV");
@@ -586,6 +698,8 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? Description;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MasterReference.ErrorMask?>>?>? MasterReferences;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? OverriddenForms;
+            public Exception? Screenshot;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TransientType.ErrorMask?>>?>? TransientTypes;
             public Exception? INTV;
             public Exception? INCC;
             #endregion
@@ -620,6 +734,10 @@ namespace Mutagen.Bethesda.Fallout4
                         return MasterReferences;
                     case Fallout4ModHeader_FieldIndex.OverriddenForms:
                         return OverriddenForms;
+                    case Fallout4ModHeader_FieldIndex.Screenshot:
+                        return Screenshot;
+                    case Fallout4ModHeader_FieldIndex.TransientTypes:
+                        return TransientTypes;
                     case Fallout4ModHeader_FieldIndex.INTV:
                         return INTV;
                     case Fallout4ModHeader_FieldIndex.INCC:
@@ -669,6 +787,12 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4ModHeader_FieldIndex.OverriddenForms:
                         this.OverriddenForms = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Fallout4ModHeader_FieldIndex.Screenshot:
+                        this.Screenshot = ex;
+                        break;
+                    case Fallout4ModHeader_FieldIndex.TransientTypes:
+                        this.TransientTypes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TransientType.ErrorMask?>>?>(ex, null);
                         break;
                     case Fallout4ModHeader_FieldIndex.INTV:
                         this.INTV = ex;
@@ -722,6 +846,12 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4ModHeader_FieldIndex.OverriddenForms:
                         this.OverriddenForms = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
+                    case Fallout4ModHeader_FieldIndex.Screenshot:
+                        this.Screenshot = (Exception?)obj;
+                        break;
+                    case Fallout4ModHeader_FieldIndex.TransientTypes:
+                        this.TransientTypes = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TransientType.ErrorMask?>>?>)obj;
+                        break;
                     case Fallout4ModHeader_FieldIndex.INTV:
                         this.INTV = (Exception?)obj;
                         break;
@@ -748,6 +878,8 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Description != null) return true;
                 if (MasterReferences != null) return true;
                 if (OverriddenForms != null) return true;
+                if (Screenshot != null) return true;
+                if (TransientTypes != null) return true;
                 if (INTV != null) return true;
                 if (INCC != null) return true;
                 return false;
@@ -838,6 +970,29 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                     fg.AppendLine("]");
                 }
+                fg.AppendItem(Screenshot, "Screenshot");
+                if (TransientTypes.TryGet(out var TransientTypesItem))
+                {
+                    fg.AppendLine("TransientTypes =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(TransientTypesItem.Overall);
+                        if (TransientTypesItem.Specific != null)
+                        {
+                            foreach (var subItem in TransientTypesItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
                 fg.AppendItem(INTV, "INTV");
                 fg.AppendItem(INCC, "INCC");
             }
@@ -860,6 +1015,8 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Description = this.Description.Combine(rhs.Description);
                 ret.MasterReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MasterReference.ErrorMask?>>?>(ExceptionExt.Combine(this.MasterReferences?.Overall, rhs.MasterReferences?.Overall), ExceptionExt.Combine(this.MasterReferences?.Specific, rhs.MasterReferences?.Specific));
                 ret.OverriddenForms = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.OverriddenForms?.Overall, rhs.OverriddenForms?.Overall), ExceptionExt.Combine(this.OverriddenForms?.Specific, rhs.OverriddenForms?.Specific));
+                ret.Screenshot = this.Screenshot.Combine(rhs.Screenshot);
+                ret.TransientTypes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TransientType.ErrorMask?>>?>(ExceptionExt.Combine(this.TransientTypes?.Overall, rhs.TransientTypes?.Overall), ExceptionExt.Combine(this.TransientTypes?.Specific, rhs.TransientTypes?.Specific));
                 ret.INTV = this.INTV.Combine(rhs.INTV);
                 ret.INCC = this.INCC.Combine(rhs.INCC);
                 return ret;
@@ -897,6 +1054,8 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Description;
             public MasterReference.TranslationMask? MasterReferences;
             public bool OverriddenForms;
+            public bool Screenshot;
+            public TransientType.TranslationMask? TransientTypes;
             public bool INTV;
             public bool INCC;
             #endregion
@@ -918,6 +1077,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Author = defaultOn;
                 this.Description = defaultOn;
                 this.OverriddenForms = defaultOn;
+                this.Screenshot = defaultOn;
                 this.INTV = defaultOn;
                 this.INCC = defaultOn;
             }
@@ -947,6 +1107,8 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Description, null));
                 ret.Add((MasterReferences == null ? DefaultOn : !MasterReferences.GetCrystal().CopyNothing, MasterReferences?.GetCrystal()));
                 ret.Add((OverriddenForms, null));
+                ret.Add((Screenshot, null));
+                ret.Add((TransientTypes == null ? DefaultOn : !TransientTypes.GetCrystal().CopyNothing, TransientTypes?.GetCrystal()));
                 ret.Add((INTV, null));
                 ret.Add((INCC, null));
             }
@@ -1038,7 +1200,9 @@ namespace Mutagen.Bethesda.Fallout4
         new String? Description { get; set; }
         new ExtendedList<MasterReference> MasterReferences { get; }
         new ExtendedList<IFormLink<IFallout4MajorRecordGetter>>? OverriddenForms { get; set; }
-        new Int32? INTV { get; set; }
+        new MemorySlice<Byte>? Screenshot { get; set; }
+        new ExtendedList<TransientType> TransientTypes { get; }
+        new MemorySlice<Byte>? INTV { get; set; }
         new Int32? INCC { get; set; }
     }
 
@@ -1067,7 +1231,9 @@ namespace Mutagen.Bethesda.Fallout4
         String? Description { get; }
         IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; }
         IReadOnlyList<IFormLink<IFallout4MajorRecordGetter>>? OverriddenForms { get; }
-        Int32? INTV { get; }
+        ReadOnlyMemorySlice<Byte>? Screenshot { get; }
+        IReadOnlyList<ITransientTypeGetter> TransientTypes { get; }
+        ReadOnlyMemorySlice<Byte>? INTV { get; }
         Int32? INCC { get; }
 
     }
@@ -1248,8 +1414,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         Description = 9,
         MasterReferences = 10,
         OverriddenForms = 11,
-        INTV = 12,
-        INCC = 13,
+        Screenshot = 12,
+        TransientTypes = 13,
+        INTV = 14,
+        INCC = 15,
     }
     #endregion
 
@@ -1267,9 +1435,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public const string GUID = "84816323-6afc-412f-a0ef-8dff92fbb30b";
 
-        public const ushort AdditionalFieldCount = 14;
+        public const ushort AdditionalFieldCount = 16;
 
-        public const ushort FieldCount = 14;
+        public const ushort FieldCount = 16;
 
         public static readonly Type MaskType = typeof(Fallout4ModHeader.Mask<>);
 
@@ -1350,6 +1518,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             item.Description = default;
             item.MasterReferences.Clear();
             item.OverriddenForms = null;
+            item.Screenshot = default;
+            item.TransientTypes.Clear();
             item.INTV = default;
             item.INCC = default;
         }
@@ -1358,6 +1528,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void RemapLinks(IFallout4ModHeader obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             obj.OverriddenForms?.RemapLinks(mapping);
+            obj.TransientTypes.RemapLinks(mapping);
         }
         
         #endregion
@@ -1425,7 +1596,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 rhs.OverriddenForms,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.INTV = item.INTV == rhs.INTV;
+            ret.Screenshot = MemorySliceExt.Equal(item.Screenshot, rhs.Screenshot);
+            ret.TransientTypes = item.TransientTypes.CollectionEqualsHelper(
+                rhs.TransientTypes,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.INTV = MemorySliceExt.Equal(item.INTV, rhs.INTV);
             ret.INCC = item.INCC == rhs.INCC;
         }
         
@@ -1554,10 +1730,33 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 fg.AppendLine("]");
             }
+            if ((printMask?.Screenshot ?? true)
+                && item.Screenshot.TryGet(out var ScreenshotItem))
+            {
+                fg.AppendLine($"Screenshot => {SpanExt.ToHexString(ScreenshotItem)}");
+            }
+            if (printMask?.TransientTypes?.Overall ?? true)
+            {
+                fg.AppendLine("TransientTypes =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.TransientTypes)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
             if ((printMask?.INTV ?? true)
                 && item.INTV.TryGet(out var INTVItem))
             {
-                fg.AppendItem(INTVItem, "INTV");
+                fg.AppendLine($"INTV => {SpanExt.ToHexString(INTVItem)}");
             }
             if ((printMask?.INCC ?? true)
                 && item.INCC.TryGet(out var INCCItem))
@@ -1585,7 +1784,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             if (!string.Equals(lhs.Description, rhs.Description)) return false;
             if (!lhs.MasterReferences.SequenceEqualNullable(rhs.MasterReferences)) return false;
             if (!lhs.OverriddenForms.SequenceEqualNullable(rhs.OverriddenForms)) return false;
-            if (lhs.INTV != rhs.INTV) return false;
+            if (!MemorySliceExt.Equal(lhs.Screenshot, rhs.Screenshot)) return false;
+            if (!lhs.TransientTypes.SequenceEqualNullable(rhs.TransientTypes)) return false;
+            if (!MemorySliceExt.Equal(lhs.INTV, rhs.INTV)) return false;
             if (lhs.INCC != rhs.INCC) return false;
             return true;
         }
@@ -1617,9 +1818,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
             hash.Add(item.MasterReferences);
             hash.Add(item.OverriddenForms);
-            if (item.INTV.TryGet(out var INTVitem))
+            if (item.Screenshot.TryGet(out var ScreenshotItem))
             {
-                hash.Add(INTVitem);
+                hash.Add(ScreenshotItem);
+            }
+            hash.Add(item.TransientTypes);
+            if (item.INTV.TryGet(out var INTVItem))
+            {
+                hash.Add(INTVItem);
             }
             if (item.INCC.TryGet(out var INCCitem))
             {
@@ -1645,6 +1851,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
+            }
+            foreach (var item in obj.TransientTypes.SelectMany(f => f.ContainedFormLinks))
+            {
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
@@ -1787,9 +1997,51 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.Screenshot) ?? true))
+            {
+                if(rhs.Screenshot.TryGet(out var Screenshotrhs))
+                {
+                    item.Screenshot = Screenshotrhs.ToArray();
+                }
+                else
+                {
+                    item.Screenshot = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.TransientTypes) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4ModHeader_FieldIndex.TransientTypes);
+                try
+                {
+                    item.TransientTypes.SetTo(
+                        rhs.TransientTypes
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.INTV) ?? true))
             {
-                item.INTV = rhs.INTV;
+                if(rhs.INTV.TryGet(out var INTVrhs))
+                {
+                    item.INTV = INTVrhs.ToArray();
+                }
+                else
+                {
+                    item.INTV = default;
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.INCC) ?? true))
             {
@@ -1956,7 +2208,22 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         writer: subWriter,
                         item: subItem);
                 });
-            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.WriteNullable(
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Screenshot,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SCRN));
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<ITransientTypeGetter>.Instance.Write(
+                writer: writer,
+                items: item.TransientTypes,
+                transl: (MutagenWriter subWriter, ITransientTypeGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((TransientTypeBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.INTV,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.INTV));
@@ -2081,10 +2348,26 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         .CastExtendedList<IFormLink<IFallout4MajorRecordGetter>>();
                     return (int)Fallout4ModHeader_FieldIndex.OverriddenForms;
                 }
+                case RecordTypeInts.SCRN:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Screenshot = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return (int)Fallout4ModHeader_FieldIndex.Screenshot;
+                }
+                case RecordTypeInts.TNAM:
+                {
+                    item.TransientTypes.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<TransientType>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: RecordTypes.TNAM,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: TransientType.TryCreateFromBinary));
+                    return (int)Fallout4ModHeader_FieldIndex.TransientTypes;
+                }
                 case RecordTypeInts.INTV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.INTV = frame.ReadInt32();
+                    item.INTV = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return (int)Fallout4ModHeader_FieldIndex.INTV;
                 }
                 case RecordTypeInts.INCC:
@@ -2195,9 +2478,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         public IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; private set; } = ListExt.Empty<MasterReferenceBinaryOverlay>();
         public IReadOnlyList<IFormLink<IFallout4MajorRecordGetter>>? OverriddenForms { get; private set; }
+        #region Screenshot
+        private int? _ScreenshotLocation;
+        public ReadOnlyMemorySlice<Byte>? Screenshot => _ScreenshotLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ScreenshotLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        public IReadOnlyList<ITransientTypeGetter> TransientTypes { get; private set; } = ListExt.Empty<TransientTypeBinaryOverlay>();
         #region INTV
         private int? _INTVLocation;
-        public Int32? INTV => _INTVLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _INTVLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        public ReadOnlyMemorySlice<Byte>? INTV => _INTVLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _INTVLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region INCC
         private int? _INCCLocation;
@@ -2321,6 +2609,25 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         getter: (s, p) => new FormLink<IFallout4MajorRecordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     stream.Position += subLen;
                     return (int)Fallout4ModHeader_FieldIndex.OverriddenForms;
+                }
+                case RecordTypeInts.SCRN:
+                {
+                    _ScreenshotLocation = (stream.Position - offset);
+                    return (int)Fallout4ModHeader_FieldIndex.Screenshot;
+                }
+                case RecordTypeInts.TNAM:
+                {
+                    this.TransientTypes = BinaryOverlayList.FactoryByArray<TransientTypeBinaryOverlay>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        recordTypeConverter: recordTypeConverter,
+                        getter: (s, p, recConv) => TransientTypeBinaryOverlay.TransientTypeFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: type,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
+                    return (int)Fallout4ModHeader_FieldIndex.TransientTypes;
                 }
                 case RecordTypeInts.INTV:
                 {
