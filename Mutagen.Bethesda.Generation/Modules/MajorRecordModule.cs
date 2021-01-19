@@ -85,7 +85,7 @@ namespace Mutagen.Bethesda.Generation
                 using (var args = new FunctionWrapper(fg, ": this"))
                 {
                     args.Add($"mod.{nameof(IMod.GetNextFormKey)}()");
-                    if (obj.GetObjectData().GameCategory?.HasFormVersion() ?? false)
+                    if (obj.GetObjectData().HasMultipleReleases)
                     {
                         args.Add($"mod.{obj.GetObjectData().GameCategory}Release");
                     }
@@ -102,7 +102,7 @@ namespace Mutagen.Bethesda.Generation
                 using (var args = new FunctionWrapper(fg, ": this"))
                 {
                     args.Add($"mod.{nameof(IMod.GetNextFormKey)}(editorID)");
-                    if (obj.GetObjectData().GameCategory?.HasFormVersion() ?? false)
+                    if (obj.GetObjectData().HasMultipleReleases)
                     {
                         args.Add($"mod.{obj.GetObjectData().GameCategory}Release");
                     }

@@ -384,12 +384,9 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public Fallout4MajorRecord(
-            FormKey formKey,
-            Fallout4Release gameRelease)
+        public Fallout4MajorRecord(FormKey formKey)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
             CustomCtor();
         }
 
@@ -412,16 +409,12 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public Fallout4MajorRecord(IFallout4Mod mod)
-            : this(
-                mod.GetNextFormKey(),
-                mod.Fallout4Release)
+            : this(mod.GetNextFormKey())
         {
         }
 
         public Fallout4MajorRecord(IFallout4Mod mod, string editorID)
-            : this(
-                mod.GetNextFormKey(editorID),
-                mod.Fallout4Release)
+            : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
         }

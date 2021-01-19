@@ -454,8 +454,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Fallout4Mod_Registration.TriggeringRecordType;
-        public Fallout4Release Fallout4Release { get; }
-        public override GameRelease GameRelease => Fallout4Release.ToGameRelease();
+        public override GameRelease GameRelease => GameRelease.Fallout4;
         IReadOnlyCache<T, FormKey> IModGetter.GetTopLevelGroupGetter<T>() => this.GetTopLevelGroupGetter<T>();
         ICache<T, FormKey> IMod.GetGroup<T>() => this.GetGroup<T>();
         void IModGetter.WriteToBinary(string path, BinaryWriteParameters? param) => this.WriteToBinary(path, importMask: null, param: param);
@@ -479,13 +478,10 @@ namespace Mutagen.Bethesda.Fallout4
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         uint IModGetter.NextFormID => this.ModHeader.Stats.NextFormID;
-        public Fallout4Mod(
-            ModKey modKey,
-            Fallout4Release release)
+        public Fallout4Mod(ModKey modKey)
             : base(modKey)
         {
             this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID();
-            this.Fallout4Release = release;
             _GameSettings_Object = new Group<GameSetting>(this);
             _Keywords_Object = new Group<Keyword>(this);
             CustomCtor();
@@ -566,17 +562,13 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static Fallout4Mod CreateFromBinary(
             MutagenFrame frame,
-            Fallout4Release release,
             ModKey modKey,
             GroupMask? importMask = null)
         {
-            var ret = new Fallout4Mod(
-                modKey: modKey,
-                release: release);
+            var ret = new Fallout4Mod(modKey: modKey);
             frame.MetaData.ModKey = modKey;
             ((Fallout4ModSetterCommon)((IFallout4ModGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
-                release: release,
                 importMask: importMask,
                 modKey: modKey,
                 frame: frame);
@@ -585,17 +577,15 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static Fallout4Mod CreateFromBinary(
             ModPath path,
-            Fallout4Release release,
             GroupMask? importMask = null,
             StringsReadParameters? stringsParam = null,
             bool parallel = true)
         {
-            var gameRelease = release.ToGameRelease();
-            using (var reader = new MutagenBinaryReadStream(path, gameRelease))
+            using (var reader = new MutagenBinaryReadStream(path, GameRelease.Fallout4))
             {
                 var modKey = path.ModKey;
                 var frame = new MutagenFrame(reader);
-                frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, gameRelease));
+                frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameRelease.Fallout4));
                 frame.MetaData.Parallel = parallel;
                 if (reader.Remaining < 12)
                 {
@@ -607,7 +597,6 @@ namespace Mutagen.Bethesda.Fallout4
                     frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path.Path)!, stringsParam, path.ModKey);
                 }
                 return CreateFromBinary(
-                    release: release,
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame);
@@ -616,18 +605,16 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static Fallout4Mod CreateFromBinary(
             ModPath path,
-            Fallout4Release release,
             ErrorMaskBuilder? errorMask,
             GroupMask? importMask = null,
             StringsReadParameters? stringsParam = null,
             bool parallel = true)
         {
-            var gameRelease = release.ToGameRelease();
-            using (var reader = new MutagenBinaryReadStream(path, gameRelease))
+            using (var reader = new MutagenBinaryReadStream(path, GameRelease.Fallout4))
             {
                 var modKey = path.ModKey;
                 var frame = new MutagenFrame(reader);
-                frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, gameRelease));
+                frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameRelease.Fallout4));
                 frame.MetaData.Parallel = parallel;
                 if (reader.Remaining < 12)
                 {
@@ -639,7 +626,6 @@ namespace Mutagen.Bethesda.Fallout4
                     frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path.Path)!, stringsParam, path.ModKey);
                 }
                 return CreateFromBinary(
-                    release: release,
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame);
@@ -649,18 +635,16 @@ namespace Mutagen.Bethesda.Fallout4
         public static Fallout4Mod CreateFromBinary(
             Stream stream,
             ModKey modKey,
-            Fallout4Release release,
             RecordInfoCache infoCache,
             GroupMask? importMask = null,
             bool parallel = true)
         {
-            using (var reader = new MutagenBinaryReadStream(stream, modKey, release.ToGameRelease()))
+            using (var reader = new MutagenBinaryReadStream(stream, modKey, GameRelease.Fallout4))
             {
                 var frame = new MutagenFrame(reader);
                 frame.MetaData.RecordInfoCache = infoCache;
                 frame.MetaData.Parallel = parallel;
                 return CreateFromBinary(
-                    release: release,
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame);
@@ -670,19 +654,17 @@ namespace Mutagen.Bethesda.Fallout4
         public static Fallout4Mod CreateFromBinary(
             Stream stream,
             ModKey modKey,
-            Fallout4Release release,
             RecordInfoCache infoCache,
             ErrorMaskBuilder? errorMask,
             GroupMask? importMask = null,
             bool parallel = true)
         {
-            using (var reader = new MutagenBinaryReadStream(stream, modKey, release.ToGameRelease()))
+            using (var reader = new MutagenBinaryReadStream(stream, modKey, GameRelease.Fallout4))
             {
                 var frame = new MutagenFrame(reader);
                 frame.MetaData.RecordInfoCache = infoCache;
                 frame.MetaData.Parallel = parallel;
                 return CreateFromBinary(
-                    release: release,
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame);
@@ -693,42 +675,36 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static IFallout4ModDisposableGetter CreateFromBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            Fallout4Release release,
             ModKey modKey,
             IStringsFolderLookup? stringsLookup = null)
         {
-            var meta = new ParsingBundle(release.ToGameRelease(), new MasterReferenceReader(modKey));
+            var meta = new ParsingBundle(GameRelease.Fallout4, new MasterReferenceReader(modKey));
             meta.RecordInfoCache = new RecordInfoCache(() => new MutagenMemoryReadStream(bytes, meta));
             meta.StringsLookup = stringsLookup;
             return Fallout4ModBinaryOverlay.Fallout4ModFactory(
                 stream: new MutagenMemoryReadStream(
                     data: bytes,
                     metaData: meta),
-                release: release,
                 modKey: modKey,
                 shouldDispose: false);
         }
 
         public static IFallout4ModDisposableGetter CreateFromBinaryOverlay(
             ModPath path,
-            Fallout4Release release,
             StringsReadParameters? stringsParam = null)
         {
             return Fallout4ModBinaryOverlay.Fallout4ModFactory(
                 path: path,
-                stringsParam: stringsParam,
-                release: release);
+                stringsParam: stringsParam);
         }
 
         public static IFallout4ModDisposableGetter CreateFromBinaryOverlay(
             Stream stream,
-            Fallout4Release release,
             ModKey modKey)
         {
             return Fallout4ModBinaryOverlay.Fallout4ModFactory(
-                stream: new MutagenBinaryReadStream(stream, modKey, release.ToGameRelease()),
+                stream: new MutagenBinaryReadStream(stream, modKey, GameRelease.Fallout4),
                 modKey: modKey,
-                release: release,
                 shouldDispose: false);
         }
 
@@ -765,8 +741,8 @@ namespace Mutagen.Bethesda.Fallout4
 
     public partial interface IFallout4ModGetter :
         ILoquiObject,
-        IMajorRecordContextEnumerable<IFallout4Mod>,
         IMajorRecordGetterEnumerable,
+        IMajorRecordContextEnumerable<IFallout4Mod>,
         ILoquiObject<IFallout4ModGetter>,
         IModGetter,
         IContextGetterMod<IFallout4Mod>,
@@ -782,10 +758,6 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4ModHeaderGetter ModHeader { get; }
         IGroupGetter<IGameSettingGetter> GameSettings { get; }
         IGroupGetter<IKeywordGetter> Keywords { get; }
-
-        #region Mutagen
-        Fallout4Release Fallout4Release { get; }
-        #endregion
 
     }
 
@@ -1232,13 +1204,11 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IFallout4Mod item,
             MutagenFrame frame,
-            Fallout4Release release,
             ModKey modKey,
             GroupMask? importMask = null)
         {
             ((Fallout4ModSetterCommon)((IFallout4ModGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
-                release: release,
                 importMask: importMask,
                 modKey: modKey,
                 frame: frame);
@@ -1247,17 +1217,15 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IFallout4Mod item,
             ModPath path,
-            Fallout4Release release,
             GroupMask? importMask = null,
             StringsReadParameters? stringsParam = null,
             bool parallel = true)
         {
-            var gameRelease = release.ToGameRelease();
-            using (var reader = new MutagenBinaryReadStream(path, gameRelease))
+            using (var reader = new MutagenBinaryReadStream(path, GameRelease.Fallout4))
             {
                 var modKey = path.ModKey;
                 var frame = new MutagenFrame(reader);
-                frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, gameRelease));
+                frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameRelease.Fallout4));
                 frame.MetaData.Parallel = parallel;
                 if (reader.Remaining < 12)
                 {
@@ -1270,7 +1238,6 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 CopyInFromBinary(
                     item: item,
-                    release: release,
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame);
@@ -1281,19 +1248,17 @@ namespace Mutagen.Bethesda.Fallout4
             this IFallout4Mod item,
             Stream stream,
             ModKey modKey,
-            Fallout4Release release,
             RecordInfoCache infoCache,
             GroupMask? importMask = null,
             bool parallel = true)
         {
-            using (var reader = new MutagenBinaryReadStream(stream, modKey, release.ToGameRelease()))
+            using (var reader = new MutagenBinaryReadStream(stream, modKey, GameRelease.Fallout4))
             {
                 var frame = new MutagenFrame(reader);
                 frame.MetaData.RecordInfoCache = infoCache;
                 frame.MetaData.Parallel = parallel;
                 CopyInFromBinary(
                     item: item,
-                    release: release,
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame);
@@ -1497,7 +1462,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual void CopyInFromBinary(
             IFallout4Mod item,
             MutagenFrame frame,
-            Fallout4Release release,
             ModKey modKey,
             GroupMask? importMask = null)
         {
@@ -1658,8 +1622,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             BinaryWriteParameters param,
             ModKey modKey)
         {
-            var gameConstants = GameConstants.Get(item.Fallout4Release.ToGameRelease());
-            var bundle = new WritingBundle(gameConstants);
+            var bundle = new WritingBundle(GameConstants.Fallout4);
             var writer = new MutagenWriter(stream, bundle);
             ModHeaderWriteLogic.WriteHeader(
                 param: param,
@@ -1669,8 +1632,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 modKey: modKey);
             Stream[] outputStreams = new Stream[2];
             List<Action> toDo = new List<Action>();
-            toDo.Add(() => WriteGroupParallel(item.GameSettings, writer.MetaData.MasterReferences!, 0, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Keywords, writer.MetaData.MasterReferences!, 1, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.GameSettings, writer.MetaData.MasterReferences!, 0, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Keywords, writer.MetaData.MasterReferences!, 1, outputStreams, param.StringsWriter));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -1681,7 +1644,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IGroupGetter<T> group,
             MasterReferenceReader masters,
             int targetIndex,
-            GameConstants gameConstants,
             Stream[] streamDepositArray,
             StringsWriter? stringsWriter)
             where T : class, IFallout4MajorRecordGetter, IBinaryItem
@@ -1689,10 +1651,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             if (group.RecordCache.Count == 0) return;
             var cuts = group.Cut(CutCount).ToArray();
             Stream[] subStreams = new Stream[cuts.Length + 1];
-            byte[] groupBytes = new byte[gameConstants.GroupConstants.HeaderLength];
+            byte[] groupBytes = new byte[GameConstants.Fallout4.GroupConstants.HeaderLength];
             BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), RecordTypes.GRUP.TypeInt);
             var groupByteStream = new MemoryStream(groupBytes);
-            using (var stream = new MutagenWriter(groupByteStream, gameConstants, dispose: false))
+            using (var stream = new MutagenWriter(groupByteStream, GameConstants.Fallout4, dispose: false))
             {
                 stream.Position += 8;
                 GroupBinaryWriteTranslation.WriteEmbedded<T>(group, stream);
@@ -1701,7 +1663,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             Parallel.ForEach(cuts, (cutItems, state, counter) =>
             {
                 MemoryTributary trib = new MemoryTributary();
-                var bundle = new WritingBundle(gameConstants)
+                var bundle = new WritingBundle(GameConstants.Fallout4)
                 {
                     MasterReferences = masters,
                     StringsWriter = stringsWriter
@@ -2098,34 +2060,6 @@ namespace Mutagen.Bethesda.Fallout4
     {
     }
 
-    /// <summary>
-    /// Different game release versions a Fallout4 mod can have
-    /// </summary>
-    public enum Fallout4Release
-    {
-        Fallout4 = 4
-    }
-
-    public static class Fallout4ReleaseExt
-    {
-        public static GameRelease ToGameRelease(this Fallout4Release release)
-        {
-            return release switch
-            {
-                Fallout4Release.Fallout4 => GameRelease.Fallout4,
-                _ => throw new ArgumentException()
-            };
-        }
-
-        public static Fallout4Release ToFallout4Release(this GameRelease release)
-        {
-            return release switch
-            {
-                GameRelease.Fallout4 => Fallout4Release.Fallout4,
-                _ => throw new ArgumentException()
-            };
-        }
-    }
 }
 #endregion
 
@@ -2299,7 +2233,7 @@ namespace Mutagen.Bethesda.Fallout4
                 path: path);
             bool disposeStrings = param.StringsWriter == null;
             var stringsWriter = param.StringsWriter ?? (EnumExt.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter(modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings")) : null);
-            var bundle = new WritingBundle(item.Fallout4Release.ToGameRelease())
+            var bundle = new WritingBundle(GameRelease.Fallout4)
             {
                 StringsWriter = stringsWriter
             };
@@ -2336,7 +2270,7 @@ namespace Mutagen.Bethesda.Fallout4
             var modKey = item.ModKey;
             using (var writer = new MutagenWriter(
                 stream: stream,
-                new WritingBundle(item.Fallout4Release.ToGameRelease()),
+                new WritingBundle(GameRelease.Fallout4),
                 dispose: false))
             {
                 Fallout4ModBinaryWriteTranslation.Instance.Write(
@@ -2377,8 +2311,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public Fallout4Release Fallout4Release { get; }
-        public GameRelease GameRelease => Fallout4Release.ToGameRelease();
+        public GameRelease GameRelease => GameRelease.Fallout4;
         IReadOnlyCache<T, FormKey> IModGetter.GetTopLevelGroupGetter<T>() => this.GetTopLevelGroupGetter<T>();
         void IModGetter.WriteToBinary(string path, BinaryWriteParameters? param) => this.WriteToBinary(path, importMask: null, param: param);
         void IModGetter.WriteToBinaryParallel(string path, BinaryWriteParameters? param) => this.WriteToBinaryParallel(path, param: param);
@@ -2425,11 +2358,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
-            bool shouldDispose,
-            Fallout4Release release)
+            bool shouldDispose)
         {
             this.ModKey = modKey;
-            this.Fallout4Release = release;
             this._data = stream;
             this._package = new BinaryOverlayFactoryPackage(stream.MetaData);
             this._shouldDispose = shouldDispose;
@@ -2438,14 +2369,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static Fallout4ModBinaryOverlay Fallout4ModFactory(
             ReadOnlyMemorySlice<byte> data,
             ModKey modKey,
-            Fallout4Release release,
             IStringsFolderLookup? stringsLookup = null)
         {
-            var meta = new ParsingBundle(release.ToGameRelease(), new MasterReferenceReader(modKey));
+            var meta = new ParsingBundle(GameRelease.Fallout4, new MasterReferenceReader(modKey));
             meta.RecordInfoCache = new RecordInfoCache(() => new MutagenMemoryReadStream(data, meta));
             meta.StringsLookup = stringsLookup;
             return Fallout4ModFactory(
-                release: release,
                 stream: new MutagenMemoryReadStream(
                     data: data,
                     metaData: meta),
@@ -2455,12 +2384,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public static Fallout4ModBinaryOverlay Fallout4ModFactory(
             ModPath path,
-            Fallout4Release release,
             StringsReadParameters? stringsParam = null)
         {
-            var meta = new ParsingBundle(release.ToGameRelease(), new MasterReferenceReader(path.ModKey))
+            var meta = new ParsingBundle(GameRelease.Fallout4, new MasterReferenceReader(path.ModKey))
             {
-                RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, release.ToGameRelease()))
+                RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameRelease.Fallout4))
             };
             var stream = new MutagenBinaryReadStream(
                 path: path.Path,
@@ -2479,7 +2407,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 return Fallout4ModFactory(
                     stream: stream,
                     path.ModKey,
-                    release: release,
                     shouldDispose: true);
             }
             catch (Exception)
@@ -2492,12 +2419,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static Fallout4ModBinaryOverlay Fallout4ModFactory(
             IMutagenReadStream stream,
             ModKey modKey,
-            Fallout4Release release,
             bool shouldDispose)
         {
             var ret = new Fallout4ModBinaryOverlay(
                 stream: stream,
-                release: release,
                 modKey: modKey,
                 shouldDispose: shouldDispose);
             BinaryOverlay.FillModTypes(

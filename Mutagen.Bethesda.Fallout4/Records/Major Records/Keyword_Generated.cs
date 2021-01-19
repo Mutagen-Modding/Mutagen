@@ -359,12 +359,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Keyword_Registration.TriggeringRecordType;
-        public Keyword(
-            FormKey formKey,
-            Fallout4Release gameRelease)
+        public Keyword(FormKey formKey)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
             CustomCtor();
         }
 
@@ -387,16 +384,12 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public Keyword(IFallout4Mod mod)
-            : this(
-                mod.GetNextFormKey(),
-                mod.Fallout4Release)
+            : this(mod.GetNextFormKey())
         {
         }
 
         public Keyword(IFallout4Mod mod, string editorID)
-            : this(
-                mod.GetNextFormKey(editorID),
-                mod.Fallout4Release)
+            : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
         }
@@ -992,7 +985,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Keyword(formKey, default(Fallout4Release));
+            var newRec = new Keyword(formKey);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }

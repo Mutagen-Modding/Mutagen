@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         partial void CustomCtor()
         {
-            this.ModHeader.FormVersion = this.Fallout4Release.ToGameRelease().GetDefaultFormVersion()!.Value;
+            this.ModHeader.FormVersion = GameRelease.Fallout4.GetDefaultFormVersion()!.Value;
         }
     }
 }

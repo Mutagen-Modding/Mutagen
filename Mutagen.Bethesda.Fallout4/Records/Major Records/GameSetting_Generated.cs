@@ -314,12 +314,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = GameSetting_Registration.TriggeringRecordType;
-        public GameSetting(
-            FormKey formKey,
-            Fallout4Release gameRelease)
+        public GameSetting(FormKey formKey)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
             CustomCtor();
         }
 
@@ -342,16 +339,12 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public GameSetting(IFallout4Mod mod)
-            : this(
-                mod.GetNextFormKey(),
-                mod.Fallout4Release)
+            : this(mod.GetNextFormKey())
         {
         }
 
         public GameSetting(IFallout4Mod mod, string editorID)
-            : this(
-                mod.GetNextFormKey(editorID),
-                mod.Fallout4Release)
+            : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
         }

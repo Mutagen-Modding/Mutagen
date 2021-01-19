@@ -6,6 +6,5 @@
       <Group name="GameSettings" refName="GameSetting" />
       <Group name="Keywords" refName="Keyword" />
     </Fields>
-    <GameReleaseOptions>Fallout4</GameReleaseOptions>
   </Object>
 </Loqui>
