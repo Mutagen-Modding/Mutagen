@@ -179,6 +179,7 @@ namespace Mutagen.Bethesda
         {
             return game switch
             {
+                GameRelease.Fallout4 => true,
                 GameRelease.SkyrimSE => true,
                 GameRelease.SkyrimVR => true,
                 GameRelease.SkyrimLE => false,
