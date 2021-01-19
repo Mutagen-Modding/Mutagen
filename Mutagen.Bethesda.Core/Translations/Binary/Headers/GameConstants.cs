@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Binary
         /// <summary> 
         /// Group constants 
         /// </summary> 
-        public RecordHeaderConstants GroupConstants { get; }
+        public GroupConstants GroupConstants { get; }
 
         /// <summary> 
         /// Major Record constants 
@@ -49,12 +49,12 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="modHeaderFluffLength">Length of the ModHeader excluding initial recordtype and length bytes.</param> 
         /// <param name="groupConstants">Constants defining Groups</param> 
         /// <param name="majorConstants">Constants defining Major Records</param> 
-        /// <param name="subConstants">Constants defining Sub Records</param> 
+        /// <param name="subConstants">Constants defining Sub Records</param>
         public GameConstants(
             GameRelease release,
             sbyte modHeaderLength,
             sbyte modHeaderFluffLength,
-            RecordHeaderConstants groupConstants,
+            GroupConstants groupConstants,
             MajorRecordConstants majorConstants,
             RecordHeaderConstants subConstants)
         {
@@ -73,10 +73,17 @@ namespace Mutagen.Bethesda.Binary
             release: GameRelease.Oblivion,
             modHeaderLength: 20,
             modHeaderFluffLength: 12,
-            groupConstants: new RecordHeaderConstants(
+            groupConstants: new GroupConstants(
                 ObjectType.Group,
                 headerLength: 20,
-                lengthLength: 4),
+                lengthLength: 4,
+                cell: new GroupCellConstants(6, SubTypes: new[] { 8, 9, 10 }),
+                world: new GroupWorldConstants(
+                    TopGroupType: 1,
+                    CellGroupTypes: new[] { 2, 4 },
+                    CellSubGroupTypes: new[] { 3, 5 }),
+                topic: new GroupTopicConstants(7),
+                hasSubGroups: new int[] { 1, 2, 4, 6, 7 }),
             majorConstants: new MajorRecordConstants(
                 headerLength: 20,
                 lengthLength: 4,
@@ -95,10 +102,17 @@ namespace Mutagen.Bethesda.Binary
             release: GameRelease.SkyrimLE,
             modHeaderLength: 24,
             modHeaderFluffLength: 16,
-            groupConstants: new RecordHeaderConstants(
+            groupConstants: new GroupConstants(
                 ObjectType.Group,
                 headerLength: 24,
-                lengthLength: 4),
+                lengthLength: 4,
+                cell: new GroupCellConstants(6, SubTypes: new[] { 8, 9 }),
+                world: new GroupWorldConstants(
+                    TopGroupType: 1,
+                    CellGroupTypes: new[] { 2, 4 },
+                    CellSubGroupTypes: new[] { 3, 5 }),
+                topic: new GroupTopicConstants(7),
+                hasSubGroups: new int[] { 1, 2, 4, 6, 7 }),
             majorConstants: new MajorRecordConstants(
                 headerLength: 24,
                 lengthLength: 4,
@@ -127,10 +141,17 @@ namespace Mutagen.Bethesda.Binary
             release: GameRelease.Fallout4,
             modHeaderLength: 24,
             modHeaderFluffLength: 16,
-            groupConstants: new RecordHeaderConstants(
+            groupConstants: new GroupConstants(
                 ObjectType.Group,
                 headerLength: 24,
-                lengthLength: 4),
+                lengthLength: 4,
+                cell: new GroupCellConstants(6, SubTypes: new[] { 8, 9 }),
+                world: new GroupWorldConstants(
+                    TopGroupType: 1,
+                    CellGroupTypes: new[] { 2, 4 },
+                    CellSubGroupTypes: new[] { 3, 5 }),
+                topic: new GroupTopicConstants(7),
+                hasSubGroups: new int[] { 1, 2, 4, 6, 7, 10 }),
             majorConstants: new MajorRecordConstants(
                 headerLength: 24,
                 lengthLength: 4,

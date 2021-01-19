@@ -699,8 +699,8 @@ namespace Mutagen.Bethesda.Tests
             stream.Position += majorHeader.ContentLength;
             var blockGroupPos = stream.Position;
             if (!stream.TryReadGroup(out var blockGroup)) return;
-            var blockGrupType = (GroupTypeEnum)blockGroup.GroupType;
-            if (blockGrupType != GroupTypeEnum.CellChildren) return;
+            var blockGrupType = blockGroup.GroupType;
+            if (blockGrupType != stream.MetaData.Constants.GroupConstants.Cell.TopGroupType) return;
             if (blockGroup.ContentLength == 0)
             {
                 removes.Add(RangeInt64.FactoryFromLength(blockGroupPos, blockGroup.HeaderLength));
@@ -712,14 +712,9 @@ namespace Mutagen.Bethesda.Tests
                 {
                     var subBlockGroupPos = stream.Position;
                     if (!stream.TryReadGroup(out var subBlockGroup)) break;
-                    switch ((GroupTypeEnum)subBlockGroup.GroupType)
+                    if (!stream.MetaData.Constants.GroupConstants.Cell.SubTypes.Contains(subBlockGroup.GroupType))
                     {
-                        case GroupTypeEnum.CellPersistentChildren:
-                        case GroupTypeEnum.CellTemporaryChildren:
-                        case GroupTypeEnum.CellVisibleDistantChildren:
-                            break;
-                        default:
-                            goto Break;
+                        goto Break;
                     }
                     if (subBlockGroup.ContentLength == 0)
                     { // Empty group
@@ -763,8 +758,8 @@ namespace Mutagen.Bethesda.Tests
             stream.Position += majorHeader.ContentLength;
             var blockGroupPos = stream.Position;
             if (!stream.TryReadGroup(out var blockGroup)) return;
-            var blockGrupType = (GroupTypeEnum)blockGroup.GroupType;
-            if (blockGrupType != GroupTypeEnum.TopicChildren) return;
+            var blockGrupType = blockGroup.GroupType;
+            if (blockGrupType != stream.MetaData.Constants.GroupConstants.Topic.TopGroupType) return;
             if (blockGroup.ContentLength == 0)
             {
                 removes.Add(RangeInt64.FactoryFromLength(blockGroupPos, blockGroup.HeaderLength));

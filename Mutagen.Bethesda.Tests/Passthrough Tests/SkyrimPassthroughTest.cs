@@ -213,7 +213,7 @@ namespace Mutagen.Bethesda.Tests
                 PlacedTrap_Registration.TriggeringRecordType,
                 trapRules);
             ret.SetGroupAlignment(
-                GroupTypeEnum.CellTemporaryChildren,
+                (int)GroupTypeEnum.CellTemporaryChildren,
                 RecordTypes.LAND,
                 RecordTypes.NAVM);
             return ret;
