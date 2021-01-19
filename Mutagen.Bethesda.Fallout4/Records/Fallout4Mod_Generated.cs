@@ -594,7 +594,7 @@ namespace Mutagen.Bethesda.Fallout4
                 var flags = reader.GetInt32(offset: 8);
                 if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
                 {
-                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path.Path)!, stringsParam, path.ModKey);
+                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(GameRelease.Fallout4, Path.GetDirectoryName(path.Path)!, stringsParam, path.ModKey);
                 }
                 return CreateFromBinary(
                     importMask: importMask,
@@ -623,7 +623,7 @@ namespace Mutagen.Bethesda.Fallout4
                 var flags = reader.GetInt32(offset: 8);
                 if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
                 {
-                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path.Path)!, stringsParam, path.ModKey);
+                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(GameRelease.Fallout4, Path.GetDirectoryName(path.Path)!, stringsParam, path.ModKey);
                 }
                 return CreateFromBinary(
                     importMask: importMask,
@@ -1234,7 +1234,7 @@ namespace Mutagen.Bethesda.Fallout4
                 var flags = reader.GetInt32(offset: 8);
                 if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
                 {
-                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path.Path)!, stringsParam, path.ModKey);
+                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(GameRelease.Fallout4, Path.GetDirectoryName(path.Path)!, stringsParam, path.ModKey);
                 }
                 CopyInFromBinary(
                     item: item,
@@ -2402,7 +2402,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 var flags = stream.GetInt32(offset: 8);
                 if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
                 {
-                    meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path.Path)!, stringsParam, path.ModKey);
+                    meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(GameRelease.Fallout4, Path.GetDirectoryName(path.Path)!, stringsParam, path.ModKey);
                 }
                 return Fallout4ModFactory(
                     stream: stream,

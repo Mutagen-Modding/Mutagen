@@ -6044,7 +6044,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var flags = reader.GetInt32(offset: 8);
                 if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
                 {
-                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path.Path)!, stringsParam, path.ModKey);
+                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(gameRelease, Path.GetDirectoryName(path.Path)!, stringsParam, path.ModKey);
                 }
                 return CreateFromBinary(
                     release: release,
@@ -6076,7 +6076,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var flags = reader.GetInt32(offset: 8);
                 if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
                 {
-                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path.Path)!, stringsParam, path.ModKey);
+                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(gameRelease, Path.GetDirectoryName(path.Path)!, stringsParam, path.ModKey);
                 }
                 return CreateFromBinary(
                     release: release,
@@ -6928,7 +6928,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var flags = reader.GetInt32(offset: 8);
                 if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
                 {
-                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path.Path)!, stringsParam, path.ModKey);
+                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(gameRelease, Path.GetDirectoryName(path.Path)!, stringsParam, path.ModKey);
                 }
                 CopyInFromBinary(
                     item: item,
@@ -23655,7 +23655,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var flags = stream.GetInt32(offset: 8);
                 if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
                 {
-                    meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path.Path)!, stringsParam, path.ModKey);
+                    meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(release.ToGameRelease(), Path.GetDirectoryName(path.Path)!, stringsParam, path.ModKey);
                 }
                 return SkyrimModFactory(
                     stream: stream,

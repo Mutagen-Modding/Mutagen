@@ -50,6 +50,12 @@
     <IsPackable>true</IsPackable>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Archives\Archive.cs" />
+    <Compile Include="Archives\Bsa\BsaFileWrapper.cs" />
+    <Compile Include="Archives\Bsa\BsaFolderWrapper.cs" />
+    <Compile Include="Archives\Bsa\BsaWrapper.cs" />
+    <Compile Include="Archives\IArchiveFile.cs" />
+    <Compile Include="Archives\IArchiveFolder.cs" />
     <Compile Include="Enums\ColorBinaryType.cs" />
     <Compile Include="Enums\FloatIntegerType.cs" />
     <Compile Include="Enums\Language.cs" />

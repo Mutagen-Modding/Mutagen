@@ -50,7 +50,7 @@ namespace Mutagen.Bethesda
             ModKey = modKey;
         }
 
-        public static StringsFolderLookupOverlay TypicalFactory(string dataPath, StringsReadParameters? instructions, ModKey modKey)
+        public static StringsFolderLookupOverlay TypicalFactory(GameRelease release, string dataPath, StringsReadParameters? instructions, ModKey modKey)
         {
             var stringsFolderPath = instructions?.StringsFolderOverride;
             if (stringsFolderPath == null)
@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda
                     {
                         try
                         {
-                            var bsaReader = BSAReader.Load(new AbsolutePath(bsaFile, skipValidation: true));
+                            var bsaReader = Archive.CreateReader(release, bsaFile);
                             if (!bsaReader.TryGetFolder("strings", out var stringsFolder)) continue;
                             try
                             {
@@ -91,7 +91,7 @@ namespace Mutagen.Bethesda
                                         {
                                             byte[] bytes = new byte[item.Size];
                                             using var stream = new MemoryStream(bytes);
-                                            item.CopyDataTo(stream).AsTask().Wait();
+                                            item.CopyDataTo(stream);
                                             return new StringsLookupOverlay(bytes, type);
                                         }
                                         catch (Exception ex)
@@ -103,7 +103,7 @@ namespace Mutagen.Bethesda
                             }
                             catch (Exception ex)
                             {
-                                throw BsaException.FolderError("BSA folder failed to parse for string file", ex, bsaFile, stringsFolder.Name ?? string.Empty);
+                                throw BsaException.FolderError("BSA folder failed to parse for string file", ex, bsaFile, stringsFolder.Path ?? string.Empty);
                             }
                         }
                         catch (Exception ex)

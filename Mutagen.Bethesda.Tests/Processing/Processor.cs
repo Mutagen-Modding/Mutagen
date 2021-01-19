@@ -598,6 +598,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public IReadOnlyList<KeyValuePair<uint, uint>> RenumberStringsFileEntries(
+            GameRelease release,
             ModKey modKey,
             IMutagenReadStream stream,
             DirectoryInfo dataFolder,
@@ -605,7 +606,7 @@ namespace Mutagen.Bethesda.Tests
             StringsSource source,
             params AStringsAlignment[] recordTypes)
         {
-            var folderOverlay = StringsFolderLookupOverlay.TypicalFactory(dataFolder.FullName, null, modKey);
+            var folderOverlay = StringsFolderLookupOverlay.TypicalFactory(release, dataFolder.FullName, null, modKey);
             var sourceDict = folderOverlay.Get(source);
             if (!sourceDict.TryGetValue(language, out var overlay)) return ListExt.Empty<KeyValuePair<uint, uint>>();
             var ret = new List<KeyValuePair<uint, uint>>();
@@ -640,6 +641,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public void ProcessStringsFiles(
+            GameRelease release,
             ModKey modKey,
             DirectoryInfo dataFolder,
             Language language,
@@ -650,7 +652,7 @@ namespace Mutagen.Bethesda.Tests
             if (reindexing.Count == 0) return;
 
             var outFolder = Path.Combine(this.TempFolder.Dir.Path, "Strings/Processed");
-            var stringsOverlay = StringsFolderLookupOverlay.TypicalFactory(dataFolder.FullName, null, modKey);
+            var stringsOverlay = StringsFolderLookupOverlay.TypicalFactory(release, dataFolder.FullName, null, modKey);
             using var writer = new StringsWriter(ModKey.FromNameAndExtension(Path.GetFileName(this.SourcePath)), outFolder);
             var dict = stringsOverlay.Get(source);
             foreach (var lang in dict)
