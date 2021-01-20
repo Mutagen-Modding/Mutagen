@@ -151,6 +151,30 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         /// <summary>
+        /// Scope a load order query to GameSettingUInt
+        /// </summary>
+        /// <param name="listings">ModListings to query</param>
+        /// <returns>A typed object to do further queries on GameSettingUInt</returns>
+        public static TypedLoadOrderAccess<IFallout4Mod, IGameSettingUInt, IGameSettingUIntGetter> GameSettingUInt(this IEnumerable<IModListing<IFallout4ModGetter>> listings)
+        {
+            return new TypedLoadOrderAccess<IFallout4Mod, IGameSettingUInt, IGameSettingUIntGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<IGameSettingUIntGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IFallout4Mod, IFallout4ModGetter, IGameSettingUInt, IGameSettingUIntGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to GameSettingUInt
+        /// </summary>
+        /// <param name="mods">Mods to query</param>
+        /// <returns>A typed object to do further queries on GameSettingUInt</returns>
+        public static TypedLoadOrderAccess<IFallout4Mod, IGameSettingUInt, IGameSettingUIntGetter> GameSettingUInt(this IEnumerable<IFallout4ModGetter> mods)
+        {
+            return new TypedLoadOrderAccess<IFallout4Mod, IGameSettingUInt, IGameSettingUIntGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<IGameSettingUIntGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IFallout4Mod, IFallout4ModGetter, IGameSettingUInt, IGameSettingUIntGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
         /// Scope a load order query to Keyword
         /// </summary>
         /// <param name="listings">ModListings to query</param>

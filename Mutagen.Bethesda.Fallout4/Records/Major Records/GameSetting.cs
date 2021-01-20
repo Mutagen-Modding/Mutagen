@@ -39,6 +39,8 @@ namespace Mutagen.Bethesda.Fallout4
                     return GameSettingString.CreateFromBinary(frame, recordTypeConverter);
                 case GameSettingType.Bool:
                     return GameSettingBool.CreateFromBinary(frame, recordTypeConverter);
+                case GameSettingType.UInt:
+                    return GameSettingUInt.CreateFromBinary(frame, recordTypeConverter);
                 default:
                     throw new ArgumentException($"Unknown game type: {settingType.Value}");
             }
@@ -69,6 +71,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return GameSettingStringBinaryOverlay.GameSettingStringFactory(stream, package);
                     case GameSettingType.Bool:
                         return GameSettingBoolBinaryOverlay.GameSettingBoolFactory(stream, package);
+                    case GameSettingType.UInt:
+                        return GameSettingUIntBinaryOverlay.GameSettingUIntFactory(stream, package);
                     default:
                         throw new ArgumentException($"Unknown game type: {settingType.Value}");
                 }

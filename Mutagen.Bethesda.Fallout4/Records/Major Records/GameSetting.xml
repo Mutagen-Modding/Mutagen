@@ -24,4 +24,9 @@
       <Bool name="Data" recordType="DATA" binary="Custom" />
     </Fields>
   </Object>
+  <Object name="GameSettingUInt" recordType="GMST" baseClass="GameSetting" objType="Record" GUID="5d09a5dd-3b6d-41f8-a228-b913f16bb141" ID="29">
+    <Fields>
+      <UInt32 name="Data" recordType="DATA" />
+    </Fields>
+  </Object>
 </Loqui>
