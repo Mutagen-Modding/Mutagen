@@ -1,4 +1,5 @@
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Fallout4.Internals;
 using Noggog;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,12 @@ namespace Mutagen.Bethesda.Tests
 
         public override GameRelease GameRelease => GameRelease.Fallout4;
 
+        protected override void AddDynamicProcessorInstructions()
+        {
+            base.AddDynamicProcessorInstructions();
+            AddDynamicProcessing(RecordTypes.GMST, ProcessGameSettings);
+        }
+
         protected override IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
         {
             foreach (var t in base.ExtraJobs(streamGetter))
@@ -29,6 +36,17 @@ namespace Mutagen.Bethesda.Tests
                     return ProcessStringsFilesIndices(streamGetter, new DirectoryInfo(Path.GetDirectoryName(this.SourcePath)), Language.English, source, ModKey.FromNameAndExtension(Path.GetFileName(this.SourcePath)));
                 });
             }
+        }
+
+        private void ProcessGameSettings(
+            MajorRecordFrame majorFrame,
+            long fileOffset)
+        {
+            if (!majorFrame.TryLocateSubrecordFrame("EDID", out var edidFrame)) return;
+            if ((char)edidFrame.Content[0] != 'f') return;
+
+            if (!majorFrame.TryLocateSubrecordPinFrame(RecordTypes.DATA, out var dataRec)) return;
+            ProcessZeroFloat(dataRec, fileOffset);
         }
 
         public void GameSettingStringHandler(
