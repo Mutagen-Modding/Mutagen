@@ -1,4 +1,3 @@
-using Compression.BSA;
 using Noggog;
 using System;
 using System.Collections.Generic;
@@ -7,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using Wabbajack.Common;
 
 namespace Mutagen.Bethesda
 {
@@ -50,7 +48,7 @@ namespace Mutagen.Bethesda
             ModKey = modKey;
         }
 
-        public static StringsFolderLookupOverlay TypicalFactory(GameRelease release, string dataPath, StringsReadParameters? instructions, ModKey modKey)
+        public static StringsFolderLookupOverlay TypicalFactory(GameRelease release, ModKey modKey, string dataPath, StringsReadParameters? instructions)
         {
             var stringsFolderPath = instructions?.StringsFolderOverride;
             if (stringsFolderPath == null)
@@ -66,7 +64,15 @@ namespace Mutagen.Bethesda
                     {
                         foreach (var file in stringsFolderPath.Value.Info.EnumerateFiles($"{modKey.Name}*{StringsUtility.StringsFileExtension}"))
                         {
-                            if (!StringsUtility.TryRetrieveInfoFromString(file.Name, out var type, out var lang, out _)) continue;
+                            if (!StringsUtility.TryRetrieveInfoFromString(
+                                release.GetLanguageFormat(),
+                                file.Name, 
+                                out var type,
+                                out var lang, 
+                                out _))
+                            {
+                                continue;
+                            }
                             var dict = bundle.Get(type);
                             dict[lang] = new Lazy<IStringsLookup>(() => new StringsLookupOverlay(file.FullName, type), LazyThreadSafetyMode.ExecutionAndPublication);
                         }
@@ -81,7 +87,15 @@ namespace Mutagen.Bethesda
                             {
                                 foreach (var item in stringsFolder.Files)
                                 {
-                                    if (!StringsUtility.TryRetrieveInfoFromString(Path.GetFileName(item.Path.ToString()), out var type, out var lang, out var modName)) continue;
+                                    if (!StringsUtility.TryRetrieveInfoFromString(
+                                        release.GetLanguageFormat(), 
+                                        Path.GetFileName(item.Path.ToString()), 
+                                        out var type, 
+                                        out var lang,
+                                        out var modName))
+                                    {
+                                        continue;
+                                    }
                                     if (!MemoryExtensions.Equals(modKey.Name, modName, StringComparison.OrdinalIgnoreCase)) continue;
                                     var dict = bundle.Get(type);
                                     if (dict.ContainsKey(lang)) continue;

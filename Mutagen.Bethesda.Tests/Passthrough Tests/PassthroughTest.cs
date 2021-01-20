@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda.Tests
                             record.IsCompressed = false;
                         }
 
-                        var writeParam = GetWriteParam(masterRefs, doStrings ? new StringsWriter(mod.ModKey, strsWriteDir) : null);
+                        var writeParam = GetWriteParam(masterRefs, doStrings ? new StringsWriter(this.GameRelease, mod.ModKey, strsWriteDir) : null);
                         mod.WriteToBinary(outputPath, writeParam);
                         GC.Collect();
 
@@ -201,7 +201,7 @@ namespace Mutagen.Bethesda.Tests
                         using (var wrapper = await ImportBinaryOverlay(this.FilePath.Path))
                         {
                             doStrings = wrapper.UsingLocalization;
-                            var writeParam = GetWriteParam(masterRefs, doStrings ? new StringsWriter(wrapper.ModKey, strsWriteDir) : null);
+                            var writeParam = GetWriteParam(masterRefs, doStrings ? new StringsWriter(this.GameRelease, wrapper.ModKey, strsWriteDir) : null);
                             wrapper.WriteToBinary(binaryOverlayPath, writeParam);
                             writeParam.StringsWriter?.Dispose();
                         }
@@ -240,7 +240,7 @@ namespace Mutagen.Bethesda.Tests
                         o.OnNext(FilePath.ToString());
                         var copyIn = await ImportCopyIn(this.FilePath.Path);
                         doStrings = copyIn.UsingLocalization;
-                        var writeParam = GetWriteParam(masterRefs, doStrings ? new StringsWriter(copyIn.ModKey, strsWriteDir) : null);
+                        var writeParam = GetWriteParam(masterRefs, doStrings ? new StringsWriter(this.GameRelease, copyIn.ModKey, strsWriteDir) : null);
                         copyIn.WriteToBinary(copyInPath, writeParam);
                         writeParam.StringsWriter?.Dispose();
 
@@ -375,7 +375,7 @@ namespace Mutagen.Bethesda.Tests
         {
             foreach (var source in EnumExt.GetValues<StringsSource>())
             {
-                var stringsFileName = StringsUtility.GetFileName(this.ModKey, Language.English, source);
+                var stringsFileName = StringsUtility.GetFileName(this.GameRelease.GetLanguageFormat(), this.ModKey, Language.English, source);
                 var sourcePath = Path.Combine(processedDir.Path, stringsFileName);
                 var pathToTest = Path.Combine(writeDir.Path, stringsFileName);
                 bool sourceExists = File.Exists(sourcePath);

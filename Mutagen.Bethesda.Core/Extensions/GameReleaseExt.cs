@@ -31,5 +31,22 @@ namespace Mutagen.Bethesda
                 _ => throw new NotImplementedException(),
             };
         }
+
+        public static StringsLanguageFormat GetLanguageFormat(this GameRelease release)
+        {
+            switch (release)
+            {
+                case GameRelease.Oblivion:
+                    throw new ArgumentException();
+                case GameRelease.SkyrimLE:
+                case GameRelease.SkyrimSE:
+                case GameRelease.SkyrimVR:
+                    return StringsLanguageFormat.FullName;
+                case GameRelease.Fallout4:
+                    return StringsLanguageFormat.Iso;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
     }
 }

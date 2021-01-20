@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Binary;
 using Noggog;
 using System;
 using System.Collections.Generic;
@@ -15,13 +15,15 @@ namespace Mutagen.Bethesda
     {
         public DirectoryPath WriteDir { get; }
         private readonly ModKey _modKey;
+        private readonly StringsLanguageFormat _languageFormat;
         private readonly List<KeyValuePair<Language, string>[]> _strings = new List<KeyValuePair<Language, string>[]>();
         private readonly List<KeyValuePair<Language, string>[]> _ilStrings = new List<KeyValuePair<Language, string>[]>();
         private readonly List<KeyValuePair<Language, string>[]> _dlStrings = new List<KeyValuePair<Language, string>[]>();
 
-        public StringsWriter(ModKey modKey, DirectoryPath writeDirectory)
+        public StringsWriter(GameRelease release, ModKey modKey, DirectoryPath writeDirectory)
         {
             _modKey = modKey;
+            _languageFormat = release.GetLanguageFormat();
             WriteDir = writeDirectory;
         }
 
@@ -112,7 +114,7 @@ namespace Mutagen.Bethesda
             foreach (var language in subLists)
             {
                 using var writer = new MutagenWriter(
-                    Path.Combine(WriteDir.Path, StringsUtility.GetFileName(_modKey, language.Key, source)),
+                    Path.Combine(WriteDir.Path, StringsUtility.GetFileName(_languageFormat, _modKey, language.Key, source)),
                     meta: null!);
                 // Write count
                 writer.Write(language.Value.Count);

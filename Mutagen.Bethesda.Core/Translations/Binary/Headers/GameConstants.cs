@@ -41,6 +41,8 @@ namespace Mutagen.Bethesda.Binary
         /// </summary> 
         public RecordHeaderConstants SubConstants { get; }
 
+        public ReadOnlyMemorySlice<Language> Languages { get; }
+
         /// <summary> 
         /// Constructor 
         /// </summary> 
@@ -50,13 +52,15 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="groupConstants">Constants defining Groups</param> 
         /// <param name="majorConstants">Constants defining Major Records</param> 
         /// <param name="subConstants">Constants defining Sub Records</param>
+        /// <param name="languages">Languages supported</param>
         public GameConstants(
             GameRelease release,
             sbyte modHeaderLength,
             sbyte modHeaderFluffLength,
             GroupConstants groupConstants,
             MajorRecordConstants majorConstants,
-            RecordHeaderConstants subConstants)
+            RecordHeaderConstants subConstants,
+            Language[] languages)
         {
             Release = release;
             ModHeaderLength = modHeaderLength;
@@ -64,6 +68,7 @@ namespace Mutagen.Bethesda.Binary
             GroupConstants = groupConstants;
             MajorConstants = majorConstants;
             SubConstants = subConstants;
+            Languages = languages;
         }
 
         /// <summary> 
@@ -93,7 +98,8 @@ namespace Mutagen.Bethesda.Binary
             subConstants: new RecordHeaderConstants(
                 ObjectType.Subrecord,
                 headerLength: 6,
-                lengthLength: 2));
+                lengthLength: 2),
+            languages: Array.Empty<Language>());
 
         /// <summary> 
         /// Readonly singleton of Skyrim LE game constants 
@@ -122,7 +128,18 @@ namespace Mutagen.Bethesda.Binary
             subConstants: new RecordHeaderConstants(
                 ObjectType.Subrecord,
                 headerLength: 6,
-                lengthLength: 2));
+                lengthLength: 2),
+            languages: new Language[]
+            {
+                Language.English,
+                Language.French,
+                Language.Italian,
+                Language.German,
+                Language.Spanish,
+                Language.Polish,
+                Language.Chinese,
+                Language.Russian,
+            });
 
         /// <summary> 
         /// Readonly singleton of Skyrim SE game constants 
@@ -164,7 +181,21 @@ namespace Mutagen.Bethesda.Binary
             subConstants: new RecordHeaderConstants(
                 ObjectType.Subrecord,
                 headerLength: 6,
-                lengthLength: 2));
+                lengthLength: 2),
+            languages: new Language[]
+            {
+                Language.English,
+                Language.German,
+                Language.Italian,
+                Language.Spanish,
+                Language.Spanish_Mexico,
+                Language.French,
+                Language.Polish,
+                Language.Portuguese_Brazil,
+                Language.Chinese,
+                Language.Russian,
+                Language.Japanese,
+            });
 
         #region Header Factories 
         public ModHeader ModHeader(ReadOnlyMemorySlice<byte> span) => new ModHeader(this, span);

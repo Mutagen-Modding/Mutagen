@@ -606,7 +606,7 @@ namespace Mutagen.Bethesda.Tests
             StringsSource source,
             params AStringsAlignment[] recordTypes)
         {
-            var folderOverlay = StringsFolderLookupOverlay.TypicalFactory(release, dataFolder.FullName, null, modKey);
+            var folderOverlay = StringsFolderLookupOverlay.TypicalFactory(release, modKey, dataFolder.FullName, null);
             var sourceDict = folderOverlay.Get(source);
             if (!sourceDict.TryGetValue(language, out var overlay)) return ListExt.Empty<KeyValuePair<uint, uint>>();
             var ret = new List<KeyValuePair<uint, uint>>();
@@ -652,8 +652,8 @@ namespace Mutagen.Bethesda.Tests
             if (reindexing.Count == 0) return;
 
             var outFolder = Path.Combine(this.TempFolder.Dir.Path, "Strings/Processed");
-            var stringsOverlay = StringsFolderLookupOverlay.TypicalFactory(release, dataFolder.FullName, null, modKey);
-            using var writer = new StringsWriter(ModKey.FromNameAndExtension(Path.GetFileName(this.SourcePath)), outFolder);
+            var stringsOverlay = StringsFolderLookupOverlay.TypicalFactory(release, modKey, dataFolder.FullName, null);
+            using var writer = new StringsWriter(this.GameRelease, ModKey.FromNameAndExtension(Path.GetFileName(this.SourcePath)), outFolder);
             var dict = stringsOverlay.Get(source);
             foreach (var lang in dict)
             {

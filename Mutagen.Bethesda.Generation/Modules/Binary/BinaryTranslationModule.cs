@@ -1312,6 +1312,16 @@ namespace Mutagen.Bethesda.Generation
         private void ConvertFromPathOut(ObjectGeneration obj, FileGeneration fg, InternalTranslation internalToDo)
         {
             var objData = obj.GetObjectData();
+            string gameReleaseStr;
+            if (objData.GameReleaseOptions == null)
+            {
+                gameReleaseStr = $"{nameof(GameRelease)}.{objData.GameCategory}";
+            }
+            else
+            {
+                gameReleaseStr = $"item.{ModModule.ReleaseEnumName(obj)}.ToGameRelease()";
+            }
+
             fg.AppendLine($"param ??= {nameof(BinaryWriteParameters)}.{nameof(BinaryWriteParameters.Default)};");
             using (var args = new ArgsWrapper(fg,
                 $"var modKey = param.{nameof(BinaryWriteParameters.RunMasterMatch)}"))
@@ -1322,16 +1332,7 @@ namespace Mutagen.Bethesda.Generation
             if (objData.UsesStringFiles)
             {
                 fg.AppendLine("bool disposeStrings = param.StringsWriter == null;");
-                fg.AppendLine($"var stringsWriter = param.StringsWriter ?? (EnumExt.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter(modKey, Path.Combine(Path.GetDirectoryName(path)!, \"Strings\")) : null);");
-            }
-            string gameReleaseStr;
-            if (objData.GameReleaseOptions == null)
-            {
-                gameReleaseStr = $"{nameof(GameRelease)}.{objData.GameCategory}";
-            }
-            else
-            {
-                gameReleaseStr = $"item.{ModModule.ReleaseEnumName(obj)}.ToGameRelease()";
+                fg.AppendLine($"var stringsWriter = param.StringsWriter ?? (EnumExt.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter({gameReleaseStr}, modKey, Path.Combine(Path.GetDirectoryName(path)!, \"Strings\")) : null);");
             }
             fg.AppendLine($"var bundle = new {nameof(WritingBundle)}({gameReleaseStr})");
             using (var prop = new PropertyCtorWrapper(fg))
@@ -1403,7 +1404,7 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine($"if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))");
                     using (new BraceWrapper(fg))
                     {
-                        fg.AppendLine($"frame.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.StringsLookup)} = StringsFolderLookupOverlay.TypicalFactory({gameReleaseStr}, Path.GetDirectoryName(path.{nameof(ModPath.Path)})!, stringsParam, path.{nameof(ModPath.ModKey)});");
+                        fg.AppendLine($"frame.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.StringsLookup)} = StringsFolderLookupOverlay.TypicalFactory({gameReleaseStr}, path.{nameof(ModPath.ModKey)}, Path.GetDirectoryName(path.{nameof(ModPath.Path)})!, stringsParam);");
                     }
                 }
                 internalToDo(this.MainAPI.PublicMembers(obj, TranslationDirection.Reader).ToArray());
@@ -2487,7 +2488,7 @@ namespace Mutagen.Bethesda.Generation
                                     fg.AppendLine($"if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))");
                                     using (new BraceWrapper(fg))
                                     {
-                                        fg.AppendLine($"meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory({gameReleaseStr}, Path.GetDirectoryName(path.{nameof(ModPath.Path)})!, stringsParam, path.{nameof(ModPath.ModKey)});");
+                                        fg.AppendLine($"meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory({gameReleaseStr}, path.{nameof(ModPath.ModKey)}, Path.GetDirectoryName(path.{nameof(ModPath.Path)})!, stringsParam);");
                                     }
                                 }
 
