@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda
         /// Returns string representation of link
         /// </summary>
         /// <returns>Returns FormKey string</returns>
-        public override string ToString() => this.FormKey.ToString();
+        public override string ToString() => $"<{typeof(TMajorGetter).Name}>{this.FormKey}";
 
         /// <summary>
         /// Attempts to locate link target in given Link Cache.
