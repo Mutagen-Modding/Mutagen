@@ -122,14 +122,7 @@ namespace Mutagen.Bethesda
             {
                 modKey.Name.AsSpan().CopyTo(chars);
                 chars[modKey.Name.Length] = '.';
-                var suffix = modKey.Type switch
-                {
-                    ModType.Master => Constants.Esm,
-                    ModType.Plugin => Constants.Esp,
-                    ModType.LightMaster => Constants.Esl,
-                    _ => throw new NotImplementedException()
-                };
-                suffix.AsSpan().CopyTo(chars.Slice(modKey.Name.Length + 1));
+                modKey.Type.GetFileExtension().AsSpan().CopyTo(chars.Slice(modKey.Name.Length + 1));
             });
         }
 
@@ -154,21 +147,7 @@ namespace Mutagen.Bethesda
                 modKey = default!;
                 return false;
             }
-            var endSpan = str.Slice(index + 1);
-            ModType type;
-            if (endSpan.Equals(Constants.Esm.AsSpan(), StringComparison.OrdinalIgnoreCase))
-            {
-                type = ModType.Master;
-            }
-            else if (endSpan.Equals(Constants.Esp.AsSpan(), StringComparison.OrdinalIgnoreCase))
-            {
-                type = ModType.Plugin;
-            }
-            else if (endSpan.Equals(Constants.Esl.AsSpan(), StringComparison.OrdinalIgnoreCase))
-            {
-                type = ModType.LightMaster;
-            }
-            else
+            if (!TryConvertExtensionToType(str.Slice(index + 1), out var type))
             {
                 modKey = default!;
                 return false;
@@ -177,6 +156,28 @@ namespace Mutagen.Bethesda
             modKey = new ModKey(
                 name: modString,
                 type: type);
+            return true;
+        }
+
+        public static bool TryConvertExtensionToType(ReadOnlySpan<char> str, [MaybeNullWhen(false)] out ModType modType)
+        {
+            if (str.Equals(Constants.Esm.AsSpan(), StringComparison.OrdinalIgnoreCase))
+            {
+                modType = ModType.Master;
+            }
+            else if (str.Equals(Constants.Esp.AsSpan(), StringComparison.OrdinalIgnoreCase))
+            {
+                modType = ModType.Plugin;
+            }
+            else if (str.Equals(Constants.Esl.AsSpan(), StringComparison.OrdinalIgnoreCase))
+            {
+                modType = ModType.LightMaster;
+            }
+            else
+            {
+                modType = default!;
+                return false;
+            }
             return true;
         }
 
