@@ -1,3 +1,4 @@
+using FluentAssertions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -138,6 +139,20 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.Equal(ModKey.Null.GetHashCode(), modKey2.GetHashCode());
             Assert.Equal(default(ModKey), ModKey.Null);
             Assert.Equal(ModKey.Null.GetHashCode(), default(ModKey).GetHashCode());
+        }
+
+        [Fact]
+        public void IsNullTypeDesync()
+        {
+            var modKey = new ModKey(string.Empty, ModType.Plugin);
+            modKey.IsNull.Should().BeTrue();
+        }
+
+        [Fact]
+        public void NullEqualityDesync()
+        {
+            var modKey = new ModKey(string.Empty, ModType.Plugin);
+            modKey.Should().BeEquivalentTo(ModKey.Null);
         }
 
         #region Comparers

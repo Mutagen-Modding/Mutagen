@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda
 
         private static readonly char[] InvalidChars = Path.GetInvalidFileNameChars();
 
-        public bool IsNull => this == Null;
+        public bool IsNull => string.IsNullOrWhiteSpace(name_);
 
         /// <summary>
         /// Constructor
@@ -88,8 +88,9 @@ namespace Mutagen.Bethesda
         /// <returns>True equal Name and Master value</returns>
         public bool Equals(ModKey other)
         {
-            return this.Type == other.Type
-                && string.Equals(this.Name, other.Name, StringComparison.CurrentCultureIgnoreCase);
+            return (IsNull && other.IsNull)
+                || (this.Type == other.Type
+                    && string.Equals(this.Name, other.Name, StringComparison.CurrentCultureIgnoreCase));
         }
 
         /// <summary>
