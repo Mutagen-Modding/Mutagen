@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -19,6 +19,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="ReactiveUI.Fody" Version="13.0.38" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,6 +32,12 @@
   
   <PropertyGroup>
     <GitInfoReportImportance Condition="$(Configuration) == 'Release'">high</GitInfoReportImportance>
+    <Company>Mutagen</Company>
+    <Product>Mutagen</Product>
+    <Authors>Noggog</Authors>
+    <PackageProjectUrl>https://github.com/Noggog/Mutagen</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Noggog/Mutagen</RepositoryUrl>
+    <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
   </PropertyGroup>
 
 </Project>

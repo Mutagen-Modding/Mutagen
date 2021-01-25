@@ -3,7 +3,6 @@
     <Nullable>enable</Nullable>
     <WarningsAsErrors>nullable</WarningsAsErrors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <GitInfoReportImportance Condition="$(Configuration) == 'Release'">high</GitInfoReportImportance>
     <LangVersion>preview</LangVersion>
   </PropertyGroup>
 
@@ -17,7 +16,6 @@
     <PropertyGroup>
       <DevLabel Condition="$(GitCommits) != '0'">.1-dev</DevLabel>
       <AssemblyDevLabel Condition="$(GitCommits) != '0'">.1</AssemblyDevLabel>
-      <AssemblyVersion>$(GitBaseVersionMajor).$(GitBaseVersionMinor).$(GitBaseVersionPatch)$(AssemblyDevLabel)</AssemblyVersion>
       <FileVersion>$(GitBaseVersionMajor).$(GitBaseVersionMinor).$(GitBaseVersionPatch)$(AssemblyDevLabel)</FileVersion>
       <PackageVersion>$(GitBaseVersionMajor).$(GitBaseVersionMinor).$(GitBaseVersionPatch)$(DevLabel)</PackageVersion>
       <InformationalVersion>$(PackageVersion)</InformationalVersion>
