@@ -47,6 +47,12 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Fact]
+        public void TryFactory_InvalidChars()
+        {
+            Assert.False(ModKey.TryFromNameAndExtension("Obliv>ion.esm", out var modKey));
+        }
+
+        [Fact]
         public void TryFactory_ImproperlyLengthedSuffix()
         {
             Assert.False(ModKey.TryFromNameAndExtension("Obliv.ion.esmz", out var modKey));

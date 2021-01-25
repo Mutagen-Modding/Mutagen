@@ -44,7 +44,9 @@ namespace Mutagen.Bethesda
         /// </summary>
         public string FileName => this.ToString();
 
-        private static readonly char[] InvalidChars = new char[] { '/', '\\' };
+        private static readonly char[] InvalidChars = Path.GetInvalidFileNameChars();
+
+        public bool IsNull => this == Null;
 
         /// <summary>
         /// Constructor
@@ -132,31 +134,55 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="str">String to parse</param>
         /// <param name="modKey">ModKey if successfully converted</param>
+        /// <param name="errorReason">Reason for a failed conversion</param>
         /// <returns>True if conversion successful</returns>
-        public static bool TryFromNameAndExtension(ReadOnlySpan<char> str, [MaybeNullWhen(false)]out ModKey modKey)
+        public static bool TryFromNameAndExtension(ReadOnlySpan<char> str, [MaybeNullWhen(false)] out ModKey modKey, out string errorReason)
         {
             if (str.Length == 0 || str.IsWhiteSpace())
             {
-                modKey = default!;
+                modKey = default;
+                errorReason = "Input string was empty or all whitespace";
                 return false;
             }
             var index = str.LastIndexOf('.');
             if (index == -1
                 || index != str.Length - 4)
             {
-                modKey = default!;
+                modKey = default;
+                errorReason = "Could not locate file extension";
                 return false;
             }
             if (!TryConvertExtensionToType(str.Slice(index + 1), out var type))
             {
-                modKey = default!;
+                modKey = default;
+                errorReason = $"Extension could not be converted to a ModType: {str.Slice(index + 1).ToString()}";
                 return false;
             }
             var modString = str.Slice(0, index).ToString();
+            var invalidIndex = modString.IndexOfAny(InvalidChars);
+            if (invalidIndex != -1)
+            {
+                modKey = default;
+                errorReason = $"Mod name contained an invalid character: {InvalidChars[invalidIndex]}";
+                return false;
+            }
             modKey = new ModKey(
                 name: modString,
                 type: type);
+            errorReason = string.Empty;
             return true;
+        }
+
+        /// <summary>
+        /// Attempts to construct a ModKey from a string:
+        ///   ModName.esp
+        /// </summary>
+        /// <param name="str">String to parse</param>
+        /// <param name="modKey">ModKey if successfully converted</param>
+        /// <returns>True if conversion successful</returns>
+        public static bool TryFromNameAndExtension(ReadOnlySpan<char> str, [MaybeNullWhen(false)] out ModKey modKey)
+        {
+            return TryFromNameAndExtension(str, out modKey, out _);
         }
 
         public static bool TryConvertExtensionToType(ReadOnlySpan<char> str, [MaybeNullWhen(false)] out ModType modType)
