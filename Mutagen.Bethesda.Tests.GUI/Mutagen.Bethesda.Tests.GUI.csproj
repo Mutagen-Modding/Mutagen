@@ -20,8 +20,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="ReactiveUI" Version="13.0.38" />
-    <PackageReference Include="ReactiveUI.Fody" Version="13.0.38" />
+    <PackageReference Include="ReactiveUI" Version="13.1.1" />
+    <PackageReference Include="ReactiveUI.Fody" Version="13.1.1" />
     <PackageReference Include="Simple.Wpf.Terminal" Version="2.3.15" />
   </ItemGroup>
 

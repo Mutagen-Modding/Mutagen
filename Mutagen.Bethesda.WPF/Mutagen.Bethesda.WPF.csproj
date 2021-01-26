@@ -1,12 +1,18 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFrameworks>net5.0;netcoreapp3.1</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IsPackable>true</IsPackable>
     <TargetPlatformIdentifier>Windows</TargetPlatformIdentifier>
     <LangVersion>preview</LangVersion>
+    <Company>Mutagen</Company>
+    <Product>Mutagen</Product>
+    <Authors>Noggog</Authors>
+    <PackageProjectUrl>https://github.com/Noggog/Mutagen</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Noggog/Mutagen</RepositoryUrl>
+    <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
@@ -32,12 +38,6 @@
   
   <PropertyGroup>
     <GitInfoReportImportance Condition="$(Configuration) == 'Release'">high</GitInfoReportImportance>
-    <Company>Mutagen</Company>
-    <Product>Mutagen</Product>
-    <Authors>Noggog</Authors>
-    <PackageProjectUrl>https://github.com/Noggog/Mutagen</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/Noggog/Mutagen</RepositoryUrl>
-    <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
   </PropertyGroup>
 
 </Project>

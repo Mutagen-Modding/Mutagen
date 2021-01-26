@@ -54,6 +54,15 @@ namespace Mutagen.Bethesda.WPF.Controls
         public static readonly DependencyProperty WatermarkProperty = DependencyProperty.Register(nameof(Watermark), typeof(string), typeof(ModKeyBox),
              new FrameworkPropertyMetadata("Mod name", FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
+        public ErrorResponse Error
+        {
+            get => (ErrorResponse)GetValue(ErrorProperty);
+            protected set => SetValue(ErrorPropertyKey, value);
+        }
+        public static readonly DependencyPropertyKey ErrorPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Error), typeof(ErrorResponse), typeof(ModKeyBox),
+             new FrameworkPropertyMetadata(default(ErrorResponse), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+        public static readonly DependencyProperty ErrorProperty = ErrorPropertyKey.DependencyProperty;
+
         static ModKeyBox()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(ModKeyBox), new FrameworkPropertyMetadata(typeof(ModKeyBox)));
@@ -67,39 +76,46 @@ namespace Mutagen.Bethesda.WPF.Controls
                 .DistinctUntilChanged()
                 .Subscribe(x =>
                 {
-                    if (_blockSync) return;
-                    if (Path.HasExtension(x.Item1))
+                    if (!_blockSync)
                     {
-                        if (ModKey.TryFromNameAndExtension(x.Item1, out var modKey))
+                        _blockSync = true;
+                        if (Path.HasExtension(x.Item1)
+                            && ModKey.TryFromNameAndExtension(x.Item1, out var modKey1))
                         {
-                            _blockSync = true;
-                            if (ModKey != modKey)
+                            if (ModKey != modKey1)
                             {
-                                ModKey = modKey;
+                                ModKey = modKey1;
                             }
-                            if (ModType != modKey.Type)
+                            if (ModType != modKey1.Type)
                             {
-                                ModType = modKey.Type;
+                                ModType = modKey1.Type;
                             }
                             FileName = Path.GetFileNameWithoutExtension(x.Item1);
-                            _blockSync = false;
+                            if (Error.Failed)
+                            {
+                                Error = ErrorResponse.Success;
+                            }
                         }
-                        else if (!ModKey.IsNull)
+                        else
                         {
-                            _blockSync = true;
-                            ModKey = ModKey.Null;
-                            _blockSync = false;
+                            if (ModKey.TryFromName(x.Item1, x.Item2, out var modKey2, out var errorReason))
+                            {
+                                if (Error.Failed)
+                                {
+                                    Error = ErrorResponse.Success;
+                                }
+                            }
+                            else
+                            {
+                                Error = ErrorResponse.Fail(errorReason);
+                                modKey2 = ModKey.Null;
+                            }
+                            if (modKey2 != ModKey)
+                            {
+                                ModKey = modKey2;
+                            }
                         }
-                    }
-                    else
-                    {
-                        var modKey = new ModKey(x.Item1, x.Item2);
-                        if (modKey != ModKey)
-                        {
-                            _blockSync = true;
-                            ModKey = modKey;
-                            _blockSync = false;
-                        }
+                        _blockSync = false;
                     }
                 })
                 .DisposeWith(_unloadDisposable);
@@ -112,22 +128,16 @@ namespace Mutagen.Bethesda.WPF.Controls
                     {
                         if (FileName != string.Empty)
                         {
-                            _blockSync = true;
                             FileName = string.Empty;
-                            _blockSync = false;
                         }
                     }
                     else if (FileName != x.FileName)
                     {
-                        _blockSync = true;
                         FileName = x.FileName;
-                        _blockSync = false;
                     }
                     if (ModType != x.Type)
                     {
-                        _blockSync = true;
                         ModType = x.Type;
-                        _blockSync = false;
                     }
                 })
                 .DisposeWith(_unloadDisposable);
