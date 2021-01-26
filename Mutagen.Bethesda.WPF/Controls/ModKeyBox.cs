@@ -4,20 +4,17 @@ using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System;
-using System.Windows.Input;
 using System.Collections.Generic;
 using Noggog;
 using System.Linq;
 using System.IO;
 using Noggog.WPF;
-using ReactiveUI.Fody.Helpers;
 
-namespace Mutagen.Bethesda.WPF.Controls
+namespace Mutagen.Bethesda.WPF
 {
     [TemplatePart(Name = "PART_FileNameBox", Type = typeof(TextBox))]
     public class ModKeyBox : NoggogControl
     {
-        private static IEnumerable<ModType> _modTypes = EnumExt.GetValues<ModType>().ToArray();
         private bool _blockSync = false;
 
         public ModKey ModKey
@@ -44,7 +41,7 @@ namespace Mutagen.Bethesda.WPF.Controls
         public static readonly DependencyProperty ModTypeProperty = DependencyProperty.Register(nameof(ModType), typeof(ModType), typeof(ModKeyBox),
              new FrameworkPropertyMetadata(default(ModType), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
-        public IEnumerable<ModType> ModTypes => _modTypes;
+        public IEnumerable<ModType> ModTypes => EnumExt.GetValues<ModType>();
 
         public string Watermark
         {
