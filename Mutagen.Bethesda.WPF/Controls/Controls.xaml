@@ -29,6 +29,7 @@
                                 Style="{StaticResource Noggog.Styles.TextBox.ErrorState}"
                                 Text="{Binding FileName, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}" />
                             <ComboBox Grid.Column="1"
+                                Height="{Binding Height, ElementName=PART_FileNameBox, Mode=OneWay}"
                                 ItemsSource="{Binding ModTypes, RelativeSource={RelativeSource TemplatedParent}}"
                                 SelectedValue="{Binding ModType, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}">
                                 <ComboBox.ItemTemplate>
@@ -38,6 +39,25 @@
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
                         </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type local:FormKeyBox}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:FormKeyBox}">
+                    <Border
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
+                        <TextBox
+                            noggog:ControlsHelper.ErrorTooltip="{Binding Error.Reason, RelativeSource={RelativeSource TemplatedParent}}"
+                            noggog:ControlsHelper.InError="{Binding Error.Failed, RelativeSource={RelativeSource TemplatedParent}}"
+                            Style="{StaticResource Noggog.Styles.TextBox.ErrorState}"
+                            Text="{Binding RawString, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}" />
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
