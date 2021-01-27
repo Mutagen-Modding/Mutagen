@@ -285,5 +285,38 @@ namespace Mutagen.Bethesda
                 yield return rec;
             }
         }
+
+        /// <inheritdoc />
+        public bool TryResolve(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec, params Type[] types)
+        {
+            return TryResolve(formKey, (IEnumerable<Type>)types, out majorRec);
+        }
+
+        /// <inheritdoc />
+        public bool TryResolve(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
+        {
+            foreach (var type in types)
+            {
+                if (TryResolve(formKey, type, out majorRec))
+                {
+                    return true;
+                }
+            }
+            majorRec = default;
+            return false;
+        }
+
+        /// <inheritdoc />
+        public IMajorRecordCommonGetter Resolve(FormKey formKey, params Type[] types)
+        {
+            return Resolve(formKey, (IEnumerable<Type>)types);
+        }
+
+        /// <inheritdoc />
+        public IMajorRecordCommonGetter Resolve(FormKey formKey, IEnumerable<Type> types)
+        {
+            if (TryResolve(formKey, types, out var commonRec)) return commonRec;
+            throw new KeyNotFoundException($"FormKey {formKey} could not be found.");
+        }
     }
 }

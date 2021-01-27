@@ -102,9 +102,15 @@ namespace Mutagen.Bethesda
         /// <inheritdoc />
         public bool TryResolve(FormKey formKey, Type type, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
         {
+            return TryResolve(formKey, type, out majorRec, out _);
+        }
+
+        private bool TryResolve(FormKey formKey, Type type, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec, [MaybeNullWhen(false)] out int depth)
+        {
             if (!_hasAny || formKey.IsNull)
             {
                 majorRec = default;
+                depth = default;
                 return false;
             }
 
@@ -151,10 +157,12 @@ namespace Mutagen.Bethesda
                 // Check for record
                 if (cache.TryGetValue(formKey, out majorRec))
                 {
+                    depth = cache.Depth;
                     return true;
                 }
                 if (ShouldStopQuery(formKey, cache))
                 {
+                    depth = default;
                     majorRec = default!;
                     return false;
                 }
@@ -190,11 +198,13 @@ namespace Mutagen.Bethesda
                     // Check again
                     if (cache.TryGetValue(formKey, out majorRec))
                     {
+                        depth = cache.Depth;
                         return true;
                     }
                 }
                 // Record doesn't exist
                 majorRec = default;
+                depth = default;
                 return false;
             }
         }
@@ -588,6 +598,39 @@ namespace Mutagen.Bethesda
         public IEnumerable<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(FormKey formKey)
         {
             return ResolveAllContexts(formKey, typeof(IMajorRecordCommonGetter));
+        }
+
+        /// <inheritdoc />
+        public bool TryResolve(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec, params Type[] types)
+        {
+            return TryResolve(formKey, (IEnumerable<Type>)types, out majorRec);
+        }
+
+        /// <inheritdoc />
+        public bool TryResolve(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
+        {
+            foreach (var type in types)
+            {
+                if (TryResolve(formKey, type, out majorRec))
+                {
+                    return true;
+                }
+            }
+            majorRec = default;
+            return false;
+        }
+
+        /// <inheritdoc />
+        public IMajorRecordCommonGetter Resolve(FormKey formKey, params Type[] types)
+        {
+            return Resolve(formKey, (IEnumerable<Type>)types);
+        }
+
+        /// <inheritdoc />
+        public IMajorRecordCommonGetter Resolve(FormKey formKey, IEnumerable<Type> types)
+        {
+            if (TryResolve(formKey, types, out var commonRec)) return commonRec;
+            throw new KeyNotFoundException($"FormKey {formKey} could not be found.");
         }
     }
 

@@ -61,6 +61,10 @@ namespace Mutagen.Bethesda
         /// <returns>True if a matching record was found</returns>
         bool TryResolve(FormKey formKey, Type type, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec);
 
+        bool TryResolve(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec, params Type[] types);
+
+        bool TryResolve(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec);
+
         /// <summary>
         /// Retrieves the record that matches the FormKey relative to the source the cache was attached to.<br/>
         /// <br/>
@@ -96,6 +100,11 @@ namespace Mutagen.Bethesda
         /// When the FormKey having the specified Major Record type cannot be found under the attached cache.<br/>
         /// </exception>
         IMajorRecordCommonGetter Resolve(FormKey formKey, Type type);
+
+
+        IMajorRecordCommonGetter Resolve(FormKey formKey, params Type[] types);
+
+        IMajorRecordCommonGetter Resolve(FormKey formKey, IEnumerable<Type> types);
 
         /// <summary>
         /// Retrieves the record that matches the FormKey relative to the source the package was attached to.
