@@ -86,14 +86,14 @@ namespace Mutagen.Bethesda
         public IMajorRecordCommonGetter Resolve(FormKey formKey)
         {
             if (TryResolve<IMajorRecordCommonGetter>(formKey, out var majorRec)) return majorRec;
-            throw new KeyNotFoundException($"Form ID {formKey.ID} could not be found.");
+            throw new KeyNotFoundException($"FormKey {formKey} could not be found.");
         }
 
         /// <inheritdoc />
         public IMajorRecordCommonGetter Resolve(FormKey formKey, Type type)
         {
             if (TryResolve(formKey, type, out var commonRec)) return commonRec;
-            throw new KeyNotFoundException($"Form ID {formKey.ID} could not be found.");
+            throw new KeyNotFoundException($"FormKey {formKey} could not be found.");
         }
 
         /// <inheritdoc />
@@ -101,7 +101,7 @@ namespace Mutagen.Bethesda
             where TMajor : class, IMajorRecordCommonGetter
         {
             if (TryResolve<TMajor>(formKey, out var commonRec)) return commonRec;
-            throw new KeyNotFoundException($"Form ID {formKey.ID} could not be found.");
+            throw new KeyNotFoundException($"FormKey {formKey} could not be found.");
         }
 
         /// <summary>
@@ -166,14 +166,14 @@ namespace Mutagen.Bethesda
         public IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(FormKey formKey)
         {
             if (TryResolveContext(formKey, out var majorRec)) return majorRec;
-            throw new KeyNotFoundException($"Form ID {formKey.ID} could not be found.");
+            throw new KeyNotFoundException($"FormKey {formKey} could not be found.");
         }
 
         /// <inheritdoc />
         public IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(FormKey formKey, Type type)
         {
             if (TryResolveContext(formKey, type, out var commonRec)) return commonRec;
-            throw new KeyNotFoundException($"Form ID {formKey.ID} could not be found.");
+            throw new KeyNotFoundException($"FormKey {formKey} could not be found.");
         }
 
         /// <inheritdoc />
@@ -182,7 +182,7 @@ namespace Mutagen.Bethesda
             where TMajorGetter : class, IMajorRecordCommonGetter
         {
             if (TryResolveContext<TMajorSetter, TMajorGetter>(formKey, out var commonRec)) return commonRec;
-            throw new KeyNotFoundException($"Form ID {formKey.ID} could not be found.");
+            throw new KeyNotFoundException($"FormKey {formKey} could not be found.");
         }
 
         /// <inheritdoc />
