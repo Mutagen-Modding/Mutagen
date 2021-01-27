@@ -357,6 +357,80 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="mod">Mod to construct the package relative to</param>
         /// <returns>LinkPackage attached to given mod</returns>
+        public static ImmutableModLinkCache ToUntypedImmutableLinkCache(this IModGetter mod)
+        {
+            return new ImmutableModLinkCache(mod);
+        }
+
+        /// <summary>
+        /// Creates a new linking package relative to a load order.<br/>
+        /// Will resolve links to the highest overriding mod containing the record being sought. <br/>
+        /// Modification of the target LoadOrder, or Mods on the LoadOrder is not safe.  Internal caches can become
+        /// incorrect if modifications occur on content already cached.
+        /// </summary>
+        /// <param name="loadOrder">LoadOrder to construct the package relative to</param>
+        /// <returns>LinkPackage attached to given LoadOrder</returns>
+        public static ImmutableLoadOrderLinkCache ToUntypedImmutableLinkCache(
+            this LoadOrder<IModGetter> loadOrder)
+        {
+            return new ImmutableLoadOrderLinkCache(loadOrder.ListedOrder);
+        }
+
+        /// <summary>
+        /// Creates a new linking package relative to a load order.<br/>
+        /// Will resolve links to the highest overriding mod containing the record being sought. <br/>
+        /// Modification of the target LoadOrder, or Mods on the LoadOrder is not safe.  Internal caches can become
+        /// incorrect if modifications occur on content already cached.
+        /// </summary>
+        /// <param name="loadOrder">LoadOrder to construct the package relative to</param>
+        /// <returns>LinkPackage attached to given LoadOrder</returns>
+        public static ImmutableLoadOrderLinkCache ToUntypedImmutableLinkCache(
+            this LoadOrder<IModListing<IModGetter>> loadOrder)
+        {
+            return new ImmutableLoadOrderLinkCache(
+                loadOrder
+                    .Select(listing => listing.Value.Mod)
+                    .NotNull());
+        }
+
+        /// <summary>
+        /// Creates a new linking package relative to a load order.<br/>
+        /// Will resolve links to the highest overriding mod containing the record being sought. <br/>
+        /// Modification of the target LoadOrder, or Mods on the LoadOrder is not safe.  Internal caches can become
+        /// incorrect if modifications occur on content already cached.
+        /// </summary>
+        /// <param name="loadOrder">LoadOrder to construct the package relative to</param>
+        /// <returns>LinkPackage attached to given LoadOrder</returns>
+        public static ImmutableLoadOrderLinkCache ToUntypedImmutableLinkCache(
+            this IEnumerable<IModListing<IModGetter>> loadOrder)
+        {
+            return new ImmutableLoadOrderLinkCache(
+                loadOrder
+                    .Select(listing => listing.Mod)
+                    .NotNull());
+        }
+
+        /// <summary>
+        /// Creates a new linking package relative to a load order.<br/>
+        /// Will resolve links to the highest overriding mod containing the record being sought. <br/>
+        /// Modification of mods on the load order is not safe.  Internal caches can become
+        /// incorrect if modifications occur on content already cached.
+        /// </summary>
+        /// <param name="loadOrder">Enumerable of mods to construct the package relative to</param>
+        /// <returns>LinkPackage attached to given LoadOrder</returns>
+        public static ImmutableLoadOrderLinkCache ToImmutableLinkCache(
+            this IEnumerable<IModGetter> loadOrder)
+        {
+            return new ImmutableLoadOrderLinkCache(loadOrder);
+        }
+
+        /// <summary>
+        /// Creates a Link Cache using a single mod as its link target. <br/>
+        /// Modification of the target Mod is not safe.  Internal caches can become incorrect if 
+        /// modifications occur on content already cached.
+        /// </summary>
+        /// <param name="mod">Mod to construct the package relative to</param>
+        /// <returns>LinkPackage attached to given mod</returns>
         public static ImmutableModLinkCache<TMod, TModGetter> ToImmutableLinkCache<TMod, TModGetter>(this TModGetter mod)
             where TMod : class, IContextMod<TMod>, TModGetter
             where TModGetter : class, IContextGetterMod<TMod>

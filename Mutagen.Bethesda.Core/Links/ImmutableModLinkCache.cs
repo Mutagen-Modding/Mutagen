@@ -19,16 +19,12 @@ namespace Mutagen.Bethesda
     /// Modification of the target Mod is not safe.  Internal caches can become incorrect if 
     /// modifications occur on content already cached.
     /// </summary>
-    public class ImmutableModLinkCache<TMod, TModGetter> : ILinkCache<TMod, TModGetter>
-        where TMod : class, IContextMod<TMod>, TModGetter
-        where TModGetter : class, IContextGetterMod<TMod>
+    public class ImmutableModLinkCache : ILinkCache
     {
-        private readonly TModGetter _sourceMod;
+        private readonly IModGetter _sourceMod;
 
-        private readonly Lazy<IReadOnlyCache<IMajorRecordCommonGetter, FormKey>> _untypedMajorRecords;
-        private readonly Lazy<IReadOnlyCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>, FormKey>> _untypedContexts;
-        private readonly Dictionary<Type, IReadOnlyCache<IMajorRecordCommonGetter, FormKey>> _majorRecords = new Dictionary<Type, IReadOnlyCache<IMajorRecordCommonGetter, FormKey>>();
-        private readonly Dictionary<Type, IReadOnlyCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>, FormKey>> _contexts = new Dictionary<Type, IReadOnlyCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>, FormKey>>();
+        protected readonly Lazy<IReadOnlyCache<IMajorRecordCommonGetter, FormKey>> _untypedMajorRecords;
+        protected readonly Dictionary<Type, IReadOnlyCache<IMajorRecordCommonGetter, FormKey>> _majorRecords = new Dictionary<Type, IReadOnlyCache<IMajorRecordCommonGetter, FormKey>>();
 
         /// <inheritdoc />
         public IReadOnlyList<IModGetter> ListedOrder { get; }
@@ -36,24 +32,40 @@ namespace Mutagen.Bethesda
         /// <inheritdoc />
         public IReadOnlyList<IModGetter> PriorityOrder => ListedOrder;
 
-        /// <summary>
-        /// Constructs a link cache around a target mod
-        /// </summary>
-        /// <param name="sourceMod">Mod to resolve against when linking</param>
-        public ImmutableModLinkCache(TModGetter sourceMod)
+        public ImmutableModLinkCache(IModGetter sourceMod)
         {
-            this._sourceMod = sourceMod;
+            _sourceMod = sourceMod;
             this._untypedMajorRecords = new Lazy<IReadOnlyCache<IMajorRecordCommonGetter, FormKey>>(
                 isThreadSafe: true,
                 valueFactory: () => ConstructCache());
-            this._untypedContexts = new Lazy<IReadOnlyCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>, FormKey>>(
-                isThreadSafe: true,
-                valueFactory: () => ConstructContextCache());
             this.ListedOrder = new List<IModGetter>()
             {
                 sourceMod
             };
         }
+
+        protected IReadOnlyCache<IMajorRecordCommonGetter, FormKey> ConstructCache(Type type)
+        {
+            var cache = new Cache<IMajorRecordCommonGetter, FormKey>(x => x.FormKey);
+            // ToDo
+            // Upgrade to call EnumerateGroups(), which will perform much better
+            foreach (var majorRec in this._sourceMod.EnumerateMajorRecords(type))
+            {
+                cache.Set(majorRec);
+            }
+            return cache;
+        }
+
+        protected IReadOnlyCache<IMajorRecordCommonGetter, FormKey> ConstructCache()
+        {
+            var majorRecords = new Cache<IMajorRecordCommonGetter, FormKey>(x => x.FormKey);
+            foreach (var majorRec in this._sourceMod.EnumerateMajorRecords())
+            {
+                majorRecords.Set(majorRec);
+            }
+            return majorRecords;
+        }
+
 
         /// <inheritdoc />
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
@@ -179,26 +191,100 @@ namespace Mutagen.Bethesda
             return cache;
         }
 
-        private IReadOnlyCache<IMajorRecordCommonGetter, FormKey> ConstructCache(Type type)
+        /// <inheritdoc />
+        public IEnumerable<TMajor> ResolveAll<TMajor>(FormKey formKey)
+            where TMajor : class, IMajorRecordCommonGetter
         {
-            var cache = new Cache<IMajorRecordCommonGetter, FormKey>(x => x.FormKey);
-            // ToDo
-            // Upgrade to call EnumerateGroups(), which will perform much better
-            foreach (var majorRec in this._sourceMod.EnumerateMajorRecords(type))
+            if (TryResolve<TMajor>(formKey, out var rec))
             {
-                cache.Set(majorRec);
+                yield return rec;
             }
-            return cache;
         }
 
-        private IReadOnlyCache<IMajorRecordCommonGetter, FormKey> ConstructCache()
+        /// <inheritdoc />
+        public IEnumerable<IMajorRecordCommonGetter> ResolveAll(FormKey formKey, Type type)
         {
-            var majorRecords = new Cache<IMajorRecordCommonGetter, FormKey>(x => x.FormKey);
-            foreach (var majorRec in this._sourceMod.EnumerateMajorRecords())
+            if (TryResolve(formKey, type, out var rec))
             {
-                majorRecords.Set(majorRec);
+                yield return rec;
             }
-            return majorRecords;
+        }
+
+        /// <inheritdoc />
+        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
+        public IEnumerable<IMajorRecordCommonGetter> ResolveAll(FormKey formKey)
+        {
+            if (TryResolve(formKey, out var rec))
+            {
+                yield return rec;
+            }
+        }
+
+        /// <inheritdoc />
+        public bool TryResolve(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec, params Type[] types)
+        {
+            return TryResolve(formKey, (IEnumerable<Type>)types, out majorRec);
+        }
+
+        /// <inheritdoc />
+        public bool TryResolve(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
+        {
+            foreach (var type in types)
+            {
+                if (TryResolve(formKey, type, out majorRec))
+                {
+                    return true;
+                }
+            }
+            majorRec = default;
+            return false;
+        }
+
+        /// <inheritdoc />
+        public IMajorRecordCommonGetter Resolve(FormKey formKey, params Type[] types)
+        {
+            return Resolve(formKey, (IEnumerable<Type>)types);
+        }
+
+        /// <inheritdoc />
+        public IMajorRecordCommonGetter Resolve(FormKey formKey, IEnumerable<Type> types)
+        {
+            if (TryResolve(formKey, types, out var commonRec)) return commonRec;
+            throw new KeyNotFoundException($"FormKey {formKey} could not be found.");
+        }
+    }
+
+    /// <summary>
+    /// A Link Cache using a single mod as its link target. <br/>
+    /// <br/>
+    /// Internal caching will only occur for the types required to serve the requested link. <br/>
+    /// <br/>
+    /// All functionality is multithread safe. <br/>
+    /// <br/>
+    /// Modification of the target Mod is not safe.  Internal caches can become incorrect if 
+    /// modifications occur on content already cached.
+    /// </summary>
+    public class ImmutableModLinkCache<TMod, TModGetter> : ImmutableModLinkCache, ILinkCache<TMod, TModGetter>
+        where TMod : class, IContextMod<TMod>, TModGetter
+        where TModGetter : class, IContextGetterMod<TMod>
+    {
+        private readonly TModGetter _sourceMod;
+
+        private readonly Lazy<IReadOnlyCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>, FormKey>> _untypedContexts;
+        private readonly Dictionary<Type, IReadOnlyCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>, FormKey>> _contexts = new Dictionary<Type, IReadOnlyCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>, FormKey>>();
+
+
+        /// <summary>
+        /// Constructs a link cache around a target mod
+        /// </summary>
+        /// <param name="sourceMod">Mod to resolve against when linking</param>
+        public ImmutableModLinkCache(TModGetter sourceMod)
+            : base(sourceMod)
+        {
+            this._sourceMod = sourceMod;
+            this._untypedContexts = new Lazy<IReadOnlyCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>, FormKey>>(
+                isThreadSafe: true,
+                valueFactory: () => ConstructContextCache());
         }
 
         /// <inheritdoc />
@@ -351,35 +437,6 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public IEnumerable<TMajor> ResolveAll<TMajor>(FormKey formKey)
-            where TMajor : class, IMajorRecordCommonGetter
-        {
-            if (TryResolve<TMajor>(formKey, out var rec))
-            {
-                yield return rec;
-            }
-        }
-
-        /// <inheritdoc />
-        public IEnumerable<IMajorRecordCommonGetter> ResolveAll(FormKey formKey, Type type)
-        {
-            if (TryResolve(formKey, type, out var rec))
-            {
-                yield return rec;
-            }
-        }
-
-        /// <inheritdoc />
-        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        public IEnumerable<IMajorRecordCommonGetter> ResolveAll(FormKey formKey)
-        {
-            if (TryResolve(formKey, out var rec))
-            {
-                yield return rec;
-            }
-        }
-
-        /// <inheritdoc />
         public IEnumerable<IModContext<TMod, TMajorSetter, TMajorGetter>> ResolveAllContexts<TMajorSetter, TMajorGetter>(FormKey formKey)
             where TMajorSetter : class, IMajorRecordCommon, TMajorGetter
             where TMajorGetter : class, IMajorRecordCommonGetter
@@ -407,39 +464,6 @@ namespace Mutagen.Bethesda
             {
                 yield return rec;
             }
-        }
-
-        /// <inheritdoc />
-        public bool TryResolve(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec, params Type[] types)
-        {
-            return TryResolve(formKey, (IEnumerable<Type>)types, out majorRec);
-        }
-
-        /// <inheritdoc />
-        public bool TryResolve(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
-        {
-            foreach (var type in types)
-            {
-                if (TryResolve(formKey, type, out majorRec))
-                {
-                    return true;
-                }
-            }
-            majorRec = default;
-            return false;
-        }
-
-        /// <inheritdoc />
-        public IMajorRecordCommonGetter Resolve(FormKey formKey, params Type[] types)
-        {
-            return Resolve(formKey, (IEnumerable<Type>)types);
-        }
-
-        /// <inheritdoc />
-        public IMajorRecordCommonGetter Resolve(FormKey formKey, IEnumerable<Type> types)
-        {
-            if (TryResolve(formKey, types, out var commonRec)) return commonRec;
-            throw new KeyNotFoundException($"FormKey {formKey} could not be found.");
         }
     }
 }
