@@ -82,6 +82,7 @@ namespace Mutagen.Bethesda.Generation
                     new DirectoryInfo("../../../../Mutagen.Bethesda.Core/Records"))
                 {
                     DefaultNamespace = "Mutagen.Bethesda",
+                    DoGeneration = ShouldRun("All")
                 });
             bethesdaProto.AddProjectToModify(
                 new FileInfo(Path.Combine(bethesdaProto.GenerationFolder.FullName, "../Mutagen.Bethesda.Core.csproj")));
