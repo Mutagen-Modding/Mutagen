@@ -65,19 +65,20 @@ namespace Mutagen.Bethesda.Internals
             foreach (var master in masters)
             {
                 var modKey = master.Master;
-                if (this._masterIndices.ContainsKey(modKey))
-                {
-                    throw new ArgumentException($"Masters list cannot contain duplicate entries: {modKey}");
-                }
                 if (index >= 0xFE)
                 {
-                    throw new ArgumentException($"Too many masters on masters list");
+                    throw new ArgumentException($"{CurrentMod} has too many masters on masters list");
                 }
                 if (modKey == this.CurrentMod)
                 {
                     throw new ArgumentException($"Cannot add mod to itself as a master: {this.CurrentMod}");
                 }
-                this._masterIndices[modKey] = new ModIndex(index++);
+                // Don't care about duplicates too much, just skip
+                if (!this._masterIndices.ContainsKey(modKey))
+                {
+                    this._masterIndices[modKey] = new ModIndex(index);
+                }
+                index++;
             }
 
             // Add current mod

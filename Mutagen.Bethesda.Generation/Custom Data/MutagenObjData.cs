@@ -7,8 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-#if NET_5 
-using TaskCompletionSource = TaskCompletionSource; 
+#if NET5_0 
+using TaskCompletionSource = System.Threading.Tasks.TaskCompletionSource; 
 #else 
 using TaskCompletionSource = Noggog.TaskCompletionSource;
 #endif

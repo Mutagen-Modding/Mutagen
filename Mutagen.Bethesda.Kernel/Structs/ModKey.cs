@@ -44,7 +44,9 @@ namespace Mutagen.Bethesda
         /// </summary>
         public string FileName => this.ToString();
 
-        private static readonly char[] InvalidChars = new char[] { '/', '\\' };
+        private static readonly char[] InvalidChars = Path.GetInvalidFileNameChars();
+
+        public bool IsNull => string.IsNullOrWhiteSpace(name_);
 
         /// <summary>
         /// Constructor
@@ -86,8 +88,9 @@ namespace Mutagen.Bethesda
         /// <returns>True equal Name and Master value</returns>
         public bool Equals(ModKey other)
         {
-            return this.Type == other.Type
-                && string.Equals(this.Name, other.Name, StringComparison.CurrentCultureIgnoreCase);
+            return (IsNull && other.IsNull)
+                || (this.Type == other.Type
+                    && string.Equals(this.Name, other.Name, StringComparison.CurrentCultureIgnoreCase));
         }
 
         /// <summary>
@@ -122,14 +125,7 @@ namespace Mutagen.Bethesda
             {
                 modKey.Name.AsSpan().CopyTo(chars);
                 chars[modKey.Name.Length] = '.';
-                var suffix = modKey.Type switch
-                {
-                    ModType.Master => Constants.Esm,
-                    ModType.Plugin => Constants.Esp,
-                    ModType.LightMaster => Constants.Esl,
-                    _ => throw new NotImplementedException()
-                };
-                suffix.AsSpan().CopyTo(chars.Slice(modKey.Name.Length + 1));
+                modKey.Type.GetFileExtension().AsSpan().CopyTo(chars.Slice(modKey.Name.Length + 1));
             });
         }
 
@@ -139,44 +135,76 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="str">String to parse</param>
         /// <param name="modKey">ModKey if successfully converted</param>
+        /// <param name="errorReason">Reason for a failed conversion</param>
         /// <returns>True if conversion successful</returns>
-        public static bool TryFromNameAndExtension(ReadOnlySpan<char> str, [MaybeNullWhen(false)]out ModKey modKey)
+        public static bool TryFromNameAndExtension(ReadOnlySpan<char> str, [MaybeNullWhen(false)] out ModKey modKey, out string errorReason)
         {
             if (str.Length == 0 || str.IsWhiteSpace())
             {
-                modKey = default!;
+                modKey = default;
+                errorReason = "Input string was empty or all whitespace";
                 return false;
             }
             var index = str.LastIndexOf('.');
             if (index == -1
                 || index != str.Length - 4)
             {
-                modKey = default!;
+                modKey = default;
+                errorReason = "Could not locate file extension";
                 return false;
             }
-            var endSpan = str.Slice(index + 1);
-            ModType type;
-            if (endSpan.Equals(Constants.Esm.AsSpan(), StringComparison.OrdinalIgnoreCase))
+            if (!TryConvertExtensionToType(str.Slice(index + 1), out var type))
             {
-                type = ModType.Master;
-            }
-            else if (endSpan.Equals(Constants.Esp.AsSpan(), StringComparison.OrdinalIgnoreCase))
-            {
-                type = ModType.Plugin;
-            }
-            else if (endSpan.Equals(Constants.Esl.AsSpan(), StringComparison.OrdinalIgnoreCase))
-            {
-                type = ModType.LightMaster;
-            }
-            else
-            {
-                modKey = default!;
+                modKey = default;
+                errorReason = $"Extension could not be converted to a ModType: {str.Slice(index + 1).ToString()}";
                 return false;
             }
             var modString = str.Slice(0, index).ToString();
+            var invalidIndex = modString.IndexOfAny(InvalidChars);
+            if (invalidIndex != -1)
+            {
+                modKey = default;
+                errorReason = $"Mod name contained an invalid character: {InvalidChars[invalidIndex]}";
+                return false;
+            }
             modKey = new ModKey(
                 name: modString,
                 type: type);
+            errorReason = string.Empty;
+            return true;
+        }
+
+        /// <summary>
+        /// Attempts to construct a ModKey from a string:
+        ///   ModName.esp
+        /// </summary>
+        /// <param name="str">String to parse</param>
+        /// <param name="modKey">ModKey if successfully converted</param>
+        /// <returns>True if conversion successful</returns>
+        public static bool TryFromNameAndExtension(ReadOnlySpan<char> str, [MaybeNullWhen(false)] out ModKey modKey)
+        {
+            return TryFromNameAndExtension(str, out modKey, out _);
+        }
+
+        public static bool TryConvertExtensionToType(ReadOnlySpan<char> str, [MaybeNullWhen(false)] out ModType modType)
+        {
+            if (str.Equals(Constants.Esm.AsSpan(), StringComparison.OrdinalIgnoreCase))
+            {
+                modType = ModType.Master;
+            }
+            else if (str.Equals(Constants.Esp.AsSpan(), StringComparison.OrdinalIgnoreCase))
+            {
+                modType = ModType.Plugin;
+            }
+            else if (str.Equals(Constants.Esl.AsSpan(), StringComparison.OrdinalIgnoreCase))
+            {
+                modType = ModType.LightMaster;
+            }
+            else
+            {
+                modType = default!;
+                return false;
+            }
             return true;
         }
 
