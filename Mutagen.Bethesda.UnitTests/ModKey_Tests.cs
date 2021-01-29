@@ -1,3 +1,4 @@
+using FluentAssertions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,6 +45,12 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.Equal("Obliv.ion", modKey.Name);
             Assert.Equal("Obliv.ion.esm", modKey.FileName);
             Assert.Equal(ModType.Master, modKey.Type);
+        }
+
+        [Fact]
+        public void TryFactory_InvalidChars()
+        {
+            Assert.False(ModKey.TryFromNameAndExtension("Obliv>ion.esm", out var modKey));
         }
 
         [Fact]
@@ -132,6 +139,20 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.Equal(ModKey.Null.GetHashCode(), modKey2.GetHashCode());
             Assert.Equal(default(ModKey), ModKey.Null);
             Assert.Equal(ModKey.Null.GetHashCode(), default(ModKey).GetHashCode());
+        }
+
+        [Fact]
+        public void IsNullTypeDesync()
+        {
+            var modKey = new ModKey(string.Empty, ModType.Plugin);
+            modKey.IsNull.Should().BeTrue();
+        }
+
+        [Fact]
+        public void NullEqualityDesync()
+        {
+            var modKey = new ModKey(string.Empty, ModType.Plugin);
+            modKey.Should().BeEquivalentTo(ModKey.Null);
         }
 
         #region Comparers
