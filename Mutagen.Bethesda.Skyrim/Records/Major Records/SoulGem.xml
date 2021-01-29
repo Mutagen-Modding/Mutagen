@@ -25,5 +25,6 @@
       <FormLink name="LinkedTo" refName="SoulGem" recordType="NAM0" />
     </Fields>
     <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IConstructible</LinkInterface>
   </Object>
 </Loqui>

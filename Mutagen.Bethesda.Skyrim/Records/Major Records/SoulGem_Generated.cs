@@ -1022,6 +1022,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISoulGemGetter,
         ISkyrimMajorRecord,
         IItem,
+        IConstructible,
         IObjectBoundedOptional,
         IWeightValue,
         IKeyworded<IKeywordGetter>,
@@ -1058,6 +1059,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ISoulGemGetter :
         ISkyrimMajorRecordGetter,
         IItemGetter,
+        IConstructibleGetter,
         IObjectBoundedOptionalGetter,
         IWeightValueGetter,
         IKeywordedGetter<IKeywordGetter>,

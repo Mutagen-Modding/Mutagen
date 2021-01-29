@@ -25,5 +25,6 @@
       </Data>
     </Fields>
     <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IConstructible</LinkInterface>
   </Object>
 </Loqui>

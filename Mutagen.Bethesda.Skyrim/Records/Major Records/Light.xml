@@ -35,5 +35,6 @@
     <LinkInterface>IItem</LinkInterface>
     <LinkInterface>IEmittance</LinkInterface>
     <LinkInterface>IObjectId</LinkInterface>
+    <LinkInterface>IConstructible</LinkInterface>
   </Object>
 </Loqui>
