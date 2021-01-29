@@ -5,7 +5,6 @@
       <RefDirect name="ModHeader" refName="Fallout4ModHeader" singleton="true" />
       <Group name="GameSettings" refName="GameSetting" />
       <Group name="Keywords" refName="Keyword" />
-      <Group name="AttractionRules" refName="AttractionRule" />
     </Fields>
   </Object>
 </Loqui>
