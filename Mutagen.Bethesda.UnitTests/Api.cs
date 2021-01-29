@@ -91,6 +91,10 @@ namespace Mutagen.Bethesda.UnitTests
             }
             TestFunction<IWeaponGetter>();
             TestFunction2<IWeaponGetter>();
+
+            var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimSE);
+            IKeyworded<IKeywordGetter> keyworded = mod.Armors.AddNew();
+            keyworded.TryResolveKeyword(Utility.Form2, mod.ToImmutableLinkCache(), out var keyword);
         }
 
         [Fact]
