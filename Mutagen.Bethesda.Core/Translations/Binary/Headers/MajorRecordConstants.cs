@@ -7,7 +7,7 @@ namespace Mutagen.Bethesda.Binary
     /// <summary>
     /// Reference for Major Record alignment and length constants
     /// </summary>
-    public class MajorRecordConstants : RecordHeaderConstants
+    public record MajorRecordConstants : RecordHeaderConstants
     {
         /// <summary>
         /// Offset in the header where flags are located

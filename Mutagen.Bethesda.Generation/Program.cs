@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "public Dictionary<FormKey, IMajorRecordCommon> CopyInDuplicat";
+            string testString = "LookupOverlay.TypicalFactory(Path.GetDirectoryName(path.Path)!, stringsPara";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>
@@ -126,6 +126,20 @@ namespace Mutagen.Bethesda.Generation
                 });
                 proto.AddProjectToModify(
                     new FileInfo(Path.Combine(proto.GenerationFolder.FullName, "../Mutagen.Bethesda.Skyrim.csproj")));
+            }
+
+            if (ShouldRun("Fallout4"))
+            {
+                var proto = gen.AddProtocol(
+                new ProtocolGeneration(
+                    gen,
+                    new ProtocolKey("Fallout4"),
+                    new DirectoryInfo("../../../../Mutagen.Bethesda.Fallout4/Records"))
+                {
+                    DefaultNamespace = "Mutagen.Bethesda.Fallout4",
+                });
+                proto.AddProjectToModify(
+                    new FileInfo(Path.Combine(proto.GenerationFolder.FullName, "../Mutagen.Bethesda.Fallout4.csproj")));
             }
 
             gen.Generate().Wait();

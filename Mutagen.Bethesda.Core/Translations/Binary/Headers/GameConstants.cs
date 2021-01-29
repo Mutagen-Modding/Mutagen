@@ -9,12 +9,12 @@ namespace Mutagen.Bethesda.Binary
     /// <summary> 
     /// Reference for all the alignment and length constants related to a specific game 
     /// </summary> 
-    public class GameConstants
+    public record GameConstants
     {
         /// <summary> 
         /// Associated game type 
         /// </summary> 
-        public GameRelease Release { get; }
+        public GameRelease Release { get; init; }
 
         /// <summary> 
         /// Length of the Mod header's metadata, excluding content 
@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Binary
         /// <summary> 
         /// Group constants 
         /// </summary> 
-        public RecordHeaderConstants GroupConstants { get; }
+        public GroupConstants GroupConstants { get; }
 
         /// <summary> 
         /// Major Record constants 
@@ -41,6 +41,8 @@ namespace Mutagen.Bethesda.Binary
         /// </summary> 
         public RecordHeaderConstants SubConstants { get; }
 
+        public ReadOnlyMemorySlice<Language> Languages { get; }
+
         /// <summary> 
         /// Constructor 
         /// </summary> 
@@ -49,14 +51,16 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="modHeaderFluffLength">Length of the ModHeader excluding initial recordtype and length bytes.</param> 
         /// <param name="groupConstants">Constants defining Groups</param> 
         /// <param name="majorConstants">Constants defining Major Records</param> 
-        /// <param name="subConstants">Constants defining Sub Records</param> 
+        /// <param name="subConstants">Constants defining Sub Records</param>
+        /// <param name="languages">Languages supported</param>
         public GameConstants(
             GameRelease release,
             sbyte modHeaderLength,
             sbyte modHeaderFluffLength,
-            RecordHeaderConstants groupConstants,
+            GroupConstants groupConstants,
             MajorRecordConstants majorConstants,
-            RecordHeaderConstants subConstants)
+            RecordHeaderConstants subConstants,
+            Language[] languages)
         {
             Release = release;
             ModHeaderLength = modHeaderLength;
@@ -64,18 +68,7 @@ namespace Mutagen.Bethesda.Binary
             GroupConstants = groupConstants;
             MajorConstants = majorConstants;
             SubConstants = subConstants;
-        }
-
-        public GameConstants(
-            GameConstants rhs,
-            GameRelease releaseOverride)
-        {
-            Release = releaseOverride;
-            ModHeaderLength = rhs.ModHeaderLength;
-            ModHeaderFluffLength = rhs.ModHeaderFluffLength;
-            GroupConstants = rhs.GroupConstants;
-            MajorConstants = rhs.MajorConstants;
-            SubConstants = rhs.SubConstants;
+            Languages = languages;
         }
 
         /// <summary> 
@@ -85,10 +78,17 @@ namespace Mutagen.Bethesda.Binary
             release: GameRelease.Oblivion,
             modHeaderLength: 20,
             modHeaderFluffLength: 12,
-            groupConstants: new RecordHeaderConstants(
+            groupConstants: new GroupConstants(
                 ObjectType.Group,
                 headerLength: 20,
-                lengthLength: 4),
+                lengthLength: 4,
+                cell: new GroupCellConstants(6, SubTypes: new[] { 8, 9, 10 }),
+                world: new GroupWorldConstants(
+                    TopGroupType: 1,
+                    CellGroupTypes: new[] { 2, 4 },
+                    CellSubGroupTypes: new[] { 3, 5 }),
+                topic: new GroupTopicConstants(7),
+                hasSubGroups: new int[] { 1, 2, 4, 6, 7 }),
             majorConstants: new MajorRecordConstants(
                 headerLength: 20,
                 lengthLength: 4,
@@ -98,7 +98,8 @@ namespace Mutagen.Bethesda.Binary
             subConstants: new RecordHeaderConstants(
                 ObjectType.Subrecord,
                 headerLength: 6,
-                lengthLength: 2));
+                lengthLength: 2),
+            languages: Array.Empty<Language>());
 
         /// <summary> 
         /// Readonly singleton of Skyrim LE game constants 
@@ -107,10 +108,17 @@ namespace Mutagen.Bethesda.Binary
             release: GameRelease.SkyrimLE,
             modHeaderLength: 24,
             modHeaderFluffLength: 16,
-            groupConstants: new RecordHeaderConstants(
+            groupConstants: new GroupConstants(
                 ObjectType.Group,
                 headerLength: 24,
-                lengthLength: 4),
+                lengthLength: 4,
+                cell: new GroupCellConstants(6, SubTypes: new[] { 8, 9 }),
+                world: new GroupWorldConstants(
+                    TopGroupType: 1,
+                    CellGroupTypes: new[] { 2, 4 },
+                    CellSubGroupTypes: new[] { 3, 5 }),
+                topic: new GroupTopicConstants(7),
+                hasSubGroups: new int[] { 1, 2, 4, 6, 7 }),
             majorConstants: new MajorRecordConstants(
                 headerLength: 24,
                 lengthLength: 4,
@@ -120,17 +128,74 @@ namespace Mutagen.Bethesda.Binary
             subConstants: new RecordHeaderConstants(
                 ObjectType.Subrecord,
                 headerLength: 6,
-                lengthLength: 2));
+                lengthLength: 2),
+            languages: new Language[]
+            {
+                Language.English,
+                Language.French,
+                Language.Italian,
+                Language.German,
+                Language.Spanish,
+                Language.Polish,
+                Language.Chinese,
+                Language.Russian,
+            });
 
         /// <summary> 
         /// Readonly singleton of Skyrim SE game constants 
         /// </summary> 
-        public static readonly GameConstants SkyrimSE = new GameConstants(SkyrimLE, GameRelease.SkyrimSE);
+        public static readonly GameConstants SkyrimSE = SkyrimLE with { Release = GameRelease.SkyrimSE };
 
         /// <summary> 
         /// Readonly singleton of Skyrim SE game constants 
         /// </summary> 
-        public static readonly GameConstants SkyrimVR = new GameConstants(SkyrimLE, GameRelease.SkyrimVR);
+        public static readonly GameConstants SkyrimVR = SkyrimLE with { Release = GameRelease.SkyrimVR };
+
+        /// <summary> 
+        /// Readonly singleton of Fallout4 game constants 
+        /// </summary> 
+        public static readonly GameConstants Fallout4 = new GameConstants(
+            release: GameRelease.Fallout4,
+            modHeaderLength: 24,
+            modHeaderFluffLength: 16,
+            groupConstants: new GroupConstants(
+                ObjectType.Group,
+                headerLength: 24,
+                lengthLength: 4,
+                cell: new GroupCellConstants(6, SubTypes: new[] { 8, 9 }),
+                world: new GroupWorldConstants(
+                    TopGroupType: 1,
+                    CellGroupTypes: new[] { 2, 4 },
+                    CellSubGroupTypes: new[] { 3, 5 }),
+                topic: new GroupTopicConstants(7),
+                hasSubGroups: new int[] { 1, 2, 4, 6, 7, 10 })
+            {
+                Quest = new GroupQuestConstants(10)
+            },
+            majorConstants: new MajorRecordConstants(
+                headerLength: 24,
+                lengthLength: 4,
+                flagsLoc: 8,
+                formIDloc: 12,
+                formVersionLoc: 20),
+            subConstants: new RecordHeaderConstants(
+                ObjectType.Subrecord,
+                headerLength: 6,
+                lengthLength: 2),
+            languages: new Language[]
+            {
+                Language.English,
+                Language.German,
+                Language.Italian,
+                Language.Spanish,
+                Language.Spanish_Mexico,
+                Language.French,
+                Language.Polish,
+                Language.Portuguese_Brazil,
+                Language.Chinese,
+                Language.Russian,
+                Language.Japanese,
+            });
 
         #region Header Factories 
         public ModHeader ModHeader(ReadOnlyMemorySlice<byte> span) => new ModHeader(this, span);
@@ -249,6 +314,8 @@ namespace Mutagen.Bethesda.Binary
                     return SkyrimSE;
                 case GameRelease.SkyrimVR:
                     return SkyrimVR;
+                case GameRelease.Fallout4:
+                    return Fallout4;
                 default:
                     throw new NotImplementedException();
             }

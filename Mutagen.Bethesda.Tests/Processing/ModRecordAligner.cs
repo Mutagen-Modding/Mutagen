@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Tests
         {
             public Dictionary<RecordType, Dictionary<RecordType, AlignmentRule>> Alignments = new Dictionary<RecordType, Dictionary<RecordType, AlignmentRule>>();
             public Dictionary<RecordType, IEnumerable<RecordType>> StopMarkers = new Dictionary<RecordType, IEnumerable<RecordType>>();
-            public Dictionary<GroupTypeEnum, List<RecordType>> GroupAlignment = new Dictionary<GroupTypeEnum, List<RecordType>>();
+            public Dictionary<int, List<RecordType>> GroupAlignment = new Dictionary<int, List<RecordType>>();
 
             public void AddAlignments(RecordType type, params RecordType[] recTypes)
             {
@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Tests
                 }
             }
 
-            public void SetGroupAlignment(GroupTypeEnum group, params RecordType[] recTypes)
+            public void SetGroupAlignment(int group, params RecordType[] recTypes)
             {
                 GroupAlignment.GetOrAdd(group).SetTo(recTypes);
             }
@@ -234,15 +234,11 @@ namespace Mutagen.Bethesda.Tests
                         if (mutaReader.Complete) break;
 
                         mutaReader.WriteTo(writer.BaseStream, 12);
-                        var grupType = (GroupTypeEnum)mutaReader.ReadUInt32();
-                        writer.Write((int)grupType);
-                        switch (grupType)
+                        var grupType = mutaReader.ReadInt32();
+                        writer.Write(grupType);
+                        if (writer.MetaData.Constants.GroupConstants.Cell.TopGroupType == grupType)
                         {
-                            case GroupTypeEnum.CellChildren:
-                                AlignCellChildren(mutaReader, writer);
-                                break;
-                            default:
-                                break;
+                            AlignCellChildren(mutaReader, writer);
                         }
                     }
                     mutaReader.WriteTo(writer.BaseStream, checked((int)mutaReader.Remaining));
@@ -262,15 +258,11 @@ namespace Mutagen.Bethesda.Tests
                         if (mutaReader.Complete) break;
 
                         mutaReader.WriteTo(writer.BaseStream, 12);
-                        var grupType = (GroupTypeEnum)mutaReader.ReadUInt32();
-                        writer.Write((int)grupType);
-                        switch (grupType)
+                        var grupType = mutaReader.ReadInt32();
+                        writer.Write(grupType);
+                        if (writer.MetaData.Constants.GroupConstants.World.TopGroupType == grupType)
                         {
-                            case GroupTypeEnum.WorldChildren:
-                                AlignWorldChildren(mutaReader, writer);
-                                break;
-                            default:
-                                break;
+                            AlignWorldChildren(mutaReader, writer);
                         }
                     }
                     mutaReader.WriteTo(writer.BaseStream, checked((int)mutaReader.Remaining));
@@ -413,7 +405,7 @@ namespace Mutagen.Bethesda.Tests
                 }
                 writer.Write(inputStream.ReadSpan(groupMeta.HeaderLength));
 
-                if (!alignmentRules.GroupAlignment.TryGetValue((GroupTypeEnum)groupMeta.GroupType, out var groupRules)) continue;
+                if (!alignmentRules.GroupAlignment.TryGetValue(groupMeta.GroupType, out var groupRules)) continue;
 
                 var storage = new Dictionary<RecordType, List<ReadOnlyMemorySlice<byte>>>();
                 var rest = new List<ReadOnlyMemorySlice<byte>>();
@@ -456,37 +448,27 @@ namespace Mutagen.Bethesda.Tests
             MutagenWriter writer)
         {
             writer.Write(mutaReader.ReadSpan(4, readSafe: false));
-            var storage = new Dictionary<GroupTypeEnum, ReadOnlyMemorySlice<byte>>();
+            var storage = new Dictionary<int, ReadOnlyMemorySlice<byte>>();
             for (int i = 0; i < 3; i++)
             {
                 mutaReader.Position += 4;
                 var subLen = mutaReader.ReadInt32();
                 mutaReader.Position += 4;
-                var subGrupType = (GroupTypeEnum)mutaReader.ReadUInt32();
+                var subGrupType = mutaReader.ReadInt32();
                 mutaReader.Position -= 16;
-                switch (subGrupType)
+                if (!writer.MetaData.Constants.GroupConstants.Cell.SubTypes.Contains(subGrupType))
                 {
-                    case GroupTypeEnum.CellPersistentChildren:
-                    case GroupTypeEnum.CellTemporaryChildren:
-                    case GroupTypeEnum.CellVisibleDistantChildren:
-                        break;
-                    default:
-                        i = 3; // end loop
-                        continue;
+                    i = 3; // end loop
+                    continue;
                 }
                 storage[subGrupType] = mutaReader.ReadMemory(subLen, readSafe: true);
             }
-            if (storage.TryGetValue(GroupTypeEnum.CellPersistentChildren, out var content))
+            foreach (var item in writer.MetaData.Constants.GroupConstants.Cell.SubTypes)
             {
-                writer.Write(content);
-            }
-            if (storage.TryGetValue(GroupTypeEnum.CellTemporaryChildren, out content))
-            {
-                writer.Write(content);
-            }
-            if (storage.TryGetValue(GroupTypeEnum.CellVisibleDistantChildren, out content))
-            {
-                writer.Write(content);
+                if (storage.TryGetValue(item, out var content))
+                {
+                    writer.Write(content);
+                }
             }
         }
 
@@ -514,10 +496,9 @@ namespace Mutagen.Bethesda.Tests
                         var cellMajorMeta = reader.GetMajorRecord();
                         var startPos = reader.Position;
                         reader.Position += cellMajorMeta.HeaderLength;
-                        var grupPos = reader.Position;
                         long cellGroupLen = 0;
                         if (reader.TryGetGroup(out var cellSubGroupMeta)
-                            && cellSubGroupMeta.GroupType == (int)GroupTypeEnum.CellChildren)
+                            && cellSubGroupMeta.GroupType == writer.MetaData.Constants.GroupConstants.Cell.TopGroupType)
                         {
                             cellGroupLen = cellSubGroupMeta.TotalLength;
                         }

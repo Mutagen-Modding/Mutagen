@@ -13,6 +13,8 @@ namespace Mutagen.Bethesda
         [Description("Oblivion")]
         Oblivion,
         [Description("Skyrim")]
-        Skyrim,
+        Skyrim, 
+        [Description("Fallout4")]
+        Fallout4,
     }
 }

@@ -15,7 +15,8 @@ namespace Mutagen.Bethesda
         Float,
         Int,
         String,
-        Bool
+        Bool,
+        UInt
     }
 
     /// <summary>
@@ -61,6 +62,10 @@ namespace Mutagen.Bethesda
         /// Character signal for Boolean content
         /// </summary>
         public const char BoolChar = 'b';
+        /// <summary>
+        /// Character signal for Unsigned Integer content
+        /// </summary>
+        public const char UIntChar = 'u';
 
         /// <summary>
         /// Tries to convert a character to a corresponding enum type value.
@@ -83,6 +88,9 @@ namespace Mutagen.Bethesda
                     return true;
                 case BoolChar:
                     type = GameSettingType.Bool;
+                    return true;
+                case UIntChar:
+                    type = GameSettingType.UInt;
                     return true;
                 default:
                     type = default;
@@ -107,6 +115,8 @@ namespace Mutagen.Bethesda
                     return StringChar;
                 case GameSettingType.Bool:
                     return BoolChar;
+                case GameSettingType.UInt:
+                    return UIntChar;
                 default:
                     throw new NotImplementedException();
             }

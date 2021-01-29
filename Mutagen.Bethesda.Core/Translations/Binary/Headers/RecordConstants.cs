@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda.Binary
     /// <summary>
     /// Reference for Record alignment and length constants
     /// </summary>
-    public class RecordHeaderConstants
+    public record RecordHeaderConstants
     {
         /// <summary>
         /// Type of object the constants are associated with

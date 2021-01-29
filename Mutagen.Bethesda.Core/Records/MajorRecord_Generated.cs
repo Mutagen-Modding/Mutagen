@@ -26,7 +26,7 @@ namespace Mutagen.Bethesda
 {
     #region Class
     /// <summary>
-    /// Implemented by: [OblivionMajorRecord, SkyrimMajorRecord]
+    /// Implemented by: [OblivionMajorRecord, SkyrimMajorRecord, Fallout4MajorRecord]
     /// </summary>
     public abstract partial class MajorRecord :
         IMajorRecordInternal,
@@ -546,7 +546,7 @@ namespace Mutagen.Bethesda
 
     #region Interface
     /// <summary>
-    /// Implemented by: [OblivionMajorRecord, SkyrimMajorRecord]
+    /// Implemented by: [OblivionMajorRecord, SkyrimMajorRecord, Fallout4MajorRecord]
     /// </summary>
     public partial interface IMajorRecord :
         IMajorRecordGetter,
@@ -567,7 +567,7 @@ namespace Mutagen.Bethesda
     }
 
     /// <summary>
-    /// Implemented by: [OblivionMajorRecord, SkyrimMajorRecord]
+    /// Implemented by: [OblivionMajorRecord, SkyrimMajorRecord, Fallout4MajorRecord]
     /// </summary>
     public partial interface IMajorRecordGetter :
         ILoquiObject,

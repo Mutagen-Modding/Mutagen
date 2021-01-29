@@ -1,5 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Text;
 
 namespace Mutagen.Bethesda
@@ -60,12 +62,109 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public static string GetFileName(ModKey modKey, Language language, StringsSource source)
+        public static string GetFileName(
+            StringsLanguageFormat languageFormat,
+            ModKey modKey, 
+            Language language,
+            StringsSource source)
         {
-            return $"{modKey.Name}_{language}.{GetSourceString(source)}";
+            return $"{modKey.Name}_{GetLanguageString(languageFormat, language)}.{GetSourceString(source)}";
         }
 
-        public static bool TryRetrieveInfoFromString(ReadOnlySpan<char> name, out StringsSource source, out Language language, out ReadOnlySpan<char> modName)
+        public static string GetLanguageString(StringsLanguageFormat format, Language language)
+        {
+            switch (format)
+            {
+                case StringsLanguageFormat.FullName:
+                    return language.ToString();
+                case StringsLanguageFormat.Iso:
+                    return GetIsoLanguageString(language);
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        public static string GetIsoLanguageString(Language language)
+        {
+            return language switch
+            {
+                Language.English => "en",
+                Language.German => "de",
+                Language.Italian => "it",
+                Language.Spanish => "es",
+                Language.Spanish_Mexico => "esmx",
+                Language.French => "fr",
+                Language.Polish => "pl",
+                Language.Chinese => "cn",
+                Language.Japanese => "ja",
+                Language.Portuguese_Brazil => "ptbr",
+                Language.Russian => "ru",
+                _ => throw new NotImplementedException()
+            };
+        }
+
+        public static bool TryGetIsoLanguage(ReadOnlySpan<char> chars, [MaybeNullWhen(false)] out Language lang)
+        {
+            switch (chars.ToString().ToLower())
+            {
+                case "en":
+                    lang = Language.English;
+                    return true;
+                case "de":
+                    lang = Language.German;
+                    return true;
+                case "it":
+                    lang = Language.Italian;
+                    return true;
+                case "es":
+                    lang = Language.Spanish;
+                    return true;
+                case "esmx":
+                    lang = Language.Spanish_Mexico;
+                    return true;
+                case "fr":
+                    lang = Language.French;
+                    return true;
+                case "pl":
+                    lang = Language.Polish;
+                    return true;
+                case "cn":
+                    lang = Language.Chinese;
+                    return true;
+                case "ja":
+                    lang = Language.Japanese;
+                    return true;
+                case "ptbr":
+                    lang = Language.Portuguese_Brazil;
+                    return true;
+                case "ru":
+                    lang = Language.Russian;
+                    return true;
+                default:
+                    lang = default;
+                    return false;
+            }
+        }
+
+        public static bool TryGetLanguage(StringsLanguageFormat languageFormat, ReadOnlySpan<char> span, [MaybeNullWhen(false)] out Language language)
+        {
+            switch (languageFormat)
+            {
+                case StringsLanguageFormat.FullName:
+                    return Enum.TryParse(span.ToString(), ignoreCase: true, out language);
+                case StringsLanguageFormat.Iso:
+                    return TryGetIsoLanguage(span, out language);
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        public static bool TryRetrieveInfoFromString(
+            StringsLanguageFormat languageFormat,
+            ReadOnlySpan<char> name,
+            out StringsSource source, 
+            out Language language,
+            out ReadOnlySpan<char> modName)
         {
             source = default;
             language = default;
@@ -78,7 +177,7 @@ namespace Mutagen.Bethesda
             if (separatorIndex > extensionIndex) return false;
             var languageSpan = name.Slice(separatorIndex + 1, extensionIndex - separatorIndex - 1);
             modName = name.Slice(0, separatorIndex);
-            return Enum.TryParse(languageSpan.ToString(), ignoreCase: true, out language);
+            return TryGetLanguage(languageFormat, languageSpan, out language);
         }
     }
 }
