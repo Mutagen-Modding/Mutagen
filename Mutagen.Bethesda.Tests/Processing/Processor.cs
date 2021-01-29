@@ -598,6 +598,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public IReadOnlyList<KeyValuePair<uint, uint>> RenumberStringsFileEntries(
+            GameRelease release,
             ModKey modKey,
             IMutagenReadStream stream,
             DirectoryInfo dataFolder,
@@ -605,7 +606,7 @@ namespace Mutagen.Bethesda.Tests
             StringsSource source,
             params AStringsAlignment[] recordTypes)
         {
-            var folderOverlay = StringsFolderLookupOverlay.TypicalFactory(dataFolder.FullName, null, modKey);
+            var folderOverlay = StringsFolderLookupOverlay.TypicalFactory(release, modKey, dataFolder.FullName, null);
             var sourceDict = folderOverlay.Get(source);
             if (!sourceDict.TryGetValue(language, out var overlay)) return ListExt.Empty<KeyValuePair<uint, uint>>();
             var ret = new List<KeyValuePair<uint, uint>>();
@@ -640,6 +641,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public void ProcessStringsFiles(
+            GameRelease release,
             ModKey modKey,
             DirectoryInfo dataFolder,
             Language language,
@@ -650,8 +652,8 @@ namespace Mutagen.Bethesda.Tests
             if (reindexing.Count == 0) return;
 
             var outFolder = Path.Combine(this.TempFolder.Dir.Path, "Strings/Processed");
-            var stringsOverlay = StringsFolderLookupOverlay.TypicalFactory(dataFolder.FullName, null, modKey);
-            using var writer = new StringsWriter(ModKey.FromNameAndExtension(Path.GetFileName(this.SourcePath)), outFolder);
+            var stringsOverlay = StringsFolderLookupOverlay.TypicalFactory(release, modKey, dataFolder.FullName, null);
+            using var writer = new StringsWriter(this.GameRelease, ModKey.FromNameAndExtension(Path.GetFileName(this.SourcePath)), outFolder);
             var dict = stringsOverlay.Get(source);
             foreach (var lang in dict)
             {
@@ -699,8 +701,8 @@ namespace Mutagen.Bethesda.Tests
             stream.Position += majorHeader.ContentLength;
             var blockGroupPos = stream.Position;
             if (!stream.TryReadGroup(out var blockGroup)) return;
-            var blockGrupType = (GroupTypeEnum)blockGroup.GroupType;
-            if (blockGrupType != GroupTypeEnum.CellChildren) return;
+            var blockGrupType = blockGroup.GroupType;
+            if (blockGrupType != stream.MetaData.Constants.GroupConstants.Cell.TopGroupType) return;
             if (blockGroup.ContentLength == 0)
             {
                 removes.Add(RangeInt64.FactoryFromLength(blockGroupPos, blockGroup.HeaderLength));
@@ -712,14 +714,9 @@ namespace Mutagen.Bethesda.Tests
                 {
                     var subBlockGroupPos = stream.Position;
                     if (!stream.TryReadGroup(out var subBlockGroup)) break;
-                    switch ((GroupTypeEnum)subBlockGroup.GroupType)
+                    if (!stream.MetaData.Constants.GroupConstants.Cell.SubTypes.Contains(subBlockGroup.GroupType))
                     {
-                        case GroupTypeEnum.CellPersistentChildren:
-                        case GroupTypeEnum.CellTemporaryChildren:
-                        case GroupTypeEnum.CellVisibleDistantChildren:
-                            break;
-                        default:
-                            goto Break;
+                        goto Break;
                     }
                     if (subBlockGroup.ContentLength == 0)
                     { // Empty group
@@ -763,8 +760,8 @@ namespace Mutagen.Bethesda.Tests
             stream.Position += majorHeader.ContentLength;
             var blockGroupPos = stream.Position;
             if (!stream.TryReadGroup(out var blockGroup)) return;
-            var blockGrupType = (GroupTypeEnum)blockGroup.GroupType;
-            if (blockGrupType != GroupTypeEnum.TopicChildren) return;
+            var blockGrupType = blockGroup.GroupType;
+            if (blockGrupType != stream.MetaData.Constants.GroupConstants.Topic.TopGroupType) return;
             if (blockGroup.ContentLength == 0)
             {
                 removes.Add(RangeInt64.FactoryFromLength(blockGroupPos, blockGroup.HeaderLength));

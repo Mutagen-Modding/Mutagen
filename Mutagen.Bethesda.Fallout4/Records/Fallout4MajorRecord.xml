@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Fallout4MajorRecord" objType="Record" abstract="true" baseClass="Bethesda.MajorRecord" GUID="31e44987-0e57-41ce-8b90-094434216c76" ID="18">
+    <Fields>
+      <UInt16 name="FormVersion" />
+      <UInt16 name="Version2" />
+    </Fields>
+  </Object>
+</Loqui>

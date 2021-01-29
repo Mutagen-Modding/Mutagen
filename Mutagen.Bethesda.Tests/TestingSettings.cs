@@ -25,6 +25,7 @@ namespace Mutagen.Bethesda.Tests
         public string Skyrim { get; set; } = string.Empty;
         public string SkyrimSpecialEdition { get; set; } = string.Empty;
         public string SkyrimVR { get; set; } = string.Empty;
+        public string Fallout4 { get; set; } = string.Empty;
 
         public string Get(GameRelease mode)
         {
@@ -36,6 +37,8 @@ namespace Mutagen.Bethesda.Tests
                     return Skyrim;
                 case GameRelease.SkyrimSE:
                     return SkyrimSpecialEdition;
+                case GameRelease.Fallout4:
+                    return Fallout4;
                 default:
                     throw new NotImplementedException();
             }

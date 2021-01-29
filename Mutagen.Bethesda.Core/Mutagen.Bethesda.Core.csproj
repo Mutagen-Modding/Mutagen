@@ -13,8 +13,10 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
   </PropertyGroup>
   <ItemGroup>
+    <EmbeddedResource Remove="Archives\Ba2\**" />
     <EmbeddedResource Remove="Properties\**" />
     <EmbeddedResource Remove="Translations\Binary\WriteParameters\**" />
+    <None Remove="Archives\Ba2\**" />
     <None Remove="Properties\**" />
     <None Remove="Translations\Binary\WriteParameters\**" />
   </ItemGroup>
@@ -50,11 +52,20 @@
     <IsPackable>true</IsPackable>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Archives\Archive.cs" />
+    <Compile Include="Archives\Ba2\Ba2FolderWrapper.cs" />
+    <Compile Include="Archives\Ba2\Ba2Wrapper.cs" />
+    <Compile Include="Archives\Bsa\BsaFileWrapper.cs" />
+    <Compile Include="Archives\Bsa\BsaFolderWrapper.cs" />
+    <Compile Include="Archives\Bsa\BsaWrapper.cs" />
+    <Compile Include="Archives\IArchiveFile.cs" />
+    <Compile Include="Archives\IArchiveFolder.cs" />
     <Compile Include="Enums\ColorBinaryType.cs" />
     <Compile Include="Enums\FloatIntegerType.cs" />
     <Compile Include="Enums\Language.cs" />
     <Compile Include="Enums\ModHeaderCommonFlag.cs" />
     <Compile Include="Enums\Quadrant.cs" />
+    <Compile Include="Enums\StringsLanguageFormat.cs" />
     <Compile Include="Enums\StringsFileFormat.cs" />
     <Compile Include="Enums\StringsSource.cs" />
     <Compile Include="Exceptions\BsaException.cs" />
@@ -127,6 +138,7 @@
     <Compile Include="Translations\Binary\Fields\DictBinaryTranslation.cs" />
     <Compile Include="Translations\Binary\Fields\PercentBinaryTranslation.cs" />
     <Compile Include="Translations\Binary\Headers\HeaderExt.cs" />
+    <Compile Include="Translations\Binary\Headers\GroupConstants.cs" />
     <Compile Include="Translations\Binary\Headers\StreamHeaderMixIn.cs" />
     <Compile Include="Translations\Binary\ModHeaderWriteLogic.cs" />
     <Compile Include="Translations\Binary\ParseResult.cs" />
@@ -168,7 +180,6 @@
     <Compile Include="Processing\ModRecordAligner.cs" />
     <Compile Include="Translations\Binary\BinaryStringUtility.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="Enums\GroupTypeEnum.cs" />
     <Compile Include="Extensions\IBinaryStreamExt.cs" />
     <Compile Include="Streams\IMutagenReadStream.cs" />
     <Compile Include="Links\EDIDLink.cs" />

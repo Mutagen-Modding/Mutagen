@@ -1,4 +1,4 @@
-﻿using Noggog;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -77,11 +77,15 @@ namespace Mutagen.Bethesda.Tests
             }
             catch (Exception ex)
             {
-                _output.OnNext(ex.ToString());
+                _stateSignal.OnError(ex);
+                while (ex != null)
+                {
+                    _output.OnNext(ex.ToString());
+                    ex = ex.InnerException;
+                }
                 _output.OnNext("Failed");
                 _output.OnNext("========================================/");
                 _stateSignal.OnNext(TestState.Error);
-                _stateSignal.OnError(ex);
             }
             finally
             {

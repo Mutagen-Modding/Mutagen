@@ -34,6 +34,7 @@
     <Compile Include="Enums\EmotionType.cs" />
     <Compile Include="Enums\EquipmentFlag.cs" />
     <Compile Include="Enums\FunctionIndex.cs" />
+    <Compile Include="Enums\GroupTypeEnum.cs" />
     <Compile Include="Enums\IngredientFlag.cs" />
     <Compile Include="Enums\LeveledFlag.cs" />
     <Compile Include="Enums\MagicSchool.cs" />

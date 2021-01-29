@@ -866,12 +866,14 @@ namespace Mutagen.Bethesda.Tests
             {
                 case StringsSource.Normal:
                     ProcessStringsFiles(
+                        GameRelease.SkyrimLE,
                         modKey,
                         dataFolder,
                         language,
                         StringsSource.Normal,
                         strict: true,
                         RenumberStringsFileEntries(
+                            GameRelease.SkyrimLE,
                             modKey,
                             stream,
                             dataFolder,
@@ -932,12 +934,14 @@ namespace Mutagen.Bethesda.Tests
                     break;
                 case StringsSource.DL:
                     ProcessStringsFiles(
+                        GameRelease.SkyrimLE,
                         modKey,
                         dataFolder,
                         language,
                         StringsSource.DL,
                         strict: true,
                         RenumberStringsFileEntries(
+                            GameRelease.SkyrimLE,
                             modKey,
                             stream,
                             dataFolder,
@@ -962,12 +966,14 @@ namespace Mutagen.Bethesda.Tests
                     break;
                 case StringsSource.IL:
                     ProcessStringsFiles(
+                        GameRelease.SkyrimLE,
                         modKey,
                         dataFolder,
                         language,
                         StringsSource.IL,
                         strict: true,
                         RenumberStringsFileEntries(
+                            GameRelease.SkyrimLE,
                             modKey,
                             stream,
                             dataFolder,

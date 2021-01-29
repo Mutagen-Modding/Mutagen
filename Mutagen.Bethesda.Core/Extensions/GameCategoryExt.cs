@@ -12,6 +12,7 @@ namespace Mutagen.Bethesda
             {
                 GameCategory.Oblivion => false,
                 GameCategory.Skyrim => true,
+                GameCategory.Fallout4 => true,
                 _ => throw new NotImplementedException(),
             };
         }
@@ -22,6 +23,7 @@ namespace Mutagen.Bethesda
             {
                 GameCategory.Oblivion => GameRelease.Oblivion,
                 GameCategory.Skyrim => GameRelease.SkyrimSE,
+                GameCategory.Fallout4 => GameRelease.Fallout4,
                 _ => throw new NotImplementedException(),
             };
         }

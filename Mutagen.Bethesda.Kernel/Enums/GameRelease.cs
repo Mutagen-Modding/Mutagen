@@ -17,6 +17,8 @@ namespace Mutagen.Bethesda
         [Description("Skyrim Special Edition")]
         SkyrimSE = 2,
         [Description("Skyrim VR")]
-        SkyrimVR = 3
+        SkyrimVR = 3,
+        [Description("Fallout 4")]
+        Fallout4 = 4
     }
 }

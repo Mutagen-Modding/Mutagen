@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Keyword" recordType="KYWD" objType="Record" baseClass="Fallout4MajorRecord" GUID="fa5a0ae9-a530-4240-96f4-13f919309178" ID="28">
+    <Interface>IKeywordCommon</Interface>
+    <Fields>
+      <Color name="Color" recordType="CNAM" binaryType="Alpha" />
+    </Fields>
+    <LinkInterface>IKeywordLinkedReference</LinkInterface>
+  </Object>
+</Loqui>

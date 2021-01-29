@@ -234,13 +234,13 @@ namespace Mutagen.Bethesda
                     var targetRec = majorRecordMeta.RecordType;
                     if (targetRec != grupRec)
                     {
-                        if (IsSubLevelGRUP(frame.GetGroup(checkIsGroup: false)))
+                        var grup = frame.GetGroup(checkIsGroup: false);
+                        if (IsSubLevelGRUP(grup))
                         {
                             parentGroupLocations.Push(grupLoc);
                             HandleSubLevelGRUP(
                                 frame: frame,
                                 fileLocs: fileLocs,
-                                recordType: grupRec,
                                 parentGroupLocations: parentGroupLocations,
                                 interest: interest);
                             parentGroupLocations.Pop();
@@ -288,24 +288,12 @@ namespace Mutagen.Bethesda
             {
                 return false;
             }
-            var grupType = EnumExt<GroupTypeEnum>.Convert(groupMeta.GroupType);
-            switch (grupType)
-            {
-                case GroupTypeEnum.InteriorCellBlock:
-                case GroupTypeEnum.ExteriorCellBlock:
-                case GroupTypeEnum.CellChildren:
-                case GroupTypeEnum.WorldChildren:
-                case GroupTypeEnum.TopicChildren:
-                    return true;
-                default:
-                    return false;
-            }
+            return groupMeta.Meta.GroupConstants.HasSubGroups.Contains(groupMeta.GroupType);
         }
 
         private static void HandleSubLevelGRUP(
             MutagenFrame frame,
             FileLocationConstructor fileLocs,
-            RecordType recordType,
             RecordInterest? interest,
             Stack<long> parentGroupLocations)
         {
@@ -316,39 +304,42 @@ namespace Mutagen.Bethesda
                 throw new DataMisalignedException("Group was not read in where expected: 0x" + (frame.Position - 4).ToString("X"));
             }
             fileLocs.GrupLocations.Add(grupLoc);
-            switch (EnumExt<GroupTypeEnum>.Convert(groupMeta.GroupType))
+            var grupType = groupMeta.GroupType;
+            if (grupType == frame.MetaData.Constants.GroupConstants.Cell.TopGroupType)
             {
-                case GroupTypeEnum.InteriorCellBlock:
-                case GroupTypeEnum.ExteriorCellBlock:
-                    parentGroupLocations.Push(grupLoc);
-                    HandleCells(
-                        frame: frame.SpawnWithLength(groupMeta.TotalLength),
-                        fileLocs: fileLocs,
-                        parentGroupLocations: parentGroupLocations,
-                        interest: interest);
-                    parentGroupLocations.Pop();
-                    break;
-                case GroupTypeEnum.CellChildren:
-                    parentGroupLocations.Push(grupLoc);
-                    HandleCellSubchildren(
-                        frame: frame.SpawnWithLength(groupMeta.TotalLength),
-                        fileLocs: fileLocs,
-                        parentGroupLocations: parentGroupLocations,
-                        interest: interest);
-                    parentGroupLocations.Pop();
-                    break;
-                case GroupTypeEnum.WorldChildren:
-                case GroupTypeEnum.TopicChildren:
-                    ParseTopLevelGRUP(
-                        reader: frame.Reader,
-                        fileLocs: fileLocs,
-                        interest: interest,
-                        parentGroupLocations: parentGroupLocations,
-                        checkOverallGrupType: false,
-                        grupRecOverride: null);
-                    break;
-                default:
-                    throw new NotImplementedException();
+                parentGroupLocations.Push(grupLoc);
+                HandleCellSubchildren(
+                    frame: frame.SpawnWithLength(groupMeta.TotalLength),
+                    fileLocs: fileLocs,
+                    parentGroupLocations: parentGroupLocations,
+                    interest: interest);
+                parentGroupLocations.Pop();
+            }
+            else if (grupType == frame.MetaData.Constants.GroupConstants.World.TopGroupType
+                || grupType == frame.MetaData.Constants.GroupConstants.Topic?.TopGroupType
+                || grupType == frame.MetaData.Constants.GroupConstants.Quest?.TopGroupType)
+            {
+                ParseTopLevelGRUP(
+                    reader: frame.Reader,
+                    fileLocs: fileLocs,
+                    interest: interest,
+                    parentGroupLocations: parentGroupLocations,
+                    checkOverallGrupType: false,
+                    grupRecOverride: null);
+            }
+            else if (frame.MetaData.Constants.GroupConstants.World.CellGroupTypes.Contains(grupType))
+            {
+                parentGroupLocations.Push(grupLoc);
+                HandleCells(
+                    frame: frame.SpawnWithLength(groupMeta.TotalLength),
+                    fileLocs: fileLocs,
+                    parentGroupLocations: parentGroupLocations,
+                    interest: interest);
+                parentGroupLocations.Pop();
+            }
+            else
+            {
+                throw new NotImplementedException();
             }
         }
 
@@ -368,20 +359,19 @@ namespace Mutagen.Bethesda
                     throw new ArgumentException();
                 }
                 fileLocs.GrupLocations.Add(grupLoc);
-                switch ((GroupTypeEnum)groupMeta.GroupType)
+                if (frame.MetaData.Constants.GroupConstants.World.CellSubGroupTypes.Contains(groupMeta.GroupType))
                 {
-                    case GroupTypeEnum.InteriorCellSubBlock:
-                    case GroupTypeEnum.ExteriorCellSubBlock:
-                        ParseTopLevelGRUP(
-                            reader: frame.Reader,
-                            fileLocs: fileLocs,
-                            interest: interest,
-                            parentGroupLocations: parentGroupLocations,
-                            grupRecOverride: new RecordType("CELL"),
-                            checkOverallGrupType: true);
-                        break;
-                    default:
-                        throw new NotImplementedException();
+                    ParseTopLevelGRUP(
+                        reader: frame.Reader,
+                        fileLocs: fileLocs,
+                        interest: interest,
+                        parentGroupLocations: parentGroupLocations,
+                        grupRecOverride: new RecordType("CELL"),
+                        checkOverallGrupType: true);
+                }
+                else
+                {
+                    throw new NotImplementedException();
                 }
             }
         }
@@ -398,21 +388,19 @@ namespace Mutagen.Bethesda
                 var grupLoc = frame.Position;
                 var groupMeta = frame.GetGroup();
                 fileLocs.GrupLocations.Add(grupLoc);
-                switch ((GroupTypeEnum)groupMeta.GroupType)
+                if (frame.MetaData.Constants.GroupConstants.Cell.SubTypes.Contains(groupMeta.GroupType))
                 {
-                    case GroupTypeEnum.CellPersistentChildren:
-                    case GroupTypeEnum.CellTemporaryChildren:
-                    case GroupTypeEnum.CellVisibleDistantChildren:
-                        ParseTopLevelGRUP(
-                            reader: frame.Reader,
-                            fileLocs: fileLocs,
-                            interest: interest,
-                            parentGroupLocations: parentGroupLocations,
-                            grupRecOverride: null,
-                            checkOverallGrupType: false);
-                        break;
-                    default:
-                        throw new NotImplementedException();
+                    ParseTopLevelGRUP(
+                        reader: frame.Reader,
+                        fileLocs: fileLocs,
+                        interest: interest,
+                        parentGroupLocations: parentGroupLocations,
+                        grupRecOverride: null,
+                        checkOverallGrupType: false);
+                }
+                else
+                {
+                    throw new NotImplementedException();
                 }
             }
         }
