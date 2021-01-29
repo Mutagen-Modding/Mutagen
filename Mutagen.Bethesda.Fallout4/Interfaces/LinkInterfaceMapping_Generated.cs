@@ -18,11 +18,21 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public LinkInterfaceMapping()
         {
             var dict = new Dictionary<Type, Type[]>();
+            dict[typeof(IIdleRelation)] = new Type[]
+            {
+                typeof(ActionRecord),
+            };
+            dict[typeof(IIdleRelationGetter)] = dict[typeof(IIdleRelation)];
             dict[typeof(IKeywordLinkedReference)] = new Type[]
             {
                 typeof(Keyword),
             };
             dict[typeof(IKeywordLinkedReferenceGetter)] = dict[typeof(IKeywordLinkedReference)];
+            dict[typeof(ILocationRecord)] = new Type[]
+            {
+                typeof(LocationReferenceType),
+            };
+            dict[typeof(ILocationRecordGetter)] = dict[typeof(ILocationRecord)];
             InterfaceToObjectTypes = dict;
         }
     }

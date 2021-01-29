@@ -2,6 +2,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 {
     public class RecordTypes
     {
+        public static readonly RecordType AACT = new RecordType(0x54434141);
         public static readonly RecordType AORU = new RecordType(0x55524F41);
         public static readonly RecordType CNAM = new RecordType(0x4D414E43);
         public static readonly RecordType DATA = new RecordType(0x41544144);
@@ -14,6 +15,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly RecordType INCC = new RecordType(0x43434E49);
         public static readonly RecordType INTV = new RecordType(0x56544E49);
         public static readonly RecordType KYWD = new RecordType(0x4457594B);
+        public static readonly RecordType LCRT = new RecordType(0x5452434C);
         public static readonly RecordType MAST = new RecordType(0x5453414D);
         public static readonly RecordType NNAM = new RecordType(0x4D414E4E);
         public static readonly RecordType OFST = new RecordType(0x5453464F);

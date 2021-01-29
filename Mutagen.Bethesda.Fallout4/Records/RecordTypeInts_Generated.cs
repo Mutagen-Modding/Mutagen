@@ -2,6 +2,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 {
     public class RecordTypeInts
     {
+        public const int AACT = 0x54434141;
         public const int AORU = 0x55524F41;
         public const int CNAM = 0x4D414E43;
         public const int DATA = 0x41544144;
@@ -14,6 +15,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public const int INCC = 0x43434E49;
         public const int INTV = 0x56544E49;
         public const int KYWD = 0x4457594B;
+        public const int LCRT = 0x5452434C;
         public const int MAST = 0x5453414D;
         public const int NNAM = 0x4D414E4E;
         public const int OFST = 0x5453464F;

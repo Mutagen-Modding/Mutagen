@@ -5,6 +5,8 @@
       <RefDirect name="ModHeader" refName="Fallout4ModHeader" singleton="true" />
       <Group name="GameSettings" refName="GameSetting" />
       <Group name="Keywords" refName="Keyword" />
+      <Group name="LocationReferenceTypes" refName="LocationReferenceType" />
+      <Group name="Actions" refName="ActionRecord" />
     </Fields>
   </Object>
 </Loqui>

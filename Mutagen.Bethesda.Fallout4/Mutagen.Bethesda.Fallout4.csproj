@@ -26,6 +26,9 @@
     <Compile Include="Records\Group.cs">
       <DependentUpon>Group.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\ActionRecord.cs">
+      <DependentUpon>ActionRecord.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\GameSetting.cs">
       <DependentUpon>GameSetting.xml</DependentUpon>
     </Compile>
@@ -105,6 +108,14 @@
     </Compile>
     <Compile Include="Records\Major Records\Keyword_Generated.cs">
       <DependentUpon>Keyword.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LocationReferenceType_Generated.cs">
+      <DependentUpon>LocationReferenceType.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\ILocationRecord_Generated.cs" />
+    <Compile Include="Interfaces\IIdleRelation_Generated.cs" />
+    <Compile Include="Records\Major Records\ActionRecord_Generated.cs">
+      <DependentUpon>ActionRecord.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
