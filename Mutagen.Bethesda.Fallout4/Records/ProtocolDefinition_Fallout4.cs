@@ -19,9 +19,10 @@ namespace Loqui
             LoquiRegistration.Register(Mutagen.Bethesda.Fallout4.Internals.GameSettingFloat_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Fallout4.Internals.GameSettingString_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Fallout4.Internals.GameSettingBool_Registration.Instance);
-            LoquiRegistration.Register(Mutagen.Bethesda.Fallout4.Internals.Keyword_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Fallout4.Internals.GameSettingUInt_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Fallout4.Internals.TransientType_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Fallout4.Internals.AttractionRule_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Fallout4.Internals.Keyword_Registration.Instance);
         }
     }
 }

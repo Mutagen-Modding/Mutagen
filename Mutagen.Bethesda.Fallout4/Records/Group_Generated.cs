@@ -98,6 +98,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType T_RecordType;
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => GroupCommon<T>.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GroupSetterCommon<T>.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
@@ -193,7 +195,8 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IGroup<T> :
         IGroupGetter<T>,
         IMajorRecordEnumerable,
-        ILoquiObjectSetter<IGroup<T>>
+        ILoquiObjectSetter<IGroup<T>>,
+        IFormLinkContainer
         where T : class, IFallout4MajorRecordInternal, IBinaryItem
     {
         new GroupTypeEnum Type { get; set; }
@@ -206,6 +209,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject,
         IMajorRecordGetterEnumerable,
         ILoquiObject<IGroupGetter<T>>,
+        IFormLinkContainerGetter,
         IBinaryItem
         where T : class, IFallout4MajorRecordGetter, IBinaryItem
     {
@@ -772,6 +776,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Mutagen
         public void RemapLinks(IGroup<T> obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
+            obj.RecordCache.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IGroup<T> obj)
@@ -999,6 +1004,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Mutagen
         public IEnumerable<FormLinkInformation> GetContainedFormLinks(IGroupGetter<T> obj)
         {
+            foreach (var item in obj.RecordCache.Items.WhereCastable<T, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.ContainedFormLinks))
+            {
+                yield return item;
+            }
             yield break;
         }
         
@@ -1388,6 +1398,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => GroupCommon<T>.Instance.GetContainedFormLinks(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

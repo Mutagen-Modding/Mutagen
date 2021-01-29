@@ -48,6 +48,29 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Color? IKeywordGetter.Color => this.Color;
         #endregion
+        #region Notes
+        public String? Notes { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IKeywordGetter.Notes => this.Notes;
+        #endregion
+        #region Type
+        public Keyword.TypeEnum? Type { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Keyword.TypeEnum? IKeywordGetter.Type => this.Type;
+        #endregion
+        #region AttractionRule
+        public FormLinkNullable<IAttractionRuleGetter> AttractionRule { get; set; } = new FormLinkNullable<IAttractionRuleGetter>();
+        #endregion
+        #region Name
+        public String? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IKeywordGetter.Name => this.Name;
+        #endregion
+        #region DisplayName
+        public String? DisplayName { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IKeywordGetter.DisplayName => this.DisplayName;
+        #endregion
 
         #region To String
 
@@ -89,6 +112,11 @@ namespace Mutagen.Bethesda.Fallout4
             : base(initialValue)
             {
                 this.Color = initialValue;
+                this.Notes = initialValue;
+                this.Type = initialValue;
+                this.AttractionRule = initialValue;
+                this.Name = initialValue;
+                this.DisplayName = initialValue;
             }
 
             public Mask(
@@ -98,7 +126,12 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem Color)
+                TItem Color,
+                TItem Notes,
+                TItem Type,
+                TItem AttractionRule,
+                TItem Name,
+                TItem DisplayName)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -108,6 +141,11 @@ namespace Mutagen.Bethesda.Fallout4
                 Version2: Version2)
             {
                 this.Color = Color;
+                this.Notes = Notes;
+                this.Type = Type;
+                this.AttractionRule = AttractionRule;
+                this.Name = Name;
+                this.DisplayName = DisplayName;
             }
 
             #pragma warning disable CS8618
@@ -120,6 +158,11 @@ namespace Mutagen.Bethesda.Fallout4
 
             #region Members
             public TItem Color;
+            public TItem Notes;
+            public TItem Type;
+            public TItem AttractionRule;
+            public TItem Name;
+            public TItem DisplayName;
             #endregion
 
             #region Equals
@@ -134,12 +177,22 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.Color, rhs.Color)) return false;
+                if (!object.Equals(this.Notes, rhs.Notes)) return false;
+                if (!object.Equals(this.Type, rhs.Type)) return false;
+                if (!object.Equals(this.AttractionRule, rhs.AttractionRule)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.DisplayName, rhs.DisplayName)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.Color);
+                hash.Add(this.Notes);
+                hash.Add(this.Type);
+                hash.Add(this.AttractionRule);
+                hash.Add(this.Name);
+                hash.Add(this.DisplayName);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -151,6 +204,11 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.Color)) return false;
+                if (!eval(this.Notes)) return false;
+                if (!eval(this.Type)) return false;
+                if (!eval(this.AttractionRule)) return false;
+                if (!eval(this.Name)) return false;
+                if (!eval(this.DisplayName)) return false;
                 return true;
             }
             #endregion
@@ -160,6 +218,11 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.Color)) return true;
+                if (eval(this.Notes)) return true;
+                if (eval(this.Type)) return true;
+                if (eval(this.AttractionRule)) return true;
+                if (eval(this.Name)) return true;
+                if (eval(this.DisplayName)) return true;
                 return false;
             }
             #endregion
@@ -176,6 +239,11 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.Color = eval(this.Color);
+                obj.Notes = eval(this.Notes);
+                obj.Type = eval(this.Type);
+                obj.AttractionRule = eval(this.AttractionRule);
+                obj.Name = eval(this.Name);
+                obj.DisplayName = eval(this.DisplayName);
             }
             #endregion
 
@@ -202,6 +270,26 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         fg.AppendItem(Color, "Color");
                     }
+                    if (printMask?.Notes ?? true)
+                    {
+                        fg.AppendItem(Notes, "Notes");
+                    }
+                    if (printMask?.Type ?? true)
+                    {
+                        fg.AppendItem(Type, "Type");
+                    }
+                    if (printMask?.AttractionRule ?? true)
+                    {
+                        fg.AppendItem(AttractionRule, "AttractionRule");
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.DisplayName ?? true)
+                    {
+                        fg.AppendItem(DisplayName, "DisplayName");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -215,6 +303,11 @@ namespace Mutagen.Bethesda.Fallout4
         {
             #region Members
             public Exception? Color;
+            public Exception? Notes;
+            public Exception? Type;
+            public Exception? AttractionRule;
+            public Exception? Name;
+            public Exception? DisplayName;
             #endregion
 
             #region IErrorMask
@@ -225,6 +318,16 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     case Keyword_FieldIndex.Color:
                         return Color;
+                    case Keyword_FieldIndex.Notes:
+                        return Notes;
+                    case Keyword_FieldIndex.Type:
+                        return Type;
+                    case Keyword_FieldIndex.AttractionRule:
+                        return AttractionRule;
+                    case Keyword_FieldIndex.Name:
+                        return Name;
+                    case Keyword_FieldIndex.DisplayName:
+                        return DisplayName;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -237,6 +340,21 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     case Keyword_FieldIndex.Color:
                         this.Color = ex;
+                        break;
+                    case Keyword_FieldIndex.Notes:
+                        this.Notes = ex;
+                        break;
+                    case Keyword_FieldIndex.Type:
+                        this.Type = ex;
+                        break;
+                    case Keyword_FieldIndex.AttractionRule:
+                        this.AttractionRule = ex;
+                        break;
+                    case Keyword_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Keyword_FieldIndex.DisplayName:
+                        this.DisplayName = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -252,6 +370,21 @@ namespace Mutagen.Bethesda.Fallout4
                     case Keyword_FieldIndex.Color:
                         this.Color = (Exception?)obj;
                         break;
+                    case Keyword_FieldIndex.Notes:
+                        this.Notes = (Exception?)obj;
+                        break;
+                    case Keyword_FieldIndex.Type:
+                        this.Type = (Exception?)obj;
+                        break;
+                    case Keyword_FieldIndex.AttractionRule:
+                        this.AttractionRule = (Exception?)obj;
+                        break;
+                    case Keyword_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case Keyword_FieldIndex.DisplayName:
+                        this.DisplayName = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -262,6 +395,11 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (Overall != null) return true;
                 if (Color != null) return true;
+                if (Notes != null) return true;
+                if (Type != null) return true;
+                if (AttractionRule != null) return true;
+                if (Name != null) return true;
+                if (DisplayName != null) return true;
                 return false;
             }
             #endregion
@@ -298,6 +436,11 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 base.ToString_FillInternal(fg);
                 fg.AppendItem(Color, "Color");
+                fg.AppendItem(Notes, "Notes");
+                fg.AppendItem(Type, "Type");
+                fg.AppendItem(AttractionRule, "AttractionRule");
+                fg.AppendItem(Name, "Name");
+                fg.AppendItem(DisplayName, "DisplayName");
             }
             #endregion
 
@@ -307,6 +450,11 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Color = this.Color.Combine(rhs.Color);
+                ret.Notes = this.Notes.Combine(rhs.Notes);
+                ret.Type = this.Type.Combine(rhs.Type);
+                ret.AttractionRule = this.AttractionRule.Combine(rhs.AttractionRule);
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.DisplayName = this.DisplayName.Combine(rhs.DisplayName);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -330,6 +478,11 @@ namespace Mutagen.Bethesda.Fallout4
         {
             #region Members
             public bool Color;
+            public bool Notes;
+            public bool Type;
+            public bool AttractionRule;
+            public bool Name;
+            public bool DisplayName;
             #endregion
 
             #region Ctors
@@ -339,6 +492,11 @@ namespace Mutagen.Bethesda.Fallout4
                 : base(defaultOn, onOverall)
             {
                 this.Color = defaultOn;
+                this.Notes = defaultOn;
+                this.Type = defaultOn;
+                this.AttractionRule = defaultOn;
+                this.Name = defaultOn;
+                this.DisplayName = defaultOn;
             }
 
             #endregion
@@ -347,6 +505,11 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 base.GetCrystal(ret);
                 ret.Add((Color, null));
+                ret.Add((Notes, null));
+                ret.Add((Type, null));
+                ret.Add((AttractionRule, null));
+                ret.Add((Name, null));
+                ret.Add((DisplayName, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -359,6 +522,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Keyword_Registration.TriggeringRecordType;
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => KeywordCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => KeywordSetterCommon.Instance.RemapLinks(this, mapping);
         public Keyword(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -455,9 +620,15 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4MajorRecord,
         IKeywordLinkedReference,
         IKeywordCommon,
-        ILoquiObjectSetter<IKeywordInternal>
+        ILoquiObjectSetter<IKeywordInternal>,
+        IFormLinkContainer
     {
         new Color? Color { get; set; }
+        new String? Notes { get; set; }
+        new Keyword.TypeEnum? Type { get; set; }
+        new FormLinkNullable<IAttractionRuleGetter> AttractionRule { get; set; }
+        new String? Name { get; set; }
+        new String? DisplayName { get; set; }
     }
 
     public partial interface IKeywordInternal :
@@ -472,10 +643,16 @@ namespace Mutagen.Bethesda.Fallout4
         IKeywordLinkedReferenceGetter,
         IKeywordCommonGetter,
         ILoquiObject<IKeywordGetter>,
+        IFormLinkContainerGetter,
         IBinaryItem
     {
         static new ILoquiRegistration Registration => Keyword_Registration.Instance;
         Color? Color { get; }
+        String? Notes { get; }
+        Keyword.TypeEnum? Type { get; }
+        FormLinkNullable<IAttractionRuleGetter> AttractionRule { get; }
+        String? Name { get; }
+        String? DisplayName { get; }
 
     }
 
@@ -639,6 +816,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         FormVersion = 4,
         Version2 = 5,
         Color = 6,
+        Notes = 7,
+        Type = 8,
+        AttractionRule = 9,
+        Name = 10,
+        DisplayName = 11,
     }
     #endregion
 
@@ -651,14 +833,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 28,
+            msgID: 32,
             version: 0);
 
-        public const string GUID = "fa5a0ae9-a530-4240-96f4-13f919309178";
+        public const string GUID = "05cd2ea7-db59-4fd0-8b00-d45eb284e754";
 
-        public const ushort AdditionalFieldCount = 1;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 12;
 
         public static readonly Type MaskType = typeof(Keyword.Mask<>);
 
@@ -728,6 +910,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             ClearPartial();
             item.Color = default;
+            item.Notes = default;
+            item.Type = default;
+            item.AttractionRule = FormLinkNullable<IAttractionRuleGetter>.Null;
+            item.Name = default;
+            item.DisplayName = default;
             base.Clear(item);
         }
         
@@ -745,6 +932,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void RemapLinks(IKeyword obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.AttractionRule = obj.AttractionRule.Relink(mapping);
         }
         
         #endregion
@@ -814,6 +1002,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             if (rhs == null) return;
             ret.Color = item.Color.ColorOnlyEquals(rhs.Color);
+            ret.Notes = string.Equals(item.Notes, rhs.Notes);
+            ret.Type = item.Type == rhs.Type;
+            ret.AttractionRule = item.AttractionRule.Equals(rhs.AttractionRule);
+            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.DisplayName = string.Equals(item.DisplayName, rhs.DisplayName);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -870,6 +1063,30 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 fg.AppendItem(ColorItem, "Color");
             }
+            if ((printMask?.Notes ?? true)
+                && item.Notes.TryGet(out var NotesItem))
+            {
+                fg.AppendItem(NotesItem, "Notes");
+            }
+            if ((printMask?.Type ?? true)
+                && item.Type.TryGet(out var TypeItem))
+            {
+                fg.AppendItem(TypeItem, "Type");
+            }
+            if (printMask?.AttractionRule ?? true)
+            {
+                fg.AppendItem(item.AttractionRule.FormKeyNullable, "AttractionRule");
+            }
+            if ((printMask?.Name ?? true)
+                && item.Name.TryGet(out var NameItem))
+            {
+                fg.AppendItem(NameItem, "Name");
+            }
+            if ((printMask?.DisplayName ?? true)
+                && item.DisplayName.TryGet(out var DisplayNameItem))
+            {
+                fg.AppendItem(DisplayNameItem, "DisplayName");
+            }
         }
         
         public static Keyword_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -919,6 +1136,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             if (lhs == null || rhs == null) return false;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs)) return false;
             if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
+            if (!string.Equals(lhs.Notes, rhs.Notes)) return false;
+            if (lhs.Type != rhs.Type) return false;
+            if (!lhs.AttractionRule.Equals(rhs.AttractionRule)) return false;
+            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (!string.Equals(lhs.DisplayName, rhs.DisplayName)) return false;
             return true;
         }
         
@@ -946,6 +1168,23 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             if (item.Color.TryGet(out var Coloritem))
             {
                 hash.Add(Coloritem);
+            }
+            if (item.Notes.TryGet(out var Notesitem))
+            {
+                hash.Add(Notesitem);
+            }
+            if (item.Type.TryGet(out var Typeitem))
+            {
+                hash.Add(Typeitem);
+            }
+            hash.Add(item.AttractionRule);
+            if (item.Name.TryGet(out var Nameitem))
+            {
+                hash.Add(Nameitem);
+            }
+            if (item.DisplayName.TryGet(out var DisplayNameitem))
+            {
+                hash.Add(DisplayNameitem);
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -975,6 +1214,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             foreach (var item in base.GetContainedFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.AttractionRule.FormKeyNullable.HasValue)
+            {
+                yield return FormLinkInformation.Factory(obj.AttractionRule);
             }
             yield break;
         }
@@ -1053,6 +1296,26 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             if ((copyMask?.GetShouldTranslate((int)Keyword_FieldIndex.Color) ?? true))
             {
                 item.Color = rhs.Color;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Keyword_FieldIndex.Notes) ?? true))
+            {
+                item.Notes = rhs.Notes;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Keyword_FieldIndex.Type) ?? true))
+            {
+                item.Type = rhs.Type;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Keyword_FieldIndex.AttractionRule) ?? true))
+            {
+                item.AttractionRule = new FormLinkNullable<IAttractionRuleGetter>(rhs.AttractionRule.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Keyword_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Keyword_FieldIndex.DisplayName) ?? true))
+            {
+                item.DisplayName = rhs.DisplayName;
             }
         }
         
@@ -1215,6 +1478,30 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 item: item.Color,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM));
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Notes,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.DNAM),
+                binaryType: StringBinaryType.NullTerminate);
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Keyword.TypeEnum>.Instance.WriteNullable(
+                writer,
+                item.Type,
+                length: 4,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM));
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.AttractionRule,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.DATA));
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate);
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.DisplayName,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NNAM),
+                binaryType: StringBinaryType.NullTerminate);
         }
 
         public void Write(
@@ -1312,6 +1599,44 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     item.Color = frame.ReadColor(ColorBinaryType.Alpha);
                     return (int)Keyword_FieldIndex.Color;
                 }
+                case RecordTypeInts.DNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Notes = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Keyword_FieldIndex.Notes;
+                }
+                case RecordTypeInts.TNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Type = EnumBinaryTranslation<Keyword.TypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return (int)Keyword_FieldIndex.Type;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.AttractionRule = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return (int)Keyword_FieldIndex.AttractionRule;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Keyword_FieldIndex.Name;
+                }
+                case RecordTypeInts.NNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DisplayName = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Keyword_FieldIndex.DisplayName;
+                }
                 default:
                     return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
@@ -1354,6 +1679,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => KeywordCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => KeywordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1369,6 +1695,26 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Color
         private int? _ColorLocation;
         public Color? Color => _ColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default(Color?);
+        #endregion
+        #region Notes
+        private int? _NotesLocation;
+        public String? Notes => _NotesLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NotesLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #endregion
+        #region Type
+        private int? _TypeLocation;
+        public Keyword.TypeEnum? Type => _TypeLocation.HasValue ? (Keyword.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TypeLocation!.Value, _package.MetaData.Constants)) : default(Keyword.TypeEnum?);
+        #endregion
+        #region AttractionRule
+        private int? _AttractionRuleLocation;
+        public FormLinkNullable<IAttractionRuleGetter> AttractionRule => _AttractionRuleLocation.HasValue ? new FormLinkNullable<IAttractionRuleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AttractionRuleLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAttractionRuleGetter>.Null;
+        #endregion
+        #region Name
+        private int? _NameLocation;
+        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #endregion
+        #region DisplayName
+        private int? _DisplayNameLocation;
+        public String? DisplayName => _DisplayNameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DisplayNameLocation.Value, _package.MetaData.Constants)) : default(string?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1440,6 +1786,31 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 {
                     _ColorLocation = (stream.Position - offset);
                     return (int)Keyword_FieldIndex.Color;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    _NotesLocation = (stream.Position - offset);
+                    return (int)Keyword_FieldIndex.Notes;
+                }
+                case RecordTypeInts.TNAM:
+                {
+                    _TypeLocation = (stream.Position - offset);
+                    return (int)Keyword_FieldIndex.Type;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    _AttractionRuleLocation = (stream.Position - offset);
+                    return (int)Keyword_FieldIndex.AttractionRule;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)Keyword_FieldIndex.Name;
+                }
+                case RecordTypeInts.NNAM:
+                {
+                    _DisplayNameLocation = (stream.Position - offset);
+                    return (int)Keyword_FieldIndex.DisplayName;
                 }
                 default:
                     return base.FillRecordType(

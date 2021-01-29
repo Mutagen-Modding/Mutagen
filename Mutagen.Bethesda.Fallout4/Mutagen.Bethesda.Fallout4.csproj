@@ -47,6 +47,9 @@
     <Compile Include="Records\Major Records\GameSettingUInt.cs">
       <DependentUpon>GameSetting.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Keyword.cs">
+      <DependentUpon>Keyword.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\ProtocolDefinition_Fallout4.cs" />
     <Compile Include="Records\Fallout4MajorRecord.cs">
       <DependentUpon>Fallout4MajorRecord.xml</DependentUpon>
@@ -89,9 +92,6 @@
     </Compile>
     <Compile Include="Records\TypeSolidifier_Generated.cs" />
     <Compile Include="Records\LinkCacheMixIns_Generated.cs" />
-    <Compile Include="Records\Major Records\Keyword_Generated.cs">
-      <DependentUpon>Keyword.xml</DependentUpon>
-    </Compile>
     <Compile Include="Interfaces\IKeywordLinkedReference_Generated.cs" />
     <Compile Include="Interfaces\LinkInterfaceMapping_Generated.cs" />
     <Compile Include="Records\Major Records\GameSettingUInt_Generated.cs">
@@ -99,6 +99,12 @@
     </Compile>
     <Compile Include="Records\TransientType_Generated.cs">
       <DependentUpon>Fallout4ModHeader.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AttractionRule_Generated.cs">
+      <DependentUpon>AttractionRule.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Keyword_Generated.cs">
+      <DependentUpon>Keyword.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

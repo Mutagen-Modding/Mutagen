@@ -7,6 +7,30 @@ namespace Mutagen.Bethesda.Fallout4
     {
         #region Normal
         /// <summary>
+        /// Scope a load order query to AttractionRule
+        /// </summary>
+        /// <param name="listings">ModListings to query</param>
+        /// <returns>A typed object to do further queries on AttractionRule</returns>
+        public static TypedLoadOrderAccess<IFallout4Mod, IAttractionRule, IAttractionRuleGetter> AttractionRule(this IEnumerable<IModListing<IFallout4ModGetter>> listings)
+        {
+            return new TypedLoadOrderAccess<IFallout4Mod, IAttractionRule, IAttractionRuleGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<IAttractionRuleGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IFallout4Mod, IFallout4ModGetter, IAttractionRule, IAttractionRuleGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to AttractionRule
+        /// </summary>
+        /// <param name="mods">Mods to query</param>
+        /// <returns>A typed object to do further queries on AttractionRule</returns>
+        public static TypedLoadOrderAccess<IFallout4Mod, IAttractionRule, IAttractionRuleGetter> AttractionRule(this IEnumerable<IFallout4ModGetter> mods)
+        {
+            return new TypedLoadOrderAccess<IFallout4Mod, IAttractionRule, IAttractionRuleGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<IAttractionRuleGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IFallout4Mod, IFallout4ModGetter, IAttractionRule, IAttractionRuleGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
         /// Scope a load order query to Fallout4MajorRecord
         /// </summary>
         /// <param name="listings">ModListings to query</param>

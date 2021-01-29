@@ -40,6 +40,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             _GameSettings_Object = new Group<GameSetting>(this);
             _Keywords_Object = new Group<Keyword>(this);
+            _AttractionRules_Object = new Group<AttractionRule>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -65,6 +66,13 @@ namespace Mutagen.Bethesda.Fallout4
         public Group<Keyword> Keywords => _Keywords_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IKeywordGetter> IFallout4ModGetter.Keywords => _Keywords_Object;
+        #endregion
+        #region AttractionRules
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<AttractionRule> _AttractionRules_Object;
+        public Group<AttractionRule> AttractionRules => _AttractionRules_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IAttractionRuleGetter> IFallout4ModGetter.AttractionRules => _AttractionRules_Object;
         #endregion
 
         #region To String
@@ -107,16 +115,19 @@ namespace Mutagen.Bethesda.Fallout4
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(initialValue, new Fallout4ModHeader.Mask<TItem>(initialValue));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Keywords = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.AttractionRules = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
                 TItem ModHeader,
                 TItem GameSettings,
-                TItem Keywords)
+                TItem Keywords,
+                TItem AttractionRules)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
                 this.Keywords = new MaskItem<TItem, Group.Mask<TItem>?>(Keywords, new Group.Mask<TItem>(Keywords));
+                this.AttractionRules = new MaskItem<TItem, Group.Mask<TItem>?>(AttractionRules, new Group.Mask<TItem>(AttractionRules));
             }
 
             #pragma warning disable CS8618
@@ -131,6 +142,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>? ModHeader { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? GameSettings { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Keywords { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? AttractionRules { get; set; }
             #endregion
 
             #region Equals
@@ -146,6 +158,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.ModHeader, rhs.ModHeader)) return false;
                 if (!object.Equals(this.GameSettings, rhs.GameSettings)) return false;
                 if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
+                if (!object.Equals(this.AttractionRules, rhs.AttractionRules)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -154,6 +167,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.ModHeader);
                 hash.Add(this.GameSettings);
                 hash.Add(this.Keywords);
+                hash.Add(this.AttractionRules);
                 return hash.ToHashCode();
             }
 
@@ -177,6 +191,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.Keywords.Overall)) return false;
                     if (this.Keywords.Specific != null && !this.Keywords.Specific.All(eval)) return false;
                 }
+                if (AttractionRules != null)
+                {
+                    if (!eval(this.AttractionRules.Overall)) return false;
+                    if (this.AttractionRules.Specific != null && !this.AttractionRules.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -199,6 +218,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.Keywords.Overall)) return true;
                     if (this.Keywords.Specific != null && this.Keywords.Specific.Any(eval)) return true;
                 }
+                if (AttractionRules != null)
+                {
+                    if (eval(this.AttractionRules.Overall)) return true;
+                    if (this.AttractionRules.Specific != null && this.AttractionRules.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -216,6 +240,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.ModHeader = this.ModHeader == null ? null : new MaskItem<R, Fallout4ModHeader.Mask<R>?>(eval(this.ModHeader.Overall), this.ModHeader.Specific?.Translate(eval));
                 obj.GameSettings = this.GameSettings == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.GameSettings.Overall), this.GameSettings.Specific?.Translate(eval));
                 obj.Keywords = this.Keywords == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Keywords.Overall), this.Keywords.Specific?.Translate(eval));
+                obj.AttractionRules = this.AttractionRules == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.AttractionRules.Overall), this.AttractionRules.Specific?.Translate(eval));
             }
             #endregion
 
@@ -250,6 +275,10 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         Keywords?.ToString(fg);
                     }
+                    if (printMask?.AttractionRules?.Overall ?? true)
+                    {
+                        AttractionRules?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -278,6 +307,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Fallout4ModHeader.ErrorMask?>? ModHeader;
             public MaskItem<Exception?, Group.ErrorMask<GameSetting.ErrorMask>?>? GameSettings;
             public MaskItem<Exception?, Group.ErrorMask<Keyword.ErrorMask>?>? Keywords;
+            public MaskItem<Exception?, Group.ErrorMask<AttractionRule.ErrorMask>?>? AttractionRules;
             #endregion
 
             #region IErrorMask
@@ -292,6 +322,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return GameSettings;
                     case Fallout4Mod_FieldIndex.Keywords:
                         return Keywords;
+                    case Fallout4Mod_FieldIndex.AttractionRules:
+                        return AttractionRules;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -310,6 +342,9 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4Mod_FieldIndex.Keywords:
                         this.Keywords = new MaskItem<Exception?, Group.ErrorMask<Keyword.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.AttractionRules:
+                        this.AttractionRules = new MaskItem<Exception?, Group.ErrorMask<AttractionRule.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -330,6 +365,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4Mod_FieldIndex.Keywords:
                         this.Keywords = (MaskItem<Exception?, Group.ErrorMask<Keyword.ErrorMask>?>?)obj;
                         break;
+                    case Fallout4Mod_FieldIndex.AttractionRules:
+                        this.AttractionRules = (MaskItem<Exception?, Group.ErrorMask<AttractionRule.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -341,6 +379,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (ModHeader != null) return true;
                 if (GameSettings != null) return true;
                 if (Keywords != null) return true;
+                if (AttractionRules != null) return true;
                 return false;
             }
             #endregion
@@ -378,6 +417,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ModHeader?.ToString(fg);
                 GameSettings?.ToString(fg);
                 Keywords?.ToString(fg);
+                AttractionRules?.ToString(fg);
             }
             #endregion
 
@@ -389,6 +429,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.ModHeader = this.ModHeader.Combine(rhs.ModHeader, (l, r) => l.Combine(r));
                 ret.GameSettings = this.GameSettings.Combine(rhs.GameSettings, (l, r) => l.Combine(r));
                 ret.Keywords = this.Keywords.Combine(rhs.Keywords, (l, r) => l.Combine(r));
+                ret.AttractionRules = this.AttractionRules.Combine(rhs.AttractionRules, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -415,6 +456,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Fallout4ModHeader.TranslationMask? ModHeader;
             public Group.TranslationMask<GameSetting.TranslationMask>? GameSettings;
             public Group.TranslationMask<Keyword.TranslationMask>? Keywords;
+            public Group.TranslationMask<AttractionRule.TranslationMask>? AttractionRules;
             #endregion
 
             #region Ctors
@@ -442,6 +484,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((ModHeader != null ? ModHeader.OnOverall : DefaultOn, ModHeader?.GetCrystal()));
                 ret.Add((GameSettings != null ? GameSettings.OnOverall : DefaultOn, GameSettings?.GetCrystal()));
                 ret.Add((Keywords != null ? Keywords.OnOverall : DefaultOn, Keywords?.GetCrystal()));
+                ret.Add((AttractionRules != null ? AttractionRules.OnOverall : DefaultOn, AttractionRules?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -484,6 +527,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID();
             _GameSettings_Object = new Group<GameSetting>(this);
             _Keywords_Object = new Group<Keyword>(this);
+            _AttractionRules_Object = new Group<AttractionRule>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -498,6 +542,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.Keywords.RecordCache.Set(rhsMod.Keywords.RecordCache.Items);
             }
+            if (mask?.AttractionRules ?? true)
+            {
+                this.AttractionRules.RecordCache.Set(rhsMod.AttractionRules.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -510,6 +558,7 @@ namespace Mutagen.Bethesda.Fallout4
             uint count = (uint)this.EnumerateMajorRecords().Count();
             count += GameSettings.RecordCache.Count > 0 ? 1 : default(uint);
             count += Keywords.RecordCache.Count > 0 ? 1 : default(uint);
+            count += AttractionRules.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -737,6 +786,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Fallout4ModHeader ModHeader { get; }
         new Group<GameSetting> GameSettings { get; }
         new Group<Keyword> Keywords { get; }
+        new Group<AttractionRule> AttractionRules { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -758,6 +808,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4ModHeaderGetter ModHeader { get; }
         IGroupGetter<IGameSettingGetter> GameSettings { get; }
         IGroupGetter<IKeywordGetter> Keywords { get; }
+        IGroupGetter<IAttractionRuleGetter> AttractionRules { get; }
 
     }
 
@@ -1280,6 +1331,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         ModHeader = 0,
         GameSettings = 1,
         Keywords = 2,
+        AttractionRules = 3,
     }
     #endregion
 
@@ -1297,9 +1349,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 3;
+        public const ushort FieldCount = 4;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -1370,12 +1422,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ClearPartial();
             item.GameSettings.Clear();
             item.Keywords.Clear();
+            item.AttractionRules.Clear();
         }
         
         #region Mutagen
         public void RemapLinks(IFallout4Mod obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             obj.ModHeader.RemapLinks(mapping);
+            obj.GameSettings.RemapLinks(mapping);
+            obj.Keywords.RemapLinks(mapping);
+            obj.AttractionRules.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IFallout4Mod obj)
@@ -1403,6 +1459,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             obj.GameSettings.Remove(keys);
             obj.Keywords.Remove(keys);
+            obj.AttractionRules.Remove(keys);
         }
         
         public void Remove(
@@ -1437,6 +1494,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "IKeyword":
                 case "IKeywordInternal":
                     obj.Keywords.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "AttractionRule":
+                case "IAttractionRuleGetter":
+                case "IAttractionRule":
+                case "IAttractionRuleInternal":
+                    obj.AttractionRules.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -1504,6 +1569,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ret.ModHeader = MaskItemExt.Factory(item.ModHeader.GetEqualsMask(rhs.ModHeader, include), include);
             ret.GameSettings = MaskItemExt.Factory(item.GameSettings.GetEqualsMask(rhs.GameSettings, include), include);
             ret.Keywords = MaskItemExt.Factory(item.Keywords.GetEqualsMask(rhs.Keywords, include), include);
+            ret.AttractionRules = MaskItemExt.Factory(item.AttractionRules.GetEqualsMask(rhs.AttractionRules, include), include);
         }
         
         public string ToString(
@@ -1562,6 +1628,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 item.Keywords?.ToString(fg, "Keywords");
             }
+            if (printMask?.AttractionRules?.Overall ?? true)
+            {
+                item.AttractionRules?.ToString(fg, "AttractionRules");
+            }
         }
         
         #region Equals and Hash
@@ -1574,6 +1644,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             if (!object.Equals(lhs.ModHeader, rhs.ModHeader)) return false;
             if (!object.Equals(lhs.GameSettings, rhs.GameSettings)) return false;
             if (!object.Equals(lhs.Keywords, rhs.Keywords)) return false;
+            if (!object.Equals(lhs.AttractionRules, rhs.AttractionRules)) return false;
             return true;
         }
         
@@ -1583,6 +1654,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             hash.Add(item.ModHeader);
             hash.Add(item.GameSettings);
             hash.Add(item.Keywords);
+            hash.Add(item.AttractionRules);
             return hash.ToHashCode();
         }
         
@@ -1610,6 +1682,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "IKeyword":
                 case "IKeywordInternal":
                     return obj.Keywords.RecordCache;
+                case "AttractionRule":
+                case "IAttractionRuleGetter":
+                case "IAttractionRule":
+                case "IAttractionRuleInternal":
+                    return obj.AttractionRules.RecordCache;
                 default:
                     throw new ArgumentException($"Unknown major record type: {typeof(TMajor)}");
             }
@@ -1630,10 +1707,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[2];
+            Stream[] outputStreams = new Stream[3];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, writer.MetaData.MasterReferences!, 0, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.Keywords, writer.MetaData.MasterReferences!, 1, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.AttractionRules, writer.MetaData.MasterReferences!, 2, outputStreams, param.StringsWriter));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -1687,6 +1765,27 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 yield return item;
             }
+            if (obj.GameSettings is IFormLinkContainerGetter GameSettingslinkCont)
+            {
+                foreach (var item in GameSettingslinkCont.ContainedFormLinks)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Keywords is IFormLinkContainerGetter KeywordslinkCont)
+            {
+                foreach (var item in KeywordslinkCont.ContainedFormLinks)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.AttractionRules is IFormLinkContainerGetter AttractionRuleslinkCont)
+            {
+                foreach (var item in AttractionRuleslinkCont.ContainedFormLinks)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -1697,6 +1796,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 yield return item;
             }
             foreach (var item in obj.Keywords.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.AttractionRules.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -1742,6 +1845,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "IKeyword":
                 case "IKeywordInternal":
                     foreach (var item in obj.Keywords.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "AttractionRule":
+                case "IAttractionRuleGetter":
+                case "IAttractionRule":
+                case "IAttractionRuleInternal":
+                    foreach (var item in obj.AttractionRules.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -1794,6 +1906,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Keywords.GetOrAddAsOverride(r),
                     duplicateInto: (m, r, e) => m.Keywords.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.AttractionRules)
+            {
+                yield return new ModContext<IFallout4Mod, IAttractionRuleInternal, IAttractionRuleGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.AttractionRules.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.AttractionRules.DuplicateInAsNewRecord(r, e));
             }
         }
         
@@ -1852,6 +1972,19 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Keywords.GetOrAddAsOverride(r),
                             duplicateInto: (m, r, e) => m.Keywords.DuplicateInAsNewRecord(r, e));
+                    }
+                    yield break;
+                case "AttractionRule":
+                case "IAttractionRuleGetter":
+                case "IAttractionRule":
+                case "IAttractionRuleInternal":
+                    foreach (var item in obj.AttractionRules)
+                    {
+                        yield return new ModContext<IFallout4Mod, IAttractionRuleInternal, IAttractionRuleGetter>(
+                            modKey: obj.ModKey,
+                            record: item,
+                            getOrAddAsOverride: (m, r) => m.AttractionRules.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.AttractionRules.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "IKeywordLinkedReference":
@@ -1943,6 +2076,26 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         rhs: rhs.Keywords,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.Keywords));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.AttractionRules) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.AttractionRules);
+                try
+                {
+                    item.AttractionRules.DeepCopyIn(
+                        rhs: rhs.AttractionRules,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.AttractionRules));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2046,6 +2199,7 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public bool GameSettings;
         public bool Keywords;
+        public bool AttractionRules;
         public GroupMask()
         {
         }
@@ -2053,6 +2207,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             GameSettings = defaultValue;
             Keywords = defaultValue;
+            AttractionRules = defaultValue;
         }
     }
 
@@ -2094,6 +2249,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)KeywordsItem).BinaryWriteTranslator).Write<IKeywordGetter>(
                         item: KeywordsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.AttractionRules ?? true)
+            {
+                var AttractionRulesItem = item.AttractionRules;
+                if (AttractionRulesItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)AttractionRulesItem).BinaryWriteTranslator).Write<IAttractionRuleGetter>(
+                        item: AttractionRulesItem,
                         writer: writer,
                         recordTypeConverter: recordTypeConverter);
                 }
@@ -2191,6 +2357,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         frame.Position += contentLength;
                     }
                     return (int)Fallout4Mod_FieldIndex.Keywords;
+                }
+                case RecordTypeInts.AORU:
+                {
+                    if (importMask?.AttractionRules ?? true)
+                    {
+                        item.AttractionRules.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.AttractionRules;
                 }
                 default:
                     frame.Position += contentLength;
@@ -2355,6 +2535,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         private IGroupGetter<IKeywordGetter>? _Keywords => _KeywordsLocation.HasValue ? GroupBinaryOverlay<IKeywordGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _KeywordsLocation!.Value.Min, _KeywordsLocation!.Value.Max), _package), _package) : default;
         public IGroupGetter<IKeywordGetter> Keywords => _Keywords ?? new Group<Keyword>(this);
         #endregion
+        #region AttractionRules
+        private RangeInt64? _AttractionRulesLocation;
+        private IGroupGetter<IAttractionRuleGetter>? _AttractionRules => _AttractionRulesLocation.HasValue ? GroupBinaryOverlay<IAttractionRuleGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _AttractionRulesLocation!.Value.Min, _AttractionRulesLocation!.Value.Max), _package), _package) : default;
+        public IGroupGetter<IAttractionRuleGetter> AttractionRules => _AttractionRules ?? new Group<AttractionRule>(this);
+        #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -2465,6 +2650,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 {
                     _KeywordsLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return (int)Fallout4Mod_FieldIndex.Keywords;
+                }
+                case RecordTypeInts.AORU:
+                {
+                    _AttractionRulesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return (int)Fallout4Mod_FieldIndex.AttractionRules;
                 }
                 default:
                     return default(int?);
