@@ -8,6 +8,7 @@
       <Group name="LocationReferenceTypes" refName="LocationReferenceType" />
       <Group name="Actions" refName="ActionRecord" />
       <Group name="Transforms" refName="Transform" />
+      <Group name="Components" refName="Component" />
     </Fields>
   </Object>
 </Loqui>
