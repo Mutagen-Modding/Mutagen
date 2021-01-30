@@ -21,6 +21,7 @@ namespace Mutagen.Bethesda.Tests
         {
             base.AddDynamicProcessorInstructions();
             AddDynamicProcessing(RecordTypes.GMST, ProcessGameSettings);
+            AddDynamicProcessing(RecordTypes.TRNS, ProcessTransforms);
         }
 
         protected override IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
@@ -47,6 +48,15 @@ namespace Mutagen.Bethesda.Tests
 
             if (!majorFrame.TryLocateSubrecordPinFrame(RecordTypes.DATA, out var dataRec)) return;
             ProcessZeroFloat(dataRec, fileOffset);
+        }
+
+        private void ProcessTransforms(
+            MajorRecordFrame majorFrame,
+            long fileOffset)
+        {
+            if (!majorFrame.TryLocateSubrecordPinFrame(RecordTypes.DATA, out var dataRec)) return;
+            int offset = 0;
+            ProcessZeroFloats(dataRec, fileOffset, ref offset, 9);
         }
 
         public void GameSettingStringHandler(
@@ -89,39 +99,39 @@ namespace Mutagen.Bethesda.Tests
                             new StringsAlignmentCustom("GMST", GameSettingStringHandler)
                         ));
                     break;
-                //case StringsSource.DL:
-                //    ProcessStringsFiles(
-                //        modKey,
-                //        dataFolder,
-                //        language,
-                //        StringsSource.DL,
-                //        strict: true,
-                //        RenumberStringsFileEntries(
-                //            modKey,
-                //            stream,
-                //            dataFolder,
-                //            language,
-                //            StringsSource.DL,
-                //            new RecordType[] { "SCRL", "DESC" },
-                //        ));
-                //    break;
-                //case StringsSource.IL:
-                //    ProcessStringsFiles(
-                //        modKey,
-                //        dataFolder,
-                //        language,
-                //        StringsSource.IL,
-                //        strict: true,
-                //        RenumberStringsFileEntries(
-                //            modKey,
-                //            stream,
-                //            dataFolder,
-                //            language,
-                //            StringsSource.IL,
-                //            new RecordType[] { "DIAL" },
-                //            new RecordType[] { "INFO", "NAM1" }
-                //        ));
-                //    break;
+                    //case StringsSource.DL:
+                    //    ProcessStringsFiles(
+                    //        modKey,
+                    //        dataFolder,
+                    //        language,
+                    //        StringsSource.DL,
+                    //        strict: true,
+                    //        RenumberStringsFileEntries(
+                    //            modKey,
+                    //            stream,
+                    //            dataFolder,
+                    //            language,
+                    //            StringsSource.DL,
+                    //            new RecordType[] { "SCRL", "DESC" },
+                    //        ));
+                    //    break;
+                    //case StringsSource.IL:
+                    //    ProcessStringsFiles(
+                    //        modKey,
+                    //        dataFolder,
+                    //        language,
+                    //        StringsSource.IL,
+                    //        strict: true,
+                    //        RenumberStringsFileEntries(
+                    //            modKey,
+                    //            stream,
+                    //            dataFolder,
+                    //            language,
+                    //            StringsSource.IL,
+                    //            new RecordType[] { "DIAL" },
+                    //            new RecordType[] { "INFO", "NAM1" }
+                    //        ));
+                    //    break;
             }
         }
 

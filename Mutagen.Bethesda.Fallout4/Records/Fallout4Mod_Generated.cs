@@ -42,6 +42,7 @@ namespace Mutagen.Bethesda.Fallout4
             _Keywords_Object = new Group<Keyword>(this);
             _LocationReferenceTypes_Object = new Group<LocationReferenceType>(this);
             _Actions_Object = new Group<ActionRecord>(this);
+            _Transforms_Object = new Group<Transform>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -81,6 +82,13 @@ namespace Mutagen.Bethesda.Fallout4
         public Group<ActionRecord> Actions => _Actions_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IActionRecordGetter> IFallout4ModGetter.Actions => _Actions_Object;
+        #endregion
+        #region Transforms
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<Transform> _Transforms_Object;
+        public Group<Transform> Transforms => _Transforms_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<ITransformGetter> IFallout4ModGetter.Transforms => _Transforms_Object;
         #endregion
 
         #region To String
@@ -125,6 +133,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Keywords = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.LocationReferenceTypes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Actions = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Transforms = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -132,13 +141,15 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem GameSettings,
                 TItem Keywords,
                 TItem LocationReferenceTypes,
-                TItem Actions)
+                TItem Actions,
+                TItem Transforms)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
                 this.Keywords = new MaskItem<TItem, Group.Mask<TItem>?>(Keywords, new Group.Mask<TItem>(Keywords));
                 this.LocationReferenceTypes = new MaskItem<TItem, Group.Mask<TItem>?>(LocationReferenceTypes, new Group.Mask<TItem>(LocationReferenceTypes));
                 this.Actions = new MaskItem<TItem, Group.Mask<TItem>?>(Actions, new Group.Mask<TItem>(Actions));
+                this.Transforms = new MaskItem<TItem, Group.Mask<TItem>?>(Transforms, new Group.Mask<TItem>(Transforms));
             }
 
             #pragma warning disable CS8618
@@ -155,6 +166,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Group.Mask<TItem>?>? Keywords { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? LocationReferenceTypes { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Actions { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Transforms { get; set; }
             #endregion
 
             #region Equals
@@ -172,6 +184,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
                 if (!object.Equals(this.LocationReferenceTypes, rhs.LocationReferenceTypes)) return false;
                 if (!object.Equals(this.Actions, rhs.Actions)) return false;
+                if (!object.Equals(this.Transforms, rhs.Transforms)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -182,6 +195,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Keywords);
                 hash.Add(this.LocationReferenceTypes);
                 hash.Add(this.Actions);
+                hash.Add(this.Transforms);
                 return hash.ToHashCode();
             }
 
@@ -215,6 +229,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.Actions.Overall)) return false;
                     if (this.Actions.Specific != null && !this.Actions.Specific.All(eval)) return false;
                 }
+                if (Transforms != null)
+                {
+                    if (!eval(this.Transforms.Overall)) return false;
+                    if (this.Transforms.Specific != null && !this.Transforms.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -247,6 +266,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.Actions.Overall)) return true;
                     if (this.Actions.Specific != null && this.Actions.Specific.Any(eval)) return true;
                 }
+                if (Transforms != null)
+                {
+                    if (eval(this.Transforms.Overall)) return true;
+                    if (this.Transforms.Specific != null && this.Transforms.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -266,6 +290,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Keywords = this.Keywords == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Keywords.Overall), this.Keywords.Specific?.Translate(eval));
                 obj.LocationReferenceTypes = this.LocationReferenceTypes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.LocationReferenceTypes.Overall), this.LocationReferenceTypes.Specific?.Translate(eval));
                 obj.Actions = this.Actions == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Actions.Overall), this.Actions.Specific?.Translate(eval));
+                obj.Transforms = this.Transforms == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Transforms.Overall), this.Transforms.Specific?.Translate(eval));
             }
             #endregion
 
@@ -308,6 +333,10 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         Actions?.ToString(fg);
                     }
+                    if (printMask?.Transforms?.Overall ?? true)
+                    {
+                        Transforms?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -338,6 +367,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Group.ErrorMask<Keyword.ErrorMask>?>? Keywords;
             public MaskItem<Exception?, Group.ErrorMask<LocationReferenceType.ErrorMask>?>? LocationReferenceTypes;
             public MaskItem<Exception?, Group.ErrorMask<ActionRecord.ErrorMask>?>? Actions;
+            public MaskItem<Exception?, Group.ErrorMask<Transform.ErrorMask>?>? Transforms;
             #endregion
 
             #region IErrorMask
@@ -356,6 +386,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return LocationReferenceTypes;
                     case Fallout4Mod_FieldIndex.Actions:
                         return Actions;
+                    case Fallout4Mod_FieldIndex.Transforms:
+                        return Transforms;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -380,6 +412,9 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4Mod_FieldIndex.Actions:
                         this.Actions = new MaskItem<Exception?, Group.ErrorMask<ActionRecord.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.Transforms:
+                        this.Transforms = new MaskItem<Exception?, Group.ErrorMask<Transform.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -406,6 +441,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4Mod_FieldIndex.Actions:
                         this.Actions = (MaskItem<Exception?, Group.ErrorMask<ActionRecord.ErrorMask>?>?)obj;
                         break;
+                    case Fallout4Mod_FieldIndex.Transforms:
+                        this.Transforms = (MaskItem<Exception?, Group.ErrorMask<Transform.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -419,6 +457,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Keywords != null) return true;
                 if (LocationReferenceTypes != null) return true;
                 if (Actions != null) return true;
+                if (Transforms != null) return true;
                 return false;
             }
             #endregion
@@ -458,6 +497,7 @@ namespace Mutagen.Bethesda.Fallout4
                 Keywords?.ToString(fg);
                 LocationReferenceTypes?.ToString(fg);
                 Actions?.ToString(fg);
+                Transforms?.ToString(fg);
             }
             #endregion
 
@@ -471,6 +511,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Keywords = this.Keywords.Combine(rhs.Keywords, (l, r) => l.Combine(r));
                 ret.LocationReferenceTypes = this.LocationReferenceTypes.Combine(rhs.LocationReferenceTypes, (l, r) => l.Combine(r));
                 ret.Actions = this.Actions.Combine(rhs.Actions, (l, r) => l.Combine(r));
+                ret.Transforms = this.Transforms.Combine(rhs.Transforms, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -499,6 +540,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Group.TranslationMask<Keyword.TranslationMask>? Keywords;
             public Group.TranslationMask<LocationReferenceType.TranslationMask>? LocationReferenceTypes;
             public Group.TranslationMask<ActionRecord.TranslationMask>? Actions;
+            public Group.TranslationMask<Transform.TranslationMask>? Transforms;
             #endregion
 
             #region Ctors
@@ -528,6 +570,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Keywords != null ? Keywords.OnOverall : DefaultOn, Keywords?.GetCrystal()));
                 ret.Add((LocationReferenceTypes != null ? LocationReferenceTypes.OnOverall : DefaultOn, LocationReferenceTypes?.GetCrystal()));
                 ret.Add((Actions != null ? Actions.OnOverall : DefaultOn, Actions?.GetCrystal()));
+                ret.Add((Transforms != null ? Transforms.OnOverall : DefaultOn, Transforms?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -572,6 +615,7 @@ namespace Mutagen.Bethesda.Fallout4
             _Keywords_Object = new Group<Keyword>(this);
             _LocationReferenceTypes_Object = new Group<LocationReferenceType>(this);
             _Actions_Object = new Group<ActionRecord>(this);
+            _Transforms_Object = new Group<Transform>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -594,6 +638,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.Actions.RecordCache.Set(rhsMod.Actions.RecordCache.Items);
             }
+            if (mask?.Transforms ?? true)
+            {
+                this.Transforms.RecordCache.Set(rhsMod.Transforms.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -608,6 +656,7 @@ namespace Mutagen.Bethesda.Fallout4
             count += Keywords.RecordCache.Count > 0 ? 1 : default(uint);
             count += LocationReferenceTypes.RecordCache.Count > 0 ? 1 : default(uint);
             count += Actions.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Transforms.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -837,6 +886,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Group<Keyword> Keywords { get; }
         new Group<LocationReferenceType> LocationReferenceTypes { get; }
         new Group<ActionRecord> Actions { get; }
+        new Group<Transform> Transforms { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -860,6 +910,7 @@ namespace Mutagen.Bethesda.Fallout4
         IGroupGetter<IKeywordGetter> Keywords { get; }
         IGroupGetter<ILocationReferenceTypeGetter> LocationReferenceTypes { get; }
         IGroupGetter<IActionRecordGetter> Actions { get; }
+        IGroupGetter<ITransformGetter> Transforms { get; }
 
     }
 
@@ -1384,6 +1435,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         Keywords = 2,
         LocationReferenceTypes = 3,
         Actions = 4,
+        Transforms = 5,
     }
     #endregion
 
@@ -1401,9 +1453,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 5;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 5;
+        public const ushort FieldCount = 6;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -1476,6 +1528,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             item.Keywords.Clear();
             item.LocationReferenceTypes.Clear();
             item.Actions.Clear();
+            item.Transforms.Clear();
         }
         
         #region Mutagen
@@ -1486,6 +1539,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             obj.Keywords.RemapLinks(mapping);
             obj.LocationReferenceTypes.RemapLinks(mapping);
             obj.Actions.RemapLinks(mapping);
+            obj.Transforms.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IFallout4Mod obj)
@@ -1515,6 +1569,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             obj.Keywords.Remove(keys);
             obj.LocationReferenceTypes.Remove(keys);
             obj.Actions.Remove(keys);
+            obj.Transforms.Remove(keys);
         }
         
         public void Remove(
@@ -1565,6 +1620,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "IActionRecord":
                 case "IActionRecordInternal":
                     obj.Actions.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Transform":
+                case "ITransformGetter":
+                case "ITransform":
+                case "ITransformInternal":
+                    obj.Transforms.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -1642,6 +1705,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ret.Keywords = MaskItemExt.Factory(item.Keywords.GetEqualsMask(rhs.Keywords, include), include);
             ret.LocationReferenceTypes = MaskItemExt.Factory(item.LocationReferenceTypes.GetEqualsMask(rhs.LocationReferenceTypes, include), include);
             ret.Actions = MaskItemExt.Factory(item.Actions.GetEqualsMask(rhs.Actions, include), include);
+            ret.Transforms = MaskItemExt.Factory(item.Transforms.GetEqualsMask(rhs.Transforms, include), include);
         }
         
         public string ToString(
@@ -1708,6 +1772,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 item.Actions?.ToString(fg, "Actions");
             }
+            if (printMask?.Transforms?.Overall ?? true)
+            {
+                item.Transforms?.ToString(fg, "Transforms");
+            }
         }
         
         #region Equals and Hash
@@ -1722,6 +1790,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             if (!object.Equals(lhs.Keywords, rhs.Keywords)) return false;
             if (!object.Equals(lhs.LocationReferenceTypes, rhs.LocationReferenceTypes)) return false;
             if (!object.Equals(lhs.Actions, rhs.Actions)) return false;
+            if (!object.Equals(lhs.Transforms, rhs.Transforms)) return false;
             return true;
         }
         
@@ -1733,6 +1802,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             hash.Add(item.Keywords);
             hash.Add(item.LocationReferenceTypes);
             hash.Add(item.Actions);
+            hash.Add(item.Transforms);
             return hash.ToHashCode();
         }
         
@@ -1770,6 +1840,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "IActionRecord":
                 case "IActionRecordInternal":
                     return obj.Actions.RecordCache;
+                case "Transform":
+                case "ITransformGetter":
+                case "ITransform":
+                case "ITransformInternal":
+                    return obj.Transforms.RecordCache;
                 default:
                     throw new ArgumentException($"Unknown major record type: {typeof(TMajor)}");
             }
@@ -1790,12 +1865,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[4];
+            Stream[] outputStreams = new Stream[5];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, writer.MetaData.MasterReferences!, 0, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.Keywords, writer.MetaData.MasterReferences!, 1, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.LocationReferenceTypes, writer.MetaData.MasterReferences!, 2, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.Actions, writer.MetaData.MasterReferences!, 3, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Transforms, writer.MetaData.MasterReferences!, 4, outputStreams, param.StringsWriter));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -1877,6 +1953,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     yield return item;
                 }
             }
+            if (obj.Transforms is IFormLinkContainerGetter TransformslinkCont)
+            {
+                foreach (var item in TransformslinkCont.ContainedFormLinks)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -1895,6 +1978,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 yield return item;
             }
             foreach (var item in obj.Actions.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Transforms.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -1958,6 +2045,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "IActionRecord":
                 case "IActionRecordInternal":
                     foreach (var item in obj.Actions.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Transform":
+                case "ITransformGetter":
+                case "ITransform":
+                case "ITransformInternal":
+                    foreach (var item in obj.Transforms.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -2061,6 +2157,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     getOrAddAsOverride: (m, r) => m.Actions.GetOrAddAsOverride(r),
                     duplicateInto: (m, r, e) => m.Actions.DuplicateInAsNewRecord(r, e));
             }
+            foreach (var item in obj.Transforms)
+            {
+                yield return new ModContext<IFallout4Mod, ITransformInternal, ITransformGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.Transforms.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.Transforms.DuplicateInAsNewRecord(r, e));
+            }
         }
         
         public IEnumerable<IModContext<IFallout4Mod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
@@ -2144,6 +2248,19 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Actions.GetOrAddAsOverride(r),
                             duplicateInto: (m, r, e) => m.Actions.DuplicateInAsNewRecord(r, e));
+                    }
+                    yield break;
+                case "Transform":
+                case "ITransformGetter":
+                case "ITransform":
+                case "ITransformInternal":
+                    foreach (var item in obj.Transforms)
+                    {
+                        yield return new ModContext<IFallout4Mod, ITransformInternal, ITransformGetter>(
+                            modKey: obj.ModKey,
+                            record: item,
+                            getOrAddAsOverride: (m, r) => m.Transforms.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.Transforms.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
                 case "IIdleRelation":
@@ -2312,6 +2429,26 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Transforms) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.Transforms);
+                try
+                {
+                    item.Transforms.DeepCopyIn(
+                        rhs: rhs.Transforms,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.Transforms));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -2406,6 +2543,7 @@ namespace Mutagen.Bethesda.Fallout4
         public bool Keywords;
         public bool LocationReferenceTypes;
         public bool Actions;
+        public bool Transforms;
         public GroupMask()
         {
         }
@@ -2415,6 +2553,7 @@ namespace Mutagen.Bethesda.Fallout4
             Keywords = defaultValue;
             LocationReferenceTypes = defaultValue;
             Actions = defaultValue;
+            Transforms = defaultValue;
         }
     }
 
@@ -2478,6 +2617,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)ActionsItem).BinaryWriteTranslator).Write<IActionRecordGetter>(
                         item: ActionsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.Transforms ?? true)
+            {
+                var TransformsItem = item.Transforms;
+                if (TransformsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)TransformsItem).BinaryWriteTranslator).Write<ITransformGetter>(
+                        item: TransformsItem,
                         writer: writer,
                         recordTypeConverter: recordTypeConverter);
                 }
@@ -2603,6 +2753,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         frame.Position += contentLength;
                     }
                     return (int)Fallout4Mod_FieldIndex.Actions;
+                }
+                case RecordTypeInts.TRNS:
+                {
+                    if (importMask?.Transforms ?? true)
+                    {
+                        item.Transforms.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.Transforms;
                 }
                 default:
                     frame.Position += contentLength;
@@ -2777,6 +2941,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         private IGroupGetter<IActionRecordGetter>? _Actions => _ActionsLocation.HasValue ? GroupBinaryOverlay<IActionRecordGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _ActionsLocation!.Value.Min, _ActionsLocation!.Value.Max), _package), _package) : default;
         public IGroupGetter<IActionRecordGetter> Actions => _Actions ?? new Group<ActionRecord>(this);
         #endregion
+        #region Transforms
+        private RangeInt64? _TransformsLocation;
+        private IGroupGetter<ITransformGetter>? _Transforms => _TransformsLocation.HasValue ? GroupBinaryOverlay<ITransformGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _TransformsLocation!.Value.Min, _TransformsLocation!.Value.Max), _package), _package) : default;
+        public IGroupGetter<ITransformGetter> Transforms => _Transforms ?? new Group<Transform>(this);
+        #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -2897,6 +3066,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 {
                     _ActionsLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return (int)Fallout4Mod_FieldIndex.Actions;
+                }
+                case RecordTypeInts.TRNS:
+                {
+                    _TransformsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return (int)Fallout4Mod_FieldIndex.Transforms;
                 }
                 default:
                     return default(int?);

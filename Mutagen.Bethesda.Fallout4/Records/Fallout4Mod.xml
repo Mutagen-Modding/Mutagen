@@ -7,6 +7,7 @@
       <Group name="Keywords" refName="Keyword" />
       <Group name="LocationReferenceTypes" refName="LocationReferenceType" />
       <Group name="Actions" refName="ActionRecord" />
+      <Group name="Transforms" refName="Transform" />
     </Fields>
   </Object>
 </Loqui>

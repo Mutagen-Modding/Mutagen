@@ -23,6 +23,7 @@
   <ItemGroup>
     <Compile Include="Constants.cs" />
     <Compile Include="Enums\GroupTypeEnum.cs" />
+    <Compile Include="Interfaces\IPositionRotation.cs" />
     <Compile Include="Records\Group.cs">
       <DependentUpon>Group.xml</DependentUpon>
     </Compile>
@@ -52,6 +53,9 @@
     </Compile>
     <Compile Include="Records\Major Records\Keyword.cs">
       <DependentUpon>Keyword.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Transform.cs">
+      <DependentUpon>Transform.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\ProtocolDefinition_Fallout4.cs" />
     <Compile Include="Records\Fallout4MajorRecord.cs">
@@ -116,6 +120,9 @@
     <Compile Include="Interfaces\IIdleRelation_Generated.cs" />
     <Compile Include="Records\Major Records\ActionRecord_Generated.cs">
       <DependentUpon>ActionRecord.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Transform_Generated.cs">
+      <DependentUpon>Transform.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

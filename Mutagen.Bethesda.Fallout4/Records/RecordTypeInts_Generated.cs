@@ -24,6 +24,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public const int SNAM = 0x4D414E53;
         public const int TES4 = 0x34534554;
         public const int TNAM = 0x4D414E54;
+        public const int TRNS = 0x534E5254;
         public const int XXXX = 0x58585858;
     }
 }
