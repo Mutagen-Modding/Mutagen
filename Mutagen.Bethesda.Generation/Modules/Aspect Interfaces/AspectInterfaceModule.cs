@@ -13,15 +13,18 @@ namespace Mutagen.Bethesda.Generation
     public class AspectInterfaceModule : GenerationModule
     {
         public List<AspectInterfaceDefinition> Definitions = new List<AspectInterfaceDefinition>();
+        public static Dictionary<ProtocolKey, Dictionary<AspectInterfaceDefinition, List<ObjectGeneration>>> ObjectMappings = new Dictionary<ProtocolKey, Dictionary<AspectInterfaceDefinition, List<ObjectGeneration>>>();
 
         public AspectInterfaceModule()
         {
             // Keyworded
-            Definitions.AddReturn(new AspectInterfaceDefinition(o =>
-            {
-                if (!(o.Fields.FirstOrDefault(x => x.Name == "Keywords") is ContainerType cont)) return false;
-                return typeof(FormLinkType).Equals(cont.SubTypeGeneration.GetType());
-            })
+            Definitions.AddReturn(new AspectInterfaceDefinition(
+                "IKeyworded",
+                o =>
+                {
+                    if (!(o.Fields.FirstOrDefault(x => x.Name == "Keywords") is ContainerType cont)) return false;
+                    return typeof(FormLinkType).Equals(cont.SubTypeGeneration.GetType());
+                })
             {
                 Interfaces = new List<(LoquiInterfaceDefinitionType Type, string Interface)>()
                 {
@@ -49,6 +52,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 if (!def.Test(obj)) continue;
                 def.Interfaces.ForEach(x => obj.Interfaces.Add(x.Type, x.Interface));
+                ObjectMappings.GetOrAdd(obj.ProtoGen.Protocol).GetOrAdd(def).Add(obj);
             }
         }
 
