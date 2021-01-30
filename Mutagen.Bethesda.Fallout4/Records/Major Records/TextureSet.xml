@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="TextureSet" recordType="TXST" objType="Record" baseClass="Fallout4MajorRecord" GUID="526a513c-010f-4dba-afef-b371137e2a21" ID="42">
+    <Interface>IObjectBounded</Interface>
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <String name="Diffuse" recordType="TX00" />
+      <String name="NormalOrGloss" recordType="TX01" />
+      <String name="Glow" recordType="TX03" />
+      <String name="Height" recordType="TX04" />
+      <String name="Environment" recordType="TX05" />
+      <String name="Wrinkles" recordType="TX02" />
+      <String name="Multilayer" recordType="TX06" />
+      <String name="SmoothSpec" recordType="TX07" />
+      <RefDirect name="Decal" refName="Decal" />
+      <Enum name="Flags" enumName="TextureSet.Flag" byteLength="2" recordType="DNAM" nullable="false" />
+      <String name="Material" recordType="MNAM" />
+    </Fields>
+    <LinkInterface>IObjectId</LinkInterface>
+  </Object>
+</Loqui>

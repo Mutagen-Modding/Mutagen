@@ -52,8 +52,8 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IComponentGetter.Name => this.Name;
         #endregion
-        #region SoundCrafting
-        public FormLinkNullable<ISoundDescriptorGetter> SoundCrafting { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
+        #region CraftingSound
+        public FormLinkNullable<ISoundDescriptorGetter> CraftingSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region AutoCalcValue
         public Int32? AutoCalcValue { get; set; }
@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.Name = initialValue;
-                this.SoundCrafting = initialValue;
+                this.CraftingSound = initialValue;
                 this.AutoCalcValue = initialValue;
                 this.ScrapItem = initialValue;
                 this.ModScrapScalar = initialValue;
@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Version2,
                 TItem ObjectBounds,
                 TItem Name,
-                TItem SoundCrafting,
+                TItem CraftingSound,
                 TItem AutoCalcValue,
                 TItem ScrapItem,
                 TItem ModScrapScalar)
@@ -137,7 +137,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.Name = Name;
-                this.SoundCrafting = SoundCrafting;
+                this.CraftingSound = CraftingSound;
                 this.AutoCalcValue = AutoCalcValue;
                 this.ScrapItem = ScrapItem;
                 this.ModScrapScalar = ModScrapScalar;
@@ -154,7 +154,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Members
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
             public TItem Name;
-            public TItem SoundCrafting;
+            public TItem CraftingSound;
             public TItem AutoCalcValue;
             public TItem ScrapItem;
             public TItem ModScrapScalar;
@@ -173,7 +173,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
-                if (!object.Equals(this.SoundCrafting, rhs.SoundCrafting)) return false;
+                if (!object.Equals(this.CraftingSound, rhs.CraftingSound)) return false;
                 if (!object.Equals(this.AutoCalcValue, rhs.AutoCalcValue)) return false;
                 if (!object.Equals(this.ScrapItem, rhs.ScrapItem)) return false;
                 if (!object.Equals(this.ModScrapScalar, rhs.ModScrapScalar)) return false;
@@ -184,7 +184,7 @@ namespace Mutagen.Bethesda.Fallout4
                 var hash = new HashCode();
                 hash.Add(this.ObjectBounds);
                 hash.Add(this.Name);
-                hash.Add(this.SoundCrafting);
+                hash.Add(this.CraftingSound);
                 hash.Add(this.AutoCalcValue);
                 hash.Add(this.ScrapItem);
                 hash.Add(this.ModScrapScalar);
@@ -204,7 +204,7 @@ namespace Mutagen.Bethesda.Fallout4
                     if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
                 }
                 if (!eval(this.Name)) return false;
-                if (!eval(this.SoundCrafting)) return false;
+                if (!eval(this.CraftingSound)) return false;
                 if (!eval(this.AutoCalcValue)) return false;
                 if (!eval(this.ScrapItem)) return false;
                 if (!eval(this.ModScrapScalar)) return false;
@@ -222,7 +222,7 @@ namespace Mutagen.Bethesda.Fallout4
                     if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
                 }
                 if (eval(this.Name)) return true;
-                if (eval(this.SoundCrafting)) return true;
+                if (eval(this.CraftingSound)) return true;
                 if (eval(this.AutoCalcValue)) return true;
                 if (eval(this.ScrapItem)) return true;
                 if (eval(this.ModScrapScalar)) return true;
@@ -243,7 +243,7 @@ namespace Mutagen.Bethesda.Fallout4
                 base.Translate_InternalFill(obj, eval);
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
                 obj.Name = eval(this.Name);
-                obj.SoundCrafting = eval(this.SoundCrafting);
+                obj.CraftingSound = eval(this.CraftingSound);
                 obj.AutoCalcValue = eval(this.AutoCalcValue);
                 obj.ScrapItem = eval(this.ScrapItem);
                 obj.ModScrapScalar = eval(this.ModScrapScalar);
@@ -277,9 +277,9 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         fg.AppendItem(Name, "Name");
                     }
-                    if (printMask?.SoundCrafting ?? true)
+                    if (printMask?.CraftingSound ?? true)
                     {
-                        fg.AppendItem(SoundCrafting, "SoundCrafting");
+                        fg.AppendItem(CraftingSound, "CraftingSound");
                     }
                     if (printMask?.AutoCalcValue ?? true)
                     {
@@ -307,7 +307,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Members
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
             public Exception? Name;
-            public Exception? SoundCrafting;
+            public Exception? CraftingSound;
             public Exception? AutoCalcValue;
             public Exception? ScrapItem;
             public Exception? ModScrapScalar;
@@ -323,8 +323,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return ObjectBounds;
                     case Component_FieldIndex.Name:
                         return Name;
-                    case Component_FieldIndex.SoundCrafting:
-                        return SoundCrafting;
+                    case Component_FieldIndex.CraftingSound:
+                        return CraftingSound;
                     case Component_FieldIndex.AutoCalcValue:
                         return AutoCalcValue;
                     case Component_FieldIndex.ScrapItem:
@@ -347,8 +347,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case Component_FieldIndex.Name:
                         this.Name = ex;
                         break;
-                    case Component_FieldIndex.SoundCrafting:
-                        this.SoundCrafting = ex;
+                    case Component_FieldIndex.CraftingSound:
+                        this.CraftingSound = ex;
                         break;
                     case Component_FieldIndex.AutoCalcValue:
                         this.AutoCalcValue = ex;
@@ -376,8 +376,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case Component_FieldIndex.Name:
                         this.Name = (Exception?)obj;
                         break;
-                    case Component_FieldIndex.SoundCrafting:
-                        this.SoundCrafting = (Exception?)obj;
+                    case Component_FieldIndex.CraftingSound:
+                        this.CraftingSound = (Exception?)obj;
                         break;
                     case Component_FieldIndex.AutoCalcValue:
                         this.AutoCalcValue = (Exception?)obj;
@@ -399,7 +399,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Overall != null) return true;
                 if (ObjectBounds != null) return true;
                 if (Name != null) return true;
-                if (SoundCrafting != null) return true;
+                if (CraftingSound != null) return true;
                 if (AutoCalcValue != null) return true;
                 if (ScrapItem != null) return true;
                 if (ModScrapScalar != null) return true;
@@ -440,7 +440,7 @@ namespace Mutagen.Bethesda.Fallout4
                 base.ToString_FillInternal(fg);
                 ObjectBounds?.ToString(fg);
                 fg.AppendItem(Name, "Name");
-                fg.AppendItem(SoundCrafting, "SoundCrafting");
+                fg.AppendItem(CraftingSound, "CraftingSound");
                 fg.AppendItem(AutoCalcValue, "AutoCalcValue");
                 fg.AppendItem(ScrapItem, "ScrapItem");
                 fg.AppendItem(ModScrapScalar, "ModScrapScalar");
@@ -454,7 +454,7 @@ namespace Mutagen.Bethesda.Fallout4
                 var ret = new ErrorMask();
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.SoundCrafting = this.SoundCrafting.Combine(rhs.SoundCrafting);
+                ret.CraftingSound = this.CraftingSound.Combine(rhs.CraftingSound);
                 ret.AutoCalcValue = this.AutoCalcValue.Combine(rhs.AutoCalcValue);
                 ret.ScrapItem = this.ScrapItem.Combine(rhs.ScrapItem);
                 ret.ModScrapScalar = this.ModScrapScalar.Combine(rhs.ModScrapScalar);
@@ -482,7 +482,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Members
             public ObjectBounds.TranslationMask? ObjectBounds;
             public bool Name;
-            public bool SoundCrafting;
+            public bool CraftingSound;
             public bool AutoCalcValue;
             public bool ScrapItem;
             public bool ModScrapScalar;
@@ -495,7 +495,7 @@ namespace Mutagen.Bethesda.Fallout4
                 : base(defaultOn, onOverall)
             {
                 this.Name = defaultOn;
-                this.SoundCrafting = defaultOn;
+                this.CraftingSound = defaultOn;
                 this.AutoCalcValue = defaultOn;
                 this.ScrapItem = defaultOn;
                 this.ModScrapScalar = defaultOn;
@@ -508,7 +508,7 @@ namespace Mutagen.Bethesda.Fallout4
                 base.GetCrystal(ret);
                 ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((Name, null));
-                ret.Add((SoundCrafting, null));
+                ret.Add((CraftingSound, null));
                 ret.Add((AutoCalcValue, null));
                 ret.Add((ScrapItem, null));
                 ret.Add((ModScrapScalar, null));
@@ -626,7 +626,7 @@ namespace Mutagen.Bethesda.Fallout4
     {
         new ObjectBounds ObjectBounds { get; set; }
         new String? Name { get; set; }
-        new FormLinkNullable<ISoundDescriptorGetter> SoundCrafting { get; set; }
+        new FormLinkNullable<ISoundDescriptorGetter> CraftingSound { get; set; }
         new Int32? AutoCalcValue { get; set; }
         new FormLinkNullable<IMiscItemGetter> ScrapItem { get; set; }
         new FormLinkNullable<IGlobalGetter> ModScrapScalar { get; set; }
@@ -649,7 +649,7 @@ namespace Mutagen.Bethesda.Fallout4
         static new ILoquiRegistration Registration => Component_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }
         String? Name { get; }
-        FormLinkNullable<ISoundDescriptorGetter> SoundCrafting { get; }
+        FormLinkNullable<ISoundDescriptorGetter> CraftingSound { get; }
         Int32? AutoCalcValue { get; }
         FormLinkNullable<IMiscItemGetter> ScrapItem { get; }
         FormLinkNullable<IGlobalGetter> ModScrapScalar { get; }
@@ -817,7 +817,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         Version2 = 5,
         ObjectBounds = 6,
         Name = 7,
-        SoundCrafting = 8,
+        CraftingSound = 8,
         AutoCalcValue = 9,
         ScrapItem = 10,
         ModScrapScalar = 11,
@@ -911,7 +911,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ClearPartial();
             item.ObjectBounds.Clear();
             item.Name = default;
-            item.SoundCrafting = FormLinkNullable<ISoundDescriptorGetter>.Null;
+            item.CraftingSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
             item.AutoCalcValue = default;
             item.ScrapItem = FormLinkNullable<IMiscItemGetter>.Null;
             item.ModScrapScalar = FormLinkNullable<IGlobalGetter>.Null;
@@ -932,7 +932,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void RemapLinks(IComponent obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.SoundCrafting = obj.SoundCrafting.Relink(mapping);
+            obj.CraftingSound = obj.CraftingSound.Relink(mapping);
             obj.ScrapItem = obj.ScrapItem.Relink(mapping);
             obj.ModScrapScalar = obj.ModScrapScalar.Relink(mapping);
         }
@@ -1005,7 +1005,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             if (rhs == null) return;
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
             ret.Name = string.Equals(item.Name, rhs.Name);
-            ret.SoundCrafting = item.SoundCrafting.Equals(rhs.SoundCrafting);
+            ret.CraftingSound = item.CraftingSound.Equals(rhs.CraftingSound);
             ret.AutoCalcValue = item.AutoCalcValue == rhs.AutoCalcValue;
             ret.ScrapItem = item.ScrapItem.Equals(rhs.ScrapItem);
             ret.ModScrapScalar = item.ModScrapScalar.Equals(rhs.ModScrapScalar);
@@ -1069,9 +1069,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 fg.AppendItem(NameItem, "Name");
             }
-            if (printMask?.SoundCrafting ?? true)
+            if (printMask?.CraftingSound ?? true)
             {
-                fg.AppendItem(item.SoundCrafting.FormKeyNullable, "SoundCrafting");
+                fg.AppendItem(item.CraftingSound.FormKeyNullable, "CraftingSound");
             }
             if ((printMask?.AutoCalcValue ?? true)
                 && item.AutoCalcValue.TryGet(out var AutoCalcValueItem))
@@ -1136,7 +1136,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            if (!lhs.SoundCrafting.Equals(rhs.SoundCrafting)) return false;
+            if (!lhs.CraftingSound.Equals(rhs.CraftingSound)) return false;
             if (lhs.AutoCalcValue != rhs.AutoCalcValue) return false;
             if (!lhs.ScrapItem.Equals(rhs.ScrapItem)) return false;
             if (!lhs.ModScrapScalar.Equals(rhs.ModScrapScalar)) return false;
@@ -1169,7 +1169,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 hash.Add(Nameitem);
             }
-            hash.Add(item.SoundCrafting);
+            hash.Add(item.CraftingSound);
             if (item.AutoCalcValue.TryGet(out var AutoCalcValueitem))
             {
                 hash.Add(AutoCalcValueitem);
@@ -1205,9 +1205,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 yield return item;
             }
-            if (obj.SoundCrafting.FormKeyNullable.HasValue)
+            if (obj.CraftingSound.FormKeyNullable.HasValue)
             {
-                yield return FormLinkInformation.Factory(obj.SoundCrafting);
+                yield return FormLinkInformation.Factory(obj.CraftingSound);
             }
             if (obj.ScrapItem.FormKeyNullable.HasValue)
             {
@@ -1317,9 +1317,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 item.Name = rhs.Name;
             }
-            if ((copyMask?.GetShouldTranslate((int)Component_FieldIndex.SoundCrafting) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Component_FieldIndex.CraftingSound) ?? true))
             {
-                item.SoundCrafting = new FormLinkNullable<ISoundDescriptorGetter>(rhs.SoundCrafting.FormKeyNullable);
+                item.CraftingSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.CraftingSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Component_FieldIndex.AutoCalcValue) ?? true))
             {
@@ -1502,7 +1502,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.SoundCrafting,
+                item: item.CraftingSound,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.CUSD));
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -1623,10 +1623,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.CUSD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SoundCrafting = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.CraftingSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return (int)Component_FieldIndex.SoundCrafting;
+                    return (int)Component_FieldIndex.CraftingSound;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -1714,9 +1714,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants)) : default(string?);
         #endregion
-        #region SoundCrafting
-        private int? _SoundCraftingLocation;
-        public FormLinkNullable<ISoundDescriptorGetter> SoundCrafting => _SoundCraftingLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SoundCraftingLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        #region CraftingSound
+        private int? _CraftingSoundLocation;
+        public FormLinkNullable<ISoundDescriptorGetter> CraftingSound => _CraftingSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CraftingSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region AutoCalcValue
         private int? _AutoCalcValueLocation;
@@ -1808,8 +1808,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 case RecordTypeInts.CUSD:
                 {
-                    _SoundCraftingLocation = (stream.Position - offset);
-                    return (int)Component_FieldIndex.SoundCrafting;
+                    _CraftingSoundLocation = (stream.Position - offset);
+                    return (int)Component_FieldIndex.CraftingSound;
                 }
                 case RecordTypeInts.DATA:
                 {

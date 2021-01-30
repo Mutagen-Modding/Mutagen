@@ -25,6 +25,9 @@
     <Compile Include="Enums\GroupTypeEnum.cs" />
     <Compile Include="Interfaces\IObjectBounded.cs" />
     <Compile Include="Interfaces\IPositionRotation.cs" />
+    <Compile Include="Records\Common Subrecords\Decal.cs">
+      <DependentUpon>Decal.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Group.cs">
       <DependentUpon>Group.xml</DependentUpon>
     </Compile>
@@ -57,6 +60,9 @@
     </Compile>
     <Compile Include="Records\Major Records\Keyword.cs">
       <DependentUpon>Keyword.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\TextureSet.cs">
+      <DependentUpon>TextureSet.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Transform.cs">
       <DependentUpon>Transform.xml</DependentUpon>
@@ -143,6 +149,13 @@
     <Compile Include="Records\Major Records\SoundDescriptor_Generated.cs">
       <DependentUpon>SoundDescriptor.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\Decal_Generated.cs">
+      <DependentUpon>Decal.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\TextureSet_Generated.cs">
+      <DependentUpon>TextureSet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\IObjectId_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.1.2">

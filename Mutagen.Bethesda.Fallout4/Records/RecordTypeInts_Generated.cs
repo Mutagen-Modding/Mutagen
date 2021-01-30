@@ -10,6 +10,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public const int DATA = 0x41544144;
         public const int DELE = 0x454C4544;
         public const int DNAM = 0x4D414E44;
+        public const int DODT = 0x54444F44;
         public const int FULL = 0x4C4C5546;
         public const int GLOB = 0x424F4C47;
         public const int GMST = 0x54534D47;
@@ -33,6 +34,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public const int TES4 = 0x34534554;
         public const int TNAM = 0x4D414E54;
         public const int TRNS = 0x534E5254;
+        public const int TX00 = 0x30305854;
+        public const int TX01 = 0x31305854;
+        public const int TX02 = 0x32305854;
+        public const int TX03 = 0x33305854;
+        public const int TX04 = 0x34305854;
+        public const int TX05 = 0x35305854;
+        public const int TX06 = 0x36305854;
+        public const int TX07 = 0x37305854;
+        public const int TXST = 0x54535854;
         public const int XXXX = 0x58585858;
     }
 }

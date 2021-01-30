@@ -10,6 +10,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly RecordType DATA = new RecordType(0x41544144);
         public static readonly RecordType DELE = new RecordType(0x454C4544);
         public static readonly RecordType DNAM = new RecordType(0x4D414E44);
+        public static readonly RecordType DODT = new RecordType(0x54444F44);
         public static readonly RecordType FULL = new RecordType(0x4C4C5546);
         public static readonly RecordType GLOB = new RecordType(0x424F4C47);
         public static readonly RecordType GMST = new RecordType(0x54534D47);
@@ -33,6 +34,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly RecordType TES4 = new RecordType(0x34534554);
         public static readonly RecordType TNAM = new RecordType(0x4D414E54);
         public static readonly RecordType TRNS = new RecordType(0x534E5254);
+        public static readonly RecordType TX00 = new RecordType(0x30305854);
+        public static readonly RecordType TX01 = new RecordType(0x31305854);
+        public static readonly RecordType TX02 = new RecordType(0x32305854);
+        public static readonly RecordType TX03 = new RecordType(0x33305854);
+        public static readonly RecordType TX04 = new RecordType(0x34305854);
+        public static readonly RecordType TX05 = new RecordType(0x35305854);
+        public static readonly RecordType TX06 = new RecordType(0x36305854);
+        public static readonly RecordType TX07 = new RecordType(0x37305854);
+        public static readonly RecordType TXST = new RecordType(0x54535854);
         public static readonly RecordType XXXX = new RecordType(0x58585858);
     }
 }

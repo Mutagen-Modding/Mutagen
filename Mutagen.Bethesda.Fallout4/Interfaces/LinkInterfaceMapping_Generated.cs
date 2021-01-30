@@ -33,6 +33,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 typeof(LocationReferenceType),
             };
             dict[typeof(ILocationRecordGetter)] = dict[typeof(ILocationRecord)];
+            dict[typeof(IObjectId)] = new Type[]
+            {
+                typeof(TextureSet),
+            };
+            dict[typeof(IObjectIdGetter)] = dict[typeof(IObjectId)];
             InterfaceToObjectTypes = dict;
         }
     }

@@ -44,6 +44,7 @@ namespace Mutagen.Bethesda.Fallout4
             _Actions_Object = new Group<ActionRecord>(this);
             _Transforms_Object = new Group<Transform>(this);
             _Components_Object = new Group<Component>(this);
+            _TextureSets_Object = new Group<TextureSet>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -98,6 +99,13 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IComponentGetter> IFallout4ModGetter.Components => _Components_Object;
         #endregion
+        #region TextureSets
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<TextureSet> _TextureSets_Object;
+        public Group<TextureSet> TextureSets => _TextureSets_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<ITextureSetGetter> IFallout4ModGetter.TextureSets => _TextureSets_Object;
+        #endregion
 
         #region To String
 
@@ -143,6 +151,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Actions = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Transforms = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Components = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.TextureSets = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -152,7 +161,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem LocationReferenceTypes,
                 TItem Actions,
                 TItem Transforms,
-                TItem Components)
+                TItem Components,
+                TItem TextureSets)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
@@ -161,6 +171,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Actions = new MaskItem<TItem, Group.Mask<TItem>?>(Actions, new Group.Mask<TItem>(Actions));
                 this.Transforms = new MaskItem<TItem, Group.Mask<TItem>?>(Transforms, new Group.Mask<TItem>(Transforms));
                 this.Components = new MaskItem<TItem, Group.Mask<TItem>?>(Components, new Group.Mask<TItem>(Components));
+                this.TextureSets = new MaskItem<TItem, Group.Mask<TItem>?>(TextureSets, new Group.Mask<TItem>(TextureSets));
             }
 
             #pragma warning disable CS8618
@@ -179,6 +190,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Group.Mask<TItem>?>? Actions { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Transforms { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Components { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? TextureSets { get; set; }
             #endregion
 
             #region Equals
@@ -198,6 +210,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Actions, rhs.Actions)) return false;
                 if (!object.Equals(this.Transforms, rhs.Transforms)) return false;
                 if (!object.Equals(this.Components, rhs.Components)) return false;
+                if (!object.Equals(this.TextureSets, rhs.TextureSets)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -210,6 +223,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Actions);
                 hash.Add(this.Transforms);
                 hash.Add(this.Components);
+                hash.Add(this.TextureSets);
                 return hash.ToHashCode();
             }
 
@@ -253,6 +267,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.Components.Overall)) return false;
                     if (this.Components.Specific != null && !this.Components.Specific.All(eval)) return false;
                 }
+                if (TextureSets != null)
+                {
+                    if (!eval(this.TextureSets.Overall)) return false;
+                    if (this.TextureSets.Specific != null && !this.TextureSets.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -295,6 +314,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.Components.Overall)) return true;
                     if (this.Components.Specific != null && this.Components.Specific.Any(eval)) return true;
                 }
+                if (TextureSets != null)
+                {
+                    if (eval(this.TextureSets.Overall)) return true;
+                    if (this.TextureSets.Specific != null && this.TextureSets.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -316,6 +340,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Actions = this.Actions == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Actions.Overall), this.Actions.Specific?.Translate(eval));
                 obj.Transforms = this.Transforms == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Transforms.Overall), this.Transforms.Specific?.Translate(eval));
                 obj.Components = this.Components == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Components.Overall), this.Components.Specific?.Translate(eval));
+                obj.TextureSets = this.TextureSets == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.TextureSets.Overall), this.TextureSets.Specific?.Translate(eval));
             }
             #endregion
 
@@ -366,6 +391,10 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         Components?.ToString(fg);
                     }
+                    if (printMask?.TextureSets?.Overall ?? true)
+                    {
+                        TextureSets?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -398,6 +427,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Group.ErrorMask<ActionRecord.ErrorMask>?>? Actions;
             public MaskItem<Exception?, Group.ErrorMask<Transform.ErrorMask>?>? Transforms;
             public MaskItem<Exception?, Group.ErrorMask<Component.ErrorMask>?>? Components;
+            public MaskItem<Exception?, Group.ErrorMask<TextureSet.ErrorMask>?>? TextureSets;
             #endregion
 
             #region IErrorMask
@@ -420,6 +450,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return Transforms;
                     case Fallout4Mod_FieldIndex.Components:
                         return Components;
+                    case Fallout4Mod_FieldIndex.TextureSets:
+                        return TextureSets;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -450,6 +482,9 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4Mod_FieldIndex.Components:
                         this.Components = new MaskItem<Exception?, Group.ErrorMask<Component.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.TextureSets:
+                        this.TextureSets = new MaskItem<Exception?, Group.ErrorMask<TextureSet.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -482,6 +517,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4Mod_FieldIndex.Components:
                         this.Components = (MaskItem<Exception?, Group.ErrorMask<Component.ErrorMask>?>?)obj;
                         break;
+                    case Fallout4Mod_FieldIndex.TextureSets:
+                        this.TextureSets = (MaskItem<Exception?, Group.ErrorMask<TextureSet.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -497,6 +535,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Actions != null) return true;
                 if (Transforms != null) return true;
                 if (Components != null) return true;
+                if (TextureSets != null) return true;
                 return false;
             }
             #endregion
@@ -538,6 +577,7 @@ namespace Mutagen.Bethesda.Fallout4
                 Actions?.ToString(fg);
                 Transforms?.ToString(fg);
                 Components?.ToString(fg);
+                TextureSets?.ToString(fg);
             }
             #endregion
 
@@ -553,6 +593,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Actions = this.Actions.Combine(rhs.Actions, (l, r) => l.Combine(r));
                 ret.Transforms = this.Transforms.Combine(rhs.Transforms, (l, r) => l.Combine(r));
                 ret.Components = this.Components.Combine(rhs.Components, (l, r) => l.Combine(r));
+                ret.TextureSets = this.TextureSets.Combine(rhs.TextureSets, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -583,6 +624,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Group.TranslationMask<ActionRecord.TranslationMask>? Actions;
             public Group.TranslationMask<Transform.TranslationMask>? Transforms;
             public Group.TranslationMask<Component.TranslationMask>? Components;
+            public Group.TranslationMask<TextureSet.TranslationMask>? TextureSets;
             #endregion
 
             #region Ctors
@@ -614,6 +656,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Actions != null ? Actions.OnOverall : DefaultOn, Actions?.GetCrystal()));
                 ret.Add((Transforms != null ? Transforms.OnOverall : DefaultOn, Transforms?.GetCrystal()));
                 ret.Add((Components != null ? Components.OnOverall : DefaultOn, Components?.GetCrystal()));
+                ret.Add((TextureSets != null ? TextureSets.OnOverall : DefaultOn, TextureSets?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -660,6 +703,7 @@ namespace Mutagen.Bethesda.Fallout4
             _Actions_Object = new Group<ActionRecord>(this);
             _Transforms_Object = new Group<Transform>(this);
             _Components_Object = new Group<Component>(this);
+            _TextureSets_Object = new Group<TextureSet>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -690,6 +734,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.Components.RecordCache.Set(rhsMod.Components.RecordCache.Items);
             }
+            if (mask?.TextureSets ?? true)
+            {
+                this.TextureSets.RecordCache.Set(rhsMod.TextureSets.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -706,6 +754,7 @@ namespace Mutagen.Bethesda.Fallout4
             count += Actions.RecordCache.Count > 0 ? 1 : default(uint);
             count += Transforms.RecordCache.Count > 0 ? 1 : default(uint);
             count += Components.RecordCache.Count > 0 ? 1 : default(uint);
+            count += TextureSets.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -937,6 +986,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Group<ActionRecord> Actions { get; }
         new Group<Transform> Transforms { get; }
         new Group<Component> Components { get; }
+        new Group<TextureSet> TextureSets { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -962,6 +1012,7 @@ namespace Mutagen.Bethesda.Fallout4
         IGroupGetter<IActionRecordGetter> Actions { get; }
         IGroupGetter<ITransformGetter> Transforms { get; }
         IGroupGetter<IComponentGetter> Components { get; }
+        IGroupGetter<ITextureSetGetter> TextureSets { get; }
 
     }
 
@@ -1488,6 +1539,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         Actions = 4,
         Transforms = 5,
         Components = 6,
+        TextureSets = 7,
     }
     #endregion
 
@@ -1505,9 +1557,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 7;
+        public const ushort AdditionalFieldCount = 8;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -1582,6 +1634,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             item.Actions.Clear();
             item.Transforms.Clear();
             item.Components.Clear();
+            item.TextureSets.Clear();
         }
         
         #region Mutagen
@@ -1594,6 +1647,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             obj.Actions.RemapLinks(mapping);
             obj.Transforms.RemapLinks(mapping);
             obj.Components.RemapLinks(mapping);
+            obj.TextureSets.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IFallout4Mod obj)
@@ -1625,6 +1679,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             obj.Actions.Remove(keys);
             obj.Transforms.Remove(keys);
             obj.Components.Remove(keys);
+            obj.TextureSets.Remove(keys);
         }
         
         public void Remove(
@@ -1694,6 +1749,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         type: type,
                         keys: keys);
                     break;
+                case "TextureSet":
+                case "ITextureSetGetter":
+                case "ITextureSet":
+                case "ITextureSetInternal":
+                    obj.TextureSets.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "IIdleRelation":
                 case "IIdleRelationGetter":
                     Remove(obj, keys, typeof(IActionRecordGetter), throwIfUnknown: throwIfUnknown);
@@ -1705,6 +1768,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "ILocationRecord":
                 case "ILocationRecordGetter":
                     Remove(obj, keys, typeof(ILocationReferenceTypeGetter), throwIfUnknown: throwIfUnknown);
+                    break;
+                case "IObjectId":
+                case "IObjectIdGetter":
+                    Remove(obj, keys, typeof(ITextureSetGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 default:
                     if (throwIfUnknown)
@@ -1770,6 +1837,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ret.Actions = MaskItemExt.Factory(item.Actions.GetEqualsMask(rhs.Actions, include), include);
             ret.Transforms = MaskItemExt.Factory(item.Transforms.GetEqualsMask(rhs.Transforms, include), include);
             ret.Components = MaskItemExt.Factory(item.Components.GetEqualsMask(rhs.Components, include), include);
+            ret.TextureSets = MaskItemExt.Factory(item.TextureSets.GetEqualsMask(rhs.TextureSets, include), include);
         }
         
         public string ToString(
@@ -1844,6 +1912,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 item.Components?.ToString(fg, "Components");
             }
+            if (printMask?.TextureSets?.Overall ?? true)
+            {
+                item.TextureSets?.ToString(fg, "TextureSets");
+            }
         }
         
         #region Equals and Hash
@@ -1860,6 +1932,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             if (!object.Equals(lhs.Actions, rhs.Actions)) return false;
             if (!object.Equals(lhs.Transforms, rhs.Transforms)) return false;
             if (!object.Equals(lhs.Components, rhs.Components)) return false;
+            if (!object.Equals(lhs.TextureSets, rhs.TextureSets)) return false;
             return true;
         }
         
@@ -1873,6 +1946,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             hash.Add(item.Actions);
             hash.Add(item.Transforms);
             hash.Add(item.Components);
+            hash.Add(item.TextureSets);
             return hash.ToHashCode();
         }
         
@@ -1920,6 +1994,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "IComponent":
                 case "IComponentInternal":
                     return obj.Components.RecordCache;
+                case "TextureSet":
+                case "ITextureSetGetter":
+                case "ITextureSet":
+                case "ITextureSetInternal":
+                    return obj.TextureSets.RecordCache;
                 default:
                     throw new ArgumentException($"Unknown major record type: {typeof(TMajor)}");
             }
@@ -1940,7 +2019,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[6];
+            Stream[] outputStreams = new Stream[7];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, writer.MetaData.MasterReferences!, 0, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.Keywords, writer.MetaData.MasterReferences!, 1, outputStreams, param.StringsWriter));
@@ -1948,6 +2027,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             toDo.Add(() => WriteGroupParallel(item.Actions, writer.MetaData.MasterReferences!, 3, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.Transforms, writer.MetaData.MasterReferences!, 4, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.Components, writer.MetaData.MasterReferences!, 5, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.TextureSets, writer.MetaData.MasterReferences!, 6, outputStreams, param.StringsWriter));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -2043,6 +2123,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     yield return item;
                 }
             }
+            if (obj.TextureSets is IFormLinkContainerGetter TextureSetslinkCont)
+            {
+                foreach (var item in TextureSetslinkCont.ContainedFormLinks)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -2069,6 +2156,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 yield return item;
             }
             foreach (var item in obj.Components.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.TextureSets.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -2154,6 +2245,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         yield return item;
                     }
                     yield break;
+                case "TextureSet":
+                case "ITextureSetGetter":
+                case "ITextureSet":
+                case "ITextureSetInternal":
+                    foreach (var item in obj.TextureSets.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "IIdleRelation":
                 {
                     if (!Fallout4Mod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
@@ -2200,6 +2300,23 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "ILocationRecordGetter":
                 {
                     foreach (var item in EnumerateMajorRecords(obj, typeof(ILocationReferenceTypeGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
+                case "IObjectId":
+                {
+                    if (!Fallout4Mod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ITextureSetGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
+                case "IObjectIdGetter":
+                {
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ITextureSetGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -2268,6 +2385,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Components.GetOrAddAsOverride(r),
                     duplicateInto: (m, r, e) => m.Components.DuplicateInAsNewRecord(r, e));
+            }
+            foreach (var item in obj.TextureSets)
+            {
+                yield return new ModContext<IFallout4Mod, ITextureSetInternal, ITextureSetGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    getOrAddAsOverride: (m, r) => m.TextureSets.GetOrAddAsOverride(r),
+                    duplicateInto: (m, r, e) => m.TextureSets.DuplicateInAsNewRecord(r, e));
             }
         }
         
@@ -2380,6 +2505,19 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                             duplicateInto: (m, r, e) => m.Components.DuplicateInAsNewRecord(r, e));
                     }
                     yield break;
+                case "TextureSet":
+                case "ITextureSetGetter":
+                case "ITextureSet":
+                case "ITextureSetInternal":
+                    foreach (var item in obj.TextureSets)
+                    {
+                        yield return new ModContext<IFallout4Mod, ITextureSetInternal, ITextureSetGetter>(
+                            modKey: obj.ModKey,
+                            record: item,
+                            getOrAddAsOverride: (m, r) => m.TextureSets.GetOrAddAsOverride(r),
+                            duplicateInto: (m, r, e) => m.TextureSets.DuplicateInAsNewRecord(r, e));
+                    }
+                    yield break;
                 case "IIdleRelation":
                 case "IIdleRelationGetter":
                 {
@@ -2413,6 +2551,19 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         obj,
                         linkCache: linkCache,
                         type: typeof(ILocationReferenceTypeGetter),
+                        throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
+                case "IObjectId":
+                case "IObjectIdGetter":
+                {
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(ITextureSetGetter),
                         throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
@@ -2586,6 +2737,26 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.TextureSets) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.TextureSets);
+                try
+                {
+                    item.TextureSets.DeepCopyIn(
+                        rhs: rhs.TextureSets,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.TextureSets));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -2682,6 +2853,7 @@ namespace Mutagen.Bethesda.Fallout4
         public bool Actions;
         public bool Transforms;
         public bool Components;
+        public bool TextureSets;
         public GroupMask()
         {
         }
@@ -2693,6 +2865,7 @@ namespace Mutagen.Bethesda.Fallout4
             Actions = defaultValue;
             Transforms = defaultValue;
             Components = defaultValue;
+            TextureSets = defaultValue;
         }
     }
 
@@ -2778,6 +2951,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)ComponentsItem).BinaryWriteTranslator).Write<IComponentGetter>(
                         item: ComponentsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.TextureSets ?? true)
+            {
+                var TextureSetsItem = item.TextureSets;
+                if (TextureSetsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)TextureSetsItem).BinaryWriteTranslator).Write<ITextureSetGetter>(
+                        item: TextureSetsItem,
                         writer: writer,
                         recordTypeConverter: recordTypeConverter);
                 }
@@ -2931,6 +3115,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         frame.Position += contentLength;
                     }
                     return (int)Fallout4Mod_FieldIndex.Components;
+                }
+                case RecordTypeInts.TXST:
+                {
+                    if (importMask?.TextureSets ?? true)
+                    {
+                        item.TextureSets.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.TextureSets;
                 }
                 default:
                     frame.Position += contentLength;
@@ -3115,6 +3313,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         private IGroupGetter<IComponentGetter>? _Components => _ComponentsLocation.HasValue ? GroupBinaryOverlay<IComponentGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _ComponentsLocation!.Value.Min, _ComponentsLocation!.Value.Max), _package), _package) : default;
         public IGroupGetter<IComponentGetter> Components => _Components ?? new Group<Component>(this);
         #endregion
+        #region TextureSets
+        private RangeInt64? _TextureSetsLocation;
+        private IGroupGetter<ITextureSetGetter>? _TextureSets => _TextureSetsLocation.HasValue ? GroupBinaryOverlay<ITextureSetGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _TextureSetsLocation!.Value.Min, _TextureSetsLocation!.Value.Max), _package), _package) : default;
+        public IGroupGetter<ITextureSetGetter> TextureSets => _TextureSets ?? new Group<TextureSet>(this);
+        #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -3245,6 +3448,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 {
                     _ComponentsLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return (int)Fallout4Mod_FieldIndex.Components;
+                }
+                case RecordTypeInts.TXST:
+                {
+                    _TextureSetsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return (int)Fallout4Mod_FieldIndex.TextureSets;
                 }
                 default:
                     return default(int?);

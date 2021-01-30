@@ -9,6 +9,7 @@
       <Group name="Actions" refName="ActionRecord" />
       <Group name="Transforms" refName="Transform" />
       <Group name="Components" refName="Component" />
+      <Group name="TextureSets" refName="TextureSet" />
     </Fields>
   </Object>
 </Loqui>
