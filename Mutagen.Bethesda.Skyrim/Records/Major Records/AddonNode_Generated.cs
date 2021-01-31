@@ -46,6 +46,18 @@ namespace Mutagen.Bethesda.Skyrim
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter IAddonNodeGetter.ObjectBounds => ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ObjectBounds? IObjectBoundedOptional.ObjectBounds
+        {
+            get => this.ObjectBounds;
+            set => this.ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
         #endregion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -674,6 +686,7 @@ namespace Mutagen.Bethesda.Skyrim
         IAddonNodeGetter,
         ISkyrimMajorRecord,
         IModeled,
+        IObjectBoundedOptional,
         IObjectBounded,
         ILoquiObjectSetter<IAddonNodeInternal>,
         IFormLinkContainer
@@ -697,6 +710,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IAddonNodeGetter :
         ISkyrimMajorRecordGetter,
         IModeledGetter,
+        IObjectBoundedOptionalGetter,
         IObjectBoundedGetter,
         ILoquiObject<IAddonNodeGetter>,
         IFormLinkContainerGetter,

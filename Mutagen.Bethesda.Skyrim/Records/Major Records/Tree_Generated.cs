@@ -57,6 +57,18 @@ namespace Mutagen.Bethesda.Skyrim
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter ITreeGetter.ObjectBounds => ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ObjectBounds? IObjectBoundedOptional.ObjectBounds
+        {
+            get => this.ObjectBounds;
+            set => this.ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
         #endregion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -935,11 +947,12 @@ namespace Mutagen.Bethesda.Skyrim
         IRegionTarget,
         IHarvestable,
         IModeled,
-        IObjectBounded,
         INamedRequired,
         INamed,
         ITranslatedNamedRequired,
         ITranslatedNamed,
+        IObjectBoundedOptional,
+        IObjectBounded,
         ILoquiObjectSetter<ITreeInternal>,
         IFormLinkContainer
     {
@@ -974,11 +987,12 @@ namespace Mutagen.Bethesda.Skyrim
         IRegionTargetGetter,
         IHarvestableGetter,
         IModeledGetter,
-        IObjectBoundedGetter,
         INamedRequiredGetter,
         INamedGetter,
         ITranslatedNamedRequiredGetter,
         ITranslatedNamedGetter,
+        IObjectBoundedOptionalGetter,
+        IObjectBoundedGetter,
         ILoquiObject<ITreeGetter>,
         IFormLinkContainerGetter,
         IBinaryItem

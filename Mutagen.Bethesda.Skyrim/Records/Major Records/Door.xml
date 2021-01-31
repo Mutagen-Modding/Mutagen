@@ -2,7 +2,6 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Door" recordType="DOOR" baseClass="SkyrimMajorRecord" objType="Record" majorFlag="true" GUID="1ad3c383-f2fa-4248-8d49-fd8d908162d4" ID="178">
     <Interface>IModeled</Interface>
-    <Interface>IObjectBounded</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />

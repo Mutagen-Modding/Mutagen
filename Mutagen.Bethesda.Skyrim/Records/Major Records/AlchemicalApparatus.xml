@@ -3,7 +3,6 @@
   <Object name="AlchemicalApparatus" recordType="APPA" baseClass="SkyrimMajorRecord" objType="Record" GUID="5ca84371-e6e9-4890-a8c8-930cc1633a36" ID="161">
     <Interface>IHasIcons</Interface>
     <Interface>IModeled</Interface>
-    <Interface>IObjectBounded</Interface>
     <Interface>IWeightValue</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />

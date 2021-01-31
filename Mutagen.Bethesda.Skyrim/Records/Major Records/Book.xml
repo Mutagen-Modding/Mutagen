@@ -3,7 +3,6 @@
   <Object name="Book" objType="Record" recordType="BOOK" baseClass="SkyrimMajorRecord" GUID="75309913-652c-4e97-9cf4-6ccb493d3143" ID="154">
     <Interface>IHasIcons</Interface>
     <Interface>IModeled</Interface>
-    <Interface>IObjectBounded</Interface>
     <Interface>IWeightValue</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />

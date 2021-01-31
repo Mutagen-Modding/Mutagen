@@ -58,6 +58,18 @@ namespace Mutagen.Bethesda.Skyrim
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter INpcGetter.ObjectBounds => ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ObjectBounds? IObjectBoundedOptional.ObjectBounds
+        {
+            get => this.ObjectBounds;
+            set => this.ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
         #endregion
         #region Configuration
         public NpcConfiguration Configuration { get; set; } = new NpcConfiguration();
@@ -2755,12 +2767,13 @@ namespace Mutagen.Bethesda.Skyrim
         ILockList,
         INpcSpawn,
         IObjectId,
-        IObjectBounded,
         IKeyworded<IKeywordGetter>,
         INamedRequired,
         INamed,
         ITranslatedNamedRequired,
         ITranslatedNamed,
+        IObjectBoundedOptional,
+        IObjectBounded,
         ILoquiObjectSetter<INpcInternal>,
         IFormLinkContainer
     {
@@ -2828,12 +2841,13 @@ namespace Mutagen.Bethesda.Skyrim
         ILockListGetter,
         INpcSpawnGetter,
         IObjectIdGetter,
-        IObjectBoundedGetter,
         IKeywordedGetter<IKeywordGetter>,
         INamedRequiredGetter,
         INamedGetter,
         ITranslatedNamedRequiredGetter,
         ITranslatedNamedGetter,
+        IObjectBoundedOptionalGetter,
+        IObjectBoundedGetter,
         ILoquiObject<INpcGetter>,
         IFormLinkContainerGetter,
         IBinaryItem

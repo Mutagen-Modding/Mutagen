@@ -46,6 +46,18 @@ namespace Mutagen.Bethesda.Skyrim
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter IStaticGetter.ObjectBounds => ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ObjectBounds? IObjectBoundedOptional.ObjectBounds
+        {
+            get => this.ObjectBounds;
+            set => this.ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
         #endregion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -748,6 +760,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectId,
         IRegionTarget,
         IModeled,
+        IObjectBoundedOptional,
         IObjectBounded,
         ILoquiObjectSetter<IStaticInternal>,
         IFormLinkContainer
@@ -778,6 +791,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectIdGetter,
         IRegionTargetGetter,
         IModeledGetter,
+        IObjectBoundedOptionalGetter,
         IObjectBoundedGetter,
         ILoquiObject<IStaticGetter>,
         IFormLinkContainerGetter,

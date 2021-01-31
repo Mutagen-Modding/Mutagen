@@ -46,6 +46,18 @@ namespace Mutagen.Bethesda.Skyrim
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter IDualCastDataGetter.ObjectBounds => ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ObjectBounds? IObjectBoundedOptional.ObjectBounds
+        {
+            get => this.ObjectBounds;
+            set => this.ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
         #endregion
         #region Projectile
         public FormLink<IProjectileGetter> Projectile { get; set; } = new FormLink<IProjectileGetter>();
@@ -689,6 +701,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IDualCastData :
         IDualCastDataGetter,
         ISkyrimMajorRecord,
+        IObjectBoundedOptional,
         IObjectBounded,
         ILoquiObjectSetter<IDualCastDataInternal>,
         IFormLinkContainer
@@ -712,6 +725,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IDualCastDataGetter :
         ISkyrimMajorRecordGetter,
+        IObjectBoundedOptionalGetter,
         IObjectBoundedGetter,
         ILoquiObject<IDualCastDataGetter>,
         IFormLinkContainerGetter,

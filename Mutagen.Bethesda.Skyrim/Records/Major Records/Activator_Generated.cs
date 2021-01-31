@@ -58,6 +58,18 @@ namespace Mutagen.Bethesda.Skyrim
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter IActivatorGetter.ObjectBounds => ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ObjectBounds? IObjectBoundedOptional.ObjectBounds
+        {
+            get => this.ObjectBounds;
+            set => this.ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
         #endregion
         #region Name
         public TranslatedString? Name { get; set; }
@@ -1017,12 +1029,13 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         IObjectId,
         IModeled,
-        IObjectBounded,
         IKeyworded<IKeywordGetter>,
         INamedRequired,
         INamed,
         ITranslatedNamedRequired,
         ITranslatedNamed,
+        IObjectBoundedOptional,
+        IObjectBounded,
         ILoquiObjectSetter<IActivatorInternal>,
         IFormLinkContainer
     {
@@ -1056,12 +1069,13 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IObjectIdGetter,
         IModeledGetter,
-        IObjectBoundedGetter,
         IKeywordedGetter<IKeywordGetter>,
         INamedRequiredGetter,
         INamedGetter,
         ITranslatedNamedRequiredGetter,
         ITranslatedNamedGetter,
+        IObjectBoundedOptionalGetter,
+        IObjectBoundedGetter,
         ILoquiObject<IActivatorGetter>,
         IFormLinkContainerGetter,
         IBinaryItem

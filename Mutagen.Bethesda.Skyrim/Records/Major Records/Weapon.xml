@@ -3,7 +3,6 @@
   <Object name="Weapon" recordType="WEAP" baseClass="SkyrimMajorRecord" objType="Record" majorFlag="true" GUID="93888344-5257-4e1e-a99c-450b6e0d06bf" ID="169">
     <Interface>IHasIcons</Interface>
     <Interface>IModeled</Interface>
-    <Interface>IObjectBounded</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />

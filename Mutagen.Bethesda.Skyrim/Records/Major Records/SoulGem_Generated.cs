@@ -52,6 +52,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter? ISoulGemGetter.ObjectBounds => this.ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
         #endregion
         #region Name
         public TranslatedString? Name { get; set; }
@@ -1051,13 +1055,13 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         IItem,
         IConstructible,
-        IObjectBoundedOptional,
         IWeightValue,
         IKeyworded<IKeywordGetter>,
         INamedRequired,
         INamed,
         ITranslatedNamedRequired,
         ITranslatedNamed,
+        IObjectBoundedOptional,
         ILoquiObjectSetter<ISoulGemInternal>,
         IFormLinkContainer
     {
@@ -1092,13 +1096,13 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IItemGetter,
         IConstructibleGetter,
-        IObjectBoundedOptionalGetter,
         IWeightValueGetter,
         IKeywordedGetter<IKeywordGetter>,
         INamedRequiredGetter,
         INamedGetter,
         ITranslatedNamedRequiredGetter,
         ITranslatedNamedGetter,
+        IObjectBoundedOptionalGetter,
         ILoquiObject<ISoulGemGetter>,
         IFormLinkContainerGetter,
         IBinaryItem

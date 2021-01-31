@@ -46,6 +46,18 @@ namespace Mutagen.Bethesda.Skyrim
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter IIdleMarkerGetter.ObjectBounds => ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ObjectBounds? IObjectBoundedOptional.ObjectBounds
+        {
+            get => this.ObjectBounds;
+            set => this.ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
         #endregion
         #region Flags
         public IdleMarker.Flag? Flags { get; set; }
@@ -701,6 +713,7 @@ namespace Mutagen.Bethesda.Skyrim
         IIdleMarkerGetter,
         ISkyrimMajorRecord,
         IObjectId,
+        IObjectBoundedOptional,
         IObjectBounded,
         ILoquiObjectSetter<IIdleMarkerInternal>,
         IFormLinkContainer
@@ -726,6 +739,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IIdleMarkerGetter :
         ISkyrimMajorRecordGetter,
         IObjectIdGetter,
+        IObjectBoundedOptionalGetter,
         IObjectBoundedGetter,
         ILoquiObject<IIdleMarkerGetter>,
         IFormLinkContainerGetter,

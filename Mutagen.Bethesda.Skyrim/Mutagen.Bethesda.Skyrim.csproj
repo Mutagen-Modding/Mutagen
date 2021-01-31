@@ -128,9 +128,6 @@
     <Compile Include="Records\ListGroup.cs">
       <DependentUpon>Group.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\AcousticSpace.cs">
-      <DependentUpon>AcousticSpace.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\Activator.cs">
       <DependentUpon>Activator.xml</DependentUpon>
     </Compile>
@@ -677,14 +674,8 @@
     <Compile Include="Records\Major Records\SoundDescriptor.cs">
       <DependentUpon>SoundDescriptor.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\SoundMarker.cs">
-      <DependentUpon>SoundMarker.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\SoundOutputModel.cs">
       <DependentUpon>SoundOutputModel.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Spell.cs">
-      <DependentUpon>Spell.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Static.cs">
       <DependentUpon>Static.xml</DependentUpon>

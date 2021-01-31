@@ -46,6 +46,18 @@ namespace Mutagen.Bethesda.Skyrim
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter IGrassGetter.ObjectBounds => ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ObjectBounds? IObjectBoundedOptional.ObjectBounds
+        {
+            get => this.ObjectBounds;
+            set => this.ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
         #endregion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -961,6 +973,7 @@ namespace Mutagen.Bethesda.Skyrim
         IGrassGetter,
         ISkyrimMajorRecord,
         IModeled,
+        IObjectBoundedOptional,
         IObjectBounded,
         ILoquiObjectSetter<IGrassInternal>,
         IFormLinkContainer
@@ -993,6 +1006,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IGrassGetter :
         ISkyrimMajorRecordGetter,
         IModeledGetter,
+        IObjectBoundedOptionalGetter,
         IObjectBoundedGetter,
         ILoquiObject<IGrassGetter>,
         IFormLinkContainerGetter,

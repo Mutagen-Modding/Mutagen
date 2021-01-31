@@ -46,6 +46,18 @@ namespace Mutagen.Bethesda.Skyrim
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter ITextureSetGetter.ObjectBounds => ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ObjectBounds? IObjectBoundedOptional.ObjectBounds
+        {
+            get => this.ObjectBounds;
+            set => this.ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
         #endregion
         #region Diffuse
         public String? Diffuse { get; set; }
@@ -810,6 +822,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITextureSetGetter,
         ISkyrimMajorRecord,
         IObjectId,
+        IObjectBoundedOptional,
         IObjectBounded,
         ILoquiObjectSetter<ITextureSetInternal>
     {
@@ -836,6 +849,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ITextureSetGetter :
         ISkyrimMajorRecordGetter,
         IObjectIdGetter,
+        IObjectBoundedOptionalGetter,
         IObjectBoundedGetter,
         ILoquiObject<ITextureSetGetter>,
         IBinaryItem

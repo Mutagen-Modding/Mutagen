@@ -46,6 +46,18 @@ namespace Mutagen.Bethesda.Skyrim
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter ILeveledSpellGetter.ObjectBounds => ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ObjectBounds? IObjectBoundedOptional.ObjectBounds
+        {
+            get => this.ObjectBounds;
+            set => this.ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
         #endregion
         #region ChanceNone
         public Byte? ChanceNone { get; set; }
@@ -650,6 +662,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILeveledSpellGetter,
         IASpell,
         ISpellSpawn,
+        IObjectBoundedOptional,
         IObjectBounded,
         ILoquiObjectSetter<ILeveledSpellInternal>,
         IFormLinkContainer
@@ -670,6 +683,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILeveledSpellGetter :
         IASpellGetter,
         ISpellSpawnGetter,
+        IObjectBoundedOptionalGetter,
         IObjectBoundedGetter,
         ILoquiObject<ILeveledSpellGetter>,
         IFormLinkContainerGetter,

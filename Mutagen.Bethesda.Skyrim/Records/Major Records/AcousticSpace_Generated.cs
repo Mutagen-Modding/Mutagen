@@ -46,6 +46,18 @@ namespace Mutagen.Bethesda.Skyrim
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter IAcousticSpaceGetter.ObjectBounds => ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ObjectBounds? IObjectBoundedOptional.ObjectBounds
+        {
+            get => this.ObjectBounds;
+            set => this.ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
         #endregion
         #region AmbientSound
         public FormLinkNullable<ISoundDescriptorGetter> AmbientSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
@@ -561,6 +573,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IAcousticSpace :
         IAcousticSpaceGetter,
         ISkyrimMajorRecord,
+        IObjectBoundedOptional,
         IObjectBounded,
         ILoquiObjectSetter<IAcousticSpaceInternal>,
         IFormLinkContainer
@@ -580,6 +593,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IAcousticSpaceGetter :
         ISkyrimMajorRecordGetter,
+        IObjectBoundedOptionalGetter,
         IObjectBoundedGetter,
         ILoquiObject<IAcousticSpaceGetter>,
         IFormLinkContainerGetter,

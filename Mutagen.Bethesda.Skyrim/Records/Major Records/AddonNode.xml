@@ -2,7 +2,6 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="AddonNode" objType="Record" recordType="ADDN" baseClass="SkyrimMajorRecord" GUID="accc5d3b-3755-4b84-9898-244c0613d575" ID="433">
     <Interface>IModeled</Interface>
-    <Interface>IObjectBounded</Interface>
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <RefDirect name="Model" refName="Model" />
