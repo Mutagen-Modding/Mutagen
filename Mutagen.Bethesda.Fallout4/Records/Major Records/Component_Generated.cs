@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Fallout4
     public partial class Component :
         Fallout4MajorRecord,
         IComponentInternal,
-        ILoquiObjectSetter<Component>,
-        IEquatable<IComponentGetter>
+        IEquatable<IComponentGetter>,
+        ILoquiObjectSetter<Component>
     {
         #region Ctor
         protected Component()
@@ -46,11 +46,33 @@ namespace Mutagen.Bethesda.Fallout4
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter IComponentGetter.ObjectBounds => ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ObjectBounds? IObjectBoundedOptional.ObjectBounds
+        {
+            get => this.ObjectBounds;
+            set => this.ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
         #endregion
         #region Name
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IComponentGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
         #endregion
         #region CraftingSound
         public FormLinkNullable<ISoundDescriptorGetter> CraftingSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
@@ -99,8 +121,8 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mask
         public new class Mask<TItem> :
             Fallout4MajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -620,9 +642,12 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IComponent :
         IComponentGetter,
         IFallout4MajorRecord,
-        IObjectBounded,
+        IFormLinkContainer,
         ILoquiObjectSetter<IComponentInternal>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired,
+        IObjectBounded,
+        IObjectBoundedOptional
     {
         new ObjectBounds ObjectBounds { get; set; }
         new String? Name { get; set; }
@@ -641,10 +666,13 @@ namespace Mutagen.Bethesda.Fallout4
 
     public partial interface IComponentGetter :
         IFallout4MajorRecordGetter,
-        IObjectBoundedGetter,
-        ILoquiObject<IComponentGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IComponentGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        IObjectBoundedGetter,
+        IObjectBoundedOptionalGetter
     {
         static new ILoquiRegistration Registration => Component_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }
@@ -1713,6 +1741,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Name
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        #endregion
         #endregion
         #region CraftingSound
         private int? _CraftingSoundLocation;

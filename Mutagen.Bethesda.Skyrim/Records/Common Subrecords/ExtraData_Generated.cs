@@ -28,9 +28,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class ExtraData :
+        IEquatable<IExtraDataGetter>,
         IExtraData,
-        ILoquiObjectSetter<ExtraData>,
-        IEquatable<IExtraDataGetter>
+        ILoquiObjectSetter<ExtraData>
     {
         #region Ctor
         public ExtraData()
@@ -75,8 +75,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -451,8 +451,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IExtraData :
         IExtraDataGetter,
-        ILoquiObjectSetter<IExtraData>,
-        IFormLinkContainer
+        IFormLinkContainer,
+        ILoquiObjectSetter<IExtraData>
     {
         new OwnerTarget Owner { get; set; }
         new Single ItemCondition { get; set; }
@@ -460,9 +460,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IExtraDataGetter :
         ILoquiObject,
-        ILoquiObject<IExtraDataGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IExtraDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

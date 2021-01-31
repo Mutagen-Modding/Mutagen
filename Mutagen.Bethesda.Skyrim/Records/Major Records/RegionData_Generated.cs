@@ -31,9 +31,9 @@ namespace Mutagen.Bethesda.Skyrim
     /// Implemented by: [RegionSounds, RegionMap, RegionObjects, RegionWeather, RegionGrasses, RegionLand]
     /// </summary>
     public abstract partial class RegionData :
-        IRegionData,
+        IEquatable<IRegionDataGetter>,
         ILoquiObjectSetter<RegionData>,
-        IEquatable<IRegionDataGetter>
+        IRegionData
     {
         #region Ctor
         public RegionData()
@@ -64,6 +64,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IIconsGetter? IRegionDataGetter.Icons => this.Icons;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IIconsGetter? IHasIconsGetter.Icons => this.Icons;
+        #endregion
         #endregion
 
         #region To String
@@ -97,8 +101,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -457,10 +461,10 @@ namespace Mutagen.Bethesda.Skyrim
     /// Implemented by: [RegionSounds, RegionMap, RegionObjects, RegionWeather, RegionGrasses, RegionLand]
     /// </summary>
     public partial interface IRegionData :
-        IRegionDataGetter,
+        IFormLinkContainer,
         IHasIcons,
         ILoquiObjectSetter<IRegionData>,
-        IFormLinkContainer
+        IRegionDataGetter
     {
         new RegionDataHeader? Header { get; set; }
         new Icons? Icons { get; set; }
@@ -471,10 +475,10 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public partial interface IRegionDataGetter :
         ILoquiObject,
-        IHasIconsGetter,
-        ILoquiObject<IRegionDataGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        IHasIconsGetter,
+        ILoquiObject<IRegionDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

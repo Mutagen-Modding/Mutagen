@@ -30,8 +30,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class BookSkill :
         BookTeachTarget,
         IBookSkill,
-        ILoquiObjectSetter<BookSkill>,
-        IEquatable<IBookSkillGetter>
+        IEquatable<IBookSkillGetter>,
+        ILoquiObjectSetter<BookSkill>
     {
         #region Ctor
         public BookSkill()
@@ -79,8 +79,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             BookTeachTarget.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem Skill)
@@ -400,8 +400,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IBookSkillGetter :
         IBookTeachTargetGetter,
-        ILoquiObject<IBookSkillGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IBookSkillGetter>
     {
         static new ILoquiRegistration Registration => BookSkill_Registration.Instance;
         Skill? Skill { get; }

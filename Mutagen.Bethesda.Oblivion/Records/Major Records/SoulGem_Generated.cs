@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class SoulGem :
         AItem,
-        ISoulGemInternal,
+        IEquatable<ISoulGemGetter>,
         ILoquiObjectSetter<SoulGem>,
-        IEquatable<ISoulGemGetter>
+        ISoulGemInternal
     {
         #region Ctor
         protected SoulGem()
@@ -46,6 +46,16 @@ namespace Mutagen.Bethesda.Oblivion
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ISoulGemGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
         #endregion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -57,6 +67,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? ISoulGemGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
         #endregion
         #region Icon
         public String? Icon { get; set; }
@@ -120,8 +134,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             AItem.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -662,11 +676,13 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ISoulGem :
-        ISoulGemGetter,
         IAItem,
-        INamed,
+        IFormLinkContainer,
         ILoquiObjectSetter<ISoulGemInternal>,
-        IFormLinkContainer
+        IModeled,
+        INamed,
+        INamedRequired,
+        ISoulGemGetter
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
@@ -686,10 +702,12 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ISoulGemGetter :
         IAItemGetter,
-        INamedGetter,
-        ILoquiObject<ISoulGemGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ISoulGemGetter>,
+        IModeledGetter,
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => SoulGem_Registration.Instance;
         String? Name { get; }
@@ -1922,6 +1940,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Name
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        #endregion
         #endregion
         public IModelGetter? Model { get; private set; }
         #region Icon

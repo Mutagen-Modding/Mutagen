@@ -28,8 +28,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class EnableParent :
         IEnableParent,
-        ILoquiObjectSetter<EnableParent>,
-        IEquatable<IEnableParentGetter>
+        IEquatable<IEnableParentGetter>,
+        ILoquiObjectSetter<EnableParent>
     {
         #region Ctor
         public EnableParent()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -446,8 +446,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IEnableParent :
         IEnableParentGetter,
-        ILoquiObjectSetter<IEnableParent>,
-        IFormLinkContainer
+        IFormLinkContainer,
+        ILoquiObjectSetter<IEnableParent>
     {
         new FormLink<IPlacedGetter> Reference { get; set; }
         new EnableParent.Flag Flags { get; set; }
@@ -455,9 +455,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IEnableParentGetter :
         ILoquiObject,
-        ILoquiObject<IEnableParentGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IEnableParentGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

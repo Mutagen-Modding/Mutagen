@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class DialogTopic :
         OblivionMajorRecord,
         IDialogTopicInternal,
-        ILoquiObjectSetter<DialogTopic>,
-        IEquatable<IDialogTopicGetter>
+        IEquatable<IDialogTopicGetter>,
+        ILoquiObjectSetter<DialogTopic>
     {
         #region Ctor
         protected DialogTopic()
@@ -60,6 +60,16 @@ namespace Mutagen.Bethesda.Oblivion
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IDialogTopicGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
         #endregion
         #region DialogType
         public DialogType? DialogType { get; set; }
@@ -116,8 +126,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -771,11 +781,12 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IDialogTopic :
         IDialogTopicGetter,
-        IOblivionMajorRecord,
-        INamed,
-        IMajorRecordEnumerable,
+        IFormLinkContainer,
         ILoquiObjectSetter<IDialogTopicInternal>,
-        IFormLinkContainer
+        IMajorRecordEnumerable,
+        INamed,
+        INamedRequired,
+        IOblivionMajorRecord
     {
         new ExtendedList<IFormLink<IQuestGetter>> Quests { get; }
         new String? Name { get; set; }
@@ -793,11 +804,12 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IDialogTopicGetter :
         IOblivionMajorRecordGetter,
-        INamedGetter,
-        IMajorRecordGetterEnumerable,
-        ILoquiObject<IDialogTopicGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IDialogTopicGetter>,
+        IMajorRecordGetterEnumerable,
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => DialogTopic_Registration.Instance;
         IReadOnlyList<IFormLink<IQuestGetter>> Quests { get; }
@@ -2372,6 +2384,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Name
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        #endregion
         #endregion
         #region DialogType
         private int? _DialogTypeLocation;

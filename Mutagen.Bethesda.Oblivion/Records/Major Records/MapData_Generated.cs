@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class MapData :
-        IMapData,
+        IEquatable<IMapDataGetter>,
         ILoquiObjectSetter<MapData>,
-        IEquatable<IMapDataGetter>
+        IMapData
     {
         #region Ctor
         public MapData()
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -474,8 +474,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IMapData :
-        IMapDataGetter,
-        ILoquiObjectSetter<IMapData>
+        ILoquiObjectSetter<IMapData>,
+        IMapDataGetter
     {
         new P2Int UsableDimensions { get; set; }
         new P2Int16 CellCoordinatesNWCell { get; set; }
@@ -484,8 +484,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IMapDataGetter :
         ILoquiObject,
-        ILoquiObject<IMapDataGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IMapDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

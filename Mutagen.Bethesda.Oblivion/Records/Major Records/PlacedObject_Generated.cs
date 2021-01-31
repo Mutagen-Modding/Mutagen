@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class PlacedObject :
         OblivionMajorRecord,
-        IPlacedObjectInternal,
+        IEquatable<IPlacedObjectGetter>,
         ILoquiObjectSetter<PlacedObject>,
-        IEquatable<IPlacedObjectGetter>
+        IPlacedObjectInternal
     {
         #region Ctor
         protected PlacedObject()
@@ -235,8 +235,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1281,11 +1281,11 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IPlacedObject :
-        IPlacedObjectGetter,
+        IFormLinkContainer,
+        ILoquiObjectSetter<IPlacedObjectInternal>,
         IOblivionMajorRecord,
         IPlaced,
-        ILoquiObjectSetter<IPlacedObjectInternal>,
-        IFormLinkContainer
+        IPlacedObjectGetter
     {
         new FormLinkNullable<IOblivionMajorRecordGetter> Base { get; set; }
         new MemorySlice<Byte>? XPCIFluff { get; set; }
@@ -1322,10 +1322,10 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IPlacedObjectGetter :
         IOblivionMajorRecordGetter,
-        IPlacedGetter,
-        ILoquiObject<IPlacedObjectGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IPlacedObjectGetter>,
+        IPlacedGetter
     {
         static new ILoquiRegistration Registration => PlacedObject_Registration.Instance;
         FormLinkNullable<IOblivionMajorRecordGetter> Base { get; }

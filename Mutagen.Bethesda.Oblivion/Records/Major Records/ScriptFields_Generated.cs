@@ -28,9 +28,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class ScriptFields :
-        IScriptFields,
+        IEquatable<IScriptFieldsGetter>,
         ILoquiObjectSetter<ScriptFields>,
-        IEquatable<IScriptFieldsGetter>
+        IScriptFields
     {
         #region Ctor
         public ScriptFields()
@@ -112,8 +112,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -720,9 +720,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IScriptFields :
-        IScriptFieldsGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IScriptFields>,
-        IFormLinkContainer
+        IScriptFieldsGetter
     {
         new ScriptMetaSummary MetadataSummary { get; }
         new MemorySlice<Byte>? CompiledScript { get; set; }
@@ -733,9 +733,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IScriptFieldsGetter :
         ILoquiObject,
-        ILoquiObject<IScriptFieldsGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IScriptFieldsGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

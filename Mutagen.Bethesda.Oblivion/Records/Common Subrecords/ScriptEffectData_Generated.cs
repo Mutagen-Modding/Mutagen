@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class ScriptEffectData :
-        IScriptEffectData,
+        IEquatable<IScriptEffectDataGetter>,
         ILoquiObjectSetter<ScriptEffectData>,
-        IEquatable<IScriptEffectDataGetter>
+        IScriptEffectData
     {
         #region Ctor
         public ScriptEffectData()
@@ -86,8 +86,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -544,9 +544,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IScriptEffectData :
-        IScriptEffectDataGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IScriptEffectData>,
-        IFormLinkContainer
+        IScriptEffectDataGetter
     {
         new ScriptEffectData.VersioningBreaks Versioning { get; set; }
         new FormLink<IScriptGetter> Script { get; set; }
@@ -557,9 +557,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IScriptEffectDataGetter :
         ILoquiObject,
-        ILoquiObject<IScriptEffectDataGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IScriptEffectDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

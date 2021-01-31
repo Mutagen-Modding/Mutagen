@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class LocationCoordinate :
+        IEquatable<ILocationCoordinateGetter>,
         ILocationCoordinate,
-        ILoquiObjectSetter<LocationCoordinate>,
-        IEquatable<ILocationCoordinateGetter>
+        ILoquiObjectSetter<LocationCoordinate>
     {
         #region Ctor
         public LocationCoordinate()
@@ -88,8 +88,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -528,9 +528,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ILocationCoordinate :
+        IFormLinkContainer,
         ILocationCoordinateGetter,
-        ILoquiObjectSetter<ILocationCoordinate>,
-        IFormLinkContainer
+        ILoquiObjectSetter<ILocationCoordinate>
     {
         new FormLink<IComplexLocationGetter> Location { get; set; }
         new ExtendedList<P2Int16> Coordinates { get; }
@@ -538,9 +538,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ILocationCoordinateGetter :
         ILoquiObject,
-        ILoquiObject<ILocationCoordinateGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ILocationCoordinateGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

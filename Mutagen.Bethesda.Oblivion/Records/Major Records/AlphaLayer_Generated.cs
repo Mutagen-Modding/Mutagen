@@ -30,8 +30,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class AlphaLayer :
         BaseLayer,
         IAlphaLayer,
-        ILoquiObjectSetter<AlphaLayer>,
-        IEquatable<IAlphaLayerGetter>
+        IEquatable<IAlphaLayerGetter>,
+        ILoquiObjectSetter<AlphaLayer>
     {
         #region Ctor
         public AlphaLayer()
@@ -85,8 +85,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             BaseLayer.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -418,8 +418,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IAlphaLayerGetter :
         IBaseLayerGetter,
-        ILoquiObject<IAlphaLayerGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IAlphaLayerGetter>
     {
         static new ILoquiRegistration Registration => AlphaLayer_Registration.Instance;
         ReadOnlyMemorySlice<Byte>? AlphaLayerData { get; }

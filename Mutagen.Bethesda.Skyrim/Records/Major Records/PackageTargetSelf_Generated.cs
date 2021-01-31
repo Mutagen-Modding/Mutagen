@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class PackageTargetSelf :
         APackageTarget,
-        IPackageTargetSelf,
+        IEquatable<IPackageTargetSelfGetter>,
         ILoquiObjectSetter<PackageTargetSelf>,
-        IEquatable<IPackageTargetSelfGetter>
+        IPackageTargetSelf
     {
         #region Ctor
         public PackageTargetSelf()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             APackageTarget.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -397,17 +397,17 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPackageTargetSelf :
-        IPackageTargetSelfGetter,
         IAPackageTarget,
-        ILoquiObjectSetter<IPackageTargetSelf>
+        ILoquiObjectSetter<IPackageTargetSelf>,
+        IPackageTargetSelfGetter
     {
         new Int32 Data { get; set; }
     }
 
     public partial interface IPackageTargetSelfGetter :
         IAPackageTargetGetter,
-        ILoquiObject<IPackageTargetSelfGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IPackageTargetSelfGetter>
     {
         static new ILoquiRegistration Registration => PackageTargetSelf_Registration.Instance;
         Int32 Data { get; }

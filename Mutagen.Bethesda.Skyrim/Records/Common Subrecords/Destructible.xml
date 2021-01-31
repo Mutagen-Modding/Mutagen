@@ -15,7 +15,6 @@
     </Fields>
   </Object>
   <Object name="DestructionStage" objType="Subrecord" endMarkerType="DSTF" GUID="8f5dd48b-9ae2-4626-838c-c0821263148a" ID="140">
-    <Interface>IModeled</Interface>
     <Fields>
       <RefDirect name="Data" refName="DestructionStageData" />
       <RefDirect name="Model" refName="Model">

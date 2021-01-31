@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class SkillData :
-        ISkillData,
+        IEquatable<ISkillDataGetter>,
         ILoquiObjectSetter<SkillData>,
-        IEquatable<ISkillDataGetter>
+        ISkillData
     {
         #region Ctor
         public SkillData()
@@ -86,8 +86,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -536,8 +536,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ISkillData :
-        ISkillDataGetter,
-        ILoquiObjectSetter<ISkillData>
+        ILoquiObjectSetter<ISkillData>,
+        ISkillDataGetter
     {
         new ActorValue Action { get; set; }
         new ActorValue Attribute { get; set; }
@@ -548,8 +548,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ISkillDataGetter :
         ILoquiObject,
-        ILoquiObject<ISkillDataGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ISkillDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

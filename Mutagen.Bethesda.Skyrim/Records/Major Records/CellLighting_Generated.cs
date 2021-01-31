@@ -29,8 +29,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class CellLighting :
         ICellLighting,
-        ILoquiObjectSetter<CellLighting>,
-        IEquatable<ICellLightingGetter>
+        IEquatable<ICellLightingGetter>,
+        ILoquiObjectSetter<CellLighting>
     {
         #region Ctor
         public CellLighting()
@@ -144,8 +144,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1131,8 +1131,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ICellLighting :
-        ICellLightingGetter,
         IAmbientColorsCommon,
+        ICellLightingGetter,
         ILoquiObjectSetter<ICellLighting>
     {
         new CellLighting.VersioningBreaks Versioning { get; set; }
@@ -1164,8 +1164,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ICellLightingGetter :
         ILoquiObject,
         IAmbientColorsCommonGetter,
-        ILoquiObject<ICellLightingGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ICellLightingGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

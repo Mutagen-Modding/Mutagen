@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class DualCastData :
         SkyrimMajorRecord,
         IDualCastDataInternal,
-        ILoquiObjectSetter<DualCastData>,
-        IEquatable<IDualCastDataGetter>
+        IEquatable<IDualCastDataGetter>,
+        ILoquiObjectSetter<DualCastData>
     {
         #region Ctor
         protected DualCastData()
@@ -46,6 +46,18 @@ namespace Mutagen.Bethesda.Skyrim
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter IDualCastDataGetter.ObjectBounds => ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ObjectBounds? IObjectBoundedOptional.ObjectBounds
+        {
+            get => this.ObjectBounds;
+            set => this.ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
         #endregion
         #region Projectile
         public FormLink<IProjectileGetter> Projectile { get; set; } = new FormLink<IProjectileGetter>();
@@ -101,8 +113,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -688,10 +700,11 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IDualCastData :
         IDualCastDataGetter,
-        ISkyrimMajorRecord,
-        IObjectBounded,
+        IFormLinkContainer,
         ILoquiObjectSetter<IDualCastDataInternal>,
-        IFormLinkContainer
+        IObjectBounded,
+        IObjectBoundedOptional,
+        ISkyrimMajorRecord
     {
         new ObjectBounds ObjectBounds { get; set; }
         new FormLink<IProjectileGetter> Projectile { get; set; }
@@ -712,10 +725,11 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IDualCastDataGetter :
         ISkyrimMajorRecordGetter,
-        IObjectBoundedGetter,
-        ILoquiObject<IDualCastDataGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IDualCastDataGetter>,
+        IObjectBoundedGetter,
+        IObjectBoundedOptionalGetter
     {
         static new ILoquiRegistration Registration => DualCastData_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }

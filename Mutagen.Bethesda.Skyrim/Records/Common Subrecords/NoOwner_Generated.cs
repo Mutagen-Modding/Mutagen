@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class NoOwner :
         OwnerTarget,
-        INoOwner,
+        IEquatable<INoOwnerGetter>,
         ILoquiObjectSetter<NoOwner>,
-        IEquatable<INoOwnerGetter>
+        INoOwner
     {
         #region Ctor
         public NoOwner()
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             OwnerTarget.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -427,9 +427,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface INoOwner :
+        ILoquiObjectSetter<INoOwner>,
         INoOwnerGetter,
-        IOwnerTarget,
-        ILoquiObjectSetter<INoOwner>
+        IOwnerTarget
     {
         new UInt32 RawOwnerData { get; set; }
         new UInt32 RawVariableData { get; set; }
@@ -437,8 +437,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface INoOwnerGetter :
         IOwnerTargetGetter,
-        ILoquiObject<INoOwnerGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<INoOwnerGetter>
     {
         static new ILoquiRegistration Registration => NoOwner_Registration.Instance;
         UInt32 RawOwnerData { get; }

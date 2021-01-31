@@ -28,9 +28,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class PlacedPrimitive :
-        IPlacedPrimitive,
+        IEquatable<IPlacedPrimitiveGetter>,
         ILoquiObjectSetter<PlacedPrimitive>,
-        IEquatable<IPlacedPrimitiveGetter>
+        IPlacedPrimitive
     {
         #region Ctor
         public PlacedPrimitive()
@@ -84,8 +84,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -506,8 +506,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPlacedPrimitive :
-        IPlacedPrimitiveGetter,
-        ILoquiObjectSetter<IPlacedPrimitive>
+        ILoquiObjectSetter<IPlacedPrimitive>,
+        IPlacedPrimitiveGetter
     {
         new P3Float Bounds { get; set; }
         new Color Color { get; set; }
@@ -517,8 +517,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IPlacedPrimitiveGetter :
         ILoquiObject,
-        ILoquiObject<IPlacedPrimitiveGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IPlacedPrimitiveGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

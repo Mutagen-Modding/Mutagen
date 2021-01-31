@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class SoundOutputModel :
         SkyrimMajorRecord,
-        ISoundOutputModelInternal,
+        IEquatable<ISoundOutputModelGetter>,
         ILoquiObjectSetter<SoundOutputModel>,
-        IEquatable<ISoundOutputModelGetter>
+        ISoundOutputModelInternal
     {
         #region Ctor
         protected SoundOutputModel()
@@ -146,8 +146,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -712,9 +712,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ISoundOutputModel :
-        ISoundOutputModelGetter,
+        ILoquiObjectSetter<ISoundOutputModelInternal>,
         ISkyrimMajorRecord,
-        ILoquiObjectSetter<ISoundOutputModelInternal>
+        ISoundOutputModelGetter
     {
         new SoundOutputData? Data { get; set; }
         new MemorySlice<Byte>? FNAM { get; set; }
@@ -734,8 +734,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ISoundOutputModelGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<ISoundOutputModelGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ISoundOutputModelGetter>
     {
         static new ILoquiRegistration Registration => SoundOutputModel_Registration.Instance;
         ISoundOutputDataGetter? Data { get; }

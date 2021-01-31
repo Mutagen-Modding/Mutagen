@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class SceneScriptFragments :
         ScriptFragments,
-        ISceneScriptFragments,
+        IEquatable<ISceneScriptFragmentsGetter>,
         ILoquiObjectSetter<SceneScriptFragments>,
-        IEquatable<ISceneScriptFragmentsGetter>
+        ISceneScriptFragments
     {
         #region Ctor
         public SceneScriptFragments()
@@ -88,8 +88,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             ScriptFragments.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -490,17 +490,17 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ISceneScriptFragments :
+        ILoquiObjectSetter<ISceneScriptFragments>,
         ISceneScriptFragmentsGetter,
-        IScriptFragments,
-        ILoquiObjectSetter<ISceneScriptFragments>
+        IScriptFragments
     {
         new ExtendedList<ScenePhaseFragment> PhaseFragments { get; }
     }
 
     public partial interface ISceneScriptFragmentsGetter :
         IScriptFragmentsGetter,
-        ILoquiObject<ISceneScriptFragmentsGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ISceneScriptFragmentsGetter>
     {
         static new ILoquiRegistration Registration => SceneScriptFragments_Registration.Instance;
         IReadOnlyList<IScenePhaseFragmentGetter> PhaseFragments { get; }

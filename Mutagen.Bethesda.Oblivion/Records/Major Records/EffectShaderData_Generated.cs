@@ -29,8 +29,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class EffectShaderData :
         IEffectShaderData,
-        ILoquiObjectSetter<EffectShaderData>,
-        IEquatable<IEffectShaderDataGetter>
+        IEquatable<IEffectShaderDataGetter>,
+        ILoquiObjectSetter<EffectShaderData>
     {
         #region Ctor
         public EffectShaderData()
@@ -243,8 +243,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -2218,8 +2218,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IEffectShaderDataGetter :
         ILoquiObject,
-        ILoquiObject<IEffectShaderDataGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IEffectShaderDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

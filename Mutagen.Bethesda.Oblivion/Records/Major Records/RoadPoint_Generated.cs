@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class RoadPoint :
-        IRoadPoint,
+        IEquatable<IRoadPointGetter>,
         ILoquiObjectSetter<RoadPoint>,
-        IEquatable<IRoadPointGetter>
+        IRoadPoint
     {
         #region Ctor
         public RoadPoint()
@@ -99,8 +99,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -562,8 +562,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IRoadPoint :
-        IRoadPointGetter,
-        ILoquiObjectSetter<IRoadPoint>
+        ILoquiObjectSetter<IRoadPoint>,
+        IRoadPointGetter
     {
         new P3Float Point { get; set; }
         new MemorySlice<Byte> NumConnectionsFluffBytes { get; set; }
@@ -572,8 +572,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IRoadPointGetter :
         ILoquiObject,
-        ILoquiObject<IRoadPointGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IRoadPointGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

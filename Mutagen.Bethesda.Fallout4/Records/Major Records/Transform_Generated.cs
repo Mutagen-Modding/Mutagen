@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Fallout4
     #region Class
     public partial class Transform :
         Fallout4MajorRecord,
-        ITransformInternal,
+        IEquatable<ITransformGetter>,
         ILoquiObjectSetter<Transform>,
-        IEquatable<ITransformGetter>
+        ITransformInternal
     {
         #region Ctor
         protected Transform()
@@ -113,8 +113,8 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mask
         public new class Mask<TItem> :
             Fallout4MajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -628,9 +628,9 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface ITransform :
-        ITransformGetter,
         IFallout4MajorRecord,
-        ILoquiObjectSetter<ITransformInternal>
+        ILoquiObjectSetter<ITransformInternal>,
+        ITransformGetter
     {
         new P3Float Position { get; set; }
         new P3Float Rotation { get; set; }
@@ -649,8 +649,8 @@ namespace Mutagen.Bethesda.Fallout4
 
     public partial interface ITransformGetter :
         IFallout4MajorRecordGetter,
-        ILoquiObject<ITransformGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ITransformGetter>
     {
         static new ILoquiRegistration Registration => Transform_Registration.Instance;
         P3Float Position { get; }

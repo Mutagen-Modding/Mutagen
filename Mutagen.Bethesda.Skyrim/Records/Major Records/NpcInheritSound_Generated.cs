@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class NpcInheritSound :
         ANpcSoundDefinition,
-        INpcInheritSound,
+        IEquatable<INpcInheritSoundGetter>,
         ILoquiObjectSetter<NpcInheritSound>,
-        IEquatable<INpcInheritSoundGetter>
+        INpcInheritSound
     {
         #region Ctor
         public NpcInheritSound()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             ANpcSoundDefinition.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem InheritsSoundsFrom)
@@ -395,19 +395,19 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface INpcInheritSound :
-        INpcInheritSoundGetter,
         IANpcSoundDefinition,
+        IFormLinkContainer,
         ILoquiObjectSetter<INpcInheritSound>,
-        IFormLinkContainer
+        INpcInheritSoundGetter
     {
         new FormLinkNullable<INpcGetter> InheritsSoundsFrom { get; set; }
     }
 
     public partial interface INpcInheritSoundGetter :
         IANpcSoundDefinitionGetter,
-        ILoquiObject<INpcInheritSoundGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<INpcInheritSoundGetter>
     {
         static new ILoquiRegistration Registration => NpcInheritSound_Registration.Instance;
         FormLinkNullable<INpcGetter> InheritsSoundsFrom { get; }

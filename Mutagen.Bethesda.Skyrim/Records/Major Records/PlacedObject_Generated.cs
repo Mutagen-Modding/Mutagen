@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class PlacedObject :
         APlaced,
-        IPlacedObjectInternal,
+        IEquatable<IPlacedObjectGetter>,
         ILoquiObjectSetter<PlacedObject>,
-        IEquatable<IPlacedObjectGetter>
+        IPlacedObjectInternal
     {
         #region Ctor
         protected PlacedObject()
@@ -527,8 +527,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             APlaced.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -3058,16 +3058,16 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPlacedObject :
-        IPlacedObjectGetter,
         IAPlaced,
-        ILinkedReference,
+        IFormLinkContainer,
         IKeywordLinkedReference,
-        IPlaced,
-        IPlacedSimple,
-        IPlacedThing,
+        ILinkedReference,
         ILocationTargetable,
         ILoquiObjectSetter<IPlacedObjectInternal>,
-        IFormLinkContainer
+        IPlaced,
+        IPlacedObjectGetter,
+        IPlacedSimple,
+        IPlacedThing
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new FormLinkNullable<ISkyrimMajorRecordGetter> Base { get; set; }
@@ -3138,15 +3138,15 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IPlacedObjectGetter :
         IAPlacedGetter,
-        ILinkedReferenceGetter,
+        IBinaryItem,
+        IFormLinkContainerGetter,
         IKeywordLinkedReferenceGetter,
-        IPlacedGetter,
-        IPlacedSimpleGetter,
-        IPlacedThingGetter,
+        ILinkedReferenceGetter,
         ILocationTargetableGetter,
         ILoquiObject<IPlacedObjectGetter>,
-        IFormLinkContainerGetter,
-        IBinaryItem
+        IPlacedGetter,
+        IPlacedSimpleGetter,
+        IPlacedThingGetter
     {
         static new ILoquiRegistration Registration => PlacedObject_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }

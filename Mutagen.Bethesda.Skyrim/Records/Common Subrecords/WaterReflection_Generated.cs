@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class WaterReflection :
-        IWaterReflection,
+        IEquatable<IWaterReflectionGetter>,
         ILoquiObjectSetter<WaterReflection>,
-        IEquatable<IWaterReflectionGetter>
+        IWaterReflection
     {
         #region Ctor
         public WaterReflection()
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -481,9 +481,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IWaterReflection :
-        IWaterReflectionGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IWaterReflection>,
-        IFormLinkContainer
+        IWaterReflectionGetter
     {
         new WaterReflection.VersioningBreaks Versioning { get; set; }
         new FormLink<IPlacedObjectGetter> Water { get; set; }
@@ -492,9 +492,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IWaterReflectionGetter :
         ILoquiObject,
-        ILoquiObject<IWaterReflectionGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IWaterReflectionGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

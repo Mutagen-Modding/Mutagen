@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class TopicReferenceSubtype :
         ATopicReference,
-        ITopicReferenceSubtype,
+        IEquatable<ITopicReferenceSubtypeGetter>,
         ILoquiObjectSetter<TopicReferenceSubtype>,
-        IEquatable<ITopicReferenceSubtypeGetter>
+        ITopicReferenceSubtype
     {
         #region Ctor
         public TopicReferenceSubtype()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             ATopicReference.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem Subtype)
@@ -393,17 +393,17 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ITopicReferenceSubtype :
-        ITopicReferenceSubtypeGetter,
         IATopicReference,
-        ILoquiObjectSetter<ITopicReferenceSubtype>
+        ILoquiObjectSetter<ITopicReferenceSubtype>,
+        ITopicReferenceSubtypeGetter
     {
         new RecordType Subtype { get; set; }
     }
 
     public partial interface ITopicReferenceSubtypeGetter :
         IATopicReferenceGetter,
-        ILoquiObject<ITopicReferenceSubtypeGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ITopicReferenceSubtypeGetter>
     {
         static new ILoquiRegistration Registration => TopicReferenceSubtype_Registration.Instance;
         RecordType Subtype { get; }

@@ -11,8 +11,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// Implemented by: [Flora, LandscapeTexture, MoveableStatic, Static, Tree]
     /// </summary>
     public partial interface IRegionTarget :
-        ISkyrimMajorRecordInternal,
-        IRegionTargetGetter
+        IRegionTargetGetter,
+        ISkyrimMajorRecordInternal
     {
     }
 

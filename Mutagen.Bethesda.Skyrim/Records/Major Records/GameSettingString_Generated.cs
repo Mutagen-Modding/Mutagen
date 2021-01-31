@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class GameSettingString :
         GameSetting,
+        IEquatable<IGameSettingStringGetter>,
         IGameSettingStringInternal,
-        ILoquiObjectSetter<GameSettingString>,
-        IEquatable<IGameSettingStringGetter>
+        ILoquiObjectSetter<GameSettingString>
     {
         #region Ctor
         protected GameSettingString()
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             GameSetting.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -457,8 +457,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IGameSettingString :
-        IGameSettingStringGetter,
         IGameSetting,
+        IGameSettingStringGetter,
         ILoquiObjectSetter<IGameSettingStringInternal>
     {
         new TranslatedString? Data { get; set; }
@@ -473,8 +473,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IGameSettingStringGetter :
         IGameSettingGetter,
-        ILoquiObject<IGameSettingStringGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IGameSettingStringGetter>
     {
         static new ILoquiRegistration Registration => GameSettingString_Registration.Instance;
         ITranslatedStringGetter? Data { get; }

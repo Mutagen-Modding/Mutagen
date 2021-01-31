@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
     public partial class Group<T> :
+        IEquatable<IGroupGetter<T>>,
         IGroup<T>,
-        ILoquiObjectSetter<Group<T>>,
-        IEquatable<IGroupGetter<T>>
+        ILoquiObjectSetter<Group<T>>
         where T : class, IFallout4MajorRecordInternal, IBinaryItem
     {
         #region Ctor
@@ -193,10 +193,10 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IGroup<T> :
+        IFormLinkContainer,
         IGroupGetter<T>,
-        IMajorRecordEnumerable,
         ILoquiObjectSetter<IGroup<T>>,
-        IFormLinkContainer
+        IMajorRecordEnumerable
         where T : class, IFallout4MajorRecordInternal, IBinaryItem
     {
         new GroupTypeEnum Type { get; set; }
@@ -207,10 +207,10 @@ namespace Mutagen.Bethesda.Fallout4
 
     public partial interface IGroupGetter<out T> :
         ILoquiObject,
-        IMajorRecordGetterEnumerable,
-        ILoquiObject<IGroupGetter<T>>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IGroupGetter<T>>,
+        IMajorRecordGetterEnumerable
         where T : class, IFallout4MajorRecordGetter, IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -1535,8 +1535,8 @@ namespace Mutagen.Bethesda.Fallout4
     public static class Group
     {
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)

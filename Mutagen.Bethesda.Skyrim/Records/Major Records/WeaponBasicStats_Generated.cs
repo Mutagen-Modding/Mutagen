@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class WeaponBasicStats :
-        IWeaponBasicStats,
+        IEquatable<IWeaponBasicStatsGetter>,
         ILoquiObjectSetter<WeaponBasicStats>,
-        IEquatable<IWeaponBasicStatsGetter>
+        IWeaponBasicStats
     {
         #region Ctor
         public WeaponBasicStats()
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -474,9 +474,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IWeaponBasicStats :
+        ILoquiObjectSetter<IWeaponBasicStats>,
         IWeaponBasicStatsGetter,
-        IWeightValue,
-        ILoquiObjectSetter<IWeaponBasicStats>
+        IWeightValue
     {
         new UInt32 Value { get; set; }
         new Single Weight { get; set; }
@@ -485,9 +485,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IWeaponBasicStatsGetter :
         ILoquiObject,
-        IWeightValueGetter,
+        IBinaryItem,
         ILoquiObject<IWeaponBasicStatsGetter>,
-        IBinaryItem
+        IWeightValueGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

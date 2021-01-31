@@ -32,9 +32,9 @@ namespace Mutagen.Bethesda.Fallout4
     /// </summary>
     public abstract partial class Fallout4MajorRecord :
         MajorRecord,
+        IEquatable<IFallout4MajorRecordGetter>,
         IFallout4MajorRecordInternal,
-        ILoquiObjectSetter<Fallout4MajorRecord>,
-        IEquatable<IFallout4MajorRecordGetter>
+        ILoquiObjectSetter<Fallout4MajorRecord>
     {
         #region Ctor
         protected Fallout4MajorRecord()
@@ -83,8 +83,8 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mask
         public new class Mask<TItem> :
             MajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -458,9 +458,9 @@ namespace Mutagen.Bethesda.Fallout4
     /// </summary>
     public partial interface IFallout4MajorRecord :
         IFallout4MajorRecordGetter,
-        IMajorRecord,
+        IFormLinkContainer,
         ILoquiObjectSetter<IFallout4MajorRecordInternal>,
-        IFormLinkContainer
+        IMajorRecord
     {
         new UInt16 FormVersion { get; set; }
         new UInt16 Version2 { get; set; }
@@ -478,9 +478,9 @@ namespace Mutagen.Bethesda.Fallout4
     /// </summary>
     public partial interface IFallout4MajorRecordGetter :
         IMajorRecordGetter,
-        ILoquiObject<IFallout4MajorRecordGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IFallout4MajorRecordGetter>
     {
         static new ILoquiRegistration Registration => Fallout4MajorRecord_Registration.Instance;
         UInt16 FormVersion { get; }

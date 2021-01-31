@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class RegionDataHeader :
-        IRegionDataHeaderInternal,
+        IEquatable<IRegionDataHeaderGetter>,
         ILoquiObjectSetter<RegionDataHeader>,
-        IEquatable<IRegionDataHeaderGetter>
+        IRegionDataHeaderInternal
     {
         #region Ctor
         public RegionDataHeader()
@@ -86,8 +86,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -480,8 +480,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IRegionDataHeader :
-        IRegionDataHeaderGetter,
-        ILoquiObjectSetter<IRegionDataHeaderInternal>
+        ILoquiObjectSetter<IRegionDataHeaderInternal>,
+        IRegionDataHeaderGetter
     {
         new RegionData.RegionDataFlag Flags { get; set; }
         new Byte Priority { get; set; }
@@ -496,8 +496,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IRegionDataHeaderGetter :
         ILoquiObject,
-        ILoquiObject<IRegionDataHeaderGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IRegionDataHeaderGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

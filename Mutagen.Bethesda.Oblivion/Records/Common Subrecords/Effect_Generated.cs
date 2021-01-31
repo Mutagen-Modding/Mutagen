@@ -29,8 +29,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Effect :
         IEffect,
-        ILoquiObjectSetter<Effect>,
-        IEquatable<IEffectGetter>
+        IEquatable<IEffectGetter>,
+        ILoquiObjectSetter<Effect>
     {
         #region Ctor
         public Effect()
@@ -88,8 +88,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -470,8 +470,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IEffect :
         IEffectGetter,
-        ILoquiObjectSetter<IEffect>,
-        IFormLinkContainer
+        IFormLinkContainer,
+        ILoquiObjectSetter<IEffect>
     {
         new EffectData Data { get; set; }
         new ScriptEffect? ScriptEffect { get; set; }
@@ -479,9 +479,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IEffectGetter :
         ILoquiObject,
-        ILoquiObject<IEffectGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IEffectGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

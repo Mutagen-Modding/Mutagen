@@ -30,8 +30,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class ConditionFloat :
         Condition,
         IConditionFloat,
-        ILoquiObjectSetter<ConditionFloat>,
-        IEquatable<IConditionFloatGetter>
+        IEquatable<IConditionFloatGetter>,
+        ILoquiObjectSetter<ConditionFloat>
     {
         #region Ctor
         public ConditionFloat()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             Condition.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -443,10 +443,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IConditionFloat :
-        IConditionFloatGetter,
         ICondition,
-        ILoquiObjectSetter<IConditionFloat>,
-        IFormLinkContainer
+        IConditionFloatGetter,
+        IFormLinkContainer,
+        ILoquiObjectSetter<IConditionFloat>
     {
         new Single ComparisonValue { get; set; }
         new ConditionData Data { get; set; }
@@ -454,9 +454,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IConditionFloatGetter :
         IConditionGetter,
-        ILoquiObject<IConditionFloatGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IConditionFloatGetter>
     {
         static new ILoquiRegistration Registration => ConditionFloat_Registration.Instance;
         Single ComparisonValue { get; }

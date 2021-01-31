@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class Rank :
-        IRank,
+        IEquatable<IRankGetter>,
         ILoquiObjectSetter<Rank>,
-        IEquatable<IRankGetter>
+        IRank
     {
         #region Ctor
         public Rank()
@@ -85,8 +85,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -484,8 +484,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IRank :
-        IRankGetter,
-        ILoquiObjectSetter<IRank>
+        ILoquiObjectSetter<IRank>,
+        IRankGetter
     {
         new UInt32? Number { get; set; }
         new IGenderedItem<TranslatedString?>? Title { get; set; }
@@ -494,8 +494,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IRankGetter :
         ILoquiObject,
-        ILoquiObject<IRankGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IRankGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

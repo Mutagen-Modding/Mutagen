@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class PlacedArrow :
         APlacedTrap,
-        IPlacedArrowInternal,
+        IEquatable<IPlacedArrowGetter>,
         ILoquiObjectSetter<PlacedArrow>,
-        IEquatable<IPlacedArrowGetter>
+        IPlacedArrowInternal
     {
         #region Ctor
         protected PlacedArrow()
@@ -78,8 +78,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             APlacedTrap.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -491,10 +491,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPlacedArrow :
-        IPlacedArrowGetter,
         IAPlacedTrap,
+        IFormLinkContainer,
         ILoquiObjectSetter<IPlacedArrowInternal>,
-        IFormLinkContainer
+        IPlacedArrowGetter
     {
         new FormLink<IProjectileGetter> Projectile { get; set; }
     }
@@ -508,9 +508,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IPlacedArrowGetter :
         IAPlacedTrapGetter,
-        ILoquiObject<IPlacedArrowGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IPlacedArrowGetter>
     {
         static new ILoquiRegistration Registration => PlacedArrow_Registration.Instance;
         FormLink<IProjectileGetter> Projectile { get; }

@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class MagicEffectEnchantmentArchetype :
         MagicEffectArchetype,
-        IMagicEffectEnchantmentArchetypeInternal,
+        IEquatable<IMagicEffectEnchantmentArchetypeGetter>,
         ILoquiObjectSetter<MagicEffectEnchantmentArchetype>,
-        IEquatable<IMagicEffectEnchantmentArchetypeGetter>
+        IMagicEffectEnchantmentArchetypeInternal
     {
 
         #region To String
@@ -66,8 +66,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             MagicEffectArchetype.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -349,9 +349,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IMagicEffectEnchantmentArchetype :
-        IMagicEffectEnchantmentArchetypeGetter,
+        ILoquiObjectSetter<IMagicEffectEnchantmentArchetypeInternal>,
         IMagicEffectArchetype,
-        ILoquiObjectSetter<IMagicEffectEnchantmentArchetypeInternal>
+        IMagicEffectEnchantmentArchetypeGetter
     {
     }
 
@@ -364,8 +364,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IMagicEffectEnchantmentArchetypeGetter :
         IMagicEffectArchetypeGetter,
-        ILoquiObject<IMagicEffectEnchantmentArchetypeGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IMagicEffectEnchantmentArchetypeGetter>
     {
         static new ILoquiRegistration Registration => MagicEffectEnchantmentArchetype_Registration.Instance;
 

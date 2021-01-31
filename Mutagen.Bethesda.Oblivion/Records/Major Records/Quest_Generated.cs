@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Quest :
         OblivionMajorRecord,
-        IQuestInternal,
+        IEquatable<IQuestGetter>,
         ILoquiObjectSetter<Quest>,
-        IEquatable<IQuestGetter>
+        IQuestInternal
     {
         #region Ctor
         protected Quest()
@@ -49,6 +49,16 @@ namespace Mutagen.Bethesda.Oblivion
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IQuestGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
         #endregion
         #region Icon
         public String? Icon { get; set; }
@@ -141,8 +151,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -901,11 +911,12 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IQuest :
-        IQuestGetter,
-        IOblivionMajorRecord,
-        INamed,
+        IFormLinkContainer,
         ILoquiObjectSetter<IQuestInternal>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired,
+        IOblivionMajorRecord,
+        IQuestGetter
     {
         new FormLinkNullable<IScriptGetter> Script { get; set; }
         new String? Name { get; set; }
@@ -925,10 +936,11 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IQuestGetter :
         IOblivionMajorRecordGetter,
-        INamedGetter,
-        ILoquiObject<IQuestGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IQuestGetter>,
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Quest_Registration.Instance;
         FormLinkNullable<IScriptGetter> Script { get; }
@@ -2176,6 +2188,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Name
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        #endregion
         #endregion
         #region Icon
         private int? _IconLocation;

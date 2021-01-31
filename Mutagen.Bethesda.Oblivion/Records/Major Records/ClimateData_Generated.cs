@@ -28,8 +28,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class ClimateData :
         IClimateData,
-        ILoquiObjectSetter<ClimateData>,
-        IEquatable<IClimateDataGetter>
+        IEquatable<IClimateDataGetter>,
+        ILoquiObjectSetter<ClimateData>
     {
         #region Ctor
         public ClimateData()
@@ -93,8 +93,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -613,8 +613,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IClimateDataGetter :
         ILoquiObject,
-        ILoquiObject<IClimateDataGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IClimateDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

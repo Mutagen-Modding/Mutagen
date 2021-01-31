@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class MagicEffectSpawnHazardArchetype :
         MagicEffectArchetype,
-        IMagicEffectSpawnHazardArchetypeInternal,
+        IEquatable<IMagicEffectSpawnHazardArchetypeGetter>,
         ILoquiObjectSetter<MagicEffectSpawnHazardArchetype>,
-        IEquatable<IMagicEffectSpawnHazardArchetypeGetter>
+        IMagicEffectSpawnHazardArchetypeInternal
     {
 
         #region To String
@@ -66,8 +66,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             MagicEffectArchetype.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -349,9 +349,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IMagicEffectSpawnHazardArchetype :
-        IMagicEffectSpawnHazardArchetypeGetter,
+        ILoquiObjectSetter<IMagicEffectSpawnHazardArchetypeInternal>,
         IMagicEffectArchetype,
-        ILoquiObjectSetter<IMagicEffectSpawnHazardArchetypeInternal>
+        IMagicEffectSpawnHazardArchetypeGetter
     {
     }
 
@@ -364,8 +364,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IMagicEffectSpawnHazardArchetypeGetter :
         IMagicEffectArchetypeGetter,
-        ILoquiObject<IMagicEffectSpawnHazardArchetypeGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IMagicEffectSpawnHazardArchetypeGetter>
     {
         static new ILoquiRegistration Registration => MagicEffectSpawnHazardArchetype_Registration.Instance;
 

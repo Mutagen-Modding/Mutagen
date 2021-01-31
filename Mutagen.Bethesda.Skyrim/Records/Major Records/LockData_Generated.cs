@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class LockData :
+        IEquatable<ILockDataGetter>,
         ILockData,
-        ILoquiObjectSetter<LockData>,
-        IEquatable<ILockDataGetter>
+        ILoquiObjectSetter<LockData>
     {
         #region Ctor
         public LockData()
@@ -102,8 +102,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -554,9 +554,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ILockData :
+        IFormLinkContainer,
         ILockDataGetter,
-        ILoquiObjectSetter<ILockData>,
-        IFormLinkContainer
+        ILoquiObjectSetter<ILockData>
     {
         new LockLevel Level { get; set; }
         new MemorySlice<Byte> Unused { get; set; }
@@ -567,9 +567,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ILockDataGetter :
         ILoquiObject,
-        ILoquiObject<ILockDataGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ILockDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

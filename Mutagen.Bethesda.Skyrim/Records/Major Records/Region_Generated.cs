@@ -31,9 +31,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class Region :
         SkyrimMajorRecord,
-        IRegionInternal,
+        IEquatable<IRegionGetter>,
         ILoquiObjectSetter<Region>,
-        IEquatable<IRegionGetter>
+        IRegionInternal
     {
         #region Ctor
         protected Region()
@@ -164,8 +164,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -889,11 +889,11 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IRegion :
-        IRegionGetter,
-        ISkyrimMajorRecord,
         IEmittance,
+        IFormLinkContainer,
         ILoquiObjectSetter<IRegionInternal>,
-        IFormLinkContainer
+        IRegionGetter,
+        ISkyrimMajorRecord
     {
         new Color? MapColor { get; set; }
         new FormLinkNullable<IWorldspaceGetter> Worldspace { get; set; }
@@ -919,10 +919,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IRegionGetter :
         ISkyrimMajorRecordGetter,
+        IBinaryItem,
         IEmittanceGetter,
-        ILoquiObject<IRegionGetter>,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IRegionGetter>
     {
         static new ILoquiRegistration Registration => Region_Registration.Instance;
         Color? MapColor { get; }

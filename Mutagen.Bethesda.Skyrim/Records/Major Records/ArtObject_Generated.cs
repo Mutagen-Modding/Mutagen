@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class ArtObject :
         SkyrimMajorRecord,
         IArtObjectInternal,
-        ILoquiObjectSetter<ArtObject>,
-        IEquatable<IArtObjectGetter>
+        IEquatable<IArtObjectGetter>,
+        ILoquiObjectSetter<ArtObject>
     {
         #region Ctor
         protected ArtObject()
@@ -46,6 +46,18 @@ namespace Mutagen.Bethesda.Skyrim
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter IArtObjectGetter.ObjectBounds => ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ObjectBounds? IObjectBoundedOptional.ObjectBounds
+        {
+            get => this.ObjectBounds;
+            set => this.ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
         #endregion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -57,6 +69,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IArtObjectGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
         #endregion
         #region Type
         public ArtObject.TypeEnum? Type { get; set; }
@@ -96,8 +112,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -546,11 +562,12 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IArtObject :
         IArtObjectGetter,
-        ISkyrimMajorRecord,
+        IFormLinkContainer,
+        ILoquiObjectSetter<IArtObjectInternal>,
         IModeled,
         IObjectBounded,
-        ILoquiObjectSetter<IArtObjectInternal>,
-        IFormLinkContainer
+        IObjectBoundedOptional,
+        ISkyrimMajorRecord
     {
         new ObjectBounds ObjectBounds { get; set; }
         new Model? Model { get; set; }
@@ -566,11 +583,12 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IArtObjectGetter :
         ISkyrimMajorRecordGetter,
+        IBinaryItem,
+        IFormLinkContainerGetter,
+        ILoquiObject<IArtObjectGetter>,
         IModeledGetter,
         IObjectBoundedGetter,
-        ILoquiObject<IArtObjectGetter>,
-        IFormLinkContainerGetter,
-        IBinaryItem
+        IObjectBoundedOptionalGetter
     {
         static new ILoquiRegistration Registration => ArtObject_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }

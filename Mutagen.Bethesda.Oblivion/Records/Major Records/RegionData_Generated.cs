@@ -31,9 +31,9 @@ namespace Mutagen.Bethesda.Oblivion
     /// Implemented by: [RegionObjects, RegionMap, RegionGrasses, RegionSounds, RegionWeather]
     /// </summary>
     public abstract partial class RegionData :
-        IRegionData,
+        IEquatable<IRegionDataGetter>,
         ILoquiObjectSetter<RegionData>,
-        IEquatable<IRegionDataGetter>
+        IRegionData
     {
         #region Ctor
         public RegionData()
@@ -86,8 +86,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem Header)
@@ -406,9 +406,9 @@ namespace Mutagen.Bethesda.Oblivion
     /// Implemented by: [RegionObjects, RegionMap, RegionGrasses, RegionSounds, RegionWeather]
     /// </summary>
     public partial interface IRegionData :
-        IRegionDataGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IRegionData>,
-        IFormLinkContainer
+        IRegionDataGetter
     {
         new RegionDataHeader? Header { get; set; }
     }
@@ -418,9 +418,9 @@ namespace Mutagen.Bethesda.Oblivion
     /// </summary>
     public partial interface IRegionDataGetter :
         ILoquiObject,
-        ILoquiObject<IRegionDataGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IRegionDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class PerkScriptFlag :
-        IPerkScriptFlag,
+        IEquatable<IPerkScriptFlagGetter>,
         ILoquiObjectSetter<PerkScriptFlag>,
-        IEquatable<IPerkScriptFlagGetter>
+        IPerkScriptFlag
     {
         #region Ctor
         public PerkScriptFlag()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -443,8 +443,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPerkScriptFlag :
-        IPerkScriptFlagGetter,
-        ILoquiObjectSetter<IPerkScriptFlag>
+        ILoquiObjectSetter<IPerkScriptFlag>,
+        IPerkScriptFlagGetter
     {
         new PerkScriptFlag.Flag Flags { get; set; }
         new UInt16 FragmentIndex { get; set; }
@@ -452,8 +452,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IPerkScriptFlagGetter :
         ILoquiObject,
-        ILoquiObject<IPerkScriptFlagGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IPerkScriptFlagGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

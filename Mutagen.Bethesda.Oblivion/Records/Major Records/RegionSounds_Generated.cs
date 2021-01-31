@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class RegionSounds :
         RegionData,
-        IRegionSounds,
+        IEquatable<IRegionSoundsGetter>,
         ILoquiObjectSetter<RegionSounds>,
-        IEquatable<IRegionSoundsGetter>
+        IRegionSounds
     {
         #region Ctor
         public RegionSounds()
@@ -93,8 +93,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             RegionData.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -522,10 +522,10 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IRegionSounds :
-        IRegionSoundsGetter,
-        IRegionData,
+        IFormLinkContainer,
         ILoquiObjectSetter<IRegionSounds>,
-        IFormLinkContainer
+        IRegionData,
+        IRegionSoundsGetter
     {
         new MusicType? MusicType { get; set; }
         new ExtendedList<RegionSound>? Sounds { get; set; }
@@ -533,9 +533,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IRegionSoundsGetter :
         IRegionDataGetter,
-        ILoquiObject<IRegionSoundsGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IRegionSoundsGetter>
     {
         static new ILoquiRegistration Registration => RegionSounds_Registration.Instance;
         MusicType? MusicType { get; }

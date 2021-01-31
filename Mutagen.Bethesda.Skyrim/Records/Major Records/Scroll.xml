@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Scroll" recordType="SCRL" objType="Record" baseClass="SkyrimMajorRecord" GUID="966367fb-9898-41f3-a250-d453749a138b" ID="139">
-    <Interface>ITranslatedNamed</Interface>
-    <Interface>IModeled</Interface>
-    <Interface>IObjectBounded</Interface>
-    <Interface>IWeightValue</Interface>
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <String name="Name" recordType="FULL" translated="Normal" />
@@ -41,5 +37,6 @@
     </Fields>
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IConstructible</LinkInterface>
   </Object>
 </Loqui>

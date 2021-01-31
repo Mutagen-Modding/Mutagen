@@ -9,15 +9,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class Spell
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String INamedRequiredGetter.Name => this.Name ?? string.Empty;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String INamedRequired.Name
-        {
-            get => this.Name ?? string.Empty;
-            set => this.Name = value;
-        }
-
         public enum SpellType
         {
             Spell = 0,
@@ -48,15 +39,6 @@ namespace Mutagen.Bethesda.Oblivion
             ScriptEffectAlwaysApplies = 0x20,
             DisallowAbsorbAndReflect = 0x40,
             TouchSpellExplodesWithoutTarget = 0x80,
-        }
-    }
-
-    namespace Internals
-    {
-        public partial class SpellBinaryOverlay
-        {
-            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            String INamedRequiredGetter.Name => this.Name ?? string.Empty;
         }
     }
 }

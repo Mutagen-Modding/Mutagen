@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class WorldspaceParent :
-        IWorldspaceParent,
+        IEquatable<IWorldspaceParentGetter>,
         ILoquiObjectSetter<WorldspaceParent>,
-        IEquatable<IWorldspaceParentGetter>
+        IWorldspaceParent
     {
         #region Ctor
         public WorldspaceParent()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -445,9 +445,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IWorldspaceParent :
-        IWorldspaceParentGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IWorldspaceParent>,
-        IFormLinkContainer
+        IWorldspaceParentGetter
     {
         new FormLink<IWorldspaceGetter> Worldspace { get; set; }
         new WorldspaceParent.Flag Flags { get; set; }
@@ -455,9 +455,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IWorldspaceParentGetter :
         ILoquiObject,
-        ILoquiObject<IWorldspaceParentGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IWorldspaceParentGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

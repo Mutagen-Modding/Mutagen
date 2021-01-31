@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class SpeedOverrides :
-        ISpeedOverrides,
+        IEquatable<ISpeedOverridesGetter>,
         ILoquiObjectSetter<SpeedOverrides>,
-        IEquatable<ISpeedOverridesGetter>
+        ISpeedOverrides
     {
         #region Ctor
         public SpeedOverrides()
@@ -104,8 +104,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -722,8 +722,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ISpeedOverrides :
-        ISpeedOverridesGetter,
-        ILoquiObjectSetter<ISpeedOverrides>
+        ILoquiObjectSetter<ISpeedOverrides>,
+        ISpeedOverridesGetter
     {
         new Single LeftWalk { get; set; }
         new Single LeftRun { get; set; }
@@ -740,8 +740,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ISpeedOverridesGetter :
         ILoquiObject,
-        ILoquiObject<ISpeedOverridesGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ISpeedOverridesGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

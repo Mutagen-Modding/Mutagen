@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class WorkbenchData :
-        IWorkbenchData,
+        IEquatable<IWorkbenchDataGetter>,
         ILoquiObjectSetter<WorkbenchData>,
-        IEquatable<IWorkbenchDataGetter>
+        IWorkbenchData
     {
         #region Ctor
         public WorkbenchData()
@@ -79,8 +79,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -445,8 +445,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IWorkbenchData :
-        IWorkbenchDataGetter,
-        ILoquiObjectSetter<IWorkbenchData>
+        ILoquiObjectSetter<IWorkbenchData>,
+        IWorkbenchDataGetter
     {
         new WorkbenchData.Type BenchType { get; set; }
         new Skill? UsesSkill { get; set; }
@@ -454,8 +454,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IWorkbenchDataGetter :
         ILoquiObject,
-        ILoquiObject<IWorkbenchDataGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IWorkbenchDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

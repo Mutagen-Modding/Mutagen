@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class LeveledEntry<T> :
+        IEquatable<ILeveledEntryGetter<T>>,
         ILeveledEntry<T>,
-        ILoquiObjectSetter<LeveledEntry<T>>,
-        IEquatable<ILeveledEntryGetter<T>>
+        ILoquiObjectSetter<LeveledEntry<T>>
         where T : class, IOblivionMajorRecordInternal, IBinaryItem
     {
         #region Ctor
@@ -154,9 +154,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ILeveledEntry<T> :
+        IFormLinkContainer,
         ILeveledEntryGetter<T>,
-        ILoquiObjectSetter<ILeveledEntry<T>>,
-        IFormLinkContainer
+        ILoquiObjectSetter<ILeveledEntry<T>>
         where T : class, IOblivionMajorRecordInternal, IBinaryItem
     {
         new Int16 Level { get; set; }
@@ -168,9 +168,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ILeveledEntryGetter<out T> :
         ILoquiObject,
-        ILoquiObject<ILeveledEntryGetter<T>>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ILeveledEntryGetter<T>>
         where T : class, IOblivionMajorRecordGetter, IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -1039,8 +1039,8 @@ namespace Mutagen.Bethesda.Oblivion
     public static class LeveledEntry
     {
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)

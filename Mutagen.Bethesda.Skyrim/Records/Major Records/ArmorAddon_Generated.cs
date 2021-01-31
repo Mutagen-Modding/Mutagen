@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class ArmorAddon :
         SkyrimMajorRecord,
         IArmorAddonInternal,
-        ILoquiObjectSetter<ArmorAddon>,
-        IEquatable<IArmorAddonGetter>
+        IEquatable<IArmorAddonGetter>,
+        ILoquiObjectSetter<ArmorAddon>
     {
         #region Ctor
         protected ArmorAddon()
@@ -144,8 +144,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1068,9 +1068,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IArmorAddon :
         IArmorAddonGetter,
-        ISkyrimMajorRecord,
+        IFormLinkContainer,
         ILoquiObjectSetter<IArmorAddonInternal>,
-        IFormLinkContainer
+        ISkyrimMajorRecord
     {
         new BodyTemplate? BodyTemplate { get; set; }
         new FormLinkNullable<IRaceGetter> Race { get; set; }
@@ -1105,9 +1105,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IArmorAddonGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<IArmorAddonGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IArmorAddonGetter>
     {
         static new ILoquiRegistration Registration => ArmorAddon_Registration.Instance;
         IBodyTemplateGetter? BodyTemplate { get; }

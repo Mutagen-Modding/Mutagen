@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class ImageSpaceDepthOfField :
+        IEquatable<IImageSpaceDepthOfFieldGetter>,
         IImageSpaceDepthOfField,
-        ILoquiObjectSetter<ImageSpaceDepthOfField>,
-        IEquatable<IImageSpaceDepthOfFieldGetter>
+        ILoquiObjectSetter<ImageSpaceDepthOfField>
     {
         #region Ctor
         public ImageSpaceDepthOfField()
@@ -93,8 +93,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -618,8 +618,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IImageSpaceDepthOfFieldGetter :
         ILoquiObject,
-        ILoquiObject<IImageSpaceDepthOfFieldGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IImageSpaceDepthOfFieldGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

@@ -28,9 +28,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class RaceData :
-        IRaceData,
+        IEquatable<IRaceDataGetter>,
         ILoquiObjectSetter<RaceData>,
-        IEquatable<IRaceDataGetter>
+        IRaceData
     {
         #region Ctor
         public RaceData()
@@ -121,8 +121,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -790,8 +790,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IRaceData :
-        IRaceDataGetter,
-        ILoquiObjectSetter<IRaceData>
+        ILoquiObjectSetter<IRaceData>,
+        IRaceDataGetter
     {
         new SkillBoost SkillBoost0 { get; set; }
         new SkillBoost SkillBoost1 { get; set; }
@@ -808,8 +808,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IRaceDataGetter :
         ILoquiObject,
-        ILoquiObject<IRaceDataGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IRaceDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

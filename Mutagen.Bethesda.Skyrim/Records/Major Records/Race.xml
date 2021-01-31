@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Race" recordType="RACE" objType="Record" baseClass="SkyrimMajorRecord" majorFlag="true" GUID="54b1dfac-1494-41b6-b6d3-653bc47987eb" ID="49">
-    <Interface>ITranslatedNamed</Interface>
     <Fields>
       <String name="Name" recordType="FULL" translated="Normal" />
       <String name="Description" recordType="DESC" nullable="False" translated="DL" />
@@ -173,7 +172,6 @@
     </Fields>
   </Object>
   <Object name="BodyData" objType="Subrecord" GUID="baeb0edf-c312-4f2b-9a87-b0bc6542773b" ID="60">
-    <Interface>IModeled</Interface>
     <Fields>
       <Enum name="Index" enumName="BodyData.PartIndex" byteLength="4" recordType="INDX" />
       <RefDirect name="Model" refName="Model" />
@@ -270,7 +268,6 @@
     </Fields>
   </Object>
   <Object name="HeadData" objType="Subrecord" GUID="c0a94c29-c6cd-4b72-b019-b2af3b6b2b34" ID="72">
-    <Interface>IModeled</Interface>
     <Fields>
       <RefList name="HeadParts" refName="HeadPartReference" />
       <RefDirect name="AvailableMorphs" refName="AvailableMorphs" />

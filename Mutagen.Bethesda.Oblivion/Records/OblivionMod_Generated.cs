@@ -31,9 +31,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class OblivionMod :
-        IOblivionMod,
+        IEquatable<IOblivionModGetter>,
         ILoquiObjectSetter<OblivionMod>,
-        IEquatable<IOblivionModGetter>
+        IOblivionMod
     {
         #region Ctor
         protected OblivionMod()
@@ -529,8 +529,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -3348,12 +3348,12 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IOblivionMod :
-        IOblivionModGetter,
-        IMajorRecordEnumerable,
-        ILoquiObjectSetter<IOblivionMod>,
-        IMod,
         IContextMod<IOblivionMod>,
-        IFormLinkContainer
+        IFormLinkContainer,
+        ILoquiObjectSetter<IOblivionMod>,
+        IMajorRecordEnumerable,
+        IMod,
+        IOblivionModGetter
     {
         new OblivionModHeader ModHeader { get; }
         new Group<GameSetting> GameSettings { get; }
@@ -3416,12 +3416,12 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IOblivionModGetter :
         ILoquiObject,
-        IMajorRecordGetterEnumerable,
-        IMajorRecordContextEnumerable<IOblivionMod>,
-        ILoquiObject<IOblivionModGetter>,
-        IModGetter,
         IContextGetterMod<IOblivionMod>,
-        IFormLinkContainerGetter
+        IFormLinkContainerGetter,
+        ILoquiObject<IOblivionModGetter>,
+        IMajorRecordContextEnumerable<IOblivionMod>,
+        IMajorRecordGetterEnumerable,
+        IModGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

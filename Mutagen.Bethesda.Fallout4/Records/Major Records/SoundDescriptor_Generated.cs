@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Fallout4
     #region Class
     public partial class SoundDescriptor :
         Fallout4MajorRecord,
-        ISoundDescriptorInternal,
+        IEquatable<ISoundDescriptorGetter>,
         ILoquiObjectSetter<SoundDescriptor>,
-        IEquatable<ISoundDescriptorGetter>
+        ISoundDescriptorInternal
     {
         #region Ctor
         protected SoundDescriptor()
@@ -75,8 +75,8 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mask
         public new class Mask<TItem> :
             Fallout4MajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -403,9 +403,9 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface ISoundDescriptor :
-        ISoundDescriptorGetter,
         IFallout4MajorRecord,
-        ILoquiObjectSetter<ISoundDescriptorInternal>
+        ILoquiObjectSetter<ISoundDescriptorInternal>,
+        ISoundDescriptorGetter
     {
     }
 
@@ -418,8 +418,8 @@ namespace Mutagen.Bethesda.Fallout4
 
     public partial interface ISoundDescriptorGetter :
         IFallout4MajorRecordGetter,
-        ILoquiObject<ISoundDescriptorGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ISoundDescriptorGetter>
     {
         static new ILoquiRegistration Registration => SoundDescriptor_Registration.Instance;
 

@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class PackageIdles :
-        IPackageIdles,
+        IEquatable<IPackageIdlesGetter>,
         ILoquiObjectSetter<PackageIdles>,
-        IEquatable<IPackageIdlesGetter>
+        IPackageIdles
     {
         #region Ctor
         public PackageIdles()
@@ -91,8 +91,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -560,9 +560,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPackageIdles :
-        IPackageIdlesGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IPackageIdles>,
-        IFormLinkContainer
+        IPackageIdlesGetter
     {
         new PackageIdles.Types Type { get; set; }
         new Single TimerSetting { get; set; }
@@ -571,9 +571,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IPackageIdlesGetter :
         ILoquiObject,
-        ILoquiObject<IPackageIdlesGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IPackageIdlesGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

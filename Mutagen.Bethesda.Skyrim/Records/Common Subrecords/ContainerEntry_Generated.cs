@@ -29,8 +29,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class ContainerEntry :
         IContainerEntry,
-        ILoquiObjectSetter<ContainerEntry>,
-        IEquatable<IContainerEntryGetter>
+        IEquatable<IContainerEntryGetter>,
+        ILoquiObjectSetter<ContainerEntry>
     {
         #region Ctor
         public ContainerEntry()
@@ -88,8 +88,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -471,8 +471,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IContainerEntry :
         IContainerEntryGetter,
-        ILoquiObjectSetter<IContainerEntry>,
-        IFormLinkContainer
+        IFormLinkContainer,
+        ILoquiObjectSetter<IContainerEntry>
     {
         new ContainerItem Item { get; set; }
         new ExtraData? Data { get; set; }
@@ -480,9 +480,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IContainerEntryGetter :
         ILoquiObject,
-        ILoquiObject<IContainerEntryGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IContainerEntryGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

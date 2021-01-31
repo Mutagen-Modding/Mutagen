@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class PerkAbilityEffect :
         APerkEffect,
-        IPerkAbilityEffect,
+        IEquatable<IPerkAbilityEffectGetter>,
         ILoquiObjectSetter<PerkAbilityEffect>,
-        IEquatable<IPerkAbilityEffectGetter>
+        IPerkAbilityEffect
     {
         #region Ctor
         public PerkAbilityEffect()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             APerkEffect.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -410,19 +410,19 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPerkAbilityEffect :
-        IPerkAbilityEffectGetter,
         IAPerkEffect,
+        IFormLinkContainer,
         ILoquiObjectSetter<IPerkAbilityEffect>,
-        IFormLinkContainer
+        IPerkAbilityEffectGetter
     {
         new FormLink<ISpellGetter> Ability { get; set; }
     }
 
     public partial interface IPerkAbilityEffectGetter :
         IAPerkEffectGetter,
-        ILoquiObject<IPerkAbilityEffectGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IPerkAbilityEffectGetter>
     {
         static new ILoquiRegistration Registration => PerkAbilityEffect_Registration.Instance;
         FormLink<ISpellGetter> Ability { get; }

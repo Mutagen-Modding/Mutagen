@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class ShoutWord :
-        IShoutWord,
+        IEquatable<IShoutWordGetter>,
         ILoquiObjectSetter<ShoutWord>,
-        IEquatable<IShoutWordGetter>
+        IShoutWord
     {
         #region Ctor
         public ShoutWord()
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -476,9 +476,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IShoutWord :
-        IShoutWordGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IShoutWord>,
-        IFormLinkContainer
+        IShoutWordGetter
     {
         new FormLink<IWordOfPowerGetter> Word { get; set; }
         new FormLink<ISpellGetter> Spell { get; set; }
@@ -487,9 +487,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IShoutWordGetter :
         ILoquiObject,
-        ILoquiObject<IShoutWordGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IShoutWordGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

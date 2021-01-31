@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class WeatherSound :
-        IWeatherSound,
+        IEquatable<IWeatherSoundGetter>,
         ILoquiObjectSetter<WeatherSound>,
-        IEquatable<IWeatherSoundGetter>
+        IWeatherSound
     {
         #region Ctor
         public WeatherSound()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -445,9 +445,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IWeatherSound :
-        IWeatherSoundGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IWeatherSound>,
-        IFormLinkContainer
+        IWeatherSoundGetter
     {
         new FormLink<ISoundGetter> Sound { get; set; }
         new WeatherSound.SoundType Type { get; set; }
@@ -455,9 +455,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IWeatherSoundGetter :
         ILoquiObject,
-        ILoquiObject<IWeatherSoundGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IWeatherSoundGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

@@ -28,8 +28,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class CreatureAIData :
         ICreatureAIData,
-        ILoquiObjectSetter<CreatureAIData>,
-        IEquatable<ICreatureAIDataGetter>
+        IEquatable<ICreatureAIDataGetter>,
+        ILoquiObjectSetter<CreatureAIData>
     {
         #region Ctor
         public CreatureAIData()
@@ -92,8 +92,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -612,8 +612,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ICreatureAIDataGetter :
         ILoquiObject,
-        ILoquiObject<ICreatureAIDataGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ICreatureAIDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

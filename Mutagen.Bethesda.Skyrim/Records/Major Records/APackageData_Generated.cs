@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public partial class APackageData :
         IAPackageData,
-        ILoquiObjectSetter<APackageData>,
-        IEquatable<IAPackageDataGetter>
+        IEquatable<IAPackageDataGetter>,
+        ILoquiObjectSetter<APackageData>
     {
         #region Ctor
         public APackageData()
@@ -46,6 +46,16 @@ namespace Mutagen.Bethesda.Skyrim
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IAPackageDataGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
         #endregion
         #region Flags
         public APackageData.Flag? Flags { get; set; }
@@ -84,8 +94,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -455,8 +465,10 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public partial interface IAPackageData :
         IAPackageDataGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IAPackageData>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired
     {
         new String? Name { get; set; }
         new APackageData.Flag? Flags { get; set; }
@@ -467,9 +479,11 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public partial interface IAPackageDataGetter :
         ILoquiObject,
-        ILoquiObject<IAPackageDataGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IAPackageDataGetter>,
+        INamedGetter,
+        INamedRequiredGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

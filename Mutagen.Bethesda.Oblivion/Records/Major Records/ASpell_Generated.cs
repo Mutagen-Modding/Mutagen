@@ -34,8 +34,8 @@ namespace Mutagen.Bethesda.Oblivion
     public abstract partial class ASpell :
         OblivionMajorRecord,
         IASpellInternal,
-        ILoquiObjectSetter<ASpell>,
-        IEquatable<IASpellGetter>
+        IEquatable<IASpellGetter>,
+        ILoquiObjectSetter<ASpell>
     {
         #region Ctor
         protected ASpell()
@@ -78,8 +78,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -375,9 +375,9 @@ namespace Mutagen.Bethesda.Oblivion
     /// </summary>
     public partial interface IASpell :
         IASpellGetter,
-        IOblivionMajorRecord,
+        IFormLinkContainer,
         ILoquiObjectSetter<IASpellInternal>,
-        IFormLinkContainer
+        IOblivionMajorRecord
     {
     }
 
@@ -393,9 +393,9 @@ namespace Mutagen.Bethesda.Oblivion
     /// </summary>
     public partial interface IASpellGetter :
         IOblivionMajorRecordGetter,
-        ILoquiObject<IASpellGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IASpellGetter>
     {
         static new ILoquiRegistration Registration => ASpell_Registration.Instance;
 

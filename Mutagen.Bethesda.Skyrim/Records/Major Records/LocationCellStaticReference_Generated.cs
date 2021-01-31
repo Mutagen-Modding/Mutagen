@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class LocationCellStaticReference :
+        IEquatable<ILocationCellStaticReferenceGetter>,
         ILocationCellStaticReference,
-        ILoquiObjectSetter<LocationCellStaticReference>,
-        IEquatable<ILocationCellStaticReferenceGetter>
+        ILoquiObjectSetter<LocationCellStaticReference>
     {
         #region Ctor
         public LocationCellStaticReference()
@@ -83,8 +83,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -506,9 +506,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ILocationCellStaticReference :
+        IFormLinkContainer,
         ILocationCellStaticReferenceGetter,
-        ILoquiObjectSetter<ILocationCellStaticReference>,
-        IFormLinkContainer
+        ILoquiObjectSetter<ILocationCellStaticReference>
     {
         new FormLink<ILocationReferenceTypeGetter> LocationRefType { get; set; }
         new FormLink<ILinkedReferenceGetter> Marker { get; set; }
@@ -518,9 +518,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ILocationCellStaticReferenceGetter :
         ILoquiObject,
-        ILoquiObject<ILocationCellStaticReferenceGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ILocationCellStaticReferenceGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

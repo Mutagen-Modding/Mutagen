@@ -28,9 +28,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class MessageButton :
-        IMessageButton,
+        IEquatable<IMessageButtonGetter>,
         ILoquiObjectSetter<MessageButton>,
-        IEquatable<IMessageButtonGetter>
+        IMessageButton
     {
         #region Ctor
         public MessageButton()
@@ -91,8 +91,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -533,9 +533,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IMessageButton :
-        IMessageButtonGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IMessageButton>,
-        IFormLinkContainer
+        IMessageButtonGetter
     {
         new TranslatedString? Text { get; set; }
         new ExtendedList<Condition> Conditions { get; }
@@ -543,9 +543,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IMessageButtonGetter :
         ILoquiObject,
-        ILoquiObject<IMessageButtonGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IMessageButtonGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

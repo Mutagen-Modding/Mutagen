@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Fallout4
     #region Class
     public partial class MiscItem :
         Fallout4MajorRecord,
-        IMiscItemInternal,
+        IEquatable<IMiscItemGetter>,
         ILoquiObjectSetter<MiscItem>,
-        IEquatable<IMiscItemGetter>
+        IMiscItemInternal
     {
         #region Ctor
         protected MiscItem()
@@ -75,8 +75,8 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mask
         public new class Mask<TItem> :
             Fallout4MajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -403,9 +403,9 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IMiscItem :
-        IMiscItemGetter,
         IFallout4MajorRecord,
-        ILoquiObjectSetter<IMiscItemInternal>
+        ILoquiObjectSetter<IMiscItemInternal>,
+        IMiscItemGetter
     {
     }
 
@@ -418,8 +418,8 @@ namespace Mutagen.Bethesda.Fallout4
 
     public partial interface IMiscItemGetter :
         IFallout4MajorRecordGetter,
-        ILoquiObject<IMiscItemGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IMiscItemGetter>
     {
         static new ILoquiRegistration Registration => MiscItem_Registration.Instance;
 

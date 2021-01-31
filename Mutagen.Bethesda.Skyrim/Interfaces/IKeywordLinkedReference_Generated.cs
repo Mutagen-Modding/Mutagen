@@ -11,8 +11,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// Implemented by: [Keyword, PlacedNpc, PlacedObject, APlacedTrap]
     /// </summary>
     public partial interface IKeywordLinkedReference :
-        ISkyrimMajorRecordInternal,
-        IKeywordLinkedReferenceGetter
+        IKeywordLinkedReferenceGetter,
+        ISkyrimMajorRecordInternal
     {
     }
 

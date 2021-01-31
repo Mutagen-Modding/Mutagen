@@ -28,9 +28,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class PackageBranch :
-        IPackageBranch,
+        IEquatable<IPackageBranchGetter>,
         ILoquiObjectSetter<PackageBranch>,
-        IEquatable<IPackageBranchGetter>
+        IPackageBranch
     {
         #region Ctor
         public PackageBranch()
@@ -160,8 +160,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -966,9 +966,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPackageBranch :
-        IPackageBranchGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IPackageBranch>,
-        IFormLinkContainer
+        IPackageBranchGetter
     {
         new String BranchType { get; set; }
         new ExtendedList<Condition> Conditions { get; }
@@ -983,9 +983,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IPackageBranchGetter :
         ILoquiObject,
-        ILoquiObject<IPackageBranchGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IPackageBranchGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

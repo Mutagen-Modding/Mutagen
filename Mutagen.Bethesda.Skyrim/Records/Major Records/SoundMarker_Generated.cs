@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class SoundMarker :
         SkyrimMajorRecord,
-        ISoundMarkerInternal,
+        IEquatable<ISoundMarkerGetter>,
         ILoquiObjectSetter<SoundMarker>,
-        IEquatable<ISoundMarkerGetter>
+        ISoundMarkerInternal
     {
         #region Ctor
         protected SoundMarker()
@@ -46,6 +46,18 @@ namespace Mutagen.Bethesda.Skyrim
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter ISoundMarkerGetter.ObjectBounds => ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ObjectBounds? IObjectBoundedOptional.ObjectBounds
+        {
+            get => this.ObjectBounds;
+            set => this.ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
         #endregion
         #region FNAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -105,8 +117,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -575,13 +587,14 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ISoundMarker :
-        ISoundMarkerGetter,
-        ISkyrimMajorRecord,
-        IObjectId,
-        ISound,
-        IObjectBounded,
+        IFormLinkContainer,
         ILoquiObjectSetter<ISoundMarkerInternal>,
-        IFormLinkContainer
+        IObjectBounded,
+        IObjectBoundedOptional,
+        IObjectId,
+        ISkyrimMajorRecord,
+        ISound,
+        ISoundMarkerGetter
     {
         new ObjectBounds ObjectBounds { get; set; }
         new MemorySlice<Byte>? FNAM { get; set; }
@@ -598,12 +611,13 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ISoundMarkerGetter :
         ISkyrimMajorRecordGetter,
-        IObjectIdGetter,
-        ISoundGetter,
-        IObjectBoundedGetter,
-        ILoquiObject<ISoundMarkerGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ISoundMarkerGetter>,
+        IObjectBoundedGetter,
+        IObjectBoundedOptionalGetter,
+        IObjectIdGetter,
+        ISoundGetter
     {
         static new ILoquiRegistration Registration => SoundMarker_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }

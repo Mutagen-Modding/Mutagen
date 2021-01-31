@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class MusicTypeData :
-        IMusicTypeData,
+        IEquatable<IMusicTypeDataGetter>,
         ILoquiObjectSetter<MusicTypeData>,
-        IEquatable<IMusicTypeDataGetter>
+        IMusicTypeData
     {
         #region Ctor
         public MusicTypeData()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -443,8 +443,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IMusicTypeData :
-        IMusicTypeDataGetter,
-        ILoquiObjectSetter<IMusicTypeData>
+        ILoquiObjectSetter<IMusicTypeData>,
+        IMusicTypeDataGetter
     {
         new UInt16 Priority { get; set; }
         new Single DuckingDecibel { get; set; }
@@ -452,8 +452,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IMusicTypeDataGetter :
         ILoquiObject,
-        ILoquiObject<IMusicTypeDataGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IMusicTypeDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

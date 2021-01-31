@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class DialogView :
         SkyrimMajorRecord,
         IDialogViewInternal,
-        ILoquiObjectSetter<DialogView>,
-        IEquatable<IDialogViewGetter>
+        IEquatable<IDialogViewGetter>,
+        ILoquiObjectSetter<DialogView>
     {
         #region Ctor
         protected DialogView()
@@ -128,8 +128,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -766,9 +766,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IDialogView :
         IDialogViewGetter,
-        ISkyrimMajorRecord,
+        IFormLinkContainer,
         ILoquiObjectSetter<IDialogViewInternal>,
-        IFormLinkContainer
+        ISkyrimMajorRecord
     {
         new FormLink<IQuestGetter> Quest { get; set; }
         new ExtendedList<IFormLink<IDialogBranchGetter>> Branches { get; }
@@ -786,9 +786,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IDialogViewGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<IDialogViewGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IDialogViewGetter>
     {
         static new ILoquiRegistration Registration => DialogView_Registration.Instance;
         FormLink<IQuestGetter> Quest { get; }

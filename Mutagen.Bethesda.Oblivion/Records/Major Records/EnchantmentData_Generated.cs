@@ -28,8 +28,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class EnchantmentData :
         IEnchantmentData,
-        ILoquiObjectSetter<EnchantmentData>,
-        IEquatable<IEnchantmentDataGetter>
+        IEquatable<IEnchantmentDataGetter>,
+        ILoquiObjectSetter<EnchantmentData>
     {
         #region Ctor
         public EnchantmentData()
@@ -83,8 +83,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -516,8 +516,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IEnchantmentDataGetter :
         ILoquiObject,
-        ILoquiObject<IEnchantmentDataGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IEnchantmentDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Fallout4
     #region Class
     public partial class GlobalInt :
         Global,
+        IEquatable<IGlobalIntGetter>,
         IGlobalIntInternal,
-        ILoquiObjectSetter<GlobalInt>,
-        IEquatable<IGlobalIntGetter>
+        ILoquiObjectSetter<GlobalInt>
     {
         #region Ctor
         protected GlobalInt()
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mask
         public new class Mask<TItem> :
             Global.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -450,8 +450,8 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IGlobalInt :
-        IGlobalIntGetter,
         IGlobal,
+        IGlobalIntGetter,
         ILoquiObjectSetter<IGlobalIntInternal>
     {
         new Int32? Data { get; set; }
@@ -466,8 +466,8 @@ namespace Mutagen.Bethesda.Fallout4
 
     public partial interface IGlobalIntGetter :
         IGlobalGetter,
-        ILoquiObject<IGlobalIntGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IGlobalIntGetter>
     {
         static new ILoquiRegistration Registration => GlobalInt_Registration.Instance;
         Int32? Data { get; }

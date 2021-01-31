@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Faction :
         OblivionMajorRecord,
+        IEquatable<IFactionGetter>,
         IFactionInternal,
-        ILoquiObjectSetter<Faction>,
-        IEquatable<IFactionGetter>
+        ILoquiObjectSetter<Faction>
     {
         #region Ctor
         protected Faction()
@@ -46,6 +46,16 @@ namespace Mutagen.Bethesda.Oblivion
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IFactionGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
         #endregion
         #region Relations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -118,8 +128,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -741,11 +751,12 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IFaction :
         IFactionGetter,
-        IOblivionMajorRecord,
-        IOwner,
-        INamed,
+        IFormLinkContainer,
         ILoquiObjectSetter<IFactionInternal>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired,
+        IOblivionMajorRecord,
+        IOwner
     {
         new String? Name { get; set; }
         new ExtendedList<Relation> Relations { get; }
@@ -763,11 +774,12 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IFactionGetter :
         IOblivionMajorRecordGetter,
-        IOwnerGetter,
-        INamedGetter,
-        ILoquiObject<IFactionGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IFactionGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        IOwnerGetter
     {
         static new ILoquiRegistration Registration => Faction_Registration.Instance;
         String? Name { get; }
@@ -1874,6 +1886,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Name
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        #endregion
         #endregion
         public IReadOnlyList<IRelationGetter> Relations { get; private set; } = ListExt.Empty<RelationBinaryOverlay>();
         #region Flags

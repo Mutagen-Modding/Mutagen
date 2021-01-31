@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Oblivion
     /// </summary>
     public abstract partial class AScriptReference :
         IAScriptReference,
-        ILoquiObjectSetter<AScriptReference>,
-        IEquatable<IAScriptReferenceGetter>
+        IEquatable<IAScriptReferenceGetter>,
+        ILoquiObjectSetter<AScriptReference>
     {
         #region Ctor
         public AScriptReference()
@@ -74,8 +74,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -359,8 +359,8 @@ namespace Mutagen.Bethesda.Oblivion
     /// </summary>
     public partial interface IAScriptReference :
         IAScriptReferenceGetter,
-        ILoquiObjectSetter<IAScriptReference>,
-        IFormLinkContainer
+        IFormLinkContainer,
+        ILoquiObjectSetter<IAScriptReference>
     {
     }
 
@@ -369,9 +369,9 @@ namespace Mutagen.Bethesda.Oblivion
     /// </summary>
     public partial interface IAScriptReferenceGetter :
         ILoquiObject,
-        ILoquiObject<IAScriptReferenceGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IAScriptReferenceGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

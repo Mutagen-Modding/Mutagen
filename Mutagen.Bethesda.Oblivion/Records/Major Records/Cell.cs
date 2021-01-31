@@ -16,15 +16,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class Cell
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String INamedRequiredGetter.Name => this.Name ?? string.Empty;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String INamedRequired.Name
-        {
-            get => this.Name ?? string.Empty;
-            set => this.Name = value;
-        }
-
         [Flags]
         public enum Flag
         {
@@ -289,9 +280,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class CellBinaryOverlay
         {
-            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            String INamedRequiredGetter.Name => this.Name ?? string.Empty;
-
             static readonly ICollectionGetter<RecordType> TypicalPlacedTypes = new CollectionGetterWrapper<RecordType>(
                 new HashSet<RecordType>()
                 {

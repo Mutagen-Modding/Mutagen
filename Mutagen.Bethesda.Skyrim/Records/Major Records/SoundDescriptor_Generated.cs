@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class SoundDescriptor :
         SkyrimMajorRecord,
-        ISoundDescriptorInternal,
+        IEquatable<ISoundDescriptorGetter>,
         ILoquiObjectSetter<SoundDescriptor>,
-        IEquatable<ISoundDescriptorGetter>
+        ISoundDescriptorInternal
     {
         #region Ctor
         protected SoundDescriptor()
@@ -157,8 +157,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1059,11 +1059,11 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ISoundDescriptor :
-        ISoundDescriptorGetter,
+        IFormLinkContainer,
+        ILoquiObjectSetter<ISoundDescriptorInternal>,
         ISkyrimMajorRecord,
         ISound,
-        ILoquiObjectSetter<ISoundDescriptorInternal>,
-        IFormLinkContainer
+        ISoundDescriptorGetter
     {
         new MemorySlice<Byte>? CNAM { get; set; }
         new FormLinkNullable<ISoundCategoryGetter> Category { get; set; }
@@ -1090,10 +1090,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ISoundDescriptorGetter :
         ISkyrimMajorRecordGetter,
-        ISoundGetter,
-        ILoquiObject<ISoundDescriptorGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ISoundDescriptorGetter>,
+        ISoundGetter
     {
         static new ILoquiRegistration Registration => SoundDescriptor_Registration.Instance;
         ReadOnlyMemorySlice<Byte>? CNAM { get; }

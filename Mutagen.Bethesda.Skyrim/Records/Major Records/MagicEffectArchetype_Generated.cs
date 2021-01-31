@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     /// Implemented by: [MagicEffectLightArchetype, MagicEffectBoundArchetype, MagicEffectNpcArchetype, MagicEffectGuideArchetype, MagicEffectSpawnHazardArchetype, MagicEffectSpellArchetype, MagicEffectWerewolfArchetype, MagicEffectVampireArchetype, MagicEffectEnchantmentArchetype, MagicEffectKeywordArchetype]
     /// </summary>
     public partial class MagicEffectArchetype :
-        IMagicEffectArchetypeInternal,
+        IEquatable<IMagicEffectArchetypeGetter>,
         ILoquiObjectSetter<MagicEffectArchetype>,
-        IEquatable<IMagicEffectArchetypeGetter>
+        IMagicEffectArchetypeInternal
     {
         #region Type
         public MagicEffectArchetype.TypeEnum Type { get; set; } = default;
@@ -75,8 +75,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -468,8 +468,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// Implemented by: [MagicEffectLightArchetype, MagicEffectBoundArchetype, MagicEffectNpcArchetype, MagicEffectGuideArchetype, MagicEffectSpawnHazardArchetype, MagicEffectSpellArchetype, MagicEffectWerewolfArchetype, MagicEffectVampireArchetype, MagicEffectEnchantmentArchetype, MagicEffectKeywordArchetype]
     /// </summary>
     public partial interface IMagicEffectArchetype :
-        IMagicEffectArchetypeGetter,
-        ILoquiObjectSetter<IMagicEffectArchetypeInternal>
+        ILoquiObjectSetter<IMagicEffectArchetypeInternal>,
+        IMagicEffectArchetypeGetter
     {
         new FormKey AssociationKey { get; set; }
         new ActorValue ActorValue { get; set; }
@@ -487,8 +487,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public partial interface IMagicEffectArchetypeGetter :
         ILoquiObject,
-        ILoquiObject<IMagicEffectArchetypeGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IMagicEffectArchetypeGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

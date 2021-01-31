@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class TintPreset :
-        ITintPreset,
+        IEquatable<ITintPresetGetter>,
         ILoquiObjectSetter<TintPreset>,
-        IEquatable<ITintPresetGetter>
+        ITintPreset
     {
         #region Ctor
         public TintPreset()
@@ -84,8 +84,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -479,9 +479,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ITintPreset :
-        ITintPresetGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<ITintPreset>,
-        IFormLinkContainer
+        ITintPresetGetter
     {
         new FormLinkNullable<IColorRecordGetter> Color { get; set; }
         new Single? DefaultValue { get; set; }
@@ -490,9 +490,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ITintPresetGetter :
         ILoquiObject,
-        ILoquiObject<ITintPresetGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ITintPresetGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

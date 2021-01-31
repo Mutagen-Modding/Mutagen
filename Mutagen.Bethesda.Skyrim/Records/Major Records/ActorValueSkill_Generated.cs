@@ -28,8 +28,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class ActorValueSkill :
         IActorValueSkill,
-        ILoquiObjectSetter<ActorValueSkill>,
-        IEquatable<IActorValueSkillGetter>
+        IEquatable<IActorValueSkillGetter>,
+        ILoquiObjectSetter<ActorValueSkill>
     {
         #region Ctor
         public ActorValueSkill()
@@ -83,8 +83,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -516,8 +516,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IActorValueSkillGetter :
         ILoquiObject,
-        ILoquiObject<IActorValueSkillGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IActorValueSkillGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

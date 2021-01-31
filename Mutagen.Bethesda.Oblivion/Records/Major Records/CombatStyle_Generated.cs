@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class CombatStyle :
         OblivionMajorRecord,
         ICombatStyleInternal,
-        ILoquiObjectSetter<CombatStyle>,
-        IEquatable<ICombatStyleGetter>
+        IEquatable<ICombatStyleGetter>,
+        ILoquiObjectSetter<CombatStyle>
     {
         #region Ctor
         protected CombatStyle()
@@ -97,8 +97,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -498,8 +498,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ICombatStyle :
         ICombatStyleGetter,
-        IOblivionMajorRecord,
-        ILoquiObjectSetter<ICombatStyleInternal>
+        ILoquiObjectSetter<ICombatStyleInternal>,
+        IOblivionMajorRecord
     {
         new CombatStyleData? Data { get; set; }
         new CombatStyleAdvanced? Advanced { get; set; }
@@ -514,8 +514,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ICombatStyleGetter :
         IOblivionMajorRecordGetter,
-        ILoquiObject<ICombatStyleGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ICombatStyleGetter>
     {
         static new ILoquiRegistration Registration => CombatStyle_Registration.Instance;
         ICombatStyleDataGetter? Data { get; }

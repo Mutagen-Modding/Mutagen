@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class Ammunition :
         SkyrimMajorRecord,
         IAmmunitionInternal,
-        ILoquiObjectSetter<Ammunition>,
-        IEquatable<IAmmunitionGetter>
+        IEquatable<IAmmunitionGetter>,
+        ILoquiObjectSetter<Ammunition>
     {
         #region Ctor
         protected Ammunition()
@@ -46,11 +46,51 @@ namespace Mutagen.Bethesda.Skyrim
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter IAmmunitionGetter.ObjectBounds => ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ObjectBounds? IObjectBoundedOptional.ObjectBounds
+        {
+            get => this.ObjectBounds;
+            set => this.ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
         #endregion
         #region Name
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ITranslatedStringGetter? IAmmunitionGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
         #endregion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -62,6 +102,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IAmmunitionGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
         #endregion
         #region Icons
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -73,6 +117,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IIconsGetter? IAmmunitionGetter.Icons => this.Icons;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IIconsGetter? IHasIconsGetter.Icons => this.Icons;
+        #endregion
         #endregion
         #region Destructible
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -180,8 +228,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1091,17 +1139,22 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IAmmunition :
         IAmmunitionGetter,
-        ISkyrimMajorRecord,
-        IItem,
-        IObjectId,
-        ITranslatedNamed,
-        IObjectBounded,
-        IModeled,
+        IConstructible,
+        IFormLinkContainer,
         IHasIcons,
-        IWeightValue,
+        IItem,
         IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<IAmmunitionInternal>,
-        IFormLinkContainer
+        IModeled,
+        INamed,
+        INamedRequired,
+        IObjectBounded,
+        IObjectBoundedOptional,
+        IObjectId,
+        ISkyrimMajorRecord,
+        ITranslatedNamed,
+        ITranslatedNamedRequired,
+        IWeightValue
     {
         new ObjectBounds ObjectBounds { get; set; }
         new TranslatedString? Name { get; set; }
@@ -1134,17 +1187,22 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IAmmunitionGetter :
         ISkyrimMajorRecordGetter,
-        IItemGetter,
-        IObjectIdGetter,
-        ITranslatedNamedGetter,
-        IObjectBoundedGetter,
-        IModeledGetter,
+        IBinaryItem,
+        IConstructibleGetter,
+        IFormLinkContainerGetter,
         IHasIconsGetter,
-        IWeightValueGetter,
+        IItemGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IAmmunitionGetter>,
-        IFormLinkContainerGetter,
-        IBinaryItem
+        IModeledGetter,
+        INamedGetter,
+        INamedRequiredGetter,
+        IObjectBoundedGetter,
+        IObjectBoundedOptionalGetter,
+        IObjectIdGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter,
+        IWeightValueGetter
     {
         static new ILoquiRegistration Registration => Ammunition_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }
@@ -2644,6 +2702,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Name
         private int? _NameLocation;
         public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        #endregion
         #endregion
         public IModelGetter? Model { get; private set; }
         public IIconsGetter? Icons { get; private set; }

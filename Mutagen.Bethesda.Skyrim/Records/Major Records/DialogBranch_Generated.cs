@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class DialogBranch :
         SkyrimMajorRecord,
         IDialogBranchInternal,
-        ILoquiObjectSetter<DialogBranch>,
-        IEquatable<IDialogBranchGetter>
+        IEquatable<IDialogBranchGetter>,
+        ILoquiObjectSetter<DialogBranch>
     {
         #region Ctor
         protected DialogBranch()
@@ -91,8 +91,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -555,9 +555,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IDialogBranch :
         IDialogBranchGetter,
-        ISkyrimMajorRecord,
+        IFormLinkContainer,
         ILoquiObjectSetter<IDialogBranchInternal>,
-        IFormLinkContainer
+        ISkyrimMajorRecord
     {
         new FormLink<IQuestGetter> Quest { get; set; }
         new Int32? TNAM { get; set; }
@@ -574,9 +574,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IDialogBranchGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<IDialogBranchGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IDialogBranchGetter>
     {
         static new ILoquiRegistration Registration => DialogBranch_Registration.Instance;
         FormLink<IQuestGetter> Quest { get; }

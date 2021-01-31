@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class LocationCell :
         ALocationTarget,
+        IEquatable<ILocationCellGetter>,
         ILocationCell,
-        ILoquiObjectSetter<LocationCell>,
-        IEquatable<ILocationCellGetter>
+        ILoquiObjectSetter<LocationCell>
     {
         #region Ctor
         public LocationCell()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             ALocationTarget.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem Link)
@@ -394,19 +394,19 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ILocationCell :
-        ILocationCellGetter,
         IALocationTarget,
-        ILoquiObjectSetter<ILocationCell>,
-        IFormLinkContainer
+        IFormLinkContainer,
+        ILocationCellGetter,
+        ILoquiObjectSetter<ILocationCell>
     {
         new FormLink<ICellGetter> Link { get; set; }
     }
 
     public partial interface ILocationCellGetter :
         IALocationTargetGetter,
-        ILoquiObject<ILocationCellGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ILocationCellGetter>
     {
         static new ILoquiRegistration Registration => LocationCell_Registration.Instance;
         FormLink<ICellGetter> Link { get; }

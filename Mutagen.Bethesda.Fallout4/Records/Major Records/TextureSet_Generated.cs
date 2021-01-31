@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Fallout4
     #region Class
     public partial class TextureSet :
         Fallout4MajorRecord,
-        ITextureSetInternal,
+        IEquatable<ITextureSetGetter>,
         ILoquiObjectSetter<TextureSet>,
-        IEquatable<ITextureSetGetter>
+        ITextureSetInternal
     {
         #region Ctor
         protected TextureSet()
@@ -46,6 +46,18 @@ namespace Mutagen.Bethesda.Fallout4
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter ITextureSetGetter.ObjectBounds => ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ObjectBounds? IObjectBoundedOptional.ObjectBounds
+        {
+            get => this.ObjectBounds;
+            set => this.ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
         #endregion
         #region Diffuse
         public String? Diffuse { get; set; }
@@ -139,8 +151,8 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mask
         public new class Mask<TItem> :
             Fallout4MajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -831,11 +843,12 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface ITextureSet :
-        ITextureSetGetter,
         IFallout4MajorRecord,
-        IObjectId,
+        ILoquiObjectSetter<ITextureSetInternal>,
         IObjectBounded,
-        ILoquiObjectSetter<ITextureSetInternal>
+        IObjectBoundedOptional,
+        IObjectId,
+        ITextureSetGetter
     {
         new ObjectBounds ObjectBounds { get; set; }
         new String? Diffuse { get; set; }
@@ -860,10 +873,11 @@ namespace Mutagen.Bethesda.Fallout4
 
     public partial interface ITextureSetGetter :
         IFallout4MajorRecordGetter,
-        IObjectIdGetter,
-        IObjectBoundedGetter,
+        IBinaryItem,
         ILoquiObject<ITextureSetGetter>,
-        IBinaryItem
+        IObjectBoundedGetter,
+        IObjectBoundedOptionalGetter,
+        IObjectIdGetter
     {
         static new ILoquiRegistration Registration => TextureSet_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }

@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class TeleportDestination :
-        ITeleportDestination,
+        IEquatable<ITeleportDestinationGetter>,
         ILoquiObjectSetter<TeleportDestination>,
-        IEquatable<ITeleportDestinationGetter>
+        ITeleportDestination
     {
         #region Ctor
         public TeleportDestination()
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -476,9 +476,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ITeleportDestination :
-        ITeleportDestinationGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<ITeleportDestination>,
-        IFormLinkContainer
+        ITeleportDestinationGetter
     {
         new FormLink<IPlacedGetter> Destination { get; set; }
         new P3Float Position { get; set; }
@@ -487,9 +487,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ITeleportDestinationGetter :
         ILoquiObject,
-        ILoquiObject<ITeleportDestinationGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ITeleportDestinationGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

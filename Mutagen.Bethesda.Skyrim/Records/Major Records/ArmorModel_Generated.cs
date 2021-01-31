@@ -29,8 +29,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class ArmorModel :
         IArmorModel,
-        ILoquiObjectSetter<ArmorModel>,
-        IEquatable<IArmorModelGetter>
+        IEquatable<IArmorModelGetter>,
+        ILoquiObjectSetter<ArmorModel>
     {
         #region Ctor
         public ArmorModel()
@@ -50,6 +50,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IArmorModelGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
         #endregion
         #region Icons
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -61,6 +65,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IIconsGetter? IArmorModelGetter.Icons => this.Icons;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IIconsGetter? IHasIconsGetter.Icons => this.Icons;
+        #endregion
         #endregion
 
         #region To String
@@ -94,8 +102,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -476,10 +484,10 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IArmorModel :
         IArmorModelGetter,
+        IFormLinkContainer,
         IHasIcons,
-        IModeled,
         ILoquiObjectSetter<IArmorModel>,
-        IFormLinkContainer
+        IModeled
     {
         new Model? Model { get; set; }
         new Icons? Icons { get; set; }
@@ -487,11 +495,11 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IArmorModelGetter :
         ILoquiObject,
-        IHasIconsGetter,
-        IModeledGetter,
-        ILoquiObject<IArmorModelGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        IHasIconsGetter,
+        ILoquiObject<IArmorModelGetter>,
+        IModeledGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

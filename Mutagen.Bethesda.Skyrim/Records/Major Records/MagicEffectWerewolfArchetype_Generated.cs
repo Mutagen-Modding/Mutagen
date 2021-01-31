@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class MagicEffectWerewolfArchetype :
         MagicEffectArchetype,
-        IMagicEffectWerewolfArchetypeInternal,
+        IEquatable<IMagicEffectWerewolfArchetypeGetter>,
         ILoquiObjectSetter<MagicEffectWerewolfArchetype>,
-        IEquatable<IMagicEffectWerewolfArchetypeGetter>
+        IMagicEffectWerewolfArchetypeInternal
     {
 
         #region To String
@@ -66,8 +66,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             MagicEffectArchetype.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -349,9 +349,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IMagicEffectWerewolfArchetype :
-        IMagicEffectWerewolfArchetypeGetter,
+        ILoquiObjectSetter<IMagicEffectWerewolfArchetypeInternal>,
         IMagicEffectArchetype,
-        ILoquiObjectSetter<IMagicEffectWerewolfArchetypeInternal>
+        IMagicEffectWerewolfArchetypeGetter
     {
     }
 
@@ -364,8 +364,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IMagicEffectWerewolfArchetypeGetter :
         IMagicEffectArchetypeGetter,
-        ILoquiObject<IMagicEffectWerewolfArchetypeGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IMagicEffectWerewolfArchetypeGetter>
     {
         static new ILoquiRegistration Registration => MagicEffectWerewolfArchetype_Registration.Instance;
 

@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Fallout4
     #region Class
     public partial class GameSettingFloat :
         GameSetting,
+        IEquatable<IGameSettingFloatGetter>,
         IGameSettingFloatInternal,
-        ILoquiObjectSetter<GameSettingFloat>,
-        IEquatable<IGameSettingFloatGetter>
+        ILoquiObjectSetter<GameSettingFloat>
     {
         #region Ctor
         protected GameSettingFloat()
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mask
         public new class Mask<TItem> :
             GameSetting.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -450,8 +450,8 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IGameSettingFloat :
-        IGameSettingFloatGetter,
         IGameSetting,
+        IGameSettingFloatGetter,
         ILoquiObjectSetter<IGameSettingFloatInternal>
     {
         new Single? Data { get; set; }
@@ -466,8 +466,8 @@ namespace Mutagen.Bethesda.Fallout4
 
     public partial interface IGameSettingFloatGetter :
         IGameSettingGetter,
-        ILoquiObject<IGameSettingFloatGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IGameSettingFloatGetter>
     {
         static new ILoquiRegistration Registration => GameSettingFloat_Registration.Instance;
         Single? Data { get; }

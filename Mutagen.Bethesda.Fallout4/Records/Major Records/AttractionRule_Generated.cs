@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Fallout4
     public partial class AttractionRule :
         Fallout4MajorRecord,
         IAttractionRuleInternal,
-        ILoquiObjectSetter<AttractionRule>,
-        IEquatable<IAttractionRuleGetter>
+        IEquatable<IAttractionRuleGetter>,
+        ILoquiObjectSetter<AttractionRule>
     {
         #region Ctor
         protected AttractionRule()
@@ -75,8 +75,8 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mask
         public new class Mask<TItem> :
             Fallout4MajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -418,8 +418,8 @@ namespace Mutagen.Bethesda.Fallout4
 
     public partial interface IAttractionRuleGetter :
         IFallout4MajorRecordGetter,
-        ILoquiObject<IAttractionRuleGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IAttractionRuleGetter>
     {
         static new ILoquiRegistration Registration => AttractionRule_Registration.Instance;
 

@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class SceneAdapter :
         AVirtualMachineAdapter,
-        ISceneAdapter,
+        IEquatable<ISceneAdapterGetter>,
         ILoquiObjectSetter<SceneAdapter>,
-        IEquatable<ISceneAdapterGetter>
+        ISceneAdapter
     {
         #region Ctor
         public SceneAdapter()
@@ -85,8 +85,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             AVirtualMachineAdapter.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -421,17 +421,17 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ISceneAdapter :
-        ISceneAdapterGetter,
         IAVirtualMachineAdapter,
-        ILoquiObjectSetter<ISceneAdapter>
+        ILoquiObjectSetter<ISceneAdapter>,
+        ISceneAdapterGetter
     {
         new SceneScriptFragments? ScriptFragments { get; set; }
     }
 
     public partial interface ISceneAdapterGetter :
         IAVirtualMachineAdapterGetter,
-        ILoquiObject<ISceneAdapterGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ISceneAdapterGetter>
     {
         static new ILoquiRegistration Registration => SceneAdapter_Registration.Instance;
         ISceneScriptFragmentsGetter? ScriptFragments { get; }

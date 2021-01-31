@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class Enchantment :
         OblivionMajorRecord,
         IEnchantmentInternal,
-        ILoquiObjectSetter<Enchantment>,
-        IEquatable<IEnchantmentGetter>
+        IEquatable<IEnchantmentGetter>,
+        ILoquiObjectSetter<Enchantment>
     {
         #region Ctor
         protected Enchantment()
@@ -46,6 +46,16 @@ namespace Mutagen.Bethesda.Oblivion
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IEnchantmentGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
         #endregion
         #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -105,8 +115,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -604,10 +614,11 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IEnchantment :
         IEnchantmentGetter,
-        IOblivionMajorRecord,
-        INamed,
+        IFormLinkContainer,
         ILoquiObjectSetter<IEnchantmentInternal>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired,
+        IOblivionMajorRecord
     {
         new String? Name { get; set; }
         new EnchantmentData? Data { get; set; }
@@ -623,10 +634,11 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IEnchantmentGetter :
         IOblivionMajorRecordGetter,
-        INamedGetter,
-        ILoquiObject<IEnchantmentGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IEnchantmentGetter>,
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Enchantment_Registration.Instance;
         String? Name { get; }
@@ -1658,6 +1670,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Name
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        #endregion
         #endregion
         #region Data
         private RangeInt32? _DataLocation;

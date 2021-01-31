@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class Class :
         OblivionMajorRecord,
         IClassInternal,
-        ILoquiObjectSetter<Class>,
-        IEquatable<IClassGetter>
+        IEquatable<IClassGetter>,
+        ILoquiObjectSetter<Class>
     {
         #region Ctor
         protected Class()
@@ -46,6 +46,16 @@ namespace Mutagen.Bethesda.Oblivion
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IClassGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
         #endregion
         #region Description
         public String? Description { get; set; }
@@ -101,8 +111,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -551,9 +561,10 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IClass :
         IClassGetter,
-        IOblivionMajorRecord,
+        ILoquiObjectSetter<IClassInternal>,
         INamed,
-        ILoquiObjectSetter<IClassInternal>
+        INamedRequired,
+        IOblivionMajorRecord
     {
         new String? Name { get; set; }
         new String? Description { get; set; }
@@ -570,9 +581,10 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IClassGetter :
         IOblivionMajorRecordGetter,
-        INamedGetter,
+        IBinaryItem,
         ILoquiObject<IClassGetter>,
-        IBinaryItem
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Class_Registration.Instance;
         String? Name { get; }
@@ -1587,6 +1599,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Name
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        #endregion
         #endregion
         #region Description
         private int? _DescriptionLocation;

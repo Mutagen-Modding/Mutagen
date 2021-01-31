@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class RelatedWaters :
-        IRelatedWaters,
+        IEquatable<IRelatedWatersGetter>,
         ILoquiObjectSetter<RelatedWaters>,
-        IEquatable<IRelatedWatersGetter>
+        IRelatedWaters
     {
         #region Ctor
         public RelatedWaters()
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -476,9 +476,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IRelatedWaters :
-        IRelatedWatersGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IRelatedWaters>,
-        IFormLinkContainer
+        IRelatedWatersGetter
     {
         new FormLink<IWaterGetter> RelatedWaterDaytime { get; set; }
         new FormLink<IWaterGetter> RelatedWaterNighttime { get; set; }
@@ -487,9 +487,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IRelatedWatersGetter :
         ILoquiObject,
-        ILoquiObject<IRelatedWatersGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IRelatedWatersGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

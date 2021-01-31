@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class ScriptBoolProperty :
         ScriptProperty,
-        IScriptBoolProperty,
+        IEquatable<IScriptBoolPropertyGetter>,
         ILoquiObjectSetter<ScriptBoolProperty>,
-        IEquatable<IScriptBoolPropertyGetter>
+        IScriptBoolProperty
     {
         #region Ctor
         public ScriptBoolProperty()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             ScriptProperty.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -400,17 +400,19 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IScriptBoolProperty :
+        ILoquiObjectSetter<IScriptBoolProperty>,
+        INamedRequired,
         IScriptBoolPropertyGetter,
-        IScriptProperty,
-        ILoquiObjectSetter<IScriptBoolProperty>
+        IScriptProperty
     {
         new Boolean Data { get; set; }
     }
 
     public partial interface IScriptBoolPropertyGetter :
         IScriptPropertyGetter,
+        IBinaryItem,
         ILoquiObject<IScriptBoolPropertyGetter>,
-        IBinaryItem
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => ScriptBoolProperty_Registration.Instance;
         Boolean Data { get; }

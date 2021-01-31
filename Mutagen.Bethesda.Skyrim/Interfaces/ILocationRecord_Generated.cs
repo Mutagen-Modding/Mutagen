@@ -11,8 +11,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// Implemented by: [Location, LocationReferenceType]
     /// </summary>
     public partial interface ILocationRecord :
-        ISkyrimMajorRecordInternal,
-        ILocationRecordGetter
+        ILocationRecordGetter,
+        ISkyrimMajorRecordInternal
     {
     }
 

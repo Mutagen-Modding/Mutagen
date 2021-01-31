@@ -28,9 +28,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class ListGroup<T> :
+        IEquatable<IListGroupGetter<T>>,
         IListGroup<T>,
-        ILoquiObjectSetter<ListGroup<T>>,
-        IEquatable<IListGroupGetter<T>>
+        ILoquiObjectSetter<ListGroup<T>>
         where T : class, ICellBlock, IBinaryItem
     {
         #region Ctor
@@ -193,10 +193,10 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IListGroup<T> :
+        IFormLinkContainer,
         IListGroupGetter<T>,
-        IMajorRecordEnumerable,
         ILoquiObjectSetter<IListGroup<T>>,
-        IFormLinkContainer
+        IMajorRecordEnumerable
         where T : class, ICellBlock, IBinaryItem
     {
         new GroupTypeEnum Type { get; set; }
@@ -206,10 +206,10 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IListGroupGetter<out T> :
         ILoquiObject,
-        IMajorRecordGetterEnumerable,
-        ILoquiObject<IListGroupGetter<T>>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IListGroupGetter<T>>,
+        IMajorRecordGetterEnumerable
         where T : class, ICellBlockGetter, IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -1506,8 +1506,8 @@ namespace Mutagen.Bethesda.Oblivion
     public static class ListGroup
     {
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)

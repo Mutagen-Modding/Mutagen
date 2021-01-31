@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Grass :
         OblivionMajorRecord,
+        IEquatable<IGrassGetter>,
         IGrassInternal,
-        ILoquiObjectSetter<Grass>,
-        IEquatable<IGrassGetter>
+        ILoquiObjectSetter<Grass>
     {
         #region Ctor
         protected Grass()
@@ -52,6 +52,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IGrassGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
         #endregion
         #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -97,8 +101,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -498,8 +502,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IGrass :
         IGrassGetter,
-        IOblivionMajorRecord,
-        ILoquiObjectSetter<IGrassInternal>
+        ILoquiObjectSetter<IGrassInternal>,
+        IModeled,
+        IOblivionMajorRecord
     {
         new Model? Model { get; set; }
         new GrassData? Data { get; set; }
@@ -514,8 +519,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IGrassGetter :
         IOblivionMajorRecordGetter,
+        IBinaryItem,
         ILoquiObject<IGrassGetter>,
-        IBinaryItem
+        IModeledGetter
     {
         static new ILoquiRegistration Registration => Grass_Registration.Instance;
         IModelGetter? Model { get; }

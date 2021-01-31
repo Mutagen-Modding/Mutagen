@@ -28,8 +28,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Dimensions :
         IDimensions,
-        ILoquiObjectSetter<Dimensions>,
-        IEquatable<IDimensionsGetter>
+        IEquatable<IDimensionsGetter>,
+        ILoquiObjectSetter<Dimensions>
     {
         #region Ctor
         public Dimensions()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -452,8 +452,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IDimensionsGetter :
         ILoquiObject,
-        ILoquiObject<IDimensionsGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IDimensionsGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

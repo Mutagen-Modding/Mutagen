@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class PathGridPoint :
-        IPathGridPoint,
+        IEquatable<IPathGridPointGetter>,
         ILoquiObjectSetter<PathGridPoint>,
-        IEquatable<IPathGridPointGetter>
+        IPathGridPoint
     {
         #region Ctor
         public PathGridPoint()
@@ -102,8 +102,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -593,8 +593,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IPathGridPoint :
-        IPathGridPointGetter,
-        ILoquiObjectSetter<IPathGridPoint>
+        ILoquiObjectSetter<IPathGridPoint>,
+        IPathGridPointGetter
     {
         new P3Float Point { get; set; }
         new Byte NumConnections { get; set; }
@@ -604,8 +604,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IPathGridPointGetter :
         ILoquiObject,
-        ILoquiObject<IPathGridPointGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IPathGridPointGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

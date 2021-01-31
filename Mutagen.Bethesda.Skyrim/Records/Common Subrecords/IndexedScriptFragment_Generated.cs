@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class IndexedScriptFragment :
+        IEquatable<IIndexedScriptFragmentGetter>,
         IIndexedScriptFragment,
-        ILoquiObjectSetter<IndexedScriptFragment>,
-        IEquatable<IIndexedScriptFragmentGetter>
+        ILoquiObjectSetter<IndexedScriptFragment>
     {
         #region Ctor
         public IndexedScriptFragment()
@@ -86,8 +86,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -544,8 +544,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IIndexedScriptFragmentGetter :
         ILoquiObject,
-        ILoquiObject<IIndexedScriptFragmentGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IIndexedScriptFragmentGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

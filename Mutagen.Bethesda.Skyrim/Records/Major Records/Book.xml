@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Book" objType="Record" recordType="BOOK" baseClass="SkyrimMajorRecord" GUID="75309913-652c-4e97-9cf4-6ccb493d3143" ID="154">
-    <Interface>ITranslatedNamed</Interface>
-    <Interface>IHasIcons</Interface>
-    <Interface>IModeled</Interface>
-    <Interface>IObjectBounded</Interface>
-    <Interface>IWeightValue</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
@@ -34,6 +29,7 @@
     </Fields>
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IConstructible</LinkInterface>
   </Object>
   <Object name="BookTeachTarget" abstract="true" objType="Subrecord" GUID="a95689cb-bc18-4276-b852-755a8d728d04" ID="156" />
   <Object name="BookSkill" objType="Subrecord" baseClass="BookTeachTarget" GUID="4b9c1ac7-82ca-47b8-af25-dae58cb74d14" ID="157">

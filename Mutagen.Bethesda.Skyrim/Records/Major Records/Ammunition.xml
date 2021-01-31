@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Ammunition" recordType="AMMO" baseClass="SkyrimMajorRecord" objType="Record" majorFlag="true" GUID="14e93a4b-95d0-42a5-8ccf-bad4555e8184" ID="162">
-    <Interface>ITranslatedNamed</Interface>
-    <Interface>IObjectBounded</Interface>
-    <Interface>IModeled</Interface>
-    <Interface>IHasIcons</Interface>
-    <Interface>IWeightValue</Interface>
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <String name="Name" recordType="FULL" translated="Normal" />
@@ -34,5 +29,6 @@
     </Fields>
     <LinkInterface>IItem</LinkInterface>
     <LinkInterface>IObjectId</LinkInterface>
+    <LinkInterface>IConstructible</LinkInterface>
   </Object>
 </Loqui>

@@ -31,9 +31,9 @@ namespace Mutagen.Bethesda.Fallout4
     #region Class
     public partial class LocationReferenceType :
         Fallout4MajorRecord,
+        IEquatable<ILocationReferenceTypeGetter>,
         ILocationReferenceTypeInternal,
-        ILoquiObjectSetter<LocationReferenceType>,
-        IEquatable<ILocationReferenceTypeGetter>
+        ILoquiObjectSetter<LocationReferenceType>
     {
         #region Ctor
         protected LocationReferenceType()
@@ -86,8 +86,8 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mask
         public new class Mask<TItem> :
             Fallout4MajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -484,9 +484,9 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface ILocationReferenceType :
-        ILocationReferenceTypeGetter,
         IFallout4MajorRecord,
         ILocationRecord,
+        ILocationReferenceTypeGetter,
         ILoquiObjectSetter<ILocationReferenceTypeInternal>
     {
         new Color? Color { get; set; }
@@ -502,9 +502,9 @@ namespace Mutagen.Bethesda.Fallout4
 
     public partial interface ILocationReferenceTypeGetter :
         IFallout4MajorRecordGetter,
+        IBinaryItem,
         ILocationRecordGetter,
-        ILoquiObject<ILocationReferenceTypeGetter>,
-        IBinaryItem
+        ILoquiObject<ILocationReferenceTypeGetter>
     {
         static new ILoquiRegistration Registration => LocationReferenceType_Registration.Instance;
         Color? Color { get; }

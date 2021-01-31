@@ -31,9 +31,9 @@ namespace Mutagen.Bethesda.Fallout4
     #region Class
     public partial class Keyword :
         Fallout4MajorRecord,
+        IEquatable<IKeywordGetter>,
         IKeywordInternal,
-        ILoquiObjectSetter<Keyword>,
-        IEquatable<IKeywordGetter>
+        ILoquiObjectSetter<Keyword>
     {
         #region Ctor
         protected Keyword()
@@ -65,6 +65,16 @@ namespace Mutagen.Bethesda.Fallout4
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IKeywordGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
         #endregion
         #region DisplayName
         public String? DisplayName { get; set; }
@@ -104,8 +114,8 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mask
         public new class Mask<TItem> :
             Fallout4MajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -616,12 +626,14 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IKeyword :
-        IKeywordGetter,
         IFallout4MajorRecord,
-        IKeywordLinkedReference,
+        IFormLinkContainer,
         IKeywordCommon,
+        IKeywordGetter,
+        IKeywordLinkedReference,
         ILoquiObjectSetter<IKeywordInternal>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired
     {
         new Color? Color { get; set; }
         new String? Notes { get; set; }
@@ -640,11 +652,13 @@ namespace Mutagen.Bethesda.Fallout4
 
     public partial interface IKeywordGetter :
         IFallout4MajorRecordGetter,
-        IKeywordLinkedReferenceGetter,
-        IKeywordCommonGetter,
-        ILoquiObject<IKeywordGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        IKeywordCommonGetter,
+        IKeywordLinkedReferenceGetter,
+        ILoquiObject<IKeywordGetter>,
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Keyword_Registration.Instance;
         Color? Color { get; }
@@ -1711,6 +1725,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Name
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        #endregion
         #endregion
         #region DisplayName
         private int? _DisplayNameLocation;

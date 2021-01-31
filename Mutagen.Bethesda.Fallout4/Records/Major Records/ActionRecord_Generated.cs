@@ -32,8 +32,8 @@ namespace Mutagen.Bethesda.Fallout4
     public partial class ActionRecord :
         Fallout4MajorRecord,
         IActionRecordInternal,
-        ILoquiObjectSetter<ActionRecord>,
-        IEquatable<IActionRecordGetter>
+        IEquatable<IActionRecordGetter>,
+        ILoquiObjectSetter<ActionRecord>
     {
         #region Ctor
         protected ActionRecord()
@@ -65,6 +65,16 @@ namespace Mutagen.Bethesda.Fallout4
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IActionRecordGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
         #endregion
 
         #region To String
@@ -99,8 +109,8 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mask
         public new class Mask<TItem> :
             Fallout4MajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -585,9 +595,11 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IActionRecord :
         IActionRecordGetter,
         IFallout4MajorRecord,
+        IFormLinkContainer,
         IIdleRelation,
         ILoquiObjectSetter<IActionRecordInternal>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired
     {
         new Color? Color { get; set; }
         new String? Notes { get; set; }
@@ -605,10 +617,12 @@ namespace Mutagen.Bethesda.Fallout4
 
     public partial interface IActionRecordGetter :
         IFallout4MajorRecordGetter,
+        IBinaryItem,
+        IFormLinkContainerGetter,
         IIdleRelationGetter,
         ILoquiObject<IActionRecordGetter>,
-        IFormLinkContainerGetter,
-        IBinaryItem
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => ActionRecord_Registration.Instance;
         Color? Color { get; }
@@ -1644,6 +1658,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Name
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        #endregion
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

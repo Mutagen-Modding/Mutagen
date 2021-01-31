@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Ingredient" baseClass="AItem" recordType="INGR" objType="Record" GUID="b617ece0-1ff6-475d-af9d-265d2f55af37" ID="76">
-    <Interface>INamed</Interface>
     <Fields>
       <String name="Name" recordType="FULL" />
       <RefDirect name="Model" refName="Model" />

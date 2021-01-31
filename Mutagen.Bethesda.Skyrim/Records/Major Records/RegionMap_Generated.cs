@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class RegionMap :
         RegionData,
-        IRegionMap,
+        IEquatable<IRegionMapGetter>,
         ILoquiObjectSetter<RegionMap>,
-        IEquatable<IRegionMapGetter>
+        IRegionMap
     {
         #region Ctor
         public RegionMap()
@@ -45,6 +45,34 @@ namespace Mutagen.Bethesda.Skyrim
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ITranslatedStringGetter? IRegionMapGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
         #endregion
 
         #region To String
@@ -79,8 +107,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             RegionData.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -402,17 +430,25 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IRegionMap :
-        IRegionMapGetter,
+        ILoquiObjectSetter<IRegionMap>,
+        INamed,
+        INamedRequired,
         IRegionData,
-        ILoquiObjectSetter<IRegionMap>
+        IRegionMapGetter,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
         new TranslatedString? Name { get; set; }
     }
 
     public partial interface IRegionMapGetter :
         IRegionDataGetter,
+        IBinaryItem,
         ILoquiObject<IRegionMapGetter>,
-        IBinaryItem
+        INamedGetter,
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => RegionMap_Registration.Instance;
         ITranslatedStringGetter? Name { get; }
@@ -1127,6 +1163,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Name
         private int? _NameLocation;
         public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        #endregion
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

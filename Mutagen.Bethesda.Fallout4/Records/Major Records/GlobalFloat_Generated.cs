@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Fallout4
     #region Class
     public partial class GlobalFloat :
         Global,
+        IEquatable<IGlobalFloatGetter>,
         IGlobalFloatInternal,
-        ILoquiObjectSetter<GlobalFloat>,
-        IEquatable<IGlobalFloatGetter>
+        ILoquiObjectSetter<GlobalFloat>
     {
         #region Ctor
         protected GlobalFloat()
@@ -83,8 +83,8 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mask
         public new class Mask<TItem> :
             Global.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -481,8 +481,8 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IGlobalFloat :
-        IGlobalFloatGetter,
         IGlobal,
+        IGlobalFloatGetter,
         ILoquiObjectSetter<IGlobalFloatInternal>
     {
         new Single? Data { get; set; }
@@ -498,8 +498,8 @@ namespace Mutagen.Bethesda.Fallout4
 
     public partial interface IGlobalFloatGetter :
         IGlobalGetter,
-        ILoquiObject<IGlobalFloatGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IGlobalFloatGetter>
     {
         static new ILoquiRegistration Registration => GlobalFloat_Registration.Instance;
         Single? Data { get; }

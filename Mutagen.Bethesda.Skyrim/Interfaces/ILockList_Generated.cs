@@ -11,8 +11,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// Implemented by: [FormList, Npc]
     /// </summary>
     public partial interface ILockList :
-        ISkyrimMajorRecordInternal,
-        ILockListGetter
+        ILockListGetter,
+        ISkyrimMajorRecordInternal
     {
     }
 

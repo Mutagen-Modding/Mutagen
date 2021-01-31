@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class AnimatedObject :
         SkyrimMajorRecord,
         IAnimatedObjectInternal,
-        ILoquiObjectSetter<AnimatedObject>,
-        IEquatable<IAnimatedObjectGetter>
+        IEquatable<IAnimatedObjectGetter>,
+        ILoquiObjectSetter<AnimatedObject>
     {
         #region Ctor
         protected AnimatedObject()
@@ -52,6 +52,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IAnimatedObjectGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
         #endregion
         #region UnloadEvent
         public String? UnloadEvent { get; set; }
@@ -91,8 +95,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -506,10 +510,10 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IAnimatedObject :
         IAnimatedObjectGetter,
-        ISkyrimMajorRecord,
-        IModeled,
+        IFormLinkContainer,
         ILoquiObjectSetter<IAnimatedObjectInternal>,
-        IFormLinkContainer
+        IModeled,
+        ISkyrimMajorRecord
     {
         new Model? Model { get; set; }
         new String? UnloadEvent { get; set; }
@@ -524,10 +528,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IAnimatedObjectGetter :
         ISkyrimMajorRecordGetter,
-        IModeledGetter,
-        ILoquiObject<IAnimatedObjectGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IAnimatedObjectGetter>,
+        IModeledGetter
     {
         static new ILoquiRegistration Registration => AnimatedObject_Registration.Instance;
         IModelGetter? Model { get; }

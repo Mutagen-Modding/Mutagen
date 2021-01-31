@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Water :
         OblivionMajorRecord,
-        IWaterInternal,
+        IEquatable<IWaterGetter>,
         ILoquiObjectSetter<Water>,
-        IEquatable<IWaterGetter>
+        IWaterInternal
     {
         #region Ctor
         protected Water()
@@ -120,8 +120,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -662,10 +662,10 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IWater :
-        IWaterGetter,
-        IOblivionMajorRecord,
+        IFormLinkContainer,
         ILoquiObjectSetter<IWaterInternal>,
-        IFormLinkContainer
+        IOblivionMajorRecord,
+        IWaterGetter
     {
         new String? Texture { get; set; }
         new Byte? Opacity { get; set; }
@@ -685,9 +685,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IWaterGetter :
         IOblivionMajorRecordGetter,
-        ILoquiObject<IWaterGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IWaterGetter>
     {
         static new ILoquiRegistration Registration => Water_Registration.Instance;
         String? Texture { get; }

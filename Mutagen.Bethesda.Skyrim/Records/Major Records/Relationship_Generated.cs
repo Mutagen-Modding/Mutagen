@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class Relationship :
         SkyrimMajorRecord,
-        IRelationshipInternal,
+        IEquatable<IRelationshipGetter>,
         ILoquiObjectSetter<Relationship>,
-        IEquatable<IRelationshipGetter>
+        IRelationshipInternal
     {
         #region Ctor
         protected Relationship()
@@ -96,8 +96,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -652,10 +652,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IRelationship :
-        IRelationshipGetter,
-        ISkyrimMajorRecord,
+        IFormLinkContainer,
         ILoquiObjectSetter<IRelationshipInternal>,
-        IFormLinkContainer
+        IRelationshipGetter,
+        ISkyrimMajorRecord
     {
         new FormLink<INpcGetter> Parent { get; set; }
         new FormLink<INpcGetter> Child { get; set; }
@@ -679,9 +679,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IRelationshipGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<IRelationshipGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IRelationshipGetter>
     {
         static new ILoquiRegistration Registration => Relationship_Registration.Instance;
         FormLink<INpcGetter> Parent { get; }

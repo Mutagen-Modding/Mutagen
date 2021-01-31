@@ -28,9 +28,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class NpcConfiguration :
-        INpcConfiguration,
+        IEquatable<INpcConfigurationGetter>,
         ILoquiObjectSetter<NpcConfiguration>,
-        IEquatable<INpcConfigurationGetter>
+        INpcConfiguration
     {
         #region Ctor
         public NpcConfiguration()
@@ -102,8 +102,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -727,8 +727,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface INpcConfiguration :
-        INpcConfigurationGetter,
-        ILoquiObjectSetter<INpcConfiguration>
+        ILoquiObjectSetter<INpcConfiguration>,
+        INpcConfigurationGetter
     {
         new NpcConfiguration.Flag Flags { get; set; }
         new Int16 MagickaOffset { get; set; }
@@ -745,8 +745,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface INpcConfigurationGetter :
         ILoquiObject,
-        ILoquiObject<INpcConfigurationGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<INpcConfigurationGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

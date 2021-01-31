@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class IdleAnimation :
         OblivionMajorRecord,
+        IEquatable<IIdleAnimationGetter>,
         IIdleAnimationInternal,
-        ILoquiObjectSetter<IdleAnimation>,
-        IEquatable<IIdleAnimationGetter>
+        ILoquiObjectSetter<IdleAnimation>
     {
         #region Ctor
         protected IdleAnimation()
@@ -52,6 +52,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IIdleAnimationGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -119,8 +123,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -718,10 +722,11 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IIdleAnimation :
+        IFormLinkContainer,
         IIdleAnimationGetter,
-        IOblivionMajorRecord,
         ILoquiObjectSetter<IIdleAnimationInternal>,
-        IFormLinkContainer
+        IModeled,
+        IOblivionMajorRecord
     {
         new Model? Model { get; set; }
         new ExtendedList<Condition> Conditions { get; }
@@ -738,9 +743,10 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IIdleAnimationGetter :
         IOblivionMajorRecordGetter,
-        ILoquiObject<IIdleAnimationGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IIdleAnimationGetter>,
+        IModeledGetter
     {
         static new ILoquiRegistration Registration => IdleAnimation_Registration.Instance;
         IModelGetter? Model { get; }

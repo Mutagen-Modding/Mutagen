@@ -28,9 +28,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class QuestAlias :
-        IQuestAlias,
+        IEquatable<IQuestAliasGetter>,
         ILoquiObjectSetter<QuestAlias>,
-        IEquatable<IQuestAliasGetter>
+        IQuestAlias
     {
         #region Ctor
         public QuestAlias()
@@ -50,6 +50,16 @@ namespace Mutagen.Bethesda.Skyrim
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IQuestAliasGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
         #endregion
         #region Flags
         public QuestAlias.Flag? Flags { get; set; }
@@ -263,8 +273,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1751,10 +1761,12 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IQuestAlias :
-        IQuestAliasGetter,
+        IFormLinkContainer,
         IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<IQuestAlias>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired,
+        IQuestAliasGetter
     {
         new UInt32 ID { get; set; }
         new QuestAlias.TypeEnum Type { get; set; }
@@ -1785,10 +1797,12 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IQuestAliasGetter :
         ILoquiObject,
+        IBinaryItem,
+        IFormLinkContainerGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IQuestAliasGetter>,
-        IFormLinkContainerGetter,
-        IBinaryItem
+        INamedGetter,
+        INamedRequiredGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -3686,6 +3700,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Name
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        #endregion
         #endregion
         #region Flags
         private int? _FlagsLocation;

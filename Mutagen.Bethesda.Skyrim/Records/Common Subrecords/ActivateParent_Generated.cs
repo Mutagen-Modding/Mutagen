@@ -28,8 +28,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class ActivateParent :
         IActivateParent,
-        ILoquiObjectSetter<ActivateParent>,
-        IEquatable<IActivateParentGetter>
+        IEquatable<IActivateParentGetter>,
+        ILoquiObjectSetter<ActivateParent>
     {
         #region Ctor
         public ActivateParent()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -446,8 +446,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IActivateParent :
         IActivateParentGetter,
-        ILoquiObjectSetter<IActivateParent>,
-        IFormLinkContainer
+        IFormLinkContainer,
+        ILoquiObjectSetter<IActivateParent>
     {
         new FormLink<ILinkedReferenceGetter> Reference { get; set; }
         new Single Delay { get; set; }
@@ -455,9 +455,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IActivateParentGetter :
         ILoquiObject,
-        ILoquiObject<IActivateParentGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IActivateParentGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

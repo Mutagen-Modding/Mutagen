@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class FormList :
         SkyrimMajorRecord,
+        IEquatable<IFormListGetter>,
         IFormListInternal,
-        ILoquiObjectSetter<FormList>,
-        IEquatable<IFormListGetter>
+        ILoquiObjectSetter<FormList>
     {
         #region Ctor
         protected FormList()
@@ -89,8 +89,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -541,13 +541,13 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IFormList :
-        IFormListGetter,
-        ISkyrimMajorRecord,
         IAliasVoiceType,
+        IFormLinkContainer,
+        IFormListGetter,
         ILockList,
-        IObjectId,
         ILoquiObjectSetter<IFormListInternal>,
-        IFormLinkContainer
+        IObjectId,
+        ISkyrimMajorRecord
     {
         new ExtendedList<IFormLink<ISkyrimMajorRecordGetter>> Items { get; }
     }
@@ -562,11 +562,11 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IFormListGetter :
         ISkyrimMajorRecordGetter,
         IAliasVoiceTypeGetter,
-        ILockListGetter,
-        IObjectIdGetter,
-        ILoquiObject<IFormListGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILockListGetter,
+        ILoquiObject<IFormListGetter>,
+        IObjectIdGetter
     {
         static new ILoquiRegistration Registration => FormList_Registration.Instance;
         IReadOnlyList<IFormLink<ISkyrimMajorRecordGetter>> Items { get; }

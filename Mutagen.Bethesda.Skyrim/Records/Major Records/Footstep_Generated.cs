@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class Footstep :
         SkyrimMajorRecord,
+        IEquatable<IFootstepGetter>,
         IFootstepInternal,
-        ILoquiObjectSetter<Footstep>,
-        IEquatable<IFootstepGetter>
+        ILoquiObjectSetter<Footstep>
     {
         #region Ctor
         protected Footstep()
@@ -81,8 +81,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -489,9 +489,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IFootstep :
         IFootstepGetter,
-        ISkyrimMajorRecord,
+        IFormLinkContainer,
         ILoquiObjectSetter<IFootstepInternal>,
-        IFormLinkContainer
+        ISkyrimMajorRecord
     {
         new FormLink<IImpactDataSetGetter> ImpactDataSet { get; set; }
         new String Tag { get; set; }
@@ -506,9 +506,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IFootstepGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<IFootstepGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IFootstepGetter>
     {
         static new ILoquiRegistration Registration => Footstep_Registration.Instance;
         FormLink<IImpactDataSetGetter> ImpactDataSet { get; }

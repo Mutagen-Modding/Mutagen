@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class PointToReferenceMapping :
-        IPointToReferenceMapping,
+        IEquatable<IPointToReferenceMappingGetter>,
         ILoquiObjectSetter<PointToReferenceMapping>,
-        IEquatable<IPointToReferenceMappingGetter>
+        IPointToReferenceMapping
     {
         #region Ctor
         public PointToReferenceMapping()
@@ -88,8 +88,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -529,9 +529,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IPointToReferenceMapping :
-        IPointToReferenceMappingGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IPointToReferenceMapping>,
-        IFormLinkContainer
+        IPointToReferenceMappingGetter
     {
         new FormLink<IPlacedGetter> Reference { get; set; }
         new ExtendedList<Int16> Points { get; }
@@ -539,9 +539,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IPointToReferenceMappingGetter :
         ILoquiObject,
-        ILoquiObject<IPointToReferenceMappingGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IPointToReferenceMappingGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

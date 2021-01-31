@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class PlayerSkills :
-        IPlayerSkills,
+        IEquatable<IPlayerSkillsGetter>,
         ILoquiObjectSetter<PlayerSkills>,
-        IEquatable<IPlayerSkillsGetter>
+        IPlayerSkills
     {
         #region Ctor
         public PlayerSkills()
@@ -118,8 +118,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -884,8 +884,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPlayerSkills :
-        IPlayerSkillsGetter,
-        ILoquiObjectSetter<IPlayerSkills>
+        ILoquiObjectSetter<IPlayerSkills>,
+        IPlayerSkillsGetter
     {
         new IDictionary<Skill, Byte> SkillValues { get; }
         new IDictionary<Skill, Byte> SkillOffsets { get; }
@@ -900,8 +900,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IPlayerSkillsGetter :
         ILoquiObject,
-        ILoquiObject<IPlayerSkillsGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IPlayerSkillsGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

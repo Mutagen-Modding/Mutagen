@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class LocalVariableData :
+        IEquatable<ILocalVariableDataGetter>,
         ILocalVariableData,
-        ILoquiObjectSetter<LocalVariableData>,
-        IEquatable<ILocalVariableDataGetter>
+        ILoquiObjectSetter<LocalVariableData>
     {
         #region Ctor
         public LocalVariableData()
@@ -91,8 +91,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -524,8 +524,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ILocalVariableDataGetter :
         ILoquiObject,
-        ILoquiObject<ILocalVariableDataGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ILocalVariableDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
