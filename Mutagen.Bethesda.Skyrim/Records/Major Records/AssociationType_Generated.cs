@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class AssociationType :
         SkyrimMajorRecord,
         IAssociationTypeInternal,
-        ILoquiObjectSetter<AssociationType>,
-        IEquatable<IAssociationTypeGetter>
+        IEquatable<IAssociationTypeGetter>,
+        ILoquiObjectSetter<AssociationType>
     {
         #region Ctor
         protected AssociationType()
@@ -86,8 +86,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -538,8 +538,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IAssociationType :
         IAssociationTypeGetter,
-        ISkyrimMajorRecord,
-        ILoquiObjectSetter<IAssociationTypeInternal>
+        ILoquiObjectSetter<IAssociationTypeInternal>,
+        ISkyrimMajorRecord
     {
         new IGenderedItem<String?>? ParentTitle { get; set; }
         new IGenderedItem<String?>? Title { get; set; }
@@ -557,8 +557,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IAssociationTypeGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<IAssociationTypeGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IAssociationTypeGetter>
     {
         static new ILoquiRegistration Registration => AssociationType_Registration.Instance;
         IGenderedItemGetter<String?>? ParentTitle { get; }

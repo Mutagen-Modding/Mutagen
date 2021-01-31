@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class ObjectEffect :
         SkyrimMajorRecord,
-        IObjectEffectInternal,
+        IEquatable<IObjectEffectGetter>,
         ILoquiObjectSetter<ObjectEffect>,
-        IEquatable<IObjectEffectGetter>
+        IObjectEffectInternal
     {
         #region Ctor
         protected ObjectEffect()
@@ -169,8 +169,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -971,17 +971,17 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IObjectEffect :
+        IEffectRecord,
+        IFormLinkContainer,
+        ILoquiObjectSetter<IObjectEffectInternal>,
+        INamed,
+        INamedRequired,
+        IObjectBounded,
+        IObjectBoundedOptional,
         IObjectEffectGetter,
         ISkyrimMajorRecord,
-        IEffectRecord,
-        INamedRequired,
-        INamed,
-        ITranslatedNamedRequired,
         ITranslatedNamed,
-        IObjectBoundedOptional,
-        IObjectBounded,
-        ILoquiObjectSetter<IObjectEffectInternal>,
-        IFormLinkContainer
+        ITranslatedNamedRequired
     {
         new ObjectBounds ObjectBounds { get; set; }
         new TranslatedString? Name { get; set; }
@@ -1007,16 +1007,16 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IObjectEffectGetter :
         ISkyrimMajorRecordGetter,
+        IBinaryItem,
         IEffectRecordGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ITranslatedNamedRequiredGetter,
-        ITranslatedNamedGetter,
-        IObjectBoundedOptionalGetter,
-        IObjectBoundedGetter,
-        ILoquiObject<IObjectEffectGetter>,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IObjectEffectGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        IObjectBoundedGetter,
+        IObjectBoundedOptionalGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => ObjectEffect_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }

@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class Armor :
         SkyrimMajorRecord,
         IArmorInternal,
-        ILoquiObjectSetter<Armor>,
-        IEquatable<IArmorGetter>
+        IEquatable<IArmorGetter>,
+        ILoquiObjectSetter<Armor>
     {
         #region Ctor
         protected Armor()
@@ -245,8 +245,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1434,21 +1434,21 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IArmor :
         IArmorGetter,
-        ISkyrimMajorRecord,
-        IItem,
-        IOutfitTarget,
-        IObjectId,
         IConstructible,
-        IWeightValue,
+        IFormLinkContainer,
+        IItem,
         IKeyworded<IKeywordGetter>,
-        INamedRequired,
-        INamed,
-        ITranslatedNamedRequired,
-        ITranslatedNamed,
-        IObjectBoundedOptional,
-        IObjectBounded,
         ILoquiObjectSetter<IArmorInternal>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired,
+        IObjectBounded,
+        IObjectBoundedOptional,
+        IObjectId,
+        IOutfitTarget,
+        ISkyrimMajorRecord,
+        ITranslatedNamed,
+        ITranslatedNamedRequired,
+        IWeightValue
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
@@ -1489,21 +1489,21 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IArmorGetter :
         ISkyrimMajorRecordGetter,
-        IItemGetter,
-        IOutfitTargetGetter,
-        IObjectIdGetter,
+        IBinaryItem,
         IConstructibleGetter,
-        IWeightValueGetter,
-        IKeywordedGetter<IKeywordGetter>,
-        INamedRequiredGetter,
-        INamedGetter,
-        ITranslatedNamedRequiredGetter,
-        ITranslatedNamedGetter,
-        IObjectBoundedOptionalGetter,
-        IObjectBoundedGetter,
-        ILoquiObject<IArmorGetter>,
         IFormLinkContainerGetter,
-        IBinaryItem
+        IItemGetter,
+        IKeywordedGetter<IKeywordGetter>,
+        ILoquiObject<IArmorGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        IObjectBoundedGetter,
+        IObjectBoundedOptionalGetter,
+        IObjectIdGetter,
+        IOutfitTargetGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter,
+        IWeightValueGetter
     {
         static new ILoquiRegistration Registration => Armor_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }

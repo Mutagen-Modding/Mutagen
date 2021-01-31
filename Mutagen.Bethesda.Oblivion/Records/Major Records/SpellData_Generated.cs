@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class SpellData :
-        ISpellData,
+        IEquatable<ISpellDataGetter>,
         ILoquiObjectSetter<SpellData>,
-        IEquatable<ISpellDataGetter>
+        ISpellData
     {
         #region Ctor
         public SpellData()
@@ -83,8 +83,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -505,8 +505,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ISpellData :
-        ISpellDataGetter,
-        ILoquiObjectSetter<ISpellData>
+        ILoquiObjectSetter<ISpellData>,
+        ISpellDataGetter
     {
         new Spell.SpellType Type { get; set; }
         new UInt32 Cost { get; set; }
@@ -516,8 +516,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ISpellDataGetter :
         ILoquiObject,
-        ILoquiObject<ISpellDataGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ISpellDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

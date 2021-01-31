@@ -28,8 +28,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class EdgeLink :
         IEdgeLink,
-        ILoquiObjectSetter<EdgeLink>,
-        IEquatable<IEdgeLinkGetter>
+        IEquatable<IEdgeLinkGetter>,
+        ILoquiObjectSetter<EdgeLink>
     {
         #region Ctor
         public EdgeLink()
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -476,8 +476,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IEdgeLink :
         IEdgeLinkGetter,
-        ILoquiObjectSetter<IEdgeLink>,
-        IFormLinkContainer
+        IFormLinkContainer,
+        ILoquiObjectSetter<IEdgeLink>
     {
         new Int32 Unknown { get; set; }
         new FormLink<IANavigationMeshGetter> Mesh { get; set; }
@@ -486,9 +486,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IEdgeLinkGetter :
         ILoquiObject,
-        ILoquiObject<IEdgeLinkGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IEdgeLinkGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

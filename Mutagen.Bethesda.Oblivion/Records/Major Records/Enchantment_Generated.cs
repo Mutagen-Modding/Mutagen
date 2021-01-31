@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class Enchantment :
         OblivionMajorRecord,
         IEnchantmentInternal,
-        ILoquiObjectSetter<Enchantment>,
-        IEquatable<IEnchantmentGetter>
+        IEquatable<IEnchantmentGetter>,
+        ILoquiObjectSetter<Enchantment>
     {
         #region Ctor
         protected Enchantment()
@@ -115,8 +115,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -614,11 +614,11 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IEnchantment :
         IEnchantmentGetter,
-        IOblivionMajorRecord,
-        INamedRequired,
-        INamed,
+        IFormLinkContainer,
         ILoquiObjectSetter<IEnchantmentInternal>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired,
+        IOblivionMajorRecord
     {
         new String? Name { get; set; }
         new EnchantmentData? Data { get; set; }
@@ -634,11 +634,11 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IEnchantmentGetter :
         IOblivionMajorRecordGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ILoquiObject<IEnchantmentGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IEnchantmentGetter>,
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Enchantment_Registration.Instance;
         String? Name { get; }

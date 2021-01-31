@@ -31,9 +31,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class SkyrimMod :
-        ISkyrimMod,
+        IEquatable<ISkyrimModGetter>,
         ILoquiObjectSetter<SkyrimMod>,
-        IEquatable<ISkyrimModGetter>
+        ISkyrimMod
     {
         #region Ctor
         protected SkyrimMod()
@@ -985,8 +985,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -6191,12 +6191,12 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ISkyrimMod :
-        ISkyrimModGetter,
-        IMajorRecordEnumerable,
-        ILoquiObjectSetter<ISkyrimMod>,
-        IMod,
         IContextMod<ISkyrimMod>,
-        IFormLinkContainer
+        IFormLinkContainer,
+        ILoquiObjectSetter<ISkyrimMod>,
+        IMajorRecordEnumerable,
+        IMod,
+        ISkyrimModGetter
     {
         new SkyrimModHeader ModHeader { get; }
         new Group<GameSetting> GameSettings { get; }
@@ -6316,12 +6316,12 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ISkyrimModGetter :
         ILoquiObject,
+        IContextGetterMod<ISkyrimMod>,
+        IFormLinkContainerGetter,
+        ILoquiObject<ISkyrimModGetter>,
         IMajorRecordContextEnumerable<ISkyrimMod>,
         IMajorRecordGetterEnumerable,
-        ILoquiObject<ISkyrimModGetter>,
-        IModGetter,
-        IContextGetterMod<ISkyrimMod>,
-        IFormLinkContainerGetter
+        IModGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

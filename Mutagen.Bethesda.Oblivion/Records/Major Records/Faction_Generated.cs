@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Faction :
         OblivionMajorRecord,
+        IEquatable<IFactionGetter>,
         IFactionInternal,
-        ILoquiObjectSetter<Faction>,
-        IEquatable<IFactionGetter>
+        ILoquiObjectSetter<Faction>
     {
         #region Ctor
         protected Faction()
@@ -128,8 +128,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -751,12 +751,12 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IFaction :
         IFactionGetter,
-        IOblivionMajorRecord,
-        IOwner,
-        INamedRequired,
-        INamed,
+        IFormLinkContainer,
         ILoquiObjectSetter<IFactionInternal>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired,
+        IOblivionMajorRecord,
+        IOwner
     {
         new String? Name { get; set; }
         new ExtendedList<Relation> Relations { get; }
@@ -774,12 +774,12 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IFactionGetter :
         IOblivionMajorRecordGetter,
-        IOwnerGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ILoquiObject<IFactionGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IFactionGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        IOwnerGetter
     {
         static new ILoquiRegistration Registration => Faction_Registration.Instance;
         String? Name { get; }

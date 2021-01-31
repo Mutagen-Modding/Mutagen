@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class PackageFlagsOverride :
-        IPackageFlagsOverride,
+        IEquatable<IPackageFlagsOverrideGetter>,
         ILoquiObjectSetter<PackageFlagsOverride>,
-        IEquatable<IPackageFlagsOverrideGetter>
+        IPackageFlagsOverride
     {
         #region Ctor
         public PackageFlagsOverride()
@@ -97,8 +97,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -575,8 +575,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPackageFlagsOverride :
-        IPackageFlagsOverrideGetter,
-        ILoquiObjectSetter<IPackageFlagsOverride>
+        ILoquiObjectSetter<IPackageFlagsOverride>,
+        IPackageFlagsOverrideGetter
     {
         new Package.Flag SetFlags { get; set; }
         new Package.Flag ClearFlags { get; set; }
@@ -588,8 +588,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IPackageFlagsOverrideGetter :
         ILoquiObject,
-        ILoquiObject<IPackageFlagsOverrideGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IPackageFlagsOverrideGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

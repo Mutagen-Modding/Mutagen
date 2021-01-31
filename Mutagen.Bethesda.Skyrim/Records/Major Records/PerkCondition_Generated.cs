@@ -28,9 +28,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class PerkCondition :
-        IPerkCondition,
+        IEquatable<IPerkConditionGetter>,
         ILoquiObjectSetter<PerkCondition>,
-        IEquatable<IPerkConditionGetter>
+        IPerkCondition
     {
         #region Ctor
         public PerkCondition()
@@ -89,8 +89,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -532,9 +532,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPerkCondition :
-        IPerkConditionGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IPerkCondition>,
-        IFormLinkContainer
+        IPerkConditionGetter
     {
         new Byte RunOnTabIndex { get; set; }
         new ExtendedList<Condition> Conditions { get; }
@@ -542,9 +542,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IPerkConditionGetter :
         ILoquiObject,
-        ILoquiObject<IPerkConditionGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IPerkConditionGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

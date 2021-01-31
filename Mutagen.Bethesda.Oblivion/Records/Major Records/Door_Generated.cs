@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class Door :
         OblivionMajorRecord,
         IDoorInternal,
-        ILoquiObjectSetter<Door>,
-        IEquatable<IDoorGetter>
+        IEquatable<IDoorGetter>,
+        ILoquiObjectSetter<Door>
     {
         #region Ctor
         protected Door()
@@ -132,8 +132,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -769,11 +769,11 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IDoor :
         IDoorGetter,
-        IOblivionMajorRecord,
-        INamedRequired,
-        INamed,
+        IFormLinkContainer,
         ILoquiObjectSetter<IDoorInternal>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired,
+        IOblivionMajorRecord
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
@@ -794,11 +794,11 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IDoorGetter :
         IOblivionMajorRecordGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ILoquiObject<IDoorGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IDoorGetter>,
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Door_Registration.Instance;
         String? Name { get; }

@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class AcousticSpace :
         SkyrimMajorRecord,
         IAcousticSpaceInternal,
-        ILoquiObjectSetter<AcousticSpace>,
-        IEquatable<IAcousticSpaceGetter>
+        IEquatable<IAcousticSpaceGetter>,
+        ILoquiObjectSetter<AcousticSpace>
     {
         #region Ctor
         protected AcousticSpace()
@@ -101,8 +101,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -572,11 +572,11 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IAcousticSpace :
         IAcousticSpaceGetter,
-        ISkyrimMajorRecord,
-        IObjectBoundedOptional,
-        IObjectBounded,
+        IFormLinkContainer,
         ILoquiObjectSetter<IAcousticSpaceInternal>,
-        IFormLinkContainer
+        IObjectBounded,
+        IObjectBoundedOptional,
+        ISkyrimMajorRecord
     {
         new ObjectBounds ObjectBounds { get; set; }
         new FormLinkNullable<ISoundDescriptorGetter> AmbientSound { get; set; }
@@ -593,11 +593,11 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IAcousticSpaceGetter :
         ISkyrimMajorRecordGetter,
-        IObjectBoundedOptionalGetter,
-        IObjectBoundedGetter,
-        ILoquiObject<IAcousticSpaceGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IAcousticSpaceGetter>,
+        IObjectBoundedGetter,
+        IObjectBoundedOptionalGetter
     {
         static new ILoquiRegistration Registration => AcousticSpace_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }

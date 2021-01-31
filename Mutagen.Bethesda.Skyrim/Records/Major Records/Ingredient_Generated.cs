@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class Ingredient :
         SkyrimMajorRecord,
+        IEquatable<IIngredientGetter>,
         IIngredientInternal,
-        ILoquiObjectSetter<Ingredient>,
-        IEquatable<IIngredientGetter>
+        ILoquiObjectSetter<Ingredient>
     {
         #region Ctor
         protected Ingredient()
@@ -228,8 +228,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1246,23 +1246,23 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IIngredient :
-        IIngredientGetter,
-        ISkyrimMajorRecord,
-        IItem,
-        IHarvestTarget,
         IConstructible,
+        IFormLinkContainer,
+        IHarvestTarget,
         IHasIcons,
-        IModeled,
-        IWeightValue,
+        IIngredientGetter,
+        IItem,
         IKeyworded<IKeywordGetter>,
-        INamedRequired,
-        INamed,
-        ITranslatedNamedRequired,
-        ITranslatedNamed,
-        IObjectBoundedOptional,
-        IObjectBounded,
         ILoquiObjectSetter<IIngredientInternal>,
-        IFormLinkContainer
+        IModeled,
+        INamed,
+        INamedRequired,
+        IObjectBounded,
+        IObjectBoundedOptional,
+        ISkyrimMajorRecord,
+        ITranslatedNamed,
+        ITranslatedNamedRequired,
+        IWeightValue
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
@@ -1292,22 +1292,22 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IIngredientGetter :
         ISkyrimMajorRecordGetter,
-        IItemGetter,
-        IHarvestTargetGetter,
+        IBinaryItem,
         IConstructibleGetter,
-        IHasIconsGetter,
-        IModeledGetter,
-        IWeightValueGetter,
-        IKeywordedGetter<IKeywordGetter>,
-        INamedRequiredGetter,
-        INamedGetter,
-        ITranslatedNamedRequiredGetter,
-        ITranslatedNamedGetter,
-        IObjectBoundedOptionalGetter,
-        IObjectBoundedGetter,
-        ILoquiObject<IIngredientGetter>,
         IFormLinkContainerGetter,
-        IBinaryItem
+        IHarvestTargetGetter,
+        IHasIconsGetter,
+        IItemGetter,
+        IKeywordedGetter<IKeywordGetter>,
+        ILoquiObject<IIngredientGetter>,
+        IModeledGetter,
+        INamedGetter,
+        INamedRequiredGetter,
+        IObjectBoundedGetter,
+        IObjectBoundedOptionalGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter,
+        IWeightValueGetter
     {
         static new ILoquiRegistration Registration => Ingredient_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }

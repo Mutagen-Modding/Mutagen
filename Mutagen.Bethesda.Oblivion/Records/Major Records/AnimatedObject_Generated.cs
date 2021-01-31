@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class AnimatedObject :
         OblivionMajorRecord,
         IAnimatedObjectInternal,
-        ILoquiObjectSetter<AnimatedObject>,
-        IEquatable<IAnimatedObjectGetter>
+        IEquatable<IAnimatedObjectGetter>,
+        ILoquiObjectSetter<AnimatedObject>
     {
         #region Ctor
         protected AnimatedObject()
@@ -89,8 +89,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -485,9 +485,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IAnimatedObject :
         IAnimatedObjectGetter,
-        IOblivionMajorRecord,
+        IFormLinkContainer,
         ILoquiObjectSetter<IAnimatedObjectInternal>,
-        IFormLinkContainer
+        IOblivionMajorRecord
     {
         new Model? Model { get; set; }
         new FormLinkNullable<IIdleAnimationGetter> IdleAnimation { get; set; }
@@ -502,9 +502,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IAnimatedObjectGetter :
         IOblivionMajorRecordGetter,
-        ILoquiObject<IAnimatedObjectGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IAnimatedObjectGetter>
     {
         static new ILoquiRegistration Registration => AnimatedObject_Registration.Instance;
         IModelGetter? Model { get; }

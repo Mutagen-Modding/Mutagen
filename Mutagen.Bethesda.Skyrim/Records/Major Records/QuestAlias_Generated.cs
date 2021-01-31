@@ -28,9 +28,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class QuestAlias :
-        IQuestAlias,
+        IEquatable<IQuestAliasGetter>,
         ILoquiObjectSetter<QuestAlias>,
-        IEquatable<IQuestAliasGetter>
+        IQuestAlias
     {
         #region Ctor
         public QuestAlias()
@@ -273,8 +273,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1761,12 +1761,12 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IQuestAlias :
-        IQuestAliasGetter,
+        IFormLinkContainer,
         IKeyworded<IKeywordGetter>,
-        INamedRequired,
-        INamed,
         ILoquiObjectSetter<IQuestAlias>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired,
+        IQuestAliasGetter
     {
         new UInt32 ID { get; set; }
         new QuestAlias.TypeEnum Type { get; set; }
@@ -1797,12 +1797,12 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IQuestAliasGetter :
         ILoquiObject,
-        IKeywordedGetter<IKeywordGetter>,
-        INamedRequiredGetter,
-        INamedGetter,
-        ILoquiObject<IQuestAliasGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        IKeywordedGetter<IKeywordGetter>,
+        ILoquiObject<IQuestAliasGetter>,
+        INamedGetter,
+        INamedRequiredGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

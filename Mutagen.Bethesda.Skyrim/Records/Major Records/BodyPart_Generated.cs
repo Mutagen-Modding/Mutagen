@@ -28,8 +28,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class BodyPart :
         IBodyPart,
-        ILoquiObjectSetter<BodyPart>,
-        IEquatable<IBodyPartGetter>
+        IEquatable<IBodyPartGetter>,
+        ILoquiObjectSetter<BodyPart>
     {
         #region Ctor
         public BodyPart()
@@ -199,8 +199,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1440,10 +1440,10 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IBodyPart :
         IBodyPartGetter,
-        INamedRequired,
-        ITranslatedNamedRequired,
+        IFormLinkContainer,
         ILoquiObjectSetter<IBodyPart>,
-        IFormLinkContainer
+        INamedRequired,
+        ITranslatedNamedRequired
     {
         new TranslatedString Name { get; set; }
         new String? PoseMatching { get; set; }
@@ -1482,11 +1482,11 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IBodyPartGetter :
         ILoquiObject,
-        INamedRequiredGetter,
-        ITranslatedNamedRequiredGetter,
-        ILoquiObject<IBodyPartGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IBodyPartGetter>,
+        INamedRequiredGetter,
+        ITranslatedNamedRequiredGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

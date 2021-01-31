@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class ModStats :
-        IModStats,
+        IEquatable<IModStatsGetter>,
         ILoquiObjectSetter<ModStats>,
-        IEquatable<IModStatsGetter>
+        IModStats
     {
         #region Ctor
         public ModStats()
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -474,8 +474,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IModStats :
-        IModStatsGetter,
-        ILoquiObjectSetter<IModStats>
+        ILoquiObjectSetter<IModStats>,
+        IModStatsGetter
     {
         new Single Version { get; set; }
         new UInt32 NumRecords { get; set; }
@@ -484,8 +484,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IModStatsGetter :
         ILoquiObject,
-        ILoquiObject<IModStatsGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IModStatsGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

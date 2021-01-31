@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class Class :
         OblivionMajorRecord,
         IClassInternal,
-        ILoquiObjectSetter<Class>,
-        IEquatable<IClassGetter>
+        IEquatable<IClassGetter>,
+        ILoquiObjectSetter<Class>
     {
         #region Ctor
         protected Class()
@@ -111,8 +111,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -561,10 +561,10 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IClass :
         IClassGetter,
-        IOblivionMajorRecord,
-        INamedRequired,
+        ILoquiObjectSetter<IClassInternal>,
         INamed,
-        ILoquiObjectSetter<IClassInternal>
+        INamedRequired,
+        IOblivionMajorRecord
     {
         new String? Name { get; set; }
         new String? Description { get; set; }
@@ -581,10 +581,10 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IClassGetter :
         IOblivionMajorRecordGetter,
-        INamedRequiredGetter,
-        INamedGetter,
+        IBinaryItem,
         ILoquiObject<IClassGetter>,
-        IBinaryItem
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Class_Registration.Instance;
         String? Name { get; }

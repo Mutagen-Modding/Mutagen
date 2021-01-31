@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class SpellUnleveled :
         Spell,
-        ISpellUnleveledInternal,
+        IEquatable<ISpellUnleveledGetter>,
         ILoquiObjectSetter<SpellUnleveled>,
-        IEquatable<ISpellUnleveledGetter>
+        ISpellUnleveledInternal
     {
         #region Ctor
         protected SpellUnleveled()
@@ -100,8 +100,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             Spell.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -572,12 +572,12 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ISpellUnleveled :
-        ISpellUnleveledGetter,
-        ISpell,
-        INamedRequired,
-        INamed,
+        IFormLinkContainer,
         ILoquiObjectSetter<ISpellUnleveledInternal>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired,
+        ISpell,
+        ISpellUnleveledGetter
     {
         new SpellData? Data { get; set; }
         new ExtendedList<Effect> Effects { get; }
@@ -592,11 +592,11 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ISpellUnleveledGetter :
         ISpellGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ILoquiObject<ISpellUnleveledGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ISpellUnleveledGetter>,
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => SpellUnleveled_Registration.Instance;
         ISpellDataGetter? Data { get; }

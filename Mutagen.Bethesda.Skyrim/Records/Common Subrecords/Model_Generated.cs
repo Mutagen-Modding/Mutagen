@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class Model :
         SimpleModel,
-        IModel,
+        IEquatable<IModelGetter>,
         ILoquiObjectSetter<Model>,
-        IEquatable<IModelGetter>
+        IModel
     {
         #region Ctor
         public Model()
@@ -88,8 +88,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SimpleModel.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -492,19 +492,19 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IModel :
-        IModelGetter,
-        ISimpleModel,
+        IFormLinkContainer,
         ILoquiObjectSetter<IModel>,
-        IFormLinkContainer
+        IModelGetter,
+        ISimpleModel
     {
         new ExtendedList<AlternateTexture>? AlternateTextures { get; set; }
     }
 
     public partial interface IModelGetter :
         ISimpleModelGetter,
-        ILoquiObject<IModelGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IModelGetter>
     {
         static new ILoquiRegistration Registration => Model_Registration.Instance;
         IReadOnlyList<IAlternateTextureGetter>? AlternateTextures { get; }

@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class StoryManagerQuest :
-        IStoryManagerQuest,
+        IEquatable<IStoryManagerQuestGetter>,
         ILoquiObjectSetter<StoryManagerQuest>,
-        IEquatable<IStoryManagerQuestGetter>
+        IStoryManagerQuest
     {
         #region Ctor
         public StoryManagerQuest()
@@ -90,8 +90,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -485,9 +485,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IStoryManagerQuest :
-        IStoryManagerQuestGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IStoryManagerQuest>,
-        IFormLinkContainer
+        IStoryManagerQuestGetter
     {
         new FormLinkNullable<IQuestGetter> Quest { get; set; }
         new MemorySlice<Byte>? FNAM { get; set; }
@@ -496,9 +496,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IStoryManagerQuestGetter :
         ILoquiObject,
-        ILoquiObject<IStoryManagerQuestGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IStoryManagerQuestGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

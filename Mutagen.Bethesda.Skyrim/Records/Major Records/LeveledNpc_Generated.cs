@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class LeveledNpc :
         SkyrimMajorRecord,
+        IEquatable<ILeveledNpcGetter>,
         ILeveledNpcInternal,
-        ILoquiObjectSetter<LeveledNpc>,
-        IEquatable<ILeveledNpcGetter>
+        ILoquiObjectSetter<LeveledNpc>
     {
         #region Ctor
         protected LeveledNpc()
@@ -126,8 +126,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -734,13 +734,13 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ILeveledNpc :
+        IFormLinkContainer,
         ILeveledNpcGetter,
-        ISkyrimMajorRecord,
-        INpcSpawn,
-        IObjectBoundedOptional,
-        IObjectBounded,
         ILoquiObjectSetter<ILeveledNpcInternal>,
-        IFormLinkContainer
+        INpcSpawn,
+        IObjectBounded,
+        IObjectBoundedOptional,
+        ISkyrimMajorRecord
     {
         new ObjectBounds ObjectBounds { get; set; }
         new Byte ChanceNone { get; set; }
@@ -759,12 +759,12 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ILeveledNpcGetter :
         ISkyrimMajorRecordGetter,
-        INpcSpawnGetter,
-        IObjectBoundedOptionalGetter,
-        IObjectBoundedGetter,
-        ILoquiObject<ILeveledNpcGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ILeveledNpcGetter>,
+        INpcSpawnGetter,
+        IObjectBoundedGetter,
+        IObjectBoundedOptionalGetter
     {
         static new ILoquiRegistration Registration => LeveledNpc_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }

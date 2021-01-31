@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class TreeData :
-        ITreeData,
+        IEquatable<ITreeDataGetter>,
         ILoquiObjectSetter<TreeData>,
-        IEquatable<ITreeDataGetter>
+        ITreeData
     {
         #region Ctor
         public TreeData()
@@ -95,8 +95,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -629,8 +629,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ITreeData :
-        ITreeDataGetter,
-        ILoquiObjectSetter<ITreeData>
+        ILoquiObjectSetter<ITreeData>,
+        ITreeDataGetter
     {
         new Single LeafCurvature { get; set; }
         new Single MinimumLeafAngle { get; set; }
@@ -644,8 +644,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ITreeDataGetter :
         ILoquiObject,
-        ILoquiObject<ITreeDataGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ITreeDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

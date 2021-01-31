@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class HeadPart :
         SkyrimMajorRecord,
+        IEquatable<IHeadPartGetter>,
         IHeadPartInternal,
-        ILoquiObjectSetter<HeadPart>,
-        IEquatable<IHeadPartGetter>
+        ILoquiObjectSetter<HeadPart>
     {
         #region Ctor
         protected HeadPart()
@@ -164,8 +164,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -927,15 +927,15 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IHeadPart :
+        IFormLinkContainer,
         IHeadPartGetter,
-        ISkyrimMajorRecord,
-        IModeled,
-        INamedRequired,
-        INamed,
-        ITranslatedNamedRequired,
-        ITranslatedNamed,
         ILoquiObjectSetter<IHeadPartInternal>,
-        IFormLinkContainer
+        IModeled,
+        INamed,
+        INamedRequired,
+        ISkyrimMajorRecord,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
         new TranslatedString? Name { get; set; }
         new Model? Model { get; set; }
@@ -961,14 +961,14 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IHeadPartGetter :
         ISkyrimMajorRecordGetter,
-        IModeledGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ITranslatedNamedRequiredGetter,
-        ITranslatedNamedGetter,
-        ILoquiObject<IHeadPartGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IHeadPartGetter>,
+        IModeledGetter,
+        INamedGetter,
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => HeadPart_Registration.Instance;
         ITranslatedStringGetter? Name { get; }

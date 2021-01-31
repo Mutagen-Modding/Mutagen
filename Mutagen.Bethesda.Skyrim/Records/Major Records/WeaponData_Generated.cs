@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class WeaponData :
-        IWeaponData,
+        IEquatable<IWeaponDataGetter>,
         ILoquiObjectSetter<WeaponData>,
-        IEquatable<IWeaponDataGetter>
+        IWeaponData
     {
         #region Ctor
         public WeaponData()
@@ -169,8 +169,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1207,8 +1207,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IWeaponData :
-        IWeaponDataGetter,
-        ILoquiObjectSetter<IWeaponData>
+        ILoquiObjectSetter<IWeaponData>,
+        IWeaponDataGetter
     {
         new WeaponAnimationType AnimationType { get; set; }
         new MemorySlice<Byte> Unused { get; set; }
@@ -1240,8 +1240,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IWeaponDataGetter :
         ILoquiObject,
-        ILoquiObject<IWeaponDataGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IWeaponDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

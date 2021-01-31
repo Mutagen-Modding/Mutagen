@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class CombatStyle :
         SkyrimMajorRecord,
         ICombatStyleInternal,
-        ILoquiObjectSetter<CombatStyle>,
-        IEquatable<ICombatStyleGetter>
+        IEquatable<ICombatStyleGetter>,
+        ILoquiObjectSetter<CombatStyle>
     {
         #region Ctor
         protected CombatStyle()
@@ -244,8 +244,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1102,8 +1102,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface ICombatStyle :
         ICombatStyleGetter,
-        ISkyrimMajorRecord,
-        ILoquiObjectSetter<ICombatStyleInternal>
+        ILoquiObjectSetter<ICombatStyleInternal>,
+        ISkyrimMajorRecord
     {
         new Single OffensiveMult { get; set; }
         new Single DefensiveMult { get; set; }
@@ -1137,8 +1137,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ICombatStyleGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<ICombatStyleGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ICombatStyleGetter>
     {
         static new ILoquiRegistration Registration => CombatStyle_Registration.Instance;
         Single OffensiveMult { get; }

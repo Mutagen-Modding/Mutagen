@@ -31,9 +31,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class Water :
         SkyrimMajorRecord,
-        IWaterInternal,
+        IEquatable<IWaterGetter>,
         ILoquiObjectSetter<Water>,
-        IEquatable<IWaterGetter>
+        IWaterInternal
     {
         #region Ctor
         protected Water()
@@ -387,8 +387,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -2720,14 +2720,14 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IWater :
-        IWaterGetter,
-        ISkyrimMajorRecord,
-        INamedRequired,
-        INamed,
-        ITranslatedNamedRequired,
-        ITranslatedNamed,
+        IFormLinkContainer,
         ILoquiObjectSetter<IWaterInternal>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired,
+        ISkyrimMajorRecord,
+        ITranslatedNamed,
+        ITranslatedNamedRequired,
+        IWaterGetter
     {
         new TranslatedString? Name { get; set; }
         new ExtendedList<String> UnusedNoisemaps { get; }
@@ -2808,13 +2808,13 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IWaterGetter :
         ISkyrimMajorRecordGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ITranslatedNamedRequiredGetter,
-        ITranslatedNamedGetter,
-        ILoquiObject<IWaterGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IWaterGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Water_Registration.Instance;
         ITranslatedStringGetter? Name { get; }

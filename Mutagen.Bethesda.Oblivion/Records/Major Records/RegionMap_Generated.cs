@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class RegionMap :
         RegionData,
-        IRegionMap,
+        IEquatable<IRegionMapGetter>,
         ILoquiObjectSetter<RegionMap>,
-        IEquatable<IRegionMapGetter>
+        IRegionMap
     {
         #region Ctor
         public RegionMap()
@@ -79,8 +79,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             RegionData.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -403,17 +403,17 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IRegionMap :
-        IRegionMapGetter,
+        ILoquiObjectSetter<IRegionMap>,
         IRegionData,
-        ILoquiObjectSetter<IRegionMap>
+        IRegionMapGetter
     {
         new String? Map { get; set; }
     }
 
     public partial interface IRegionMapGetter :
         IRegionDataGetter,
-        ILoquiObject<IRegionMapGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IRegionMapGetter>
     {
         static new ILoquiRegistration Registration => RegionMap_Registration.Instance;
         String? Map { get; }

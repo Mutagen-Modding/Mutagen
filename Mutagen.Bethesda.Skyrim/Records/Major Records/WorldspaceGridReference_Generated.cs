@@ -28,9 +28,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class WorldspaceGridReference :
-        IWorldspaceGridReference,
+        IEquatable<IWorldspaceGridReferenceGetter>,
         ILoquiObjectSetter<WorldspaceGridReference>,
-        IEquatable<IWorldspaceGridReferenceGetter>
+        IWorldspaceGridReference
     {
         #region Ctor
         public WorldspaceGridReference()
@@ -89,8 +89,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -532,9 +532,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IWorldspaceGridReference :
-        IWorldspaceGridReferenceGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IWorldspaceGridReference>,
-        IFormLinkContainer
+        IWorldspaceGridReferenceGetter
     {
         new P2Int16 GridPosition { get; set; }
         new ExtendedList<WorldspaceReference> References { get; }
@@ -542,9 +542,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IWorldspaceGridReferenceGetter :
         ILoquiObject,
-        ILoquiObject<IWorldspaceGridReferenceGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IWorldspaceGridReferenceGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

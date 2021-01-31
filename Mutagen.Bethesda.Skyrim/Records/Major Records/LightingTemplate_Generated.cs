@@ -31,9 +31,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class LightingTemplate :
         SkyrimMajorRecord,
+        IEquatable<ILightingTemplateGetter>,
         ILightingTemplateInternal,
-        ILoquiObjectSetter<LightingTemplate>,
-        IEquatable<ILightingTemplateGetter>
+        ILoquiObjectSetter<LightingTemplate>
     {
         #region Ctor
         protected LightingTemplate()
@@ -234,8 +234,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1296,10 +1296,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ILightingTemplate :
-        ILightingTemplateGetter,
-        ISkyrimMajorRecord,
         IAmbientColorsCommon,
-        ILoquiObjectSetter<ILightingTemplateInternal>
+        ILightingTemplateGetter,
+        ILoquiObjectSetter<ILightingTemplateInternal>,
+        ISkyrimMajorRecord
     {
         new Color AmbientColor { get; set; }
         new Color DirectionalColor { get; set; }
@@ -1338,8 +1338,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILightingTemplateGetter :
         ISkyrimMajorRecordGetter,
         IAmbientColorsCommonGetter,
-        ILoquiObject<ILightingTemplateGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ILightingTemplateGetter>
     {
         static new ILoquiRegistration Registration => LightingTemplate_Registration.Instance;
         Color AmbientColor { get; }

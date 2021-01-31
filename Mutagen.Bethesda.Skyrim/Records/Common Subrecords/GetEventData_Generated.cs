@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class GetEventData :
         ConditionData,
+        IEquatable<IGetEventDataGetter>,
         IGetEventData,
-        ILoquiObjectSetter<GetEventData>,
-        IEquatable<IGetEventDataGetter>
+        ILoquiObjectSetter<GetEventData>
     {
         #region Ctor
         public GetEventData()
@@ -96,8 +96,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             ConditionData.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -588,10 +588,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IGetEventData :
-        IGetEventDataGetter,
         IConditionData,
-        ILoquiObjectSetter<IGetEventData>,
-        IFormLinkContainer
+        IFormLinkContainer,
+        IGetEventDataGetter,
+        ILoquiObjectSetter<IGetEventData>
     {
         new UInt16 Unknown2 { get; set; }
         new UInt16 EventFunction { get; set; }
@@ -604,9 +604,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IGetEventDataGetter :
         IConditionDataGetter,
-        ILoquiObject<IGetEventDataGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IGetEventDataGetter>
     {
         static new ILoquiRegistration Registration => GetEventData_Registration.Instance;
         UInt16 Unknown2 { get; }

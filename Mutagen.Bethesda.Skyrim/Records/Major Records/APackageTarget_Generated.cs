@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public abstract partial class APackageTarget :
         IAPackageTarget,
-        ILoquiObjectSetter<APackageTarget>,
-        IEquatable<IAPackageTargetGetter>
+        IEquatable<IAPackageTargetGetter>,
+        ILoquiObjectSetter<APackageTarget>
     {
         #region Ctor
         public APackageTarget()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem CountOrDistance)
@@ -390,8 +390,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public partial interface IAPackageTarget :
         IAPackageTargetGetter,
-        ILoquiObjectSetter<IAPackageTarget>,
-        IFormLinkContainer
+        IFormLinkContainer,
+        ILoquiObjectSetter<IAPackageTarget>
     {
         new Int32 CountOrDistance { get; set; }
     }
@@ -401,9 +401,9 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public partial interface IAPackageTargetGetter :
         ILoquiObject,
-        ILoquiObject<IAPackageTargetGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IAPackageTargetGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

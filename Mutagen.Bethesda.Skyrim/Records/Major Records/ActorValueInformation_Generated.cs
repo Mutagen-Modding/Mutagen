@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class ActorValueInformation :
         SkyrimMajorRecord,
         IActorValueInformationInternal,
-        ILoquiObjectSetter<ActorValueInformation>,
-        IEquatable<IActorValueInformationGetter>
+        IEquatable<IActorValueInformationGetter>,
+        ILoquiObjectSetter<ActorValueInformation>
     {
         #region Ctor
         protected ActorValueInformation()
@@ -154,8 +154,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -756,13 +756,13 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IActorValueInformation :
         IActorValueInformationGetter,
-        ISkyrimMajorRecord,
-        INamedRequired,
-        INamed,
-        ITranslatedNamedRequired,
-        ITranslatedNamed,
+        IFormLinkContainer,
         ILoquiObjectSetter<IActorValueInformationInternal>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired,
+        ISkyrimMajorRecord,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
         new TranslatedString? Name { get; set; }
         new TranslatedString? Description { get; set; }
@@ -781,13 +781,13 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IActorValueInformationGetter :
         ISkyrimMajorRecordGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ITranslatedNamedRequiredGetter,
-        ITranslatedNamedGetter,
-        ILoquiObject<IActorValueInformationGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IActorValueInformationGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => ActorValueInformation_Registration.Instance;
         ITranslatedStringGetter? Name { get; }

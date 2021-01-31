@@ -29,8 +29,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class CellLighting :
         ICellLighting,
-        ILoquiObjectSetter<CellLighting>,
-        IEquatable<ICellLightingGetter>
+        IEquatable<ICellLightingGetter>,
+        ILoquiObjectSetter<CellLighting>
     {
         #region Ctor
         public CellLighting()
@@ -99,8 +99,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -677,8 +677,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ICellLightingGetter :
         ILoquiObject,
-        ILoquiObject<ICellLightingGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ICellLightingGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

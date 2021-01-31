@@ -28,9 +28,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class LocationTargetRadius :
+        IEquatable<ILocationTargetRadiusGetter>,
         ILocationTargetRadius,
-        ILoquiObjectSetter<LocationTargetRadius>,
-        IEquatable<ILocationTargetRadiusGetter>
+        ILoquiObjectSetter<LocationTargetRadius>
     {
         #region Ctor
         public LocationTargetRadius()
@@ -75,8 +75,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -449,9 +449,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ILocationTargetRadius :
+        IFormLinkContainer,
         ILocationTargetRadiusGetter,
-        ILoquiObjectSetter<ILocationTargetRadius>,
-        IFormLinkContainer
+        ILoquiObjectSetter<ILocationTargetRadius>
     {
         new ALocationTarget Target { get; set; }
         new UInt32 Radius { get; set; }
@@ -459,9 +459,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ILocationTargetRadiusGetter :
         ILoquiObject,
-        ILoquiObject<ILocationTargetRadiusGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ILocationTargetRadiusGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

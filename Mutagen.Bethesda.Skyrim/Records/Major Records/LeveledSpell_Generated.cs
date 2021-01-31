@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class LeveledSpell :
         ASpell,
+        IEquatable<ILeveledSpellGetter>,
         ILeveledSpellInternal,
-        ILoquiObjectSetter<LeveledSpell>,
-        IEquatable<ILeveledSpellGetter>
+        ILoquiObjectSetter<LeveledSpell>
     {
         #region Ctor
         protected LeveledSpell()
@@ -114,8 +114,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             ASpell.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -659,13 +659,13 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ILeveledSpell :
-        ILeveledSpellGetter,
         IASpell,
-        ISpellSpawn,
-        IObjectBoundedOptional,
-        IObjectBounded,
+        IFormLinkContainer,
+        ILeveledSpellGetter,
         ILoquiObjectSetter<ILeveledSpellInternal>,
-        IFormLinkContainer
+        IObjectBounded,
+        IObjectBoundedOptional,
+        ISpellSpawn
     {
         new ObjectBounds ObjectBounds { get; set; }
         new Byte? ChanceNone { get; set; }
@@ -682,12 +682,12 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ILeveledSpellGetter :
         IASpellGetter,
-        ISpellSpawnGetter,
-        IObjectBoundedOptionalGetter,
-        IObjectBoundedGetter,
-        ILoquiObject<ILeveledSpellGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ILeveledSpellGetter>,
+        IObjectBoundedGetter,
+        IObjectBoundedOptionalGetter,
+        ISpellSpawnGetter
     {
         static new ILoquiRegistration Registration => LeveledSpell_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }

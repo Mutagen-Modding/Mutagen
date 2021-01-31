@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class GlobalShort :
         Global,
+        IEquatable<IGlobalShortGetter>,
         IGlobalShortInternal,
-        ILoquiObjectSetter<GlobalShort>,
-        IEquatable<IGlobalShortGetter>
+        ILoquiObjectSetter<GlobalShort>
     {
         #region Ctor
         protected GlobalShort()
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             Global.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -457,8 +457,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IGlobalShort :
-        IGlobalShortGetter,
         IGlobal,
+        IGlobalShortGetter,
         ILoquiObjectSetter<IGlobalShortInternal>
     {
         new Int16? Data { get; set; }
@@ -473,8 +473,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IGlobalShortGetter :
         IGlobalGetter,
-        ILoquiObject<IGlobalShortGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IGlobalShortGetter>
     {
         static new ILoquiRegistration Registration => GlobalShort_Registration.Instance;
         Int16? Data { get; }

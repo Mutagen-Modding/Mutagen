@@ -29,8 +29,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class CellBlock :
         ICellBlock,
-        ILoquiObjectSetter<CellBlock>,
-        IEquatable<ICellBlockGetter>
+        IEquatable<ICellBlockGetter>,
+        ILoquiObjectSetter<CellBlock>
     {
         #region Ctor
         public CellBlock()
@@ -95,8 +95,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -629,9 +629,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ICellBlock :
         ICellBlockGetter,
-        IMajorRecordEnumerable,
+        IFormLinkContainer,
         ILoquiObjectSetter<ICellBlock>,
-        IFormLinkContainer
+        IMajorRecordEnumerable
     {
         new Int32 BlockNumber { get; set; }
         new GroupTypeEnum GroupType { get; set; }
@@ -641,10 +641,10 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ICellBlockGetter :
         ILoquiObject,
-        IMajorRecordGetterEnumerable,
-        ILoquiObject<ICellBlockGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ICellBlockGetter>,
+        IMajorRecordGetterEnumerable
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Miscellaneous :
         AItem,
-        IMiscellaneousInternal,
+        IEquatable<IMiscellaneousGetter>,
         ILoquiObjectSetter<Miscellaneous>,
-        IEquatable<IMiscellaneousGetter>
+        IMiscellaneousInternal
     {
         #region Ctor
         protected Miscellaneous()
@@ -120,8 +120,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             AItem.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -606,12 +606,12 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IMiscellaneous :
-        IMiscellaneousGetter,
         IAItem,
-        INamedRequired,
-        INamed,
+        IFormLinkContainer,
         ILoquiObjectSetter<IMiscellaneousInternal>,
-        IFormLinkContainer
+        IMiscellaneousGetter,
+        INamed,
+        INamedRequired
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
@@ -629,11 +629,11 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IMiscellaneousGetter :
         IAItemGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ILoquiObject<IMiscellaneousGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IMiscellaneousGetter>,
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Miscellaneous_Registration.Instance;
         String? Name { get; }

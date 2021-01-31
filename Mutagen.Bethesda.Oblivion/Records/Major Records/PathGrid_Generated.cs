@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class PathGrid :
         OblivionMajorRecord,
-        IPathGridInternal,
+        IEquatable<IPathGridGetter>,
         ILoquiObjectSetter<PathGrid>,
-        IEquatable<IPathGridGetter>
+        IPathGridInternal
     {
         #region Ctor
         protected PathGrid()
@@ -128,8 +128,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -797,10 +797,10 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IPathGrid :
-        IPathGridGetter,
-        IOblivionMajorRecord,
+        IFormLinkContainer,
         ILoquiObjectSetter<IPathGridInternal>,
-        IFormLinkContainer
+        IOblivionMajorRecord,
+        IPathGridGetter
     {
         new ExtendedList<PathGridPoint>? PointToPointConnections { get; set; }
         new MemorySlice<Byte>? PGAG { get; set; }
@@ -817,9 +817,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IPathGridGetter :
         IOblivionMajorRecordGetter,
-        ILoquiObject<IPathGridGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IPathGridGetter>
     {
         static new ILoquiRegistration Registration => PathGrid_Registration.Instance;
         IReadOnlyList<IPathGridPointGetter>? PointToPointConnections { get; }

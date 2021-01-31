@@ -11,8 +11,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// Implemented by: [Faction, PlacedNpc]
     /// </summary>
     public partial interface IOwner :
-        ISkyrimMajorRecordInternal,
-        IOwnerGetter
+        IOwnerGetter,
+        ISkyrimMajorRecordInternal
     {
     }
 

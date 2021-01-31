@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class PotionData :
-        IPotionData,
+        IEquatable<IPotionDataGetter>,
         ILoquiObjectSetter<PotionData>,
-        IEquatable<IPotionDataGetter>
+        IPotionData
     {
         #region Ctor
         public PotionData()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -443,8 +443,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IPotionData :
-        IPotionDataGetter,
-        ILoquiObjectSetter<IPotionData>
+        ILoquiObjectSetter<IPotionData>,
+        IPotionDataGetter
     {
         new UInt32 Value { get; set; }
         new IngredientFlag Flags { get; set; }
@@ -452,8 +452,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IPotionDataGetter :
         ILoquiObject,
-        ILoquiObject<IPotionDataGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IPotionDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

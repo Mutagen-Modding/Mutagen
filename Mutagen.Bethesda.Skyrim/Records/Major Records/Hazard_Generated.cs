@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class Hazard :
         SkyrimMajorRecord,
+        IEquatable<IHazardGetter>,
         IHazardInternal,
-        ILoquiObjectSetter<Hazard>,
-        IEquatable<IHazardGetter>
+        ILoquiObjectSetter<Hazard>
     {
         #region Ctor
         protected Hazard()
@@ -172,8 +172,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -961,17 +961,17 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IHazard :
+        IFormLinkContainer,
         IHazardGetter,
-        ISkyrimMajorRecord,
-        IPlacedTrapTarget,
-        INamedRequired,
-        INamed,
-        ITranslatedNamedRequired,
-        ITranslatedNamed,
-        IObjectBoundedOptional,
-        IObjectBounded,
         ILoquiObjectSetter<IHazardInternal>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired,
+        IObjectBounded,
+        IObjectBoundedOptional,
+        IPlacedTrapTarget,
+        ISkyrimMajorRecord,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
         new ObjectBounds ObjectBounds { get; set; }
         new TranslatedString? Name { get; set; }
@@ -999,16 +999,16 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IHazardGetter :
         ISkyrimMajorRecordGetter,
-        IPlacedTrapTargetGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ITranslatedNamedRequiredGetter,
-        ITranslatedNamedGetter,
-        IObjectBoundedOptionalGetter,
-        IObjectBoundedGetter,
-        ILoquiObject<IHazardGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IHazardGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        IObjectBoundedGetter,
+        IObjectBoundedOptionalGetter,
+        IPlacedTrapTargetGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Hazard_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }

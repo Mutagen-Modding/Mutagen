@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class DialogTopic :
         SkyrimMajorRecord,
         IDialogTopicInternal,
-        ILoquiObjectSetter<DialogTopic>,
-        IEquatable<IDialogTopicGetter>
+        IEquatable<IDialogTopicGetter>,
+        ILoquiObjectSetter<DialogTopic>
     {
         #region Ctor
         protected DialogTopic()
@@ -152,8 +152,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -952,16 +952,16 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IDialogTopic :
-        IDialogTopicGetter,
-        ISkyrimMajorRecord,
         IDialog,
-        INamedRequired,
-        INamed,
-        ITranslatedNamedRequired,
-        ITranslatedNamed,
-        IMajorRecordEnumerable,
+        IDialogTopicGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IDialogTopicInternal>,
-        IFormLinkContainer
+        IMajorRecordEnumerable,
+        INamed,
+        INamedRequired,
+        ISkyrimMajorRecord,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
         new TranslatedString? Name { get; set; }
         new Single Priority { get; set; }
@@ -986,15 +986,15 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IDialogTopicGetter :
         ISkyrimMajorRecordGetter,
+        IBinaryItem,
         IDialogGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ITranslatedNamedRequiredGetter,
-        ITranslatedNamedGetter,
-        IMajorRecordGetterEnumerable,
-        ILoquiObject<IDialogTopicGetter>,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IDialogTopicGetter>,
+        IMajorRecordGetterEnumerable,
+        INamedGetter,
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => DialogTopic_Registration.Instance;
         ITranslatedStringGetter? Name { get; }

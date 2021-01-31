@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class ScriptBoolListProperty :
         ScriptProperty,
-        IScriptBoolListProperty,
+        IEquatable<IScriptBoolListPropertyGetter>,
         ILoquiObjectSetter<ScriptBoolListProperty>,
-        IEquatable<IScriptBoolListPropertyGetter>
+        IScriptBoolListProperty
     {
         #region Ctor
         public ScriptBoolListProperty()
@@ -88,8 +88,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             ScriptProperty.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -484,19 +484,19 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IScriptBoolListProperty :
-        IScriptBoolListPropertyGetter,
-        IScriptProperty,
+        ILoquiObjectSetter<IScriptBoolListProperty>,
         INamedRequired,
-        ILoquiObjectSetter<IScriptBoolListProperty>
+        IScriptBoolListPropertyGetter,
+        IScriptProperty
     {
         new ExtendedList<Boolean> Data { get; }
     }
 
     public partial interface IScriptBoolListPropertyGetter :
         IScriptPropertyGetter,
-        INamedRequiredGetter,
+        IBinaryItem,
         ILoquiObject<IScriptBoolListPropertyGetter>,
-        IBinaryItem
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => ScriptBoolListProperty_Registration.Instance;
         IReadOnlyList<Boolean> Data { get; }

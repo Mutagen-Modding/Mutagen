@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class ScriptStringProperty :
         ScriptProperty,
-        IScriptStringProperty,
+        IEquatable<IScriptStringPropertyGetter>,
         ILoquiObjectSetter<ScriptStringProperty>,
-        IEquatable<IScriptStringPropertyGetter>
+        IScriptStringProperty
     {
         #region Ctor
         public ScriptStringProperty()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             ScriptProperty.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -400,19 +400,19 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IScriptStringProperty :
-        IScriptStringPropertyGetter,
-        IScriptProperty,
+        ILoquiObjectSetter<IScriptStringProperty>,
         INamedRequired,
-        ILoquiObjectSetter<IScriptStringProperty>
+        IScriptProperty,
+        IScriptStringPropertyGetter
     {
         new String Data { get; set; }
     }
 
     public partial interface IScriptStringPropertyGetter :
         IScriptPropertyGetter,
-        INamedRequiredGetter,
+        IBinaryItem,
         ILoquiObject<IScriptStringPropertyGetter>,
-        IBinaryItem
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => ScriptStringProperty_Registration.Instance;
         String Data { get; }

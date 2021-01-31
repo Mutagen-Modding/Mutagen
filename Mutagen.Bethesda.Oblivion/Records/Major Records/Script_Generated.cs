@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Script :
         OblivionMajorRecord,
-        IScriptInternal,
+        IEquatable<IScriptGetter>,
         ILoquiObjectSetter<Script>,
-        IEquatable<IScriptGetter>
+        IScriptInternal
     {
         #region Ctor
         protected Script()
@@ -82,8 +82,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -449,10 +449,10 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IScript :
-        IScriptGetter,
-        IOblivionMajorRecord,
+        IFormLinkContainer,
         ILoquiObjectSetter<IScriptInternal>,
-        IFormLinkContainer
+        IOblivionMajorRecord,
+        IScriptGetter
     {
         new ScriptFields Fields { get; }
     }
@@ -467,9 +467,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IScriptGetter :
         IOblivionMajorRecordGetter,
-        ILoquiObject<IScriptGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IScriptGetter>
     {
         static new ILoquiRegistration Registration => Script_Registration.Instance;
         IScriptFieldsGetter Fields { get; }

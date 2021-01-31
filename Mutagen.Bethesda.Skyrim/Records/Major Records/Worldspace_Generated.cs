@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class Worldspace :
         SkyrimMajorRecord,
-        IWorldspaceInternal,
+        IEquatable<IWorldspaceGetter>,
         ILoquiObjectSetter<Worldspace>,
-        IEquatable<IWorldspaceGetter>
+        IWorldspaceInternal
     {
         #region Ctor
         protected Worldspace()
@@ -304,8 +304,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1768,16 +1768,16 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IWorldspace :
-        IWorldspaceGetter,
-        ISkyrimMajorRecord,
         IComplexLocation,
-        INamedRequired,
-        INamed,
-        ITranslatedNamedRequired,
-        ITranslatedNamed,
-        IMajorRecordEnumerable,
+        IFormLinkContainer,
         ILoquiObjectSetter<IWorldspaceInternal>,
-        IFormLinkContainer
+        IMajorRecordEnumerable,
+        INamed,
+        INamedRequired,
+        ISkyrimMajorRecord,
+        ITranslatedNamed,
+        ITranslatedNamedRequired,
+        IWorldspaceGetter
     {
         new ExtendedList<WorldspaceGridReference> LargeReferences { get; }
         new WorldspaceMaxHeight? MaxHeight { get; set; }
@@ -1825,15 +1825,15 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IWorldspaceGetter :
         ISkyrimMajorRecordGetter,
+        IBinaryItem,
         IComplexLocationGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ITranslatedNamedRequiredGetter,
-        ITranslatedNamedGetter,
-        IMajorRecordGetterEnumerable,
-        ILoquiObject<IWorldspaceGetter>,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IWorldspaceGetter>,
+        IMajorRecordGetterEnumerable,
+        INamedGetter,
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Worldspace_Registration.Instance;
         IReadOnlyList<IWorldspaceGridReferenceGetter> LargeReferences { get; }

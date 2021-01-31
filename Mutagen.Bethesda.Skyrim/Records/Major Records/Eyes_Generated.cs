@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class Eyes :
         SkyrimMajorRecord,
+        IEquatable<IEyesGetter>,
         IEyesInternal,
-        ILoquiObjectSetter<Eyes>,
-        IEquatable<IEyesGetter>
+        ILoquiObjectSetter<Eyes>
     {
         #region Ctor
         protected Eyes()
@@ -103,8 +103,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -542,10 +542,10 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IEyes :
         IEyesGetter,
-        ISkyrimMajorRecord,
+        ILoquiObjectSetter<IEyesInternal>,
         INamedRequired,
-        ITranslatedNamedRequired,
-        ILoquiObjectSetter<IEyesInternal>
+        ISkyrimMajorRecord,
+        ITranslatedNamedRequired
     {
         new TranslatedString Name { get; set; }
         new String Icon { get; set; }
@@ -565,10 +565,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IEyesGetter :
         ISkyrimMajorRecordGetter,
-        INamedRequiredGetter,
-        ITranslatedNamedRequiredGetter,
+        IBinaryItem,
         ILoquiObject<IEyesGetter>,
-        IBinaryItem
+        INamedRequiredGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Eyes_Registration.Instance;
         ITranslatedStringGetter Name { get; }

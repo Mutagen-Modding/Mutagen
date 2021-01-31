@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class VirtualMachineAdapter :
         AVirtualMachineAdapter,
-        IVirtualMachineAdapter,
+        IEquatable<IVirtualMachineAdapterGetter>,
         ILoquiObjectSetter<VirtualMachineAdapter>,
-        IEquatable<IVirtualMachineAdapterGetter>
+        IVirtualMachineAdapter
     {
         #region Ctor
         public VirtualMachineAdapter()
@@ -74,8 +74,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             AVirtualMachineAdapter.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -361,16 +361,16 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IVirtualMachineAdapter :
-        IVirtualMachineAdapterGetter,
         IAVirtualMachineAdapter,
-        ILoquiObjectSetter<IVirtualMachineAdapter>
+        ILoquiObjectSetter<IVirtualMachineAdapter>,
+        IVirtualMachineAdapterGetter
     {
     }
 
     public partial interface IVirtualMachineAdapterGetter :
         IAVirtualMachineAdapterGetter,
-        ILoquiObject<IVirtualMachineAdapterGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IVirtualMachineAdapterGetter>
     {
         static new ILoquiRegistration Registration => VirtualMachineAdapter_Registration.Instance;
 

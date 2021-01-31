@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class ScriptFloatProperty :
         ScriptProperty,
-        IScriptFloatProperty,
+        IEquatable<IScriptFloatPropertyGetter>,
         ILoquiObjectSetter<ScriptFloatProperty>,
-        IEquatable<IScriptFloatPropertyGetter>
+        IScriptFloatProperty
     {
         #region Ctor
         public ScriptFloatProperty()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             ScriptProperty.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -400,19 +400,19 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IScriptFloatProperty :
-        IScriptFloatPropertyGetter,
-        IScriptProperty,
+        ILoquiObjectSetter<IScriptFloatProperty>,
         INamedRequired,
-        ILoquiObjectSetter<IScriptFloatProperty>
+        IScriptFloatPropertyGetter,
+        IScriptProperty
     {
         new Single Data { get; set; }
     }
 
     public partial interface IScriptFloatPropertyGetter :
         IScriptPropertyGetter,
-        INamedRequiredGetter,
+        IBinaryItem,
         ILoquiObject<IScriptFloatPropertyGetter>,
-        IBinaryItem
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => ScriptFloatProperty_Registration.Instance;
         Single Data { get; }

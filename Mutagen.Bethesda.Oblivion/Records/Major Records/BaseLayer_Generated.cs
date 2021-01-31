@@ -32,8 +32,8 @@ namespace Mutagen.Bethesda.Oblivion
     /// </summary>
     public partial class BaseLayer :
         IBaseLayer,
-        ILoquiObjectSetter<BaseLayer>,
-        IEquatable<IBaseLayerGetter>
+        IEquatable<IBaseLayerGetter>,
+        ILoquiObjectSetter<BaseLayer>
     {
         #region Ctor
         public BaseLayer()
@@ -86,8 +86,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem Header)
@@ -430,8 +430,8 @@ namespace Mutagen.Bethesda.Oblivion
     /// </summary>
     public partial interface IBaseLayer :
         IBaseLayerGetter,
-        ILoquiObjectSetter<IBaseLayer>,
-        IFormLinkContainer
+        IFormLinkContainer,
+        ILoquiObjectSetter<IBaseLayer>
     {
         new LayerHeader? Header { get; set; }
     }
@@ -441,9 +441,9 @@ namespace Mutagen.Bethesda.Oblivion
     /// </summary>
     public partial interface IBaseLayerGetter :
         ILoquiObject,
-        ILoquiObject<IBaseLayerGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IBaseLayerGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

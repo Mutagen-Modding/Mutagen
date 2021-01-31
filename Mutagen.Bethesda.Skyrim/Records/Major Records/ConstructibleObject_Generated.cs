@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class ConstructibleObject :
         SkyrimMajorRecord,
         IConstructibleObjectInternal,
-        ILoquiObjectSetter<ConstructibleObject>,
-        IEquatable<IConstructibleObjectGetter>
+        IEquatable<IConstructibleObjectGetter>,
+        ILoquiObjectSetter<ConstructibleObject>
     {
         #region Ctor
         protected ConstructibleObject()
@@ -114,8 +114,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -756,9 +756,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IConstructibleObject :
         IConstructibleObjectGetter,
-        ISkyrimMajorRecord,
+        IFormLinkContainer,
         ILoquiObjectSetter<IConstructibleObjectInternal>,
-        IFormLinkContainer
+        ISkyrimMajorRecord
     {
         new ExtendedList<ContainerEntry>? Items { get; set; }
         new ExtendedList<Condition> Conditions { get; }
@@ -776,9 +776,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IConstructibleObjectGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<IConstructibleObjectGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IConstructibleObjectGetter>
     {
         static new ILoquiRegistration Registration => ConstructibleObject_Registration.Instance;
         IReadOnlyList<IContainerEntryGetter>? Items { get; }

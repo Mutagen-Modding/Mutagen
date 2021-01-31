@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class NpcFaceParts :
-        INpcFaceParts,
+        IEquatable<INpcFacePartsGetter>,
         ILoquiObjectSetter<NpcFaceParts>,
-        IEquatable<INpcFacePartsGetter>
+        INpcFaceParts
     {
         #region Ctor
         public NpcFaceParts()
@@ -83,8 +83,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -505,8 +505,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface INpcFaceParts :
-        INpcFacePartsGetter,
-        ILoquiObjectSetter<INpcFaceParts>
+        ILoquiObjectSetter<INpcFaceParts>,
+        INpcFacePartsGetter
     {
         new UInt32 Nose { get; set; }
         new UInt32 Unknown { get; set; }
@@ -516,8 +516,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface INpcFacePartsGetter :
         ILoquiObject,
-        ILoquiObject<INpcFacePartsGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<INpcFacePartsGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class PackageDataFloat :
         APackageData,
-        IPackageDataFloat,
+        IEquatable<IPackageDataFloatGetter>,
         ILoquiObjectSetter<PackageDataFloat>,
-        IEquatable<IPackageDataFloatGetter>
+        IPackageDataFloat
     {
         #region Ctor
         public PackageDataFloat()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             APackageData.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -400,21 +400,21 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPackageDataFloat :
-        IPackageDataFloatGetter,
         IAPackageData,
-        INamedRequired,
+        ILoquiObjectSetter<IPackageDataFloat>,
         INamed,
-        ILoquiObjectSetter<IPackageDataFloat>
+        INamedRequired,
+        IPackageDataFloatGetter
     {
         new Single Data { get; set; }
     }
 
     public partial interface IPackageDataFloatGetter :
         IAPackageDataGetter,
-        INamedRequiredGetter,
-        INamedGetter,
+        IBinaryItem,
         ILoquiObject<IPackageDataFloatGetter>,
-        IBinaryItem
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => PackageDataFloat_Registration.Instance;
         Single Data { get; }

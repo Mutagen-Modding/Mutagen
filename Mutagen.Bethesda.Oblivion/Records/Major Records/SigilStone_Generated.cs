@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class SigilStone :
         AItem,
-        ISigilStoneInternal,
+        IEquatable<ISigilStoneGetter>,
         ILoquiObjectSetter<SigilStone>,
-        IEquatable<ISigilStoneGetter>
+        ISigilStoneInternal
     {
         #region Ctor
         protected SigilStone()
@@ -134,8 +134,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             AItem.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -723,12 +723,12 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ISigilStone :
-        ISigilStoneGetter,
         IAItem,
-        INamedRequired,
-        INamed,
+        IFormLinkContainer,
         ILoquiObjectSetter<ISigilStoneInternal>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired,
+        ISigilStoneGetter
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
@@ -747,11 +747,11 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ISigilStoneGetter :
         IAItemGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ILoquiObject<ISigilStoneGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ISigilStoneGetter>,
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => SigilStone_Registration.Instance;
         String? Name { get; }

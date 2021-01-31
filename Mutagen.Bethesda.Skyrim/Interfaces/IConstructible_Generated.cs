@@ -11,8 +11,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// Implemented by: [AlchemicalApparatus, Ammunition, Armor, Book, Ingestible, Ingredient, Key, Light, MiscItem, Scroll, SoulGem, Weapon]
     /// </summary>
     public partial interface IConstructible :
-        ISkyrimMajorRecordInternal,
-        IConstructibleGetter
+        IConstructibleGetter,
+        ISkyrimMajorRecordInternal
     {
     }
 

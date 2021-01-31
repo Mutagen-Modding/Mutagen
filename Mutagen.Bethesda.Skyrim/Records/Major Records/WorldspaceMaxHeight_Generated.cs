@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class WorldspaceMaxHeight :
-        IWorldspaceMaxHeight,
+        IEquatable<IWorldspaceMaxHeightGetter>,
         ILoquiObjectSetter<WorldspaceMaxHeight>,
-        IEquatable<IWorldspaceMaxHeightGetter>
+        IWorldspaceMaxHeight
     {
         #region Ctor
         public WorldspaceMaxHeight()
@@ -88,8 +88,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -482,8 +482,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IWorldspaceMaxHeight :
-        IWorldspaceMaxHeightGetter,
-        ILoquiObjectSetter<IWorldspaceMaxHeight>
+        ILoquiObjectSetter<IWorldspaceMaxHeight>,
+        IWorldspaceMaxHeightGetter
     {
         new P2Int16 Min { get; set; }
         new P2Int16 Max { get; set; }
@@ -492,8 +492,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IWorldspaceMaxHeightGetter :
         ILoquiObject,
-        ILoquiObject<IWorldspaceMaxHeightGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IWorldspaceMaxHeightGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

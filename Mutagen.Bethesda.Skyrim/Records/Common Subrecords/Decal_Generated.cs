@@ -29,8 +29,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class Decal :
         IDecal,
-        ILoquiObjectSetter<Decal>,
-        IEquatable<IDecalGetter>
+        IEquatable<IDecalGetter>,
+        ILoquiObjectSetter<Decal>
     {
         #region Ctor
         public Decal()
@@ -105,8 +105,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -741,8 +741,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IDecalGetter :
         ILoquiObject,
-        ILoquiObject<IDecalGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IDecalGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

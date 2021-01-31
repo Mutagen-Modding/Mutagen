@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class IdleAnimation :
         SkyrimMajorRecord,
+        IEquatable<IIdleAnimationGetter>,
         IIdleAnimationInternal,
-        ILoquiObjectSetter<IdleAnimation>,
-        IEquatable<IIdleAnimationGetter>
+        ILoquiObjectSetter<IdleAnimation>
     {
         #region Ctor
         protected IdleAnimation()
@@ -131,8 +131,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -914,11 +914,11 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IIdleAnimation :
+        IFormLinkContainer,
         IIdleAnimationGetter,
-        ISkyrimMajorRecord,
         IIdleRelation,
         ILoquiObjectSetter<IIdleAnimationInternal>,
-        IFormLinkContainer
+        ISkyrimMajorRecord
     {
         new ExtendedList<Condition> Conditions { get; }
         new String? Filename { get; set; }
@@ -941,10 +941,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IIdleAnimationGetter :
         ISkyrimMajorRecordGetter,
-        IIdleRelationGetter,
-        ILoquiObject<IIdleAnimationGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        IIdleRelationGetter,
+        ILoquiObject<IIdleAnimationGetter>
     {
         static new ILoquiRegistration Registration => IdleAnimation_Registration.Instance;
         IReadOnlyList<IConditionGetter> Conditions { get; }

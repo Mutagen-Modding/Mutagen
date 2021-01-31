@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class LoadScreen :
         SkyrimMajorRecord,
+        IEquatable<ILoadScreenGetter>,
         ILoadScreenInternal,
-        ILoquiObjectSetter<LoadScreen>,
-        IEquatable<ILoadScreenGetter>
+        ILoquiObjectSetter<LoadScreen>
     {
         #region Ctor
         protected LoadScreen()
@@ -138,8 +138,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -835,11 +835,11 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ILoadScreen :
-        ILoadScreenGetter,
-        ISkyrimMajorRecord,
+        IFormLinkContainer,
         IHasIcons,
+        ILoadScreenGetter,
         ILoquiObjectSetter<ILoadScreenInternal>,
-        IFormLinkContainer
+        ISkyrimMajorRecord
     {
         new Icons? Icons { get; set; }
         new TranslatedString Description { get; set; }
@@ -865,10 +865,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ILoadScreenGetter :
         ISkyrimMajorRecordGetter,
-        IHasIconsGetter,
-        ILoquiObject<ILoadScreenGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        IHasIconsGetter,
+        ILoquiObject<ILoadScreenGetter>
     {
         static new ILoquiRegistration Registration => LoadScreen_Registration.Instance;
         IIconsGetter? Icons { get; }

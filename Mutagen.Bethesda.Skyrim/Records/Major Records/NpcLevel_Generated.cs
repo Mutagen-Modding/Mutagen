@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class NpcLevel :
         ANpcLevel,
-        INpcLevel,
+        IEquatable<INpcLevelGetter>,
         ILoquiObjectSetter<NpcLevel>,
-        IEquatable<INpcLevelGetter>
+        INpcLevel
     {
         #region Ctor
         public NpcLevel()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             ANpcLevel.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem Level)
@@ -389,17 +389,17 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface INpcLevel :
-        INpcLevelGetter,
         IANpcLevel,
-        ILoquiObjectSetter<INpcLevel>
+        ILoquiObjectSetter<INpcLevel>,
+        INpcLevelGetter
     {
         new Int16 Level { get; set; }
     }
 
     public partial interface INpcLevelGetter :
         IANpcLevelGetter,
-        ILoquiObject<INpcLevelGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<INpcLevelGetter>
     {
         static new ILoquiRegistration Registration => NpcLevel_Registration.Instance;
         Int16 Level { get; }

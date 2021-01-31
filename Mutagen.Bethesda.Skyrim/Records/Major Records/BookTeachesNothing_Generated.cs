@@ -30,8 +30,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class BookTeachesNothing :
         BookTeachTarget,
         IBookTeachesNothing,
-        ILoquiObjectSetter<BookTeachesNothing>,
-        IEquatable<IBookTeachesNothingGetter>
+        IEquatable<IBookTeachesNothingGetter>,
+        ILoquiObjectSetter<BookTeachesNothing>
     {
         #region Ctor
         public BookTeachesNothing()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             BookTeachTarget.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem RawContent)
@@ -398,8 +398,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IBookTeachesNothingGetter :
         IBookTeachTargetGetter,
-        ILoquiObject<IBookTeachesNothingGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IBookTeachesNothingGetter>
     {
         static new ILoquiRegistration Registration => BookTeachesNothing_Registration.Instance;
         UInt32 RawContent { get; }

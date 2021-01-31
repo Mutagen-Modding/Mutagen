@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class DialogItem :
         OblivionMajorRecord,
         IDialogItemInternal,
-        ILoquiObjectSetter<DialogItem>,
-        IEquatable<IDialogItemGetter>
+        IEquatable<IDialogItemGetter>,
+        ILoquiObjectSetter<DialogItem>
     {
         #region Ctor
         protected DialogItem()
@@ -169,8 +169,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1137,9 +1137,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IDialogItem :
         IDialogItemGetter,
-        IOblivionMajorRecord,
+        IFormLinkContainer,
         ILoquiObjectSetter<IDialogItemInternal>,
-        IFormLinkContainer
+        IOblivionMajorRecord
     {
         new DialogItemData? Data { get; set; }
         new FormLinkNullable<IQuestGetter> Quest { get; set; }
@@ -1162,9 +1162,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IDialogItemGetter :
         IOblivionMajorRecordGetter,
-        ILoquiObject<IDialogItemGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IDialogItemGetter>
     {
         static new ILoquiRegistration Registration => DialogItem_Registration.Instance;
         IDialogItemDataGetter? Data { get; }

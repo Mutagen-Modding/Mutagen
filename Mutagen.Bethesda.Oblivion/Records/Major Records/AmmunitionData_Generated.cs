@@ -28,8 +28,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class AmmunitionData :
         IAmmunitionData,
-        ILoquiObjectSetter<AmmunitionData>,
-        IEquatable<IAmmunitionDataGetter>
+        IEquatable<IAmmunitionDataGetter>,
+        ILoquiObjectSetter<AmmunitionData>
     {
         #region Ctor
         public AmmunitionData()
@@ -86,8 +86,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -548,8 +548,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IAmmunitionDataGetter :
         ILoquiObject,
-        ILoquiObject<IAmmunitionDataGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IAmmunitionDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

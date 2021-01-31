@@ -32,8 +32,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class Activator :
         SkyrimMajorRecord,
         IActivatorInternal,
-        ILoquiObjectSetter<Activator>,
-        IEquatable<IActivatorGetter>
+        IEquatable<IActivatorGetter>,
+        ILoquiObjectSetter<Activator>
     {
         #region Ctor
         protected Activator()
@@ -204,8 +204,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1026,18 +1026,18 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IActivator :
         IActivatorGetter,
-        ISkyrimMajorRecord,
-        IObjectId,
-        IModeled,
+        IFormLinkContainer,
         IKeyworded<IKeywordGetter>,
-        INamedRequired,
-        INamed,
-        ITranslatedNamedRequired,
-        ITranslatedNamed,
-        IObjectBoundedOptional,
-        IObjectBounded,
         ILoquiObjectSetter<IActivatorInternal>,
-        IFormLinkContainer
+        IModeled,
+        INamed,
+        INamedRequired,
+        IObjectBounded,
+        IObjectBoundedOptional,
+        IObjectId,
+        ISkyrimMajorRecord,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
@@ -1067,18 +1067,18 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IActivatorGetter :
         ISkyrimMajorRecordGetter,
-        IObjectIdGetter,
-        IModeledGetter,
-        IKeywordedGetter<IKeywordGetter>,
-        INamedRequiredGetter,
-        INamedGetter,
-        ITranslatedNamedRequiredGetter,
-        ITranslatedNamedGetter,
-        IObjectBoundedOptionalGetter,
-        IObjectBoundedGetter,
-        ILoquiObject<IActivatorGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        IKeywordedGetter<IKeywordGetter>,
+        ILoquiObject<IActivatorGetter>,
+        IModeledGetter,
+        INamedGetter,
+        INamedRequiredGetter,
+        IObjectBoundedGetter,
+        IObjectBoundedOptionalGetter,
+        IObjectIdGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Activator_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }

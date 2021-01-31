@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class InterCellPoint :
+        IEquatable<IInterCellPointGetter>,
         IInterCellPoint,
-        ILoquiObjectSetter<InterCellPoint>,
-        IEquatable<IInterCellPointGetter>
+        ILoquiObjectSetter<InterCellPoint>
     {
         #region Ctor
         public InterCellPoint()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -448,8 +448,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IInterCellPointGetter :
         ILoquiObject,
-        ILoquiObject<IInterCellPointGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IInterCellPointGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

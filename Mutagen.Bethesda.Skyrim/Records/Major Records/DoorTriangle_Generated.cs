@@ -28,8 +28,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class DoorTriangle :
         IDoorTriangle,
-        ILoquiObjectSetter<DoorTriangle>,
-        IEquatable<IDoorTriangleGetter>
+        IEquatable<IDoorTriangleGetter>,
+        ILoquiObjectSetter<DoorTriangle>
     {
         #region Ctor
         public DoorTriangle()
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -476,8 +476,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IDoorTriangle :
         IDoorTriangleGetter,
-        ILoquiObjectSetter<IDoorTriangle>,
-        IFormLinkContainer
+        IFormLinkContainer,
+        ILoquiObjectSetter<IDoorTriangle>
     {
         new Int16 TriangleBeforeDoor { get; set; }
         new Int32 Unknown { get; set; }
@@ -486,9 +486,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IDoorTriangleGetter :
         ILoquiObject,
-        ILoquiObject<IDoorTriangleGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IDoorTriangleGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

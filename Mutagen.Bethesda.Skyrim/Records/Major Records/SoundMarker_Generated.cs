@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class SoundMarker :
         SkyrimMajorRecord,
-        ISoundMarkerInternal,
+        IEquatable<ISoundMarkerGetter>,
         ILoquiObjectSetter<SoundMarker>,
-        IEquatable<ISoundMarkerGetter>
+        ISoundMarkerInternal
     {
         #region Ctor
         protected SoundMarker()
@@ -117,8 +117,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -587,14 +587,14 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ISoundMarker :
-        ISoundMarkerGetter,
-        ISkyrimMajorRecord,
-        IObjectId,
-        ISound,
-        IObjectBoundedOptional,
-        IObjectBounded,
+        IFormLinkContainer,
         ILoquiObjectSetter<ISoundMarkerInternal>,
-        IFormLinkContainer
+        IObjectBounded,
+        IObjectBoundedOptional,
+        IObjectId,
+        ISkyrimMajorRecord,
+        ISound,
+        ISoundMarkerGetter
     {
         new ObjectBounds ObjectBounds { get; set; }
         new MemorySlice<Byte>? FNAM { get; set; }
@@ -611,13 +611,13 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ISoundMarkerGetter :
         ISkyrimMajorRecordGetter,
-        IObjectIdGetter,
-        ISoundGetter,
-        IObjectBoundedOptionalGetter,
-        IObjectBoundedGetter,
-        ILoquiObject<ISoundMarkerGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ISoundMarkerGetter>,
+        IObjectBoundedGetter,
+        IObjectBoundedOptionalGetter,
+        IObjectIdGetter,
+        ISoundGetter
     {
         static new ILoquiRegistration Registration => SoundMarker_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }

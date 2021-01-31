@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class Ammunition :
         SkyrimMajorRecord,
         IAmmunitionInternal,
-        ILoquiObjectSetter<Ammunition>,
-        IEquatable<IAmmunitionGetter>
+        IEquatable<IAmmunitionGetter>,
+        ILoquiObjectSetter<Ammunition>
     {
         #region Ctor
         protected Ammunition()
@@ -220,8 +220,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1131,22 +1131,22 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IAmmunition :
         IAmmunitionGetter,
-        ISkyrimMajorRecord,
-        IItem,
-        IObjectId,
         IConstructible,
-        IModeled,
+        IFormLinkContainer,
         IHasIcons,
-        IWeightValue,
+        IItem,
         IKeyworded<IKeywordGetter>,
-        INamedRequired,
-        INamed,
-        ITranslatedNamedRequired,
-        ITranslatedNamed,
-        IObjectBoundedOptional,
-        IObjectBounded,
         ILoquiObjectSetter<IAmmunitionInternal>,
-        IFormLinkContainer
+        IModeled,
+        INamed,
+        INamedRequired,
+        IObjectBounded,
+        IObjectBoundedOptional,
+        IObjectId,
+        ISkyrimMajorRecord,
+        ITranslatedNamed,
+        ITranslatedNamedRequired,
+        IWeightValue
     {
         new ObjectBounds ObjectBounds { get; set; }
         new TranslatedString? Name { get; set; }
@@ -1179,22 +1179,22 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IAmmunitionGetter :
         ISkyrimMajorRecordGetter,
-        IItemGetter,
-        IObjectIdGetter,
+        IBinaryItem,
         IConstructibleGetter,
-        IModeledGetter,
-        IHasIconsGetter,
-        IWeightValueGetter,
-        IKeywordedGetter<IKeywordGetter>,
-        INamedRequiredGetter,
-        INamedGetter,
-        ITranslatedNamedRequiredGetter,
-        ITranslatedNamedGetter,
-        IObjectBoundedOptionalGetter,
-        IObjectBoundedGetter,
-        ILoquiObject<IAmmunitionGetter>,
         IFormLinkContainerGetter,
-        IBinaryItem
+        IHasIconsGetter,
+        IItemGetter,
+        IKeywordedGetter<IKeywordGetter>,
+        ILoquiObject<IAmmunitionGetter>,
+        IModeledGetter,
+        INamedGetter,
+        INamedRequiredGetter,
+        IObjectBoundedGetter,
+        IObjectBoundedOptionalGetter,
+        IObjectIdGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter,
+        IWeightValueGetter
     {
         static new ILoquiRegistration Registration => Ammunition_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }

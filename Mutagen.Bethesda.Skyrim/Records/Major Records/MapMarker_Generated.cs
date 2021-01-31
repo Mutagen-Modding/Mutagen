@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class MapMarker :
-        IMapMarker,
+        IEquatable<IMapMarkerGetter>,
         ILoquiObjectSetter<MapMarker>,
-        IEquatable<IMapMarkerGetter>
+        IMapMarker
     {
         #region Ctor
         public MapMarker()
@@ -110,8 +110,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -504,12 +504,12 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IMapMarker :
+        ILoquiObjectSetter<IMapMarker>,
         IMapMarkerGetter,
-        INamedRequired,
         INamed,
-        ITranslatedNamedRequired,
+        INamedRequired,
         ITranslatedNamed,
-        ILoquiObjectSetter<IMapMarker>
+        ITranslatedNamedRequired
     {
         new MapMarker.Flag Flags { get; set; }
         new TranslatedString? Name { get; set; }
@@ -518,12 +518,12 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IMapMarkerGetter :
         ILoquiObject,
-        INamedRequiredGetter,
-        INamedGetter,
-        ITranslatedNamedRequiredGetter,
-        ITranslatedNamedGetter,
+        IBinaryItem,
         ILoquiObject<IMapMarkerGetter>,
-        IBinaryItem
+        INamedGetter,
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

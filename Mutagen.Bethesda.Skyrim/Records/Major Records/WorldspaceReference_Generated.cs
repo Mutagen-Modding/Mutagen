@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class WorldspaceReference :
-        IWorldspaceReference,
+        IEquatable<IWorldspaceReferenceGetter>,
         ILoquiObjectSetter<WorldspaceReference>,
-        IEquatable<IWorldspaceReferenceGetter>
+        IWorldspaceReference
     {
         #region Ctor
         public WorldspaceReference()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -444,9 +444,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IWorldspaceReference :
-        IWorldspaceReferenceGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IWorldspaceReference>,
-        IFormLinkContainer
+        IWorldspaceReferenceGetter
     {
         new FormLink<IPlacedObjectGetter> Reference { get; set; }
         new P2Int16 Position { get; set; }
@@ -454,9 +454,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IWorldspaceReferenceGetter :
         ILoquiObject,
-        ILoquiObject<IWorldspaceReferenceGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IWorldspaceReferenceGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

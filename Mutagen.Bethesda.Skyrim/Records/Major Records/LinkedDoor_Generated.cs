@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class LinkedDoor :
+        IEquatable<ILinkedDoorGetter>,
         ILinkedDoor,
-        ILoquiObjectSetter<LinkedDoor>,
-        IEquatable<ILinkedDoorGetter>
+        ILoquiObjectSetter<LinkedDoor>
     {
         #region Ctor
         public LinkedDoor()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -444,9 +444,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ILinkedDoor :
+        IFormLinkContainer,
         ILinkedDoorGetter,
-        ILoquiObjectSetter<ILinkedDoor>,
-        IFormLinkContainer
+        ILoquiObjectSetter<ILinkedDoor>
     {
         new Int32 Unknown { get; set; }
         new FormLink<IPlacedObjectGetter> Door { get; set; }
@@ -454,9 +454,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ILinkedDoorGetter :
         ILoquiObject,
-        ILoquiObject<ILinkedDoorGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ILinkedDoorGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

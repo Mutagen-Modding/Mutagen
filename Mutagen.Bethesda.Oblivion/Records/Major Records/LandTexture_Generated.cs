@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class LandTexture :
         OblivionMajorRecord,
+        IEquatable<ILandTextureGetter>,
         ILandTextureInternal,
-        ILoquiObjectSetter<LandTexture>,
-        IEquatable<ILandTextureGetter>
+        ILoquiObjectSetter<LandTexture>
     {
         #region Ctor
         protected LandTexture()
@@ -110,8 +110,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -634,10 +634,10 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ILandTexture :
+        IFormLinkContainer,
         ILandTextureGetter,
-        IOblivionMajorRecord,
         ILoquiObjectSetter<ILandTextureInternal>,
-        IFormLinkContainer
+        IOblivionMajorRecord
     {
         new String? Icon { get; set; }
         new HavokData? Havok { get; set; }
@@ -654,9 +654,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ILandTextureGetter :
         IOblivionMajorRecordGetter,
-        ILoquiObject<ILandTextureGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ILandTextureGetter>
     {
         static new ILoquiRegistration Registration => LandTexture_Registration.Instance;
         String? Icon { get; }

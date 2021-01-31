@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class MagicEffect :
         SkyrimMajorRecord,
-        IMagicEffectInternal,
+        IEquatable<IMagicEffectGetter>,
         ILoquiObjectSetter<MagicEffect>,
-        IEquatable<IMagicEffectGetter>
+        IMagicEffectInternal
     {
         #region Ctor
         protected MagicEffect()
@@ -306,8 +306,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -2259,15 +2259,15 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IMagicEffect :
-        IMagicEffectGetter,
-        ISkyrimMajorRecord,
+        IFormLinkContainer,
         IKeyworded<IKeywordGetter>,
-        INamedRequired,
-        INamed,
-        ITranslatedNamedRequired,
-        ITranslatedNamed,
         ILoquiObjectSetter<IMagicEffectInternal>,
-        IFormLinkContainer
+        IMagicEffectGetter,
+        INamed,
+        INamedRequired,
+        ISkyrimMajorRecord,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new TranslatedString? Name { get; set; }
@@ -2326,14 +2326,14 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IMagicEffectGetter :
         ISkyrimMajorRecordGetter,
-        IKeywordedGetter<IKeywordGetter>,
-        INamedRequiredGetter,
-        INamedGetter,
-        ITranslatedNamedRequiredGetter,
-        ITranslatedNamedGetter,
-        ILoquiObject<IMagicEffectGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        IKeywordedGetter<IKeywordGetter>,
+        ILoquiObject<IMagicEffectGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => MagicEffect_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }

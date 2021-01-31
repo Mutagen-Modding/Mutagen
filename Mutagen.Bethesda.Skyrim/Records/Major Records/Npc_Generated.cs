@@ -31,9 +31,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class Npc :
         SkyrimMajorRecord,
-        INpcInternal,
+        IEquatable<INpcGetter>,
         ILoquiObjectSetter<Npc>,
-        IEquatable<INpcGetter>
+        INpcInternal
     {
         #region Ctor
         protected Npc()
@@ -415,8 +415,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -2761,21 +2761,21 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface INpc :
-        INpcGetter,
-        ISkyrimMajorRecord,
         IAliasVoiceType,
-        ILockList,
-        INpcSpawn,
-        IObjectId,
+        IFormLinkContainer,
         IKeyworded<IKeywordGetter>,
-        INamedRequired,
-        INamed,
-        ITranslatedNamedRequired,
-        ITranslatedNamed,
-        IObjectBoundedOptional,
-        IObjectBounded,
+        ILockList,
         ILoquiObjectSetter<INpcInternal>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired,
+        INpcGetter,
+        INpcSpawn,
+        IObjectBounded,
+        IObjectBoundedOptional,
+        IObjectId,
+        ISkyrimMajorRecord,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
@@ -2838,19 +2838,19 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface INpcGetter :
         ISkyrimMajorRecordGetter,
         IAliasVoiceTypeGetter,
-        ILockListGetter,
-        INpcSpawnGetter,
-        IObjectIdGetter,
-        IKeywordedGetter<IKeywordGetter>,
-        INamedRequiredGetter,
-        INamedGetter,
-        ITranslatedNamedRequiredGetter,
-        ITranslatedNamedGetter,
-        IObjectBoundedOptionalGetter,
-        IObjectBoundedGetter,
-        ILoquiObject<INpcGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        IKeywordedGetter<IKeywordGetter>,
+        ILockListGetter,
+        ILoquiObject<INpcGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        INpcSpawnGetter,
+        IObjectBoundedGetter,
+        IObjectBoundedOptionalGetter,
+        IObjectIdGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Npc_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }

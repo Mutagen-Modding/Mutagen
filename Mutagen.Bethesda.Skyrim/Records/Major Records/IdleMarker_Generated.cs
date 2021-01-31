@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class IdleMarker :
         SkyrimMajorRecord,
+        IEquatable<IIdleMarkerGetter>,
         IIdleMarkerInternal,
-        ILoquiObjectSetter<IdleMarker>,
-        IEquatable<IIdleMarkerGetter>
+        ILoquiObjectSetter<IdleMarker>
     {
         #region Ctor
         protected IdleMarker()
@@ -127,8 +127,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -710,13 +710,13 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IIdleMarker :
+        IFormLinkContainer,
         IIdleMarkerGetter,
-        ISkyrimMajorRecord,
-        IObjectId,
-        IObjectBoundedOptional,
-        IObjectBounded,
         ILoquiObjectSetter<IIdleMarkerInternal>,
-        IFormLinkContainer
+        IObjectBounded,
+        IObjectBoundedOptional,
+        IObjectId,
+        ISkyrimMajorRecord
     {
         new ObjectBounds ObjectBounds { get; set; }
         new IdleMarker.Flag? Flags { get; set; }
@@ -738,12 +738,12 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IIdleMarkerGetter :
         ISkyrimMajorRecordGetter,
-        IObjectIdGetter,
-        IObjectBoundedOptionalGetter,
-        IObjectBoundedGetter,
-        ILoquiObject<IIdleMarkerGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IIdleMarkerGetter>,
+        IObjectBoundedGetter,
+        IObjectBoundedOptionalGetter,
+        IObjectIdGetter
     {
         static new ILoquiRegistration Registration => IdleMarker_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }

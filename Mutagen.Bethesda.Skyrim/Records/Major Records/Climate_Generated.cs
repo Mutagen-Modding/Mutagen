@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class Climate :
         SkyrimMajorRecord,
         IClimateInternal,
-        ILoquiObjectSetter<Climate>,
-        IEquatable<IClimateGetter>
+        IEquatable<IClimateGetter>,
+        ILoquiObjectSetter<Climate>
     {
         #region Ctor
         protected Climate()
@@ -135,8 +135,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -909,10 +909,10 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IClimate :
         IClimateGetter,
-        ISkyrimMajorRecord,
-        IModeled,
+        IFormLinkContainer,
         ILoquiObjectSetter<IClimateInternal>,
-        IFormLinkContainer
+        IModeled,
+        ISkyrimMajorRecord
     {
         new ExtendedList<WeatherType>? WeatherTypes { get; set; }
         new String? SunTexture { get; set; }
@@ -937,10 +937,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IClimateGetter :
         ISkyrimMajorRecordGetter,
-        IModeledGetter,
-        ILoquiObject<IClimateGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IClimateGetter>,
+        IModeledGetter
     {
         static new ILoquiRegistration Registration => Climate_Registration.Instance;
         IReadOnlyList<IWeatherTypeGetter>? WeatherTypes { get; }

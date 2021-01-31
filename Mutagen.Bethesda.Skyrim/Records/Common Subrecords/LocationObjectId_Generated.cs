@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class LocationObjectId :
         ALocationTarget,
+        IEquatable<ILocationObjectIdGetter>,
         ILocationObjectId,
-        ILoquiObjectSetter<LocationObjectId>,
-        IEquatable<ILocationObjectIdGetter>
+        ILoquiObjectSetter<LocationObjectId>
     {
         #region Ctor
         public LocationObjectId()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             ALocationTarget.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem Link)
@@ -394,19 +394,19 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ILocationObjectId :
-        ILocationObjectIdGetter,
         IALocationTarget,
-        ILoquiObjectSetter<ILocationObjectId>,
-        IFormLinkContainer
+        IFormLinkContainer,
+        ILocationObjectIdGetter,
+        ILoquiObjectSetter<ILocationObjectId>
     {
         new FormLink<IObjectIdGetter> Link { get; set; }
     }
 
     public partial interface ILocationObjectIdGetter :
         IALocationTargetGetter,
-        ILoquiObject<ILocationObjectIdGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ILocationObjectIdGetter>
     {
         static new ILoquiRegistration Registration => LocationObjectId_Registration.Instance;
         FormLink<IObjectIdGetter> Link { get; }

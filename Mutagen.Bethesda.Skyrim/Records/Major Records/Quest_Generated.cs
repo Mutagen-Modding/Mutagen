@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class Quest :
         SkyrimMajorRecord,
-        IQuestInternal,
+        IEquatable<IQuestGetter>,
         ILoquiObjectSetter<Quest>,
-        IEquatable<IQuestGetter>
+        IQuestInternal
     {
         #region Ctor
         protected Quest()
@@ -237,8 +237,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1523,14 +1523,14 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IQuest :
+        IFormLinkContainer,
+        ILoquiObjectSetter<IQuestInternal>,
+        INamed,
+        INamedRequired,
         IQuestGetter,
         ISkyrimMajorRecord,
-        INamedRequired,
-        INamed,
-        ITranslatedNamedRequired,
         ITranslatedNamed,
-        ILoquiObjectSetter<IQuestInternal>,
-        IFormLinkContainer
+        ITranslatedNamedRequired
     {
         new QuestAdapter? VirtualMachineAdapter { get; set; }
         new TranslatedString? Name { get; set; }
@@ -1560,13 +1560,13 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IQuestGetter :
         ISkyrimMajorRecordGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ITranslatedNamedRequiredGetter,
-        ITranslatedNamedGetter,
-        ILoquiObject<IQuestGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IQuestGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Quest_Registration.Instance;
         IQuestAdapterGetter? VirtualMachineAdapter { get; }

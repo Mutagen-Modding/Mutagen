@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class PackageTargetSpecificReference :
         APackageTarget,
-        IPackageTargetSpecificReference,
+        IEquatable<IPackageTargetSpecificReferenceGetter>,
         ILoquiObjectSetter<PackageTargetSpecificReference>,
-        IEquatable<IPackageTargetSpecificReferenceGetter>
+        IPackageTargetSpecificReference
     {
         #region Ctor
         public PackageTargetSpecificReference()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             APackageTarget.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -402,19 +402,19 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPackageTargetSpecificReference :
-        IPackageTargetSpecificReferenceGetter,
         IAPackageTarget,
+        IFormLinkContainer,
         ILoquiObjectSetter<IPackageTargetSpecificReference>,
-        IFormLinkContainer
+        IPackageTargetSpecificReferenceGetter
     {
         new FormLink<ILinkedReferenceGetter> Reference { get; set; }
     }
 
     public partial interface IPackageTargetSpecificReferenceGetter :
         IAPackageTargetGetter,
-        ILoquiObject<IPackageTargetSpecificReferenceGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IPackageTargetSpecificReferenceGetter>
     {
         static new ILoquiRegistration Registration => PackageTargetSpecificReference_Registration.Instance;
         FormLink<ILinkedReferenceGetter> Reference { get; }

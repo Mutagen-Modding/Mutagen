@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class LeveledItem :
         SkyrimMajorRecord,
+        IEquatable<ILeveledItemGetter>,
         ILeveledItemInternal,
-        ILoquiObjectSetter<LeveledItem>,
-        IEquatable<ILeveledItemGetter>
+        ILoquiObjectSetter<LeveledItem>
     {
         #region Ctor
         protected LeveledItem()
@@ -115,8 +115,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -688,15 +688,15 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ILeveledItem :
-        ILeveledItemGetter,
-        ISkyrimMajorRecord,
-        IItem,
+        IFormLinkContainer,
         IHarvestTarget,
-        IOutfitTarget,
-        IObjectBoundedOptional,
-        IObjectBounded,
+        IItem,
+        ILeveledItemGetter,
         ILoquiObjectSetter<ILeveledItemInternal>,
-        IFormLinkContainer
+        IObjectBounded,
+        IObjectBoundedOptional,
+        IOutfitTarget,
+        ISkyrimMajorRecord
     {
         new ObjectBounds ObjectBounds { get; set; }
         new Byte ChanceNone { get; set; }
@@ -714,14 +714,14 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ILeveledItemGetter :
         ISkyrimMajorRecordGetter,
-        IItemGetter,
-        IHarvestTargetGetter,
-        IOutfitTargetGetter,
-        IObjectBoundedOptionalGetter,
-        IObjectBoundedGetter,
-        ILoquiObject<ILeveledItemGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        IHarvestTargetGetter,
+        IItemGetter,
+        ILoquiObject<ILeveledItemGetter>,
+        IObjectBoundedGetter,
+        IObjectBoundedOptionalGetter,
+        IOutfitTargetGetter
     {
         static new ILoquiRegistration Registration => LeveledItem_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }

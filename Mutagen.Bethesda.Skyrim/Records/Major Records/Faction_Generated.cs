@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class Faction :
         SkyrimMajorRecord,
+        IEquatable<IFactionGetter>,
         IFactionInternal,
-        ILoquiObjectSetter<Faction>,
-        IEquatable<IFactionGetter>
+        ILoquiObjectSetter<Faction>
     {
         #region Ctor
         protected Faction()
@@ -210,8 +210,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1256,16 +1256,16 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IFaction :
         IFactionGetter,
-        ISkyrimMajorRecord,
-        IOwner,
-        IObjectId,
-        IRelatable,
-        INamedRequired,
-        INamed,
-        ITranslatedNamedRequired,
-        ITranslatedNamed,
+        IFormLinkContainer,
         ILoquiObjectSetter<IFactionInternal>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired,
+        IObjectId,
+        IOwner,
+        IRelatable,
+        ISkyrimMajorRecord,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
         new TranslatedString? Name { get; set; }
         new ExtendedList<Relation> Relations { get; }
@@ -1294,16 +1294,16 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IFactionGetter :
         ISkyrimMajorRecordGetter,
-        IOwnerGetter,
-        IObjectIdGetter,
-        IRelatableGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ITranslatedNamedRequiredGetter,
-        ITranslatedNamedGetter,
-        ILoquiObject<IFactionGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IFactionGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        IObjectIdGetter,
+        IOwnerGetter,
+        IRelatableGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Faction_Registration.Instance;
         ITranslatedStringGetter? Name { get; }

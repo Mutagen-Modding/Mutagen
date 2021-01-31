@@ -31,9 +31,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class Location :
         SkyrimMajorRecord,
+        IEquatable<ILocationGetter>,
         ILocationInternal,
-        ILoquiObjectSetter<Location>,
-        IEquatable<ILocationGetter>
+        ILoquiObjectSetter<Location>
     {
         #region Ctor
         protected Location()
@@ -376,8 +376,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -2690,16 +2690,16 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ILocation :
-        ILocationGetter,
-        ISkyrimMajorRecord,
-        ILocationRecord,
+        IFormLinkContainer,
         IKeyworded<IKeywordGetter>,
-        INamedRequired,
-        INamed,
-        ITranslatedNamedRequired,
-        ITranslatedNamed,
+        ILocationGetter,
+        ILocationRecord,
         ILoquiObjectSetter<ILocationInternal>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired,
+        ISkyrimMajorRecord,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
         new ExtendedList<LocationReference>? ActorCellPersistentReferences { get; set; }
         new ExtendedList<LocationReference>? LocationCellPersistentReferences { get; set; }
@@ -2737,15 +2737,15 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ILocationGetter :
         ISkyrimMajorRecordGetter,
-        ILocationRecordGetter,
-        IKeywordedGetter<IKeywordGetter>,
-        INamedRequiredGetter,
-        INamedGetter,
-        ITranslatedNamedRequiredGetter,
-        ITranslatedNamedGetter,
-        ILoquiObject<ILocationGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        IKeywordedGetter<IKeywordGetter>,
+        ILocationRecordGetter,
+        ILoquiObject<ILocationGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Location_Registration.Instance;
         IReadOnlyList<ILocationReferenceGetter>? ActorCellPersistentReferences { get; }

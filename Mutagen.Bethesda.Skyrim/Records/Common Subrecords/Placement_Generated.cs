@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class Placement :
-        IPlacement,
+        IEquatable<IPlacementGetter>,
         ILoquiObjectSetter<Placement>,
-        IEquatable<IPlacementGetter>
+        IPlacement
     {
         #region Ctor
         public Placement()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -443,9 +443,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPlacement :
+        ILoquiObjectSetter<IPlacement>,
         IPlacementGetter,
-        IPositionRotation,
-        ILoquiObjectSetter<IPlacement>
+        IPositionRotation
     {
         new P3Float Position { get; set; }
         new P3Float Rotation { get; set; }
@@ -453,9 +453,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IPlacementGetter :
         ILoquiObject,
-        IPositionRotationGetter,
+        IBinaryItem,
         ILoquiObject<IPlacementGetter>,
-        IBinaryItem
+        IPositionRotationGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

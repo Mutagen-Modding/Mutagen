@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class MapMarker :
-        IMapMarker,
+        IEquatable<IMapMarkerGetter>,
         ILoquiObjectSetter<MapMarker>,
-        IEquatable<IMapMarkerGetter>
+        IMapMarker
     {
         #region Ctor
         public MapMarker()
@@ -105,8 +105,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -568,10 +568,10 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IMapMarker :
+        ILoquiObjectSetter<IMapMarker>,
         IMapMarkerGetter,
-        INamedRequired,
         INamed,
-        ILoquiObjectSetter<IMapMarker>
+        INamedRequired
     {
         new MapMarker.Flag? Flags { get; set; }
         new String? Name { get; set; }
@@ -580,10 +580,10 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IMapMarkerGetter :
         ILoquiObject,
-        INamedRequiredGetter,
-        INamedGetter,
+        IBinaryItem,
         ILoquiObject<IMapMarkerGetter>,
-        IBinaryItem
+        INamedGetter,
+        INamedRequiredGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

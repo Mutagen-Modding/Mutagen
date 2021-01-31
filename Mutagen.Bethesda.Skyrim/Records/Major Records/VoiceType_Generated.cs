@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class VoiceType :
         SkyrimMajorRecord,
-        IVoiceTypeInternal,
+        IEquatable<IVoiceTypeGetter>,
         ILoquiObjectSetter<VoiceType>,
-        IEquatable<IVoiceTypeGetter>
+        IVoiceTypeInternal
     {
         #region Ctor
         protected VoiceType()
@@ -78,8 +78,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -455,9 +455,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IVoiceType :
-        IVoiceTypeGetter,
+        ILoquiObjectSetter<IVoiceTypeInternal>,
         ISkyrimMajorRecord,
-        ILoquiObjectSetter<IVoiceTypeInternal>
+        IVoiceTypeGetter
     {
         new VoiceType.Flag Flags { get; set; }
     }
@@ -471,8 +471,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IVoiceTypeGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<IVoiceTypeGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IVoiceTypeGetter>
     {
         static new ILoquiRegistration Registration => VoiceType_Registration.Instance;
         VoiceType.Flag Flags { get; }

@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
     public partial class Fallout4ModHeader :
+        IEquatable<IFallout4ModHeaderGetter>,
         IFallout4ModHeader,
-        ILoquiObjectSetter<Fallout4ModHeader>,
-        IEquatable<IFallout4ModHeaderGetter>
+        ILoquiObjectSetter<Fallout4ModHeader>
     {
         #region Ctor
         public Fallout4ModHeader()
@@ -194,8 +194,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1185,8 +1185,8 @@ namespace Mutagen.Bethesda.Fallout4
     #region Interface
     public partial interface IFallout4ModHeader :
         IFallout4ModHeaderGetter,
-        ILoquiObjectSetter<IFallout4ModHeader>,
-        IFormLinkContainer
+        IFormLinkContainer,
+        ILoquiObjectSetter<IFallout4ModHeader>
     {
         new Fallout4ModHeader.HeaderFlag Flags { get; set; }
         new UInt32 FormID { get; set; }
@@ -1208,9 +1208,9 @@ namespace Mutagen.Bethesda.Fallout4
 
     public partial interface IFallout4ModHeaderGetter :
         ILoquiObject,
-        ILoquiObject<IFallout4ModHeaderGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IFallout4ModHeaderGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

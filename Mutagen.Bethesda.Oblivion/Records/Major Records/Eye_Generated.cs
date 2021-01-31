@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Eye :
         OblivionMajorRecord,
+        IEquatable<IEyeGetter>,
         IEyeInternal,
-        ILoquiObjectSetter<Eye>,
-        IEquatable<IEyeGetter>
+        ILoquiObjectSetter<Eye>
     {
         #region Ctor
         protected Eye()
@@ -100,8 +100,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -515,10 +515,10 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IEye :
         IEyeGetter,
-        IOblivionMajorRecord,
-        INamedRequired,
+        ILoquiObjectSetter<IEyeInternal>,
         INamed,
-        ILoquiObjectSetter<IEyeInternal>
+        INamedRequired,
+        IOblivionMajorRecord
     {
         new String? Name { get; set; }
         new String? Icon { get; set; }
@@ -534,10 +534,10 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IEyeGetter :
         IOblivionMajorRecordGetter,
-        INamedRequiredGetter,
-        INamedGetter,
+        IBinaryItem,
         ILoquiObject<IEyeGetter>,
-        IBinaryItem
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Eye_Registration.Instance;
         String? Name { get; }

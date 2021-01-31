@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Fallout4
     #region Class
     public partial class GameSettingUInt :
         GameSetting,
+        IEquatable<IGameSettingUIntGetter>,
         IGameSettingUIntInternal,
-        ILoquiObjectSetter<GameSettingUInt>,
-        IEquatable<IGameSettingUIntGetter>
+        ILoquiObjectSetter<GameSettingUInt>
     {
         #region Ctor
         protected GameSettingUInt()
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mask
         public new class Mask<TItem> :
             GameSetting.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -450,8 +450,8 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IGameSettingUInt :
-        IGameSettingUIntGetter,
         IGameSetting,
+        IGameSettingUIntGetter,
         ILoquiObjectSetter<IGameSettingUIntInternal>
     {
         new UInt32? Data { get; set; }
@@ -466,8 +466,8 @@ namespace Mutagen.Bethesda.Fallout4
 
     public partial interface IGameSettingUIntGetter :
         IGameSettingGetter,
-        ILoquiObject<IGameSettingUIntGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IGameSettingUIntGetter>
     {
         static new ILoquiRegistration Registration => GameSettingUInt_Registration.Instance;
         UInt32? Data { get; }

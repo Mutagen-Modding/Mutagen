@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class Clothing :
         AClothing,
         IClothingInternal,
-        ILoquiObjectSetter<Clothing>,
-        IEquatable<IClothingGetter>
+        IEquatable<IClothingGetter>,
+        ILoquiObjectSetter<Clothing>
     {
         #region Ctor
         protected Clothing()
@@ -86,8 +86,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             AClothing.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -473,11 +473,11 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IClothing :
-        IClothingGetter,
         IAClothing,
-        INamedRequired,
+        IClothingGetter,
+        ILoquiObjectSetter<IClothingInternal>,
         INamed,
-        ILoquiObjectSetter<IClothingInternal>
+        INamedRequired
     {
         new ClothingData? Data { get; set; }
     }
@@ -491,10 +491,10 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IClothingGetter :
         IAClothingGetter,
-        INamedRequiredGetter,
-        INamedGetter,
+        IBinaryItem,
         ILoquiObject<IClothingGetter>,
-        IBinaryItem
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Clothing_Registration.Instance;
         IClothingDataGetter? Data { get; }

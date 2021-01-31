@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class PlacedNpc :
         OblivionMajorRecord,
-        IPlacedNpcInternal,
+        IEquatable<IPlacedNpcGetter>,
         ILoquiObjectSetter<PlacedNpc>,
-        IEquatable<IPlacedNpcGetter>
+        IPlacedNpcInternal
     {
         #region Ctor
         protected PlacedNpc()
@@ -155,8 +155,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -788,11 +788,11 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IPlacedNpc :
-        IPlacedNpcGetter,
+        IFormLinkContainer,
+        ILoquiObjectSetter<IPlacedNpcInternal>,
         IOblivionMajorRecord,
         IPlaced,
-        ILoquiObjectSetter<IPlacedNpcInternal>,
-        IFormLinkContainer
+        IPlacedNpcGetter
     {
         new FormLinkNullable<INpcGetter> Base { get; set; }
         new MemorySlice<Byte>? XPCIFluff { get; set; }
@@ -815,10 +815,10 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IPlacedNpcGetter :
         IOblivionMajorRecordGetter,
-        IPlacedGetter,
-        ILoquiObject<IPlacedNpcGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IPlacedNpcGetter>,
+        IPlacedGetter
     {
         static new ILoquiRegistration Registration => PlacedNpc_Registration.Instance;
         FormLinkNullable<INpcGetter> Base { get; }

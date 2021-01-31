@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class Landscape :
         SkyrimMajorRecord,
+        IEquatable<ILandscapeGetter>,
         ILandscapeInternal,
-        ILoquiObjectSetter<Landscape>,
-        IEquatable<ILandscapeGetter>
+        ILoquiObjectSetter<Landscape>
     {
         #region Ctor
         protected Landscape()
@@ -147,8 +147,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -814,10 +814,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ILandscape :
+        IFormLinkContainer,
         ILandscapeGetter,
-        ISkyrimMajorRecord,
         ILoquiObjectSetter<ILandscapeInternal>,
-        IFormLinkContainer
+        ISkyrimMajorRecord
     {
         new MemorySlice<Byte>? DATA { get; set; }
         new MemorySlice<Byte>? VertexNormals { get; set; }
@@ -836,9 +836,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ILandscapeGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<ILandscapeGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ILandscapeGetter>
     {
         static new ILoquiRegistration Registration => Landscape_Registration.Instance;
         ReadOnlyMemorySlice<Byte>? DATA { get; }

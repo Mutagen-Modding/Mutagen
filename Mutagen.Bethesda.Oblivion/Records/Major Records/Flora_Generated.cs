@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Flora :
         OblivionMajorRecord,
+        IEquatable<IFloraGetter>,
         IFloraInternal,
-        ILoquiObjectSetter<Flora>,
-        IEquatable<IFloraGetter>
+        ILoquiObjectSetter<Flora>
     {
         #region Ctor
         protected Flora()
@@ -118,8 +118,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -605,11 +605,11 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IFlora :
         IFloraGetter,
-        IOblivionMajorRecord,
-        INamedRequired,
-        INamed,
+        IFormLinkContainer,
         ILoquiObjectSetter<IFloraInternal>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired,
+        IOblivionMajorRecord
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
@@ -627,11 +627,11 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IFloraGetter :
         IOblivionMajorRecordGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ILoquiObject<IFloraGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IFloraGetter>,
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Flora_Registration.Instance;
         String? Name { get; }

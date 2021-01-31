@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class PackageTargetObjectID :
         APackageTarget,
-        IPackageTargetObjectID,
+        IEquatable<IPackageTargetObjectIDGetter>,
         ILoquiObjectSetter<PackageTargetObjectID>,
-        IEquatable<IPackageTargetObjectIDGetter>
+        IPackageTargetObjectID
     {
         #region Ctor
         public PackageTargetObjectID()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             APackageTarget.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -402,19 +402,19 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPackageTargetObjectID :
-        IPackageTargetObjectIDGetter,
         IAPackageTarget,
+        IFormLinkContainer,
         ILoquiObjectSetter<IPackageTargetObjectID>,
-        IFormLinkContainer
+        IPackageTargetObjectIDGetter
     {
         new FormLink<IObjectIdGetter> Reference { get; set; }
     }
 
     public partial interface IPackageTargetObjectIDGetter :
         IAPackageTargetGetter,
-        ILoquiObject<IPackageTargetObjectIDGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IPackageTargetObjectIDGetter>
     {
         static new ILoquiRegistration Registration => PackageTargetObjectID_Registration.Instance;
         FormLink<IObjectIdGetter> Reference { get; }

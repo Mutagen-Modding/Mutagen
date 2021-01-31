@@ -32,8 +32,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class ColorRecord :
         SkyrimMajorRecord,
         IColorRecordInternal,
-        ILoquiObjectSetter<ColorRecord>,
-        IEquatable<IColorRecordGetter>
+        IEquatable<IColorRecordGetter>,
+        ILoquiObjectSetter<ColorRecord>
     {
         #region Ctor
         protected ColorRecord()
@@ -115,8 +115,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -549,12 +549,12 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IColorRecord :
         IColorRecordGetter,
-        ISkyrimMajorRecord,
-        INamedRequired,
+        ILoquiObjectSetter<IColorRecordInternal>,
         INamed,
-        ITranslatedNamedRequired,
+        INamedRequired,
+        ISkyrimMajorRecord,
         ITranslatedNamed,
-        ILoquiObjectSetter<IColorRecordInternal>
+        ITranslatedNamedRequired
     {
         new TranslatedString? Name { get; set; }
         new Color Color { get; set; }
@@ -570,12 +570,12 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IColorRecordGetter :
         ISkyrimMajorRecordGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ITranslatedNamedRequiredGetter,
-        ITranslatedNamedGetter,
+        IBinaryItem,
         ILoquiObject<IColorRecordGetter>,
-        IBinaryItem
+        INamedGetter,
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => ColorRecord_Registration.Instance;
         ITranslatedStringGetter? Name { get; }

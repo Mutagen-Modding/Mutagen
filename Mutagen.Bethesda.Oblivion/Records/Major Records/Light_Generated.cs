@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Light :
         AItem,
+        IEquatable<ILightGetter>,
         ILightInternal,
-        ILoquiObjectSetter<Light>,
-        IEquatable<ILightGetter>
+        ILoquiObjectSetter<Light>
     {
         #region Ctor
         protected Light()
@@ -128,8 +128,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             AItem.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -670,12 +670,12 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ILight :
-        ILightGetter,
         IAItem,
-        INamedRequired,
-        INamed,
+        IFormLinkContainer,
+        ILightGetter,
         ILoquiObjectSetter<ILightInternal>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired
     {
         new Model? Model { get; set; }
         new FormLinkNullable<IScriptGetter> Script { get; set; }
@@ -695,11 +695,11 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ILightGetter :
         IAItemGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ILoquiObject<ILightGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ILightGetter>,
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Light_Registration.Instance;
         IModelGetter? Model { get; }

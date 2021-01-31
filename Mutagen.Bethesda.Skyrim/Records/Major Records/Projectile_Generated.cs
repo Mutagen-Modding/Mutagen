@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class Projectile :
         SkyrimMajorRecord,
-        IProjectileInternal,
+        IEquatable<IProjectileGetter>,
         ILoquiObjectSetter<Projectile>,
-        IEquatable<IProjectileGetter>
+        IProjectileInternal
     {
         #region Ctor
         protected Projectile()
@@ -239,8 +239,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1513,18 +1513,18 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IProjectile :
-        IProjectileGetter,
-        ISkyrimMajorRecord,
+        IFormLinkContainer,
+        ILoquiObjectSetter<IProjectileInternal>,
+        INamed,
+        INamedRequired,
+        IObjectBounded,
+        IObjectBoundedOptional,
         IObjectId,
         IPlacedTrapTarget,
-        INamedRequired,
-        INamed,
-        ITranslatedNamedRequired,
+        IProjectileGetter,
+        ISkyrimMajorRecord,
         ITranslatedNamed,
-        IObjectBoundedOptional,
-        IObjectBounded,
-        ILoquiObjectSetter<IProjectileInternal>,
-        IFormLinkContainer
+        ITranslatedNamedRequired
     {
         new ObjectBounds ObjectBounds { get; set; }
         new TranslatedString? Name { get; set; }
@@ -1569,17 +1569,17 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IProjectileGetter :
         ISkyrimMajorRecordGetter,
+        IBinaryItem,
+        IFormLinkContainerGetter,
+        ILoquiObject<IProjectileGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        IObjectBoundedGetter,
+        IObjectBoundedOptionalGetter,
         IObjectIdGetter,
         IPlacedTrapTargetGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ITranslatedNamedRequiredGetter,
         ITranslatedNamedGetter,
-        IObjectBoundedOptionalGetter,
-        IObjectBoundedGetter,
-        ILoquiObject<IProjectileGetter>,
-        IFormLinkContainerGetter,
-        IBinaryItem
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Projectile_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }

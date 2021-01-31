@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class ImageSpace :
         SkyrimMajorRecord,
+        IEquatable<IImageSpaceGetter>,
         IImageSpaceInternal,
-        ILoquiObjectSetter<ImageSpace>,
-        IEquatable<IImageSpaceGetter>
+        ILoquiObjectSetter<ImageSpace>
     {
         #region Ctor
         protected ImageSpace()
@@ -130,8 +130,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -648,8 +648,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IImageSpace :
         IImageSpaceGetter,
-        ISkyrimMajorRecord,
-        ILoquiObjectSetter<IImageSpaceInternal>
+        ILoquiObjectSetter<IImageSpaceInternal>,
+        ISkyrimMajorRecord
     {
         new MemorySlice<Byte>? ENAM { get; set; }
         new ImageSpaceHdr? Hdr { get; set; }
@@ -667,8 +667,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IImageSpaceGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<IImageSpaceGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IImageSpaceGetter>
     {
         static new ILoquiRegistration Registration => ImageSpace_Registration.Instance;
         ReadOnlyMemorySlice<Byte>? ENAM { get; }

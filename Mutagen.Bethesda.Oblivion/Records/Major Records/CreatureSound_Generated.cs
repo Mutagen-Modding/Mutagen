@@ -29,8 +29,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class CreatureSound :
         ICreatureSound,
-        ILoquiObjectSetter<CreatureSound>,
-        IEquatable<ICreatureSoundGetter>
+        IEquatable<ICreatureSoundGetter>,
+        ILoquiObjectSetter<CreatureSound>
     {
         #region Ctor
         public CreatureSound()
@@ -91,8 +91,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -534,8 +534,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ICreatureSound :
         ICreatureSoundGetter,
-        ILoquiObjectSetter<ICreatureSound>,
-        IFormLinkContainer
+        IFormLinkContainer,
+        ILoquiObjectSetter<ICreatureSound>
     {
         new CreatureSound.CreatureSoundType? SoundType { get; set; }
         new ExtendedList<SoundItem> Sounds { get; }
@@ -543,9 +543,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ICreatureSoundGetter :
         ILoquiObject,
-        ILoquiObject<ICreatureSoundGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ICreatureSoundGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

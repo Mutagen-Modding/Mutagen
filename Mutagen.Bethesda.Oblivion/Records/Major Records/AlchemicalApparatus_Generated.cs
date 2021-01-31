@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class AlchemicalApparatus :
         AItem,
         IAlchemicalApparatusInternal,
-        ILoquiObjectSetter<AlchemicalApparatus>,
-        IEquatable<IAlchemicalApparatusGetter>
+        IEquatable<IAlchemicalApparatusGetter>,
+        ILoquiObjectSetter<AlchemicalApparatus>
     {
         #region Ctor
         protected AlchemicalApparatus()
@@ -120,8 +120,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             AItem.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -606,12 +606,12 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IAlchemicalApparatus :
-        IAlchemicalApparatusGetter,
         IAItem,
-        INamedRequired,
-        INamed,
+        IAlchemicalApparatusGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IAlchemicalApparatusInternal>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
@@ -629,11 +629,11 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IAlchemicalApparatusGetter :
         IAItemGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ILoquiObject<IAlchemicalApparatusGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IAlchemicalApparatusGetter>,
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => AlchemicalApparatus_Registration.Instance;
         String? Name { get; }

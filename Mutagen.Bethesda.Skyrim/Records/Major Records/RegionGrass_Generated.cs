@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class RegionGrass :
-        IRegionGrass,
+        IEquatable<IRegionGrassGetter>,
         ILoquiObjectSetter<RegionGrass>,
-        IEquatable<IRegionGrassGetter>
+        IRegionGrass
     {
         #region Ctor
         public RegionGrass()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -444,9 +444,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IRegionGrass :
-        IRegionGrassGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IRegionGrass>,
-        IFormLinkContainer
+        IRegionGrassGetter
     {
         new FormLink<IGrassGetter> Grass { get; set; }
         new Int32 Unknown { get; set; }
@@ -454,9 +454,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IRegionGrassGetter :
         ILoquiObject,
-        ILoquiObject<IRegionGrassGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IRegionGrassGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

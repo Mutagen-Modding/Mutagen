@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Landscape :
         OblivionMajorRecord,
+        IEquatable<ILandscapeGetter>,
         ILandscapeInternal,
-        ILoquiObjectSetter<Landscape>,
-        IEquatable<ILandscapeGetter>
+        ILoquiObjectSetter<Landscape>
     {
         #region Ctor
         protected Landscape()
@@ -147,8 +147,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -795,11 +795,11 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ILandscape :
+        IFormLinkContainer,
         ILandscapeGetter,
-        IOblivionMajorRecord,
-        IPlaced,
         ILoquiObjectSetter<ILandscapeInternal>,
-        IFormLinkContainer
+        IOblivionMajorRecord,
+        IPlaced
     {
         new MemorySlice<Byte>? DATA { get; set; }
         new MemorySlice<Byte>? VertexNormals { get; set; }
@@ -818,10 +818,10 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ILandscapeGetter :
         IOblivionMajorRecordGetter,
-        IPlacedGetter,
-        ILoquiObject<ILandscapeGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ILandscapeGetter>,
+        IPlacedGetter
     {
         static new ILoquiRegistration Registration => Landscape_Registration.Instance;
         ReadOnlyMemorySlice<Byte>? DATA { get; }

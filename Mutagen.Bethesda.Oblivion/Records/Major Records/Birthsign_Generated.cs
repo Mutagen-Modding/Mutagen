@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class Birthsign :
         OblivionMajorRecord,
         IBirthsignInternal,
-        ILoquiObjectSetter<Birthsign>,
-        IEquatable<IBirthsignGetter>
+        IEquatable<IBirthsignGetter>,
+        ILoquiObjectSetter<Birthsign>
     {
         #region Ctor
         protected Birthsign()
@@ -114,8 +114,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -632,11 +632,11 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IBirthsign :
         IBirthsignGetter,
-        IOblivionMajorRecord,
-        INamedRequired,
-        INamed,
+        IFormLinkContainer,
         ILoquiObjectSetter<IBirthsignInternal>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired,
+        IOblivionMajorRecord
     {
         new String? Name { get; set; }
         new String? Icon { get; set; }
@@ -653,11 +653,11 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IBirthsignGetter :
         IOblivionMajorRecordGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ILoquiObject<IBirthsignGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IBirthsignGetter>,
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Birthsign_Registration.Instance;
         String? Name { get; }

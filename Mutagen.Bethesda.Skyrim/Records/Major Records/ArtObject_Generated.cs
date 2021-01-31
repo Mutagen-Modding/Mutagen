@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class ArtObject :
         SkyrimMajorRecord,
         IArtObjectInternal,
-        ILoquiObjectSetter<ArtObject>,
-        IEquatable<IArtObjectGetter>
+        IEquatable<IArtObjectGetter>,
+        ILoquiObjectSetter<ArtObject>
     {
         #region Ctor
         protected ArtObject()
@@ -108,8 +108,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -558,12 +558,12 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IArtObject :
         IArtObjectGetter,
-        ISkyrimMajorRecord,
-        IModeled,
-        IObjectBoundedOptional,
-        IObjectBounded,
+        IFormLinkContainer,
         ILoquiObjectSetter<IArtObjectInternal>,
-        IFormLinkContainer
+        IModeled,
+        IObjectBounded,
+        IObjectBoundedOptional,
+        ISkyrimMajorRecord
     {
         new ObjectBounds ObjectBounds { get; set; }
         new Model? Model { get; set; }
@@ -579,12 +579,12 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IArtObjectGetter :
         ISkyrimMajorRecordGetter,
-        IModeledGetter,
-        IObjectBoundedOptionalGetter,
-        IObjectBoundedGetter,
-        ILoquiObject<IArtObjectGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IArtObjectGetter>,
+        IModeledGetter,
+        IObjectBoundedGetter,
+        IObjectBoundedOptionalGetter
     {
         static new ILoquiRegistration Registration => ArtObject_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }

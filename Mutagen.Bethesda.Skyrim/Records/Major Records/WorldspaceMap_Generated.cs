@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class WorldspaceMap :
-        IWorldspaceMap,
+        IEquatable<IWorldspaceMapGetter>,
         ILoquiObjectSetter<WorldspaceMap>,
-        IEquatable<IWorldspaceMapGetter>
+        IWorldspaceMap
     {
         #region Ctor
         public WorldspaceMap()
@@ -92,8 +92,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -603,8 +603,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IWorldspaceMap :
-        IWorldspaceMapGetter,
-        ILoquiObjectSetter<IWorldspaceMap>
+        ILoquiObjectSetter<IWorldspaceMap>,
+        IWorldspaceMapGetter
     {
         new WorldspaceMap.VersioningBreaks Versioning { get; set; }
         new P2Int UsableDimensions { get; set; }
@@ -617,8 +617,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IWorldspaceMapGetter :
         ILoquiObject,
-        ILoquiObject<IWorldspaceMapGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IWorldspaceMapGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

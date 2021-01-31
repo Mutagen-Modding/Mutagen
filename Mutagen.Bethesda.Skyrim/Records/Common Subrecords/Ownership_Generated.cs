@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class Ownership :
-        IOwnership,
+        IEquatable<IOwnershipGetter>,
         ILoquiObjectSetter<Ownership>,
-        IEquatable<IOwnershipGetter>
+        IOwnership
     {
         #region Ctor
         public Ownership()
@@ -79,8 +79,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -446,9 +446,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IOwnership :
-        IOwnershipGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IOwnership>,
-        IFormLinkContainer
+        IOwnershipGetter
     {
         new FormLinkNullable<IOwnerGetter> Owner { get; set; }
         new Int32? FactionRank { get; set; }
@@ -456,9 +456,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IOwnershipGetter :
         ILoquiObject,
-        ILoquiObject<IOwnershipGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IOwnershipGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

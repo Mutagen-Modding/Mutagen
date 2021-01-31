@@ -28,9 +28,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class FurnitureMarker :
+        IEquatable<IFurnitureMarkerGetter>,
         IFurnitureMarker,
-        ILoquiObjectSetter<FurnitureMarker>,
-        IEquatable<IFurnitureMarkerGetter>
+        ILoquiObjectSetter<FurnitureMarker>
     {
         #region Ctor
         public FurnitureMarker()
@@ -100,8 +100,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -537,9 +537,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IFurnitureMarker :
+        IFormLinkContainer,
         IFurnitureMarkerGetter,
-        ILoquiObjectSetter<IFurnitureMarker>,
-        IFormLinkContainer
+        ILoquiObjectSetter<IFurnitureMarker>
     {
         new Boolean Enabled { get; set; }
         new EntryPoints? DisabledEntryPoints { get; set; }
@@ -549,9 +549,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IFurnitureMarkerGetter :
         ILoquiObject,
-        ILoquiObject<IFurnitureMarkerGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IFurnitureMarkerGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

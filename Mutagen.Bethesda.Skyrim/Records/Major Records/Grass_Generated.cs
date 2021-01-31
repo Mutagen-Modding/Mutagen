@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class Grass :
         SkyrimMajorRecord,
+        IEquatable<IGrassGetter>,
         IGrassInternal,
-        ILoquiObjectSetter<Grass>,
-        IEquatable<IGrassGetter>
+        ILoquiObjectSetter<Grass>
     {
         #region Ctor
         protected Grass()
@@ -153,8 +153,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -970,13 +970,13 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IGrass :
+        IFormLinkContainer,
         IGrassGetter,
-        ISkyrimMajorRecord,
-        IModeled,
-        IObjectBoundedOptional,
-        IObjectBounded,
         ILoquiObjectSetter<IGrassInternal>,
-        IFormLinkContainer
+        IModeled,
+        IObjectBounded,
+        IObjectBoundedOptional,
+        ISkyrimMajorRecord
     {
         new ObjectBounds ObjectBounds { get; set; }
         new Model? Model { get; set; }
@@ -1005,12 +1005,12 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IGrassGetter :
         ISkyrimMajorRecordGetter,
-        IModeledGetter,
-        IObjectBoundedOptionalGetter,
-        IObjectBoundedGetter,
-        ILoquiObject<IGrassGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IGrassGetter>,
+        IModeledGetter,
+        IObjectBoundedGetter,
+        IObjectBoundedOptionalGetter
     {
         static new ILoquiRegistration Registration => Grass_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }

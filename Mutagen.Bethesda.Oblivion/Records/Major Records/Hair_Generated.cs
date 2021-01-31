@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Hair :
         OblivionMajorRecord,
+        IEquatable<IHairGetter>,
         IHairInternal,
-        ILoquiObjectSetter<Hair>,
-        IEquatable<IHairGetter>
+        ILoquiObjectSetter<Hair>
     {
         #region Ctor
         protected Hair()
@@ -111,8 +111,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -561,10 +561,10 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IHair :
         IHairGetter,
-        IOblivionMajorRecord,
-        INamedRequired,
+        ILoquiObjectSetter<IHairInternal>,
         INamed,
-        ILoquiObjectSetter<IHairInternal>
+        INamedRequired,
+        IOblivionMajorRecord
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
@@ -581,10 +581,10 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IHairGetter :
         IOblivionMajorRecordGetter,
-        INamedRequiredGetter,
-        INamedGetter,
+        IBinaryItem,
         ILoquiObject<IHairGetter>,
-        IBinaryItem
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Hair_Registration.Instance;
         String? Name { get; }

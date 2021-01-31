@@ -28,9 +28,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class ScriptEntry :
-        IScriptEntry,
+        IEquatable<IScriptEntryGetter>,
         ILoquiObjectSetter<ScriptEntry>,
-        IEquatable<IScriptEntryGetter>
+        IScriptEntry
     {
         #region Ctor
         public ScriptEntry()
@@ -92,8 +92,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -562,10 +562,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IScriptEntry :
-        IScriptEntryGetter,
-        INamedRequired,
+        IFormLinkContainer,
         ILoquiObjectSetter<IScriptEntry>,
-        IFormLinkContainer
+        INamedRequired,
+        IScriptEntryGetter
     {
         new String Name { get; set; }
         new ScriptEntry.Flag Flags { get; set; }
@@ -574,10 +574,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IScriptEntryGetter :
         ILoquiObject,
-        INamedRequiredGetter,
-        ILoquiObject<IScriptEntryGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IScriptEntryGetter>,
+        INamedRequiredGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

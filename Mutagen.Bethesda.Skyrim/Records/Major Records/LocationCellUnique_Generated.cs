@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class LocationCellUnique :
+        IEquatable<ILocationCellUniqueGetter>,
         ILocationCellUnique,
-        ILoquiObjectSetter<LocationCellUnique>,
-        IEquatable<ILocationCellUniqueGetter>
+        ILoquiObjectSetter<LocationCellUnique>
     {
         #region Ctor
         public LocationCellUnique()
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -475,9 +475,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ILocationCellUnique :
+        IFormLinkContainer,
         ILocationCellUniqueGetter,
-        ILoquiObjectSetter<ILocationCellUnique>,
-        IFormLinkContainer
+        ILoquiObjectSetter<ILocationCellUnique>
     {
         new FormLink<INpcGetter> Actor { get; set; }
         new FormLink<IPlacedNpcGetter> Ref { get; set; }
@@ -486,9 +486,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ILocationCellUniqueGetter :
         ILoquiObject,
-        ILoquiObject<ILocationCellUniqueGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ILocationCellUniqueGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

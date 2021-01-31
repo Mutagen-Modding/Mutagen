@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class SoundOutputAttenuation :
-        ISoundOutputAttenuation,
+        IEquatable<ISoundOutputAttenuationGetter>,
         ILoquiObjectSetter<SoundOutputAttenuation>,
-        IEquatable<ISoundOutputAttenuationGetter>
+        ISoundOutputAttenuation
     {
         #region Ctor
         public SoundOutputAttenuation()
@@ -102,8 +102,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -552,8 +552,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ISoundOutputAttenuation :
-        ISoundOutputAttenuationGetter,
-        ILoquiObjectSetter<ISoundOutputAttenuation>
+        ILoquiObjectSetter<ISoundOutputAttenuation>,
+        ISoundOutputAttenuationGetter
     {
         new Int32 Unknown { get; set; }
         new Single MinDistance { get; set; }
@@ -564,8 +564,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ISoundOutputAttenuationGetter :
         ILoquiObject,
-        ILoquiObject<ISoundOutputAttenuationGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ISoundOutputAttenuationGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

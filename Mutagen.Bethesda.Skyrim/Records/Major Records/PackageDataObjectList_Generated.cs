@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class PackageDataObjectList :
         APackageData,
-        IPackageDataObjectList,
+        IEquatable<IPackageDataObjectListGetter>,
         ILoquiObjectSetter<PackageDataObjectList>,
-        IEquatable<IPackageDataObjectListGetter>
+        IPackageDataObjectList
     {
         #region Ctor
         public PackageDataObjectList()
@@ -79,8 +79,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             APackageData.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -402,21 +402,21 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPackageDataObjectList :
-        IPackageDataObjectListGetter,
         IAPackageData,
-        INamedRequired,
+        ILoquiObjectSetter<IPackageDataObjectList>,
         INamed,
-        ILoquiObjectSetter<IPackageDataObjectList>
+        INamedRequired,
+        IPackageDataObjectListGetter
     {
         new Single? Data { get; set; }
     }
 
     public partial interface IPackageDataObjectListGetter :
         IAPackageDataGetter,
-        INamedRequiredGetter,
-        INamedGetter,
+        IBinaryItem,
         ILoquiObject<IPackageDataObjectListGetter>,
-        IBinaryItem
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => PackageDataObjectList_Registration.Instance;
         Single? Data { get; }

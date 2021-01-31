@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class NavigationDoorLink :
-        INavigationDoorLink,
+        IEquatable<INavigationDoorLinkGetter>,
         ILoquiObjectSetter<NavigationDoorLink>,
-        IEquatable<INavigationDoorLinkGetter>
+        INavigationDoorLink
     {
         #region Ctor
         public NavigationDoorLink()
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -476,9 +476,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface INavigationDoorLink :
-        INavigationDoorLinkGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<INavigationDoorLink>,
-        IFormLinkContainer
+        INavigationDoorLinkGetter
     {
         new FormLink<IANavigationMeshGetter> NavMesh { get; set; }
         new Int16 NavMeshTriangleIndex { get; set; }
@@ -487,9 +487,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface INavigationDoorLinkGetter :
         ILoquiObject,
-        ILoquiObject<INavigationDoorLinkGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<INavigationDoorLinkGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

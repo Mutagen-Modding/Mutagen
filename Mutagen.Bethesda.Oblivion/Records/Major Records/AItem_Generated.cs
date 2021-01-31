@@ -34,8 +34,8 @@ namespace Mutagen.Bethesda.Oblivion
     public abstract partial class AItem :
         OblivionMajorRecord,
         IAItemInternal,
-        ILoquiObjectSetter<AItem>,
-        IEquatable<IAItemGetter>
+        IEquatable<IAItemGetter>,
+        ILoquiObjectSetter<AItem>
     {
         #region Ctor
         protected AItem()
@@ -78,8 +78,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -375,9 +375,9 @@ namespace Mutagen.Bethesda.Oblivion
     /// </summary>
     public partial interface IAItem :
         IAItemGetter,
-        IOblivionMajorRecord,
+        IFormLinkContainer,
         ILoquiObjectSetter<IAItemInternal>,
-        IFormLinkContainer
+        IOblivionMajorRecord
     {
     }
 
@@ -393,9 +393,9 @@ namespace Mutagen.Bethesda.Oblivion
     /// </summary>
     public partial interface IAItemGetter :
         IOblivionMajorRecordGetter,
-        ILoquiObject<IAItemGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IAItemGetter>
     {
         static new ILoquiRegistration Registration => AItem_Registration.Instance;
 

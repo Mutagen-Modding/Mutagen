@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class LockInformation :
+        IEquatable<ILockInformationGetter>,
         ILockInformation,
-        ILoquiObjectSetter<LockInformation>,
-        IEquatable<ILockInformationGetter>
+        ILoquiObjectSetter<LockInformation>
     {
         #region Ctor
         public LockInformation()
@@ -91,8 +91,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -515,9 +515,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ILockInformation :
+        IFormLinkContainer,
         ILockInformationGetter,
-        ILoquiObjectSetter<ILockInformation>,
-        IFormLinkContainer
+        ILoquiObjectSetter<ILockInformation>
     {
         new Byte LockLevel { get; set; }
         new MemorySlice<Byte> Unused { get; set; }
@@ -527,9 +527,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ILockInformationGetter :
         ILoquiObject,
-        ILoquiObject<ILockInformationGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ILockInformationGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

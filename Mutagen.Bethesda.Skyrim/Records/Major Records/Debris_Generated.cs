@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class Debris :
         SkyrimMajorRecord,
         IDebrisInternal,
-        ILoquiObjectSetter<Debris>,
-        IEquatable<IDebrisGetter>
+        IEquatable<IDebrisGetter>,
+        ILoquiObjectSetter<Debris>
     {
         #region Ctor
         protected Debris()
@@ -89,8 +89,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -542,8 +542,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IDebris :
         IDebrisGetter,
-        ISkyrimMajorRecord,
-        ILoquiObjectSetter<IDebrisInternal>
+        ILoquiObjectSetter<IDebrisInternal>,
+        ISkyrimMajorRecord
     {
         new ExtendedList<DebrisModel> Models { get; }
     }
@@ -557,8 +557,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IDebrisGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<IDebrisGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IDebrisGetter>
     {
         static new ILoquiRegistration Registration => Debris_Registration.Instance;
         IReadOnlyList<IDebrisModelGetter> Models { get; }

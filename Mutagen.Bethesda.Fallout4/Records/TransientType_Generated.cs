@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
     public partial class TransientType :
-        ITransientType,
+        IEquatable<ITransientTypeGetter>,
         ILoquiObjectSetter<TransientType>,
-        IEquatable<ITransientTypeGetter>
+        ITransientType
     {
         #region Ctor
         public TransientType()
@@ -88,8 +88,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -529,9 +529,9 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface ITransientType :
-        ITransientTypeGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<ITransientType>,
-        IFormLinkContainer
+        ITransientTypeGetter
     {
         new UInt32 FormType { get; set; }
         new ExtendedList<IFormLink<IFallout4MajorRecordGetter>> Links { get; }
@@ -539,9 +539,9 @@ namespace Mutagen.Bethesda.Fallout4
 
     public partial interface ITransientTypeGetter :
         ILoquiObject,
-        ILoquiObject<ITransientTypeGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ITransientTypeGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

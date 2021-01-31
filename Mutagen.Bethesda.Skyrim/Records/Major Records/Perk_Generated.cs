@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class Perk :
         SkyrimMajorRecord,
-        IPerkInternal,
+        IEquatable<IPerkGetter>,
         ILoquiObjectSetter<Perk>,
-        IEquatable<IPerkGetter>
+        IPerkInternal
     {
         #region Ctor
         protected Perk()
@@ -183,8 +183,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1071,15 +1071,15 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPerk :
+        IFormLinkContainer,
+        IHasIcons,
+        ILoquiObjectSetter<IPerkInternal>,
+        INamed,
+        INamedRequired,
         IPerkGetter,
         ISkyrimMajorRecord,
-        IHasIcons,
-        INamedRequired,
-        INamed,
-        ITranslatedNamedRequired,
         ITranslatedNamed,
-        ILoquiObjectSetter<IPerkInternal>,
-        IFormLinkContainer
+        ITranslatedNamedRequired
     {
         new PerkAdapter? VirtualMachineAdapter { get; set; }
         new TranslatedString? Name { get; set; }
@@ -1109,14 +1109,14 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IPerkGetter :
         ISkyrimMajorRecordGetter,
-        IHasIconsGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ITranslatedNamedRequiredGetter,
-        ITranslatedNamedGetter,
-        ILoquiObject<IPerkGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        IHasIconsGetter,
+        ILoquiObject<IPerkGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Perk_Registration.Instance;
         IPerkAdapterGetter? VirtualMachineAdapter { get; }

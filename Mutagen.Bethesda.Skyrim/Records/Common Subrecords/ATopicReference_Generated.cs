@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public abstract partial class ATopicReference :
         IATopicReference,
-        ILoquiObjectSetter<ATopicReference>,
-        IEquatable<IATopicReferenceGetter>
+        IEquatable<IATopicReferenceGetter>,
+        ILoquiObjectSetter<ATopicReference>
     {
         #region Ctor
         public ATopicReference()
@@ -74,8 +74,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -360,8 +360,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public partial interface IATopicReference :
         IATopicReferenceGetter,
-        ILoquiObjectSetter<IATopicReference>,
-        IFormLinkContainer
+        IFormLinkContainer,
+        ILoquiObjectSetter<IATopicReference>
     {
     }
 
@@ -370,9 +370,9 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public partial interface IATopicReferenceGetter :
         ILoquiObject,
-        ILoquiObject<IATopicReferenceGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IATopicReferenceGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

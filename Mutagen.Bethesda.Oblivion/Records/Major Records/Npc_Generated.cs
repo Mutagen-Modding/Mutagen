@@ -31,9 +31,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Npc :
         ANpc,
-        INpcInternal,
+        IEquatable<INpcGetter>,
         ILoquiObjectSetter<Npc>,
-        IEquatable<INpcGetter>
+        INpcInternal
     {
         #region Ctor
         protected Npc()
@@ -291,8 +291,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             ANpc.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1737,13 +1737,13 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface INpc :
-        INpcGetter,
         IANpc,
-        IOwner,
-        INamedRequired,
-        INamed,
+        IFormLinkContainer,
         ILoquiObjectSetter<INpcInternal>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired,
+        INpcGetter,
+        IOwner
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
@@ -1779,12 +1779,12 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface INpcGetter :
         IANpcGetter,
-        IOwnerGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ILoquiObject<INpcGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<INpcGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        IOwnerGetter
     {
         static new ILoquiRegistration Registration => Npc_Registration.Instance;
         String? Name { get; }

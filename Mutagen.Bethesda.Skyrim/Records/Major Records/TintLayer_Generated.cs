@@ -28,9 +28,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class TintLayer :
-        ITintLayer,
+        IEquatable<ITintLayerGetter>,
         ILoquiObjectSetter<TintLayer>,
-        IEquatable<ITintLayerGetter>
+        ITintLayer
     {
         #region Ctor
         public TintLayer()
@@ -92,8 +92,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -510,8 +510,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ITintLayer :
-        ITintLayerGetter,
-        ILoquiObjectSetter<ITintLayer>
+        ILoquiObjectSetter<ITintLayer>,
+        ITintLayerGetter
     {
         new UInt16? Index { get; set; }
         new Color? Color { get; set; }
@@ -521,8 +521,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ITintLayerGetter :
         ILoquiObject,
-        ILoquiObject<ITintLayerGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ITintLayerGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

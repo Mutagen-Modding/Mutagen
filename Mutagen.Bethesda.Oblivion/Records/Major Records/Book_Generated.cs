@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class Book :
         AItem,
         IBookInternal,
-        ILoquiObjectSetter<Book>,
-        IEquatable<IBookGetter>
+        IEquatable<IBookGetter>,
+        ILoquiObjectSetter<Book>
     {
         #region Ctor
         protected Book()
@@ -133,8 +133,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             AItem.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -703,12 +703,12 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IBook :
-        IBookGetter,
         IAItem,
-        INamedRequired,
-        INamed,
+        IBookGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IBookInternal>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
@@ -729,11 +729,11 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IBookGetter :
         IAItemGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ILoquiObject<IBookGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IBookGetter>,
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Book_Registration.Instance;
         String? Name { get; }

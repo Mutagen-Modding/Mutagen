@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class Explosion :
         SkyrimMajorRecord,
+        IEquatable<IExplosionGetter>,
         IExplosionInternal,
-        ILoquiObjectSetter<Explosion>,
-        IEquatable<IExplosionGetter>
+        ILoquiObjectSetter<Explosion>
     {
         #region Ctor
         protected Explosion()
@@ -228,8 +228,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1168,15 +1168,15 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IExplosion :
         IExplosionGetter,
-        ISkyrimMajorRecord,
-        INamedRequired,
-        INamed,
-        ITranslatedNamedRequired,
-        ITranslatedNamed,
-        IObjectBoundedOptional,
-        IObjectBounded,
+        IFormLinkContainer,
         ILoquiObjectSetter<IExplosionInternal>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired,
+        IObjectBounded,
+        IObjectBoundedOptional,
+        ISkyrimMajorRecord,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
@@ -1209,15 +1209,15 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IExplosionGetter :
         ISkyrimMajorRecordGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ITranslatedNamedRequiredGetter,
-        ITranslatedNamedGetter,
-        IObjectBoundedOptionalGetter,
-        IObjectBoundedGetter,
-        ILoquiObject<IExplosionGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IExplosionGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        IObjectBoundedGetter,
+        IObjectBoundedOptionalGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Explosion_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }

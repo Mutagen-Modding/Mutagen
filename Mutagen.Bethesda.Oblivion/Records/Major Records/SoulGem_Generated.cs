@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class SoulGem :
         AItem,
-        ISoulGemInternal,
+        IEquatable<ISoulGemGetter>,
         ILoquiObjectSetter<SoulGem>,
-        IEquatable<ISoulGemGetter>
+        ISoulGemInternal
     {
         #region Ctor
         protected SoulGem()
@@ -130,8 +130,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             AItem.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -672,12 +672,12 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ISoulGem :
-        ISoulGemGetter,
         IAItem,
-        INamedRequired,
-        INamed,
+        IFormLinkContainer,
         ILoquiObjectSetter<ISoulGemInternal>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired,
+        ISoulGemGetter
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
@@ -697,11 +697,11 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ISoulGemGetter :
         IAItemGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ILoquiObject<ISoulGemGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ISoulGemGetter>,
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => SoulGem_Registration.Instance;
         String? Name { get; }

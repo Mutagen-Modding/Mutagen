@@ -29,8 +29,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class Attack :
         IAttack,
-        ILoquiObjectSetter<Attack>,
-        IEquatable<IAttackGetter>
+        IEquatable<IAttackGetter>,
+        ILoquiObjectSetter<Attack>
     {
         #region Ctor
         public Attack()
@@ -88,8 +88,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -463,8 +463,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IAttack :
         IAttackGetter,
-        ILoquiObjectSetter<IAttack>,
-        IFormLinkContainer
+        IFormLinkContainer,
+        ILoquiObjectSetter<IAttack>
     {
         new AttackData? AttackData { get; set; }
         new String? AttackEvent { get; set; }
@@ -472,9 +472,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IAttackGetter :
         ILoquiObject,
-        ILoquiObject<IAttackGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IAttackGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

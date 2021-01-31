@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Ingredient :
         AItem,
+        IEquatable<IIngredientGetter>,
         IIngredientInternal,
-        ILoquiObjectSetter<Ingredient>,
-        IEquatable<IIngredientGetter>
+        ILoquiObjectSetter<Ingredient>
     {
         #region Ctor
         protected Ingredient()
@@ -139,8 +139,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             AItem.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -756,12 +756,12 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IIngredient :
-        IIngredientGetter,
         IAItem,
-        INamedRequired,
-        INamed,
+        IFormLinkContainer,
+        IIngredientGetter,
         ILoquiObjectSetter<IIngredientInternal>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
@@ -781,11 +781,11 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IIngredientGetter :
         IAItemGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ILoquiObject<IIngredientGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IIngredientGetter>,
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Ingredient_Registration.Instance;
         String? Name { get; }

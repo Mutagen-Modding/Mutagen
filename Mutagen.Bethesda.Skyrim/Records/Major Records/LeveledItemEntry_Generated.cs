@@ -28,9 +28,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class LeveledItemEntry :
+        IEquatable<ILeveledItemEntryGetter>,
         ILeveledItemEntry,
-        ILoquiObjectSetter<LeveledItemEntry>,
-        IEquatable<ILeveledItemEntryGetter>
+        ILoquiObjectSetter<LeveledItemEntry>
     {
         #region Ctor
         public LeveledItemEntry()
@@ -94,8 +94,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -475,9 +475,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ILeveledItemEntry :
+        IFormLinkContainer,
         ILeveledItemEntryGetter,
-        ILoquiObjectSetter<ILeveledItemEntry>,
-        IFormLinkContainer
+        ILoquiObjectSetter<ILeveledItemEntry>
     {
         new LeveledItemEntryData? Data { get; set; }
         new ExtraData? ExtraData { get; set; }
@@ -485,9 +485,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ILeveledItemEntryGetter :
         ILoquiObject,
-        ILoquiObject<ILeveledItemEntryGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ILeveledItemEntryGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

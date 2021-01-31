@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class CameraShot :
         SkyrimMajorRecord,
         ICameraShotInternal,
-        ILoquiObjectSetter<CameraShot>,
-        IEquatable<ICameraShotGetter>
+        IEquatable<ICameraShotGetter>,
+        ILoquiObjectSetter<CameraShot>
     {
         #region Ctor
         protected CameraShot()
@@ -135,8 +135,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -891,10 +891,10 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface ICameraShot :
         ICameraShotGetter,
-        ISkyrimMajorRecord,
-        IModeled,
+        IFormLinkContainer,
         ILoquiObjectSetter<ICameraShotInternal>,
-        IFormLinkContainer
+        IModeled,
+        ISkyrimMajorRecord
     {
         new Model? Model { get; set; }
         new CameraShot.ActionType Action { get; set; }
@@ -921,10 +921,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ICameraShotGetter :
         ISkyrimMajorRecordGetter,
-        IModeledGetter,
-        ILoquiObject<ICameraShotGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ICameraShotGetter>,
+        IModeledGetter
     {
         static new ILoquiRegistration Registration => CameraShot_Registration.Instance;
         IModelGetter? Model { get; }

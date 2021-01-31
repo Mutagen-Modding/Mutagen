@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class Book :
         SkyrimMajorRecord,
         IBookInternal,
-        ILoquiObjectSetter<Book>,
-        IEquatable<IBookGetter>
+        IEquatable<IBookGetter>,
+        ILoquiObjectSetter<Book>
     {
         #region Ctor
         protected Book()
@@ -234,8 +234,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1237,22 +1237,22 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IBook :
         IBookGetter,
-        ISkyrimMajorRecord,
-        IObjectId,
-        IItem,
         IConstructible,
+        IFormLinkContainer,
         IHasIcons,
-        IModeled,
-        IWeightValue,
+        IItem,
         IKeyworded<IKeywordGetter>,
-        INamedRequired,
-        INamed,
-        ITranslatedNamedRequired,
-        ITranslatedNamed,
-        IObjectBoundedOptional,
-        IObjectBounded,
         ILoquiObjectSetter<IBookInternal>,
-        IFormLinkContainer
+        IModeled,
+        INamed,
+        INamedRequired,
+        IObjectBounded,
+        IObjectBoundedOptional,
+        IObjectId,
+        ISkyrimMajorRecord,
+        ITranslatedNamed,
+        ITranslatedNamedRequired,
+        IWeightValue
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
@@ -1284,22 +1284,22 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IBookGetter :
         ISkyrimMajorRecordGetter,
-        IObjectIdGetter,
-        IItemGetter,
+        IBinaryItem,
         IConstructibleGetter,
-        IHasIconsGetter,
-        IModeledGetter,
-        IWeightValueGetter,
-        IKeywordedGetter<IKeywordGetter>,
-        INamedRequiredGetter,
-        INamedGetter,
-        ITranslatedNamedRequiredGetter,
-        ITranslatedNamedGetter,
-        IObjectBoundedOptionalGetter,
-        IObjectBoundedGetter,
-        ILoquiObject<IBookGetter>,
         IFormLinkContainerGetter,
-        IBinaryItem
+        IHasIconsGetter,
+        IItemGetter,
+        IKeywordedGetter<IKeywordGetter>,
+        ILoquiObject<IBookGetter>,
+        IModeledGetter,
+        INamedGetter,
+        INamedRequiredGetter,
+        IObjectBoundedGetter,
+        IObjectBoundedOptionalGetter,
+        IObjectIdGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter,
+        IWeightValueGetter
     {
         static new ILoquiRegistration Registration => Book_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }

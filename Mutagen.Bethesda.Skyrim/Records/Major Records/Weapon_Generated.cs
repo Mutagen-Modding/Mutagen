@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class Weapon :
         SkyrimMajorRecord,
-        IWeaponInternal,
+        IEquatable<IWeaponGetter>,
         ILoquiObjectSetter<Weapon>,
-        IEquatable<IWeaponGetter>
+        IWeaponInternal
     {
         #region Ctor
         protected Weapon()
@@ -305,8 +305,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1665,22 +1665,22 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IWeapon :
-        IWeaponGetter,
-        ISkyrimMajorRecord,
-        IItem,
-        IObjectId,
         IConstructible,
+        IFormLinkContainer,
         IHasIcons,
-        IModeled,
+        IItem,
         IKeyworded<IKeywordGetter>,
-        INamedRequired,
-        INamed,
-        ITranslatedNamedRequired,
-        ITranslatedNamed,
-        IObjectBoundedOptional,
-        IObjectBounded,
         ILoquiObjectSetter<IWeaponInternal>,
-        IFormLinkContainer
+        IModeled,
+        INamed,
+        INamedRequired,
+        IObjectBounded,
+        IObjectBoundedOptional,
+        IObjectId,
+        ISkyrimMajorRecord,
+        ITranslatedNamed,
+        ITranslatedNamedRequired,
+        IWeaponGetter
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
@@ -1728,21 +1728,21 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IWeaponGetter :
         ISkyrimMajorRecordGetter,
-        IItemGetter,
-        IObjectIdGetter,
+        IBinaryItem,
         IConstructibleGetter,
-        IHasIconsGetter,
-        IModeledGetter,
-        IKeywordedGetter<IKeywordGetter>,
-        INamedRequiredGetter,
-        INamedGetter,
-        ITranslatedNamedRequiredGetter,
-        ITranslatedNamedGetter,
-        IObjectBoundedOptionalGetter,
-        IObjectBoundedGetter,
-        ILoquiObject<IWeaponGetter>,
         IFormLinkContainerGetter,
-        IBinaryItem
+        IHasIconsGetter,
+        IItemGetter,
+        IKeywordedGetter<IKeywordGetter>,
+        ILoquiObject<IWeaponGetter>,
+        IModeledGetter,
+        INamedGetter,
+        INamedRequiredGetter,
+        IObjectBoundedGetter,
+        IObjectBoundedOptionalGetter,
+        IObjectIdGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Weapon_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }

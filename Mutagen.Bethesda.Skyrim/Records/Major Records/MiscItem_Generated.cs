@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class MiscItem :
         SkyrimMajorRecord,
-        IMiscItemInternal,
+        IEquatable<IMiscItemGetter>,
         ILoquiObjectSetter<MiscItem>,
-        IEquatable<IMiscItemGetter>
+        IMiscItemInternal
     {
         #region Ctor
         protected MiscItem()
@@ -202,8 +202,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1006,24 +1006,24 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IMiscItem :
-        IMiscItemGetter,
-        ISkyrimMajorRecord,
-        IItem,
-        IHarvestTarget,
-        IObjectId,
         IConstructible,
+        IFormLinkContainer,
+        IHarvestTarget,
         IHasIcons,
-        IModeled,
-        IWeightValue,
+        IItem,
         IKeyworded<IKeywordGetter>,
-        INamedRequired,
-        INamed,
-        ITranslatedNamedRequired,
-        ITranslatedNamed,
-        IObjectBoundedOptional,
-        IObjectBounded,
         ILoquiObjectSetter<IMiscItemInternal>,
-        IFormLinkContainer
+        IMiscItemGetter,
+        IModeled,
+        INamed,
+        INamedRequired,
+        IObjectBounded,
+        IObjectBoundedOptional,
+        IObjectId,
+        ISkyrimMajorRecord,
+        ITranslatedNamed,
+        ITranslatedNamedRequired,
+        IWeightValue
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
@@ -1052,23 +1052,23 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IMiscItemGetter :
         ISkyrimMajorRecordGetter,
-        IItemGetter,
-        IHarvestTargetGetter,
-        IObjectIdGetter,
+        IBinaryItem,
         IConstructibleGetter,
-        IHasIconsGetter,
-        IModeledGetter,
-        IWeightValueGetter,
-        IKeywordedGetter<IKeywordGetter>,
-        INamedRequiredGetter,
-        INamedGetter,
-        ITranslatedNamedRequiredGetter,
-        ITranslatedNamedGetter,
-        IObjectBoundedOptionalGetter,
-        IObjectBoundedGetter,
-        ILoquiObject<IMiscItemGetter>,
         IFormLinkContainerGetter,
-        IBinaryItem
+        IHarvestTargetGetter,
+        IHasIconsGetter,
+        IItemGetter,
+        IKeywordedGetter<IKeywordGetter>,
+        ILoquiObject<IMiscItemGetter>,
+        IModeledGetter,
+        INamedGetter,
+        INamedRequiredGetter,
+        IObjectBoundedGetter,
+        IObjectBoundedOptionalGetter,
+        IObjectIdGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter,
+        IWeightValueGetter
     {
         static new ILoquiRegistration Registration => MiscItem_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }

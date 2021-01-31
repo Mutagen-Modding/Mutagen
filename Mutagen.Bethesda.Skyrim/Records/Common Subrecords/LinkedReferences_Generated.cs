@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class LinkedReferences :
+        IEquatable<ILinkedReferencesGetter>,
         ILinkedReferences,
-        ILoquiObjectSetter<LinkedReferences>,
-        IEquatable<ILinkedReferencesGetter>
+        ILoquiObjectSetter<LinkedReferences>
     {
         #region Ctor
         public LinkedReferences()
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -481,9 +481,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ILinkedReferences :
+        IFormLinkContainer,
         ILinkedReferencesGetter,
-        ILoquiObjectSetter<ILinkedReferences>,
-        IFormLinkContainer
+        ILoquiObjectSetter<ILinkedReferences>
     {
         new LinkedReferences.VersioningBreaks Versioning { get; set; }
         new FormLink<IKeywordLinkedReferenceGetter> KeywordOrReference { get; set; }
@@ -492,9 +492,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ILinkedReferencesGetter :
         ILoquiObject,
-        ILoquiObject<ILinkedReferencesGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ILinkedReferencesGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class ScriptObjectReference :
         AScriptReference,
-        IScriptObjectReference,
+        IEquatable<IScriptObjectReferenceGetter>,
         ILoquiObjectSetter<ScriptObjectReference>,
-        IEquatable<IScriptObjectReferenceGetter>
+        IScriptObjectReference
     {
         #region Ctor
         public ScriptObjectReference()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             AScriptReference.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem Reference)
@@ -395,19 +395,19 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IScriptObjectReference :
-        IScriptObjectReferenceGetter,
         IAScriptReference,
+        IFormLinkContainer,
         ILoquiObjectSetter<IScriptObjectReference>,
-        IFormLinkContainer
+        IScriptObjectReferenceGetter
     {
         new FormLink<IOblivionMajorRecordGetter> Reference { get; set; }
     }
 
     public partial interface IScriptObjectReferenceGetter :
         IAScriptReferenceGetter,
-        ILoquiObject<IScriptObjectReferenceGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IScriptObjectReferenceGetter>
     {
         static new ILoquiRegistration Registration => ScriptObjectReference_Registration.Instance;
         FormLink<IOblivionMajorRecordGetter> Reference { get; }

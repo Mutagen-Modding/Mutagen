@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class MagicEffect :
         OblivionMajorRecord,
-        IMagicEffectInternal,
+        IEquatable<IMagicEffectGetter>,
         ILoquiObjectSetter<MagicEffect>,
-        IEquatable<IMagicEffectGetter>
+        IMagicEffectInternal
     {
         #region Ctor
         protected MagicEffect()
@@ -136,8 +136,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -723,12 +723,12 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IMagicEffect :
-        IMagicEffectGetter,
-        IOblivionMajorRecord,
-        INamedRequired,
-        INamed,
+        IFormLinkContainer,
         ILoquiObjectSetter<IMagicEffectInternal>,
-        IFormLinkContainer
+        IMagicEffectGetter,
+        INamed,
+        INamedRequired,
+        IOblivionMajorRecord
     {
         new String? Name { get; set; }
         new String? Description { get; set; }
@@ -747,11 +747,11 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IMagicEffectGetter :
         IOblivionMajorRecordGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ILoquiObject<IMagicEffectGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IMagicEffectGetter>,
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => MagicEffect_Registration.Instance;
         String? Name { get; }

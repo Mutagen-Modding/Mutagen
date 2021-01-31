@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class Tree :
         SkyrimMajorRecord,
-        ITreeInternal,
+        IEquatable<ITreeGetter>,
         ILoquiObjectSetter<Tree>,
-        IEquatable<ITreeGetter>
+        ITreeInternal
     {
         #region Ctor
         protected Tree()
@@ -190,8 +190,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -942,19 +942,19 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ITree :
-        ITreeGetter,
-        ISkyrimMajorRecord,
-        IRegionTarget,
+        IFormLinkContainer,
         IHarvestable,
-        IModeled,
-        INamedRequired,
-        INamed,
-        ITranslatedNamedRequired,
-        ITranslatedNamed,
-        IObjectBoundedOptional,
-        IObjectBounded,
         ILoquiObjectSetter<ITreeInternal>,
-        IFormLinkContainer
+        IModeled,
+        INamed,
+        INamedRequired,
+        IObjectBounded,
+        IObjectBoundedOptional,
+        IRegionTarget,
+        ISkyrimMajorRecord,
+        ITranslatedNamed,
+        ITranslatedNamedRequired,
+        ITreeGetter
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
@@ -984,18 +984,18 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ITreeGetter :
         ISkyrimMajorRecordGetter,
-        IRegionTargetGetter,
-        IHarvestableGetter,
-        IModeledGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ITranslatedNamedRequiredGetter,
-        ITranslatedNamedGetter,
-        IObjectBoundedOptionalGetter,
-        IObjectBoundedGetter,
-        ILoquiObject<ITreeGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        IHarvestableGetter,
+        ILoquiObject<ITreeGetter>,
+        IModeledGetter,
+        INamedGetter,
+        INamedRequiredGetter,
+        IObjectBoundedGetter,
+        IObjectBoundedOptionalGetter,
+        IRegionTargetGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Tree_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }

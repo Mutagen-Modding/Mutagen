@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class NpcData :
-        INpcData,
+        IEquatable<INpcDataGetter>,
         ILoquiObjectSetter<NpcData>,
-        IEquatable<INpcDataGetter>
+        INpcData
     {
         #region Ctor
         public NpcData()
@@ -161,8 +161,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1311,8 +1311,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface INpcData :
-        INpcDataGetter,
-        ILoquiObjectSetter<INpcData>
+        ILoquiObjectSetter<INpcData>,
+        INpcDataGetter
     {
         new Byte Armorer { get; set; }
         new Byte Athletics { get; set; }
@@ -1348,8 +1348,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface INpcDataGetter :
         ILoquiObject,
-        ILoquiObject<INpcDataGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<INpcDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

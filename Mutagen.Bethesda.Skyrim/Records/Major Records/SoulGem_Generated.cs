@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class SoulGem :
         SkyrimMajorRecord,
-        ISoulGemInternal,
+        IEquatable<ISoulGemGetter>,
         ILoquiObjectSetter<SoulGem>,
-        IEquatable<ISoulGemGetter>
+        ISoulGemInternal
     {
         #region Ctor
         protected SoulGem()
@@ -198,8 +198,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1051,19 +1051,19 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ISoulGem :
-        ISoulGemGetter,
-        ISkyrimMajorRecord,
-        IItem,
         IConstructible,
-        IWeightValue,
+        IFormLinkContainer,
+        IItem,
         IKeyworded<IKeywordGetter>,
-        INamedRequired,
-        INamed,
-        ITranslatedNamedRequired,
-        ITranslatedNamed,
-        IObjectBoundedOptional,
         ILoquiObjectSetter<ISoulGemInternal>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired,
+        IObjectBoundedOptional,
+        ISkyrimMajorRecord,
+        ISoulGemGetter,
+        ITranslatedNamed,
+        ITranslatedNamedRequired,
+        IWeightValue
     {
         new ObjectBounds? ObjectBounds { get; set; }
         new TranslatedString? Name { get; set; }
@@ -1094,18 +1094,18 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ISoulGemGetter :
         ISkyrimMajorRecordGetter,
-        IItemGetter,
+        IBinaryItem,
         IConstructibleGetter,
-        IWeightValueGetter,
-        IKeywordedGetter<IKeywordGetter>,
-        INamedRequiredGetter,
-        INamedGetter,
-        ITranslatedNamedRequiredGetter,
-        ITranslatedNamedGetter,
-        IObjectBoundedOptionalGetter,
-        ILoquiObject<ISoulGemGetter>,
         IFormLinkContainerGetter,
-        IBinaryItem
+        IItemGetter,
+        IKeywordedGetter<IKeywordGetter>,
+        ILoquiObject<ISoulGemGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        IObjectBoundedOptionalGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter,
+        IWeightValueGetter
     {
         static new ILoquiRegistration Registration => SoulGem_Registration.Instance;
         IObjectBoundsGetter? ObjectBounds { get; }

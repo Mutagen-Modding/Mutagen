@@ -29,8 +29,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class BodyData :
         IBodyData,
-        ILoquiObjectSetter<BodyData>,
-        IEquatable<IBodyDataGetter>
+        IEquatable<IBodyDataGetter>,
+        ILoquiObjectSetter<BodyData>
     {
         #region Ctor
         public BodyData()
@@ -88,8 +88,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -463,9 +463,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IBodyData :
         IBodyDataGetter,
-        IModeled,
+        IFormLinkContainer,
         ILoquiObjectSetter<IBodyData>,
-        IFormLinkContainer
+        IModeled
     {
         new BodyData.PartIndex? Index { get; set; }
         new Model? Model { get; set; }
@@ -473,10 +473,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IBodyDataGetter :
         ILoquiObject,
-        IModeledGetter,
-        ILoquiObject<IBodyDataGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IBodyDataGetter>,
+        IModeledGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

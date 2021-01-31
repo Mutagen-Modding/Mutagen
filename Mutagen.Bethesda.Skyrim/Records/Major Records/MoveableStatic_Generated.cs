@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class MoveableStatic :
         SkyrimMajorRecord,
-        IMoveableStaticInternal,
+        IEquatable<IMoveableStaticGetter>,
         ILoquiObjectSetter<MoveableStatic>,
-        IEquatable<IMoveableStaticGetter>
+        IMoveableStaticInternal
     {
         #region Ctor
         protected MoveableStatic()
@@ -153,8 +153,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -698,19 +698,19 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IMoveableStatic :
+        IFormLinkContainer,
+        ILoquiObjectSetter<IMoveableStaticInternal>,
+        IModeled,
         IMoveableStaticGetter,
-        ISkyrimMajorRecord,
+        INamed,
+        INamedRequired,
+        IObjectBounded,
+        IObjectBoundedOptional,
         IObjectId,
         IRegionTarget,
-        IModeled,
-        INamedRequired,
-        INamed,
-        ITranslatedNamedRequired,
+        ISkyrimMajorRecord,
         ITranslatedNamed,
-        IObjectBoundedOptional,
-        IObjectBounded,
-        ILoquiObjectSetter<IMoveableStaticInternal>,
-        IFormLinkContainer
+        ITranslatedNamedRequired
     {
         new ObjectBounds ObjectBounds { get; set; }
         new TranslatedString? Name { get; set; }
@@ -733,18 +733,18 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IMoveableStaticGetter :
         ISkyrimMajorRecordGetter,
+        IBinaryItem,
+        IFormLinkContainerGetter,
+        ILoquiObject<IMoveableStaticGetter>,
+        IModeledGetter,
+        INamedGetter,
+        INamedRequiredGetter,
+        IObjectBoundedGetter,
+        IObjectBoundedOptionalGetter,
         IObjectIdGetter,
         IRegionTargetGetter,
-        IModeledGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ITranslatedNamedRequiredGetter,
         ITranslatedNamedGetter,
-        IObjectBoundedOptionalGetter,
-        IObjectBoundedGetter,
-        ILoquiObject<IMoveableStaticGetter>,
-        IFormLinkContainerGetter,
-        IBinaryItem
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => MoveableStatic_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }

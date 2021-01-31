@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class Container :
         OblivionMajorRecord,
         IContainerInternal,
-        ILoquiObjectSetter<Container>,
-        IEquatable<IContainerGetter>
+        IEquatable<IContainerGetter>,
+        ILoquiObjectSetter<Container>
     {
         #region Ctor
         protected Container()
@@ -135,8 +135,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -753,11 +753,11 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IContainer :
         IContainerGetter,
-        IOblivionMajorRecord,
-        INamedRequired,
-        INamed,
+        IFormLinkContainer,
         ILoquiObjectSetter<IContainerInternal>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired,
+        IOblivionMajorRecord
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
@@ -777,11 +777,11 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IContainerGetter :
         IOblivionMajorRecordGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ILoquiObject<IContainerGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IContainerGetter>,
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Container_Registration.Instance;
         String? Name { get; }

@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Furniture :
         OblivionMajorRecord,
+        IEquatable<IFurnitureGetter>,
         IFurnitureInternal,
-        ILoquiObjectSetter<Furniture>,
-        IEquatable<IFurnitureGetter>
+        ILoquiObjectSetter<Furniture>
     {
         #region Ctor
         protected Furniture()
@@ -109,8 +109,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -560,12 +560,12 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IFurniture :
+        IFormLinkContainer,
         IFurnitureGetter,
-        IOblivionMajorRecord,
-        INamedRequired,
-        INamed,
         ILoquiObjectSetter<IFurnitureInternal>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired,
+        IOblivionMajorRecord
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
@@ -582,11 +582,11 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IFurnitureGetter :
         IOblivionMajorRecordGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ILoquiObject<IFurnitureGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IFurnitureGetter>,
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Furniture_Registration.Instance;
         String? Name { get; }

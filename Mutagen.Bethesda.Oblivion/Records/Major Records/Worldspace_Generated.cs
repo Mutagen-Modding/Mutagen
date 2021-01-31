@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Worldspace :
         Place,
-        IWorldspaceInternal,
+        IEquatable<IWorldspaceGetter>,
         ILoquiObjectSetter<Worldspace>,
-        IEquatable<IWorldspaceGetter>
+        IWorldspaceInternal
     {
         #region Ctor
         protected Worldspace()
@@ -185,8 +185,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             Place.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1067,13 +1067,13 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IWorldspace :
-        IWorldspaceGetter,
-        IPlace,
-        INamedRequired,
-        INamed,
-        IMajorRecordEnumerable,
+        IFormLinkContainer,
         ILoquiObjectSetter<IWorldspaceInternal>,
-        IFormLinkContainer
+        IMajorRecordEnumerable,
+        INamed,
+        INamedRequired,
+        IPlace,
+        IWorldspaceGetter
     {
         new String? Name { get; set; }
         new FormLinkNullable<IWorldspaceGetter> Parent { get; set; }
@@ -1101,12 +1101,12 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IWorldspaceGetter :
         IPlaceGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        IMajorRecordGetterEnumerable,
-        ILoquiObject<IWorldspaceGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IWorldspaceGetter>,
+        IMajorRecordGetterEnumerable,
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Worldspace_Registration.Instance;
         String? Name { get; }

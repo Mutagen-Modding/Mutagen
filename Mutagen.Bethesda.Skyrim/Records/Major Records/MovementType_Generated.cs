@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class MovementType :
         SkyrimMajorRecord,
-        IMovementTypeInternal,
+        IEquatable<IMovementTypeGetter>,
         ILoquiObjectSetter<MovementType>,
-        IEquatable<IMovementTypeGetter>
+        IMovementTypeInternal
     {
         #region Ctor
         protected MovementType()
@@ -147,8 +147,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -900,11 +900,11 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IMovementType :
+        ILoquiObjectSetter<IMovementTypeInternal>,
         IMovementTypeGetter,
-        ISkyrimMajorRecord,
-        INamedRequired,
         INamed,
-        ILoquiObjectSetter<IMovementTypeInternal>
+        INamedRequired,
+        ISkyrimMajorRecord
     {
         new String? Name { get; set; }
         new Single LeftWalk { get; set; }
@@ -931,10 +931,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IMovementTypeGetter :
         ISkyrimMajorRecordGetter,
-        INamedRequiredGetter,
-        INamedGetter,
+        IBinaryItem,
         ILoquiObject<IMovementTypeGetter>,
-        IBinaryItem
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => MovementType_Registration.Instance;
         String? Name { get; }

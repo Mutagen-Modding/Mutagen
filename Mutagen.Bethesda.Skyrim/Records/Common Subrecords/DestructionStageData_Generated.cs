@@ -28,8 +28,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class DestructionStageData :
         IDestructionStageData,
-        ILoquiObjectSetter<DestructionStageData>,
-        IEquatable<IDestructionStageDataGetter>
+        IEquatable<IDestructionStageDataGetter>,
+        ILoquiObjectSetter<DestructionStageData>
     {
         #region Ctor
         public DestructionStageData()
@@ -95,8 +95,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -632,8 +632,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IDestructionStageData :
         IDestructionStageDataGetter,
-        ILoquiObjectSetter<IDestructionStageData>,
-        IFormLinkContainer
+        IFormLinkContainer,
+        ILoquiObjectSetter<IDestructionStageData>
     {
         new Byte HealthPercent { get; set; }
         new Byte Index { get; set; }
@@ -647,9 +647,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IDestructionStageDataGetter :
         ILoquiObject,
-        ILoquiObject<IDestructionStageDataGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IDestructionStageDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

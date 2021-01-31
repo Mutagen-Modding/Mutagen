@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class SoundDataExtended :
         SoundData,
-        ISoundDataExtendedInternal,
+        IEquatable<ISoundDataExtendedInternalGetter>,
         ILoquiObjectSetter<SoundDataExtended>,
-        IEquatable<ISoundDataExtendedInternalGetter>
+        ISoundDataExtendedInternal
     {
         #region Ctor
         public SoundDataExtended()
@@ -85,8 +85,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             SoundData.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -472,9 +472,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ISoundDataExtended :
-        ISoundDataExtendedInternalGetter,
+        ILoquiObjectSetter<ISoundDataExtendedInternal>,
         ISoundData,
-        ILoquiObjectSetter<ISoundDataExtendedInternal>
+        ISoundDataExtendedInternalGetter
     {
         new Single StaticAttenuation { get; set; }
         new Single StopTime { get; set; }
@@ -490,8 +490,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ISoundDataExtendedGetter :
         ISoundDataGetter,
-        ILoquiObject<ISoundDataExtendedInternalGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ISoundDataExtendedInternalGetter>
     {
         static new ILoquiRegistration Registration => SoundDataExtended_Registration.Instance;
         Single StaticAttenuation { get; }

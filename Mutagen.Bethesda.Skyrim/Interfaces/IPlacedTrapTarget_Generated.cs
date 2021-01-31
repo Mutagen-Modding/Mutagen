@@ -11,8 +11,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// Implemented by: [Hazard, Projectile]
     /// </summary>
     public partial interface IPlacedTrapTarget :
-        ISkyrimMajorRecordInternal,
-        IPlacedTrapTargetGetter
+        IPlacedTrapTargetGetter,
+        ISkyrimMajorRecordInternal
     {
     }
 

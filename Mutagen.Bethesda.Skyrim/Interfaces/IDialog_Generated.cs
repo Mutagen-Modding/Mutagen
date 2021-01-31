@@ -11,8 +11,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// Implemented by: [DialogResponses, DialogTopic]
     /// </summary>
     public partial interface IDialog :
-        ISkyrimMajorRecordInternal,
-        IDialogGetter
+        IDialogGetter,
+        ISkyrimMajorRecordInternal
     {
     }
 

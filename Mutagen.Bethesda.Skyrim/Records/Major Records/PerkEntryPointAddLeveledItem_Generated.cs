@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class PerkEntryPointAddLeveledItem :
         APerkEntryPointEffect,
-        IPerkEntryPointAddLeveledItem,
+        IEquatable<IPerkEntryPointAddLeveledItemGetter>,
         ILoquiObjectSetter<PerkEntryPointAddLeveledItem>,
-        IEquatable<IPerkEntryPointAddLeveledItemGetter>
+        IPerkEntryPointAddLeveledItem
     {
         #region Ctor
         public PerkEntryPointAddLeveledItem()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             APerkEntryPointEffect.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -414,19 +414,19 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPerkEntryPointAddLeveledItem :
-        IPerkEntryPointAddLeveledItemGetter,
         IAPerkEntryPointEffect,
+        IFormLinkContainer,
         ILoquiObjectSetter<IPerkEntryPointAddLeveledItem>,
-        IFormLinkContainer
+        IPerkEntryPointAddLeveledItemGetter
     {
         new FormLink<ILeveledItemGetter> Item { get; set; }
     }
 
     public partial interface IPerkEntryPointAddLeveledItemGetter :
         IAPerkEntryPointEffectGetter,
-        ILoquiObject<IPerkEntryPointAddLeveledItemGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IPerkEntryPointAddLeveledItemGetter>
     {
         static new ILoquiRegistration Registration => PerkEntryPointAddLeveledItem_Registration.Instance;
         FormLink<ILeveledItemGetter> Item { get; }

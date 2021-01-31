@@ -31,9 +31,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class Light :
         SkyrimMajorRecord,
+        IEquatable<ILightGetter>,
         ILightInternal,
-        ILoquiObjectSetter<Light>,
-        IEquatable<ILightGetter>
+        ILoquiObjectSetter<Light>
     {
         #region Ctor
         protected Light()
@@ -215,8 +215,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1198,23 +1198,23 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ILight :
-        ILightGetter,
-        ISkyrimMajorRecord,
-        IItem,
-        IEmittance,
-        IObjectId,
         IConstructible,
+        IEmittance,
+        IFormLinkContainer,
         IHasIcons,
-        IModeled,
-        IWeightValue,
-        INamedRequired,
-        INamed,
-        ITranslatedNamedRequired,
-        ITranslatedNamed,
-        IObjectBoundedOptional,
-        IObjectBounded,
+        IItem,
+        ILightGetter,
         ILoquiObjectSetter<ILightInternal>,
-        IFormLinkContainer
+        IModeled,
+        INamed,
+        INamedRequired,
+        IObjectBounded,
+        IObjectBoundedOptional,
+        IObjectId,
+        ISkyrimMajorRecord,
+        ITranslatedNamed,
+        ITranslatedNamedRequired,
+        IWeightValue
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
@@ -1252,22 +1252,22 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ILightGetter :
         ISkyrimMajorRecordGetter,
-        IItemGetter,
-        IEmittanceGetter,
-        IObjectIdGetter,
+        IBinaryItem,
         IConstructibleGetter,
-        IHasIconsGetter,
-        IModeledGetter,
-        IWeightValueGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ITranslatedNamedRequiredGetter,
-        ITranslatedNamedGetter,
-        IObjectBoundedOptionalGetter,
-        IObjectBoundedGetter,
-        ILoquiObject<ILightGetter>,
+        IEmittanceGetter,
         IFormLinkContainerGetter,
-        IBinaryItem
+        IHasIconsGetter,
+        IItemGetter,
+        ILoquiObject<ILightGetter>,
+        IModeledGetter,
+        INamedGetter,
+        INamedRequiredGetter,
+        IObjectBoundedGetter,
+        IObjectBoundedOptionalGetter,
+        IObjectIdGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter,
+        IWeightValueGetter
     {
         static new ILoquiRegistration Registration => Light_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }

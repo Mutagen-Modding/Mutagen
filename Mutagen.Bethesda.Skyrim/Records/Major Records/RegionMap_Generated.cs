@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class RegionMap :
         RegionData,
-        IRegionMap,
+        IEquatable<IRegionMapGetter>,
         ILoquiObjectSetter<RegionMap>,
-        IEquatable<IRegionMapGetter>
+        IRegionMap
     {
         #region Ctor
         public RegionMap()
@@ -107,8 +107,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             RegionData.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -430,25 +430,25 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IRegionMap :
-        IRegionMapGetter,
-        IRegionData,
-        INamedRequired,
+        ILoquiObjectSetter<IRegionMap>,
         INamed,
-        ITranslatedNamedRequired,
+        INamedRequired,
+        IRegionData,
+        IRegionMapGetter,
         ITranslatedNamed,
-        ILoquiObjectSetter<IRegionMap>
+        ITranslatedNamedRequired
     {
         new TranslatedString? Name { get; set; }
     }
 
     public partial interface IRegionMapGetter :
         IRegionDataGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ITranslatedNamedRequiredGetter,
-        ITranslatedNamedGetter,
+        IBinaryItem,
         ILoquiObject<IRegionMapGetter>,
-        IBinaryItem
+        INamedGetter,
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => RegionMap_Registration.Instance;
         ITranslatedStringGetter? Name { get; }

@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class OblivionModHeader :
-        IOblivionModHeader,
+        IEquatable<IOblivionModHeaderGetter>,
         ILoquiObjectSetter<OblivionModHeader>,
-        IEquatable<IOblivionModHeaderGetter>
+        IOblivionModHeader
     {
         #region Ctor
         public OblivionModHeader()
@@ -133,8 +133,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -777,8 +777,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IOblivionModHeader :
-        IOblivionModHeaderGetter,
-        ILoquiObjectSetter<IOblivionModHeader>
+        ILoquiObjectSetter<IOblivionModHeader>,
+        IOblivionModHeaderGetter
     {
         new OblivionModHeader.HeaderFlag Flags { get; set; }
         new UInt32 FormID { get; set; }
@@ -793,8 +793,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IOblivionModHeaderGetter :
         ILoquiObject,
-        ILoquiObject<IOblivionModHeaderGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IOblivionModHeaderGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

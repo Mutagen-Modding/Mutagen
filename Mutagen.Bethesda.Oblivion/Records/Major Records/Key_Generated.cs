@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Key :
         AItem,
+        IEquatable<IKeyGetter>,
         IKeyInternal,
-        ILoquiObjectSetter<Key>,
-        IEquatable<IKeyGetter>
+        ILoquiObjectSetter<Key>
     {
         #region Ctor
         protected Key()
@@ -120,8 +120,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             AItem.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -606,12 +606,12 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IKey :
-        IKeyGetter,
         IAItem,
-        INamedRequired,
-        INamed,
+        IFormLinkContainer,
+        IKeyGetter,
         ILoquiObjectSetter<IKeyInternal>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
@@ -629,11 +629,11 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IKeyGetter :
         IAItemGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ILoquiObject<IKeyGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IKeyGetter>,
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Key_Registration.Instance;
         String? Name { get; }

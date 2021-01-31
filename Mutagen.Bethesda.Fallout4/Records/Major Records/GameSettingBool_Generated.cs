@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Fallout4
     #region Class
     public partial class GameSettingBool :
         GameSetting,
+        IEquatable<IGameSettingBoolGetter>,
         IGameSettingBoolInternal,
-        ILoquiObjectSetter<GameSettingBool>,
-        IEquatable<IGameSettingBoolGetter>
+        ILoquiObjectSetter<GameSettingBool>
     {
         #region Ctor
         protected GameSettingBool()
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mask
         public new class Mask<TItem> :
             GameSetting.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -450,8 +450,8 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IGameSettingBool :
-        IGameSettingBoolGetter,
         IGameSetting,
+        IGameSettingBoolGetter,
         ILoquiObjectSetter<IGameSettingBoolInternal>
     {
         new Boolean? Data { get; set; }
@@ -466,8 +466,8 @@ namespace Mutagen.Bethesda.Fallout4
 
     public partial interface IGameSettingBoolGetter :
         IGameSettingGetter,
-        ILoquiObject<IGameSettingBoolGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IGameSettingBoolGetter>
     {
         static new ILoquiRegistration Registration => GameSettingBool_Registration.Instance;
         Boolean? Data { get; }

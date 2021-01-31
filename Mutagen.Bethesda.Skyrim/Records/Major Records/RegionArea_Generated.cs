@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class RegionArea :
-        IRegionArea,
+        IEquatable<IRegionAreaGetter>,
         ILoquiObjectSetter<RegionArea>,
-        IEquatable<IRegionAreaGetter>
+        IRegionArea
     {
         #region Ctor
         public RegionArea()
@@ -90,8 +90,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -525,8 +525,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IRegionArea :
-        IRegionAreaGetter,
-        ILoquiObjectSetter<IRegionArea>
+        ILoquiObjectSetter<IRegionArea>,
+        IRegionAreaGetter
     {
         new UInt32? EdgeFallOff { get; set; }
         new ExtendedList<P2Float>? RegionPointListData { get; set; }
@@ -534,8 +534,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IRegionAreaGetter :
         ILoquiObject,
-        ILoquiObject<IRegionAreaGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IRegionAreaGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

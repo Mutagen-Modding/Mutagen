@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class LeveledSpell :
         ASpell,
+        IEquatable<ILeveledSpellGetter>,
         ILeveledSpellInternal,
-        ILoquiObjectSetter<LeveledSpell>,
-        IEquatable<ILeveledSpellGetter>
+        ILoquiObjectSetter<LeveledSpell>
     {
         #region Ctor
         protected LeveledSpell()
@@ -99,8 +99,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             ASpell.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -590,10 +590,10 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ILeveledSpell :
-        ILeveledSpellGetter,
         IASpell,
-        ILoquiObjectSetter<ILeveledSpellInternal>,
-        IFormLinkContainer
+        IFormLinkContainer,
+        ILeveledSpellGetter,
+        ILoquiObjectSetter<ILeveledSpellInternal>
     {
         new Byte? ChanceNone { get; set; }
         new LeveledFlag? Flags { get; set; }
@@ -609,9 +609,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ILeveledSpellGetter :
         IASpellGetter,
-        ILoquiObject<ILeveledSpellGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ILeveledSpellGetter>
     {
         static new ILoquiRegistration Registration => LeveledSpell_Registration.Instance;
         Byte? ChanceNone { get; }

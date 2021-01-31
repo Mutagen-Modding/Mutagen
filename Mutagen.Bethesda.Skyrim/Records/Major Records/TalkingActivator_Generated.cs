@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class TalkingActivator :
         SkyrimMajorRecord,
-        ITalkingActivatorInternal,
+        IEquatable<ITalkingActivatorGetter>,
         ILoquiObjectSetter<TalkingActivator>,
-        IEquatable<ITalkingActivatorGetter>
+        ITalkingActivatorInternal
     {
         #region Ctor
         protected TalkingActivator()
@@ -192,8 +192,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -929,18 +929,18 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ITalkingActivator :
-        ITalkingActivatorGetter,
-        ISkyrimMajorRecord,
-        IModeled,
+        IFormLinkContainer,
         IKeyworded<IKeywordGetter>,
-        INamedRequired,
-        INamed,
-        ITranslatedNamedRequired,
-        ITranslatedNamed,
-        IObjectBoundedOptional,
-        IObjectBounded,
         ILoquiObjectSetter<ITalkingActivatorInternal>,
-        IFormLinkContainer
+        IModeled,
+        INamed,
+        INamedRequired,
+        IObjectBounded,
+        IObjectBoundedOptional,
+        ISkyrimMajorRecord,
+        ITalkingActivatorGetter,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
@@ -967,17 +967,17 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ITalkingActivatorGetter :
         ISkyrimMajorRecordGetter,
-        IModeledGetter,
-        IKeywordedGetter<IKeywordGetter>,
-        INamedRequiredGetter,
-        INamedGetter,
-        ITranslatedNamedRequiredGetter,
-        ITranslatedNamedGetter,
-        IObjectBoundedOptionalGetter,
-        IObjectBoundedGetter,
-        ILoquiObject<ITalkingActivatorGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        IKeywordedGetter<IKeywordGetter>,
+        ILoquiObject<ITalkingActivatorGetter>,
+        IModeledGetter,
+        INamedGetter,
+        INamedRequiredGetter,
+        IObjectBoundedGetter,
+        IObjectBoundedOptionalGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => TalkingActivator_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }

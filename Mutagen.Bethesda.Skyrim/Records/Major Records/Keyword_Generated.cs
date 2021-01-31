@@ -31,9 +31,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class Keyword :
         SkyrimMajorRecord,
+        IEquatable<IKeywordGetter>,
         IKeywordInternal,
-        ILoquiObjectSetter<Keyword>,
-        IEquatable<IKeywordGetter>
+        ILoquiObjectSetter<Keyword>
     {
         #region Ctor
         protected Keyword()
@@ -81,8 +81,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -458,11 +458,11 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IKeyword :
-        IKeywordGetter,
-        ISkyrimMajorRecord,
-        IKeywordLinkedReference,
         IKeywordCommon,
-        ILoquiObjectSetter<IKeywordInternal>
+        IKeywordGetter,
+        IKeywordLinkedReference,
+        ILoquiObjectSetter<IKeywordInternal>,
+        ISkyrimMajorRecord
     {
         new Color? Color { get; set; }
     }
@@ -476,10 +476,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IKeywordGetter :
         ISkyrimMajorRecordGetter,
-        IKeywordLinkedReferenceGetter,
+        IBinaryItem,
         IKeywordCommonGetter,
-        ILoquiObject<IKeywordGetter>,
-        IBinaryItem
+        IKeywordLinkedReferenceGetter,
+        ILoquiObject<IKeywordGetter>
     {
         static new ILoquiRegistration Registration => Keyword_Registration.Instance;
         Color? Color { get; }

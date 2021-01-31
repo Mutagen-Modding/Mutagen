@@ -29,8 +29,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class AmbientColors :
         IAmbientColors,
-        ILoquiObjectSetter<AmbientColors>,
-        IEquatable<IAmbientColorsGetter>
+        IEquatable<IAmbientColorsGetter>,
+        ILoquiObjectSetter<AmbientColors>
     {
         #region Ctor
         public AmbientColors()
@@ -99,8 +99,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -665,8 +665,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IAmbientColors :
-        IAmbientColorsGetter,
         IAmbientColorsCommon,
+        IAmbientColorsGetter,
         ILoquiObjectSetter<IAmbientColors>
     {
         new AmbientColors.VersioningBreaks Versioning { get; set; }
@@ -683,8 +683,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IAmbientColorsGetter :
         ILoquiObject,
         IAmbientColorsCommonGetter,
-        ILoquiObject<IAmbientColorsGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IAmbientColorsGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

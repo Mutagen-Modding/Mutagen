@@ -33,8 +33,8 @@ namespace Mutagen.Bethesda.Skyrim
     public abstract partial class APerkEntryPointEffect :
         APerkEffect,
         IAPerkEntryPointEffect,
-        ILoquiObjectSetter<APerkEntryPointEffect>,
-        IEquatable<IAPerkEntryPointEffectGetter>
+        IEquatable<IAPerkEntryPointEffectGetter>,
+        ILoquiObjectSetter<APerkEntryPointEffect>
     {
         #region Ctor
         public APerkEntryPointEffect()
@@ -83,8 +83,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             APerkEffect.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -423,10 +423,10 @@ namespace Mutagen.Bethesda.Skyrim
     /// Implemented by: [PerkEntryPointModifyValue, PerkEntryPointAddRangeToValue, PerkEntryPointModifyActorValue, PerkEntryPointAbsoluteValue, PerkEntryPointAddLeveledItem, PerkEntryPointAddActivateChoice, PerkEntryPointSelectSpell, PerkEntryPointSelectText, PerkEntryPointSetText]
     /// </summary>
     public partial interface IAPerkEntryPointEffect :
-        IAPerkEntryPointEffectGetter,
         IAPerkEffect,
-        ILoquiObjectSetter<IAPerkEntryPointEffect>,
-        IFormLinkContainer
+        IAPerkEntryPointEffectGetter,
+        IFormLinkContainer,
+        ILoquiObjectSetter<IAPerkEntryPointEffect>
     {
         new APerkEntryPointEffect.EntryType EntryPoint { get; set; }
         new Byte PerkConditionTabCount { get; set; }
@@ -437,9 +437,9 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public partial interface IAPerkEntryPointEffectGetter :
         IAPerkEffectGetter,
-        ILoquiObject<IAPerkEntryPointEffectGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IAPerkEntryPointEffectGetter>
     {
         static new ILoquiRegistration Registration => APerkEntryPointEffect_Registration.Instance;
         APerkEntryPointEffect.EntryType EntryPoint { get; }

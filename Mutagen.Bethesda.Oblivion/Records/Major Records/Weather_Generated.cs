@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Weather :
         OblivionMajorRecord,
-        IWeatherInternal,
+        IEquatable<IWeatherGetter>,
         ILoquiObjectSetter<Weather>,
-        IEquatable<IWeatherGetter>
+        IWeatherInternal
     {
         #region Ctor
         protected Weather()
@@ -157,8 +157,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -891,10 +891,10 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IWeather :
-        IWeatherGetter,
-        IOblivionMajorRecord,
+        IFormLinkContainer,
         ILoquiObjectSetter<IWeatherInternal>,
-        IFormLinkContainer
+        IOblivionMajorRecord,
+        IWeatherGetter
     {
         new String? TextureLowerLayer { get; set; }
         new String? TextureUpperLayer { get; set; }
@@ -915,9 +915,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IWeatherGetter :
         IOblivionMajorRecordGetter,
-        ILoquiObject<IWeatherGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IWeatherGetter>
     {
         static new ILoquiRegistration Registration => Weather_Registration.Instance;
         String? TextureLowerLayer { get; }

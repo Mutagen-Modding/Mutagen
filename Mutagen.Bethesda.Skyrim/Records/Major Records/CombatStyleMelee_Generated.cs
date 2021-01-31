@@ -28,8 +28,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class CombatStyleMelee :
         ICombatStyleMelee,
-        ILoquiObjectSetter<CombatStyleMelee>,
-        IEquatable<ICombatStyleMeleeGetter>
+        IEquatable<ICombatStyleMeleeGetter>,
+        ILoquiObjectSetter<CombatStyleMelee>
     {
         #region Ctor
         public CombatStyleMelee()
@@ -98,8 +98,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -681,8 +681,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ICombatStyleMeleeGetter :
         ILoquiObject,
-        ILoquiObject<ICombatStyleMeleeGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ICombatStyleMeleeGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

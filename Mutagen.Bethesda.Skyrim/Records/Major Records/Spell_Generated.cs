@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class Spell :
         ASpell,
-        ISpellInternal,
+        IEquatable<ISpellGetter>,
         ILoquiObjectSetter<Spell>,
-        IEquatable<ISpellGetter>
+        ISpellInternal
     {
         #region Ctor
         protected Spell()
@@ -197,8 +197,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             ASpell.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1183,20 +1183,20 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ISpell :
-        ISpellGetter,
         IASpell,
-        IObjectId,
         IEffectRecord,
-        ISpellSpawn,
+        IFormLinkContainer,
         IKeyworded<IKeywordGetter>,
-        INamedRequired,
-        INamed,
-        ITranslatedNamedRequired,
-        ITranslatedNamed,
-        IObjectBoundedOptional,
-        IObjectBounded,
         ILoquiObjectSetter<ISpellInternal>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired,
+        IObjectBounded,
+        IObjectBoundedOptional,
+        IObjectId,
+        ISpellGetter,
+        ISpellSpawn,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
         new ObjectBounds ObjectBounds { get; set; }
         new TranslatedString? Name { get; set; }
@@ -1226,19 +1226,19 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ISpellGetter :
         IASpellGetter,
-        IObjectIdGetter,
+        IBinaryItem,
         IEffectRecordGetter,
-        ISpellSpawnGetter,
-        IKeywordedGetter<IKeywordGetter>,
-        INamedRequiredGetter,
-        INamedGetter,
-        ITranslatedNamedRequiredGetter,
-        ITranslatedNamedGetter,
-        IObjectBoundedOptionalGetter,
-        IObjectBoundedGetter,
-        ILoquiObject<ISpellGetter>,
         IFormLinkContainerGetter,
-        IBinaryItem
+        IKeywordedGetter<IKeywordGetter>,
+        ILoquiObject<ISpellGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        IObjectBoundedGetter,
+        IObjectBoundedOptionalGetter,
+        IObjectIdGetter,
+        ISpellSpawnGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Spell_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }

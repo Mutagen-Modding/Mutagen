@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class Climate :
         OblivionMajorRecord,
         IClimateInternal,
-        ILoquiObjectSetter<Climate>,
-        IEquatable<IClimateGetter>
+        IEquatable<IClimateGetter>,
+        ILoquiObjectSetter<Climate>
     {
         #region Ctor
         protected Climate()
@@ -121,8 +121,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -683,9 +683,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IClimate :
         IClimateGetter,
-        IOblivionMajorRecord,
+        IFormLinkContainer,
         ILoquiObjectSetter<IClimateInternal>,
-        IFormLinkContainer
+        IOblivionMajorRecord
     {
         new ExtendedList<WeatherType>? Weathers { get; set; }
         new String? SunTexture { get; set; }
@@ -703,9 +703,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IClimateGetter :
         IOblivionMajorRecordGetter,
-        ILoquiObject<IClimateGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IClimateGetter>
     {
         static new ILoquiRegistration Registration => Climate_Registration.Instance;
         IReadOnlyList<IWeatherTypeGetter>? Weathers { get; }

@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class Door :
         SkyrimMajorRecord,
         IDoorInternal,
-        ILoquiObjectSetter<Door>,
-        IEquatable<IDoorGetter>
+        IEquatable<IDoorGetter>,
+        ILoquiObjectSetter<Door>
     {
         #region Ctor
         protected Door()
@@ -170,8 +170,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -807,18 +807,18 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IDoor :
         IDoorGetter,
-        ISkyrimMajorRecord,
-        IObjectId,
+        IFormLinkContainer,
         ILocationTargetable,
-        IModeled,
-        INamedRequired,
-        INamed,
-        ITranslatedNamedRequired,
-        ITranslatedNamed,
-        IObjectBoundedOptional,
-        IObjectBounded,
         ILoquiObjectSetter<IDoorInternal>,
-        IFormLinkContainer
+        IModeled,
+        INamed,
+        INamedRequired,
+        IObjectBounded,
+        IObjectBoundedOptional,
+        IObjectId,
+        ISkyrimMajorRecord,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
@@ -844,18 +844,18 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IDoorGetter :
         ISkyrimMajorRecordGetter,
-        IObjectIdGetter,
-        ILocationTargetableGetter,
-        IModeledGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ITranslatedNamedRequiredGetter,
-        ITranslatedNamedGetter,
-        IObjectBoundedOptionalGetter,
-        IObjectBoundedGetter,
-        ILoquiObject<IDoorGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILocationTargetableGetter,
+        ILoquiObject<IDoorGetter>,
+        IModeledGetter,
+        INamedGetter,
+        INamedRequiredGetter,
+        IObjectBoundedGetter,
+        IObjectBoundedOptionalGetter,
+        IObjectIdGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Door_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }

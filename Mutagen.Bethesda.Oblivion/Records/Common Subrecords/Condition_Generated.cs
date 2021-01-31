@@ -28,8 +28,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Condition :
         ICondition,
-        ILoquiObjectSetter<Condition>,
-        IEquatable<IConditionGetter>
+        IEquatable<IConditionGetter>,
+        ILoquiObjectSetter<Condition>
     {
         #region Ctor
         public Condition()
@@ -103,8 +103,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -662,8 +662,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IConditionGetter :
         ILoquiObject,
-        ILoquiObject<IConditionGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IConditionGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

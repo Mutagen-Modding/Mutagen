@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class SigilStoneData :
-        ISigilStoneData,
+        IEquatable<ISigilStoneDataGetter>,
         ILoquiObjectSetter<SigilStoneData>,
-        IEquatable<ISigilStoneDataGetter>
+        ISigilStoneData
     {
         #region Ctor
         public SigilStoneData()
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -474,8 +474,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ISigilStoneData :
-        ISigilStoneDataGetter,
-        ILoquiObjectSetter<ISigilStoneData>
+        ILoquiObjectSetter<ISigilStoneData>,
+        ISigilStoneDataGetter
     {
         new Byte Uses { get; set; }
         new UInt32 Value { get; set; }
@@ -484,8 +484,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ISigilStoneDataGetter :
         ILoquiObject,
-        ILoquiObject<ISigilStoneDataGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ISigilStoneDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

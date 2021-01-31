@@ -31,9 +31,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class MaterialType :
         SkyrimMajorRecord,
-        IMaterialTypeInternal,
+        IEquatable<IMaterialTypeGetter>,
         ILoquiObjectSetter<MaterialType>,
-        IEquatable<IMaterialTypeGetter>
+        IMaterialTypeInternal
     {
         #region Ctor
         protected MaterialType()
@@ -112,8 +112,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -631,12 +631,12 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IMaterialType :
-        IMaterialTypeGetter,
-        ISkyrimMajorRecord,
-        INamedRequired,
-        INamed,
+        IFormLinkContainer,
         ILoquiObjectSetter<IMaterialTypeInternal>,
-        IFormLinkContainer
+        IMaterialTypeGetter,
+        INamed,
+        INamedRequired,
+        ISkyrimMajorRecord
     {
         new FormLinkNullable<IMaterialTypeGetter> Parent { get; set; }
         new String? Name { get; set; }
@@ -655,11 +655,11 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IMaterialTypeGetter :
         ISkyrimMajorRecordGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ILoquiObject<IMaterialTypeGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IMaterialTypeGetter>,
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => MaterialType_Registration.Instance;
         FormLinkNullable<IMaterialTypeGetter> Parent { get; }

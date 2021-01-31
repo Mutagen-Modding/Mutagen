@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class Cell :
         Place,
         ICellInternal,
-        ILoquiObjectSetter<Cell>,
-        IEquatable<ICellGetter>
+        IEquatable<ICellGetter>,
+        ILoquiObjectSetter<Cell>
     {
         #region Ctor
         protected Cell()
@@ -228,8 +228,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             Place.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1508,12 +1508,12 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ICell :
         ICellGetter,
-        IPlace,
-        INamedRequired,
-        INamed,
-        IMajorRecordEnumerable,
+        IFormLinkContainer,
         ILoquiObjectSetter<ICellInternal>,
-        IFormLinkContainer
+        IMajorRecordEnumerable,
+        INamed,
+        INamedRequired,
+        IPlace
     {
         new String? Name { get; set; }
         new Cell.Flag? Flags { get; set; }
@@ -1547,12 +1547,12 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ICellGetter :
         IPlaceGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        IMajorRecordGetterEnumerable,
-        ILoquiObject<ICellGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ICellGetter>,
+        IMajorRecordGetterEnumerable,
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Cell_Registration.Instance;
         String? Name { get; }

@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class WordOfPower :
         SkyrimMajorRecord,
-        IWordOfPowerInternal,
+        IEquatable<IWordOfPowerGetter>,
         ILoquiObjectSetter<WordOfPower>,
-        IEquatable<IWordOfPowerGetter>
+        IWordOfPowerInternal
     {
         #region Ctor
         protected WordOfPower()
@@ -112,8 +112,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -517,13 +517,13 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IWordOfPower :
-        IWordOfPowerGetter,
-        ISkyrimMajorRecord,
-        INamedRequired,
+        ILoquiObjectSetter<IWordOfPowerInternal>,
         INamed,
-        ITranslatedNamedRequired,
+        INamedRequired,
+        ISkyrimMajorRecord,
         ITranslatedNamed,
-        ILoquiObjectSetter<IWordOfPowerInternal>
+        ITranslatedNamedRequired,
+        IWordOfPowerGetter
     {
         new TranslatedString? Name { get; set; }
         new TranslatedString Translation { get; set; }
@@ -538,12 +538,12 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IWordOfPowerGetter :
         ISkyrimMajorRecordGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ITranslatedNamedRequiredGetter,
-        ITranslatedNamedGetter,
+        IBinaryItem,
         ILoquiObject<IWordOfPowerGetter>,
-        IBinaryItem
+        INamedGetter,
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => WordOfPower_Registration.Instance;
         ITranslatedStringGetter? Name { get; }

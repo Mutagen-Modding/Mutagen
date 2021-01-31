@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class Race :
         SkyrimMajorRecord,
-        IRaceInternal,
+        IEquatable<IRaceGetter>,
         ILoquiObjectSetter<Race>,
-        IEquatable<IRaceGetter>
+        IRaceInternal
     {
         #region Ctor
         protected Race()
@@ -475,8 +475,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -3869,16 +3869,16 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IRace :
-        IRaceGetter,
-        ISkyrimMajorRecord,
-        IRelatable,
+        IFormLinkContainer,
         IKeyworded<IKeywordGetter>,
-        INamedRequired,
-        INamed,
-        ITranslatedNamedRequired,
-        ITranslatedNamed,
         ILoquiObjectSetter<IRaceInternal>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired,
+        IRaceGetter,
+        IRelatable,
+        ISkyrimMajorRecord,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
         new TranslatedString? Name { get; set; }
         new TranslatedString Description { get; set; }
@@ -3979,15 +3979,15 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IRaceGetter :
         ISkyrimMajorRecordGetter,
-        IRelatableGetter,
-        IKeywordedGetter<IKeywordGetter>,
-        INamedRequiredGetter,
-        INamedGetter,
-        ITranslatedNamedRequiredGetter,
-        ITranslatedNamedGetter,
-        ILoquiObject<IRaceGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        IKeywordedGetter<IKeywordGetter>,
+        ILoquiObject<IRaceGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        IRelatableGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Race_Registration.Instance;
         ITranslatedStringGetter? Name { get; }

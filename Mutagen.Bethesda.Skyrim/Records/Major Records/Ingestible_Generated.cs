@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class Ingestible :
         SkyrimMajorRecord,
+        IEquatable<IIngestibleGetter>,
         IIngestibleInternal,
-        ILoquiObjectSetter<Ingestible>,
-        IEquatable<IIngestibleGetter>
+        ILoquiObjectSetter<Ingestible>
     {
         #region Ctor
         protected Ingestible()
@@ -225,8 +225,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1265,22 +1265,22 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IIngestible :
-        IIngestibleGetter,
-        ISkyrimMajorRecord,
-        IItem,
-        IHarvestTarget,
-        IObjectId,
         IConstructible,
-        IWeightValue,
+        IFormLinkContainer,
+        IHarvestTarget,
+        IIngestibleGetter,
+        IItem,
         IKeyworded<IKeywordGetter>,
-        INamedRequired,
-        INamed,
-        ITranslatedNamedRequired,
-        ITranslatedNamed,
-        IObjectBoundedOptional,
-        IObjectBounded,
         ILoquiObjectSetter<IIngestibleInternal>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired,
+        IObjectBounded,
+        IObjectBoundedOptional,
+        IObjectId,
+        ISkyrimMajorRecord,
+        ITranslatedNamed,
+        ITranslatedNamedRequired,
+        IWeightValue
     {
         new ObjectBounds ObjectBounds { get; set; }
         new TranslatedString? Name { get; set; }
@@ -1315,21 +1315,21 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IIngestibleGetter :
         ISkyrimMajorRecordGetter,
-        IItemGetter,
-        IHarvestTargetGetter,
-        IObjectIdGetter,
+        IBinaryItem,
         IConstructibleGetter,
-        IWeightValueGetter,
-        IKeywordedGetter<IKeywordGetter>,
-        INamedRequiredGetter,
-        INamedGetter,
-        ITranslatedNamedRequiredGetter,
-        ITranslatedNamedGetter,
-        IObjectBoundedOptionalGetter,
-        IObjectBoundedGetter,
-        ILoquiObject<IIngestibleGetter>,
         IFormLinkContainerGetter,
-        IBinaryItem
+        IHarvestTargetGetter,
+        IItemGetter,
+        IKeywordedGetter<IKeywordGetter>,
+        ILoquiObject<IIngestibleGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        IObjectBoundedGetter,
+        IObjectBoundedOptionalGetter,
+        IObjectIdGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter,
+        IWeightValueGetter
     {
         static new ILoquiRegistration Registration => Ingestible_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }

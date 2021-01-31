@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class TopicReference :
         ATopicReference,
-        ITopicReference,
+        IEquatable<ITopicReferenceGetter>,
         ILoquiObjectSetter<TopicReference>,
-        IEquatable<ITopicReferenceGetter>
+        ITopicReference
     {
         #region Ctor
         public TopicReference()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             ATopicReference.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem Reference)
@@ -395,19 +395,19 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ITopicReference :
-        ITopicReferenceGetter,
         IATopicReference,
+        IFormLinkContainer,
         ILoquiObjectSetter<ITopicReference>,
-        IFormLinkContainer
+        ITopicReferenceGetter
     {
         new FormLink<IDialogTopicGetter> Reference { get; set; }
     }
 
     public partial interface ITopicReferenceGetter :
         IATopicReferenceGetter,
-        ILoquiObject<ITopicReferenceGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ITopicReferenceGetter>
     {
         static new ILoquiRegistration Registration => TopicReference_Registration.Instance;
         FormLink<IDialogTopicGetter> Reference { get; }

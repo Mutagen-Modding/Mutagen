@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     /// Implemented by: [ScriptObjectProperty, ScriptStringProperty, ScriptIntProperty, ScriptFloatProperty, ScriptBoolProperty, ScriptObjectListProperty, ScriptStringListProperty, ScriptIntListProperty, ScriptFloatListProperty, ScriptBoolListProperty]
     /// </summary>
     public partial class ScriptProperty :
-        IScriptProperty,
+        IEquatable<IScriptPropertyGetter>,
         ILoquiObjectSetter<ScriptProperty>,
-        IEquatable<IScriptPropertyGetter>
+        IScriptProperty
     {
         #region Ctor
         public ScriptProperty()
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -450,10 +450,10 @@ namespace Mutagen.Bethesda.Skyrim
     /// Implemented by: [ScriptObjectProperty, ScriptStringProperty, ScriptIntProperty, ScriptFloatProperty, ScriptBoolProperty, ScriptObjectListProperty, ScriptStringListProperty, ScriptIntListProperty, ScriptFloatListProperty, ScriptBoolListProperty]
     /// </summary>
     public partial interface IScriptProperty :
-        IScriptPropertyGetter,
-        INamedRequired,
+        IFormLinkContainer,
         ILoquiObjectSetter<IScriptProperty>,
-        IFormLinkContainer
+        INamedRequired,
+        IScriptPropertyGetter
     {
         new String Name { get; set; }
         new ScriptProperty.Flag Flags { get; set; }
@@ -464,10 +464,10 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public partial interface IScriptPropertyGetter :
         ILoquiObject,
-        INamedRequiredGetter,
-        ILoquiObject<IScriptPropertyGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IScriptPropertyGetter>,
+        INamedRequiredGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

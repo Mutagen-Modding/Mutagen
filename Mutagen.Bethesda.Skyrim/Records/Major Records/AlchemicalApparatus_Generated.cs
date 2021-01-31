@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class AlchemicalApparatus :
         SkyrimMajorRecord,
         IAlchemicalApparatusInternal,
-        ILoquiObjectSetter<AlchemicalApparatus>,
-        IEquatable<IAlchemicalApparatusGetter>
+        IEquatable<IAlchemicalApparatusGetter>,
+        ILoquiObjectSetter<AlchemicalApparatus>
     {
         #region Ctor
         protected AlchemicalApparatus()
@@ -194,8 +194,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -949,20 +949,20 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IAlchemicalApparatus :
         IAlchemicalApparatusGetter,
-        ISkyrimMajorRecord,
-        IItem,
         IConstructible,
+        IFormLinkContainer,
         IHasIcons,
-        IModeled,
-        IWeightValue,
-        INamedRequired,
-        INamed,
-        ITranslatedNamedRequired,
-        ITranslatedNamed,
-        IObjectBoundedOptional,
-        IObjectBounded,
+        IItem,
         ILoquiObjectSetter<IAlchemicalApparatusInternal>,
-        IFormLinkContainer
+        IModeled,
+        INamed,
+        INamedRequired,
+        IObjectBounded,
+        IObjectBoundedOptional,
+        ISkyrimMajorRecord,
+        ITranslatedNamed,
+        ITranslatedNamedRequired,
+        IWeightValue
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
@@ -988,20 +988,20 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IAlchemicalApparatusGetter :
         ISkyrimMajorRecordGetter,
-        IItemGetter,
+        IBinaryItem,
         IConstructibleGetter,
-        IHasIconsGetter,
-        IModeledGetter,
-        IWeightValueGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ITranslatedNamedRequiredGetter,
-        ITranslatedNamedGetter,
-        IObjectBoundedOptionalGetter,
-        IObjectBoundedGetter,
-        ILoquiObject<IAlchemicalApparatusGetter>,
         IFormLinkContainerGetter,
-        IBinaryItem
+        IHasIconsGetter,
+        IItemGetter,
+        ILoquiObject<IAlchemicalApparatusGetter>,
+        IModeledGetter,
+        INamedGetter,
+        INamedRequiredGetter,
+        IObjectBoundedGetter,
+        IObjectBoundedOptionalGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter,
+        IWeightValueGetter
     {
         static new ILoquiRegistration Registration => AlchemicalApparatus_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }

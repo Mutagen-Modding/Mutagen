@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Tree :
         OblivionMajorRecord,
-        ITreeInternal,
+        IEquatable<ITreeGetter>,
         ILoquiObjectSetter<Tree>,
-        IEquatable<ITreeGetter>
+        ITreeInternal
     {
         #region Ctor
         protected Tree()
@@ -127,8 +127,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -691,9 +691,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ITree :
-        ITreeGetter,
+        ILoquiObjectSetter<ITreeInternal>,
         IOblivionMajorRecord,
-        ILoquiObjectSetter<ITreeInternal>
+        ITreeGetter
     {
         new Model? Model { get; set; }
         new String? Icon { get; set; }
@@ -711,8 +711,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ITreeGetter :
         IOblivionMajorRecordGetter,
-        ILoquiObject<ITreeGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ITreeGetter>
     {
         static new ILoquiRegistration Registration => Tree_Registration.Instance;
         IModelGetter? Model { get; }

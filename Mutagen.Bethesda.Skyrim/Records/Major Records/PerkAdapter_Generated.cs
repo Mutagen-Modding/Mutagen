@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class PerkAdapter :
         AVirtualMachineAdapter,
-        IPerkAdapter,
+        IEquatable<IPerkAdapterGetter>,
         ILoquiObjectSetter<PerkAdapter>,
-        IEquatable<IPerkAdapterGetter>
+        IPerkAdapter
     {
         #region Ctor
         public PerkAdapter()
@@ -85,8 +85,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             AVirtualMachineAdapter.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -421,17 +421,17 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPerkAdapter :
-        IPerkAdapterGetter,
         IAVirtualMachineAdapter,
-        ILoquiObjectSetter<IPerkAdapter>
+        ILoquiObjectSetter<IPerkAdapter>,
+        IPerkAdapterGetter
     {
         new PerkScriptFragments? ScriptFragments { get; set; }
     }
 
     public partial interface IPerkAdapterGetter :
         IAVirtualMachineAdapterGetter,
-        ILoquiObject<IPerkAdapterGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IPerkAdapterGetter>
     {
         static new ILoquiRegistration Registration => PerkAdapter_Registration.Instance;
         IPerkScriptFragmentsGetter? ScriptFragments { get; }

@@ -28,8 +28,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class DefaultObject :
         IDefaultObject,
-        ILoquiObjectSetter<DefaultObject>,
-        IEquatable<IDefaultObjectGetter>
+        IEquatable<IDefaultObjectGetter>,
+        ILoquiObjectSetter<DefaultObject>
     {
         #region Ctor
         public DefaultObject()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -445,8 +445,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IDefaultObject :
         IDefaultObjectGetter,
-        ILoquiObjectSetter<IDefaultObject>,
-        IFormLinkContainer
+        IFormLinkContainer,
+        ILoquiObjectSetter<IDefaultObject>
     {
         new RecordType Use { get; set; }
         new FormLink<ISkyrimMajorRecordGetter> Object { get; set; }
@@ -454,9 +454,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IDefaultObjectGetter :
         ILoquiObject,
-        ILoquiObject<IDefaultObjectGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IDefaultObjectGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

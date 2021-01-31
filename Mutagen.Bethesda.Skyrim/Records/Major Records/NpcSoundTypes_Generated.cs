@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class NpcSoundTypes :
         ANpcSoundDefinition,
-        INpcSoundTypes,
+        IEquatable<INpcSoundTypesGetter>,
         ILoquiObjectSetter<NpcSoundTypes>,
-        IEquatable<INpcSoundTypesGetter>
+        INpcSoundTypes
     {
         #region Ctor
         public NpcSoundTypes()
@@ -88,8 +88,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             ANpcSoundDefinition.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem Types)
@@ -480,19 +480,19 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface INpcSoundTypes :
-        INpcSoundTypesGetter,
         IANpcSoundDefinition,
+        IFormLinkContainer,
         ILoquiObjectSetter<INpcSoundTypes>,
-        IFormLinkContainer
+        INpcSoundTypesGetter
     {
         new ExtendedList<NpcSoundType> Types { get; }
     }
 
     public partial interface INpcSoundTypesGetter :
         IANpcSoundDefinitionGetter,
-        ILoquiObject<INpcSoundTypesGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<INpcSoundTypesGetter>
     {
         static new ILoquiRegistration Registration => NpcSoundTypes_Registration.Instance;
         IReadOnlyList<INpcSoundTypeGetter> Types { get; }

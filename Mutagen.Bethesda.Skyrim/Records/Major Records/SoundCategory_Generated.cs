@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class SoundCategory :
         SkyrimMajorRecord,
-        ISoundCategoryInternal,
+        IEquatable<ISoundCategoryGetter>,
         ILoquiObjectSetter<SoundCategory>,
-        IEquatable<ISoundCategoryGetter>
+        ISoundCategoryInternal
     {
         #region Ctor
         protected SoundCategory()
@@ -126,8 +126,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -617,14 +617,14 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ISoundCategory :
-        ISoundCategoryGetter,
-        ISkyrimMajorRecord,
-        INamedRequired,
-        INamed,
-        ITranslatedNamedRequired,
-        ITranslatedNamed,
+        IFormLinkContainer,
         ILoquiObjectSetter<ISoundCategoryInternal>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired,
+        ISkyrimMajorRecord,
+        ISoundCategoryGetter,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
         new TranslatedString? Name { get; set; }
         new SoundCategory.Flag? Flags { get; set; }
@@ -642,13 +642,13 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ISoundCategoryGetter :
         ISkyrimMajorRecordGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ITranslatedNamedRequiredGetter,
-        ITranslatedNamedGetter,
-        ILoquiObject<ISoundCategoryGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ISoundCategoryGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => SoundCategory_Registration.Instance;
         ITranslatedStringGetter? Name { get; }

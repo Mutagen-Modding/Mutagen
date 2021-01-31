@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class Flora :
         SkyrimMajorRecord,
+        IEquatable<IFloraGetter>,
         IFloraInternal,
-        ILoquiObjectSetter<Flora>,
-        IEquatable<IFloraGetter>
+        ILoquiObjectSetter<Flora>
     {
         #region Ctor
         protected Flora()
@@ -209,8 +209,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1005,16 +1005,16 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IFlora :
         IFloraGetter,
-        ISkyrimMajorRecord,
-        IRegionTarget,
-        IModeled,
+        IFormLinkContainer,
         IKeyworded<IKeywordGetter>,
-        INamedRequired,
-        ITranslatedNamedRequired,
-        IObjectBoundedOptional,
-        IObjectBounded,
         ILoquiObjectSetter<IFloraInternal>,
-        IFormLinkContainer
+        IModeled,
+        INamedRequired,
+        IObjectBounded,
+        IObjectBoundedOptional,
+        IRegionTarget,
+        ISkyrimMajorRecord,
+        ITranslatedNamedRequired
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
@@ -1039,16 +1039,16 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IFloraGetter :
         ISkyrimMajorRecordGetter,
-        IRegionTargetGetter,
-        IModeledGetter,
-        IKeywordedGetter<IKeywordGetter>,
-        INamedRequiredGetter,
-        ITranslatedNamedRequiredGetter,
-        IObjectBoundedOptionalGetter,
-        IObjectBoundedGetter,
-        ILoquiObject<IFloraGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        IKeywordedGetter<IKeywordGetter>,
+        ILoquiObject<IFloraGetter>,
+        IModeledGetter,
+        INamedRequiredGetter,
+        IObjectBoundedGetter,
+        IObjectBoundedOptionalGetter,
+        IRegionTargetGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Flora_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }

@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class Hair :
         SkyrimMajorRecord,
+        IEquatable<IHairGetter>,
         IHairInternal,
-        ILoquiObjectSetter<Hair>,
-        IEquatable<IHairGetter>
+        ILoquiObjectSetter<Hair>
     {
         #region Ctor
         protected Hair()
@@ -75,8 +75,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -411,8 +411,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IHair :
         IHairGetter,
-        ISkyrimMajorRecord,
-        ILoquiObjectSetter<IHairInternal>
+        ILoquiObjectSetter<IHairInternal>,
+        ISkyrimMajorRecord
     {
     }
 
@@ -425,8 +425,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IHairGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<IHairGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IHairGetter>
     {
         static new ILoquiRegistration Registration => Hair_Registration.Instance;
 

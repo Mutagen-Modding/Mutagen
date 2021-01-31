@@ -34,8 +34,8 @@ namespace Mutagen.Bethesda.Skyrim
     public abstract partial class AStoryManagerNode :
         SkyrimMajorRecord,
         IAStoryManagerNodeInternal,
-        ILoquiObjectSetter<AStoryManagerNode>,
-        IEquatable<IAStoryManagerNodeGetter>
+        IEquatable<IAStoryManagerNodeGetter>,
+        ILoquiObjectSetter<AStoryManagerNode>
     {
         #region Ctor
         protected AStoryManagerNode()
@@ -98,8 +98,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -587,9 +587,9 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public partial interface IAStoryManagerNode :
         IAStoryManagerNodeGetter,
-        ISkyrimMajorRecord,
+        IFormLinkContainer,
         ILoquiObjectSetter<IAStoryManagerNodeInternal>,
-        IFormLinkContainer
+        ISkyrimMajorRecord
     {
         new FormLinkNullable<IAStoryManagerNodeGetter> Parent { get; set; }
         new FormLinkNullable<IAStoryManagerNodeGetter> PreviousSibling { get; set; }
@@ -608,9 +608,9 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public partial interface IAStoryManagerNodeGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<IAStoryManagerNodeGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IAStoryManagerNodeGetter>
     {
         static new ILoquiRegistration Registration => AStoryManagerNode_Registration.Instance;
         FormLinkNullable<IAStoryManagerNodeGetter> Parent { get; }

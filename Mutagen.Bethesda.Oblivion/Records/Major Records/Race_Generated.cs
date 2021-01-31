@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Race :
         OblivionMajorRecord,
-        IRaceInternal,
+        IEquatable<IRaceGetter>,
         ILoquiObjectSetter<Race>,
-        IEquatable<IRaceGetter>
+        IRaceInternal
     {
         #region Ctor
         protected Race()
@@ -223,8 +223,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1452,12 +1452,12 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IRace :
-        IRaceGetter,
-        IOblivionMajorRecord,
-        INamedRequired,
-        INamed,
+        IFormLinkContainer,
         ILoquiObjectSetter<IRaceInternal>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired,
+        IOblivionMajorRecord,
+        IRaceGetter
     {
         new String? Name { get; set; }
         new String? Description { get; set; }
@@ -1491,11 +1491,11 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IRaceGetter :
         IOblivionMajorRecordGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ILoquiObject<IRaceGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IRaceGetter>,
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Race_Registration.Instance;
         String? Name { get; }

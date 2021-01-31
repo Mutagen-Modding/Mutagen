@@ -28,8 +28,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class AlternateTexture :
         IAlternateTexture,
-        ILoquiObjectSetter<AlternateTexture>,
-        IEquatable<IAlternateTextureGetter>
+        IEquatable<IAlternateTextureGetter>,
+        ILoquiObjectSetter<AlternateTexture>
     {
         #region Ctor
         public AlternateTexture()
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -476,9 +476,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IAlternateTexture :
         IAlternateTextureGetter,
-        INamedRequired,
+        IFormLinkContainer,
         ILoquiObjectSetter<IAlternateTexture>,
-        IFormLinkContainer
+        INamedRequired
     {
         new String Name { get; set; }
         new FormLink<ITextureSetGetter> NewTexture { get; set; }
@@ -487,10 +487,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IAlternateTextureGetter :
         ILoquiObject,
-        INamedRequiredGetter,
-        ILoquiObject<IAlternateTextureGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IAlternateTextureGetter>,
+        INamedRequiredGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class Ammunition :
         AItem,
         IAmmunitionInternal,
-        ILoquiObjectSetter<Ammunition>,
-        IEquatable<IAmmunitionGetter>
+        IEquatable<IAmmunitionGetter>,
+        ILoquiObjectSetter<Ammunition>
     {
         #region Ctor
         protected Ammunition()
@@ -125,8 +125,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             AItem.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -639,12 +639,12 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IAmmunition :
-        IAmmunitionGetter,
         IAItem,
-        INamedRequired,
-        INamed,
+        IAmmunitionGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IAmmunitionInternal>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
@@ -663,11 +663,11 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IAmmunitionGetter :
         IAItemGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ILoquiObject<IAmmunitionGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IAmmunitionGetter>,
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Ammunition_Registration.Instance;
         String? Name { get; }

@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class HeadPartReference :
+        IEquatable<IHeadPartReferenceGetter>,
         IHeadPartReference,
-        ILoquiObjectSetter<HeadPartReference>,
-        IEquatable<IHeadPartReferenceGetter>
+        ILoquiObjectSetter<HeadPartReference>
     {
         #region Ctor
         public HeadPartReference()
@@ -79,8 +79,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -446,9 +446,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IHeadPartReference :
+        IFormLinkContainer,
         IHeadPartReferenceGetter,
-        ILoquiObjectSetter<IHeadPartReference>,
-        IFormLinkContainer
+        ILoquiObjectSetter<IHeadPartReference>
     {
         new Int32? Number { get; set; }
         new FormLinkNullable<IHeadPartGetter> Head { get; set; }
@@ -456,9 +456,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IHeadPartReferenceGetter :
         ILoquiObject,
-        ILoquiObject<IHeadPartReferenceGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IHeadPartReferenceGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

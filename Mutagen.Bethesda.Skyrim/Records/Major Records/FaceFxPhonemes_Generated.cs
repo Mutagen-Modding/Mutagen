@@ -28,9 +28,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class FaceFxPhonemes :
+        IEquatable<IFaceFxPhonemesGetter>,
         IFaceFxPhonemes,
-        ILoquiObjectSetter<FaceFxPhonemes>,
-        IEquatable<IFaceFxPhonemesGetter>
+        ILoquiObjectSetter<FaceFxPhonemes>
     {
         #region Ctor
         public FaceFxPhonemes()
@@ -251,8 +251,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1169,8 +1169,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IFaceFxPhonemesGetter :
         ILoquiObject,
-        ILoquiObject<IFaceFxPhonemesGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IFaceFxPhonemesGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Potion :
         AItem,
-        IPotionInternal,
+        IEquatable<IPotionGetter>,
         ILoquiObjectSetter<Potion>,
-        IEquatable<IPotionGetter>
+        IPotionInternal
     {
         #region Ctor
         protected Potion()
@@ -139,8 +139,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             AItem.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -756,12 +756,12 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IPotion :
-        IPotionGetter,
         IAItem,
-        INamedRequired,
-        INamed,
+        IFormLinkContainer,
         ILoquiObjectSetter<IPotionInternal>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired,
+        IPotionGetter
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
@@ -781,11 +781,11 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IPotionGetter :
         IAItemGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ILoquiObject<IPotionGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IPotionGetter>,
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Potion_Registration.Instance;
         String? Name { get; }

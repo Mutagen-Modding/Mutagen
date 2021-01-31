@@ -34,8 +34,8 @@ namespace Mutagen.Bethesda.Skyrim
     public abstract partial class ANavigationMesh :
         SkyrimMajorRecord,
         IANavigationMeshInternal,
-        ILoquiObjectSetter<ANavigationMesh>,
-        IEquatable<IANavigationMeshGetter>
+        IEquatable<IANavigationMeshGetter>,
+        ILoquiObjectSetter<ANavigationMesh>
     {
         #region Ctor
         protected ANavigationMesh()
@@ -111,8 +111,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -531,9 +531,9 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public partial interface IANavigationMesh :
         IANavigationMeshGetter,
-        ISkyrimMajorRecord,
+        IFormLinkContainer,
         ILoquiObjectSetter<IANavigationMeshInternal>,
-        IFormLinkContainer
+        ISkyrimMajorRecord
     {
         new MemorySlice<Byte>? ONAM { get; set; }
         new MemorySlice<Byte>? PNAM { get; set; }
@@ -556,9 +556,9 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public partial interface IANavigationMeshGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<IANavigationMeshGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IANavigationMeshGetter>
     {
         static new ILoquiRegistration Registration => ANavigationMesh_Registration.Instance;
         ReadOnlyMemorySlice<Byte>? ONAM { get; }

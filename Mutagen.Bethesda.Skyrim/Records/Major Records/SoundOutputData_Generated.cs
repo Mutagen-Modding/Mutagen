@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class SoundOutputData :
-        ISoundOutputData,
+        IEquatable<ISoundOutputDataGetter>,
         ILoquiObjectSetter<SoundOutputData>,
-        IEquatable<ISoundOutputDataGetter>
+        ISoundOutputData
     {
         #region Ctor
         public SoundOutputData()
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -474,8 +474,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ISoundOutputData :
-        ISoundOutputDataGetter,
-        ILoquiObjectSetter<ISoundOutputData>
+        ILoquiObjectSetter<ISoundOutputData>,
+        ISoundOutputDataGetter
     {
         new SoundOutputModel.Flag Flags { get; set; }
         new UInt16 Unknown { get; set; }
@@ -484,8 +484,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ISoundOutputDataGetter :
         ILoquiObject,
-        ILoquiObject<ISoundOutputDataGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ISoundOutputDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class Cell :
         SkyrimMajorRecord,
         ICellInternal,
-        ILoquiObjectSetter<Cell>,
-        IEquatable<ICellGetter>
+        IEquatable<ICellGetter>,
+        ILoquiObjectSetter<Cell>
     {
         #region Ctor
         protected Cell()
@@ -337,8 +337,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -2017,15 +2017,15 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface ICell :
         ICellGetter,
-        ISkyrimMajorRecord,
         IComplexLocation,
-        INamedRequired,
-        INamed,
-        ITranslatedNamedRequired,
-        ITranslatedNamed,
-        IMajorRecordEnumerable,
+        IFormLinkContainer,
         ILoquiObjectSetter<ICellInternal>,
-        IFormLinkContainer
+        IMajorRecordEnumerable,
+        INamed,
+        INamedRequired,
+        ISkyrimMajorRecord,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
         new TranslatedString? Name { get; set; }
         new Cell.Flag Flags { get; set; }
@@ -2076,15 +2076,15 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ICellGetter :
         ISkyrimMajorRecordGetter,
+        IBinaryItem,
         IComplexLocationGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ITranslatedNamedRequiredGetter,
-        ITranslatedNamedGetter,
-        IMajorRecordGetterEnumerable,
-        ILoquiObject<ICellGetter>,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ICellGetter>,
+        IMajorRecordGetterEnumerable,
+        INamedGetter,
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Cell_Registration.Instance;
         ITranslatedStringGetter? Name { get; }

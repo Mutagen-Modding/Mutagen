@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class VisualEffect :
         SkyrimMajorRecord,
-        IVisualEffectInternal,
+        IEquatable<IVisualEffectGetter>,
         ILoquiObjectSetter<VisualEffect>,
-        IEquatable<IVisualEffectGetter>
+        IVisualEffectInternal
     {
         #region Ctor
         protected VisualEffect()
@@ -87,8 +87,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -554,10 +554,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IVisualEffect :
-        IVisualEffectGetter,
-        ISkyrimMajorRecord,
+        IFormLinkContainer,
         ILoquiObjectSetter<IVisualEffectInternal>,
-        IFormLinkContainer
+        ISkyrimMajorRecord,
+        IVisualEffectGetter
     {
         new FormLink<IArtObjectGetter> EffectArt { get; set; }
         new FormLink<IEffectShaderGetter> Shader { get; set; }
@@ -574,9 +574,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IVisualEffectGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<IVisualEffectGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IVisualEffectGetter>
     {
         static new ILoquiRegistration Registration => VisualEffect_Registration.Instance;
         FormLink<IArtObjectGetter> EffectArt { get; }

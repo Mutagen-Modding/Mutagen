@@ -26,9 +26,9 @@ namespace Mutagen.Bethesda
 {
     #region Class
     public partial class MasterReference :
-        IMasterReference,
+        IEquatable<IMasterReferenceGetter>,
         ILoquiObjectSetter<MasterReference>,
-        IEquatable<IMasterReferenceGetter>
+        IMasterReference
     {
         #region Ctor
         public MasterReference()
@@ -76,8 +76,8 @@ namespace Mutagen.Bethesda
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -442,8 +442,8 @@ namespace Mutagen.Bethesda
 
     #region Interface
     public partial interface IMasterReference :
-        IMasterReferenceGetter,
-        ILoquiObjectSetter<IMasterReference>
+        ILoquiObjectSetter<IMasterReference>,
+        IMasterReferenceGetter
     {
         new ModKey Master { get; set; }
         new UInt64 FileSize { get; set; }
@@ -451,8 +451,8 @@ namespace Mutagen.Bethesda
 
     public partial interface IMasterReferenceGetter :
         ILoquiObject,
-        ILoquiObject<IMasterReferenceGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IMasterReferenceGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

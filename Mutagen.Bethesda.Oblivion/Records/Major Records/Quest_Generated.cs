@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Quest :
         OblivionMajorRecord,
-        IQuestInternal,
+        IEquatable<IQuestGetter>,
         ILoquiObjectSetter<Quest>,
-        IEquatable<IQuestGetter>
+        IQuestInternal
     {
         #region Ctor
         protected Quest()
@@ -151,8 +151,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -911,12 +911,12 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IQuest :
-        IQuestGetter,
-        IOblivionMajorRecord,
-        INamedRequired,
-        INamed,
+        IFormLinkContainer,
         ILoquiObjectSetter<IQuestInternal>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired,
+        IOblivionMajorRecord,
+        IQuestGetter
     {
         new FormLinkNullable<IScriptGetter> Script { get; set; }
         new String? Name { get; set; }
@@ -936,11 +936,11 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IQuestGetter :
         IOblivionMajorRecordGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ILoquiObject<IQuestGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IQuestGetter>,
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Quest_Registration.Instance;
         FormLinkNullable<IScriptGetter> Script { get; }

@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class Shout :
         ASpell,
-        IShoutInternal,
+        IEquatable<IShoutGetter>,
         ILoquiObjectSetter<Shout>,
-        IEquatable<IShoutGetter>
+        IShoutInternal
     {
         #region Ctor
         protected Shout()
@@ -130,8 +130,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             ASpell.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -673,15 +673,15 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IShout :
-        IShoutGetter,
         IASpell,
-        IObjectId,
-        INamedRequired,
-        INamed,
-        ITranslatedNamedRequired,
-        ITranslatedNamed,
+        IFormLinkContainer,
         ILoquiObjectSetter<IShoutInternal>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired,
+        IObjectId,
+        IShoutGetter,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
         new TranslatedString? Name { get; set; }
         new FormLinkNullable<IStaticGetter> MenuDisplayObject { get; set; }
@@ -702,14 +702,14 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IShoutGetter :
         IASpellGetter,
-        IObjectIdGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ITranslatedNamedRequiredGetter,
-        ITranslatedNamedGetter,
-        ILoquiObject<IShoutGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IShoutGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        IObjectIdGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Shout_Registration.Instance;
         ITranslatedStringGetter? Name { get; }

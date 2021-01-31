@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class PackageDataTopic :
         APackageData,
-        IPackageDataTopic,
+        IEquatable<IPackageDataTopicGetter>,
         ILoquiObjectSetter<PackageDataTopic>,
-        IEquatable<IPackageDataTopicGetter>
+        IPackageDataTopic
     {
         #region Ctor
         public PackageDataTopic()
@@ -99,8 +99,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             APackageData.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -530,12 +530,12 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPackageDataTopic :
-        IPackageDataTopicGetter,
         IAPackageData,
-        INamedRequired,
-        INamed,
+        IFormLinkContainer,
         ILoquiObjectSetter<IPackageDataTopic>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired,
+        IPackageDataTopicGetter
     {
         new ExtendedList<ATopicReference> Topics { get; }
         new MemorySlice<Byte>? TPIC { get; set; }
@@ -543,11 +543,11 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IPackageDataTopicGetter :
         IAPackageDataGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ILoquiObject<IPackageDataTopicGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IPackageDataTopicGetter>,
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => PackageDataTopic_Registration.Instance;
         IReadOnlyList<IATopicReferenceGetter> Topics { get; }

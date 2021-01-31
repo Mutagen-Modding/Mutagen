@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class Class :
         SkyrimMajorRecord,
         IClassInternal,
-        ILoquiObjectSetter<Class>,
-        IEquatable<IClassGetter>
+        IEquatable<IClassGetter>,
+        ILoquiObjectSetter<Class>
     {
         #region Ctor
         protected Class()
@@ -146,8 +146,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1040,10 +1040,10 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IClass :
         IClassGetter,
-        ISkyrimMajorRecord,
+        ILoquiObjectSetter<IClassInternal>,
         INamedRequired,
-        ITranslatedNamedRequired,
-        ILoquiObjectSetter<IClassInternal>
+        ISkyrimMajorRecord,
+        ITranslatedNamedRequired
     {
         new TranslatedString Name { get; set; }
         new String Description { get; set; }
@@ -1070,10 +1070,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IClassGetter :
         ISkyrimMajorRecordGetter,
-        INamedRequiredGetter,
-        ITranslatedNamedRequiredGetter,
+        IBinaryItem,
         ILoquiObject<IClassGetter>,
-        IBinaryItem
+        INamedRequiredGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Class_Registration.Instance;
         ITranslatedStringGetter Name { get; }

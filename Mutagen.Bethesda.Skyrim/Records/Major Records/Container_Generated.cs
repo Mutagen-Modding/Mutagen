@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class Container :
         SkyrimMajorRecord,
         IContainerInternal,
-        ILoquiObjectSetter<Container>,
-        IEquatable<IContainerGetter>
+        IEquatable<IContainerGetter>,
+        ILoquiObjectSetter<Container>
     {
         #region Ctor
         protected Container()
@@ -187,8 +187,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -959,17 +959,17 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IContainer :
         IContainerGetter,
-        ISkyrimMajorRecord,
-        IObjectId,
-        IModeled,
-        INamedRequired,
-        INamed,
-        ITranslatedNamedRequired,
-        ITranslatedNamed,
-        IObjectBoundedOptional,
-        IObjectBounded,
+        IFormLinkContainer,
         ILoquiObjectSetter<IContainerInternal>,
-        IFormLinkContainer
+        IModeled,
+        INamed,
+        INamedRequired,
+        IObjectBounded,
+        IObjectBoundedOptional,
+        IObjectId,
+        ISkyrimMajorRecord,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
@@ -997,17 +997,17 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IContainerGetter :
         ISkyrimMajorRecordGetter,
-        IObjectIdGetter,
-        IModeledGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ITranslatedNamedRequiredGetter,
-        ITranslatedNamedGetter,
-        IObjectBoundedOptionalGetter,
-        IObjectBoundedGetter,
-        ILoquiObject<IContainerGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IContainerGetter>,
+        IModeledGetter,
+        INamedGetter,
+        INamedRequiredGetter,
+        IObjectBoundedGetter,
+        IObjectBoundedOptionalGetter,
+        IObjectIdGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Container_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }

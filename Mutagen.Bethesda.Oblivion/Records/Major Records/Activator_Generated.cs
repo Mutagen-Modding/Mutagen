@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class Activator :
         OblivionMajorRecord,
         IActivatorInternal,
-        ILoquiObjectSetter<Activator>,
-        IEquatable<IActivatorGetter>
+        IEquatable<IActivatorGetter>,
+        ILoquiObjectSetter<Activator>
     {
         #region Ctor
         protected Activator()
@@ -107,8 +107,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -559,11 +559,11 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IActivator :
         IActivatorGetter,
-        IOblivionMajorRecord,
-        INamedRequired,
-        INamed,
+        IFormLinkContainer,
         ILoquiObjectSetter<IActivatorInternal>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired,
+        IOblivionMajorRecord
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
@@ -580,11 +580,11 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IActivatorGetter :
         IOblivionMajorRecordGetter,
-        INamedRequiredGetter,
-        INamedGetter,
-        ILoquiObject<IActivatorGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IActivatorGetter>,
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Activator_Registration.Instance;
         String? Name { get; }

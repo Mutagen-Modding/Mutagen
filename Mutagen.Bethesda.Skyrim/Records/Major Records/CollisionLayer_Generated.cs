@@ -32,8 +32,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class CollisionLayer :
         SkyrimMajorRecord,
         ICollisionLayerInternal,
-        ILoquiObjectSetter<CollisionLayer>,
-        IEquatable<ICollisionLayerGetter>
+        IEquatable<ICollisionLayerGetter>,
+        ILoquiObjectSetter<CollisionLayer>
     {
         #region Ctor
         protected CollisionLayer()
@@ -106,8 +106,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -699,10 +699,10 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface ICollisionLayer :
         ICollisionLayerGetter,
-        ISkyrimMajorRecord,
-        INamedRequired,
+        IFormLinkContainer,
         ILoquiObjectSetter<ICollisionLayerInternal>,
-        IFormLinkContainer
+        INamedRequired,
+        ISkyrimMajorRecord
     {
         new TranslatedString Description { get; set; }
         new UInt32 Index { get; set; }
@@ -721,10 +721,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ICollisionLayerGetter :
         ISkyrimMajorRecordGetter,
-        INamedRequiredGetter,
-        ILoquiObject<ICollisionLayerGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ICollisionLayerGetter>,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => CollisionLayer_Registration.Instance;
         ITranslatedStringGetter Description { get; }

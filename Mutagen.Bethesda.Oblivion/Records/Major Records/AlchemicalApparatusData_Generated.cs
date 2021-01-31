@@ -28,8 +28,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class AlchemicalApparatusData :
         IAlchemicalApparatusData,
-        ILoquiObjectSetter<AlchemicalApparatusData>,
-        IEquatable<IAlchemicalApparatusDataGetter>
+        IEquatable<IAlchemicalApparatusDataGetter>,
+        ILoquiObjectSetter<AlchemicalApparatusData>
     {
         #region Ctor
         public AlchemicalApparatusData()
@@ -84,8 +84,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -517,8 +517,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IAlchemicalApparatusDataGetter :
         ILoquiObject,
-        ILoquiObject<IAlchemicalApparatusDataGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IAlchemicalApparatusDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

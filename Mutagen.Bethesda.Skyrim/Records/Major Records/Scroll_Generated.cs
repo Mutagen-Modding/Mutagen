@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class Scroll :
         SkyrimMajorRecord,
-        IScrollInternal,
+        IEquatable<IScrollGetter>,
         ILoquiObjectSetter<Scroll>,
-        IEquatable<IScrollGetter>
+        IScrollInternal
     {
         #region Ctor
         protected Scroll()
@@ -235,8 +235,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1435,22 +1435,22 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IScroll :
+        IConstructible,
+        IFormLinkContainer,
+        IItem,
+        IKeyworded<IKeywordGetter>,
+        ILoquiObjectSetter<IScrollInternal>,
+        IModeled,
+        INamed,
+        INamedRequired,
+        IObjectBounded,
+        IObjectBoundedOptional,
+        IObjectId,
         IScrollGetter,
         ISkyrimMajorRecord,
-        IObjectId,
-        IItem,
-        IConstructible,
-        IModeled,
-        IWeightValue,
-        IKeyworded<IKeywordGetter>,
-        INamedRequired,
-        INamed,
-        ITranslatedNamedRequired,
         ITranslatedNamed,
-        IObjectBoundedOptional,
-        IObjectBounded,
-        ILoquiObjectSetter<IScrollInternal>,
-        IFormLinkContainer
+        ITranslatedNamedRequired,
+        IWeightValue
     {
         new ObjectBounds ObjectBounds { get; set; }
         new TranslatedString? Name { get; set; }
@@ -1487,21 +1487,21 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IScrollGetter :
         ISkyrimMajorRecordGetter,
-        IObjectIdGetter,
-        IItemGetter,
+        IBinaryItem,
         IConstructibleGetter,
-        IModeledGetter,
-        IWeightValueGetter,
-        IKeywordedGetter<IKeywordGetter>,
-        INamedRequiredGetter,
-        INamedGetter,
-        ITranslatedNamedRequiredGetter,
-        ITranslatedNamedGetter,
-        IObjectBoundedOptionalGetter,
-        IObjectBoundedGetter,
-        ILoquiObject<IScrollGetter>,
         IFormLinkContainerGetter,
-        IBinaryItem
+        IItemGetter,
+        IKeywordedGetter<IKeywordGetter>,
+        ILoquiObject<IScrollGetter>,
+        IModeledGetter,
+        INamedGetter,
+        INamedRequiredGetter,
+        IObjectBoundedGetter,
+        IObjectBoundedOptionalGetter,
+        IObjectIdGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter,
+        IWeightValueGetter
     {
         static new ILoquiRegistration Registration => Scroll_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }

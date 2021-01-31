@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class BodyPartData :
         SkyrimMajorRecord,
         IBodyPartDataInternal,
-        ILoquiObjectSetter<BodyPartData>,
-        IEquatable<IBodyPartDataGetter>
+        IEquatable<IBodyPartDataGetter>,
+        ILoquiObjectSetter<BodyPartData>
     {
         #region Ctor
         protected BodyPartData()
@@ -100,8 +100,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -590,10 +590,10 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IBodyPartData :
         IBodyPartDataGetter,
-        ISkyrimMajorRecord,
-        IModeled,
+        IFormLinkContainer,
         ILoquiObjectSetter<IBodyPartDataInternal>,
-        IFormLinkContainer
+        IModeled,
+        ISkyrimMajorRecord
     {
         new Model? Model { get; set; }
         new ExtendedList<BodyPart> Parts { get; }
@@ -608,10 +608,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IBodyPartDataGetter :
         ISkyrimMajorRecordGetter,
-        IModeledGetter,
-        ILoquiObject<IBodyPartDataGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IBodyPartDataGetter>,
+        IModeledGetter
     {
         static new ILoquiRegistration Registration => BodyPartData_Registration.Instance;
         IModelGetter? Model { get; }

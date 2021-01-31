@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Static :
         OblivionMajorRecord,
-        IStaticInternal,
+        IEquatable<IStaticGetter>,
         ILoquiObjectSetter<Static>,
-        IEquatable<IStaticGetter>
+        IStaticInternal
     {
         #region Ctor
         protected Static()
@@ -86,8 +86,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -451,9 +451,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IStatic :
-        IStaticGetter,
+        ILoquiObjectSetter<IStaticInternal>,
         IOblivionMajorRecord,
-        ILoquiObjectSetter<IStaticInternal>
+        IStaticGetter
     {
         new Model? Model { get; set; }
     }
@@ -467,8 +467,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IStaticGetter :
         IOblivionMajorRecordGetter,
-        ILoquiObject<IStaticGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IStaticGetter>
     {
         static new ILoquiRegistration Registration => Static_Registration.Instance;
         IModelGetter? Model { get; }

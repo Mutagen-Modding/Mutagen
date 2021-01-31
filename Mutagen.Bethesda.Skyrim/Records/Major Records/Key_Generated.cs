@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class Key :
         SkyrimMajorRecord,
+        IEquatable<IKeyGetter>,
         IKeyInternal,
-        ILoquiObjectSetter<Key>,
-        IEquatable<IKeyGetter>
+        ILoquiObjectSetter<Key>
     {
         #region Ctor
         protected Key()
@@ -191,8 +191,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -995,19 +995,19 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IKey :
-        IKeyGetter,
-        ISkyrimMajorRecord,
-        IItem,
-        IObjectId,
         IConstructible,
-        IWeightValue,
+        IFormLinkContainer,
+        IItem,
+        IKeyGetter,
         IKeyworded<IKeywordGetter>,
-        INamedRequired,
-        ITranslatedNamedRequired,
-        IObjectBoundedOptional,
-        IObjectBounded,
         ILoquiObjectSetter<IKeyInternal>,
-        IFormLinkContainer
+        INamedRequired,
+        IObjectBounded,
+        IObjectBoundedOptional,
+        IObjectId,
+        ISkyrimMajorRecord,
+        ITranslatedNamedRequired,
+        IWeightValue
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
@@ -1036,18 +1036,18 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IKeyGetter :
         ISkyrimMajorRecordGetter,
-        IItemGetter,
-        IObjectIdGetter,
+        IBinaryItem,
         IConstructibleGetter,
-        IWeightValueGetter,
-        IKeywordedGetter<IKeywordGetter>,
-        INamedRequiredGetter,
-        ITranslatedNamedRequiredGetter,
-        IObjectBoundedOptionalGetter,
-        IObjectBoundedGetter,
-        ILoquiObject<IKeyGetter>,
         IFormLinkContainerGetter,
-        IBinaryItem
+        IItemGetter,
+        IKeywordedGetter<IKeywordGetter>,
+        ILoquiObject<IKeyGetter>,
+        INamedRequiredGetter,
+        IObjectBoundedGetter,
+        IObjectBoundedOptionalGetter,
+        IObjectIdGetter,
+        ITranslatedNamedRequiredGetter,
+        IWeightValueGetter
     {
         static new ILoquiRegistration Registration => Key_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }

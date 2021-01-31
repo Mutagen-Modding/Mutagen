@@ -28,9 +28,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class ScenePhase :
-        IScenePhase,
+        IEquatable<IScenePhaseGetter>,
         ILoquiObjectSetter<ScenePhase>,
-        IEquatable<IScenePhaseGetter>
+        IScenePhase
     {
         #region Ctor
         public ScenePhase()
@@ -142,8 +142,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -786,11 +786,11 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IScenePhase :
-        IScenePhaseGetter,
-        INamedRequired,
-        INamed,
+        IFormLinkContainer,
         ILoquiObjectSetter<IScenePhase>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired,
+        IScenePhaseGetter
     {
         new String? Name { get; set; }
         new ExtendedList<Condition> StartConditions { get; }
@@ -802,11 +802,11 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IScenePhaseGetter :
         ILoquiObject,
-        INamedRequiredGetter,
-        INamedGetter,
-        ILoquiObject<IScenePhaseGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IScenePhaseGetter>,
+        INamedGetter,
+        INamedRequiredGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

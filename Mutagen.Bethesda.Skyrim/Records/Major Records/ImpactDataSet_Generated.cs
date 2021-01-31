@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class ImpactDataSet :
         SkyrimMajorRecord,
+        IEquatable<IImpactDataSetGetter>,
         IImpactDataSetInternal,
-        ILoquiObjectSetter<ImpactDataSet>,
-        IEquatable<IImpactDataSetGetter>
+        ILoquiObjectSetter<ImpactDataSet>
     {
         #region Ctor
         protected ImpactDataSet()
@@ -89,8 +89,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -543,10 +543,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IImpactDataSet :
+        IFormLinkContainer,
         IImpactDataSetGetter,
-        ISkyrimMajorRecord,
         ILoquiObjectSetter<IImpactDataSetInternal>,
-        IFormLinkContainer
+        ISkyrimMajorRecord
     {
         new ExtendedList<ImpactData> Impacts { get; }
     }
@@ -560,9 +560,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IImpactDataSetGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<IImpactDataSetGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IImpactDataSetGetter>
     {
         static new ILoquiRegistration Registration => ImpactDataSet_Registration.Instance;
         IReadOnlyList<IImpactDataGetter> Impacts { get; }

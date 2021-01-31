@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class SkillBoost :
-        ISkillBoost,
+        IEquatable<ISkillBoostGetter>,
         ILoquiObjectSetter<SkillBoost>,
-        IEquatable<ISkillBoostGetter>
+        ISkillBoost
     {
         #region Ctor
         public SkillBoost()
@@ -78,8 +78,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -440,8 +440,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ISkillBoost :
-        ISkillBoostGetter,
-        ILoquiObjectSetter<ISkillBoost>
+        ILoquiObjectSetter<ISkillBoost>,
+        ISkillBoostGetter
     {
         new ActorValue Skill { get; set; }
         new SByte Boost { get; set; }
@@ -449,8 +449,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ISkillBoostGetter :
         ILoquiObject,
-        ILoquiObject<ISkillBoostGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ISkillBoostGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

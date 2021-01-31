@@ -28,9 +28,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class PreferredPathing :
-        IPreferredPathing,
+        IEquatable<IPreferredPathingGetter>,
         ILoquiObjectSetter<PreferredPathing>,
-        IEquatable<IPreferredPathingGetter>
+        IPreferredPathing
     {
         #region Ctor
         public PreferredPathing()
@@ -100,8 +100,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -618,9 +618,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPreferredPathing :
-        IPreferredPathingGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IPreferredPathing>,
-        IFormLinkContainer
+        IPreferredPathingGetter
     {
         new ExtendedList<NavmeshSet> NavmeshSets { get; }
         new ExtendedList<NavmeshNode> NavmeshTree { get; }
@@ -628,9 +628,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IPreferredPathingGetter :
         ILoquiObject,
-        ILoquiObject<IPreferredPathingGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IPreferredPathingGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

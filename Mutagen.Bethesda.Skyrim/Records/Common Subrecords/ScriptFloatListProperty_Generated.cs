@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class ScriptFloatListProperty :
         ScriptProperty,
-        IScriptFloatListProperty,
+        IEquatable<IScriptFloatListPropertyGetter>,
         ILoquiObjectSetter<ScriptFloatListProperty>,
-        IEquatable<IScriptFloatListPropertyGetter>
+        IScriptFloatListProperty
     {
         #region Ctor
         public ScriptFloatListProperty()
@@ -88,8 +88,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             ScriptProperty.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -484,19 +484,19 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IScriptFloatListProperty :
-        IScriptFloatListPropertyGetter,
-        IScriptProperty,
+        ILoquiObjectSetter<IScriptFloatListProperty>,
         INamedRequired,
-        ILoquiObjectSetter<IScriptFloatListProperty>
+        IScriptFloatListPropertyGetter,
+        IScriptProperty
     {
         new ExtendedList<Single> Data { get; }
     }
 
     public partial interface IScriptFloatListPropertyGetter :
         IScriptPropertyGetter,
-        INamedRequiredGetter,
+        IBinaryItem,
         ILoquiObject<IScriptFloatListPropertyGetter>,
-        IBinaryItem
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => ScriptFloatListProperty_Registration.Instance;
         IReadOnlyList<Single> Data { get; }
