@@ -7,11 +7,6 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class Grass
     {
-        #region Interfaces
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IModelGetter? IModeledGetter.Model => this.Model;
-        #endregion
-
         public enum UnitsFromWaterTypeEnum
         {
             AboveAtLeast,

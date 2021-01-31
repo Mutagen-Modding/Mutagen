@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Flora" recordType="FLOR" baseClass="SkyrimMajorRecord" objType="Record" GUID="004a650f-053a-425f-8eb9-2efda89c4869" ID="191">
-    <Interface>IModeled</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />

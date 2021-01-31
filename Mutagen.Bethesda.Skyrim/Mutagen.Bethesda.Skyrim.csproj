@@ -89,9 +89,6 @@
     <Compile Include="Records\Common Subrecords\Decal.cs">
       <DependentUpon>Decal.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Common Subrecords\DestructionStage.cs">
-      <DependentUpon>Destructible.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Common Subrecords\DestructionStageData.cs">
       <DependentUpon>Destructible.xml</DependentUpon>
     </Compile>
@@ -149,9 +146,6 @@
     <Compile Include="Records\Major Records\ANavigationMeshData.cs">
       <DependentUpon>NavigationMesh.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\AnimatedObject.cs">
-      <DependentUpon>AnimatedObject.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\APackageData.cs">
       <DependentUpon>Package.xml</DependentUpon>
     </Compile>
@@ -195,9 +189,6 @@
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\BodyPart.cs">
-      <DependentUpon>BodyPartData.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\BodyPartData.cs">
       <DependentUpon>BodyPartData.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Book.cs">
@@ -296,9 +287,6 @@
     <Compile Include="Records\Major Records\FindMatchingRefNearAlias.cs">
       <DependentUpon>Quest.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\Flora.cs">
-      <DependentUpon>Flora.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\FootstepSet.cs">
       <DependentUpon>FootstepSet.xml</DependentUpon>
     </Compile>
@@ -337,9 +325,6 @@
     </Compile>
     <Compile Include="Records\Major Records\Hazard.cs">
       <DependentUpon>Hazard.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\HeadData.cs">
-      <DependentUpon>Race.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\HeadPart.cs">
       <DependentUpon>HeadPart.xml</DependentUpon>
@@ -655,9 +640,6 @@
     </Compile>
     <Compile Include="Records\Major Records\ScenePhaseFragments.cs">
       <DependentUpon>Scene.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Scroll.cs">
-      <DependentUpon>Scroll.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\ShaderParticleGeometry.cs">
       <DependentUpon>ShaderParticleGeometry.xml</DependentUpon>

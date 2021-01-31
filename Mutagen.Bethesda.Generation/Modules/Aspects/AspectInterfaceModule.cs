@@ -21,6 +21,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects
             Definitions.Add(new KeywordAspect());
             Definitions.Add(new NamedAspect());
             Definitions.Add(new ObjectBoundedAspect());
+            Definitions.Add(new ModeledAspect());
         }
 
         public override async Task LoadWrapup(ObjectGeneration obj)

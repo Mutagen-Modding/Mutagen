@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="MaterialObject" recordType="MATO" objType="Record" baseClass="SkyrimMajorRecord" GUID="5902e694-f48d-4a53-8531-3f763fcf5f27" ID="183">
-    <Interface>IModeled</Interface>
     <Fields>
       <RefDirect name="Model" refName="Model" />
       <List name="DNAMs" >

@@ -102,6 +102,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IProjectileGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
         #endregion
         #region Destructible
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1515,6 +1519,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IProjectile :
         IFormLinkContainer,
         ILoquiObjectSetter<IProjectileInternal>,
+        IModeled,
         INamed,
         INamedRequired,
         IObjectBounded,
@@ -1572,6 +1577,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IProjectileGetter>,
+        IModeledGetter,
         INamedGetter,
         INamedRequiredGetter,
         IObjectBoundedGetter,

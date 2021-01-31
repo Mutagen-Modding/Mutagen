@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Furniture" recordType="FURN" baseClass="SkyrimMajorRecord" objType="Record" majorFlag="true" GUID="d259f939-c92a-48d0-aad5-2d58e712b4f6" ID="192">
-    <Interface>IModeled</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />

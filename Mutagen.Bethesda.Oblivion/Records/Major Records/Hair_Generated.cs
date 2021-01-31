@@ -67,6 +67,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IHairGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
         #endregion
         #region Icon
         public String? Icon { get; set; }
@@ -562,6 +566,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IHair :
         IHairGetter,
         ILoquiObjectSetter<IHairInternal>,
+        IModeled,
         INamed,
         INamedRequired,
         IOblivionMajorRecord
@@ -583,6 +588,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         IBinaryItem,
         ILoquiObject<IHairGetter>,
+        IModeledGetter,
         INamedGetter,
         INamedRequiredGetter
     {

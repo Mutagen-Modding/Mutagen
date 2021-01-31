@@ -55,6 +55,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IFacePartGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
         #endregion
         #region Icon
         public String? Icon { get; set; }
@@ -491,7 +495,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IFacePart :
         IFacePartGetter,
-        ILoquiObjectSetter<IFacePart>
+        ILoquiObjectSetter<IFacePart>,
+        IModeled
     {
         new Race.FaceIndex? Index { get; set; }
         new Model? Model { get; set; }
@@ -501,7 +506,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IFacePartGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<IFacePartGetter>
+        ILoquiObject<IFacePartGetter>,
+        IModeledGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

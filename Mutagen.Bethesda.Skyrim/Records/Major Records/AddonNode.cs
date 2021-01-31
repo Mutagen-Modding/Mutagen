@@ -7,14 +7,6 @@ using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class AddonNode
-    {
-        #region Interfaces
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IModelGetter? IModeledGetter.Model => this.Model;
-        #endregion
-    }
-
     namespace Internals
     {
         public partial class AddonNodeBinaryCreateTranslation

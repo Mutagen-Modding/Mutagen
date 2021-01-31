@@ -67,6 +67,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IFurnitureGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
         #endregion
         #region Script
         public FormLinkNullable<IScriptGetter> Script { get; set; } = new FormLinkNullable<IScriptGetter>();
@@ -563,6 +567,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkContainer,
         IFurnitureGetter,
         ILoquiObjectSetter<IFurnitureInternal>,
+        IModeled,
         INamed,
         INamedRequired,
         IOblivionMajorRecord
@@ -585,6 +590,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IFurnitureGetter>,
+        IModeledGetter,
         INamedGetter,
         INamedRequiredGetter
     {

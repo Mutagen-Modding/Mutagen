@@ -76,6 +76,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IClimateGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
         #endregion
         #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -685,6 +689,7 @@ namespace Mutagen.Bethesda.Oblivion
         IClimateGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IClimateInternal>,
+        IModeled,
         IOblivionMajorRecord
     {
         new ExtendedList<WeatherType>? Weathers { get; set; }
@@ -705,7 +710,8 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IClimateGetter>
+        ILoquiObject<IClimateGetter>,
+        IModeledGetter
     {
         static new ILoquiRegistration Registration => Climate_Registration.Instance;
         IReadOnlyList<IWeatherTypeGetter>? Weathers { get; }

@@ -125,6 +125,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IIngestibleGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
         #endregion
         #region Destructible
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1272,6 +1276,7 @@ namespace Mutagen.Bethesda.Skyrim
         IItem,
         IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<IIngestibleInternal>,
+        IModeled,
         INamed,
         INamedRequired,
         IObjectBounded,
@@ -1322,6 +1327,7 @@ namespace Mutagen.Bethesda.Skyrim
         IItemGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IIngestibleGetter>,
+        IModeledGetter,
         INamedGetter,
         INamedRequiredGetter,
         IObjectBoundedGetter,

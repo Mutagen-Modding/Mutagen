@@ -100,6 +100,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? ISoulGemGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
         #endregion
         #region Icons
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1056,6 +1060,7 @@ namespace Mutagen.Bethesda.Skyrim
         IItem,
         IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<ISoulGemInternal>,
+        IModeled,
         INamed,
         INamedRequired,
         IObjectBoundedOptional,
@@ -1100,6 +1105,7 @@ namespace Mutagen.Bethesda.Skyrim
         IItemGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<ISoulGemGetter>,
+        IModeledGetter,
         INamedGetter,
         INamedRequiredGetter,
         IObjectBoundedOptionalGetter,

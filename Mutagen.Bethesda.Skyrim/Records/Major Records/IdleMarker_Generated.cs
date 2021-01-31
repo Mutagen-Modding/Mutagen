@@ -93,6 +93,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IIdleMarkerGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
         #endregion
 
         #region To String
@@ -713,6 +717,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         IIdleMarkerGetter,
         ILoquiObjectSetter<IIdleMarkerInternal>,
+        IModeled,
         IObjectBounded,
         IObjectBoundedOptional,
         IObjectId,
@@ -741,6 +746,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IIdleMarkerGetter>,
+        IModeledGetter,
         IObjectBoundedGetter,
         IObjectBoundedOptionalGetter,
         IObjectIdGetter

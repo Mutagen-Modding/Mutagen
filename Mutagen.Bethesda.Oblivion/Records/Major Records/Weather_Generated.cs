@@ -62,6 +62,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IWeatherGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
         #endregion
         #region Colors
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -893,6 +897,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IWeather :
         IFormLinkContainer,
         ILoquiObjectSetter<IWeatherInternal>,
+        IModeled,
         IOblivionMajorRecord,
         IWeatherGetter
     {
@@ -917,7 +922,8 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IWeatherGetter>
+        ILoquiObject<IWeatherGetter>,
+        IModeledGetter
     {
         static new ILoquiRegistration Registration => Weather_Registration.Instance;
         String? TextureLowerLayer { get; }

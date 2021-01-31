@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="MoveableStatic" recordType="MSTT" objType="Record" baseClass="SkyrimMajorRecord" majorFlag="true" GUID="2b67f0bf-985c-4fb6-844a-8b8d93ad85a6" ID="186">
-    <Interface>IModeled</Interface>
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <String name="Name" recordType="FULL" translated="Normal" />

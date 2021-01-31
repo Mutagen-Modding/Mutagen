@@ -92,6 +92,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? ILeveledNpcGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
         #endregion
 
         #region To String
@@ -737,6 +741,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILeveledNpcGetter,
         ILoquiObjectSetter<ILeveledNpcInternal>,
+        IModeled,
         INpcSpawn,
         IObjectBounded,
         IObjectBoundedOptional,
@@ -762,6 +767,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<ILeveledNpcGetter>,
+        IModeledGetter,
         INpcSpawnGetter,
         IObjectBoundedGetter,
         IObjectBoundedOptionalGetter

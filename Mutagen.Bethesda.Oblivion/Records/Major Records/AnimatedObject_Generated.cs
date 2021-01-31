@@ -52,6 +52,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IAnimatedObjectGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
         #endregion
         #region IdleAnimation
         public FormLinkNullable<IIdleAnimationGetter> IdleAnimation { get; set; } = new FormLinkNullable<IIdleAnimationGetter>();
@@ -487,6 +491,7 @@ namespace Mutagen.Bethesda.Oblivion
         IAnimatedObjectGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IAnimatedObjectInternal>,
+        IModeled,
         IOblivionMajorRecord
     {
         new Model? Model { get; set; }
@@ -504,7 +509,8 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IAnimatedObjectGetter>
+        ILoquiObject<IAnimatedObjectGetter>,
+        IModeledGetter
     {
         static new ILoquiRegistration Registration => AnimatedObject_Registration.Instance;
         IModelGetter? Model { get; }

@@ -50,6 +50,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IBodyDataGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
         #endregion
         #region BodyParts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -542,7 +546,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IBodyData :
         IBodyDataGetter,
-        ILoquiObjectSetter<IBodyData>
+        ILoquiObjectSetter<IBodyData>,
+        IModeled
     {
         new Model? Model { get; set; }
         new ExtendedList<BodyPart> BodyParts { get; }
@@ -551,7 +556,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IBodyDataGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<IBodyDataGetter>
+        ILoquiObject<IBodyDataGetter>,
+        IModeledGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

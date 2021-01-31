@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="ArtObject" objType="Record" recordType="ARTO" baseClass="SkyrimMajorRecord" GUID="2c9154ee-5886-44e0-a073-67c19feaeda8" ID="78">
-    <Interface>IModeled</Interface>
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <RefDirect name="Model" refName="Model" />

@@ -80,6 +80,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? ITreeGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
         #endregion
         #region Ingredient
         public FormLinkNullable<IHarvestTargetGetter> Ingredient { get; set; } = new FormLinkNullable<IHarvestTargetGetter>();

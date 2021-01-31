@@ -46,6 +46,7 @@
     <Compile Include="Enums\Specialization.cs" />
     <Compile Include="Enums\Weekday.cs" />
     <Compile Include="Extensions\ModContextExt.cs" />
+    <Compile Include="Interfaces\IModeled.cs" />
     <Compile Include="Records\Common Subrecords\Condition.cs">
       <DependentUpon>Condition.xml</DependentUpon>
     </Compile>

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="TalkingActivator" recordType="TACT" objType="Record" majorFlag="true" baseClass="SkyrimMajorRecord" GUID="94183ba9-f9eb-4dd2-9969-62218607a50f" ID="150">
-    <Interface>IModeled</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />

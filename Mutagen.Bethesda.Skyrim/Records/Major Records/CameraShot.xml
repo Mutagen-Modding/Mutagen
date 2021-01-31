@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="CameraShot" objType="Record" recordType="CAMS" baseClass="SkyrimMajorRecord" GUID="85db459c-255a-409e-82a0-04a5e602a956" ID="437">
-    <Interface>IModeled</Interface>
     <Fields>
       <RefDirect name="Model" refName="Model" />
       <Data>

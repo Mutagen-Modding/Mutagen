@@ -113,6 +113,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IExplosionGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
         #endregion
         #region ObjectEffect
         public FormLinkNullable<IEffectRecordGetter> ObjectEffect { get; set; } = new FormLinkNullable<IEffectRecordGetter>();
@@ -1170,6 +1174,7 @@ namespace Mutagen.Bethesda.Skyrim
         IExplosionGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IExplosionInternal>,
+        IModeled,
         INamed,
         INamedRequired,
         IObjectBounded,
@@ -1212,6 +1217,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IExplosionGetter>,
+        IModeledGetter,
         INamedGetter,
         INamedRequiredGetter,
         IObjectBoundedGetter,

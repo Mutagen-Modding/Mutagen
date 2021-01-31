@@ -52,6 +52,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? ITreeGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
         #endregion
         #region Icon
         public String? Icon { get; set; }
@@ -692,6 +696,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ITree :
         ILoquiObjectSetter<ITreeInternal>,
+        IModeled,
         IOblivionMajorRecord,
         ITreeGetter
     {
@@ -712,7 +717,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ITreeGetter :
         IOblivionMajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<ITreeGetter>
+        ILoquiObject<ITreeGetter>,
+        IModeledGetter
     {
         static new ILoquiRegistration Registration => Tree_Registration.Instance;
         IModelGetter? Model { get; }

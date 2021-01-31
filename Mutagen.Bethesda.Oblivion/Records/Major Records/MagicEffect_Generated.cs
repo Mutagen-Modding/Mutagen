@@ -77,6 +77,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IMagicEffectGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
         #endregion
         #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -726,6 +730,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkContainer,
         ILoquiObjectSetter<IMagicEffectInternal>,
         IMagicEffectGetter,
+        IModeled,
         INamed,
         INamedRequired,
         IOblivionMajorRecord
@@ -750,6 +755,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IMagicEffectGetter>,
+        IModeledGetter,
         INamedGetter,
         INamedRequiredGetter
     {

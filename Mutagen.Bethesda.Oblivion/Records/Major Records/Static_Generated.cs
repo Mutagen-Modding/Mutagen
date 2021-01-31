@@ -52,6 +52,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IStaticGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
         #endregion
 
         #region To String
@@ -452,6 +456,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IStatic :
         ILoquiObjectSetter<IStaticInternal>,
+        IModeled,
         IOblivionMajorRecord,
         IStaticGetter
     {
@@ -468,7 +473,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IStaticGetter :
         IOblivionMajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<IStaticGetter>
+        ILoquiObject<IStaticGetter>,
+        IModeledGetter
     {
         static new ILoquiRegistration Registration => Static_Registration.Instance;
         IModelGetter? Model { get; }

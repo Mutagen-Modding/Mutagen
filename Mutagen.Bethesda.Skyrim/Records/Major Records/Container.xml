@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Container" recordType="CONT" objType="Record" majorFlag="true" baseClass="SkyrimMajorRecord" GUID="9adb9b58-0aef-4cee-a346-0639dd924acd" ID="160">
-    <Interface>IModeled</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />

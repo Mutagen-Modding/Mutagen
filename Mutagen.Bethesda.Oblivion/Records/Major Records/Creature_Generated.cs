@@ -67,6 +67,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? ICreatureGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1810,6 +1814,7 @@ namespace Mutagen.Bethesda.Oblivion
         ICreatureGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<ICreatureInternal>,
+        IModeled,
         INamed,
         INamedRequired
     {
@@ -1850,6 +1855,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<ICreatureGetter>,
+        IModeledGetter,
         INamedGetter,
         INamedRequiredGetter
     {

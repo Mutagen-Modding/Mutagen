@@ -11,11 +11,6 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class Furniture
     {
-        #region Interfaces
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IModelGetter? IModeledGetter.Model => this.Model;
-        #endregion
-
         [Flags]
         public enum MajorFlag
         {

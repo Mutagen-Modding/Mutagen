@@ -67,6 +67,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IPotionGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
         #endregion
         #region Icon
         public String? Icon { get; set; }
@@ -759,6 +763,7 @@ namespace Mutagen.Bethesda.Oblivion
         IAItem,
         IFormLinkContainer,
         ILoquiObjectSetter<IPotionInternal>,
+        IModeled,
         INamed,
         INamedRequired,
         IPotionGetter
@@ -784,6 +789,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IPotionGetter>,
+        IModeledGetter,
         INamedGetter,
         INamedRequiredGetter
     {

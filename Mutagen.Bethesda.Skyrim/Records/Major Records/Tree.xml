@@ -2,7 +2,6 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Tree" recordType="TREE" objType="Record" baseClass="SkyrimMajorRecord" majorFlag="true" GUID="5353e43a-3c33-49d9-b5a7-fc971ba96d88" ID="188">
     <Interface>IHarvestable</Interface>
-    <Interface>IModeled</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />

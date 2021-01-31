@@ -102,6 +102,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IHazardGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
         #endregion
         #region ImageSpaceModifier
         public FormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier { get; set; } = new FormLinkNullable<IImageSpaceAdapterGetter>();
@@ -964,6 +968,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         IHazardGetter,
         ILoquiObjectSetter<IHazardInternal>,
+        IModeled,
         INamed,
         INamedRequired,
         IObjectBounded,
@@ -1002,6 +1007,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IHazardGetter>,
+        IModeledGetter,
         INamedGetter,
         INamedRequiredGetter,
         IObjectBoundedGetter,

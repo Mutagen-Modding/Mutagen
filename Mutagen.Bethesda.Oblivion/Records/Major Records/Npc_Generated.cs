@@ -68,6 +68,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? INpcGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
         #endregion
         #region Configuration
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1740,6 +1744,7 @@ namespace Mutagen.Bethesda.Oblivion
         IANpc,
         IFormLinkContainer,
         ILoquiObjectSetter<INpcInternal>,
+        IModeled,
         INamed,
         INamedRequired,
         INpcGetter,
@@ -1782,6 +1787,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<INpcGetter>,
+        IModeledGetter,
         INamedGetter,
         INamedRequiredGetter,
         IOwnerGetter
