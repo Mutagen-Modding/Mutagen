@@ -140,6 +140,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IIconsGetter? ILightGetter.Icons => this.Icons;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IIconsGetter? IHasIconsGetter.Icons => this.Icons;
+        #endregion
         #endregion
         #region Time
         public Int32 Time { get; set; } = default;

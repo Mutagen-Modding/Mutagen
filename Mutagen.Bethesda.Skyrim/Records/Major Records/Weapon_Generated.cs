@@ -128,6 +128,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IIconsGetter? IWeaponGetter.Icons => this.Icons;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IIconsGetter? IHasIconsGetter.Icons => this.Icons;
+        #endregion
         #endregion
         #region ObjectEffect
         public FormLinkNullable<IEffectRecordGetter> ObjectEffect { get; set; } = new FormLinkNullable<IEffectRecordGetter>();

@@ -170,9 +170,6 @@
     <Compile Include="Records\Major Records\ArmorAddon.cs">
       <DependentUpon>ArmorAddon.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\ArmorModel.cs">
-      <DependentUpon>Armor.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\ArtObject.cs">
       <DependentUpon>ArtObject.xml</DependentUpon>
     </Compile>

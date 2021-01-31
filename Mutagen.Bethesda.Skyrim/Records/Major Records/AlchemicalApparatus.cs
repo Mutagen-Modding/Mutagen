@@ -7,11 +7,6 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class AlchemicalApparatus
     {
-        #region Interfaces
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IIconsGetter? IHasIconsGetter.Icons => this.Icons;
-        #endregion
-
         public enum QualityLevel
         {
             Novice = 0,

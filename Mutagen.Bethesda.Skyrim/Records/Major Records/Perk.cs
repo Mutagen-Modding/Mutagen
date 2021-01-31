@@ -12,11 +12,6 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class Perk
     {
-        #region Interfaces
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IIconsGetter? IHasIconsGetter.Icons => this.Icons;
-        #endregion
-
         [Flags]
         public enum MajorFlag
         {

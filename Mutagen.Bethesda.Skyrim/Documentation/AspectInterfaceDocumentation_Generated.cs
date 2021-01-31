@@ -3,6 +3,21 @@ Aspect Interfaces expose common aspects of records.  For example, `INamed` are i
 
 Functions can then be written that take in `INamed`, allowing any record that has a name to be passed in.
 ## Interfaces to Concrete Classes
+### HasIcons
+- AlchemicalApparatus
+- Ammunition
+- ArmorModel
+- Book
+- Ingestible
+- Ingredient
+- Key
+- Light
+- LoadScreen
+- MiscItem
+- Perk
+- RegionData
+- SoulGem
+- Weapon
 ### IKeyworded
 - Activator
 - Ammunition
@@ -196,12 +211,14 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IObjectBounded
 - Modeled
 ### AlchemicalApparatus
+- HasIcons
 - INamed
 - IObjectBounded
 - Modeled
 ### AlternateTexture
 - INamed
 ### Ammunition
+- HasIcons
 - IKeyworded
 - INamed
 - IObjectBounded
@@ -215,6 +232,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 - IObjectBounded
 ### ArmorModel
+- HasIcons
 - Modeled
 ### ArtObject
 - IObjectBounded
@@ -226,6 +244,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### BodyPartData
 - Modeled
 ### Book
+- HasIcons
 - IKeyworded
 - INamed
 - IObjectBounded
@@ -292,16 +311,19 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### Impact
 - Modeled
 ### Ingestible
+- HasIcons
 - IKeyworded
 - INamed
 - IObjectBounded
 - Modeled
 ### Ingredient
+- HasIcons
 - IKeyworded
 - INamed
 - IObjectBounded
 - Modeled
 ### Key
+- HasIcons
 - IKeyworded
 - INamed
 - IObjectBounded
@@ -316,9 +338,12 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### LeveledSpell
 - IObjectBounded
 ### Light
+- HasIcons
 - INamed
 - IObjectBounded
 - Modeled
+### LoadScreen
+- HasIcons
 ### Location
 - IKeyworded
 - INamed
@@ -334,6 +359,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### Message
 - INamed
 ### MiscItem
+- HasIcons
 - IKeyworded
 - INamed
 - IObjectBounded
@@ -366,6 +392,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### PackageDataTopic
 - INamed
 ### Perk
+- HasIcons
 - INamed
 ### Phoneme
 - INamed
@@ -381,6 +408,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### Race
 - IKeyworded
 - INamed
+### RegionData
+- HasIcons
 ### RegionMap
 - INamed
 ### SceneAction
@@ -419,6 +448,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### Shout
 - INamed
 ### SoulGem
+- HasIcons
 - IKeyworded
 - INamed
 - IObjectBounded
@@ -448,6 +478,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### Water
 - INamed
 ### Weapon
+- HasIcons
 - IKeyworded
 - INamed
 - IObjectBounded

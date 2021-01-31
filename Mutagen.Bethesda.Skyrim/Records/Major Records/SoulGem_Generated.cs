@@ -115,6 +115,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IIconsGetter? ISoulGemGetter.Icons => this.Icons;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IIconsGetter? IHasIconsGetter.Icons => this.Icons;
+        #endregion
         #endregion
         #region Destructible
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1057,6 +1061,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ISoulGem :
         IConstructible,
         IFormLinkContainer,
+        IHasIcons,
         IItem,
         IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<ISoulGemInternal>,
@@ -1102,6 +1107,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IConstructibleGetter,
         IFormLinkContainerGetter,
+        IHasIconsGetter,
         IItemGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<ISoulGemGetter>,

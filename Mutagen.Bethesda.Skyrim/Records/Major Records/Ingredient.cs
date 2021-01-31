@@ -7,11 +7,6 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class Ingredient
     {
-        #region Interfaces
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IIconsGetter? IHasIconsGetter.Icons => this.Icons;
-        #endregion
-
         [Flags]
         public enum Flag
         {

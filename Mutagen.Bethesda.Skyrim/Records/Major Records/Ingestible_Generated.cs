@@ -151,6 +151,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IIconsGetter? IIngestibleGetter.Icons => this.Icons;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IIconsGetter? IHasIconsGetter.Icons => this.Icons;
+        #endregion
         #endregion
         #region PickUpSound
         public FormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
@@ -1272,6 +1276,7 @@ namespace Mutagen.Bethesda.Skyrim
         IConstructible,
         IFormLinkContainer,
         IHarvestTarget,
+        IHasIcons,
         IIngestibleGetter,
         IItem,
         IKeyworded<IKeywordGetter>,
@@ -1324,6 +1329,7 @@ namespace Mutagen.Bethesda.Skyrim
         IConstructibleGetter,
         IFormLinkContainerGetter,
         IHarvestTargetGetter,
+        IHasIconsGetter,
         IItemGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IIngestibleGetter>,
