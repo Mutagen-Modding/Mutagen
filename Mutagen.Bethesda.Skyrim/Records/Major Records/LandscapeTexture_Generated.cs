@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class LandscapeTexture :
         SkyrimMajorRecord,
+        IEquatable<ILandscapeTextureGetter>,
         ILandscapeTextureInternal,
-        ILoquiObjectSetter<LandscapeTexture>,
-        IEquatable<ILandscapeTextureGetter>
+        ILoquiObjectSetter<LandscapeTexture>
     {
         #region Ctor
         protected LandscapeTexture()
@@ -112,8 +112,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -764,11 +764,11 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ILandscapeTexture :
+        IFormLinkContainer,
         ILandscapeTextureGetter,
-        ISkyrimMajorRecord,
-        IRegionTarget,
         ILoquiObjectSetter<ILandscapeTextureInternal>,
-        IFormLinkContainer
+        IRegionTarget,
+        ISkyrimMajorRecord
     {
         new FormLinkNullable<ITextureSetGetter> TextureSet { get; set; }
         new FormLink<IMaterialTypeGetter> MaterialType { get; set; }
@@ -789,10 +789,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ILandscapeTextureGetter :
         ISkyrimMajorRecordGetter,
-        IRegionTargetGetter,
-        ILoquiObject<ILandscapeTextureGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ILandscapeTextureGetter>,
+        IRegionTargetGetter
     {
         static new ILoquiRegistration Registration => LandscapeTexture_Registration.Instance;
         FormLinkNullable<ITextureSetGetter> TextureSet { get; }

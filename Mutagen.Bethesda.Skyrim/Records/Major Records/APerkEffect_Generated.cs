@@ -32,8 +32,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public abstract partial class APerkEffect :
         IAPerkEffect,
-        ILoquiObjectSetter<APerkEffect>,
-        IEquatable<IAPerkEffectGetter>
+        IEquatable<IAPerkEffectGetter>,
+        ILoquiObjectSetter<APerkEffect>
     {
         #region Ctor
         public APerkEffect()
@@ -98,8 +98,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -581,8 +581,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public partial interface IAPerkEffect :
         IAPerkEffectGetter,
-        ILoquiObjectSetter<IAPerkEffect>,
-        IFormLinkContainer
+        IFormLinkContainer,
+        ILoquiObjectSetter<IAPerkEffect>
     {
         new Byte Rank { get; set; }
         new Byte Priority { get; set; }
@@ -595,9 +595,9 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public partial interface IAPerkEffectGetter :
         ILoquiObject,
-        ILoquiObject<IAPerkEffectGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IAPerkEffectGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

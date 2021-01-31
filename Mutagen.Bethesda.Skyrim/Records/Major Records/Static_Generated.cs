@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class Static :
         SkyrimMajorRecord,
-        IStaticInternal,
+        IEquatable<IStaticGetter>,
         ILoquiObjectSetter<Static>,
-        IEquatable<IStaticGetter>
+        IStaticInternal
     {
         #region Ctor
         protected Static()
@@ -46,6 +46,18 @@ namespace Mutagen.Bethesda.Skyrim
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter IStaticGetter.ObjectBounds => ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ObjectBounds? IObjectBoundedOptional.ObjectBounds
+        {
+            get => this.ObjectBounds;
+            set => this.ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
         #endregion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -57,6 +69,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IStaticGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
         #endregion
         #region MaxAngle
         public readonly static Single _MaxAngle_Default = 30;
@@ -137,8 +153,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -743,14 +759,15 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IStatic :
-        IStaticGetter,
-        ISkyrimMajorRecord,
-        IObjectId,
-        IRegionTarget,
+        IFormLinkContainer,
+        ILoquiObjectSetter<IStaticInternal>,
         IModeled,
         IObjectBounded,
-        ILoquiObjectSetter<IStaticInternal>,
-        IFormLinkContainer
+        IObjectBoundedOptional,
+        IObjectId,
+        IRegionTarget,
+        ISkyrimMajorRecord,
+        IStaticGetter
     {
         new ObjectBounds ObjectBounds { get; set; }
         new Model? Model { get; set; }
@@ -775,13 +792,14 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IStaticGetter :
         ISkyrimMajorRecordGetter,
-        IObjectIdGetter,
-        IRegionTargetGetter,
+        IBinaryItem,
+        IFormLinkContainerGetter,
+        ILoquiObject<IStaticGetter>,
         IModeledGetter,
         IObjectBoundedGetter,
-        ILoquiObject<IStaticGetter>,
-        IFormLinkContainerGetter,
-        IBinaryItem
+        IObjectBoundedOptionalGetter,
+        IObjectIdGetter,
+        IRegionTargetGetter
     {
         static new ILoquiRegistration Registration => Static_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }

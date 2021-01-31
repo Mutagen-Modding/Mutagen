@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class ShaderParticleGeometry :
         SkyrimMajorRecord,
-        IShaderParticleGeometryInternal,
+        IEquatable<IShaderParticleGeometryGetter>,
         ILoquiObjectSetter<ShaderParticleGeometry>,
-        IEquatable<IShaderParticleGeometryGetter>
+        IShaderParticleGeometryInternal
     {
         #region Ctor
         protected ShaderParticleGeometry()
@@ -139,8 +139,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -885,9 +885,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IShaderParticleGeometry :
+        ILoquiObjectSetter<IShaderParticleGeometryInternal>,
         IShaderParticleGeometryGetter,
-        ISkyrimMajorRecord,
-        ILoquiObjectSetter<IShaderParticleGeometryInternal>
+        ISkyrimMajorRecord
     {
         new Single GravityVelocity { get; set; }
         new Single RotationVelocity { get; set; }
@@ -914,8 +914,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IShaderParticleGeometryGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<IShaderParticleGeometryGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IShaderParticleGeometryGetter>
     {
         static new ILoquiRegistration Registration => ShaderParticleGeometry_Registration.Instance;
         Single GravityVelocity { get; }

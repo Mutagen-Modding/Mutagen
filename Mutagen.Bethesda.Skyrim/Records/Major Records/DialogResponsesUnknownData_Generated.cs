@@ -28,8 +28,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class DialogResponsesUnknownData :
         IDialogResponsesUnknownData,
-        ILoquiObjectSetter<DialogResponsesUnknownData>,
-        IEquatable<IDialogResponsesUnknownDataGetter>
+        IEquatable<IDialogResponsesUnknownDataGetter>,
+        ILoquiObjectSetter<DialogResponsesUnknownData>
     {
         #region Ctor
         public DialogResponsesUnknownData()
@@ -88,8 +88,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -484,8 +484,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IDialogResponsesUnknownData :
         IDialogResponsesUnknownDataGetter,
-        ILoquiObjectSetter<IDialogResponsesUnknownData>,
-        IFormLinkContainer
+        IFormLinkContainer,
+        ILoquiObjectSetter<IDialogResponsesUnknownData>
     {
         new MemorySlice<Byte>? SCHR { get; set; }
         new FormLinkNullable<ISkyrimMajorRecordGetter> QNAM { get; set; }
@@ -494,9 +494,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IDialogResponsesUnknownDataGetter :
         ILoquiObject,
-        ILoquiObject<IDialogResponsesUnknownDataGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IDialogResponsesUnknownDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

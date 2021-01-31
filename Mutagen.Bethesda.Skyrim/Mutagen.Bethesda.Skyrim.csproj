@@ -34,6 +34,7 @@
     <Compile Include="Enums\Confidence.cs" />
     <Compile Include="Enums\EquipType.cs" />
     <Compile Include="Enums\FavorLevel.cs" />
+    <Compile Include="Enums\GroupTypeEnum.cs" />
     <Compile Include="Enums\Level.cs" />
     <Compile Include="Enums\LockLevel.cs" />
     <Compile Include="Enums\Mood.cs" />
@@ -57,7 +58,6 @@
     <Compile Include="Interfaces\IObjectBounded.cs" />
     <Compile Include="Interfaces\IPlaced.cs" />
     <Compile Include="Interfaces\IPositionRotation.cs" />
-    <Compile Include="Interfaces\IWeightValue.cs" />
     <Compile Include="Records\Common Subrecords\ActivateParents.cs">
       <DependentUpon>ActivateParents.xml</DependentUpon>
     </Compile>
@@ -87,9 +87,6 @@
     </Compile>
     <Compile Include="Records\Common Subrecords\Decal.cs">
       <DependentUpon>Decal.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Common Subrecords\DestructionStage.cs">
-      <DependentUpon>Destructible.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\DestructionStageData.cs">
       <DependentUpon>Destructible.xml</DependentUpon>
@@ -127,14 +124,8 @@
     <Compile Include="Records\ListGroup.cs">
       <DependentUpon>Group.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\AcousticSpace.cs">
-      <DependentUpon>AcousticSpace.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\Activator.cs">
       <DependentUpon>Activator.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\ActorValueInformation.cs">
-      <DependentUpon>ActorValueInformation.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\AddonNode.cs">
       <DependentUpon>AddonNode.xml</DependentUpon>
@@ -153,9 +144,6 @@
     </Compile>
     <Compile Include="Records\Major Records\ANavigationMeshData.cs">
       <DependentUpon>NavigationMesh.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\AnimatedObject.cs">
-      <DependentUpon>AnimatedObject.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\APackageData.cs">
       <DependentUpon>Package.xml</DependentUpon>
@@ -181,9 +169,6 @@
     <Compile Include="Records\Major Records\ArmorAddon.cs">
       <DependentUpon>ArmorAddon.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\ArmorModel.cs">
-      <DependentUpon>Armor.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\ArtObject.cs">
       <DependentUpon>ArtObject.xml</DependentUpon>
     </Compile>
@@ -200,9 +185,6 @@
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\BodyPart.cs">
-      <DependentUpon>BodyPartData.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\BodyPartData.cs">
       <DependentUpon>BodyPartData.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Book.cs">
@@ -232,9 +214,6 @@
     <Compile Include="Records\Major Records\CellSubBlock.cs">
       <DependentUpon>Cell.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\Class.cs">
-      <DependentUpon>Class.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\Climate.cs">
       <DependentUpon>Climate.xml</DependentUpon>
     </Compile>
@@ -243,9 +222,6 @@
     </Compile>
     <Compile Include="Records\Major Records\CollisionLayer.cs">
       <DependentUpon>CollisionLayer.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\ColorRecord.cs">
-      <DependentUpon>ColorRecord.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\CombatStyle.cs">
       <DependentUpon>CombatStyle.xml</DependentUpon>
@@ -307,9 +283,6 @@
     <Compile Include="Records\Major Records\FindMatchingRefNearAlias.cs">
       <DependentUpon>Quest.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\Flora.cs">
-      <DependentUpon>Flora.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\FootstepSet.cs">
       <DependentUpon>FootstepSet.xml</DependentUpon>
     </Compile>
@@ -348,9 +321,6 @@
     </Compile>
     <Compile Include="Records\Major Records\Hazard.cs">
       <DependentUpon>Hazard.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\HeadData.cs">
-      <DependentUpon>Race.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\HeadPart.cs">
       <DependentUpon>HeadPart.xml</DependentUpon>
@@ -399,9 +369,6 @@
     </Compile>
     <Compile Include="Records\Major Records\LoadScreen.cs">
       <DependentUpon>LoadScreen.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Location.cs">
-      <DependentUpon>Location.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\LockData.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
@@ -670,9 +637,6 @@
     <Compile Include="Records\Major Records\ScenePhaseFragments.cs">
       <DependentUpon>Scene.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\Scroll.cs">
-      <DependentUpon>Scroll.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\ShaderParticleGeometry.cs">
       <DependentUpon>ShaderParticleGeometry.xml</DependentUpon>
     </Compile>
@@ -688,14 +652,8 @@
     <Compile Include="Records\Major Records\SoundDescriptor.cs">
       <DependentUpon>SoundDescriptor.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\SoundMarker.cs">
-      <DependentUpon>SoundMarker.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\SoundOutputModel.cs">
       <DependentUpon>SoundOutputModel.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Spell.cs">
-      <DependentUpon>Spell.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Static.cs">
       <DependentUpon>Static.xml</DependentUpon>
@@ -753,9 +711,6 @@
     </Compile>
     <Compile Include="Records\Major Records\WeatherSound.cs">
       <DependentUpon>Weather.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\WordOfPower.cs">
-      <DependentUpon>WordOfPower.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\WorkbenchData.cs">
       <DependentUpon>Furniture.xml</DependentUpon>
@@ -2122,14 +2077,15 @@
       <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\LinkCacheMixIns_Generated.cs" />
+    <Compile Include="Interfaces\IConstructible_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.1.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Loqui" Version="2.3.2" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.4.0.1-dev" />
+    <PackageReference Include="Loqui" Version="2.5.0" />
+    <PackageReference Include="Noggog.CSharpExt" Version="2.5.0" />
     <PackageReference Include="NuGetizer" Version="0.6.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class HavokData :
+        IEquatable<IHavokDataGetter>,
         IHavokData,
-        ILoquiObjectSetter<HavokData>,
-        IEquatable<IHavokDataGetter>
+        ILoquiObjectSetter<HavokData>
     {
         #region Ctor
         public HavokData()
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -484,8 +484,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IHavokDataGetter :
         ILoquiObject,
-        ILoquiObject<IHavokDataGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IHavokDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

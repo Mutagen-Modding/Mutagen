@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class EncounterZone :
         SkyrimMajorRecord,
         IEncounterZoneInternal,
-        ILoquiObjectSetter<EncounterZone>,
-        IEquatable<IEncounterZoneGetter>
+        IEquatable<IEncounterZoneGetter>,
+        ILoquiObjectSetter<EncounterZone>
     {
         #region Ctor
         protected EncounterZone()
@@ -136,8 +136,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -689,9 +689,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IEncounterZone :
         IEncounterZoneGetter,
-        ISkyrimMajorRecord,
+        IFormLinkContainer,
         ILoquiObjectSetter<IEncounterZoneInternal>,
-        IFormLinkContainer
+        ISkyrimMajorRecord
     {
         new FormLink<IOwnerGetter> Owner { get; set; }
         new FormLink<ILocationGetter> Location { get; set; }
@@ -711,9 +711,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IEncounterZoneGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<IEncounterZoneGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IEncounterZoneGetter>
     {
         static new ILoquiRegistration Registration => EncounterZone_Registration.Instance;
         FormLink<IOwnerGetter> Owner { get; }

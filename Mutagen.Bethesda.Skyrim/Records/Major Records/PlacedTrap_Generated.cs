@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class PlacedTrap :
         APlacedTrap,
-        IPlacedTrapInternal,
+        IEquatable<IPlacedTrapGetter>,
         ILoquiObjectSetter<PlacedTrap>,
-        IEquatable<IPlacedTrapGetter>
+        IPlacedTrapInternal
     {
         #region Ctor
         protected PlacedTrap()
@@ -78,8 +78,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             APlacedTrap.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -491,10 +491,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPlacedTrap :
-        IPlacedTrapGetter,
         IAPlacedTrap,
+        IFormLinkContainer,
         ILoquiObjectSetter<IPlacedTrapInternal>,
-        IFormLinkContainer
+        IPlacedTrapGetter
     {
         new FormLink<IProjectileGetter> Projectile { get; set; }
     }
@@ -508,9 +508,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IPlacedTrapGetter :
         IAPlacedTrapGetter,
-        ILoquiObject<IPlacedTrapGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IPlacedTrapGetter>
     {
         static new ILoquiRegistration Registration => PlacedTrap_Registration.Instance;
         FormLink<IProjectileGetter> Projectile { get; }

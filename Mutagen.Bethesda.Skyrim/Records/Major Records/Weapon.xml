@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Weapon" recordType="WEAP" baseClass="SkyrimMajorRecord" objType="Record" majorFlag="true" GUID="93888344-5257-4e1e-a99c-450b6e0d06bf" ID="169">
-    <Interface>ITranslatedNamed</Interface>
-    <Interface>IHasIcons</Interface>
-    <Interface>IModeled</Interface>
-    <Interface>IObjectBounded</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
@@ -50,9 +46,9 @@
     </Fields>
     <LinkInterface>IItem</LinkInterface>
     <LinkInterface>IObjectId</LinkInterface>
+    <LinkInterface>IConstructible</LinkInterface>
   </Object>
   <Object name="WeaponBasicStats" objType="Subrecord" recordType="DATA" GUID="be7d3fc4-80d6-464c-931d-8329744fe7d3" ID="196">
-    <Interface>IWeightValue</Interface>
     <Fields>
       <UInt32 name="Value" />
       <Float name="Weight" />

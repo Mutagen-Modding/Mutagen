@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class WorldspaceNavigationMeshData :
         ANavigationMeshData,
-        IWorldspaceNavigationMeshData,
+        IEquatable<IWorldspaceNavigationMeshDataGetter>,
         ILoquiObjectSetter<WorldspaceNavigationMeshData>,
-        IEquatable<IWorldspaceNavigationMeshDataGetter>
+        IWorldspaceNavigationMeshData
     {
         #region Ctor
         public WorldspaceNavigationMeshData()
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             ANavigationMeshData.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -456,10 +456,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IWorldspaceNavigationMeshData :
-        IWorldspaceNavigationMeshDataGetter,
         IANavigationMeshData,
+        IFormLinkContainer,
         ILoquiObjectSetter<IWorldspaceNavigationMeshData>,
-        IFormLinkContainer
+        IWorldspaceNavigationMeshDataGetter
     {
         new FormLink<IWorldspaceGetter> Parent { get; set; }
         new P2Int16 Coordinates { get; set; }
@@ -467,9 +467,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IWorldspaceNavigationMeshDataGetter :
         IANavigationMeshDataGetter,
-        ILoquiObject<IWorldspaceNavigationMeshDataGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IWorldspaceNavigationMeshDataGetter>
     {
         static new ILoquiRegistration Registration => WorldspaceNavigationMeshData_Registration.Instance;
         FormLink<IWorldspaceGetter> Parent { get; }

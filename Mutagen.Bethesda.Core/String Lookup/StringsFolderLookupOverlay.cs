@@ -1,4 +1,3 @@
-using Compression.BSA;
 using Noggog;
 using System;
 using System.Collections.Generic;
@@ -7,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using Wabbajack.Common;
 
 namespace Mutagen.Bethesda
 {
@@ -50,7 +48,7 @@ namespace Mutagen.Bethesda
             ModKey = modKey;
         }
 
-        public static StringsFolderLookupOverlay TypicalFactory(string dataPath, StringsReadParameters? instructions, ModKey modKey)
+        public static StringsFolderLookupOverlay TypicalFactory(GameRelease release, ModKey modKey, string dataPath, StringsReadParameters? instructions)
         {
             var stringsFolderPath = instructions?.StringsFolderOverride;
             if (stringsFolderPath == null)
@@ -66,22 +64,38 @@ namespace Mutagen.Bethesda
                     {
                         foreach (var file in stringsFolderPath.Value.Info.EnumerateFiles($"{modKey.Name}*{StringsUtility.StringsFileExtension}"))
                         {
-                            if (!StringsUtility.TryRetrieveInfoFromString(file.Name, out var type, out var lang, out _)) continue;
+                            if (!StringsUtility.TryRetrieveInfoFromString(
+                                release.GetLanguageFormat(),
+                                file.Name, 
+                                out var type,
+                                out var lang, 
+                                out _))
+                            {
+                                continue;
+                            }
                             var dict = bundle.Get(type);
                             dict[lang] = new Lazy<IStringsLookup>(() => new StringsLookupOverlay(file.FullName, type), LazyThreadSafetyMode.ExecutionAndPublication);
                         }
                     }
-                    foreach (var bsaFile in Directory.EnumerateFiles(dataPath, "*.bsa"))
+                    foreach (var bsaFile in Archive.GetApplicableArchivePaths(release, dataPath, modKey))
                     {
                         try
                         {
-                            var bsaReader = BSAReader.Load(new AbsolutePath(bsaFile, skipValidation: true));
+                            var bsaReader = Archive.CreateReader(release, bsaFile);
                             if (!bsaReader.TryGetFolder("strings", out var stringsFolder)) continue;
                             try
                             {
                                 foreach (var item in stringsFolder.Files)
                                 {
-                                    if (!StringsUtility.TryRetrieveInfoFromString(Path.GetFileName(item.Path.ToString()), out var type, out var lang, out var modName)) continue;
+                                    if (!StringsUtility.TryRetrieveInfoFromString(
+                                        release.GetLanguageFormat(), 
+                                        Path.GetFileName(item.Path.ToString()), 
+                                        out var type, 
+                                        out var lang,
+                                        out var modName))
+                                    {
+                                        continue;
+                                    }
                                     if (!MemoryExtensions.Equals(modKey.Name, modName, StringComparison.OrdinalIgnoreCase)) continue;
                                     var dict = bundle.Get(type);
                                     if (dict.ContainsKey(lang)) continue;
@@ -91,7 +105,7 @@ namespace Mutagen.Bethesda
                                         {
                                             byte[] bytes = new byte[item.Size];
                                             using var stream = new MemoryStream(bytes);
-                                            item.CopyDataTo(stream).AsTask().Wait();
+                                            item.CopyDataTo(stream);
                                             return new StringsLookupOverlay(bytes, type);
                                         }
                                         catch (Exception ex)
@@ -103,7 +117,7 @@ namespace Mutagen.Bethesda
                             }
                             catch (Exception ex)
                             {
-                                throw BsaException.FolderError("BSA folder failed to parse for string file", ex, bsaFile, stringsFolder.Name ?? string.Empty);
+                                throw BsaException.FolderError("BSA folder failed to parse for string file", ex, bsaFile, stringsFolder.Path ?? string.Empty);
                             }
                         }
                         catch (Exception ex)

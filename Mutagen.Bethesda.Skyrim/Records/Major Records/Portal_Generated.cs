@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class Portal :
-        IPortal,
+        IEquatable<IPortalGetter>,
         ILoquiObjectSetter<Portal>,
-        IEquatable<IPortalGetter>
+        IPortal
     {
         #region Ctor
         public Portal()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -444,9 +444,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPortal :
-        IPortalGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IPortal>,
-        IFormLinkContainer
+        IPortalGetter
     {
         new FormLink<IPlacedObjectGetter> Origin { get; set; }
         new FormLink<IPlacedObjectGetter> Destination { get; set; }
@@ -454,9 +454,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IPortalGetter :
         ILoquiObject,
-        ILoquiObject<IPortalGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IPortalGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

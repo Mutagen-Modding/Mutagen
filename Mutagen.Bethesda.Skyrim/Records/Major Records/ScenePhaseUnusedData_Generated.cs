@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class ScenePhaseUnusedData :
-        IScenePhaseUnusedData,
+        IEquatable<IScenePhaseUnusedDataGetter>,
         ILoquiObjectSetter<ScenePhaseUnusedData>,
-        IEquatable<IScenePhaseUnusedDataGetter>
+        IScenePhaseUnusedData
     {
         #region Ctor
         public ScenePhaseUnusedData()
@@ -126,8 +126,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -572,8 +572,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IScenePhaseUnusedData :
-        IScenePhaseUnusedDataGetter,
-        ILoquiObjectSetter<IScenePhaseUnusedData>
+        ILoquiObjectSetter<IScenePhaseUnusedData>,
+        IScenePhaseUnusedDataGetter
     {
         new MemorySlice<Byte>? SCHR { get; set; }
         new MemorySlice<Byte>? SCDA { get; set; }
@@ -584,8 +584,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IScenePhaseUnusedDataGetter :
         ILoquiObject,
-        ILoquiObject<IScenePhaseUnusedDataGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IScenePhaseUnusedDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

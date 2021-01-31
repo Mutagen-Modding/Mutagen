@@ -34,6 +34,7 @@
     <Compile Include="Enums\EmotionType.cs" />
     <Compile Include="Enums\EquipmentFlag.cs" />
     <Compile Include="Enums\FunctionIndex.cs" />
+    <Compile Include="Enums\GroupTypeEnum.cs" />
     <Compile Include="Enums\IngredientFlag.cs" />
     <Compile Include="Enums\LeveledFlag.cs" />
     <Compile Include="Enums\MagicSchool.cs" />
@@ -45,6 +46,7 @@
     <Compile Include="Enums\Specialization.cs" />
     <Compile Include="Enums\Weekday.cs" />
     <Compile Include="Extensions\ModContextExt.cs" />
+    <Compile Include="Interfaces\IModeled.cs" />
     <Compile Include="Records\Common Subrecords\Condition.cs">
       <DependentUpon>Condition.xml</DependentUpon>
     </Compile>
@@ -63,12 +65,6 @@
     <Compile Include="Records\ListGroup.cs">
       <DependentUpon>Group.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\AClothing.cs">
-      <DependentUpon>AClothing.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Activator.cs">
-      <DependentUpon>Activator.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\AIPackage.cs">
       <DependentUpon>AIPackage.xml</DependentUpon>
     </Compile>
@@ -81,17 +77,11 @@
     <Compile Include="Records\Major Records\AlchemicalApparatus.cs">
       <DependentUpon>AlchemicalApparatus.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\Ammunition.cs">
-      <DependentUpon>Ammunition.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\AmmunitionData.cs">
       <DependentUpon>Ammunition.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\ArmorData.cs">
       <DependentUpon>Armor.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Birthsign.cs">
-      <DependentUpon>Birthsign.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Book.cs">
       <DependentUpon>Book.xml</DependentUpon>
@@ -147,12 +137,6 @@
     <Compile Include="Records\Major Records\Faction.cs">
       <DependentUpon>Faction.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\Flora.cs">
-      <DependentUpon>Flora.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Furniture.cs">
-      <DependentUpon>Furniture.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\GameSetting.cs">
       <DependentUpon>GameSetting.xml</DependentUpon>
     </Compile>
@@ -189,12 +173,6 @@
     <Compile Include="Records\Major Records\IdleAnimation.cs">
       <DependentUpon>IdleAnimation.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\Ingredient.cs">
-      <DependentUpon>Ingredient.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Key.cs">
-      <DependentUpon>Key.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\LeveledItem.cs">
       <DependentUpon>LeveledItem.xml</DependentUpon>
     </Compile>
@@ -213,9 +191,6 @@
     <Compile Include="Records\Major Records\MapMarker.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\Miscellaneous.cs">
-      <DependentUpon>Miscellaneous.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\Npc.cs">
       <DependentUpon>Npc.xml</DependentUpon>
     </Compile>
@@ -227,9 +202,6 @@
     </Compile>
     <Compile Include="Records\Major Records\PlacedObject.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Potion.cs">
-      <DependentUpon>Potion.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Quest.cs">
       <DependentUpon>Quest.xml</DependentUpon>
@@ -263,12 +235,6 @@
     </Compile>
     <Compile Include="Records\Major Records\ScriptMetaSummary.cs">
       <DependentUpon>Script.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\SigilStone.cs">
-      <DependentUpon>SigilStone.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\SoulGem.cs">
-      <DependentUpon>SoulGem.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\SoundData.cs">
       <DependentUpon>Sound.xml</DependentUpon>
@@ -925,8 +891,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Loqui" Version="2.3.2" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.4.0.1-dev" />
+    <PackageReference Include="Loqui" Version="2.5.0" />
+    <PackageReference Include="Noggog.CSharpExt" Version="2.5.0" />
     <PackageReference Include="NuGetizer" Version="0.6.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

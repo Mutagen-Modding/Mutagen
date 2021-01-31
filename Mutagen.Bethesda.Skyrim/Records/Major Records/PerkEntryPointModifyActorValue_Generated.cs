@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class PerkEntryPointModifyActorValue :
         APerkEntryPointEffect,
-        IPerkEntryPointModifyActorValue,
+        IEquatable<IPerkEntryPointModifyActorValueGetter>,
         ILoquiObjectSetter<PerkEntryPointModifyActorValue>,
-        IEquatable<IPerkEntryPointModifyActorValueGetter>
+        IPerkEntryPointModifyActorValue
     {
         #region Ctor
         public PerkEntryPointModifyActorValue()
@@ -83,8 +83,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             APerkEntryPointEffect.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -474,9 +474,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPerkEntryPointModifyActorValue :
-        IPerkEntryPointModifyActorValueGetter,
         IAPerkEntryPointEffect,
-        ILoquiObjectSetter<IPerkEntryPointModifyActorValue>
+        ILoquiObjectSetter<IPerkEntryPointModifyActorValue>,
+        IPerkEntryPointModifyActorValueGetter
     {
         new ActorValue ActorValue { get; set; }
         new Single Value { get; set; }
@@ -485,8 +485,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IPerkEntryPointModifyActorValueGetter :
         IAPerkEntryPointEffectGetter,
-        ILoquiObject<IPerkEntryPointModifyActorValueGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IPerkEntryPointModifyActorValueGetter>
     {
         static new ILoquiRegistration Registration => PerkEntryPointModifyActorValue_Registration.Instance;
         ActorValue ActorValue { get; }

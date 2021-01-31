@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class GrassData :
+        IEquatable<IGrassDataGetter>,
         IGrassData,
-        ILoquiObjectSetter<GrassData>,
-        IEquatable<IGrassDataGetter>
+        ILoquiObjectSetter<GrassData>
     {
         #region Ctor
         public GrassData()
@@ -107,8 +107,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -772,8 +772,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IGrassDataGetter :
         ILoquiObject,
-        ILoquiObject<IGrassDataGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IGrassDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

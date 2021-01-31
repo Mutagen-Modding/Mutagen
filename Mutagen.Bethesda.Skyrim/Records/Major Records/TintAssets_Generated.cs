@@ -28,9 +28,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class TintAssets :
-        ITintAssets,
+        IEquatable<ITintAssetsGetter>,
         ILoquiObjectSetter<TintAssets>,
-        IEquatable<ITintAssetsGetter>
+        ITintAssets
     {
         #region Ctor
         public TintAssets()
@@ -104,8 +104,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -630,9 +630,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ITintAssets :
-        ITintAssetsGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<ITintAssets>,
-        IFormLinkContainer
+        ITintAssetsGetter
     {
         new UInt16? Index { get; set; }
         new String? FileName { get; set; }
@@ -643,9 +643,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ITintAssetsGetter :
         ILoquiObject,
-        ILoquiObject<ITintAssetsGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ITintAssetsGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

@@ -35,6 +35,8 @@ namespace Mutagen.Bethesda
                     return true;
                 case GameCategory.Skyrim:
                     return false;
+                case GameCategory.Fallout4:
+                    return false;
                 default:
                     throw new NotImplementedException();
             }

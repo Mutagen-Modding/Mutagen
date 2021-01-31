@@ -30,8 +30,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class CellNavigationMeshData :
         ANavigationMeshData,
         ICellNavigationMeshData,
-        ILoquiObjectSetter<CellNavigationMeshData>,
-        IEquatable<ICellNavigationMeshDataGetter>
+        IEquatable<ICellNavigationMeshDataGetter>,
+        ILoquiObjectSetter<CellNavigationMeshData>
     {
         #region Ctor
         public CellNavigationMeshData()
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             ANavigationMeshData.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -456,10 +456,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ICellNavigationMeshData :
-        ICellNavigationMeshDataGetter,
         IANavigationMeshData,
-        ILoquiObjectSetter<ICellNavigationMeshData>,
-        IFormLinkContainer
+        ICellNavigationMeshDataGetter,
+        IFormLinkContainer,
+        ILoquiObjectSetter<ICellNavigationMeshData>
     {
         new FormLink<IWorldspaceGetter> UnusedWorldspaceParent { get; set; }
         new FormLink<ICellGetter> Parent { get; set; }
@@ -467,9 +467,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ICellNavigationMeshDataGetter :
         IANavigationMeshDataGetter,
-        ILoquiObject<ICellNavigationMeshDataGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ICellNavigationMeshDataGetter>
     {
         static new ILoquiRegistration Registration => CellNavigationMeshData_Registration.Instance;
         FormLink<IWorldspaceGetter> UnusedWorldspaceParent { get; }

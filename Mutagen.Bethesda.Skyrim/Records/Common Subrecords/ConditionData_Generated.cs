@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public abstract partial class ConditionData :
         IConditionData,
-        ILoquiObjectSetter<ConditionData>,
-        IEquatable<IConditionDataGetter>
+        IEquatable<IConditionDataGetter>,
+        ILoquiObjectSetter<ConditionData>
     {
         #region Ctor
         public ConditionData()
@@ -74,8 +74,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -359,8 +359,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public partial interface IConditionData :
         IConditionDataGetter,
-        ILoquiObjectSetter<IConditionData>,
-        IFormLinkContainer
+        IFormLinkContainer,
+        ILoquiObjectSetter<IConditionData>
     {
     }
 
@@ -369,9 +369,9 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public partial interface IConditionDataGetter :
         ILoquiObject,
-        ILoquiObject<IConditionDataGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IConditionDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

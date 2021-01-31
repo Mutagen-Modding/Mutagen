@@ -32,8 +32,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public abstract partial class ANavigationMeshData :
         IANavigationMeshData,
-        ILoquiObjectSetter<ANavigationMeshData>,
-        IEquatable<IANavigationMeshDataGetter>
+        IEquatable<IANavigationMeshDataGetter>,
+        ILoquiObjectSetter<ANavigationMeshData>
     {
         #region Ctor
         public ANavigationMeshData()
@@ -165,8 +165,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1090,8 +1090,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public partial interface IANavigationMeshData :
         IANavigationMeshDataGetter,
-        ILoquiObjectSetter<IANavigationMeshData>,
-        IFormLinkContainer
+        IFormLinkContainer,
+        ILoquiObjectSetter<IANavigationMeshData>
     {
         new UInt32 NavmeshVersion { get; set; }
         new UInt32 Magic { get; set; }
@@ -1112,9 +1112,9 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public partial interface IANavigationMeshDataGetter :
         ILoquiObject,
-        ILoquiObject<IANavigationMeshDataGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IANavigationMeshDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

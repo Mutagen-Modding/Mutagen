@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class NpcConfiguration :
-        INpcConfiguration,
+        IEquatable<INpcConfigurationGetter>,
         ILoquiObjectSetter<NpcConfiguration>,
-        IEquatable<INpcConfigurationGetter>
+        INpcConfiguration
     {
         #region Ctor
         public NpcConfiguration()
@@ -92,8 +92,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -598,8 +598,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface INpcConfiguration :
-        INpcConfigurationGetter,
-        ILoquiObjectSetter<INpcConfiguration>
+        ILoquiObjectSetter<INpcConfiguration>,
+        INpcConfigurationGetter
     {
         new Npc.NpcFlag Flags { get; set; }
         new UInt16 BaseSpellPoints { get; set; }
@@ -612,8 +612,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface INpcConfigurationGetter :
         ILoquiObject,
-        ILoquiObject<INpcConfigurationGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<INpcConfigurationGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

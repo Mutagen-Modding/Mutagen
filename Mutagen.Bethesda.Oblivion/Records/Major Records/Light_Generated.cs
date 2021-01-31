@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Light :
         AItem,
+        IEquatable<ILightGetter>,
         ILightInternal,
-        ILoquiObjectSetter<Light>,
-        IEquatable<ILightGetter>
+        ILoquiObjectSetter<Light>
     {
         #region Ctor
         protected Light()
@@ -52,6 +52,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? ILightGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
         #endregion
         #region Script
         public FormLinkNullable<IScriptGetter> Script { get; set; } = new FormLinkNullable<IScriptGetter>();
@@ -60,6 +64,16 @@ namespace Mutagen.Bethesda.Oblivion
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ILightGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
         #endregion
         #region Icon
         public String? Icon { get; set; }
@@ -118,8 +132,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             AItem.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -660,11 +674,13 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ILight :
-        ILightGetter,
         IAItem,
-        INamed,
+        IFormLinkContainer,
+        ILightGetter,
         ILoquiObjectSetter<ILightInternal>,
-        IFormLinkContainer
+        IModeled,
+        INamed,
+        INamedRequired
     {
         new Model? Model { get; set; }
         new FormLinkNullable<IScriptGetter> Script { get; set; }
@@ -684,10 +700,12 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ILightGetter :
         IAItemGetter,
-        INamedGetter,
-        ILoquiObject<ILightGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ILightGetter>,
+        IModeledGetter,
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Light_Registration.Instance;
         IModelGetter? Model { get; }
@@ -1926,6 +1944,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Name
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        #endregion
         #endregion
         #region Icon
         private int? _IconLocation;

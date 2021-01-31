@@ -28,9 +28,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class NpcSoundType :
-        INpcSoundType,
+        IEquatable<INpcSoundTypeGetter>,
         ILoquiObjectSetter<NpcSoundType>,
-        IEquatable<INpcSoundTypeGetter>
+        INpcSoundType
     {
         #region Ctor
         public NpcSoundType()
@@ -91,8 +91,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -533,9 +533,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface INpcSoundType :
-        INpcSoundTypeGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<INpcSoundType>,
-        IFormLinkContainer
+        INpcSoundTypeGetter
     {
         new NpcSoundType.SoundType? Type { get; set; }
         new ExtendedList<NpcSound> Sounds { get; }
@@ -543,9 +543,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface INpcSoundTypeGetter :
         ILoquiObject,
-        ILoquiObject<INpcSoundTypeGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<INpcSoundTypeGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

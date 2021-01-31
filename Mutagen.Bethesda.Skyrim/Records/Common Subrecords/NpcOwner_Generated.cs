@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class NpcOwner :
         OwnerTarget,
-        INpcOwner,
+        IEquatable<INpcOwnerGetter>,
         ILoquiObjectSetter<NpcOwner>,
-        IEquatable<INpcOwnerGetter>
+        INpcOwner
     {
         #region Ctor
         public NpcOwner()
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             OwnerTarget.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -432,10 +432,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface INpcOwner :
-        INpcOwnerGetter,
-        IOwnerTarget,
+        IFormLinkContainer,
         ILoquiObjectSetter<INpcOwner>,
-        IFormLinkContainer
+        INpcOwnerGetter,
+        IOwnerTarget
     {
         new FormLink<INpcGetter> Npc { get; set; }
         new FormLink<IGlobalGetter> Global { get; set; }
@@ -443,9 +443,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface INpcOwnerGetter :
         IOwnerTargetGetter,
-        ILoquiObject<INpcOwnerGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<INpcOwnerGetter>
     {
         static new ILoquiRegistration Registration => NpcOwner_Registration.Instance;
         FormLink<INpcGetter> Npc { get; }

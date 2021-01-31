@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class CameraPath :
         SkyrimMajorRecord,
         ICameraPathInternal,
-        ILoquiObjectSetter<CameraPath>,
-        IEquatable<ICameraPathGetter>
+        IEquatable<ICameraPathGetter>,
+        ILoquiObjectSetter<CameraPath>
     {
         #region Ctor
         protected CameraPath()
@@ -123,8 +123,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -836,9 +836,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface ICameraPath :
         ICameraPathGetter,
-        ISkyrimMajorRecord,
+        IFormLinkContainer,
         ILoquiObjectSetter<ICameraPathInternal>,
-        IFormLinkContainer
+        ISkyrimMajorRecord
     {
         new ExtendedList<Condition> Conditions { get; }
         new ExtendedList<IFormLink<ICameraPathGetter>> RelatedPaths { get; }
@@ -856,9 +856,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ICameraPathGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<ICameraPathGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ICameraPathGetter>
     {
         static new ILoquiRegistration Registration => CameraPath_Registration.Instance;
         IReadOnlyList<IConditionGetter> Conditions { get; }

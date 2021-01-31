@@ -9,15 +9,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class Light
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String INamedRequiredGetter.Name => this.Name ?? string.Empty;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String INamedRequired.Name
-        {
-            get => this.Name ?? string.Empty;
-            set => this.Name = value;
-        }
-
         [Flags]
         public enum LightFlag
         {
@@ -31,15 +22,6 @@ namespace Mutagen.Bethesda.Oblivion
             PulseSlow = 0x100,
             SpotLight = 0x200,
             SpotShadow = 0x400,
-        }
-    }
-
-    namespace Internals
-    {
-        public partial class LightBinaryOverlay
-        {
-            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            String INamedRequiredGetter.Name => this.Name ?? string.Empty;
         }
     }
 }

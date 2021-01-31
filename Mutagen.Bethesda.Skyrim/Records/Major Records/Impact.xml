@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Impact" objType="Record" recordType="IPCT" baseClass="SkyrimMajorRecord" GUID="d508129e-9303-4d72-bbb5-dc4abc363372" ID="439">
-    <Interface>IModeled</Interface>
     <Fields>
       <RefDirect name="Model" refName="Model" />
       <Data>

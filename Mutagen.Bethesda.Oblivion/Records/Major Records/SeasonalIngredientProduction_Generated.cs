@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class SeasonalIngredientProduction :
-        ISeasonalIngredientProduction,
+        IEquatable<ISeasonalIngredientProductionGetter>,
         ILoquiObjectSetter<SeasonalIngredientProduction>,
-        IEquatable<ISeasonalIngredientProductionGetter>
+        ISeasonalIngredientProduction
     {
         #region Ctor
         public SeasonalIngredientProduction()
@@ -83,8 +83,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -505,8 +505,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ISeasonalIngredientProduction :
-        ISeasonalIngredientProductionGetter,
-        ILoquiObjectSetter<ISeasonalIngredientProduction>
+        ILoquiObjectSetter<ISeasonalIngredientProduction>,
+        ISeasonalIngredientProductionGetter
     {
         new Byte Spring { get; set; }
         new Byte Summer { get; set; }
@@ -516,8 +516,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ISeasonalIngredientProductionGetter :
         ILoquiObject,
-        ILoquiObject<ISeasonalIngredientProductionGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ISeasonalIngredientProductionGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

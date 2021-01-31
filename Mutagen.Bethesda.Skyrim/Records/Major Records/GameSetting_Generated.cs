@@ -33,9 +33,9 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public abstract partial class GameSetting :
         SkyrimMajorRecord,
+        IEquatable<IGameSettingGetter>,
         IGameSettingInternal,
-        ILoquiObjectSetter<GameSetting>,
-        IEquatable<IGameSettingGetter>
+        ILoquiObjectSetter<GameSetting>
     {
         #region Ctor
         protected GameSetting()
@@ -78,8 +78,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -393,8 +393,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public partial interface IGameSetting :
         IGameSettingGetter,
-        ISkyrimMajorRecord,
-        ILoquiObjectSetter<IGameSettingInternal>
+        ILoquiObjectSetter<IGameSettingInternal>,
+        ISkyrimMajorRecord
     {
     }
 
@@ -410,8 +410,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public partial interface IGameSettingGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<IGameSettingGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IGameSettingGetter>
     {
         static new ILoquiRegistration Registration => GameSetting_Registration.Instance;
 

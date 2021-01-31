@@ -28,9 +28,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class WorldspaceBlock :
-        IWorldspaceBlock,
+        IEquatable<IWorldspaceBlockGetter>,
         ILoquiObjectSetter<WorldspaceBlock>,
-        IEquatable<IWorldspaceBlockGetter>
+        IWorldspaceBlock
     {
         #region Ctor
         public WorldspaceBlock()
@@ -98,8 +98,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -659,10 +659,10 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IWorldspaceBlock :
-        IWorldspaceBlockGetter,
-        IMajorRecordEnumerable,
+        IFormLinkContainer,
         ILoquiObjectSetter<IWorldspaceBlock>,
-        IFormLinkContainer
+        IMajorRecordEnumerable,
+        IWorldspaceBlockGetter
     {
         new Int16 BlockNumberY { get; set; }
         new Int16 BlockNumberX { get; set; }
@@ -673,10 +673,10 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IWorldspaceBlockGetter :
         ILoquiObject,
-        IMajorRecordGetterEnumerable,
-        ILoquiObject<IWorldspaceBlockGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IWorldspaceBlockGetter>,
+        IMajorRecordGetterEnumerable
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

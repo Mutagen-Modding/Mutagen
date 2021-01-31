@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class DialogResponses :
         SkyrimMajorRecord,
         IDialogResponsesInternal,
-        ILoquiObjectSetter<DialogResponses>,
-        IEquatable<IDialogResponsesGetter>
+        IEquatable<IDialogResponsesGetter>,
+        ILoquiObjectSetter<DialogResponses>
     {
         #region Ctor
         protected DialogResponses()
@@ -192,8 +192,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1280,11 +1280,11 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IDialogResponses :
-        IDialogResponsesGetter,
-        ISkyrimMajorRecord,
         IDialog,
+        IDialogResponsesGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IDialogResponsesInternal>,
-        IFormLinkContainer
+        ISkyrimMajorRecord
     {
         new DialogResponsesAdapter? VirtualMachineAdapter { get; set; }
         new MemorySlice<Byte>? DATA { get; set; }
@@ -1316,10 +1316,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IDialogResponsesGetter :
         ISkyrimMajorRecordGetter,
+        IBinaryItem,
         IDialogGetter,
-        ILoquiObject<IDialogResponsesGetter>,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IDialogResponsesGetter>
     {
         static new ILoquiRegistration Registration => DialogResponses_Registration.Instance;
         IDialogResponsesAdapterGetter? VirtualMachineAdapter { get; }

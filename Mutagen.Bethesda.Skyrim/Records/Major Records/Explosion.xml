@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Explosion" recordType="EXPL" objType="Record" baseClass="SkyrimMajorRecord" GUID="ce166e0d-db1e-4510-b8f6-af429a302425" ID="109">
-    <Interface>ITranslatedNamed</Interface>
-    <Interface>IObjectBounded</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />

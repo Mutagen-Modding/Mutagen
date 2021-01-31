@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     /// Implemented by: [Model]
     /// </summary>
     public partial class SimpleModel :
-        ISimpleModel,
+        IEquatable<ISimpleModelGetter>,
         ILoquiObjectSetter<SimpleModel>,
-        IEquatable<ISimpleModelGetter>
+        ISimpleModel
     {
         #region Ctor
         public SimpleModel()
@@ -88,8 +88,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -459,9 +459,9 @@ namespace Mutagen.Bethesda.Skyrim
     /// Implemented by: [Model]
     /// </summary>
     public partial interface ISimpleModel :
-        ISimpleModelGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<ISimpleModel>,
-        IFormLinkContainer
+        ISimpleModelGetter
     {
         new String File { get; set; }
         new MemorySlice<Byte>? Data { get; set; }
@@ -472,9 +472,9 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public partial interface ISimpleModelGetter :
         ILoquiObject,
-        ILoquiObject<ISimpleModelGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ISimpleModelGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

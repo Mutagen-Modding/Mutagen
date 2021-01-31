@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class ActorValueInformation :
         SkyrimMajorRecord,
         IActorValueInformationInternal,
-        ILoquiObjectSetter<ActorValueInformation>,
-        IEquatable<IActorValueInformationGetter>
+        IEquatable<IActorValueInformationGetter>,
+        ILoquiObjectSetter<ActorValueInformation>
     {
         #region Ctor
         protected ActorValueInformation()
@@ -46,6 +46,34 @@ namespace Mutagen.Bethesda.Skyrim
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ITranslatedStringGetter? IActorValueInformationGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
         #endregion
         #region Description
         public TranslatedString? Description { get; set; }
@@ -126,8 +154,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -728,10 +756,13 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IActorValueInformation :
         IActorValueInformationGetter,
+        IFormLinkContainer,
+        ILoquiObjectSetter<IActorValueInformationInternal>,
+        INamed,
+        INamedRequired,
         ISkyrimMajorRecord,
         ITranslatedNamed,
-        ILoquiObjectSetter<IActorValueInformationInternal>,
-        IFormLinkContainer
+        ITranslatedNamedRequired
     {
         new TranslatedString? Name { get; set; }
         new TranslatedString? Description { get; set; }
@@ -750,10 +781,13 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IActorValueInformationGetter :
         ISkyrimMajorRecordGetter,
-        ITranslatedNamedGetter,
-        ILoquiObject<IActorValueInformationGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IActorValueInformationGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => ActorValueInformation_Registration.Instance;
         ITranslatedStringGetter? Name { get; }
@@ -1888,6 +1922,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Name
         private int? _NameLocation;
         public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        #endregion
         #endregion
         #region Description
         private int? _DescriptionLocation;

@@ -28,9 +28,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class WaterData :
-        IWaterData,
+        IEquatable<IWaterDataGetter>,
         ILoquiObjectSetter<WaterData>,
-        IEquatable<IWaterDataGetter>
+        IWaterData
     {
         #region Ctor
         public WaterData()
@@ -153,8 +153,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1227,8 +1227,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IWaterData :
-        IWaterDataGetter,
-        ILoquiObjectSetter<IWaterData>
+        ILoquiObjectSetter<IWaterData>,
+        IWaterDataGetter
     {
         new WaterData.VersioningBreaks Versioning { get; set; }
         new Single WindVelocity { get; set; }
@@ -1261,8 +1261,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IWaterDataGetter :
         ILoquiObject,
-        ILoquiObject<IWaterDataGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IWaterDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class LoadScreen :
         OblivionMajorRecord,
+        IEquatable<ILoadScreenGetter>,
         ILoadScreenInternal,
-        ILoquiObjectSetter<LoadScreen>,
-        IEquatable<ILoadScreenGetter>
+        ILoquiObjectSetter<LoadScreen>
     {
         #region Ctor
         protected LoadScreen()
@@ -99,8 +99,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -590,10 +590,10 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ILoadScreen :
+        IFormLinkContainer,
         ILoadScreenGetter,
-        IOblivionMajorRecord,
         ILoquiObjectSetter<ILoadScreenInternal>,
-        IFormLinkContainer
+        IOblivionMajorRecord
     {
         new String? Icon { get; set; }
         new String? Description { get; set; }
@@ -609,9 +609,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ILoadScreenGetter :
         IOblivionMajorRecordGetter,
-        ILoquiObject<ILoadScreenGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ILoadScreenGetter>
     {
         static new ILoquiRegistration Registration => LoadScreen_Registration.Instance;
         String? Icon { get; }

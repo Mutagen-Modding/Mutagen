@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Race :
         OblivionMajorRecord,
-        IRaceInternal,
+        IEquatable<IRaceGetter>,
         ILoquiObjectSetter<Race>,
-        IEquatable<IRaceGetter>
+        IRaceInternal
     {
         #region Ctor
         protected Race()
@@ -46,6 +46,16 @@ namespace Mutagen.Bethesda.Oblivion
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IRaceGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
         #endregion
         #region Description
         public String? Description { get; set; }
@@ -213,8 +223,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1442,11 +1452,12 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IRace :
-        IRaceGetter,
-        IOblivionMajorRecord,
-        INamed,
+        IFormLinkContainer,
         ILoquiObjectSetter<IRaceInternal>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired,
+        IOblivionMajorRecord,
+        IRaceGetter
     {
         new String? Name { get; set; }
         new String? Description { get; set; }
@@ -1480,10 +1491,11 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IRaceGetter :
         IOblivionMajorRecordGetter,
-        INamedGetter,
-        ILoquiObject<IRaceGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IRaceGetter>,
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Race_Registration.Instance;
         String? Name { get; }
@@ -3246,6 +3258,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Name
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        #endregion
         #endregion
         #region Description
         private int? _DescriptionLocation;

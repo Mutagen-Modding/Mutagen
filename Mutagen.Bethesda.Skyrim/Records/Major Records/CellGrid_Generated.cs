@@ -28,8 +28,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class CellGrid :
         ICellGrid,
-        ILoquiObjectSetter<CellGrid>,
-        IEquatable<ICellGridGetter>
+        IEquatable<ICellGridGetter>,
+        ILoquiObjectSetter<CellGrid>
     {
         #region Ctor
         public CellGrid()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -452,8 +452,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ICellGridGetter :
         ILoquiObject,
-        ILoquiObject<ICellGridGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ICellGridGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

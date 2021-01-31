@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class ItemEntry :
+        IEquatable<IItemEntryGetter>,
         IItemEntry,
-        ILoquiObjectSetter<ItemEntry>,
-        IEquatable<IItemEntryGetter>
+        ILoquiObjectSetter<ItemEntry>
     {
         #region Ctor
         public ItemEntry()
@@ -79,8 +79,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -447,9 +447,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IItemEntry :
+        IFormLinkContainer,
         IItemEntryGetter,
-        ILoquiObjectSetter<IItemEntry>,
-        IFormLinkContainer
+        ILoquiObjectSetter<IItemEntry>
     {
         new FormLink<IAItemGetter> Item { get; set; }
         new Int32? Count { get; set; }
@@ -457,9 +457,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IItemEntryGetter :
         ILoquiObject,
-        ILoquiObject<IItemEntryGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IItemEntryGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

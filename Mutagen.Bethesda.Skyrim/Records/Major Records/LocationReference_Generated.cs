@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class LocationReference :
+        IEquatable<ILocationReferenceGetter>,
         ILocationReference,
-        ILoquiObjectSetter<LocationReference>,
-        IEquatable<ILocationReferenceGetter>
+        ILoquiObjectSetter<LocationReference>
     {
         #region Ctor
         public LocationReference()
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -475,9 +475,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ILocationReference :
+        IFormLinkContainer,
         ILocationReferenceGetter,
-        ILoquiObjectSetter<ILocationReference>,
-        IFormLinkContainer
+        ILoquiObjectSetter<ILocationReference>
     {
         new FormLink<ILinkedReferenceGetter> Actor { get; set; }
         new FormLink<IComplexLocationGetter> Location { get; set; }
@@ -486,9 +486,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ILocationReferenceGetter :
         ILoquiObject,
-        ILoquiObject<ILocationReferenceGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ILocationReferenceGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

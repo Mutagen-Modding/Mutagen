@@ -31,9 +31,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Region :
         OblivionMajorRecord,
-        IRegionInternal,
+        IEquatable<IRegionGetter>,
         ILoquiObjectSetter<Region>,
-        IEquatable<IRegionGetter>
+        IRegionInternal
     {
         #region Ctor
         protected Region()
@@ -158,8 +158,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -852,10 +852,10 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IRegion :
-        IRegionGetter,
-        IOblivionMajorRecord,
+        IFormLinkContainer,
         ILoquiObjectSetter<IRegionInternal>,
-        IFormLinkContainer
+        IOblivionMajorRecord,
+        IRegionGetter
     {
         new String? Icon { get; set; }
         new Color? MapColor { get; set; }
@@ -877,9 +877,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IRegionGetter :
         IOblivionMajorRecordGetter,
-        ILoquiObject<IRegionGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IRegionGetter>
     {
         static new ILoquiRegistration Registration => Region_Registration.Instance;
         String? Icon { get; }

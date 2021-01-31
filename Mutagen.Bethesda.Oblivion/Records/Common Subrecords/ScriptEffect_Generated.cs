@@ -28,9 +28,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class ScriptEffect :
-        IScriptEffect,
+        IEquatable<IScriptEffectGetter>,
         ILoquiObjectSetter<ScriptEffect>,
-        IEquatable<IScriptEffectGetter>
+        IScriptEffect
     {
         #region Ctor
         public ScriptEffect()
@@ -55,6 +55,16 @@ namespace Mutagen.Bethesda.Oblivion
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IScriptEffectGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
         #endregion
 
         #region To String
@@ -88,8 +98,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -462,10 +472,11 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IScriptEffect :
-        IScriptEffectGetter,
-        INamed,
+        IFormLinkContainer,
         ILoquiObjectSetter<IScriptEffect>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired,
+        IScriptEffectGetter
     {
         new ScriptEffectData? Data { get; set; }
         new String? Name { get; set; }
@@ -473,10 +484,11 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IScriptEffectGetter :
         ILoquiObject,
-        INamedGetter,
-        ILoquiObject<IScriptEffectGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IScriptEffectGetter>,
+        INamedGetter,
+        INamedRequiredGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -1213,6 +1225,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Name
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        #endregion
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

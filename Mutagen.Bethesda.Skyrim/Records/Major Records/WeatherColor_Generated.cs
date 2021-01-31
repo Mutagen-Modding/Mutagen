@@ -28,9 +28,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class WeatherColor :
-        IWeatherColor,
+        IEquatable<IWeatherColorGetter>,
         ILoquiObjectSetter<WeatherColor>,
-        IEquatable<IWeatherColorGetter>
+        IWeatherColor
     {
         #region Ctor
         public WeatherColor()
@@ -84,8 +84,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -502,8 +502,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IWeatherColor :
-        IWeatherColorGetter,
-        ILoquiObjectSetter<IWeatherColor>
+        ILoquiObjectSetter<IWeatherColor>,
+        IWeatherColorGetter
     {
         new Color Sunrise { get; set; }
         new Color Day { get; set; }
@@ -513,8 +513,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IWeatherColorGetter :
         ILoquiObject,
-        ILoquiObject<IWeatherColorGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IWeatherColorGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

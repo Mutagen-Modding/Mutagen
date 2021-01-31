@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class PlacedBarrier :
         APlacedTrap,
-        IPlacedBarrierInternal,
+        IEquatable<IPlacedBarrierGetter>,
         ILoquiObjectSetter<PlacedBarrier>,
-        IEquatable<IPlacedBarrierGetter>
+        IPlacedBarrierInternal
     {
         #region Ctor
         protected PlacedBarrier()
@@ -78,8 +78,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             APlacedTrap.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -491,10 +491,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPlacedBarrier :
-        IPlacedBarrierGetter,
         IAPlacedTrap,
+        IFormLinkContainer,
         ILoquiObjectSetter<IPlacedBarrierInternal>,
-        IFormLinkContainer
+        IPlacedBarrierGetter
     {
         new FormLink<IProjectileGetter> Projectile { get; set; }
     }
@@ -508,9 +508,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IPlacedBarrierGetter :
         IAPlacedTrapGetter,
-        ILoquiObject<IPlacedBarrierGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IPlacedBarrierGetter>
     {
         static new ILoquiRegistration Registration => PlacedBarrier_Registration.Instance;
         FormLink<IProjectileGetter> Projectile { get; }

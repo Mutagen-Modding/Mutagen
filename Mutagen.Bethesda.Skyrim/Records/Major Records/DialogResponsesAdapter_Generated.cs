@@ -30,8 +30,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class DialogResponsesAdapter :
         AVirtualMachineAdapter,
         IDialogResponsesAdapter,
-        ILoquiObjectSetter<DialogResponsesAdapter>,
-        IEquatable<IDialogResponsesAdapterGetter>
+        IEquatable<IDialogResponsesAdapterGetter>,
+        ILoquiObjectSetter<DialogResponsesAdapter>
     {
         #region Ctor
         public DialogResponsesAdapter()
@@ -85,8 +85,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             AVirtualMachineAdapter.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -421,8 +421,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IDialogResponsesAdapter :
-        IDialogResponsesAdapterGetter,
         IAVirtualMachineAdapter,
+        IDialogResponsesAdapterGetter,
         ILoquiObjectSetter<IDialogResponsesAdapter>
     {
         new ScriptFragments? ScriptFragments { get; set; }
@@ -430,8 +430,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IDialogResponsesAdapterGetter :
         IAVirtualMachineAdapterGetter,
-        ILoquiObject<IDialogResponsesAdapterGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IDialogResponsesAdapterGetter>
     {
         static new ILoquiRegistration Registration => DialogResponsesAdapter_Registration.Instance;
         IScriptFragmentsGetter? ScriptFragments { get; }

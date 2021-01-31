@@ -24,7 +24,6 @@
     </Fields>
   </Object>
   <Object name="RegionData" abstract="true" objType="Subrecord" GUID="a6986ee8-e0cb-4fd9-bd88-b883bbc763d2" ID="260">
-    <Interface>IHasIcons</Interface>
     <Fields>
       <RefDirect name="Header" refName="RegionDataHeader" />
       <RefDirect name="Icons" refName="Icons" />

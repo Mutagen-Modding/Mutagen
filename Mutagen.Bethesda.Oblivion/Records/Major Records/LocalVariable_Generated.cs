@@ -28,9 +28,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class LocalVariable :
+        IEquatable<ILocalVariableGetter>,
         ILocalVariable,
-        ILoquiObjectSetter<LocalVariable>,
-        IEquatable<ILocalVariableGetter>
+        ILoquiObjectSetter<LocalVariable>
     {
         #region Ctor
         public LocalVariable()
@@ -55,6 +55,16 @@ namespace Mutagen.Bethesda.Oblivion
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ILocalVariableGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
         #endregion
 
         #region To String
@@ -88,8 +98,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -458,7 +468,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ILocalVariable :
         ILocalVariableGetter,
-        ILoquiObjectSetter<ILocalVariable>
+        ILoquiObjectSetter<ILocalVariable>,
+        INamed,
+        INamedRequired
     {
         new LocalVariableData? Data { get; set; }
         new String? Name { get; set; }
@@ -466,8 +478,10 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ILocalVariableGetter :
         ILoquiObject,
+        IBinaryItem,
         ILoquiObject<ILocalVariableGetter>,
-        IBinaryItem
+        INamedGetter,
+        INamedRequiredGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -1195,6 +1209,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Name
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        #endregion
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

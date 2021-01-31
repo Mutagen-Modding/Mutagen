@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class StoryManagerEventNode :
         AStoryManagerNode,
-        IStoryManagerEventNodeInternal,
+        IEquatable<IStoryManagerEventNodeGetter>,
         ILoquiObjectSetter<StoryManagerEventNode>,
-        IEquatable<IStoryManagerEventNodeGetter>
+        IStoryManagerEventNodeInternal
     {
         #region Ctor
         protected StoryManagerEventNode()
@@ -96,8 +96,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             AStoryManagerNode.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -535,9 +535,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IStoryManagerEventNode :
-        IStoryManagerEventNodeGetter,
         IAStoryManagerNode,
-        ILoquiObjectSetter<IStoryManagerEventNodeInternal>
+        ILoquiObjectSetter<IStoryManagerEventNodeInternal>,
+        IStoryManagerEventNodeGetter
     {
         new AStoryManagerNode.Flag? Flags { get; set; }
         new MemorySlice<Byte>? XNAM { get; set; }
@@ -553,8 +553,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IStoryManagerEventNodeGetter :
         IAStoryManagerNodeGetter,
-        ILoquiObject<IStoryManagerEventNodeGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IStoryManagerEventNodeGetter>
     {
         static new ILoquiRegistration Registration => StoryManagerEventNode_Registration.Instance;
         AStoryManagerNode.Flag? Flags { get; }

@@ -28,9 +28,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class PackageEvent :
-        IPackageEvent,
+        IEquatable<IPackageEventGetter>,
         ILoquiObjectSetter<PackageEvent>,
-        IEquatable<IPackageEventGetter>
+        IPackageEvent
     {
         #region Ctor
         public PackageEvent()
@@ -144,8 +144,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -726,9 +726,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPackageEvent :
-        IPackageEventGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IPackageEvent>,
-        IFormLinkContainer
+        IPackageEventGetter
     {
         new FormLinkNullable<IIdleAnimationGetter> Idle { get; set; }
         new MemorySlice<Byte>? SCHR { get; set; }
@@ -741,9 +741,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IPackageEventGetter :
         ILoquiObject,
-        ILoquiObject<IPackageEventGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IPackageEventGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class EffectShader :
         OblivionMajorRecord,
         IEffectShaderInternal,
-        ILoquiObjectSetter<EffectShader>,
-        IEquatable<IEffectShaderGetter>
+        IEquatable<IEffectShaderGetter>,
+        ILoquiObjectSetter<EffectShader>
     {
         #region Ctor
         protected EffectShader()
@@ -96,8 +96,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -518,8 +518,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IEffectShader :
         IEffectShaderGetter,
-        IOblivionMajorRecord,
-        ILoquiObjectSetter<IEffectShaderInternal>
+        ILoquiObjectSetter<IEffectShaderInternal>,
+        IOblivionMajorRecord
     {
         new String? FillTexture { get; set; }
         new String? ParticleShaderTexture { get; set; }
@@ -535,8 +535,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IEffectShaderGetter :
         IOblivionMajorRecordGetter,
-        ILoquiObject<IEffectShaderGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IEffectShaderGetter>
     {
         static new ILoquiRegistration Registration => EffectShader_Registration.Instance;
         String? FillTexture { get; }

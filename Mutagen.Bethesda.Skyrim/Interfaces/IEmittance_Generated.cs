@@ -11,8 +11,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// Implemented by: [Light, Region]
     /// </summary>
     public partial interface IEmittance :
-        ISkyrimMajorRecordInternal,
-        IEmittanceGetter
+        IEmittanceGetter,
+        ISkyrimMajorRecordInternal
     {
     }
 

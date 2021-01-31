@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class SceneActor :
-        ISceneActor,
+        IEquatable<ISceneActorGetter>,
         ILoquiObjectSetter<SceneActor>,
-        IEquatable<ISceneActorGetter>
+        ISceneActor
     {
         #region Ctor
         public SceneActor()
@@ -84,8 +84,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -478,8 +478,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ISceneActor :
-        ISceneActorGetter,
-        ILoquiObjectSetter<ISceneActor>
+        ILoquiObjectSetter<ISceneActor>,
+        ISceneActorGetter
     {
         new UInt32 ID { get; set; }
         new SceneActor.Flag? Flags { get; set; }
@@ -488,8 +488,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ISceneActorGetter :
         ILoquiObject,
-        ILoquiObject<ISceneActorGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ISceneActorGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

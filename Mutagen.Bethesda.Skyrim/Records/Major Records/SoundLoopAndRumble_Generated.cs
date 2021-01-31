@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class SoundLoopAndRumble :
-        ISoundLoopAndRumble,
+        IEquatable<ISoundLoopAndRumbleGetter>,
         ILoquiObjectSetter<SoundLoopAndRumble>,
-        IEquatable<ISoundLoopAndRumbleGetter>
+        ISoundLoopAndRumble
     {
         #region Ctor
         public SoundLoopAndRumble()
@@ -83,8 +83,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -505,8 +505,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ISoundLoopAndRumble :
-        ISoundLoopAndRumbleGetter,
-        ILoquiObjectSetter<ISoundLoopAndRumble>
+        ILoquiObjectSetter<ISoundLoopAndRumble>,
+        ISoundLoopAndRumbleGetter
     {
         new Byte Unknown { get; set; }
         new SoundDescriptor.LoopType Loop { get; set; }
@@ -516,8 +516,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ISoundLoopAndRumbleGetter :
         ILoquiObject,
-        ILoquiObject<ISoundLoopAndRumbleGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ISoundLoopAndRumbleGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

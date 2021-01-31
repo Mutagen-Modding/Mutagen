@@ -29,8 +29,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class Effect :
         IEffect,
-        ILoquiObjectSetter<Effect>,
-        IEquatable<IEffectGetter>
+        IEquatable<IEffectGetter>,
+        ILoquiObjectSetter<Effect>
     {
         #region Ctor
         public Effect()
@@ -100,8 +100,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -578,8 +578,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IEffect :
         IEffectGetter,
-        ILoquiObjectSetter<IEffect>,
-        IFormLinkContainer
+        IFormLinkContainer,
+        ILoquiObjectSetter<IEffect>
     {
         new FormLinkNullable<IMagicEffectGetter> BaseEffect { get; set; }
         new EffectData? Data { get; set; }
@@ -588,9 +588,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IEffectGetter :
         ILoquiObject,
-        ILoquiObject<IEffectGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IEffectGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

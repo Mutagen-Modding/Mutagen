@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class ImageSpaceAdapter :
         SkyrimMajorRecord,
+        IEquatable<IImageSpaceAdapterGetter>,
         IImageSpaceAdapterInternal,
-        ILoquiObjectSetter<ImageSpaceAdapter>,
-        IEquatable<IImageSpaceAdapterGetter>
+        ILoquiObjectSetter<ImageSpaceAdapter>
     {
         #region Ctor
         protected ImageSpaceAdapter()
@@ -863,8 +863,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -7050,8 +7050,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IImageSpaceAdapter :
         IImageSpaceAdapterGetter,
-        ISkyrimMajorRecord,
-        ILoquiObjectSetter<IImageSpaceAdapterInternal>
+        ILoquiObjectSetter<IImageSpaceAdapterInternal>,
+        ISkyrimMajorRecord
     {
         new ImageSpaceAdapter.Flag Flags { get; set; }
         new Single Duration { get; set; }
@@ -7125,8 +7125,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IImageSpaceAdapterGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<IImageSpaceAdapterGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IImageSpaceAdapterGetter>
     {
         static new ILoquiRegistration Registration => ImageSpaceAdapter_Registration.Instance;
         ImageSpaceAdapter.Flag Flags { get; }

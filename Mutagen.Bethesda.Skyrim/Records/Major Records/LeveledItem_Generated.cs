@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class LeveledItem :
         SkyrimMajorRecord,
+        IEquatable<ILeveledItemGetter>,
         ILeveledItemInternal,
-        ILoquiObjectSetter<LeveledItem>,
-        IEquatable<ILeveledItemGetter>
+        ILoquiObjectSetter<LeveledItem>
     {
         #region Ctor
         protected LeveledItem()
@@ -46,6 +46,18 @@ namespace Mutagen.Bethesda.Skyrim
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter ILeveledItemGetter.ObjectBounds => ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ObjectBounds? IObjectBoundedOptional.ObjectBounds
+        {
+            get => this.ObjectBounds;
+            set => this.ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
         #endregion
         #region ChanceNone
         public Byte ChanceNone { get; set; } = default;
@@ -103,8 +115,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -676,14 +688,15 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ILeveledItem :
-        ILeveledItemGetter,
-        ISkyrimMajorRecord,
-        IItem,
+        IFormLinkContainer,
         IHarvestTarget,
-        IOutfitTarget,
-        IObjectBounded,
+        IItem,
+        ILeveledItemGetter,
         ILoquiObjectSetter<ILeveledItemInternal>,
-        IFormLinkContainer
+        IObjectBounded,
+        IObjectBoundedOptional,
+        IOutfitTarget,
+        ISkyrimMajorRecord
     {
         new ObjectBounds ObjectBounds { get; set; }
         new Byte ChanceNone { get; set; }
@@ -701,13 +714,14 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ILeveledItemGetter :
         ISkyrimMajorRecordGetter,
-        IItemGetter,
-        IHarvestTargetGetter,
-        IOutfitTargetGetter,
-        IObjectBoundedGetter,
-        ILoquiObject<ILeveledItemGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        IHarvestTargetGetter,
+        IItemGetter,
+        ILoquiObject<ILeveledItemGetter>,
+        IObjectBoundedGetter,
+        IObjectBoundedOptionalGetter,
+        IOutfitTargetGetter
     {
         static new ILoquiRegistration Registration => LeveledItem_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }

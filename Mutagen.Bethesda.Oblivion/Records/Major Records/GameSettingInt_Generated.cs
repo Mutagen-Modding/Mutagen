@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class GameSettingInt :
         GameSetting,
+        IEquatable<IGameSettingIntGetter>,
         IGameSettingIntInternal,
-        ILoquiObjectSetter<GameSettingInt>,
-        IEquatable<IGameSettingIntGetter>
+        ILoquiObjectSetter<GameSettingInt>
     {
         #region Ctor
         protected GameSettingInt()
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             GameSetting.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -438,8 +438,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IGameSettingInt :
-        IGameSettingIntGetter,
         IGameSetting,
+        IGameSettingIntGetter,
         ILoquiObjectSetter<IGameSettingIntInternal>
     {
         new Int32? Data { get; set; }
@@ -454,8 +454,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IGameSettingIntGetter :
         IGameSettingGetter,
-        ILoquiObject<IGameSettingIntGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IGameSettingIntGetter>
     {
         static new ILoquiRegistration Registration => GameSettingInt_Registration.Instance;
         Int32? Data { get; }

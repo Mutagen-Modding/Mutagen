@@ -28,8 +28,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class EnableParent :
         IEnableParent,
-        ILoquiObjectSetter<EnableParent>,
-        IEquatable<IEnableParentGetter>
+        IEquatable<IEnableParentGetter>,
+        ILoquiObjectSetter<EnableParent>
     {
         #region Ctor
         public EnableParent()
@@ -91,8 +91,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -521,8 +521,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IEnableParent :
         IEnableParentGetter,
-        ILoquiObjectSetter<IEnableParent>,
-        IFormLinkContainer
+        IFormLinkContainer,
+        ILoquiObjectSetter<IEnableParent>
     {
         new EnableParent.VersioningBreaks Versioning { get; set; }
         new FormLink<ILinkedReferenceGetter> Reference { get; set; }
@@ -532,9 +532,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IEnableParentGetter :
         ILoquiObject,
-        ILoquiObject<IEnableParentGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IEnableParentGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

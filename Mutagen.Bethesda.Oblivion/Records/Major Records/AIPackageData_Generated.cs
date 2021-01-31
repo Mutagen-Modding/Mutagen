@@ -28,8 +28,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class AIPackageData :
         IAIPackageData,
-        ILoquiObjectSetter<AIPackageData>,
-        IEquatable<IAIPackageDataGetter>
+        IEquatable<IAIPackageDataGetter>,
+        ILoquiObjectSetter<AIPackageData>
     {
         #region Ctor
         public AIPackageData()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -452,8 +452,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IAIPackageDataGetter :
         ILoquiObject,
-        ILoquiObject<IAIPackageDataGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IAIPackageDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

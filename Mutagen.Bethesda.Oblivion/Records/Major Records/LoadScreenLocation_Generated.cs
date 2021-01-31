@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class LoadScreenLocation :
+        IEquatable<ILoadScreenLocationGetter>,
         ILoadScreenLocation,
-        ILoquiObjectSetter<LoadScreenLocation>,
-        IEquatable<ILoadScreenLocationGetter>
+        ILoquiObjectSetter<LoadScreenLocation>
     {
         #region Ctor
         public LoadScreenLocation()
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -476,9 +476,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ILoadScreenLocation :
+        IFormLinkContainer,
         ILoadScreenLocationGetter,
-        ILoquiObjectSetter<ILoadScreenLocation>,
-        IFormLinkContainer
+        ILoquiObjectSetter<ILoadScreenLocation>
     {
         new FormLink<IPlaceGetter> Direct { get; set; }
         new FormLink<IWorldspaceGetter> Indirect { get; set; }
@@ -487,9 +487,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ILoadScreenLocationGetter :
         ILoquiObject,
-        ILoquiObject<ILoadScreenLocationGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ILoadScreenLocationGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class DefaultObjectManager :
         SkyrimMajorRecord,
         IDefaultObjectManagerInternal,
-        ILoquiObjectSetter<DefaultObjectManager>,
-        IEquatable<IDefaultObjectManagerGetter>
+        IEquatable<IDefaultObjectManagerGetter>,
+        ILoquiObjectSetter<DefaultObjectManager>
     {
         #region Ctor
         protected DefaultObjectManager()
@@ -89,8 +89,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -544,9 +544,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IDefaultObjectManager :
         IDefaultObjectManagerGetter,
-        ISkyrimMajorRecord,
+        IFormLinkContainer,
         ILoquiObjectSetter<IDefaultObjectManagerInternal>,
-        IFormLinkContainer
+        ISkyrimMajorRecord
     {
         new ExtendedList<DefaultObject>? Objects { get; set; }
     }
@@ -560,9 +560,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IDefaultObjectManagerGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<IDefaultObjectManagerGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IDefaultObjectManagerGetter>
     {
         static new ILoquiRegistration Registration => DefaultObjectManager_Registration.Instance;
         IReadOnlyList<IDefaultObjectGetter>? Objects { get; }

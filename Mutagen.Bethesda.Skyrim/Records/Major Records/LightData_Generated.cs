@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class LightData :
+        IEquatable<ILightDataGetter>,
         ILightData,
-        ILoquiObjectSetter<LightData>,
-        IEquatable<ILightDataGetter>
+        ILoquiObjectSetter<LightData>
     {
         #region Ctor
         public LightData()
@@ -89,8 +89,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -585,8 +585,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ILightDataGetter :
         ILoquiObject,
-        ILoquiObject<ILightDataGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ILightDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class NavigationMeshInfoMap :
         SkyrimMajorRecord,
-        INavigationMeshInfoMapInternal,
+        IEquatable<INavigationMeshInfoMapGetter>,
         ILoquiObjectSetter<NavigationMeshInfoMap>,
-        IEquatable<INavigationMeshInfoMapGetter>
+        INavigationMeshInfoMapInternal
     {
         #region Ctor
         protected NavigationMeshInfoMap()
@@ -116,8 +116,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -661,10 +661,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface INavigationMeshInfoMap :
-        INavigationMeshInfoMapGetter,
-        ISkyrimMajorRecord,
+        IFormLinkContainer,
         ILoquiObjectSetter<INavigationMeshInfoMapInternal>,
-        IFormLinkContainer
+        INavigationMeshInfoMapGetter,
+        ISkyrimMajorRecord
     {
         new UInt32? NavMeshVersion { get; set; }
         new ExtendedList<NavigationMapInfo> MapInfos { get; }
@@ -681,9 +681,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface INavigationMeshInfoMapGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<INavigationMeshInfoMapGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<INavigationMeshInfoMapGetter>
     {
         static new ILoquiRegistration Registration => NavigationMeshInfoMap_Registration.Instance;
         UInt32? NavMeshVersion { get; }

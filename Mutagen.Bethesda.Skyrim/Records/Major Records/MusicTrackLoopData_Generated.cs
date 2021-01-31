@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class MusicTrackLoopData :
-        IMusicTrackLoopData,
+        IEquatable<IMusicTrackLoopDataGetter>,
         ILoquiObjectSetter<MusicTrackLoopData>,
-        IEquatable<IMusicTrackLoopDataGetter>
+        IMusicTrackLoopData
     {
         #region Ctor
         public MusicTrackLoopData()
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -474,8 +474,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IMusicTrackLoopData :
-        IMusicTrackLoopDataGetter,
-        ILoquiObjectSetter<IMusicTrackLoopData>
+        ILoquiObjectSetter<IMusicTrackLoopData>,
+        IMusicTrackLoopDataGetter
     {
         new Single Begins { get; set; }
         new Single Ends { get; set; }
@@ -484,8 +484,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IMusicTrackLoopDataGetter :
         ILoquiObject,
-        ILoquiObject<IMusicTrackLoopDataGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IMusicTrackLoopDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

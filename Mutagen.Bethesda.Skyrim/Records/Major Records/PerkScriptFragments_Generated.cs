@@ -28,9 +28,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class PerkScriptFragments :
-        IPerkScriptFragments,
+        IEquatable<IPerkScriptFragmentsGetter>,
         ILoquiObjectSetter<PerkScriptFragments>,
-        IEquatable<IPerkScriptFragmentsGetter>
+        IPerkScriptFragments
     {
         #region Ctor
         public PerkScriptFragments()
@@ -92,8 +92,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -557,8 +557,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPerkScriptFragments :
-        IPerkScriptFragmentsGetter,
-        ILoquiObjectSetter<IPerkScriptFragments>
+        ILoquiObjectSetter<IPerkScriptFragments>,
+        IPerkScriptFragmentsGetter
     {
         new SByte Unknown { get; set; }
         new String FileName { get; set; }
@@ -567,8 +567,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IPerkScriptFragmentsGetter :
         ILoquiObject,
-        ILoquiObject<IPerkScriptFragmentsGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IPerkScriptFragmentsGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

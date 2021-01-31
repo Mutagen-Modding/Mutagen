@@ -28,8 +28,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class CombatStyleCloseRange :
         ICombatStyleCloseRange,
-        ILoquiObjectSetter<CombatStyleCloseRange>,
-        IEquatable<ICombatStyleCloseRangeGetter>
+        IEquatable<ICombatStyleCloseRangeGetter>,
+        ILoquiObjectSetter<CombatStyleCloseRange>
     {
         #region Ctor
         public CombatStyleCloseRange()
@@ -86,8 +86,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -553,8 +553,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ICombatStyleCloseRangeGetter :
         ILoquiObject,
-        ILoquiObject<ICombatStyleCloseRangeGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ICombatStyleCloseRangeGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

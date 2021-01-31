@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Sound :
         OblivionMajorRecord,
-        ISoundInternal,
+        IEquatable<ISoundGetter>,
         ILoquiObjectSetter<Sound>,
-        IEquatable<ISoundGetter>
+        ISoundInternal
     {
         #region Ctor
         protected Sound()
@@ -91,8 +91,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -484,9 +484,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ISound :
-        ISoundGetter,
+        ILoquiObjectSetter<ISoundInternal>,
         IOblivionMajorRecord,
-        ILoquiObjectSetter<ISoundInternal>
+        ISoundGetter
     {
         new String? File { get; set; }
         new SoundData? Data { get; set; }
@@ -501,8 +501,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ISoundGetter :
         IOblivionMajorRecordGetter,
-        ILoquiObject<ISoundGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ISoundGetter>
     {
         static new ILoquiRegistration Registration => Sound_Registration.Instance;
         String? File { get; }

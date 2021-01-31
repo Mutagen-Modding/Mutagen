@@ -28,9 +28,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class Patrol :
-        IPatrol,
+        IEquatable<IPatrolGetter>,
         ILoquiObjectSetter<Patrol>,
-        IEquatable<IPatrolGetter>
+        IPatrol
     {
         #region Ctor
         public Patrol()
@@ -114,8 +114,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -641,9 +641,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPatrol :
-        IPatrolGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IPatrol>,
-        IFormLinkContainer
+        IPatrolGetter
     {
         new Single IdleTime { get; set; }
         new FormLink<IIdleAnimationGetter> Idle { get; set; }
@@ -654,9 +654,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IPatrolGetter :
         ILoquiObject,
-        ILoquiObject<IPatrolGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IPatrolGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

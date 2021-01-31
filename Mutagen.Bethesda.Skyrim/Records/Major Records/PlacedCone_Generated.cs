@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class PlacedCone :
         APlacedTrap,
-        IPlacedConeInternal,
+        IEquatable<IPlacedConeGetter>,
         ILoquiObjectSetter<PlacedCone>,
-        IEquatable<IPlacedConeGetter>
+        IPlacedConeInternal
     {
         #region Ctor
         protected PlacedCone()
@@ -78,8 +78,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             APlacedTrap.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -491,10 +491,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPlacedCone :
-        IPlacedConeGetter,
         IAPlacedTrap,
+        IFormLinkContainer,
         ILoquiObjectSetter<IPlacedConeInternal>,
-        IFormLinkContainer
+        IPlacedConeGetter
     {
         new FormLink<IProjectileGetter> Projectile { get; set; }
     }
@@ -508,9 +508,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IPlacedConeGetter :
         IAPlacedTrapGetter,
-        ILoquiObject<IPlacedConeGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IPlacedConeGetter>
     {
         static new ILoquiRegistration Registration => PlacedCone_Registration.Instance;
         FormLink<IProjectileGetter> Projectile { get; }

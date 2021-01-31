@@ -28,8 +28,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class CombatStyleFlight :
         ICombatStyleFlight,
-        ILoquiObjectSetter<CombatStyleFlight>,
-        IEquatable<ICombatStyleFlightGetter>
+        IEquatable<ICombatStyleFlightGetter>,
+        ILoquiObjectSetter<CombatStyleFlight>
     {
         #region Ctor
         public CombatStyleFlight()
@@ -98,8 +98,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -684,8 +684,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ICombatStyleFlightGetter :
         ILoquiObject,
-        ILoquiObject<ICombatStyleFlightGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ICombatStyleFlightGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

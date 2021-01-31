@@ -34,8 +34,8 @@ namespace Mutagen.Bethesda.Oblivion
     public abstract partial class ANpcSpawn :
         OblivionMajorRecord,
         IANpcSpawnInternal,
-        ILoquiObjectSetter<ANpcSpawn>,
-        IEquatable<IANpcSpawnGetter>
+        IEquatable<IANpcSpawnGetter>,
+        ILoquiObjectSetter<ANpcSpawn>
     {
         #region Ctor
         protected ANpcSpawn()
@@ -78,8 +78,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -375,9 +375,9 @@ namespace Mutagen.Bethesda.Oblivion
     /// </summary>
     public partial interface IANpcSpawn :
         IANpcSpawnGetter,
-        IOblivionMajorRecord,
+        IFormLinkContainer,
         ILoquiObjectSetter<IANpcSpawnInternal>,
-        IFormLinkContainer
+        IOblivionMajorRecord
     {
     }
 
@@ -393,9 +393,9 @@ namespace Mutagen.Bethesda.Oblivion
     /// </summary>
     public partial interface IANpcSpawnGetter :
         IOblivionMajorRecordGetter,
-        ILoquiObject<IANpcSpawnGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IANpcSpawnGetter>
     {
         static new ILoquiRegistration Registration => ANpcSpawn_Registration.Instance;
 

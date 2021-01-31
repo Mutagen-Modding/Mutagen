@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class PackageDataLocation :
         APackageData,
-        IPackageDataLocation,
+        IEquatable<IPackageDataLocationGetter>,
         ILoquiObjectSetter<PackageDataLocation>,
-        IEquatable<IPackageDataLocationGetter>
+        IPackageDataLocation
     {
         #region Ctor
         public PackageDataLocation()
@@ -79,8 +79,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             APackageData.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -414,19 +414,23 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPackageDataLocation :
-        IPackageDataLocationGetter,
         IAPackageData,
+        IFormLinkContainer,
         ILoquiObjectSetter<IPackageDataLocation>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired,
+        IPackageDataLocationGetter
     {
         new LocationTargetRadius Location { get; set; }
     }
 
     public partial interface IPackageDataLocationGetter :
         IAPackageDataGetter,
-        ILoquiObject<IPackageDataLocationGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IPackageDataLocationGetter>,
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => PackageDataLocation_Registration.Instance;
         ILocationTargetRadiusGetter Location { get; }

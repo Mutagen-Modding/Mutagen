@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class WorldspaceLandDefaults :
-        IWorldspaceLandDefaults,
+        IEquatable<IWorldspaceLandDefaultsGetter>,
         ILoquiObjectSetter<WorldspaceLandDefaults>,
-        IEquatable<IWorldspaceLandDefaultsGetter>
+        IWorldspaceLandDefaults
     {
         #region Ctor
         public WorldspaceLandDefaults()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -443,8 +443,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IWorldspaceLandDefaults :
-        IWorldspaceLandDefaultsGetter,
-        ILoquiObjectSetter<IWorldspaceLandDefaults>
+        ILoquiObjectSetter<IWorldspaceLandDefaults>,
+        IWorldspaceLandDefaultsGetter
     {
         new Single DefaultLandHeight { get; set; }
         new Single DefaultWaterHeight { get; set; }
@@ -452,8 +452,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IWorldspaceLandDefaultsGetter :
         ILoquiObject,
-        ILoquiObject<IWorldspaceLandDefaultsGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IWorldspaceLandDefaultsGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

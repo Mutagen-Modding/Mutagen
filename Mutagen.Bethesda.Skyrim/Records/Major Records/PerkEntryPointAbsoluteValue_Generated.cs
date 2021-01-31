@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class PerkEntryPointAbsoluteValue :
         APerkEntryPointEffect,
-        IPerkEntryPointAbsoluteValue,
+        IEquatable<IPerkEntryPointAbsoluteValueGetter>,
         ILoquiObjectSetter<PerkEntryPointAbsoluteValue>,
-        IEquatable<IPerkEntryPointAbsoluteValueGetter>
+        IPerkEntryPointAbsoluteValue
     {
         #region Ctor
         public PerkEntryPointAbsoluteValue()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             APerkEntryPointEffect.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -412,17 +412,17 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPerkEntryPointAbsoluteValue :
-        IPerkEntryPointAbsoluteValueGetter,
         IAPerkEntryPointEffect,
-        ILoquiObjectSetter<IPerkEntryPointAbsoluteValue>
+        ILoquiObjectSetter<IPerkEntryPointAbsoluteValue>,
+        IPerkEntryPointAbsoluteValueGetter
     {
         new Boolean Negative { get; set; }
     }
 
     public partial interface IPerkEntryPointAbsoluteValueGetter :
         IAPerkEntryPointEffectGetter,
-        ILoquiObject<IPerkEntryPointAbsoluteValueGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IPerkEntryPointAbsoluteValueGetter>
     {
         static new ILoquiRegistration Registration => PerkEntryPointAbsoluteValue_Registration.Instance;
         Boolean Negative { get; }

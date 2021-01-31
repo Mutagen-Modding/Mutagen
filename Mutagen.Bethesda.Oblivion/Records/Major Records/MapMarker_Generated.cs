@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class MapMarker :
-        IMapMarker,
+        IEquatable<IMapMarkerGetter>,
         ILoquiObjectSetter<MapMarker>,
-        IEquatable<IMapMarkerGetter>
+        IMapMarker
     {
         #region Ctor
         public MapMarker()
@@ -48,6 +48,16 @@ namespace Mutagen.Bethesda.Oblivion
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IMapMarkerGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
         #endregion
         #region Types
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -95,8 +105,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -558,9 +568,10 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IMapMarker :
+        ILoquiObjectSetter<IMapMarker>,
         IMapMarkerGetter,
         INamed,
-        ILoquiObjectSetter<IMapMarker>
+        INamedRequired
     {
         new MapMarker.Flag? Flags { get; set; }
         new String? Name { get; set; }
@@ -569,9 +580,10 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IMapMarkerGetter :
         ILoquiObject,
-        INamedGetter,
+        IBinaryItem,
         ILoquiObject<IMapMarkerGetter>,
-        IBinaryItem
+        INamedGetter,
+        INamedRequiredGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -1354,6 +1366,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Name
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        #endregion
         #endregion
         public IReadOnlyList<MapMarker.Type>? Types { get; private set; }
         partial void CustomFactoryEnd(

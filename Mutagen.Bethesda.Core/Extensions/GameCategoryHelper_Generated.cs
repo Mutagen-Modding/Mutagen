@@ -15,6 +15,9 @@ namespace Mutagen.Bethesda
                 case "ISkyrimMod":
                 case "ISkyrimModGetter":
                     return GameCategory.Skyrim;
+                case "IFallout4Mod":
+                case "IFallout4ModGetter":
+                    return GameCategory.Fallout4;
                 default:
                 {
                     throw new ArgumentException($"Unknown game type for: {typeof(TMod).Name}");

@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class Part :
-        IPart,
+        IEquatable<IPartGetter>,
         ILoquiObjectSetter<Part>,
-        IEquatable<IPartGetter>
+        IPart
     {
         #region Ctor
         public Part()
@@ -81,8 +81,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -443,8 +443,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPart :
-        IPartGetter,
-        ILoquiObjectSetter<IPart>
+        ILoquiObjectSetter<IPart>,
+        IPartGetter
     {
         new Part.PartTypeEnum? PartType { get; set; }
         new String? FileName { get; set; }
@@ -452,8 +452,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IPartGetter :
         ILoquiObject,
-        ILoquiObject<IPartGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IPartGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

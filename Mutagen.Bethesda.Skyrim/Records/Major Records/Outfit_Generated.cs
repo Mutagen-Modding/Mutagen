@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class Outfit :
         SkyrimMajorRecord,
-        IOutfitInternal,
+        IEquatable<IOutfitGetter>,
         ILoquiObjectSetter<Outfit>,
-        IEquatable<IOutfitGetter>
+        IOutfitInternal
     {
         #region Ctor
         protected Outfit()
@@ -89,8 +89,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -541,10 +541,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IOutfit :
-        IOutfitGetter,
-        ISkyrimMajorRecord,
+        IFormLinkContainer,
         ILoquiObjectSetter<IOutfitInternal>,
-        IFormLinkContainer
+        IOutfitGetter,
+        ISkyrimMajorRecord
     {
         new ExtendedList<IFormLink<IOutfitTargetGetter>>? Items { get; set; }
     }
@@ -558,9 +558,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IOutfitGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<IOutfitGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IOutfitGetter>
     {
         static new ILoquiRegistration Registration => Outfit_Registration.Instance;
         IReadOnlyList<IFormLink<IOutfitTargetGetter>>? Items { get; }

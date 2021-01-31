@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class FactionOwner :
         OwnerTarget,
+        IEquatable<IFactionOwnerGetter>,
         IFactionOwner,
-        ILoquiObjectSetter<FactionOwner>,
-        IEquatable<IFactionOwnerGetter>
+        ILoquiObjectSetter<FactionOwner>
     {
         #region Ctor
         public FactionOwner()
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             OwnerTarget.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -433,9 +433,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IFactionOwner :
         IFactionOwnerGetter,
-        IOwnerTarget,
+        IFormLinkContainer,
         ILoquiObjectSetter<IFactionOwner>,
-        IFormLinkContainer
+        IOwnerTarget
     {
         new FormLink<IFactionGetter> Faction { get; set; }
         new Int32 RequiredRank { get; set; }
@@ -443,9 +443,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IFactionOwnerGetter :
         IOwnerTargetGetter,
-        ILoquiObject<IFactionOwnerGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IFactionOwnerGetter>
     {
         static new ILoquiRegistration Registration => FactionOwner_Registration.Instance;
         FormLink<IFactionGetter> Faction { get; }

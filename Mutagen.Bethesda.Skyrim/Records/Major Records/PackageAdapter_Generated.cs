@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class PackageAdapter :
         AVirtualMachineAdapter,
-        IPackageAdapter,
+        IEquatable<IPackageAdapterGetter>,
         ILoquiObjectSetter<PackageAdapter>,
-        IEquatable<IPackageAdapterGetter>
+        IPackageAdapter
     {
         #region Ctor
         public PackageAdapter()
@@ -85,8 +85,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             AVirtualMachineAdapter.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -421,17 +421,17 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPackageAdapter :
-        IPackageAdapterGetter,
         IAVirtualMachineAdapter,
-        ILoquiObjectSetter<IPackageAdapter>
+        ILoquiObjectSetter<IPackageAdapter>,
+        IPackageAdapterGetter
     {
         new PackageScriptFragments? ScriptFragments { get; set; }
     }
 
     public partial interface IPackageAdapterGetter :
         IAVirtualMachineAdapterGetter,
-        ILoquiObject<IPackageAdapterGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IPackageAdapterGetter>
     {
         static new ILoquiRegistration Registration => PackageAdapter_Registration.Instance;
         IPackageScriptFragmentsGetter? ScriptFragments { get; }

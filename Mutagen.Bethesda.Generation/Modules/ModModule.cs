@@ -327,6 +327,16 @@ namespace Mutagen.Bethesda.Generation
         public override async Task GenerateInCommonMixin(ObjectGeneration obj, FileGeneration fg)
         {
             await base.GenerateInCommonMixin(obj, fg);
+            var objData = obj.GetObjectData();
+            string gameReleaseStr;
+            if (objData.GameReleaseOptions == null)
+            {
+                gameReleaseStr = $"{nameof(GameRelease)}.{obj.GetObjectData().GameCategory}";
+            }
+            else
+            {
+                gameReleaseStr = $"item.GameRelease";
+            }
 
             if (obj.GetObjectType() != ObjectType.Mod) return;
             using (var args = new FunctionWrapper(fg,
@@ -400,7 +410,7 @@ namespace Mutagen.Bethesda.Generation
                 if (obj.GetObjectData().UsesStringFiles)
                 {
                     fg.AppendLine("bool disposeStrings = param.StringsWriter == null;");
-                    fg.AppendLine("param.StringsWriter ??= EnumExt.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter(modKey, Path.Combine(Path.GetDirectoryName(path)!, \"Strings\")) : null;");
+                    fg.AppendLine($"param.StringsWriter ??= EnumExt.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter({gameReleaseStr}, modKey, Path.Combine(Path.GetDirectoryName(path)!, \"Strings\")) : null;");
                 }
                 fg.AppendLine("using (var stream = new FileStream(path, FileMode.Create, FileAccess.Write))");
                 using (new BraceWrapper(fg))

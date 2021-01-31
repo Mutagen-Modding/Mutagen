@@ -7,25 +7,6 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class BodyPart
     {
-        #region Interfaces
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequired.Name
-        {
-            get => this.Name?.String ?? string.Empty;
-            set => this.Name = new TranslatedString(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        TranslatedString ITranslatedNamedRequired.Name
-        {
-            get => this.Name ?? string.Empty;
-            set => this.Name = value;
-        }
-        #endregion
-
         [Flags]
         public enum Flag
         {
@@ -46,19 +27,6 @@ namespace Mutagen.Bethesda.Skyrim
             LookAt,
             FlyGrab,
             Saddle,
-        }
-    }
-
-    namespace Internals
-    {
-        public partial class BodyPartBinaryOverlay
-        {
-            #region Interfaces
-            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
-            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
-            #endregion
         }
     }
 }

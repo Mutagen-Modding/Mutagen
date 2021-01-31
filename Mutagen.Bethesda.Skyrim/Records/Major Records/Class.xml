@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Class" recordType="CLAS" objType="Record" baseClass="SkyrimMajorRecord" GUID="faa1b071-96bf-43c3-be87-10d98e0b6cd8" ID="25">
-    <Interface>ITranslatedNamedRequired</Interface>
     <Fields>
       <String name="Name" recordType="FULL" nullable="False" translated="Normal" />
       <String name="Description" recordType="DESC" nullable="False" />

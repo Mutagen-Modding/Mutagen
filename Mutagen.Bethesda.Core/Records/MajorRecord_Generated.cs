@@ -26,12 +26,12 @@ namespace Mutagen.Bethesda
 {
     #region Class
     /// <summary>
-    /// Implemented by: [OblivionMajorRecord, SkyrimMajorRecord]
+    /// Implemented by: [OblivionMajorRecord, SkyrimMajorRecord, Fallout4MajorRecord]
     /// </summary>
     public abstract partial class MajorRecord :
-        IMajorRecordInternal,
+        IEquatable<IMajorRecordGetter>,
         ILoquiObjectSetter<MajorRecord>,
-        IEquatable<IMajorRecordGetter>
+        IMajorRecordInternal
     {
         #region Ctor
         protected MajorRecord()
@@ -88,8 +88,8 @@ namespace Mutagen.Bethesda
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -546,13 +546,13 @@ namespace Mutagen.Bethesda
 
     #region Interface
     /// <summary>
-    /// Implemented by: [OblivionMajorRecord, SkyrimMajorRecord]
+    /// Implemented by: [OblivionMajorRecord, SkyrimMajorRecord, Fallout4MajorRecord]
     /// </summary>
     public partial interface IMajorRecord :
-        IMajorRecordGetter,
-        IMajorRecordEnumerable,
+        IFormLinkContainer,
         ILoquiObjectSetter<IMajorRecordInternal>,
-        IFormLinkContainer
+        IMajorRecordEnumerable,
+        IMajorRecordGetter
     {
         new Int32 MajorRecordFlagsRaw { get; set; }
         new UInt32 VersionControl { get; set; }
@@ -567,14 +567,14 @@ namespace Mutagen.Bethesda
     }
 
     /// <summary>
-    /// Implemented by: [OblivionMajorRecord, SkyrimMajorRecord]
+    /// Implemented by: [OblivionMajorRecord, SkyrimMajorRecord, Fallout4MajorRecord]
     /// </summary>
     public partial interface IMajorRecordGetter :
         ILoquiObject,
-        IMajorRecordGetterEnumerable,
-        ILoquiObject<IMajorRecordGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IMajorRecordGetter>,
+        IMajorRecordGetterEnumerable
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

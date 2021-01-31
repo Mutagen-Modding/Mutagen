@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class PackageDataBool :
         APackageData,
-        IPackageDataBool,
+        IEquatable<IPackageDataBoolGetter>,
         ILoquiObjectSetter<PackageDataBool>,
-        IEquatable<IPackageDataBoolGetter>
+        IPackageDataBool
     {
         #region Ctor
         public PackageDataBool()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             APackageData.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -400,17 +400,21 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPackageDataBool :
-        IPackageDataBoolGetter,
         IAPackageData,
-        ILoquiObjectSetter<IPackageDataBool>
+        ILoquiObjectSetter<IPackageDataBool>,
+        INamed,
+        INamedRequired,
+        IPackageDataBoolGetter
     {
         new Boolean Data { get; set; }
     }
 
     public partial interface IPackageDataBoolGetter :
         IAPackageDataGetter,
+        IBinaryItem,
         ILoquiObject<IPackageDataBoolGetter>,
-        IBinaryItem
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => PackageDataBool_Registration.Instance;
         Boolean Data { get; }

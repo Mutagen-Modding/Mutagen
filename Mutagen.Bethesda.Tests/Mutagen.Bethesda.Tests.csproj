@@ -22,9 +22,9 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Loqui" Version="2.3.2" />
+    <PackageReference Include="Loqui" Version="2.5.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.4.0.1-dev" />
+    <PackageReference Include="Noggog.CSharpExt" Version="2.5.0" />
     <PackageReference Include="NuGetizer" Version="0.6.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -48,12 +48,14 @@
     <Compile Include="Exceptions\DidNotMatchException.cs" />
     <Compile Include="Exceptions\MoreDataException.cs" />
     <Compile Include="Exceptions\UnexpectedlyMoreData.cs" />
+    <Compile Include="Passthrough Tests\Fallout4PassthroughTest.cs" />
     <Compile Include="Processing\BinaryFileProcessor.cs" />
     <Compile Include="ComparisonStream.cs" />
     <Compile Include="FlattenedMod_Tests.cs" />
     <Compile Include="Processing\ModRecordAligner.cs" />
     <Compile Include="Processing\OblivionProcessor.cs" />
     <Compile Include="Processing\Processor.cs" />
+    <Compile Include="Processing\Fallout4Processor.cs" />
     <Compile Include="Processing\SkyrimProcessor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Passthrough Tests\OtherTests.cs" />

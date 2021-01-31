@@ -28,8 +28,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class DialogResponseData :
         IDialogResponseData,
-        ILoquiObjectSetter<DialogResponseData>,
-        IEquatable<IDialogResponseDataGetter>
+        IEquatable<IDialogResponseDataGetter>,
+        ILoquiObjectSetter<DialogResponseData>
     {
         #region Ctor
         public DialogResponseData()
@@ -94,8 +94,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -556,8 +556,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IDialogResponseDataGetter :
         ILoquiObject,
-        ILoquiObject<IDialogResponseDataGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IDialogResponseDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

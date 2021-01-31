@@ -28,9 +28,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class QuestTarget :
-        IQuestTarget,
+        IEquatable<IQuestTargetGetter>,
         ILoquiObjectSetter<QuestTarget>,
-        IEquatable<IQuestTargetGetter>
+        IQuestTarget
     {
         #region Ctor
         public QuestTarget()
@@ -95,8 +95,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -598,9 +598,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IQuestTarget :
-        IQuestTargetGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IQuestTarget>,
-        IFormLinkContainer
+        IQuestTargetGetter
     {
         new FormLink<IPlacedGetter> Target { get; set; }
         new Quest.TargetFlag Flags { get; set; }
@@ -610,9 +610,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IQuestTargetGetter :
         ILoquiObject,
-        ILoquiObject<IQuestTargetGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IQuestTargetGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

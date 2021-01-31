@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class RegionLand :
         RegionData,
-        IRegionLand,
+        IEquatable<IRegionLandGetter>,
         ILoquiObjectSetter<RegionLand>,
-        IEquatable<IRegionLandGetter>
+        IRegionLand
     {
         #region Ctor
         public RegionLand()
@@ -74,8 +74,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             RegionData.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -355,16 +355,16 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IRegionLand :
-        IRegionLandGetter,
+        ILoquiObjectSetter<IRegionLand>,
         IRegionData,
-        ILoquiObjectSetter<IRegionLand>
+        IRegionLandGetter
     {
     }
 
     public partial interface IRegionLandGetter :
         IRegionDataGetter,
-        ILoquiObject<IRegionLandGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IRegionLandGetter>
     {
         static new ILoquiRegistration Registration => RegionLand_Registration.Instance;
 

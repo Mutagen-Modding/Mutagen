@@ -11,8 +11,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// Implemented by: [Cell, Worldspace]
     /// </summary>
     public partial interface IComplexLocation :
-        ISkyrimMajorRecordInternal,
-        IComplexLocationGetter
+        IComplexLocationGetter,
+        ISkyrimMajorRecordInternal
     {
     }
 

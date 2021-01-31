@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Worldspace" objType="Record" baseClass="Place" recordType="WRLD" customBinaryEnd="Normal" GUID="d95e86a2-5fdd-4bb1-a2b9-c16161ef2f62" ID="75">
-    <Interface>INamed</Interface>
     <Fields>
       <String name="Name" recordType="FULL" />
       <FormLink name="Parent" recordType="WNAM" refName="Worldspace" />

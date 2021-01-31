@@ -69,6 +69,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 typeof(Weapon),
             };
             dict[typeof(IItemGetter)] = dict[typeof(IItem)];
+            dict[typeof(IConstructible)] = new Type[]
+            {
+                typeof(AlchemicalApparatus),
+                typeof(Ammunition),
+                typeof(Armor),
+                typeof(Book),
+                typeof(Ingestible),
+                typeof(Ingredient),
+                typeof(Key),
+                typeof(Light),
+                typeof(MiscItem),
+                typeof(Scroll),
+                typeof(SoulGem),
+                typeof(Weapon),
+            };
+            dict[typeof(IConstructibleGetter)] = dict[typeof(IConstructible)];
             dict[typeof(IOutfitTarget)] = new Type[]
             {
                 typeof(Armor),

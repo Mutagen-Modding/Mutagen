@@ -32,8 +32,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class EffectShader :
         SkyrimMajorRecord,
         IEffectShaderInternal,
-        ILoquiObjectSetter<EffectShader>,
-        IEquatable<IEffectShaderGetter>
+        IEquatable<IEffectShaderGetter>,
+        ILoquiObjectSetter<EffectShader>
     {
         #region Ctor
         protected EffectShader()
@@ -669,8 +669,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -3997,9 +3997,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IEffectShader :
         IEffectShaderGetter,
-        ISkyrimMajorRecord,
+        IFormLinkContainer,
         ILoquiObjectSetter<IEffectShaderInternal>,
-        IFormLinkContainer
+        ISkyrimMajorRecord
     {
         new String? FillTexture { get; set; }
         new String? ParticleShaderTexture { get; set; }
@@ -4118,9 +4118,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IEffectShaderGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<IEffectShaderGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IEffectShaderGetter>
     {
         static new ILoquiRegistration Registration => EffectShader_Registration.Instance;
         String? FillTexture { get; }

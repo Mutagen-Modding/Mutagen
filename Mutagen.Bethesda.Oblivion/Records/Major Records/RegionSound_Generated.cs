@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class RegionSound :
-        IRegionSound,
+        IEquatable<IRegionSoundGetter>,
         ILoquiObjectSetter<RegionSound>,
-        IEquatable<IRegionSoundGetter>
+        IRegionSound
     {
         #region Ctor
         public RegionSound()
@@ -81,8 +81,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -476,9 +476,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IRegionSound :
-        IRegionSoundGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IRegionSound>,
-        IFormLinkContainer
+        IRegionSoundGetter
     {
         new FormLink<ISoundGetter> Sound { get; set; }
         new RegionSound.Flag Flags { get; set; }
@@ -487,9 +487,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IRegionSoundGetter :
         ILoquiObject,
-        ILoquiObject<IRegionSoundGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IRegionSoundGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

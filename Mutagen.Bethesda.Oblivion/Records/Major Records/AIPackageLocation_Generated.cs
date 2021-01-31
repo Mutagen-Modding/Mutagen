@@ -28,8 +28,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class AIPackageLocation :
         IAIPackageLocation,
-        ILoquiObjectSetter<AIPackageLocation>,
-        IEquatable<IAIPackageLocationGetter>
+        IEquatable<IAIPackageLocationGetter>,
+        ILoquiObjectSetter<AIPackageLocation>
     {
         #region Ctor
         public AIPackageLocation()
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -477,8 +477,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IAIPackageLocation :
         IAIPackageLocationGetter,
-        ILoquiObjectSetter<IAIPackageLocation>,
-        IFormLinkContainer
+        IFormLinkContainer,
+        ILoquiObjectSetter<IAIPackageLocation>
     {
         new AIPackageLocation.LocationType Type { get; set; }
         new FormLink<IPlacedGetter> LocationReference { get; set; }
@@ -487,9 +487,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IAIPackageLocationGetter :
         ILoquiObject,
-        ILoquiObject<IAIPackageLocationGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IAIPackageLocationGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

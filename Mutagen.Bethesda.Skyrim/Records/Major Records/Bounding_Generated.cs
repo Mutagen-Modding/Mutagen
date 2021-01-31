@@ -28,8 +28,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class Bounding :
         IBounding,
-        ILoquiObjectSetter<Bounding>,
-        IEquatable<IBoundingGetter>
+        IEquatable<IBoundingGetter>,
+        ILoquiObjectSetter<Bounding>
     {
         #region Ctor
         public Bounding()
@@ -92,8 +92,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -608,8 +608,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IBoundingGetter :
         ILoquiObject,
-        ILoquiObject<IBoundingGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IBoundingGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

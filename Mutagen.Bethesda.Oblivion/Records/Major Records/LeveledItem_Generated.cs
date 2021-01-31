@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class LeveledItem :
         AItem,
+        IEquatable<ILeveledItemGetter>,
         ILeveledItemInternal,
-        ILoquiObjectSetter<LeveledItem>,
-        IEquatable<ILeveledItemGetter>
+        ILoquiObjectSetter<LeveledItem>
     {
         #region Ctor
         protected LeveledItem()
@@ -99,8 +99,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             AItem.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -590,10 +590,10 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ILeveledItem :
-        ILeveledItemGetter,
         IAItem,
-        ILoquiObjectSetter<ILeveledItemInternal>,
-        IFormLinkContainer
+        IFormLinkContainer,
+        ILeveledItemGetter,
+        ILoquiObjectSetter<ILeveledItemInternal>
     {
         new Byte? ChanceNone { get; set; }
         new LeveledFlag? Flags { get; set; }
@@ -609,9 +609,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ILeveledItemGetter :
         IAItemGetter,
-        ILoquiObject<ILeveledItemGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ILeveledItemGetter>
     {
         static new ILoquiRegistration Registration => LeveledItem_Registration.Instance;
         Byte? ChanceNone { get; }

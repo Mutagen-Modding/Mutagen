@@ -29,8 +29,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class CellSubBlock :
         ICellSubBlock,
-        ILoquiObjectSetter<CellSubBlock>,
-        IEquatable<ICellSubBlockGetter>
+        IEquatable<ICellSubBlockGetter>,
+        ILoquiObjectSetter<CellSubBlock>
     {
         #region Ctor
         public CellSubBlock()
@@ -98,8 +98,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -660,9 +660,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface ICellSubBlock :
         ICellSubBlockGetter,
-        IMajorRecordEnumerable,
+        IFormLinkContainer,
         ILoquiObjectSetter<ICellSubBlock>,
-        IFormLinkContainer
+        IMajorRecordEnumerable
     {
         new Int32 BlockNumber { get; set; }
         new GroupTypeEnum GroupType { get; set; }
@@ -673,10 +673,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ICellSubBlockGetter :
         ILoquiObject,
-        IMajorRecordGetterEnumerable,
-        ILoquiObject<ICellSubBlockGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ICellSubBlockGetter>,
+        IMajorRecordGetterEnumerable
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

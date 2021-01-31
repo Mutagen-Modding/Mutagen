@@ -28,8 +28,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class BodyPart :
         IBodyPart,
-        ILoquiObjectSetter<BodyPart>,
-        IEquatable<IBodyPartGetter>
+        IEquatable<IBodyPartGetter>,
+        ILoquiObjectSetter<BodyPart>
     {
         #region Ctor
         public BodyPart()
@@ -42,6 +42,24 @@ namespace Mutagen.Bethesda.Skyrim
         #region Name
         public TranslatedString Name { get; set; } = string.Empty;
         ITranslatedStringGetter IBodyPartGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
         #endregion
         #region PoseMatching
         public String? PoseMatching { get; set; }
@@ -181,8 +199,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1422,9 +1440,10 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IBodyPart :
         IBodyPartGetter,
-        ITranslatedNamedRequired,
+        IFormLinkContainer,
         ILoquiObjectSetter<IBodyPart>,
-        IFormLinkContainer
+        INamedRequired,
+        ITranslatedNamedRequired
     {
         new TranslatedString Name { get; set; }
         new String? PoseMatching { get; set; }
@@ -1463,10 +1482,11 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IBodyPartGetter :
         ILoquiObject,
-        ITranslatedNamedRequiredGetter,
-        ILoquiObject<IBodyPartGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IBodyPartGetter>,
+        INamedRequiredGetter,
+        ITranslatedNamedRequiredGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -2797,6 +2817,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Name
         private int? _NameLocation;
         public ITranslatedStringGetter Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : TranslatedString.Empty;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        #endregion
         #endregion
         #region PoseMatching
         private int? _PoseMatchingLocation;

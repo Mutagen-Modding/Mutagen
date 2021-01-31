@@ -28,8 +28,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class AIData :
         IAIData,
-        ILoquiObjectSetter<AIData>,
-        IEquatable<IAIDataGetter>
+        IEquatable<IAIDataGetter>,
+        ILoquiObjectSetter<AIData>
     {
         #region Ctor
         public AIData()
@@ -104,8 +104,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -740,8 +740,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IAIDataGetter :
         ILoquiObject,
-        ILoquiObject<IAIDataGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IAIDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

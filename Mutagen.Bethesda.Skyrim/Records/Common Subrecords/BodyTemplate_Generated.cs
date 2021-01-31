@@ -28,8 +28,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class BodyTemplate :
         IBodyTemplate,
-        ILoquiObjectSetter<BodyTemplate>,
-        IEquatable<IBodyTemplateGetter>
+        IEquatable<IBodyTemplateGetter>,
+        ILoquiObjectSetter<BodyTemplate>
     {
         #region Ctor
         public BodyTemplate()
@@ -83,8 +83,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -512,8 +512,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IBodyTemplateGetter :
         ILoquiObject,
-        ILoquiObject<IBodyTemplateGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IBodyTemplateGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

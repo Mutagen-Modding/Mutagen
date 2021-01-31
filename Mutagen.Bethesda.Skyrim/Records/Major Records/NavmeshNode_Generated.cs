@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class NavmeshNode :
-        INavmeshNode,
+        IEquatable<INavmeshNodeGetter>,
         ILoquiObjectSetter<NavmeshNode>,
-        IEquatable<INavmeshNodeGetter>
+        INavmeshNode
     {
         #region Ctor
         public NavmeshNode()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -444,9 +444,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface INavmeshNode :
-        INavmeshNodeGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<INavmeshNode>,
-        IFormLinkContainer
+        INavmeshNodeGetter
     {
         new FormLink<IANavigationMeshGetter> NavMesh { get; set; }
         new UInt32 NodeIndex { get; set; }
@@ -454,9 +454,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface INavmeshNodeGetter :
         ILoquiObject,
-        ILoquiObject<INavmeshNodeGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<INavmeshNodeGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

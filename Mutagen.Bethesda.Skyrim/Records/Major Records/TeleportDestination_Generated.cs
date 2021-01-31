@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class TeleportDestination :
-        ITeleportDestination,
+        IEquatable<ITeleportDestinationGetter>,
         ILoquiObjectSetter<TeleportDestination>,
-        IEquatable<ITeleportDestinationGetter>
+        ITeleportDestination
     {
         #region Ctor
         public TeleportDestination()
@@ -83,8 +83,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -507,10 +507,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ITeleportDestination :
-        ITeleportDestinationGetter,
-        IPositionRotation,
+        IFormLinkContainer,
         ILoquiObjectSetter<ITeleportDestination>,
-        IFormLinkContainer
+        IPositionRotation,
+        ITeleportDestinationGetter
     {
         new FormLink<IPlacedObjectGetter> Door { get; set; }
         new P3Float Position { get; set; }
@@ -520,10 +520,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ITeleportDestinationGetter :
         ILoquiObject,
-        IPositionRotationGetter,
-        ILoquiObject<ITeleportDestinationGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ITeleportDestinationGetter>,
+        IPositionRotationGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

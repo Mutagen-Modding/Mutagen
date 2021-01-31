@@ -28,8 +28,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class CombatStyleAdvanced :
         ICombatStyleAdvanced,
-        ILoquiObjectSetter<CombatStyleAdvanced>,
-        IEquatable<ICombatStyleAdvancedGetter>
+        IEquatable<ICombatStyleAdvancedGetter>,
+        ILoquiObjectSetter<CombatStyleAdvanced>
     {
         #region Ctor
         public CombatStyleAdvanced()
@@ -134,8 +134,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1060,8 +1060,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ICombatStyleAdvancedGetter :
         ILoquiObject,
-        ILoquiObject<ICombatStyleAdvancedGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ICombatStyleAdvancedGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

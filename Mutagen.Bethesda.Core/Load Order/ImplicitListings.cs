@@ -18,12 +18,24 @@ namespace Mutagen.Bethesda
             "Dragonborn.esm",
         };
 
+        private readonly static ModKey[] _fo4ImplicitMods = new ModKey[]
+        {
+            "Fallout4.esm",
+            "DLCRobot.esm",
+            "DLCworkshop01.esm",
+            "DLCCoast.esm",
+            "DLCworkshop02.esm",
+            "DLCworkshop03.esm",
+            "DLCNukaWorld.esm",
+        };
+
         public static IEnumerable<ModKey> GetListings(GameRelease release)
         {
             return release switch
             {
                 GameRelease.SkyrimSE => _sseImplicitMods,
                 GameRelease.SkyrimVR => _sseImplicitMods,
+                GameRelease.Fallout4 => _fo4ImplicitMods,
                 _ => Enumerable.Empty<ModKey>(),
             };
         }

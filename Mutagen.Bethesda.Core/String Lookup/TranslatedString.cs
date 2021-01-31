@@ -276,7 +276,7 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public static implicit operator TranslatedString(string str)
+        public static implicit operator TranslatedString(string? str)
         {
             return new TranslatedString(str);
         }
