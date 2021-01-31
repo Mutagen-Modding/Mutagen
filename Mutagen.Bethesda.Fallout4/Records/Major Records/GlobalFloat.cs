@@ -16,13 +16,6 @@ namespace Mutagen.Bethesda.Fallout4
             get => this.Data;
             set => this.Data = value;
         }
-
-        internal static GlobalFloat Factory()
-        {
-            var ret = new GlobalFloat();
-            ret.TypeChar = TRIGGER_CHAR;
-            return ret;
-        }
     }
 
     namespace Internals

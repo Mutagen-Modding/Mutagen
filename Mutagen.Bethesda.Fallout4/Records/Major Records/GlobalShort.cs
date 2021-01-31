@@ -31,11 +31,6 @@ namespace Mutagen.Bethesda.Fallout4
                 }
             }
         }
-
-        internal static GlobalShort Factory()
-        {
-            return new GlobalShort();
-        }
     }
 
     namespace Internals
