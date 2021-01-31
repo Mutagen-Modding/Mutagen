@@ -670,7 +670,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ILightData :
         ILightDataGetter,
-        ILoquiObjectSetter<ILightData>
+        ILoquiObjectSetter<ILightData>,
+        IWeightValue
     {
         new LightData.VersioningBreaks Versioning { get; set; }
         new Int32 Time { get; set; }
@@ -686,7 +687,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILightDataGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<ILightDataGetter>
+        ILoquiObject<ILightDataGetter>,
+        IWeightValueGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

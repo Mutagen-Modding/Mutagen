@@ -99,6 +99,7 @@
     <Compile Include="Interfaces\Aspect\ITranslatedNamedRequired.cs" />
     <Compile Include="Interfaces\LinkInterfaceMapping.cs" />
     <Compile Include="IsExternalInit.cs" />
+    <Compile Include="Interfaces\Aspect\IWeightValue.cs" />
     <Compile Include="Links\ImmutableModLinkCache.cs" />
     <Compile Include="Links\FormLinkNullable.cs" />
     <Compile Include="Links\IFormLink.cs" />

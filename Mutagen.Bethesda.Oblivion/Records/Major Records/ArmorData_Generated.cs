@@ -506,7 +506,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IArmorData :
         IArmorDataGetter,
-        ILoquiObjectSetter<IArmorData>
+        ILoquiObjectSetter<IArmorData>,
+        IWeightValue
     {
         new Single ArmorValue { get; set; }
         new UInt32 Value { get; set; }
@@ -517,7 +518,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IArmorDataGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<IArmorDataGetter>
+        ILoquiObject<IArmorDataGetter>,
+        IWeightValueGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

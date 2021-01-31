@@ -630,7 +630,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IWeaponData :
         ILoquiObjectSetter<IWeaponData>,
-        IWeaponDataGetter
+        IWeaponDataGetter,
+        IWeightValue
     {
         new Weapon.WeaponType Type { get; set; }
         new Single Speed { get; set; }
@@ -645,7 +646,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IWeaponDataGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<IWeaponDataGetter>
+        ILoquiObject<IWeaponDataGetter>,
+        IWeightValueGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

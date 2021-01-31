@@ -444,7 +444,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IKeyData :
         IKeyDataGetter,
-        ILoquiObjectSetter<IKeyData>
+        ILoquiObjectSetter<IKeyData>,
+        IWeightValue
     {
         new UInt32 Value { get; set; }
         new Single Weight { get; set; }
@@ -453,7 +454,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IKeyDataGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<IKeyDataGetter>
+        ILoquiObject<IKeyDataGetter>,
+        IWeightValueGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

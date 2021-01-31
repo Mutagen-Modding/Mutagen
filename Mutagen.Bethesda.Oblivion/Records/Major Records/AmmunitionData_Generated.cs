@@ -537,7 +537,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IAmmunitionData :
         IAmmunitionDataGetter,
-        ILoquiObjectSetter<IAmmunitionData>
+        ILoquiObjectSetter<IAmmunitionData>,
+        IWeightValue
     {
         new Single Speed { get; set; }
         new AmmunitionData.Flag Flags { get; set; }
@@ -549,7 +550,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IAmmunitionDataGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<IAmmunitionDataGetter>
+        ILoquiObject<IAmmunitionDataGetter>,
+        IWeightValueGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

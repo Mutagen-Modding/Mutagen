@@ -475,7 +475,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ISigilStoneData :
         ILoquiObjectSetter<ISigilStoneData>,
-        ISigilStoneDataGetter
+        ISigilStoneDataGetter,
+        IWeightValue
     {
         new Byte Uses { get; set; }
         new UInt32 Value { get; set; }
@@ -485,7 +486,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ISigilStoneDataGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<ISigilStoneDataGetter>
+        ILoquiObject<ISigilStoneDataGetter>,
+        IWeightValueGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

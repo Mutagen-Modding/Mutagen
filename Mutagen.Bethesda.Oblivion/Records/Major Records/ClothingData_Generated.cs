@@ -444,7 +444,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IClothingData :
         IClothingDataGetter,
-        ILoquiObjectSetter<IClothingData>
+        ILoquiObjectSetter<IClothingData>,
+        IWeightValue
     {
         new UInt32 Value { get; set; }
         new Single Weight { get; set; }
@@ -453,7 +454,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IClothingDataGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<IClothingDataGetter>
+        ILoquiObject<IClothingDataGetter>,
+        IWeightValueGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

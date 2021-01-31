@@ -14,11 +14,10 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects
         public string LoquiName;
 
         public RefAspect(
-            string aspectName,
             string interfaceName,
             string memberName,
             string loquiName)
-            : base(aspectName, null!)
+            : base(interfaceName, null!)
         {
             InterfaceName = interfaceName;
             MemberName = memberName;

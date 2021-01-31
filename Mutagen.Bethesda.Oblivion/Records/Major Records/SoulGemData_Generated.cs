@@ -444,7 +444,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ISoulGemData :
         ILoquiObjectSetter<ISoulGemData>,
-        ISoulGemDataGetter
+        ISoulGemDataGetter,
+        IWeightValue
     {
         new UInt32 Value { get; set; }
         new Single Weight { get; set; }
@@ -453,7 +454,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ISoulGemDataGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<ISoulGemDataGetter>
+        ILoquiObject<ISoulGemDataGetter>,
+        IWeightValueGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

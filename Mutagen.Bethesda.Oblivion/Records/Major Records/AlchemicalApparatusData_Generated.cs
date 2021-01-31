@@ -507,7 +507,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IAlchemicalApparatusData :
         IAlchemicalApparatusDataGetter,
-        ILoquiObjectSetter<IAlchemicalApparatusData>
+        ILoquiObjectSetter<IAlchemicalApparatusData>,
+        IWeightValue
     {
         new AlchemicalApparatus.ApparatusType Type { get; set; }
         new UInt32 Value { get; set; }
@@ -518,7 +519,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IAlchemicalApparatusDataGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<IAlchemicalApparatusDataGetter>
+        ILoquiObject<IAlchemicalApparatusDataGetter>,
+        IWeightValueGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

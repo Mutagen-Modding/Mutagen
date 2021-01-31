@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Book" objType="Record" recordType="BOOK" baseClass="SkyrimMajorRecord" GUID="75309913-652c-4e97-9cf4-6ccb493d3143" ID="154">
-    <Interface>IWeightValue</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
