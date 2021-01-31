@@ -18,6 +18,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects
         public AspectInterfaceModule()
         {
             Definitions.Add(new KeywordedAspect());
+            Definitions.Add(new KeywordAspect());
             Definitions.Add(new NamedAspect());
             Definitions.Add(new ObjectBoundedAspect());
         }

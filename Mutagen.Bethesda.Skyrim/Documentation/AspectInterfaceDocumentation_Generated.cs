@@ -140,6 +140,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - TextureSet
 - Tree
 - Weapon
+### Keyword
+- Keyword
 ## Concrete Classes to Interfaces
 ### AcousticSpace
 - IObjectBounded
@@ -228,6 +230,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IKeyworded
 - INamed
 - IObjectBounded
+### Keyword
+- Keyword
 ### LeveledItem
 - IObjectBounded
 ### LeveledNpc
