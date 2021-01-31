@@ -1,5 +1,6 @@
 using Loqui;
 using Loqui.Generation;
+using Mutagen.Bethesda.Generation.Modules.Aspects;
 using Noggog;
 using System;
 using System.Collections.Generic;

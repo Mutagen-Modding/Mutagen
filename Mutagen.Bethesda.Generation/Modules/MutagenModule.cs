@@ -8,6 +8,7 @@ using Loqui;
 using System.Xml.Linq;
 using Noggog;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Generation.Modules.Aspects;
 
 namespace Mutagen.Bethesda.Generation
 {
