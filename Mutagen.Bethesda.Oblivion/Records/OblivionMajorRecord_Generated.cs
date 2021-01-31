@@ -32,9 +32,9 @@ namespace Mutagen.Bethesda.Oblivion
     /// </summary>
     public abstract partial class OblivionMajorRecord :
         MajorRecord,
-        IOblivionMajorRecordInternal,
+        IEquatable<IOblivionMajorRecordGetter>,
         ILoquiObjectSetter<OblivionMajorRecord>,
-        IEquatable<IOblivionMajorRecordGetter>
+        IOblivionMajorRecordInternal
     {
         #region Ctor
         protected OblivionMajorRecord()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             MajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -447,11 +447,11 @@ namespace Mutagen.Bethesda.Oblivion
     /// Implemented by: [Activator, AIPackage, AItem, AnimatedObject, ANpcSpawn, ASpell, Birthsign, Class, Climate, CombatStyle, Container, DialogTopic, DialogItem, Door, EffectShader, Enchantment, Eye, Faction, Flora, Furniture, GameSetting, Global, Grass, Hair, IdleAnimation, Landscape, LandTexture, LoadScreen, MagicEffect, PathGrid, Place, PlacedCreature, PlacedNpc, PlacedObject, Quest, Race, Region, Road, Script, SkillRecord, Sound, Static, Subspace, Tree, Water, Weather]
     /// </summary>
     public partial interface IOblivionMajorRecord :
-        IOblivionMajorRecordGetter,
+        IFormLinkContainer,
+        ILoquiObjectSetter<IOblivionMajorRecordInternal>,
         IMajorRecord,
         IMajorRecordEnumerable,
-        ILoquiObjectSetter<IOblivionMajorRecordInternal>,
-        IFormLinkContainer
+        IOblivionMajorRecordGetter
     {
         new OblivionMajorRecord.OblivionMajorRecordFlag OblivionMajorRecordFlags { get; set; }
     }
@@ -468,10 +468,10 @@ namespace Mutagen.Bethesda.Oblivion
     /// </summary>
     public partial interface IOblivionMajorRecordGetter :
         IMajorRecordGetter,
-        IMajorRecordGetterEnumerable,
-        ILoquiObject<IOblivionMajorRecordGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IOblivionMajorRecordGetter>,
+        IMajorRecordGetterEnumerable
     {
         static new ILoquiRegistration Registration => OblivionMajorRecord_Registration.Instance;
         OblivionMajorRecord.OblivionMajorRecordFlag OblivionMajorRecordFlags { get; }

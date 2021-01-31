@@ -9,15 +9,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class Creature
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String INamedRequiredGetter.Name => this.Name ?? string.Empty;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String INamedRequired.Name
-        {
-            get => this.Name ?? string.Empty;
-            set => this.Name = value;
-        }
-
         [Flags]
         public enum CreatureFlag
         {
@@ -48,15 +39,6 @@ namespace Mutagen.Bethesda.Oblivion
             Humanoid = 3,
             Horse = 4,
             Giant = 5,
-        }
-    }
-
-    namespace Internals
-    {
-        public partial class CreatureBinaryOverlay
-        {
-            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            String INamedRequiredGetter.Name => this.Name ?? string.Empty;
         }
     }
 }

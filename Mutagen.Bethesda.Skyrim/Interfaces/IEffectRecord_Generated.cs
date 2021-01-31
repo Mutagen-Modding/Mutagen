@@ -11,8 +11,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// Implemented by: [ObjectEffect, Spell]
     /// </summary>
     public partial interface IEffectRecord :
-        ISkyrimMajorRecordInternal,
-        IEffectRecordGetter
+        IEffectRecordGetter,
+        ISkyrimMajorRecordInternal
     {
     }
 

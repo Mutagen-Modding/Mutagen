@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Subspace :
         OblivionMajorRecord,
-        ISubspaceInternal,
+        IEquatable<ISubspaceGetter>,
         ILoquiObjectSetter<Subspace>,
-        IEquatable<ISubspaceGetter>
+        ISubspaceInternal
     {
         #region Ctor
         protected Subspace()
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -438,9 +438,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ISubspace :
-        ISubspaceGetter,
+        ILoquiObjectSetter<ISubspaceInternal>,
         IOblivionMajorRecord,
-        ILoquiObjectSetter<ISubspaceInternal>
+        ISubspaceGetter
     {
         new P3Float? Point { get; set; }
     }
@@ -454,8 +454,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ISubspaceGetter :
         IOblivionMajorRecordGetter,
-        ILoquiObject<ISubspaceGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ISubspaceGetter>
     {
         static new ILoquiRegistration Registration => Subspace_Registration.Instance;
         P3Float? Point { get; }

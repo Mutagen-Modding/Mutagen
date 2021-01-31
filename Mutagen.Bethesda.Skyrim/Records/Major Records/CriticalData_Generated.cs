@@ -28,8 +28,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class CriticalData :
         ICriticalData,
-        ILoquiObjectSetter<CriticalData>,
-        IEquatable<ICriticalDataGetter>
+        IEquatable<ICriticalDataGetter>,
+        ILoquiObjectSetter<CriticalData>
     {
         #region Ctor
         public CriticalData()
@@ -106,8 +106,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -676,8 +676,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface ICriticalData :
         ICriticalDataGetter,
-        ILoquiObjectSetter<ICriticalData>,
-        IFormLinkContainer
+        IFormLinkContainer,
+        ILoquiObjectSetter<ICriticalData>
     {
         new CriticalData.VersioningBreaks Versioning { get; set; }
         new UInt16 Damage { get; set; }
@@ -692,9 +692,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ICriticalDataGetter :
         ILoquiObject,
-        ILoquiObject<ICriticalDataGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ICriticalDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

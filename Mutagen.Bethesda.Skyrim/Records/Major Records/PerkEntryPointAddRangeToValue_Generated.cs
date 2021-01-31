@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class PerkEntryPointAddRangeToValue :
         APerkEntryPointEffect,
-        IPerkEntryPointAddRangeToValue,
+        IEquatable<IPerkEntryPointAddRangeToValueGetter>,
         ILoquiObjectSetter<PerkEntryPointAddRangeToValue>,
-        IEquatable<IPerkEntryPointAddRangeToValueGetter>
+        IPerkEntryPointAddRangeToValue
     {
         #region Ctor
         public PerkEntryPointAddRangeToValue()
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             APerkEntryPointEffect.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -443,9 +443,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPerkEntryPointAddRangeToValue :
-        IPerkEntryPointAddRangeToValueGetter,
         IAPerkEntryPointEffect,
-        ILoquiObjectSetter<IPerkEntryPointAddRangeToValue>
+        ILoquiObjectSetter<IPerkEntryPointAddRangeToValue>,
+        IPerkEntryPointAddRangeToValueGetter
     {
         new Single From { get; set; }
         new Single To { get; set; }
@@ -453,8 +453,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IPerkEntryPointAddRangeToValueGetter :
         IAPerkEntryPointEffectGetter,
-        ILoquiObject<IPerkEntryPointAddRangeToValueGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IPerkEntryPointAddRangeToValueGetter>
     {
         static new ILoquiRegistration Registration => PerkEntryPointAddRangeToValue_Registration.Instance;
         Single From { get; }

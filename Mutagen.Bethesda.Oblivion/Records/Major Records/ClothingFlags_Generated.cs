@@ -28,8 +28,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class ClothingFlags :
         IClothingFlags,
-        ILoquiObjectSetter<ClothingFlags>,
-        IEquatable<IClothingFlagsGetter>
+        IEquatable<IClothingFlagsGetter>,
+        ILoquiObjectSetter<ClothingFlags>
     {
         #region Ctor
         public ClothingFlags()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -452,8 +452,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IClothingFlagsGetter :
         ILoquiObject,
-        ILoquiObject<IClothingFlagsGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IClothingFlagsGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

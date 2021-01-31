@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Location :
+        IEquatable<ILocationGetter>,
         ILocation,
-        ILoquiObjectSetter<Location>,
-        IEquatable<ILocationGetter>
+        ILoquiObjectSetter<Location>
     {
         #region Ctor
         public Location()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -448,8 +448,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ILocationGetter :
         ILoquiObject,
-        ILoquiObject<ILocationGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ILocationGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

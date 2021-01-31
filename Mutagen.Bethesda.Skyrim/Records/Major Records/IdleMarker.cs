@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -10,19 +10,6 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class IdleMarker
     {
-        #region Interfaces
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ObjectBounds? IObjectBoundedOptional.ObjectBounds
-        {
-            get => this.ObjectBounds;
-            set => this.ObjectBounds = value ?? new ObjectBounds();
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
-        #endregion
-
         [Flags]
         public enum MajorFlag
         {

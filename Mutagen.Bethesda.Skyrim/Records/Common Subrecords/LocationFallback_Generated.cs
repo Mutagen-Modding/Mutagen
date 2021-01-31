@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class LocationFallback :
         ALocationTarget,
+        IEquatable<ILocationFallbackGetter>,
         ILocationFallback,
-        ILoquiObjectSetter<LocationFallback>,
-        IEquatable<ILocationFallbackGetter>
+        ILoquiObjectSetter<LocationFallback>
     {
         #region Ctor
         public LocationFallback()
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             ALocationTarget.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -427,8 +427,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ILocationFallback :
-        ILocationFallbackGetter,
         IALocationTarget,
+        ILocationFallbackGetter,
         ILoquiObjectSetter<ILocationFallback>
     {
         new LocationTargetRadius.LocationType Type { get; set; }
@@ -437,8 +437,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ILocationFallbackGetter :
         IALocationTargetGetter,
-        ILoquiObject<ILocationFallbackGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ILocationFallbackGetter>
     {
         static new ILoquiRegistration Registration => LocationFallback_Registration.Instance;
         LocationTargetRadius.LocationType Type { get; }

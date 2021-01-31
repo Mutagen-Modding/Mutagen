@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class FootstepSet :
         SkyrimMajorRecord,
+        IEquatable<IFootstepSetGetter>,
         IFootstepSetInternal,
-        ILoquiObjectSetter<FootstepSet>,
-        IEquatable<IFootstepSetGetter>
+        ILoquiObjectSetter<FootstepSet>
     {
         #region Ctor
         protected FootstepSet()
@@ -145,8 +145,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1002,9 +1002,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IFootstepSet :
         IFootstepSetGetter,
-        ISkyrimMajorRecord,
+        IFormLinkContainer,
         ILoquiObjectSetter<IFootstepSetInternal>,
-        IFormLinkContainer
+        ISkyrimMajorRecord
     {
         new ExtendedList<IFormLink<IFootstepGetter>> WalkForwardFootsteps { get; }
         new ExtendedList<IFormLink<IFootstepGetter>> RunForwardFootsteps { get; }
@@ -1022,9 +1022,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IFootstepSetGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<IFootstepSetGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IFootstepSetGetter>
     {
         static new ILoquiRegistration Registration => FootstepSet_Registration.Instance;
         IReadOnlyList<IFormLink<IFootstepGetter>> WalkForwardFootsteps { get; }

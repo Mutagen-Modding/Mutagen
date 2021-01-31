@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class PerkPlacement :
-        IPerkPlacement,
+        IEquatable<IPerkPlacementGetter>,
         ILoquiObjectSetter<PerkPlacement>,
-        IEquatable<IPerkPlacementGetter>
+        IPerkPlacement
     {
         #region Ctor
         public PerkPlacement()
@@ -88,8 +88,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -484,9 +484,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPerkPlacement :
-        IPerkPlacementGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IPerkPlacement>,
-        IFormLinkContainer
+        IPerkPlacementGetter
     {
         new FormLink<IPerkGetter> Perk { get; set; }
         new Byte Rank { get; set; }
@@ -495,9 +495,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IPerkPlacementGetter :
         ILoquiObject,
-        ILoquiObject<IPerkPlacementGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IPerkPlacementGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

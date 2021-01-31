@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class EquipType :
         SkyrimMajorRecord,
+        IEquatable<IEquipTypeGetter>,
         IEquipTypeInternal,
-        ILoquiObjectSetter<EquipType>,
-        IEquatable<IEquipTypeGetter>
+        ILoquiObjectSetter<EquipType>
     {
         #region Ctor
         protected EquipType()
@@ -94,8 +94,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -575,9 +575,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IEquipType :
         IEquipTypeGetter,
-        ISkyrimMajorRecord,
+        IFormLinkContainer,
         ILoquiObjectSetter<IEquipTypeInternal>,
-        IFormLinkContainer
+        ISkyrimMajorRecord
     {
         new ExtendedList<IFormLink<IEquipTypeGetter>>? SlotParents { get; set; }
         new Boolean? UseAllParents { get; set; }
@@ -592,9 +592,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IEquipTypeGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<IEquipTypeGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IEquipTypeGetter>
     {
         static new ILoquiRegistration Registration => EquipType_Registration.Instance;
         IReadOnlyList<IFormLink<IEquipTypeGetter>>? SlotParents { get; }

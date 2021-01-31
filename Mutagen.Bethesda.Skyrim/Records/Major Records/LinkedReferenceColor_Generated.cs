@@ -28,9 +28,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class LinkedReferenceColor :
+        IEquatable<ILinkedReferenceColorGetter>,
         ILinkedReferenceColor,
-        ILoquiObjectSetter<LinkedReferenceColor>,
-        IEquatable<ILinkedReferenceColorGetter>
+        ILoquiObjectSetter<LinkedReferenceColor>
     {
         #region Ctor
         public LinkedReferenceColor()
@@ -78,8 +78,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -453,8 +453,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ILinkedReferenceColorGetter :
         ILoquiObject,
-        ILoquiObject<ILinkedReferenceColorGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ILinkedReferenceColorGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

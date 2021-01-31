@@ -33,9 +33,9 @@ namespace Mutagen.Bethesda.Oblivion
     /// </summary>
     public abstract partial class Global :
         OblivionMajorRecord,
+        IEquatable<IGlobalGetter>,
         IGlobalInternal,
-        ILoquiObjectSetter<Global>,
-        IEquatable<IGlobalGetter>
+        ILoquiObjectSetter<Global>
     {
         #region Ctor
         protected Global()
@@ -78,8 +78,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -374,8 +374,8 @@ namespace Mutagen.Bethesda.Oblivion
     /// </summary>
     public partial interface IGlobal :
         IGlobalGetter,
-        IOblivionMajorRecord,
-        ILoquiObjectSetter<IGlobalInternal>
+        ILoquiObjectSetter<IGlobalInternal>,
+        IOblivionMajorRecord
     {
     }
 
@@ -391,8 +391,8 @@ namespace Mutagen.Bethesda.Oblivion
     /// </summary>
     public partial interface IGlobalGetter :
         IOblivionMajorRecordGetter,
-        ILoquiObject<IGlobalGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IGlobalGetter>
     {
         static new ILoquiRegistration Registration => Global_Registration.Instance;
 

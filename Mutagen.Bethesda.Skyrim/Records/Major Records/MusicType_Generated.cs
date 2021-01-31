@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class MusicType :
         SkyrimMajorRecord,
-        IMusicTypeInternal,
+        IEquatable<IMusicTypeGetter>,
         ILoquiObjectSetter<MusicType>,
-        IEquatable<IMusicTypeGetter>
+        IMusicTypeInternal
     {
         #region Ctor
         protected MusicType()
@@ -108,8 +108,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -651,10 +651,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IMusicType :
-        IMusicTypeGetter,
-        ISkyrimMajorRecord,
+        IFormLinkContainer,
         ILoquiObjectSetter<IMusicTypeInternal>,
-        IFormLinkContainer
+        IMusicTypeGetter,
+        ISkyrimMajorRecord
     {
         new MusicType.Flag Flags { get; set; }
         new MusicTypeData? Data { get; set; }
@@ -671,9 +671,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IMusicTypeGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<IMusicTypeGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IMusicTypeGetter>
     {
         static new ILoquiRegistration Registration => MusicType_Registration.Instance;
         MusicType.Flag Flags { get; }

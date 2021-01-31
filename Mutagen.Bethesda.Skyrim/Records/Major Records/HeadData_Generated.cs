@@ -28,9 +28,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class HeadData :
+        IEquatable<IHeadDataGetter>,
         IHeadData,
-        ILoquiObjectSetter<HeadData>,
-        IEquatable<IHeadDataGetter>
+        ILoquiObjectSetter<HeadData>
     {
         #region Ctor
         public HeadData()
@@ -134,6 +134,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IHeadDataGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
         #endregion
 
         #region To String
@@ -167,8 +171,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1085,10 +1089,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IHeadData :
+        IFormLinkContainer,
         IHeadDataGetter,
-        IModeled,
         ILoquiObjectSetter<IHeadData>,
-        IFormLinkContainer
+        IModeled
     {
         new ExtendedList<HeadPartReference> HeadParts { get; }
         new AvailableMorphs? AvailableMorphs { get; set; }
@@ -1102,10 +1106,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IHeadDataGetter :
         ILoquiObject,
-        IModeledGetter,
-        ILoquiObject<IHeadDataGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IHeadDataGetter>,
+        IModeledGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

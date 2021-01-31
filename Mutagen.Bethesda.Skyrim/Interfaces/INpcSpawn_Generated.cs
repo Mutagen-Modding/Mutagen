@@ -11,8 +11,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// Implemented by: [LeveledNpc, Npc]
     /// </summary>
     public partial interface INpcSpawn :
-        ISkyrimMajorRecordInternal,
-        INpcSpawnGetter
+        INpcSpawnGetter,
+        ISkyrimMajorRecordInternal
     {
     }
 

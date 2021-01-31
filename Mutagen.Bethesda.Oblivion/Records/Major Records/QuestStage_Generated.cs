@@ -28,9 +28,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class QuestStage :
-        IQuestStage,
+        IEquatable<IQuestStageGetter>,
         ILoquiObjectSetter<QuestStage>,
-        IEquatable<IQuestStageGetter>
+        IQuestStage
     {
         #region Ctor
         public QuestStage()
@@ -89,8 +89,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -532,9 +532,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IQuestStage :
-        IQuestStageGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IQuestStage>,
-        IFormLinkContainer
+        IQuestStageGetter
     {
         new UInt16 Stage { get; set; }
         new ExtendedList<LogEntry> LogEntries { get; }
@@ -542,9 +542,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IQuestStageGetter :
         ILoquiObject,
-        ILoquiObject<IQuestStageGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IQuestStageGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

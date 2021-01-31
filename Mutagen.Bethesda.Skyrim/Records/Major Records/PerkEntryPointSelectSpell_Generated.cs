@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class PerkEntryPointSelectSpell :
         APerkEntryPointEffect,
-        IPerkEntryPointSelectSpell,
+        IEquatable<IPerkEntryPointSelectSpellGetter>,
         ILoquiObjectSetter<PerkEntryPointSelectSpell>,
-        IEquatable<IPerkEntryPointSelectSpellGetter>
+        IPerkEntryPointSelectSpell
     {
         #region Ctor
         public PerkEntryPointSelectSpell()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             APerkEntryPointEffect.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -414,19 +414,19 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPerkEntryPointSelectSpell :
-        IPerkEntryPointSelectSpellGetter,
         IAPerkEntryPointEffect,
+        IFormLinkContainer,
         ILoquiObjectSetter<IPerkEntryPointSelectSpell>,
-        IFormLinkContainer
+        IPerkEntryPointSelectSpellGetter
     {
         new FormLink<ISpellGetter> Spell { get; set; }
     }
 
     public partial interface IPerkEntryPointSelectSpellGetter :
         IAPerkEntryPointEffectGetter,
-        ILoquiObject<IPerkEntryPointSelectSpellGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IPerkEntryPointSelectSpellGetter>
     {
         static new ILoquiRegistration Registration => PerkEntryPointSelectSpell_Registration.Instance;
         FormLink<ISpellGetter> Spell { get; }

@@ -11,8 +11,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// Implemented by: [Faction, Race]
     /// </summary>
     public partial interface IRelatable :
-        ISkyrimMajorRecordInternal,
-        IRelatableGetter
+        IRelatableGetter,
+        ISkyrimMajorRecordInternal
     {
     }
 

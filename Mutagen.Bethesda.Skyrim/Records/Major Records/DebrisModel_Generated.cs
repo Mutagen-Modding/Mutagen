@@ -28,8 +28,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class DebrisModel :
         IDebrisModel,
-        ILoquiObjectSetter<DebrisModel>,
-        IEquatable<IDebrisModelGetter>
+        IEquatable<IDebrisModelGetter>,
+        ILoquiObjectSetter<DebrisModel>
     {
         #region Ctor
         public DebrisModel()
@@ -104,8 +104,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -571,8 +571,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IDebrisModelGetter :
         ILoquiObject,
-        ILoquiObject<IDebrisModelGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IDebrisModelGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

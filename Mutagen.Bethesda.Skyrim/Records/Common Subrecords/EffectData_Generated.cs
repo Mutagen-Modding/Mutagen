@@ -28,8 +28,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class EffectData :
         IEffectData,
-        ILoquiObjectSetter<EffectData>,
-        IEquatable<IEffectDataGetter>
+        IEquatable<IEffectDataGetter>,
+        ILoquiObjectSetter<EffectData>
     {
         #region Ctor
         public EffectData()
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -484,8 +484,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IEffectDataGetter :
         ILoquiObject,
-        ILoquiObject<IEffectDataGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IEffectDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

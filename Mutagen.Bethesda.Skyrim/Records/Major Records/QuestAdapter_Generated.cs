@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class QuestAdapter :
         AVirtualMachineAdapter,
-        IQuestAdapter,
+        IEquatable<IQuestAdapterGetter>,
         ILoquiObjectSetter<QuestAdapter>,
-        IEquatable<IQuestAdapterGetter>
+        IQuestAdapter
     {
         #region Ctor
         public QuestAdapter()
@@ -111,8 +111,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             AVirtualMachineAdapter.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -709,10 +709,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IQuestAdapter :
-        IQuestAdapterGetter,
         IAVirtualMachineAdapter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IQuestAdapter>,
-        IFormLinkContainer
+        IQuestAdapterGetter
     {
         new QuestAdapter.VersioningBreaks Versioning { get; set; }
         new Byte Unknown { get; set; }
@@ -723,9 +723,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IQuestAdapterGetter :
         IAVirtualMachineAdapterGetter,
-        ILoquiObject<IQuestAdapterGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IQuestAdapterGetter>
     {
         static new ILoquiRegistration Registration => QuestAdapter_Registration.Instance;
         QuestAdapter.VersioningBreaks Versioning { get; }

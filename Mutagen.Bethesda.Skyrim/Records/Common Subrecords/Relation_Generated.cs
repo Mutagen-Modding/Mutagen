@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class Relation :
-        IRelation,
+        IEquatable<IRelationGetter>,
         ILoquiObjectSetter<Relation>,
-        IEquatable<IRelationGetter>
+        IRelation
     {
         #region Ctor
         public Relation()
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -476,9 +476,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IRelation :
-        IRelationGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IRelation>,
-        IFormLinkContainer
+        IRelationGetter
     {
         new FormLink<IRelatableGetter> Target { get; set; }
         new Int32 Modifier { get; set; }
@@ -487,9 +487,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IRelationGetter :
         ILoquiObject,
-        ILoquiObject<IRelationGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IRelationGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

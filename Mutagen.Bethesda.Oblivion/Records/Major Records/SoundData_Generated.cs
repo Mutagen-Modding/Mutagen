@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     /// Implemented by: [SoundDataExtended]
     /// </summary>
     public partial class SoundData :
-        ISoundDataInternal,
+        IEquatable<ISoundDataInternalGetter>,
         ILoquiObjectSetter<SoundData>,
-        IEquatable<ISoundDataInternalGetter>
+        ISoundDataInternal
     {
         #region Ctor
         public SoundData()
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -501,8 +501,8 @@ namespace Mutagen.Bethesda.Oblivion
     /// Implemented by: [SoundDataExtended]
     /// </summary>
     public partial interface ISoundData :
-        ISoundDataInternalGetter,
-        ILoquiObjectSetter<ISoundDataInternal>
+        ILoquiObjectSetter<ISoundDataInternal>,
+        ISoundDataInternalGetter
     {
         new UInt16 MinimumAttenuationDistance { get; set; }
         new UInt16 MaximumAttenuationDistance { get; set; }
@@ -521,8 +521,8 @@ namespace Mutagen.Bethesda.Oblivion
     /// </summary>
     public partial interface ISoundDataGetter :
         ILoquiObject,
-        ILoquiObject<ISoundDataInternalGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ISoundDataInternalGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

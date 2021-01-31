@@ -29,8 +29,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class Destructible :
         IDestructible,
-        ILoquiObjectSetter<Destructible>,
-        IEquatable<IDestructibleGetter>
+        IEquatable<IDestructibleGetter>,
+        ILoquiObjectSetter<Destructible>
     {
         #region Ctor
         public Destructible()
@@ -97,8 +97,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -547,8 +547,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IDestructible :
         IDestructibleGetter,
-        ILoquiObjectSetter<IDestructible>,
-        IFormLinkContainer
+        IFormLinkContainer,
+        ILoquiObjectSetter<IDestructible>
     {
         new DestructableData? Data { get; set; }
         new ExtendedList<DestructionStage> Stages { get; }
@@ -556,9 +556,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IDestructibleGetter :
         ILoquiObject,
-        ILoquiObject<IDestructibleGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IDestructibleGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

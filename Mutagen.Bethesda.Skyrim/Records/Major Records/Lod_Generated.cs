@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class Lod :
+        IEquatable<ILodGetter>,
         ILod,
-        ILoquiObjectSetter<Lod>,
-        IEquatable<ILodGetter>
+        ILoquiObjectSetter<Lod>
     {
         #region Ctor
         public Lod()
@@ -127,8 +127,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -676,8 +676,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ILodGetter :
         ILoquiObject,
-        ILoquiObject<ILodGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ILodGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

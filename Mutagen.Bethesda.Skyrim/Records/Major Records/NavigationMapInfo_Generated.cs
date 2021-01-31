@@ -28,9 +28,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class NavigationMapInfo :
-        INavigationMapInfo,
+        IEquatable<INavigationMapInfoGetter>,
         ILoquiObjectSetter<NavigationMapInfo>,
-        IEquatable<INavigationMapInfoGetter>
+        INavigationMapInfo
     {
         #region Ctor
         public NavigationMapInfo()
@@ -149,8 +149,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1025,9 +1025,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface INavigationMapInfo :
-        INavigationMapInfoGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<INavigationMapInfo>,
-        IFormLinkContainer
+        INavigationMapInfoGetter
     {
         new FormLink<IANavigationMeshGetter> NavigationMesh { get; set; }
         new Int32 Unknown { get; set; }
@@ -1045,9 +1045,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface INavigationMapInfoGetter :
         ILoquiObject,
-        ILoquiObject<INavigationMapInfoGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<INavigationMapInfoGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

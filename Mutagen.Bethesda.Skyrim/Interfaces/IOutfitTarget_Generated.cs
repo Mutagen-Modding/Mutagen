@@ -11,8 +11,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// Implemented by: [Armor, LeveledItem]
     /// </summary>
     public partial interface IOutfitTarget :
-        ISkyrimMajorRecordInternal,
-        IOutfitTargetGetter
+        IOutfitTargetGetter,
+        ISkyrimMajorRecordInternal
     {
     }
 

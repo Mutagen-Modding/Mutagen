@@ -28,8 +28,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class BodyPart :
         IBodyPart,
-        ILoquiObjectSetter<BodyPart>,
-        IEquatable<IBodyPartGetter>
+        IEquatable<IBodyPartGetter>,
+        ILoquiObjectSetter<BodyPart>
     {
         #region Ctor
         public BodyPart()
@@ -81,8 +81,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -452,8 +452,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IBodyPartGetter :
         ILoquiObject,
-        ILoquiObject<IBodyPartGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IBodyPartGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

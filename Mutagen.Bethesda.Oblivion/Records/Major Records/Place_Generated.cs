@@ -33,9 +33,9 @@ namespace Mutagen.Bethesda.Oblivion
     /// </summary>
     public abstract partial class Place :
         OblivionMajorRecord,
-        IPlaceInternal,
+        IEquatable<IPlaceGetter>,
         ILoquiObjectSetter<Place>,
-        IEquatable<IPlaceGetter>
+        IPlaceInternal
     {
         #region Ctor
         protected Place()
@@ -78,8 +78,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -408,11 +408,11 @@ namespace Mutagen.Bethesda.Oblivion
     /// Implemented by: [Cell, Worldspace]
     /// </summary>
     public partial interface IPlace :
-        IPlaceGetter,
-        IOblivionMajorRecord,
-        IMajorRecordEnumerable,
+        IFormLinkContainer,
         ILoquiObjectSetter<IPlaceInternal>,
-        IFormLinkContainer
+        IMajorRecordEnumerable,
+        IOblivionMajorRecord,
+        IPlaceGetter
     {
     }
 
@@ -428,10 +428,10 @@ namespace Mutagen.Bethesda.Oblivion
     /// </summary>
     public partial interface IPlaceGetter :
         IOblivionMajorRecordGetter,
-        IMajorRecordGetterEnumerable,
-        ILoquiObject<IPlaceGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IPlaceGetter>,
+        IMajorRecordGetterEnumerable
     {
         static new ILoquiRegistration Registration => Place_Registration.Instance;
 

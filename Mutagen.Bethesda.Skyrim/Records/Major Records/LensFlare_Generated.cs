@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class LensFlare :
         SkyrimMajorRecord,
+        IEquatable<ILensFlareGetter>,
         ILensFlareInternal,
-        ILoquiObjectSetter<LensFlare>,
-        IEquatable<ILensFlareGetter>
+        ILoquiObjectSetter<LensFlare>
     {
         #region Ctor
         protected LensFlare()
@@ -75,8 +75,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -411,8 +411,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface ILensFlare :
         ILensFlareGetter,
-        ISkyrimMajorRecord,
-        ILoquiObjectSetter<ILensFlareInternal>
+        ILoquiObjectSetter<ILensFlareInternal>,
+        ISkyrimMajorRecord
     {
     }
 
@@ -425,8 +425,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ILensFlareGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<ILensFlareGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ILensFlareGetter>
     {
         static new ILoquiRegistration Registration => LensFlare_Registration.Instance;
 

@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class RegionObjects :
         RegionData,
-        IRegionObjects,
+        IEquatable<IRegionObjectsGetter>,
         ILoquiObjectSetter<RegionObjects>,
-        IEquatable<IRegionObjectsGetter>
+        IRegionObjects
     {
         #region Ctor
         public RegionObjects()
@@ -88,8 +88,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             RegionData.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -489,19 +489,19 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IRegionObjects :
-        IRegionObjectsGetter,
-        IRegionData,
+        IFormLinkContainer,
         ILoquiObjectSetter<IRegionObjects>,
-        IFormLinkContainer
+        IRegionData,
+        IRegionObjectsGetter
     {
         new ExtendedList<RegionObject>? Objects { get; set; }
     }
 
     public partial interface IRegionObjectsGetter :
         IRegionDataGetter,
-        ILoquiObject<IRegionObjectsGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IRegionObjectsGetter>
     {
         static new ILoquiRegistration Registration => RegionObjects_Registration.Instance;
         IReadOnlyList<IRegionObjectGetter>? Objects { get; }

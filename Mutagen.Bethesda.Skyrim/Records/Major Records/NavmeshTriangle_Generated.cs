@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class NavmeshTriangle :
-        INavmeshTriangle,
+        IEquatable<INavmeshTriangleGetter>,
         ILoquiObjectSetter<NavmeshTriangle>,
-        IEquatable<INavmeshTriangleGetter>
+        INavmeshTriangle
     {
         #region Ctor
         public NavmeshTriangle()
@@ -92,8 +92,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -594,8 +594,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface INavmeshTriangle :
-        INavmeshTriangleGetter,
-        ILoquiObjectSetter<INavmeshTriangle>
+        ILoquiObjectSetter<INavmeshTriangle>,
+        INavmeshTriangleGetter
     {
         new P3Int16 Vertices { get; set; }
         new Int16 EdgeLink_0_1 { get; set; }
@@ -608,8 +608,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface INavmeshTriangleGetter :
         ILoquiObject,
-        ILoquiObject<INavmeshTriangleGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<INavmeshTriangleGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

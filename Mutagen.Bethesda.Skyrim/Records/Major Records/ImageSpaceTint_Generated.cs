@@ -28,9 +28,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class ImageSpaceTint :
+        IEquatable<IImageSpaceTintGetter>,
         IImageSpaceTint,
-        ILoquiObjectSetter<ImageSpaceTint>,
-        IEquatable<IImageSpaceTintGetter>
+        ILoquiObjectSetter<ImageSpaceTint>
     {
         #region Ctor
         public ImageSpaceTint()
@@ -78,8 +78,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -453,8 +453,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IImageSpaceTintGetter :
         ILoquiObject,
-        ILoquiObject<IImageSpaceTintGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IImageSpaceTintGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

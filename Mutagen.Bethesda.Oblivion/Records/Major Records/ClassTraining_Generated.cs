@@ -28,8 +28,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class ClassTraining :
         IClassTraining,
-        ILoquiObjectSetter<ClassTraining>,
-        IEquatable<IClassTrainingGetter>
+        IEquatable<IClassTrainingGetter>,
+        ILoquiObjectSetter<ClassTraining>
     {
         #region Ctor
         public ClassTraining()
@@ -81,8 +81,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -481,8 +481,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IClassTrainingGetter :
         ILoquiObject,
-        ILoquiObject<IClassTrainingGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IClassTrainingGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

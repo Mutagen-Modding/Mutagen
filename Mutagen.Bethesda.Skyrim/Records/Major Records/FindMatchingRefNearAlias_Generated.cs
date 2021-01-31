@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class FindMatchingRefNearAlias :
+        IEquatable<IFindMatchingRefNearAliasGetter>,
         IFindMatchingRefNearAlias,
-        ILoquiObjectSetter<FindMatchingRefNearAlias>,
-        IEquatable<IFindMatchingRefNearAliasGetter>
+        ILoquiObjectSetter<FindMatchingRefNearAlias>
     {
         #region Ctor
         public FindMatchingRefNearAlias()
@@ -81,8 +81,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -452,8 +452,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IFindMatchingRefNearAliasGetter :
         ILoquiObject,
-        ILoquiObject<IFindMatchingRefNearAliasGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IFindMatchingRefNearAliasGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

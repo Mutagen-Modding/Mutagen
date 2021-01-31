@@ -31,9 +31,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class MaterialType :
         SkyrimMajorRecord,
-        IMaterialTypeInternal,
+        IEquatable<IMaterialTypeGetter>,
         ILoquiObjectSetter<MaterialType>,
-        IEquatable<IMaterialTypeGetter>
+        IMaterialTypeInternal
     {
         #region Ctor
         protected MaterialType()
@@ -50,6 +50,16 @@ namespace Mutagen.Bethesda.Skyrim
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IMaterialTypeGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
         #endregion
         #region HavokDisplayColor
         public Color? HavokDisplayColor { get; set; }
@@ -102,8 +112,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -621,10 +631,12 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IMaterialType :
-        IMaterialTypeGetter,
-        ISkyrimMajorRecord,
+        IFormLinkContainer,
         ILoquiObjectSetter<IMaterialTypeInternal>,
-        IFormLinkContainer
+        IMaterialTypeGetter,
+        INamed,
+        INamedRequired,
+        ISkyrimMajorRecord
     {
         new FormLinkNullable<IMaterialTypeGetter> Parent { get; set; }
         new String? Name { get; set; }
@@ -643,9 +655,11 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IMaterialTypeGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<IMaterialTypeGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IMaterialTypeGetter>,
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => MaterialType_Registration.Instance;
         FormLinkNullable<IMaterialTypeGetter> Parent { get; }
@@ -1698,6 +1712,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Name
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        #endregion
         #endregion
         #region HavokDisplayColor
         private int? _HavokDisplayColorLocation;

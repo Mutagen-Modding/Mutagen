@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class MagicEffectSubData :
-        IMagicEffectSubData,
+        IEquatable<IMagicEffectSubDataGetter>,
         ILoquiObjectSetter<MagicEffectSubData>,
-        IEquatable<IMagicEffectSubDataGetter>
+        IMagicEffectSubData
     {
         #region Ctor
         public MagicEffectSubData()
@@ -92,8 +92,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -599,9 +599,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IMagicEffectSubData :
-        IMagicEffectSubDataGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IMagicEffectSubData>,
-        IFormLinkContainer
+        IMagicEffectSubDataGetter
     {
         new FormLink<IEffectShaderGetter> EnchantEffect { get; set; }
         new FormLink<ISoundGetter> CastingSound { get; set; }
@@ -614,9 +614,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IMagicEffectSubDataGetter :
         ILoquiObject,
-        ILoquiObject<IMagicEffectSubDataGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IMagicEffectSubDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

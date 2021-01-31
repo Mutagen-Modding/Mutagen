@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class WeatherVolumetricLighting :
-        IWeatherVolumetricLighting,
+        IEquatable<IWeatherVolumetricLightingGetter>,
         ILoquiObjectSetter<WeatherVolumetricLighting>,
-        IEquatable<IWeatherVolumetricLightingGetter>
+        IWeatherVolumetricLighting
     {
         #region Ctor
         public WeatherVolumetricLighting()
@@ -83,8 +83,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -507,9 +507,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IWeatherVolumetricLighting :
-        IWeatherVolumetricLightingGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IWeatherVolumetricLighting>,
-        IFormLinkContainer
+        IWeatherVolumetricLightingGetter
     {
         new FormLink<IVolumetricLightingGetter> Sunrise { get; set; }
         new FormLink<IVolumetricLightingGetter> Day { get; set; }
@@ -519,9 +519,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IWeatherVolumetricLightingGetter :
         ILoquiObject,
-        ILoquiObject<IWeatherVolumetricLightingGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IWeatherVolumetricLightingGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

@@ -34,8 +34,8 @@ namespace Mutagen.Bethesda.Skyrim
     public abstract partial class APlacedTrap :
         APlaced,
         IAPlacedTrapInternal,
-        ILoquiObjectSetter<APlacedTrap>,
-        IEquatable<IAPlacedTrapGetter>
+        IEquatable<IAPlacedTrapGetter>,
+        ILoquiObjectSetter<APlacedTrap>
     {
         #region Ctor
         protected APlacedTrap()
@@ -227,8 +227,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             APlaced.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1368,14 +1368,14 @@ namespace Mutagen.Bethesda.Skyrim
     /// Implemented by: [PlacedArrow, PlacedBeam, PlacedFlame, PlacedCone, PlacedBarrier, PlacedTrap, PlacedHazard, PlacedMissile]
     /// </summary>
     public partial interface IAPlacedTrap :
-        IAPlacedTrapGetter,
         IAPlaced,
-        IPlaced,
-        IPlacedThing,
-        ILinkedReference,
+        IAPlacedTrapGetter,
+        IFormLinkContainer,
         IKeywordLinkedReference,
+        ILinkedReference,
         ILoquiObjectSetter<IAPlacedTrapInternal>,
-        IFormLinkContainer
+        IPlaced,
+        IPlacedThing
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new FormLinkNullable<IEncounterZoneGetter> EncounterZone { get; set; }
@@ -1412,13 +1412,13 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public partial interface IAPlacedTrapGetter :
         IAPlacedGetter,
-        IPlacedGetter,
-        IPlacedThingGetter,
-        ILinkedReferenceGetter,
-        IKeywordLinkedReferenceGetter,
-        ILoquiObject<IAPlacedTrapGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        IKeywordLinkedReferenceGetter,
+        ILinkedReferenceGetter,
+        ILoquiObject<IAPlacedTrapGetter>,
+        IPlacedGetter,
+        IPlacedThingGetter
     {
         static new ILoquiRegistration Registration => APlacedTrap_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }

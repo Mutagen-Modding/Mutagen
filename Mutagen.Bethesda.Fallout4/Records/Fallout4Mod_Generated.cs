@@ -31,9 +31,9 @@ namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
     public partial class Fallout4Mod :
+        IEquatable<IFallout4ModGetter>,
         IFallout4Mod,
-        ILoquiObjectSetter<Fallout4Mod>,
-        IEquatable<IFallout4ModGetter>
+        ILoquiObjectSetter<Fallout4Mod>
     {
         #region Ctor
         protected Fallout4Mod()
@@ -98,8 +98,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -727,12 +727,12 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IFallout4Mod :
-        IFallout4ModGetter,
-        IMajorRecordEnumerable,
-        ILoquiObjectSetter<IFallout4Mod>,
-        IMod,
         IContextMod<IFallout4Mod>,
-        IFormLinkContainer
+        IFallout4ModGetter,
+        IFormLinkContainer,
+        ILoquiObjectSetter<IFallout4Mod>,
+        IMajorRecordEnumerable,
+        IMod
     {
         new Fallout4ModHeader ModHeader { get; }
         new Group<GameSetting> GameSettings { get; }
@@ -741,12 +741,12 @@ namespace Mutagen.Bethesda.Fallout4
 
     public partial interface IFallout4ModGetter :
         ILoquiObject,
-        IMajorRecordGetterEnumerable,
-        IMajorRecordContextEnumerable<IFallout4Mod>,
-        ILoquiObject<IFallout4ModGetter>,
-        IModGetter,
         IContextGetterMod<IFallout4Mod>,
-        IFormLinkContainerGetter
+        IFormLinkContainerGetter,
+        ILoquiObject<IFallout4ModGetter>,
+        IMajorRecordContextEnumerable<IFallout4Mod>,
+        IMajorRecordGetterEnumerable,
+        IModGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

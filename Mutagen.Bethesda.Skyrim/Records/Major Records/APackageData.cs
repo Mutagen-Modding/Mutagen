@@ -1,7 +1,8 @@
-﻿using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Binary;
 using Noggog;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
@@ -20,6 +21,9 @@ namespace Mutagen.Bethesda.Skyrim
         public partial class APackageDataBinaryOverlay
         {
             public string? Name => throw new NotImplementedException();
+
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            string INamedRequiredGetter.Name => this.Name ?? string.Empty;
 
             public APackageData.Flag? Flags => throw new NotImplementedException();
         }

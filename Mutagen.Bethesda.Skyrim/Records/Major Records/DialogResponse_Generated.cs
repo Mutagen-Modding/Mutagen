@@ -28,8 +28,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class DialogResponse :
         IDialogResponse,
-        ILoquiObjectSetter<DialogResponse>,
-        IEquatable<IDialogResponseGetter>
+        IEquatable<IDialogResponseGetter>,
+        ILoquiObjectSetter<DialogResponse>
     {
         #region Ctor
         public DialogResponse()
@@ -130,8 +130,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -839,8 +839,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IDialogResponse :
         IDialogResponseGetter,
-        ILoquiObjectSetter<IDialogResponse>,
-        IFormLinkContainer
+        IFormLinkContainer,
+        ILoquiObjectSetter<IDialogResponse>
     {
         new Emotion Emotion { get; set; }
         new UInt32 EmotionValue { get; set; }
@@ -860,9 +860,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IDialogResponseGetter :
         ILoquiObject,
-        ILoquiObject<IDialogResponseGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IDialogResponseGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class PerkQuestEffect :
         APerkEffect,
-        IPerkQuestEffect,
+        IEquatable<IPerkQuestEffectGetter>,
         ILoquiObjectSetter<PerkQuestEffect>,
-        IEquatable<IPerkQuestEffectGetter>
+        IPerkQuestEffect
     {
         #region Ctor
         public PerkQuestEffect()
@@ -91,8 +91,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             APerkEffect.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -480,10 +480,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPerkQuestEffect :
-        IPerkQuestEffectGetter,
         IAPerkEffect,
+        IFormLinkContainer,
         ILoquiObjectSetter<IPerkQuestEffect>,
-        IFormLinkContainer
+        IPerkQuestEffectGetter
     {
         new FormLink<IQuestGetter> Quest { get; set; }
         new Byte Stage { get; set; }
@@ -492,9 +492,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IPerkQuestEffectGetter :
         IAPerkEffectGetter,
-        ILoquiObject<IPerkQuestEffectGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IPerkQuestEffectGetter>
     {
         static new ILoquiRegistration Registration => PerkQuestEffect_Registration.Instance;
         FormLink<IQuestGetter> Quest { get; }

@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class ScriptMetaSummary :
-        IScriptMetaSummary,
+        IEquatable<IScriptMetaSummaryGetter>,
         ILoquiObjectSetter<ScriptMetaSummary>,
-        IEquatable<IScriptMetaSummaryGetter>
+        IScriptMetaSummary
     {
         #region Ctor
         public ScriptMetaSummary()
@@ -86,8 +86,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -536,8 +536,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IScriptMetaSummary :
-        IScriptMetaSummaryGetter,
-        ILoquiObjectSetter<IScriptMetaSummary>
+        ILoquiObjectSetter<IScriptMetaSummary>,
+        IScriptMetaSummaryGetter
     {
         new Int32 Unknown { get; set; }
         new UInt32 RefCount { get; set; }
@@ -547,8 +547,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IScriptMetaSummaryGetter :
         ILoquiObject,
-        ILoquiObject<IScriptMetaSummaryGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IScriptMetaSummaryGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

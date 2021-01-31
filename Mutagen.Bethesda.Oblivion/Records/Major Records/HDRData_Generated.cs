@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class HDRData :
+        IEquatable<IHDRDataGetter>,
         IHDRData,
-        ILoquiObjectSetter<HDRData>,
-        IEquatable<IHDRDataGetter>
+        ILoquiObjectSetter<HDRData>
     {
         #region Ctor
         public HDRData()
@@ -113,8 +113,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -836,8 +836,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IHDRDataGetter :
         ILoquiObject,
-        ILoquiObject<IHDRDataGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IHDRDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

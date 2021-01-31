@@ -28,8 +28,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class AnimationChangeThresholds :
         IAnimationChangeThresholds,
-        ILoquiObjectSetter<AnimationChangeThresholds>,
-        IEquatable<IAnimationChangeThresholdsGetter>
+        IEquatable<IAnimationChangeThresholdsGetter>,
+        ILoquiObjectSetter<AnimationChangeThresholds>
     {
         #region Ctor
         public AnimationChangeThresholds()
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -484,8 +484,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IAnimationChangeThresholdsGetter :
         ILoquiObject,
-        ILoquiObject<IAnimationChangeThresholdsGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IAnimationChangeThresholdsGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

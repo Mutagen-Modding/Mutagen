@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class SoulGemData :
-        ISoulGemData,
+        IEquatable<ISoulGemDataGetter>,
         ILoquiObjectSetter<SoulGemData>,
-        IEquatable<ISoulGemDataGetter>
+        ISoulGemData
     {
         #region Ctor
         public SoulGemData()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -443,8 +443,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ISoulGemData :
+        ILoquiObjectSetter<ISoulGemData>,
         ISoulGemDataGetter,
-        ILoquiObjectSetter<ISoulGemData>
+        IWeightValue
     {
         new UInt32 Value { get; set; }
         new Single Weight { get; set; }
@@ -452,8 +453,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ISoulGemDataGetter :
         ILoquiObject,
+        IBinaryItem,
         ILoquiObject<ISoulGemDataGetter>,
-        IBinaryItem
+        IWeightValueGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

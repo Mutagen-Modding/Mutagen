@@ -29,8 +29,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class AvailableMorphs :
         IAvailableMorphs,
-        ILoquiObjectSetter<AvailableMorphs>,
-        IEquatable<IAvailableMorphsGetter>
+        IEquatable<IAvailableMorphsGetter>,
+        ILoquiObjectSetter<AvailableMorphs>
     {
         #region Ctor
         public AvailableMorphs()
@@ -116,8 +116,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -577,8 +577,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IAvailableMorphsGetter :
         ILoquiObject,
-        ILoquiObject<IAvailableMorphsGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IAvailableMorphsGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

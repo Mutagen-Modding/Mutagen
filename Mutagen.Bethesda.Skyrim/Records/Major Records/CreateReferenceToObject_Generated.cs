@@ -28,8 +28,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class CreateReferenceToObject :
         ICreateReferenceToObject,
-        ILoquiObjectSetter<CreateReferenceToObject>,
-        IEquatable<ICreateReferenceToObjectGetter>
+        IEquatable<ICreateReferenceToObjectGetter>,
+        ILoquiObjectSetter<CreateReferenceToObject>
     {
         #region Ctor
         public CreateReferenceToObject()
@@ -86,8 +86,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -543,8 +543,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface ICreateReferenceToObject :
         ICreateReferenceToObjectGetter,
-        ILoquiObjectSetter<ICreateReferenceToObject>,
-        IFormLinkContainer
+        IFormLinkContainer,
+        ILoquiObjectSetter<ICreateReferenceToObject>
     {
         new FormLink<ISkyrimMajorRecordGetter> Object { get; set; }
         new Int16 AliasIndex { get; set; }
@@ -555,9 +555,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ICreateReferenceToObjectGetter :
         ILoquiObject,
-        ILoquiObject<ICreateReferenceToObjectGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ICreateReferenceToObjectGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

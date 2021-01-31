@@ -17,7 +17,6 @@
     </Fields>
   </Object>
   <Object name="Cell" recordType="CELL" baseClass="Place" objType="Record" customBinaryEnd="Normal" GUID="d54abb07-d896-4ddb-b857-9b9df945dd1e" ID="120">
-    <Interface>INamed</Interface>
     <Fields>
       <String name="Name" recordType="FULL" />
       <Enum name="Flags" enumName="Cell.Flag" byteLength="1" recordType="DATA" />

@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Model :
-        IModel,
+        IEquatable<IModelGetter>,
         ILoquiObjectSetter<Model>,
-        IEquatable<IModelGetter>
+        IModel
     {
         #region Ctor
         public Model()
@@ -88,8 +88,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -482,8 +482,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IModel :
-        IModelGetter,
-        ILoquiObjectSetter<IModel>
+        ILoquiObjectSetter<IModel>,
+        IModelGetter
     {
         new String File { get; set; }
         new Single BoundRadius { get; set; }
@@ -492,8 +492,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IModelGetter :
         ILoquiObject,
-        ILoquiObject<IModelGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IModelGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

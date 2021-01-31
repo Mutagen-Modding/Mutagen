@@ -28,8 +28,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class CrimeValues :
         ICrimeValues,
-        ILoquiObjectSetter<CrimeValues>,
-        IEquatable<ICrimeValuesGetter>
+        IEquatable<ICrimeValuesGetter>,
+        ILoquiObjectSetter<CrimeValues>
     {
         #region Ctor
         public CrimeValues()
@@ -104,8 +104,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -746,8 +746,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ICrimeValuesGetter :
         ILoquiObject,
-        ILoquiObject<ICrimeValuesGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ICrimeValuesGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

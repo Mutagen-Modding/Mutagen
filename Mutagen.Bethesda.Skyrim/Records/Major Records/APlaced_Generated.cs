@@ -34,8 +34,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class APlaced :
         SkyrimMajorRecord,
         IAPlacedInternal,
-        ILoquiObjectSetter<APlaced>,
-        IEquatable<IAPlacedGetter>
+        IEquatable<IAPlacedGetter>,
+        ILoquiObjectSetter<APlaced>
     {
         #region Ctor
         protected APlaced()
@@ -78,8 +78,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -418,10 +418,10 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public partial interface IAPlaced :
         IAPlacedGetter,
-        ISkyrimMajorRecord,
-        IPlaced,
+        IFormLinkContainer,
         ILoquiObjectSetter<IAPlacedInternal>,
-        IFormLinkContainer
+        IPlaced,
+        ISkyrimMajorRecord
     {
     }
 
@@ -437,10 +437,10 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public partial interface IAPlacedGetter :
         ISkyrimMajorRecordGetter,
-        IPlacedGetter,
-        ILoquiObject<IAPlacedGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IAPlacedGetter>,
+        IPlacedGetter
     {
         static new ILoquiRegistration Registration => APlaced_Registration.Instance;
 

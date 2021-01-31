@@ -30,8 +30,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class BookSpell :
         BookTeachTarget,
         IBookSpell,
-        ILoquiObjectSetter<BookSpell>,
-        IEquatable<IBookSpellGetter>
+        IEquatable<IBookSpellGetter>,
+        ILoquiObjectSetter<BookSpell>
     {
         #region Ctor
         public BookSpell()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             BookTeachTarget.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem Spell)
@@ -396,17 +396,17 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IBookSpell :
         IBookSpellGetter,
         IBookTeachTarget,
-        ILoquiObjectSetter<IBookSpell>,
-        IFormLinkContainer
+        IFormLinkContainer,
+        ILoquiObjectSetter<IBookSpell>
     {
         new FormLink<ISpellGetter> Spell { get; set; }
     }
 
     public partial interface IBookSpellGetter :
         IBookTeachTargetGetter,
-        ILoquiObject<IBookSpellGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IBookSpellGetter>
     {
         static new ILoquiRegistration Registration => BookSpell_Registration.Instance;
         FormLink<ISpellGetter> Spell { get; }

@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     /// Implemented by: [NpcOwner, FactionOwner, NoOwner]
     /// </summary>
     public abstract partial class OwnerTarget :
-        IOwnerTarget,
+        IEquatable<IOwnerTargetGetter>,
         ILoquiObjectSetter<OwnerTarget>,
-        IEquatable<IOwnerTargetGetter>
+        IOwnerTarget
     {
         #region Ctor
         public OwnerTarget()
@@ -74,8 +74,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -358,9 +358,9 @@ namespace Mutagen.Bethesda.Skyrim
     /// Implemented by: [NpcOwner, FactionOwner, NoOwner]
     /// </summary>
     public partial interface IOwnerTarget :
-        IOwnerTargetGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IOwnerTarget>,
-        IFormLinkContainer
+        IOwnerTargetGetter
     {
     }
 
@@ -369,9 +369,9 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public partial interface IOwnerTargetGetter :
         ILoquiObject,
-        ILoquiObject<IOwnerTargetGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IOwnerTargetGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

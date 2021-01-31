@@ -33,9 +33,9 @@ namespace Mutagen.Bethesda.Oblivion
     /// </summary>
     public abstract partial class Spell :
         ASpell,
-        ISpellInternal,
+        IEquatable<ISpellGetter>,
         ILoquiObjectSetter<Spell>,
-        IEquatable<ISpellGetter>
+        ISpellInternal
     {
         #region Ctor
         protected Spell()
@@ -49,6 +49,16 @@ namespace Mutagen.Bethesda.Oblivion
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ISpellGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
         #endregion
 
         #region To String
@@ -83,8 +93,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             ASpell.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -421,11 +431,12 @@ namespace Mutagen.Bethesda.Oblivion
     /// Implemented by: [SpellLeveled, SpellUnleveled]
     /// </summary>
     public partial interface ISpell :
-        ISpellGetter,
         IASpell,
-        INamed,
+        IFormLinkContainer,
         ILoquiObjectSetter<ISpellInternal>,
-        IFormLinkContainer
+        INamed,
+        INamedRequired,
+        ISpellGetter
     {
         new String? Name { get; set; }
     }
@@ -442,10 +453,11 @@ namespace Mutagen.Bethesda.Oblivion
     /// </summary>
     public partial interface ISpellGetter :
         IASpellGetter,
-        INamedGetter,
-        ILoquiObject<ISpellGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ISpellGetter>,
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Spell_Registration.Instance;
         String? Name { get; }
@@ -1433,6 +1445,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Name
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        #endregion
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class Grass :
         SkyrimMajorRecord,
+        IEquatable<IGrassGetter>,
         IGrassInternal,
-        ILoquiObjectSetter<Grass>,
-        IEquatable<IGrassGetter>
+        ILoquiObjectSetter<Grass>
     {
         #region Ctor
         protected Grass()
@@ -46,6 +46,18 @@ namespace Mutagen.Bethesda.Skyrim
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter IGrassGetter.ObjectBounds => ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ObjectBounds? IObjectBoundedOptional.ObjectBounds
+        {
+            get => this.ObjectBounds;
+            set => this.ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
         #endregion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -57,6 +69,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IGrassGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
         #endregion
         #region Density
         public Byte Density { get; set; } = default;
@@ -141,8 +157,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -958,12 +974,13 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IGrass :
+        IFormLinkContainer,
         IGrassGetter,
-        ISkyrimMajorRecord,
+        ILoquiObjectSetter<IGrassInternal>,
         IModeled,
         IObjectBounded,
-        ILoquiObjectSetter<IGrassInternal>,
-        IFormLinkContainer
+        IObjectBoundedOptional,
+        ISkyrimMajorRecord
     {
         new ObjectBounds ObjectBounds { get; set; }
         new Model? Model { get; set; }
@@ -992,11 +1009,12 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IGrassGetter :
         ISkyrimMajorRecordGetter,
+        IBinaryItem,
+        IFormLinkContainerGetter,
+        ILoquiObject<IGrassGetter>,
         IModeledGetter,
         IObjectBoundedGetter,
-        ILoquiObject<IGrassGetter>,
-        IFormLinkContainerGetter,
-        IBinaryItem
+        IObjectBoundedOptionalGetter
     {
         static new ILoquiRegistration Registration => Grass_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }

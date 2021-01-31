@@ -4,7 +4,9 @@
     <Fields>
       <RefList name="Items" counterRecType="COCT" refName="ContainerEntry" />
       <RefList name="Conditions" refName="Condition" binary="Custom" />
-      <FormLink name="CreatedObject" refName="SkyrimMajorRecord" recordType="CNAM" />
+      <FormLink name="CreatedObject" recordType="CNAM" >
+        <Interface>IConstructible</Interface>
+      </FormLink>
       <FormLink name="WorkbenchKeyword" refName="Keyword" recordType="BNAM" />
       <UInt16 name="CreatedObjectCount" recordType="NAM1" />
     </Fields>

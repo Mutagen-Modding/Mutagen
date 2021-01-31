@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class MiscellaneousData :
-        IMiscellaneousData,
+        IEquatable<IMiscellaneousDataGetter>,
         ILoquiObjectSetter<MiscellaneousData>,
-        IEquatable<IMiscellaneousDataGetter>
+        IMiscellaneousData
     {
         #region Ctor
         public MiscellaneousData()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -443,8 +443,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IMiscellaneousData :
-        IMiscellaneousDataGetter,
-        ILoquiObjectSetter<IMiscellaneousData>
+        ILoquiObjectSetter<IMiscellaneousData>,
+        IMiscellaneousDataGetter
     {
         new Int32 Value { get; set; }
         new Single Weight { get; set; }
@@ -452,8 +452,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IMiscellaneousDataGetter :
         ILoquiObject,
-        ILoquiObject<IMiscellaneousDataGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IMiscellaneousDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

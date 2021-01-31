@@ -33,9 +33,9 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public abstract partial class Global :
         SkyrimMajorRecord,
+        IEquatable<IGlobalGetter>,
         IGlobalInternal,
-        ILoquiObjectSetter<Global>,
-        IEquatable<IGlobalGetter>
+        ILoquiObjectSetter<Global>
     {
         #region Ctor
         protected Global()
@@ -78,8 +78,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -398,8 +398,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public partial interface IGlobal :
         IGlobalGetter,
-        ISkyrimMajorRecord,
-        ILoquiObjectSetter<IGlobalInternal>
+        ILoquiObjectSetter<IGlobalInternal>,
+        ISkyrimMajorRecord
     {
         #region Mutagen
         new Global.MajorFlag MajorFlags { get; set; }
@@ -419,8 +419,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public partial interface IGlobalGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<IGlobalGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IGlobalGetter>
     {
         static new ILoquiRegistration Registration => Global_Registration.Instance;
 

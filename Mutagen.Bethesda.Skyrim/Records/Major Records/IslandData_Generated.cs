@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class IslandData :
+        IEquatable<IIslandDataGetter>,
         IIslandData,
-        ILoquiObjectSetter<IslandData>,
-        IEquatable<IIslandDataGetter>
+        ILoquiObjectSetter<IslandData>
     {
         #region Ctor
         public IslandData()
@@ -105,8 +105,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -680,8 +680,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IIslandDataGetter :
         ILoquiObject,
-        ILoquiObject<IIslandDataGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IIslandDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

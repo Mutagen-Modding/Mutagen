@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class SkillRecord :
         OblivionMajorRecord,
-        ISkillRecordInternal,
+        IEquatable<ISkillRecordGetter>,
         ILoquiObjectSetter<SkillRecord>,
-        IEquatable<ISkillRecordGetter>
+        ISkillRecordInternal
     {
         #region Ctor
         protected SkillRecord()
@@ -121,8 +121,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -682,9 +682,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ISkillRecord :
-        ISkillRecordGetter,
+        ILoquiObjectSetter<ISkillRecordInternal>,
         IOblivionMajorRecord,
-        ILoquiObjectSetter<ISkillRecordInternal>
+        ISkillRecordGetter
     {
         new ActorValue? Skill { get; set; }
         new String? Description { get; set; }
@@ -705,8 +705,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ISkillRecordGetter :
         IOblivionMajorRecordGetter,
-        ILoquiObject<ISkillRecordGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ISkillRecordGetter>
     {
         static new ILoquiRegistration Registration => SkillRecord_Registration.Instance;
         ActorValue? Skill { get; }

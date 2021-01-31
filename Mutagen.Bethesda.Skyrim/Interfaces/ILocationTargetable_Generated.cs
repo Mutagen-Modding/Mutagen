@@ -11,8 +11,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// Implemented by: [Door, PlacedNpc, PlacedObject]
     /// </summary>
     public partial interface ILocationTargetable :
-        ISkyrimMajorRecordInternal,
-        ILocationTargetableGetter
+        ILocationTargetableGetter,
+        ISkyrimMajorRecordInternal
     {
     }
 

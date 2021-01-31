@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class Morph :
-        IMorph,
+        IEquatable<IMorphGetter>,
         ILoquiObjectSetter<Morph>,
-        IEquatable<IMorphGetter>
+        IMorph
     {
         #region Ctor
         public Morph()
@@ -82,8 +82,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem Data)
@@ -410,16 +410,16 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IMorph :
-        IMorphGetter,
-        ILoquiObjectSetter<IMorph>
+        ILoquiObjectSetter<IMorph>,
+        IMorphGetter
     {
         new MemorySlice<Byte> Data { get; set; }
     }
 
     public partial interface IMorphGetter :
         ILoquiObject,
-        ILoquiObject<IMorphGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IMorphGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

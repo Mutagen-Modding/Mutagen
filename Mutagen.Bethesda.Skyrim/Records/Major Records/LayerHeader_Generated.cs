@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class LayerHeader :
+        IEquatable<ILayerHeaderGetter>,
         ILayerHeader,
-        ILoquiObjectSetter<LayerHeader>,
-        IEquatable<ILayerHeaderGetter>
+        ILoquiObjectSetter<LayerHeader>
     {
         #region Ctor
         public LayerHeader()
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -476,9 +476,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ILayerHeader :
+        IFormLinkContainer,
         ILayerHeaderGetter,
-        ILoquiObjectSetter<ILayerHeader>,
-        IFormLinkContainer
+        ILoquiObjectSetter<ILayerHeader>
     {
         new FormLink<ILandscapeTextureGetter> Texture { get; set; }
         new Quadrant Quadrant { get; set; }
@@ -487,9 +487,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ILayerHeaderGetter :
         ILoquiObject,
-        ILoquiObject<ILayerHeaderGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ILayerHeaderGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

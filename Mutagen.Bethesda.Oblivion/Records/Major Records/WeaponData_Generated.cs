@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class WeaponData :
-        IWeaponData,
+        IEquatable<IWeaponDataGetter>,
         ILoquiObjectSetter<WeaponData>,
-        IEquatable<IWeaponDataGetter>
+        IWeaponData
     {
         #region Ctor
         public WeaponData()
@@ -95,8 +95,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -629,8 +629,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IWeaponData :
+        ILoquiObjectSetter<IWeaponData>,
         IWeaponDataGetter,
-        ILoquiObjectSetter<IWeaponData>
+        IWeightValue
     {
         new Weapon.WeaponType Type { get; set; }
         new Single Speed { get; set; }
@@ -644,8 +645,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IWeaponDataGetter :
         ILoquiObject,
+        IBinaryItem,
         ILoquiObject<IWeaponDataGetter>,
-        IBinaryItem
+        IWeightValueGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

@@ -28,8 +28,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class ActorValuePerkNode :
         IActorValuePerkNode,
-        ILoquiObjectSetter<ActorValuePerkNode>,
-        IEquatable<IActorValuePerkNodeGetter>
+        IEquatable<IActorValuePerkNodeGetter>,
+        ILoquiObjectSetter<ActorValuePerkNode>
     {
         #region Ctor
         public ActorValuePerkNode()
@@ -127,8 +127,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -765,8 +765,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IActorValuePerkNode :
         IActorValuePerkNodeGetter,
-        ILoquiObjectSetter<IActorValuePerkNode>,
-        IFormLinkContainer
+        IFormLinkContainer,
+        ILoquiObjectSetter<IActorValuePerkNode>
     {
         new FormLink<IPerkGetter> Perk { get; set; }
         new MemorySlice<Byte>? FNAM { get; set; }
@@ -781,9 +781,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IActorValuePerkNodeGetter :
         ILoquiObject,
-        ILoquiObject<IActorValuePerkNodeGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IActorValuePerkNodeGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

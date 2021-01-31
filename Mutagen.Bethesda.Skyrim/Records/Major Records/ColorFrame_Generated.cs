@@ -29,8 +29,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class ColorFrame :
         IColorFrame,
-        ILoquiObjectSetter<ColorFrame>,
-        IEquatable<IColorFrameGetter>
+        IEquatable<IColorFrameGetter>,
+        ILoquiObjectSetter<ColorFrame>
     {
         #region Ctor
         public ColorFrame()
@@ -78,8 +78,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -449,8 +449,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IColorFrameGetter :
         ILoquiObject,
-        ILoquiObject<IColorFrameGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IColorFrameGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

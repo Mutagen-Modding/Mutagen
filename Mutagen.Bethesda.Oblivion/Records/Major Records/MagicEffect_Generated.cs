@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class MagicEffect :
         OblivionMajorRecord,
-        IMagicEffectInternal,
+        IEquatable<IMagicEffectGetter>,
         ILoquiObjectSetter<MagicEffect>,
-        IEquatable<IMagicEffectGetter>
+        IMagicEffectInternal
     {
         #region Ctor
         protected MagicEffect()
@@ -46,6 +46,16 @@ namespace Mutagen.Bethesda.Oblivion
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IMagicEffectGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
         #endregion
         #region Description
         public String? Description { get; set; }
@@ -67,6 +77,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IMagicEffectGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
         #endregion
         #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -126,8 +140,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -713,11 +727,13 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IMagicEffect :
-        IMagicEffectGetter,
-        IOblivionMajorRecord,
-        INamed,
+        IFormLinkContainer,
         ILoquiObjectSetter<IMagicEffectInternal>,
-        IFormLinkContainer
+        IMagicEffectGetter,
+        IModeled,
+        INamed,
+        INamedRequired,
+        IOblivionMajorRecord
     {
         new String? Name { get; set; }
         new String? Description { get; set; }
@@ -736,10 +752,12 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IMagicEffectGetter :
         IOblivionMajorRecordGetter,
-        INamedGetter,
-        ILoquiObject<IMagicEffectGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IMagicEffectGetter>,
+        IModeledGetter,
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => MagicEffect_Registration.Instance;
         String? Name { get; }
@@ -1896,6 +1914,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Name
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        #endregion
         #endregion
         #region Description
         private int? _DescriptionLocation;

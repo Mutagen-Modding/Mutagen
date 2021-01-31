@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class AIPackage :
         OblivionMajorRecord,
         IAIPackageInternal,
-        ILoquiObjectSetter<AIPackage>,
-        IEquatable<IAIPackageGetter>
+        IEquatable<IAIPackageGetter>,
+        ILoquiObjectSetter<AIPackage>
     {
         #region Ctor
         protected AIPackage()
@@ -133,8 +133,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -709,9 +709,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IAIPackage :
         IAIPackageGetter,
-        IOblivionMajorRecord,
+        IFormLinkContainer,
         ILoquiObjectSetter<IAIPackageInternal>,
-        IFormLinkContainer
+        IOblivionMajorRecord
     {
         new AIPackageData? Data { get; set; }
         new AIPackageLocation? Location { get; set; }
@@ -729,9 +729,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IAIPackageGetter :
         IOblivionMajorRecordGetter,
-        ILoquiObject<IAIPackageGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IAIPackageGetter>
     {
         static new ILoquiRegistration Registration => AIPackage_Registration.Instance;
         IAIPackageDataGetter? Data { get; }

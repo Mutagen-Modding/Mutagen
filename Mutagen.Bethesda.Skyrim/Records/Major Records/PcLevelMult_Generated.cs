@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class PcLevelMult :
         ANpcLevel,
-        IPcLevelMult,
+        IEquatable<IPcLevelMultGetter>,
         ILoquiObjectSetter<PcLevelMult>,
-        IEquatable<IPcLevelMultGetter>
+        IPcLevelMult
     {
         #region Ctor
         public PcLevelMult()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             ANpcLevel.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem LevelMult)
@@ -389,17 +389,17 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPcLevelMult :
-        IPcLevelMultGetter,
         IANpcLevel,
-        ILoquiObjectSetter<IPcLevelMult>
+        ILoquiObjectSetter<IPcLevelMult>,
+        IPcLevelMultGetter
     {
         new Single LevelMult { get; set; }
     }
 
     public partial interface IPcLevelMultGetter :
         IANpcLevelGetter,
-        ILoquiObject<IPcLevelMultGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IPcLevelMultGetter>
     {
         static new ILoquiRegistration Registration => PcLevelMult_Registration.Instance;
         Single LevelMult { get; }

@@ -11,8 +11,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// Implemented by: [ActionRecord, IdleAnimation]
     /// </summary>
     public partial interface IIdleRelation :
-        ISkyrimMajorRecordInternal,
-        IIdleRelationGetter
+        IIdleRelationGetter,
+        ISkyrimMajorRecordInternal
     {
     }
 

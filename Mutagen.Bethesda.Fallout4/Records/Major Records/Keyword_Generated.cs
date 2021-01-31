@@ -31,9 +31,9 @@ namespace Mutagen.Bethesda.Fallout4
     #region Class
     public partial class Keyword :
         Fallout4MajorRecord,
+        IEquatable<IKeywordGetter>,
         IKeywordInternal,
-        ILoquiObjectSetter<Keyword>,
-        IEquatable<IKeywordGetter>
+        ILoquiObjectSetter<Keyword>
     {
         #region Ctor
         protected Keyword()
@@ -81,8 +81,8 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mask
         public new class Mask<TItem> :
             Fallout4MajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -451,10 +451,10 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IKeyword :
-        IKeywordGetter,
         IFallout4MajorRecord,
-        IKeywordLinkedReference,
         IKeywordCommon,
+        IKeywordGetter,
+        IKeywordLinkedReference,
         ILoquiObjectSetter<IKeywordInternal>
     {
         new Color? Color { get; set; }
@@ -469,10 +469,10 @@ namespace Mutagen.Bethesda.Fallout4
 
     public partial interface IKeywordGetter :
         IFallout4MajorRecordGetter,
-        IKeywordLinkedReferenceGetter,
+        IBinaryItem,
         IKeywordCommonGetter,
-        ILoquiObject<IKeywordGetter>,
-        IBinaryItem
+        IKeywordLinkedReferenceGetter,
+        ILoquiObject<IKeywordGetter>
     {
         static new ILoquiRegistration Registration => Keyword_Registration.Instance;
         Color? Color { get; }

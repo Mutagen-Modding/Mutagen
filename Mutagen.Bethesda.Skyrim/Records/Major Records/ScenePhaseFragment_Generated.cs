@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class ScenePhaseFragment :
-        IScenePhaseFragment,
+        IEquatable<IScenePhaseFragmentGetter>,
         ILoquiObjectSetter<ScenePhaseFragment>,
-        IEquatable<IScenePhaseFragmentGetter>
+        IScenePhaseFragment
     {
         #region Ctor
         public ScenePhaseFragment()
@@ -86,8 +86,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -532,8 +532,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IScenePhaseFragment :
-        IScenePhaseFragmentGetter,
-        ILoquiObjectSetter<IScenePhaseFragment>
+        ILoquiObjectSetter<IScenePhaseFragment>,
+        IScenePhaseFragmentGetter
     {
         new ScenePhaseFragment.Flag Flags { get; set; }
         new Byte Index { get; set; }
@@ -544,8 +544,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IScenePhaseFragmentGetter :
         ILoquiObject,
-        ILoquiObject<IScenePhaseFragmentGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IScenePhaseFragmentGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

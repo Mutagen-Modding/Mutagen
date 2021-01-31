@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class RegionWeather :
         RegionData,
-        IRegionWeather,
+        IEquatable<IRegionWeatherGetter>,
         ILoquiObjectSetter<RegionWeather>,
-        IEquatable<IRegionWeatherGetter>
+        IRegionWeather
     {
         #region Ctor
         public RegionWeather()
@@ -88,8 +88,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             RegionData.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -491,19 +491,19 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IRegionWeather :
-        IRegionWeatherGetter,
-        IRegionData,
+        IFormLinkContainer,
         ILoquiObjectSetter<IRegionWeather>,
-        IFormLinkContainer
+        IRegionData,
+        IRegionWeatherGetter
     {
         new ExtendedList<WeatherType>? Weathers { get; set; }
     }
 
     public partial interface IRegionWeatherGetter :
         IRegionDataGetter,
-        ILoquiObject<IRegionWeatherGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IRegionWeatherGetter>
     {
         static new ILoquiRegistration Registration => RegionWeather_Registration.Instance;
         IReadOnlyList<IWeatherTypeGetter>? Weathers { get; }

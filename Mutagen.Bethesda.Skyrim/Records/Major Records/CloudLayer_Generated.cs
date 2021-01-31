@@ -29,8 +29,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class CloudLayer :
         ICloudLayer,
-        ILoquiObjectSetter<CloudLayer>,
-        IEquatable<ICloudLayerGetter>
+        IEquatable<ICloudLayerGetter>,
+        ILoquiObjectSetter<CloudLayer>
     {
         #region Ctor
         public CloudLayer()
@@ -109,8 +109,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -581,8 +581,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ICloudLayerGetter :
         ILoquiObject,
-        ILoquiObject<ICloudLayerGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ICloudLayerGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

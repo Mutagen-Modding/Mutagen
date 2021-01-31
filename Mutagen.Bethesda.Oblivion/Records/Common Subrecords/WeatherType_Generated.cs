@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class WeatherType :
-        IWeatherType,
+        IEquatable<IWeatherTypeGetter>,
         ILoquiObjectSetter<WeatherType>,
-        IEquatable<IWeatherTypeGetter>
+        IWeatherType
     {
         #region Ctor
         public WeatherType()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -444,9 +444,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IWeatherType :
-        IWeatherTypeGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IWeatherType>,
-        IFormLinkContainer
+        IWeatherTypeGetter
     {
         new FormLink<IWeatherGetter> Weather { get; set; }
         new Int32 Chance { get; set; }
@@ -454,9 +454,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IWeatherTypeGetter :
         ILoquiObject,
-        ILoquiObject<IWeatherTypeGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IWeatherTypeGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

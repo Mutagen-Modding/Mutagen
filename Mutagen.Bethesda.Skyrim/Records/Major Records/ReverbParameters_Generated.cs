@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class ReverbParameters :
         SkyrimMajorRecord,
-        IReverbParametersInternal,
+        IEquatable<IReverbParametersGetter>,
         ILoquiObjectSetter<ReverbParameters>,
-        IEquatable<IReverbParametersGetter>
+        IReverbParametersInternal
     {
         #region Ctor
         protected ReverbParameters()
@@ -114,8 +114,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -831,9 +831,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IReverbParameters :
+        ILoquiObjectSetter<IReverbParametersInternal>,
         IReverbParametersGetter,
-        ISkyrimMajorRecord,
-        ILoquiObjectSetter<IReverbParametersInternal>
+        ISkyrimMajorRecord
     {
         new UInt16 DecayMilliseconds { get; set; }
         new UInt16 HfReferenceHertz { get; set; }
@@ -859,8 +859,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IReverbParametersGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<IReverbParametersGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IReverbParametersGetter>
     {
         static new ILoquiRegistration Registration => ReverbParameters_Registration.Instance;
         UInt16 DecayMilliseconds { get; }

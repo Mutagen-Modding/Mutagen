@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class KeyFrame :
+        IEquatable<IKeyFrameGetter>,
         IKeyFrame,
-        ILoquiObjectSetter<KeyFrame>,
-        IEquatable<IKeyFrameGetter>
+        ILoquiObjectSetter<KeyFrame>
     {
         #region Ctor
         public KeyFrame()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -448,8 +448,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IKeyFrameGetter :
         ILoquiObject,
-        ILoquiObject<IKeyFrameGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IKeyFrameGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class MagicEffectSound :
-        IMagicEffectSound,
+        IEquatable<IMagicEffectSoundGetter>,
         ILoquiObjectSetter<MagicEffectSound>,
-        IEquatable<IMagicEffectSoundGetter>
+        IMagicEffectSound
     {
         #region Ctor
         public MagicEffectSound()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -444,9 +444,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IMagicEffectSound :
-        IMagicEffectSoundGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IMagicEffectSound>,
-        IFormLinkContainer
+        IMagicEffectSoundGetter
     {
         new MagicEffect.SoundType Type { get; set; }
         new FormLink<ISoundDescriptorGetter> Sound { get; set; }
@@ -454,9 +454,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IMagicEffectSoundGetter :
         ILoquiObject,
-        ILoquiObject<IMagicEffectSoundGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IMagicEffectSoundGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class FogDistance :
+        IEquatable<IFogDistanceGetter>,
         IFogDistance,
-        ILoquiObjectSetter<FogDistance>,
-        IEquatable<IFogDistanceGetter>
+        ILoquiObjectSetter<FogDistance>
     {
         #region Ctor
         public FogDistance()
@@ -83,8 +83,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -516,8 +516,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IFogDistanceGetter :
         ILoquiObject,
-        ILoquiObject<IFogDistanceGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IFogDistanceGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

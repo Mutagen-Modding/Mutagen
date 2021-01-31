@@ -34,8 +34,8 @@ namespace Mutagen.Bethesda.Skyrim
     public abstract partial class ASpell :
         SkyrimMajorRecord,
         IASpellInternal,
-        ILoquiObjectSetter<ASpell>,
-        IEquatable<IASpellGetter>
+        IEquatable<IASpellGetter>,
+        ILoquiObjectSetter<ASpell>
     {
         #region Ctor
         protected ASpell()
@@ -78,8 +78,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -394,9 +394,9 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public partial interface IASpell :
         IASpellGetter,
-        ISkyrimMajorRecord,
+        IFormLinkContainer,
         ILoquiObjectSetter<IASpellInternal>,
-        IFormLinkContainer
+        ISkyrimMajorRecord
     {
     }
 
@@ -412,9 +412,9 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public partial interface IASpellGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<IASpellGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IASpellGetter>
     {
         static new ILoquiRegistration Registration => ASpell_Registration.Instance;
 

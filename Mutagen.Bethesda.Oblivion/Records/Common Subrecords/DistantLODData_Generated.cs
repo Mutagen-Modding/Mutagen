@@ -28,8 +28,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class DistantLODData :
         IDistantLODData,
-        ILoquiObjectSetter<DistantLODData>,
-        IEquatable<IDistantLODDataGetter>
+        IEquatable<IDistantLODDataGetter>,
+        ILoquiObjectSetter<DistantLODData>
     {
         #region Ctor
         public DistantLODData()
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -484,8 +484,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IDistantLODDataGetter :
         ILoquiObject,
-        ILoquiObject<IDistantLODDataGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IDistantLODDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

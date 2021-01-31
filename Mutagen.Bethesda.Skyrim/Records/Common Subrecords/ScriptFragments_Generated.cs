@@ -31,9 +31,9 @@ namespace Mutagen.Bethesda.Skyrim
     /// Implemented by: [SceneScriptFragments]
     /// </summary>
     public partial class ScriptFragments :
-        IScriptFragments,
+        IEquatable<IScriptFragmentsGetter>,
         ILoquiObjectSetter<ScriptFragments>,
-        IEquatable<IScriptFragmentsGetter>
+        IScriptFragments
     {
         #region Ctor
         public ScriptFragments()
@@ -103,8 +103,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -538,8 +538,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// Implemented by: [SceneScriptFragments]
     /// </summary>
     public partial interface IScriptFragments :
-        IScriptFragmentsGetter,
-        ILoquiObjectSetter<IScriptFragments>
+        ILoquiObjectSetter<IScriptFragments>,
+        IScriptFragmentsGetter
     {
         new SByte Unknown { get; set; }
         new String FileName { get; set; }
@@ -552,8 +552,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public partial interface IScriptFragmentsGetter :
         ILoquiObject,
-        ILoquiObject<IScriptFragmentsGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IScriptFragmentsGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

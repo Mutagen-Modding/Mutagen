@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class PlacedNpc :
         APlaced,
-        IPlacedNpcInternal,
+        IEquatable<IPlacedNpcGetter>,
         ILoquiObjectSetter<PlacedNpc>,
-        IEquatable<IPlacedNpcGetter>
+        IPlacedNpcInternal
     {
         #region Ctor
         protected PlacedNpc()
@@ -267,8 +267,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             APlaced.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1604,16 +1604,16 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPlacedNpc :
-        IPlacedNpcGetter,
         IAPlaced,
-        IOwner,
-        ILinkedReference,
+        IFormLinkContainer,
         IKeywordLinkedReference,
-        IPlaced,
-        IPlacedSimple,
+        ILinkedReference,
         ILocationTargetable,
         ILoquiObjectSetter<IPlacedNpcInternal>,
-        IFormLinkContainer
+        IOwner,
+        IPlaced,
+        IPlacedNpcGetter,
+        IPlacedSimple
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new FormLinkNullable<INpcGetter> Base { get; set; }
@@ -1658,15 +1658,15 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IPlacedNpcGetter :
         IAPlacedGetter,
-        IOwnerGetter,
-        ILinkedReferenceGetter,
+        IBinaryItem,
+        IFormLinkContainerGetter,
         IKeywordLinkedReferenceGetter,
-        IPlacedGetter,
-        IPlacedSimpleGetter,
+        ILinkedReferenceGetter,
         ILocationTargetableGetter,
         ILoquiObject<IPlacedNpcGetter>,
-        IFormLinkContainerGetter,
-        IBinaryItem
+        IOwnerGetter,
+        IPlacedGetter,
+        IPlacedSimpleGetter
     {
         static new ILoquiRegistration Registration => PlacedNpc_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }

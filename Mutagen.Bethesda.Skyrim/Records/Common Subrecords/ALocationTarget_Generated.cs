@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public abstract partial class ALocationTarget :
         IALocationTarget,
-        ILoquiObjectSetter<ALocationTarget>,
-        IEquatable<IALocationTargetGetter>
+        IEquatable<IALocationTargetGetter>,
+        ILoquiObjectSetter<ALocationTarget>
     {
         #region Ctor
         public ALocationTarget()
@@ -74,8 +74,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -359,8 +359,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public partial interface IALocationTarget :
         IALocationTargetGetter,
-        ILoquiObjectSetter<IALocationTarget>,
-        IFormLinkContainer
+        IFormLinkContainer,
+        ILoquiObjectSetter<IALocationTarget>
     {
     }
 
@@ -369,9 +369,9 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public partial interface IALocationTargetGetter :
         ILoquiObject,
-        ILoquiObject<IALocationTargetGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IALocationTargetGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

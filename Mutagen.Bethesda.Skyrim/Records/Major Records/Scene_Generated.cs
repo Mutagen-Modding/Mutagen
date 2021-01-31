@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class Scene :
         SkyrimMajorRecord,
-        ISceneInternal,
+        IEquatable<ISceneGetter>,
         ILoquiObjectSetter<Scene>,
-        IEquatable<ISceneGetter>
+        ISceneInternal
     {
         #region Ctor
         protected Scene()
@@ -188,8 +188,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1168,10 +1168,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IScene :
-        ISceneGetter,
-        ISkyrimMajorRecord,
+        IFormLinkContainer,
         ILoquiObjectSetter<ISceneInternal>,
-        IFormLinkContainer
+        ISceneGetter,
+        ISkyrimMajorRecord
     {
         new SceneAdapter? VirtualMachineAdapter { get; set; }
         new Scene.Flag? Flags { get; set; }
@@ -1195,9 +1195,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ISceneGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<ISceneGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ISceneGetter>
     {
         static new ILoquiRegistration Registration => Scene_Registration.Instance;
         ISceneAdapterGetter? VirtualMachineAdapter { get; }

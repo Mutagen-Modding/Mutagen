@@ -31,9 +31,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class LocationReferenceType :
         SkyrimMajorRecord,
+        IEquatable<ILocationReferenceTypeGetter>,
         ILocationReferenceTypeInternal,
-        ILoquiObjectSetter<LocationReferenceType>,
-        IEquatable<ILocationReferenceTypeGetter>
+        ILoquiObjectSetter<LocationReferenceType>
     {
         #region Ctor
         protected LocationReferenceType()
@@ -81,8 +81,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -458,10 +458,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ILocationReferenceType :
-        ILocationReferenceTypeGetter,
-        ISkyrimMajorRecord,
         ILocationRecord,
-        ILoquiObjectSetter<ILocationReferenceTypeInternal>
+        ILocationReferenceTypeGetter,
+        ILoquiObjectSetter<ILocationReferenceTypeInternal>,
+        ISkyrimMajorRecord
     {
         new Color? Color { get; set; }
     }
@@ -475,9 +475,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ILocationReferenceTypeGetter :
         ISkyrimMajorRecordGetter,
+        IBinaryItem,
         ILocationRecordGetter,
-        ILoquiObject<ILocationReferenceTypeGetter>,
-        IBinaryItem
+        ILoquiObject<ILocationReferenceTypeGetter>
     {
         static new ILoquiRegistration Registration => LocationReferenceType_Registration.Instance;
         Color? Color { get; }

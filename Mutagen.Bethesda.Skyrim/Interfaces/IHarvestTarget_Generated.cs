@@ -11,8 +11,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// Implemented by: [Ingestible, Ingredient, LeveledItem, MiscItem]
     /// </summary>
     public partial interface IHarvestTarget :
-        ISkyrimMajorRecordInternal,
-        IHarvestTargetGetter
+        IHarvestTargetGetter,
+        ISkyrimMajorRecordInternal
     {
     }
 

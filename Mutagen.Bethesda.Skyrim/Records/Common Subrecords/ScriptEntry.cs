@@ -1,6 +1,7 @@
 using Mutagen.Bethesda.Binary;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
@@ -20,6 +21,9 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class ScriptEntryBinaryOverlay
         {
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+
             public IReadOnlyList<IScriptPropertyGetter> Properties => throw new NotImplementedException();
 
             public string Name => throw new NotImplementedException();

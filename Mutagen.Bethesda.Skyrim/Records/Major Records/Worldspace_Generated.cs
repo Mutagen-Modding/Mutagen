@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class Worldspace :
         SkyrimMajorRecord,
-        IWorldspaceInternal,
+        IEquatable<IWorldspaceGetter>,
         ILoquiObjectSetter<Worldspace>,
-        IEquatable<IWorldspaceGetter>
+        IWorldspaceInternal
     {
         #region Ctor
         protected Worldspace()
@@ -71,6 +71,34 @@ namespace Mutagen.Bethesda.Skyrim
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ITranslatedStringGetter? IWorldspaceGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
         #endregion
         #region FixedDimensionsCenterCell
         public P2Int16? FixedDimensionsCenterCell { get; set; }
@@ -276,8 +304,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1740,13 +1768,16 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IWorldspace :
-        IWorldspaceGetter,
-        ISkyrimMajorRecord,
         IComplexLocation,
-        ITranslatedNamed,
-        IMajorRecordEnumerable,
+        IFormLinkContainer,
         ILoquiObjectSetter<IWorldspaceInternal>,
-        IFormLinkContainer
+        IMajorRecordEnumerable,
+        INamed,
+        INamedRequired,
+        ISkyrimMajorRecord,
+        ITranslatedNamed,
+        ITranslatedNamedRequired,
+        IWorldspaceGetter
     {
         new ExtendedList<WorldspaceGridReference> LargeReferences { get; }
         new WorldspaceMaxHeight? MaxHeight { get; set; }
@@ -1794,12 +1825,15 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IWorldspaceGetter :
         ISkyrimMajorRecordGetter,
+        IBinaryItem,
         IComplexLocationGetter,
-        ITranslatedNamedGetter,
-        IMajorRecordGetterEnumerable,
-        ILoquiObject<IWorldspaceGetter>,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IWorldspaceGetter>,
+        IMajorRecordGetterEnumerable,
+        INamedGetter,
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Worldspace_Registration.Instance;
         IReadOnlyList<IWorldspaceGridReferenceGetter> LargeReferences { get; }
@@ -5816,6 +5850,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Name
         private int? _NameLocation;
         public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        #endregion
         #endregion
         #region FixedDimensionsCenterCell
         private int? _FixedDimensionsCenterCellLocation;

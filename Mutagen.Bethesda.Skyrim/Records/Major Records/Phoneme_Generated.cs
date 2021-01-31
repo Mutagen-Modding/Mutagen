@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class Phoneme :
-        IPhoneme,
+        IEquatable<IPhonemeGetter>,
         ILoquiObjectSetter<Phoneme>,
-        IEquatable<IPhonemeGetter>
+        IPhoneme
     {
         #region Ctor
         public Phoneme()
@@ -203,8 +203,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1741,8 +1741,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPhoneme :
-        IPhonemeGetter,
-        ILoquiObjectSetter<IPhoneme>
+        ILoquiObjectSetter<IPhoneme>,
+        INamedRequired,
+        IPhonemeGetter
     {
         new String Name { get; set; }
         new Single IY { get; set; }
@@ -1792,8 +1793,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IPhonemeGetter :
         ILoquiObject,
+        IBinaryItem,
         ILoquiObject<IPhonemeGetter>,
-        IBinaryItem
+        INamedRequiredGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

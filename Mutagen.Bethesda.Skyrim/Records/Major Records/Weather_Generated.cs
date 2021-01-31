@@ -31,9 +31,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class Weather :
         SkyrimMajorRecord,
-        IWeatherInternal,
+        IEquatable<IWeatherGetter>,
         ILoquiObjectSetter<Weather>,
-        IEquatable<IWeatherGetter>
+        IWeatherInternal
     {
         #region Ctor
         protected Weather()
@@ -442,8 +442,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -3014,10 +3014,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IWeather :
-        IWeatherGetter,
-        ISkyrimMajorRecord,
+        IFormLinkContainer,
         ILoquiObjectSetter<IWeatherInternal>,
-        IFormLinkContainer
+        ISkyrimMajorRecord,
+        IWeatherGetter
     {
         new String?[] CloudTextures { get; }
         new MemorySlice<Byte>? DNAM { get; set; }
@@ -3093,9 +3093,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IWeatherGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<IWeatherGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IWeatherGetter>
     {
         static new ILoquiRegistration Registration => Weather_Registration.Instance;
         ReadOnlyMemorySlice<String?> CloudTextures { get; }

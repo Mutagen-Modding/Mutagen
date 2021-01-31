@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class WeatherImageSpaces :
-        IWeatherImageSpaces,
+        IEquatable<IWeatherImageSpacesGetter>,
         ILoquiObjectSetter<WeatherImageSpaces>,
-        IEquatable<IWeatherImageSpacesGetter>
+        IWeatherImageSpaces
     {
         #region Ctor
         public WeatherImageSpaces()
@@ -83,8 +83,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -507,9 +507,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IWeatherImageSpaces :
-        IWeatherImageSpacesGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IWeatherImageSpaces>,
-        IFormLinkContainer
+        IWeatherImageSpacesGetter
     {
         new FormLink<IImageSpaceAdapterGetter> Sunrise { get; set; }
         new FormLink<IImageSpaceAdapterGetter> Day { get; set; }
@@ -519,9 +519,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IWeatherImageSpacesGetter :
         ILoquiObject,
-        ILoquiObject<IWeatherImageSpacesGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IWeatherImageSpacesGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

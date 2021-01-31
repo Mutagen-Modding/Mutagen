@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="DialogTopic" recordType="DIAL" objType="Record" baseClass="OblivionMajorRecord" customBinaryEnd="Normal" GUID="64f03683-28fd-43e3-8141-da8e95a52f89" ID="147">
-    <Interface>INamed</Interface>
     <Fields>
       <List name="Quests">
         <FormLink recordType="QSTI" refName="Quest" />

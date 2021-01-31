@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class PerkEntryPointAddActivateChoice :
         APerkEntryPointEffect,
-        IPerkEntryPointAddActivateChoice,
+        IEquatable<IPerkEntryPointAddActivateChoiceGetter>,
         ILoquiObjectSetter<PerkEntryPointAddActivateChoice>,
-        IEquatable<IPerkEntryPointAddActivateChoiceGetter>
+        IPerkEntryPointAddActivateChoice
     {
         #region Ctor
         public PerkEntryPointAddActivateChoice()
@@ -87,8 +87,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             APerkEntryPointEffect.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -487,10 +487,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPerkEntryPointAddActivateChoice :
-        IPerkEntryPointAddActivateChoiceGetter,
         IAPerkEntryPointEffect,
+        IFormLinkContainer,
         ILoquiObjectSetter<IPerkEntryPointAddActivateChoice>,
-        IFormLinkContainer
+        IPerkEntryPointAddActivateChoiceGetter
     {
         new FormLinkNullable<ISpellGetter> Spell { get; set; }
         new TranslatedString? ButtonLabel { get; set; }
@@ -499,9 +499,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IPerkEntryPointAddActivateChoiceGetter :
         IAPerkEntryPointEffectGetter,
-        ILoquiObject<IPerkEntryPointAddActivateChoiceGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IPerkEntryPointAddActivateChoiceGetter>
     {
         static new ILoquiRegistration Registration => PerkEntryPointAddActivateChoice_Registration.Instance;
         FormLinkNullable<ISpellGetter> Spell { get; }

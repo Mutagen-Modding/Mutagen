@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class RegionGrasses :
         RegionData,
-        IRegionGrasses,
+        IEquatable<IRegionGrassesGetter>,
         ILoquiObjectSetter<RegionGrasses>,
-        IEquatable<IRegionGrassesGetter>
+        IRegionGrasses
     {
         #region Ctor
         public RegionGrasses()
@@ -88,8 +88,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             RegionData.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -487,19 +487,19 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IRegionGrasses :
-        IRegionGrassesGetter,
-        IRegionData,
+        IFormLinkContainer,
         ILoquiObjectSetter<IRegionGrasses>,
-        IFormLinkContainer
+        IRegionData,
+        IRegionGrassesGetter
     {
         new ExtendedList<IFormLink<IGrassGetter>>? Grasses { get; set; }
     }
 
     public partial interface IRegionGrassesGetter :
         IRegionDataGetter,
-        ILoquiObject<IRegionGrassesGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IRegionGrassesGetter>
     {
         static new ILoquiRegistration Registration => RegionGrasses_Registration.Instance;
         IReadOnlyList<IFormLink<IGrassGetter>>? Grasses { get; }

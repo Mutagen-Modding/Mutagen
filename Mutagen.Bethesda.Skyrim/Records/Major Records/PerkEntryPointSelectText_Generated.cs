@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class PerkEntryPointSelectText :
         APerkEntryPointEffect,
-        IPerkEntryPointSelectText,
+        IEquatable<IPerkEntryPointSelectTextGetter>,
         ILoquiObjectSetter<PerkEntryPointSelectText>,
-        IEquatable<IPerkEntryPointSelectTextGetter>
+        IPerkEntryPointSelectText
     {
         #region Ctor
         public PerkEntryPointSelectText()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             APerkEntryPointEffect.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -412,17 +412,17 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPerkEntryPointSelectText :
-        IPerkEntryPointSelectTextGetter,
         IAPerkEntryPointEffect,
-        ILoquiObjectSetter<IPerkEntryPointSelectText>
+        ILoquiObjectSetter<IPerkEntryPointSelectText>,
+        IPerkEntryPointSelectTextGetter
     {
         new String Text { get; set; }
     }
 
     public partial interface IPerkEntryPointSelectTextGetter :
         IAPerkEntryPointEffectGetter,
-        ILoquiObject<IPerkEntryPointSelectTextGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IPerkEntryPointSelectTextGetter>
     {
         static new ILoquiRegistration Registration => PerkEntryPointSelectText_Registration.Instance;
         String Text { get; }

@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class FunctionConditionData :
         ConditionData,
+        IEquatable<IFunctionConditionDataGetter>,
         IFunctionConditionData,
-        ILoquiObjectSetter<FunctionConditionData>,
-        IEquatable<IFunctionConditionDataGetter>
+        ILoquiObjectSetter<FunctionConditionData>
     {
         #region Ctor
         public FunctionConditionData()
@@ -112,8 +112,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             ConditionData.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -716,10 +716,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IFunctionConditionData :
-        IFunctionConditionDataGetter,
         IConditionData,
-        ILoquiObjectSetter<IFunctionConditionData>,
-        IFormLinkContainer
+        IFormLinkContainer,
+        IFunctionConditionDataGetter,
+        ILoquiObjectSetter<IFunctionConditionData>
     {
         new UInt16 Function { get; set; }
         new UInt16 Unknown2 { get; set; }
@@ -736,9 +736,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IFunctionConditionDataGetter :
         IConditionDataGetter,
-        ILoquiObject<IFunctionConditionDataGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IFunctionConditionDataGetter>
     {
         static new ILoquiRegistration Registration => FunctionConditionData_Registration.Instance;
         UInt16 Function { get; }

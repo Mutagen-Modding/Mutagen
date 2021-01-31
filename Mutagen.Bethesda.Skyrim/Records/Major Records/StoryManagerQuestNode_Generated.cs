@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class StoryManagerQuestNode :
         AStoryManagerNode,
-        IStoryManagerQuestNodeInternal,
+        IEquatable<IStoryManagerQuestNodeGetter>,
         ILoquiObjectSetter<StoryManagerQuestNode>,
-        IEquatable<IStoryManagerQuestNodeGetter>
+        IStoryManagerQuestNodeInternal
     {
         #region Ctor
         protected StoryManagerQuestNode()
@@ -104,8 +104,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             AStoryManagerNode.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -648,10 +648,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IStoryManagerQuestNode :
-        IStoryManagerQuestNodeGetter,
         IAStoryManagerNode,
+        IFormLinkContainer,
         ILoquiObjectSetter<IStoryManagerQuestNodeInternal>,
-        IFormLinkContainer
+        IStoryManagerQuestNodeGetter
     {
         new StoryManagerQuestNode.QuestFlag? Flags { get; set; }
         new UInt32? MaxConcurrentQuests { get; set; }
@@ -668,9 +668,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IStoryManagerQuestNodeGetter :
         IAStoryManagerNodeGetter,
-        ILoquiObject<IStoryManagerQuestNodeGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IStoryManagerQuestNodeGetter>
     {
         static new ILoquiRegistration Registration => StoryManagerQuestNode_Registration.Instance;
         StoryManagerQuestNode.QuestFlag? Flags { get; }

@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class ImageSpaceHdr :
+        IEquatable<IImageSpaceHdrGetter>,
         IImageSpaceHdr,
-        ILoquiObjectSetter<ImageSpaceHdr>,
-        IEquatable<IImageSpaceHdrGetter>
+        ILoquiObjectSetter<ImageSpaceHdr>
     {
         #region Ctor
         public ImageSpaceHdr()
@@ -98,8 +98,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -676,8 +676,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IImageSpaceHdrGetter :
         ILoquiObject,
-        ILoquiObject<IImageSpaceHdrGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IImageSpaceHdrGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

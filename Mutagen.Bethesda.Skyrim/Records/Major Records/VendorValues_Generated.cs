@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class VendorValues :
-        IVendorValues,
+        IEquatable<IVendorValuesGetter>,
         ILoquiObjectSetter<VendorValues>,
-        IEquatable<IVendorValuesGetter>
+        IVendorValues
     {
         #region Ctor
         public VendorValues()
@@ -92,8 +92,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -598,8 +598,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IVendorValues :
-        IVendorValuesGetter,
-        ILoquiObjectSetter<IVendorValues>
+        ILoquiObjectSetter<IVendorValues>,
+        IVendorValuesGetter
     {
         new UInt16 StartHour { get; set; }
         new UInt16 EndHour { get; set; }
@@ -612,8 +612,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IVendorValuesGetter :
         ILoquiObject,
-        ILoquiObject<IVendorValuesGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IVendorValuesGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

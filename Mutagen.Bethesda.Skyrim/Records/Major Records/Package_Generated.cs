@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class Package :
         SkyrimMajorRecord,
-        IPackageInternal,
+        IEquatable<IPackageGetter>,
         ILoquiObjectSetter<Package>,
-        IEquatable<IPackageGetter>
+        IPackageInternal
     {
         #region Ctor
         protected Package()
@@ -251,8 +251,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1744,10 +1744,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPackage :
-        IPackageGetter,
-        ISkyrimMajorRecord,
+        IFormLinkContainer,
         ILoquiObjectSetter<IPackageInternal>,
-        IFormLinkContainer
+        IPackageGetter,
+        ISkyrimMajorRecord
     {
         new PackageAdapter? VirtualMachineAdapter { get; set; }
         new Package.Flag Flags { get; set; }
@@ -1791,9 +1791,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IPackageGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<IPackageGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IPackageGetter>
     {
         static new ILoquiRegistration Registration => Package_Registration.Instance;
         IPackageAdapterGetter? VirtualMachineAdapter { get; }

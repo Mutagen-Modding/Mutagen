@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class PlacedCreature :
         OblivionMajorRecord,
-        IPlacedCreatureInternal,
+        IEquatable<IPlacedCreatureGetter>,
         ILoquiObjectSetter<PlacedCreature>,
-        IEquatable<IPlacedCreatureGetter>
+        IPlacedCreatureInternal
     {
         #region Ctor
         protected PlacedCreature()
@@ -127,8 +127,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -697,11 +697,11 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IPlacedCreature :
-        IPlacedCreatureGetter,
+        IFormLinkContainer,
+        ILoquiObjectSetter<IPlacedCreatureInternal>,
         IOblivionMajorRecord,
         IPlaced,
-        ILoquiObjectSetter<IPlacedCreatureInternal>,
-        IFormLinkContainer
+        IPlacedCreatureGetter
     {
         new FormLinkNullable<ICreatureGetter> Base { get; set; }
         new FormLinkNullable<IFactionGetter> Owner { get; set; }
@@ -722,10 +722,10 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IPlacedCreatureGetter :
         IOblivionMajorRecordGetter,
-        IPlacedGetter,
-        ILoquiObject<IPlacedCreatureGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IPlacedCreatureGetter>,
+        IPlacedGetter
     {
         static new ILoquiRegistration Registration => PlacedCreature_Registration.Instance;
         FormLinkNullable<ICreatureGetter> Base { get; }

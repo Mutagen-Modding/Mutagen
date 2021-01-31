@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class Int16MinMax :
+        IEquatable<IInt16MinMaxGetter>,
         IInt16MinMax,
-        ILoquiObjectSetter<Int16MinMax>,
-        IEquatable<IInt16MinMaxGetter>
+        ILoquiObjectSetter<Int16MinMax>
     {
         #region Ctor
         public Int16MinMax()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -448,8 +448,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IInt16MinMaxGetter :
         ILoquiObject,
-        ILoquiObject<IInt16MinMaxGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IInt16MinMaxGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

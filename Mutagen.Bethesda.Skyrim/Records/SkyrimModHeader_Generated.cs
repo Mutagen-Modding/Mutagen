@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class SkyrimModHeader :
-        ISkyrimModHeader,
+        IEquatable<ISkyrimModHeaderGetter>,
         ILoquiObjectSetter<SkyrimModHeader>,
-        IEquatable<ISkyrimModHeaderGetter>
+        ISkyrimModHeader
     {
         #region Ctor
         public SkyrimModHeader()
@@ -163,8 +163,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1022,9 +1022,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ISkyrimModHeader :
-        ISkyrimModHeaderGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<ISkyrimModHeader>,
-        IFormLinkContainer
+        ISkyrimModHeaderGetter
     {
         new SkyrimModHeader.HeaderFlag Flags { get; set; }
         new UInt32 FormID { get; set; }
@@ -1044,9 +1044,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ISkyrimModHeaderGetter :
         ILoquiObject,
-        ILoquiObject<ISkyrimModHeaderGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<ISkyrimModHeaderGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

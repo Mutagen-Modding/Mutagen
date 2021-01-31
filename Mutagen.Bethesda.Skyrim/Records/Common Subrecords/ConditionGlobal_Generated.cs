@@ -30,8 +30,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class ConditionGlobal :
         Condition,
         IConditionGlobal,
-        ILoquiObjectSetter<ConditionGlobal>,
-        IEquatable<IConditionGlobalGetter>
+        IEquatable<IConditionGlobalGetter>,
+        ILoquiObjectSetter<ConditionGlobal>
     {
         #region Ctor
         public ConditionGlobal()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             Condition.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -443,10 +443,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IConditionGlobal :
-        IConditionGlobalGetter,
         ICondition,
-        ILoquiObjectSetter<IConditionGlobal>,
-        IFormLinkContainer
+        IConditionGlobalGetter,
+        IFormLinkContainer,
+        ILoquiObjectSetter<IConditionGlobal>
     {
         new FormLink<IGlobalGetter> ComparisonValue { get; set; }
         new ConditionData Data { get; set; }
@@ -454,9 +454,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IConditionGlobalGetter :
         IConditionGetter,
-        ILoquiObject<IConditionGlobalGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IConditionGlobalGetter>
     {
         static new ILoquiRegistration Registration => ConditionGlobal_Registration.Instance;
         FormLink<IGlobalGetter> ComparisonValue { get; }

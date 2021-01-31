@@ -32,8 +32,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class ActionRecord :
         SkyrimMajorRecord,
         IActionRecordInternal,
-        ILoquiObjectSetter<ActionRecord>,
-        IEquatable<IActionRecordGetter>
+        IEquatable<IActionRecordGetter>,
+        ILoquiObjectSetter<ActionRecord>
     {
         #region Ctor
         protected ActionRecord()
@@ -81,8 +81,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -459,9 +459,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IActionRecord :
         IActionRecordGetter,
-        ISkyrimMajorRecord,
         IIdleRelation,
-        ILoquiObjectSetter<IActionRecordInternal>
+        ILoquiObjectSetter<IActionRecordInternal>,
+        ISkyrimMajorRecord
     {
         new Color? Color { get; set; }
     }
@@ -475,9 +475,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IActionRecordGetter :
         ISkyrimMajorRecordGetter,
+        IBinaryItem,
         IIdleRelationGetter,
-        ILoquiObject<IActionRecordGetter>,
-        IBinaryItem
+        ILoquiObject<IActionRecordGetter>
     {
         static new ILoquiRegistration Registration => ActionRecord_Registration.Instance;
         Color? Color { get; }

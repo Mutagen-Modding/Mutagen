@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class ScriptVariableReference :
         AScriptReference,
-        IScriptVariableReference,
+        IEquatable<IScriptVariableReferenceGetter>,
         ILoquiObjectSetter<ScriptVariableReference>,
-        IEquatable<IScriptVariableReferenceGetter>
+        IScriptVariableReference
     {
         #region Ctor
         public ScriptVariableReference()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             AScriptReference.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem VariableIndex)
@@ -393,17 +393,17 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IScriptVariableReference :
-        IScriptVariableReferenceGetter,
         IAScriptReference,
-        ILoquiObjectSetter<IScriptVariableReference>
+        ILoquiObjectSetter<IScriptVariableReference>,
+        IScriptVariableReferenceGetter
     {
         new Int32 VariableIndex { get; set; }
     }
 
     public partial interface IScriptVariableReferenceGetter :
         IAScriptReferenceGetter,
-        ILoquiObject<IScriptVariableReferenceGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IScriptVariableReferenceGetter>
     {
         static new ILoquiRegistration Registration => ScriptVariableReference_Registration.Instance;
         Int32 VariableIndex { get; }

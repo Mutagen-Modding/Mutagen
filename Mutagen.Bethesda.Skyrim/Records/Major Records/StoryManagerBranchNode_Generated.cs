@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class StoryManagerBranchNode :
         AStoryManagerNode,
-        IStoryManagerBranchNodeInternal,
+        IEquatable<IStoryManagerBranchNodeGetter>,
         ILoquiObjectSetter<StoryManagerBranchNode>,
-        IEquatable<IStoryManagerBranchNodeGetter>
+        IStoryManagerBranchNodeInternal
     {
         #region Ctor
         protected StoryManagerBranchNode()
@@ -91,8 +91,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             AStoryManagerNode.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -502,9 +502,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IStoryManagerBranchNode :
-        IStoryManagerBranchNodeGetter,
         IAStoryManagerNode,
-        ILoquiObjectSetter<IStoryManagerBranchNodeInternal>
+        ILoquiObjectSetter<IStoryManagerBranchNodeInternal>,
+        IStoryManagerBranchNodeGetter
     {
         new AStoryManagerNode.Flag? Flags { get; set; }
         new MemorySlice<Byte>? XNAM { get; set; }
@@ -519,8 +519,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IStoryManagerBranchNodeGetter :
         IAStoryManagerNodeGetter,
-        ILoquiObject<IStoryManagerBranchNodeGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IStoryManagerBranchNodeGetter>
     {
         static new ILoquiRegistration Registration => StoryManagerBranchNode_Registration.Instance;
         AStoryManagerNode.Flag? Flags { get; }

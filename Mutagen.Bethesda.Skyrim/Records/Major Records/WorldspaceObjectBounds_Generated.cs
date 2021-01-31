@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class WorldspaceObjectBounds :
-        IWorldspaceObjectBounds,
+        IEquatable<IWorldspaceObjectBoundsGetter>,
         ILoquiObjectSetter<WorldspaceObjectBounds>,
-        IEquatable<IWorldspaceObjectBoundsGetter>
+        IWorldspaceObjectBounds
     {
         #region Ctor
         public WorldspaceObjectBounds()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -439,8 +439,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IWorldspaceObjectBounds :
-        IWorldspaceObjectBoundsGetter,
-        ILoquiObjectSetter<IWorldspaceObjectBounds>
+        ILoquiObjectSetter<IWorldspaceObjectBounds>,
+        IWorldspaceObjectBoundsGetter
     {
         new P2Float Min { get; set; }
         new P2Float Max { get; set; }
@@ -448,8 +448,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IWorldspaceObjectBoundsGetter :
         ILoquiObject,
-        ILoquiObject<IWorldspaceObjectBoundsGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IWorldspaceObjectBoundsGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

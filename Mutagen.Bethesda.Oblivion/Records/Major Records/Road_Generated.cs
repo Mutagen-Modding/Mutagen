@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Road :
         OblivionMajorRecord,
-        IRoadInternal,
+        IEquatable<IRoadGetter>,
         ILoquiObjectSetter<Road>,
-        IEquatable<IRoadGetter>
+        IRoadInternal
     {
         #region Ctor
         protected Road()
@@ -89,8 +89,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -522,9 +522,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IRoad :
-        IRoadGetter,
+        ILoquiObjectSetter<IRoadInternal>,
         IOblivionMajorRecord,
-        ILoquiObjectSetter<IRoadInternal>
+        IRoadGetter
     {
         new ExtendedList<RoadPoint>? Points { get; set; }
     }
@@ -538,8 +538,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IRoadGetter :
         IOblivionMajorRecordGetter,
-        ILoquiObject<IRoadGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IRoadGetter>
     {
         static new ILoquiRegistration Registration => Road_Registration.Instance;
         IReadOnlyList<IRoadPointGetter>? Points { get; }

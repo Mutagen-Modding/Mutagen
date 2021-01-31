@@ -31,9 +31,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class MaterialObject :
         SkyrimMajorRecord,
-        IMaterialObjectInternal,
+        IEquatable<IMaterialObjectGetter>,
         ILoquiObjectSetter<MaterialObject>,
-        IEquatable<IMaterialObjectGetter>
+        IMaterialObjectInternal
     {
         #region Ctor
         protected MaterialObject()
@@ -53,6 +53,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IMaterialObjectGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
         #endregion
         #region DNAMs
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -160,8 +164,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -905,11 +909,11 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IMaterialObject :
-        IMaterialObjectGetter,
-        ISkyrimMajorRecord,
-        IModeled,
+        IFormLinkContainer,
         ILoquiObjectSetter<IMaterialObjectInternal>,
-        IFormLinkContainer
+        IMaterialObjectGetter,
+        IModeled,
+        ISkyrimMajorRecord
     {
         new Model? Model { get; set; }
         new SliceList<byte> DNAMs { get; }
@@ -933,10 +937,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IMaterialObjectGetter :
         ISkyrimMajorRecordGetter,
-        IModeledGetter,
-        ILoquiObject<IMaterialObjectGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IMaterialObjectGetter>,
+        IModeledGetter
     {
         static new ILoquiRegistration Registration => MaterialObject_Registration.Instance;
         IModelGetter? Model { get; }

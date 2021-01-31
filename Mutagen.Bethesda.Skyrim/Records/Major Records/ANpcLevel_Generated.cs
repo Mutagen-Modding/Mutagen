@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public abstract partial class ANpcLevel :
         IANpcLevel,
-        ILoquiObjectSetter<ANpcLevel>,
-        IEquatable<IANpcLevelGetter>
+        IEquatable<IANpcLevelGetter>,
+        ILoquiObjectSetter<ANpcLevel>
     {
         #region Ctor
         public ANpcLevel()
@@ -74,8 +74,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -363,8 +363,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public partial interface IANpcLevelGetter :
         ILoquiObject,
-        ILoquiObject<IANpcLevelGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IANpcLevelGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

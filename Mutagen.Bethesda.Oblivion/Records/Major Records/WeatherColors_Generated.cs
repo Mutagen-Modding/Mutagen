@@ -28,9 +28,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class WeatherColors :
-        IWeatherColors,
+        IEquatable<IWeatherColorsGetter>,
         ILoquiObjectSetter<WeatherColors>,
-        IEquatable<IWeatherColorsGetter>
+        IWeatherColors
     {
         #region Ctor
         public WeatherColors()
@@ -84,8 +84,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -502,8 +502,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IWeatherColors :
-        IWeatherColorsGetter,
-        ILoquiObjectSetter<IWeatherColors>
+        ILoquiObjectSetter<IWeatherColors>,
+        IWeatherColorsGetter
     {
         new Color Sunrise { get; set; }
         new Color Day { get; set; }
@@ -513,8 +513,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IWeatherColorsGetter :
         ILoquiObject,
-        ILoquiObject<IWeatherColorsGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IWeatherColorsGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

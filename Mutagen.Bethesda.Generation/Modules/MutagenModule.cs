@@ -8,6 +8,7 @@ using Loqui;
 using System.Xml.Linq;
 using Noggog;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Generation.Modules.Aspects;
 
 namespace Mutagen.Bethesda.Generation
 {
@@ -41,6 +42,7 @@ namespace Mutagen.Bethesda.Generation
             this.SubModules.Add(new LinkCacheExtensionsModule());
             this.SubModules.Add(new DuplicateModule());
             this.SubModules.Add(new GameCategoryExtensionsModule());
+            this.SubModules.Add(new InterfaceDocumentationModule());
         }
 
         public bool FieldFilter(TypeGeneration field)

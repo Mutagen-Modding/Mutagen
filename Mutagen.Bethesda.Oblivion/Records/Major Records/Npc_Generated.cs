@@ -31,9 +31,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Npc :
         ANpc,
-        INpcInternal,
+        IEquatable<INpcGetter>,
         ILoquiObjectSetter<Npc>,
-        IEquatable<INpcGetter>
+        INpcInternal
     {
         #region Ctor
         protected Npc()
@@ -47,6 +47,16 @@ namespace Mutagen.Bethesda.Oblivion
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? INpcGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
         #endregion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -58,6 +68,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? INpcGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
         #endregion
         #region Configuration
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -281,8 +295,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             ANpc.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -1727,12 +1741,14 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface INpc :
-        INpcGetter,
         IANpc,
-        IOwner,
-        INamed,
+        IFormLinkContainer,
         ILoquiObjectSetter<INpcInternal>,
-        IFormLinkContainer
+        IModeled,
+        INamed,
+        INamedRequired,
+        INpcGetter,
+        IOwner
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
@@ -1768,11 +1784,13 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface INpcGetter :
         IANpcGetter,
-        IOwnerGetter,
-        INamedGetter,
-        ILoquiObject<INpcGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<INpcGetter>,
+        IModeledGetter,
+        INamedGetter,
+        INamedRequiredGetter,
+        IOwnerGetter
     {
         static new ILoquiRegistration Registration => Npc_Registration.Instance;
         String? Name { get; }
@@ -3933,6 +3951,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Name
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        #endregion
         #endregion
         public IModelGetter? Model { get; private set; }
         #region Configuration

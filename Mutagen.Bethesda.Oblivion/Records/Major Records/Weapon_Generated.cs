@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Weapon :
         AItem,
-        IWeaponInternal,
+        IEquatable<IWeaponGetter>,
         ILoquiObjectSetter<Weapon>,
-        IEquatable<IWeaponGetter>
+        IWeaponInternal
     {
         #region Ctor
         protected Weapon()
@@ -46,6 +46,16 @@ namespace Mutagen.Bethesda.Oblivion
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IWeaponGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
         #endregion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -57,6 +67,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IWeaponGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
         #endregion
         #region Icon
         public String? Icon { get; set; }
@@ -118,8 +132,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mask
         public new class Mask<TItem> :
             AItem.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -660,11 +674,13 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IWeapon :
-        IWeaponGetter,
         IAItem,
-        INamed,
+        IFormLinkContainer,
         ILoquiObjectSetter<IWeaponInternal>,
-        IFormLinkContainer
+        IModeled,
+        INamed,
+        INamedRequired,
+        IWeaponGetter
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
@@ -684,10 +700,12 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IWeaponGetter :
         IAItemGetter,
-        INamedGetter,
-        ILoquiObject<IWeaponGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IWeaponGetter>,
+        IModeledGetter,
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Weapon_Registration.Instance;
         String? Name { get; }
@@ -1921,6 +1939,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Name
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        #endregion
         #endregion
         public IModelGetter? Model { get; private set; }
         #region Icon

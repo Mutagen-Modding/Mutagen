@@ -163,7 +163,6 @@
     </Fields>
   </Object>
   <Object name="MapMarker" objType="Subrecord" GUID="20f60842-6b59-4470-979e-93cd7fe472a3" ID="316">
-    <Interface>ITranslatedNamedRequired</Interface>
     <Fields>
       <Enum name="Flags" enumName="MapMarker.Flag" byteLength="1" nullable="False" recordType="FNAM" />
       <String name="Name" recordType="FULL" nullable="True" translated="Normal" />

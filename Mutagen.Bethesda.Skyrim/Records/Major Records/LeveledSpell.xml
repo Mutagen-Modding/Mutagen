@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="LeveledSpell" objType="Record" baseClass="ASpell" recordType="LVSP" GUID="7390cba1-60b9-4a1d-9734-060a32e15cbc" ID="146">
-    <Interface>IObjectBounded</Interface>
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <UInt8 name="ChanceNone" recordType="LVLD" />

@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Binary;
 using Noggog;
 using System;
 using System.Collections.Generic;
@@ -9,11 +9,6 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LoadScreen
     {
-        #region Interfaces
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IIconsGetter? IHasIconsGetter.Icons => this.Icons;
-        #endregion
-
         [Flags]
         public enum MajorFlag
         {

@@ -29,8 +29,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class DestructionStage :
         IDestructionStage,
-        ILoquiObjectSetter<DestructionStage>,
-        IEquatable<IDestructionStageGetter>
+        IEquatable<IDestructionStageGetter>,
+        ILoquiObjectSetter<DestructionStage>
     {
         #region Ctor
         public DestructionStage()
@@ -61,6 +61,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IDestructionStageGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
         #endregion
 
         #region To String
@@ -94,8 +98,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -476,9 +480,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IDestructionStage :
         IDestructionStageGetter,
-        IModeled,
+        IFormLinkContainer,
         ILoquiObjectSetter<IDestructionStage>,
-        IFormLinkContainer
+        IModeled
     {
         new DestructionStageData? Data { get; set; }
         new Model? Model { get; set; }
@@ -486,10 +490,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IDestructionStageGetter :
         ILoquiObject,
-        IModeledGetter,
-        ILoquiObject<IDestructionStageGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IDestructionStageGetter>,
+        IModeledGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

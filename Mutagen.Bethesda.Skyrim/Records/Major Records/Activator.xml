@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Activator" objType="Record" recordType="ACTI" majorFlag="true" baseClass="SkyrimMajorRecord" GUID="ec45e095-71e5-410d-a22b-ad98bead29c6" ID="144">
-    <Interface>ITranslatedNamed</Interface>
-    <Interface>IModeled</Interface>
-    <Interface>IObjectBounded</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />

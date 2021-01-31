@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="IdleMarker" recordType="IDLM" baseClass="SkyrimMajorRecord" majorFlag="true" objType="Record" GUID="fe40d14c-1bec-4308-8f53-fb83f48d4708" ID="230">
-    <Interface>IObjectBounded</Interface>
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <Enum name="Flags" enumName="IdleMarker.Flag" recordType="IDLF" byteLength="1" />

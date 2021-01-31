@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class ImpactData :
+        IEquatable<IImpactDataGetter>,
         IImpactData,
-        ILoquiObjectSetter<ImpactData>,
-        IEquatable<IImpactDataGetter>
+        ILoquiObjectSetter<ImpactData>
     {
         #region Ctor
         public ImpactData()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -445,9 +445,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IImpactData :
+        IFormLinkContainer,
         IImpactDataGetter,
-        ILoquiObjectSetter<IImpactData>,
-        IFormLinkContainer
+        ILoquiObjectSetter<IImpactData>
     {
         new FormLink<IMaterialTypeGetter> Material { get; set; }
         new FormLink<IImpactGetter> Impact { get; set; }
@@ -455,9 +455,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IImpactDataGetter :
         ILoquiObject,
-        ILoquiObject<IImpactDataGetter>,
+        IBinaryItem,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IImpactDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

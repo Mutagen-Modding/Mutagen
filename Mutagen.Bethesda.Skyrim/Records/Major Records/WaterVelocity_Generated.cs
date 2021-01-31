@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class WaterVelocity :
-        IWaterVelocity,
+        IEquatable<IWaterVelocityGetter>,
         ILoquiObjectSetter<WaterVelocity>,
-        IEquatable<IWaterVelocityGetter>
+        IWaterVelocity
     {
         #region Ctor
         public WaterVelocity()
@@ -91,8 +91,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public class Mask<TItem> :
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -513,8 +513,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IWaterVelocity :
-        IWaterVelocityGetter,
-        ILoquiObjectSetter<IWaterVelocity>
+        ILoquiObjectSetter<IWaterVelocity>,
+        IWaterVelocityGetter
     {
         new P3Float Offset { get; set; }
         new Int32 Unknown { get; set; }
@@ -524,8 +524,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IWaterVelocityGetter :
         ILoquiObject,
-        ILoquiObject<IWaterVelocityGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IWaterVelocityGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();

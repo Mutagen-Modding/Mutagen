@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class DialogTopic :
         SkyrimMajorRecord,
         IDialogTopicInternal,
-        ILoquiObjectSetter<DialogTopic>,
-        IEquatable<IDialogTopicGetter>
+        IEquatable<IDialogTopicGetter>,
+        ILoquiObjectSetter<DialogTopic>
     {
         #region Ctor
         protected DialogTopic()
@@ -46,6 +46,34 @@ namespace Mutagen.Bethesda.Skyrim
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ITranslatedStringGetter? IDialogTopicGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
         #endregion
         #region Priority
         public Single Priority { get; set; } = default;
@@ -124,8 +152,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -924,13 +952,16 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IDialogTopic :
-        IDialogTopicGetter,
-        ISkyrimMajorRecord,
         IDialog,
-        ITranslatedNamed,
-        IMajorRecordEnumerable,
+        IDialogTopicGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IDialogTopicInternal>,
-        IFormLinkContainer
+        IMajorRecordEnumerable,
+        INamed,
+        INamedRequired,
+        ISkyrimMajorRecord,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
         new TranslatedString? Name { get; set; }
         new Single Priority { get; set; }
@@ -955,12 +986,15 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IDialogTopicGetter :
         ISkyrimMajorRecordGetter,
+        IBinaryItem,
         IDialogGetter,
-        ITranslatedNamedGetter,
-        IMajorRecordGetterEnumerable,
-        ILoquiObject<IDialogTopicGetter>,
         IFormLinkContainerGetter,
-        IBinaryItem
+        ILoquiObject<IDialogTopicGetter>,
+        IMajorRecordGetterEnumerable,
+        INamedGetter,
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => DialogTopic_Registration.Instance;
         ITranslatedStringGetter? Name { get; }
@@ -2671,6 +2705,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Name
         private int? _NameLocation;
         public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        #endregion
         #endregion
         #region Priority
         private int? _PriorityLocation;

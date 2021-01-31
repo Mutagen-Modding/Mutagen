@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class LocationObjectType :
         ALocationTarget,
+        IEquatable<ILocationObjectTypeGetter>,
         ILocationObjectType,
-        ILoquiObjectSetter<LocationObjectType>,
-        IEquatable<ILocationObjectTypeGetter>
+        ILoquiObjectSetter<LocationObjectType>
     {
         #region Ctor
         public LocationObjectType()
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             ALocationTarget.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem Type)
@@ -389,8 +389,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ILocationObjectType :
-        ILocationObjectTypeGetter,
         IALocationTarget,
+        ILocationObjectTypeGetter,
         ILoquiObjectSetter<ILocationObjectType>
     {
         new TargetObjectType Type { get; set; }
@@ -398,8 +398,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ILocationObjectTypeGetter :
         IALocationTargetGetter,
-        ILoquiObject<ILocationObjectTypeGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<ILocationObjectTypeGetter>
     {
         static new ILoquiRegistration Registration => LocationObjectType_Registration.Instance;
         TargetObjectType Type { get; }

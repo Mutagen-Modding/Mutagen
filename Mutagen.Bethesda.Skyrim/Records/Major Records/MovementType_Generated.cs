@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class MovementType :
         SkyrimMajorRecord,
-        IMovementTypeInternal,
+        IEquatable<IMovementTypeGetter>,
         ILoquiObjectSetter<MovementType>,
-        IEquatable<IMovementTypeGetter>
+        IMovementTypeInternal
     {
         #region Ctor
         protected MovementType()
@@ -46,6 +46,16 @@ namespace Mutagen.Bethesda.Skyrim
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IMovementTypeGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
         #endregion
         #region LeftWalk
         public Single LeftWalk { get; set; } = default;
@@ -137,8 +147,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -890,9 +900,11 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IMovementType :
+        ILoquiObjectSetter<IMovementTypeInternal>,
         IMovementTypeGetter,
-        ISkyrimMajorRecord,
-        ILoquiObjectSetter<IMovementTypeInternal>
+        INamed,
+        INamedRequired,
+        ISkyrimMajorRecord
     {
         new String? Name { get; set; }
         new Single LeftWalk { get; set; }
@@ -919,8 +931,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IMovementTypeGetter :
         ISkyrimMajorRecordGetter,
+        IBinaryItem,
         ILoquiObject<IMovementTypeGetter>,
-        IBinaryItem
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => MovementType_Registration.Instance;
         String? Name { get; }
@@ -2114,6 +2128,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Name
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        #endregion
         #endregion
         private int? _SPEDLocation;
         public MovementType.SPEDDataType SPEDDataTypeState { get; private set; }

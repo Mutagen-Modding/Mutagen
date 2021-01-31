@@ -30,9 +30,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Class
     public partial class VolumetricLighting :
         SkyrimMajorRecord,
-        IVolumetricLightingInternal,
+        IEquatable<IVolumetricLightingGetter>,
         ILoquiObjectSetter<VolumetricLighting>,
-        IEquatable<IVolumetricLightingGetter>
+        IVolumetricLightingInternal
     {
         #region Ctor
         protected VolumetricLighting()
@@ -139,8 +139,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
-            IMask<TItem>,
-            IEquatable<Mask<TItem>>
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -824,9 +824,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IVolumetricLighting :
-        IVolumetricLightingGetter,
+        ILoquiObjectSetter<IVolumetricLightingInternal>,
         ISkyrimMajorRecord,
-        ILoquiObjectSetter<IVolumetricLightingInternal>
+        IVolumetricLightingGetter
     {
         new Single? Intensity { get; set; }
         new Single? CustomColorContribution { get; set; }
@@ -851,8 +851,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IVolumetricLightingGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<IVolumetricLightingGetter>,
-        IBinaryItem
+        IBinaryItem,
+        ILoquiObject<IVolumetricLightingGetter>
     {
         static new ILoquiRegistration Registration => VolumetricLighting_Registration.Instance;
         Single? Intensity { get; }
