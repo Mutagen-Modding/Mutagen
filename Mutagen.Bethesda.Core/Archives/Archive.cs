@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda
 
         public static IEnumerable<string> GetApplicableArchivePaths(GameRelease release, string dataFolderPath, ModKey modKey)
         {
-            return Directory.EnumerateFiles(dataFolderPath, $"{modKey.Name}*{GetArchiveExtension(release)}");
+            return Directory.EnumerateFiles(dataFolderPath, $"*{GetArchiveExtension(release)}");
         }
     }
 }
