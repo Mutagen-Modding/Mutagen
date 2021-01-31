@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="HeadPart" recordType="HDPT" objType="Record" majorFlag="true" baseClass="SkyrimMajorRecord" GUID="857a29e8-2860-48f1-b007-30df75c1667c" ID="44">
-    <Interface>ITranslatedNamed</Interface>
     <Interface>IModeled</Interface>
     <Fields>
       <String name="Name" recordType="FULL" translated="Normal" />

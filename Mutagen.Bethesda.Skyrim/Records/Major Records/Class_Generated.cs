@@ -45,6 +45,24 @@ namespace Mutagen.Bethesda.Skyrim
         #region Name
         public TranslatedString Name { get; set; } = string.Empty;
         ITranslatedStringGetter IClassGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
         #endregion
         #region Description
         public String Description { get; set; } = string.Empty;
@@ -1023,6 +1041,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IClass :
         IClassGetter,
         ISkyrimMajorRecord,
+        INamedRequired,
         ITranslatedNamedRequired,
         ILoquiObjectSetter<IClassInternal>
     {
@@ -1051,6 +1070,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IClassGetter :
         ISkyrimMajorRecordGetter,
+        INamedRequiredGetter,
         ITranslatedNamedRequiredGetter,
         ILoquiObject<IClassGetter>,
         IBinaryItem
@@ -2226,6 +2246,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Name
         private int? _NameLocation;
         public ITranslatedStringGetter Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : TranslatedString.Empty;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        #endregion
         #endregion
         #region Description
         private int? _DescriptionLocation;

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Ingredient" recordType="INGR" baseClass="SkyrimMajorRecord" objType="Record" GUID="03907af3-2557-45c7-9c9e-c22854b4ffe6" ID="164">
-    <Interface>ITranslatedNamed</Interface>
     <Interface>IHasIcons</Interface>
     <Interface>IModeled</Interface>
     <Interface>IObjectBounded</Interface>

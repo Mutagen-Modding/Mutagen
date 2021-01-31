@@ -402,6 +402,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IScriptStringProperty :
         IScriptStringPropertyGetter,
         IScriptProperty,
+        INamedRequired,
         ILoquiObjectSetter<IScriptStringProperty>
     {
         new String Data { get; set; }
@@ -409,6 +410,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IScriptStringPropertyGetter :
         IScriptPropertyGetter,
+        INamedRequiredGetter,
         ILoquiObject<IScriptStringPropertyGetter>,
         IBinaryItem
     {

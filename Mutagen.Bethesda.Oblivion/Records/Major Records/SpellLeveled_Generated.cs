@@ -395,6 +395,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ISpellLeveled :
         ISpellLeveledGetter,
         ISpell,
+        INamedRequired,
+        INamed,
         ILoquiObjectSetter<ISpellLeveledInternal>
     {
     }
@@ -408,6 +410,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ISpellLeveledGetter :
         ISpellGetter,
+        INamedRequiredGetter,
+        INamedGetter,
         ILoquiObject<ISpellLeveledGetter>,
         IBinaryItem
     {

@@ -134,9 +134,6 @@
     <Compile Include="Records\Major Records\Activator.cs">
       <DependentUpon>Activator.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\ActorValueInformation.cs">
-      <DependentUpon>ActorValueInformation.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\AddonNode.cs">
       <DependentUpon>AddonNode.xml</DependentUpon>
     </Compile>
@@ -233,9 +230,6 @@
     <Compile Include="Records\Major Records\CellSubBlock.cs">
       <DependentUpon>Cell.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\Class.cs">
-      <DependentUpon>Class.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\Climate.cs">
       <DependentUpon>Climate.xml</DependentUpon>
     </Compile>
@@ -244,9 +238,6 @@
     </Compile>
     <Compile Include="Records\Major Records\CollisionLayer.cs">
       <DependentUpon>CollisionLayer.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\ColorRecord.cs">
-      <DependentUpon>ColorRecord.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\CombatStyle.cs">
       <DependentUpon>CombatStyle.xml</DependentUpon>
@@ -400,9 +391,6 @@
     </Compile>
     <Compile Include="Records\Major Records\LoadScreen.cs">
       <DependentUpon>LoadScreen.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Location.cs">
-      <DependentUpon>Location.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\LockData.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
@@ -754,9 +742,6 @@
     </Compile>
     <Compile Include="Records\Major Records\WeatherSound.cs">
       <DependentUpon>Weather.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\WordOfPower.cs">
-      <DependentUpon>WordOfPower.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\WorkbenchData.cs">
       <DependentUpon>Furniture.xml</DependentUpon>

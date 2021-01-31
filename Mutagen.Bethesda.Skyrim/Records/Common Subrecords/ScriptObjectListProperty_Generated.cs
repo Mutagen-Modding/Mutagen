@@ -493,6 +493,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IScriptObjectListProperty :
         IScriptObjectListPropertyGetter,
         IScriptProperty,
+        INamedRequired,
         ILoquiObjectSetter<IScriptObjectListProperty>,
         IFormLinkContainer
     {
@@ -501,6 +502,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IScriptObjectListPropertyGetter :
         IScriptPropertyGetter,
+        INamedRequiredGetter,
         ILoquiObject<IScriptObjectListPropertyGetter>,
         IFormLinkContainerGetter,
         IBinaryItem

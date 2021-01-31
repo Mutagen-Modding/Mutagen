@@ -486,6 +486,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IScriptIntListProperty :
         IScriptIntListPropertyGetter,
         IScriptProperty,
+        INamedRequired,
         ILoquiObjectSetter<IScriptIntListProperty>
     {
         new ExtendedList<Int32> Data { get; }
@@ -493,6 +494,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IScriptIntListPropertyGetter :
         IScriptPropertyGetter,
+        INamedRequiredGetter,
         ILoquiObject<IScriptIntListPropertyGetter>,
         IBinaryItem
     {

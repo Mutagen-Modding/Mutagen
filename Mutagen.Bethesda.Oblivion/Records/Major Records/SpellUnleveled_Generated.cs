@@ -574,6 +574,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ISpellUnleveled :
         ISpellUnleveledGetter,
         ISpell,
+        INamedRequired,
+        INamed,
         ILoquiObjectSetter<ISpellUnleveledInternal>,
         IFormLinkContainer
     {
@@ -590,6 +592,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ISpellUnleveledGetter :
         ISpellGetter,
+        INamedRequiredGetter,
+        INamedGetter,
         ILoquiObject<ISpellUnleveledGetter>,
         IFormLinkContainerGetter,
         IBinaryItem

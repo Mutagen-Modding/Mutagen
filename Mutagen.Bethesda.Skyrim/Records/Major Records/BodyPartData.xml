@@ -8,7 +8,6 @@
     </Fields>
   </Object>
   <Object name="BodyPart" objType="Subrecord" GUID="8a2f315d-0fc0-40ef-abc2-ee949928ba76" ID="432">
-    <Interface>ITranslatedNamedRequired</Interface>
     <Fields>
       <String name="Name" recordType="BPTN" translated="Normal" nullable="False" />
       <String name="PoseMatching" recordType="PNAM" />

@@ -46,6 +46,16 @@ namespace Mutagen.Bethesda.Oblivion
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IWorldspaceGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
         #endregion
         #region Parent
         public FormLinkNullable<IWorldspaceGetter> Parent { get; set; } = new FormLinkNullable<IWorldspaceGetter>();
@@ -1059,6 +1069,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IWorldspace :
         IWorldspaceGetter,
         IPlace,
+        INamedRequired,
         INamed,
         IMajorRecordEnumerable,
         ILoquiObjectSetter<IWorldspaceInternal>,
@@ -1090,6 +1101,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IWorldspaceGetter :
         IPlaceGetter,
+        INamedRequiredGetter,
         INamedGetter,
         IMajorRecordGetterEnumerable,
         ILoquiObject<IWorldspaceGetter>,
@@ -3864,6 +3876,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Name
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        #endregion
         #endregion
         #region Parent
         private int? _ParentLocation;

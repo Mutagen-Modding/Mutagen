@@ -700,6 +700,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ICollisionLayer :
         ICollisionLayerGetter,
         ISkyrimMajorRecord,
+        INamedRequired,
         ILoquiObjectSetter<ICollisionLayerInternal>,
         IFormLinkContainer
     {
@@ -720,6 +721,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ICollisionLayerGetter :
         ISkyrimMajorRecordGetter,
+        INamedRequiredGetter,
         ILoquiObject<ICollisionLayerGetter>,
         IFormLinkContainerGetter,
         IBinaryItem

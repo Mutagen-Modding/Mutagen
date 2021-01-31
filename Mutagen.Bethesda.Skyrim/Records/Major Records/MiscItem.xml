@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="MiscItem" recordType="MISC" baseClass="SkyrimMajorRecord" objType="Record" majorFlag="true" GUID="91d335f8-47e0-4625-928e-ad386acf723b" ID="167">
-    <Interface>ITranslatedNamed</Interface>
     <Interface>IHasIcons</Interface>
     <Interface>IModeled</Interface>
     <Interface>IObjectBounded</Interface>

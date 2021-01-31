@@ -1742,6 +1742,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IPhoneme :
         IPhonemeGetter,
+        INamedRequired,
         ILoquiObjectSetter<IPhoneme>
     {
         new String Name { get; set; }
@@ -1792,6 +1793,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IPhonemeGetter :
         ILoquiObject,
+        INamedRequiredGetter,
         ILoquiObject<IPhonemeGetter>,
         IBinaryItem
     {

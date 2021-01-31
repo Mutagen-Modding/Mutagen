@@ -42,6 +42,24 @@ namespace Mutagen.Bethesda.Skyrim
         #region Name
         public TranslatedString Name { get; set; } = string.Empty;
         ITranslatedStringGetter IBodyPartGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
         #endregion
         #region PoseMatching
         public String? PoseMatching { get; set; }
@@ -1422,6 +1440,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IBodyPart :
         IBodyPartGetter,
+        INamedRequired,
         ITranslatedNamedRequired,
         ILoquiObjectSetter<IBodyPart>,
         IFormLinkContainer
@@ -1463,6 +1482,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IBodyPartGetter :
         ILoquiObject,
+        INamedRequiredGetter,
         ITranslatedNamedRequiredGetter,
         ILoquiObject<IBodyPartGetter>,
         IFormLinkContainerGetter,
@@ -2797,6 +2817,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Name
         private int? _NameLocation;
         public ITranslatedStringGetter Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : TranslatedString.Empty;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        #endregion
         #endregion
         #region PoseMatching
         private int? _PoseMatchingLocation;

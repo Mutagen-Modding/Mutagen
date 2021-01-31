@@ -475,6 +475,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IClothing :
         IClothingGetter,
         IAClothing,
+        INamedRequired,
+        INamed,
         ILoquiObjectSetter<IClothingInternal>
     {
         new ClothingData? Data { get; set; }
@@ -489,6 +491,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IClothingGetter :
         IAClothingGetter,
+        INamedRequiredGetter,
+        INamedGetter,
         ILoquiObject<IClothingGetter>,
         IBinaryItem
     {

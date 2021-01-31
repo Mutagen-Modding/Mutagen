@@ -442,6 +442,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPackageDataTarget :
         IPackageDataTargetGetter,
         IAPackageData,
+        INamedRequired,
+        INamed,
         ILoquiObjectSetter<IPackageDataTarget>,
         IFormLinkContainer
     {
@@ -451,6 +453,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IPackageDataTargetGetter :
         IAPackageDataGetter,
+        INamedRequiredGetter,
+        INamedGetter,
         ILoquiObject<IPackageDataTargetGetter>,
         IFormLinkContainerGetter,
         IBinaryItem

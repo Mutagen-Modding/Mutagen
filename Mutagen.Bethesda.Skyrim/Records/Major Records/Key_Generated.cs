@@ -61,6 +61,24 @@ namespace Mutagen.Bethesda.Skyrim
         #region Name
         public TranslatedString Name { get; set; } = string.Empty;
         ITranslatedStringGetter IKeyGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
         #endregion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -970,10 +988,11 @@ namespace Mutagen.Bethesda.Skyrim
         IItem,
         IObjectId,
         IConstructible,
-        ITranslatedNamedRequired,
         IObjectBounded,
         IWeightValue,
         IKeyworded<IKeywordGetter>,
+        INamedRequired,
+        ITranslatedNamedRequired,
         ILoquiObjectSetter<IKeyInternal>,
         IFormLinkContainer
     {
@@ -1007,10 +1026,11 @@ namespace Mutagen.Bethesda.Skyrim
         IItemGetter,
         IObjectIdGetter,
         IConstructibleGetter,
-        ITranslatedNamedRequiredGetter,
         IObjectBoundedGetter,
         IWeightValueGetter,
         IKeywordedGetter<IKeywordGetter>,
+        INamedRequiredGetter,
+        ITranslatedNamedRequiredGetter,
         ILoquiObject<IKeyGetter>,
         IFormLinkContainerGetter,
         IBinaryItem
@@ -2440,6 +2460,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Name
         private int? _NameLocation;
         public ITranslatedStringGetter Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : TranslatedString.Empty;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        #endregion
         #endregion
         public IModelGetter? Model { get; private set; }
         public IIconsGetter? Icons { get; private set; }

@@ -476,6 +476,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IAlternateTexture :
         IAlternateTextureGetter,
+        INamedRequired,
         ILoquiObjectSetter<IAlternateTexture>,
         IFormLinkContainer
     {
@@ -486,6 +487,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IAlternateTextureGetter :
         ILoquiObject,
+        INamedRequiredGetter,
         ILoquiObject<IAlternateTextureGetter>,
         IFormLinkContainerGetter,
         IBinaryItem

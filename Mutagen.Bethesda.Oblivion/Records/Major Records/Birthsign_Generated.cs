@@ -46,6 +46,16 @@ namespace Mutagen.Bethesda.Oblivion
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IBirthsignGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
         #endregion
         #region Icon
         public String? Icon { get; set; }
@@ -623,6 +633,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IBirthsign :
         IBirthsignGetter,
         IOblivionMajorRecord,
+        INamedRequired,
         INamed,
         ILoquiObjectSetter<IBirthsignInternal>,
         IFormLinkContainer
@@ -642,6 +653,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IBirthsignGetter :
         IOblivionMajorRecordGetter,
+        INamedRequiredGetter,
         INamedGetter,
         ILoquiObject<IBirthsignGetter>,
         IFormLinkContainerGetter,
@@ -1675,6 +1687,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Name
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        #endregion
         #endregion
         #region Icon
         private int? _IconLocation;

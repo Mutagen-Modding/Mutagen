@@ -9,8 +9,8 @@ namespace Mutagen.Bethesda.Generation
     public class AspectInterfaceDefinition
     {
         public string Name { get; }
-        public List<(LoquiInterfaceDefinitionType Type, string Interface)> Interfaces = new List<(LoquiInterfaceDefinitionType Type, string Interface)>();
-        public List<(LoquiInterfaceType Type, string Name, Action<FileGeneration> Actions)> FieldActions = new List<(LoquiInterfaceType Type, string Name, Action<FileGeneration> Actions)>();
+        public Func<ObjectGeneration, IEnumerable<(LoquiInterfaceDefinitionType Type, string Interface)>> Interfaces;
+        public List<(LoquiInterfaceType Type, string Name, Action<ObjectGeneration, FileGeneration> Actions)> FieldActions = new List<(LoquiInterfaceType Type, string Name, Action<ObjectGeneration, FileGeneration> Actions)>();
         public Func<ObjectGeneration, bool> Test { get; set; }
 
         public AspectInterfaceDefinition(

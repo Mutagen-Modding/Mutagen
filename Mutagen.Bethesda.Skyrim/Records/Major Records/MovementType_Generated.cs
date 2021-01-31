@@ -46,6 +46,16 @@ namespace Mutagen.Bethesda.Skyrim
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IMovementTypeGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
         #endregion
         #region LeftWalk
         public Single LeftWalk { get; set; } = default;
@@ -892,6 +902,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IMovementType :
         IMovementTypeGetter,
         ISkyrimMajorRecord,
+        INamedRequired,
+        INamed,
         ILoquiObjectSetter<IMovementTypeInternal>
     {
         new String? Name { get; set; }
@@ -919,6 +931,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IMovementTypeGetter :
         ISkyrimMajorRecordGetter,
+        INamedRequiredGetter,
+        INamedGetter,
         ILoquiObject<IMovementTypeGetter>,
         IBinaryItem
     {
@@ -2114,6 +2128,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Name
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        #endregion
         #endregion
         private int? _SPEDLocation;
         public MovementType.SPEDDataType SPEDDataTypeState { get; private set; }

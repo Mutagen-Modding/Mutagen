@@ -46,6 +46,16 @@ namespace Mutagen.Bethesda.Oblivion
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ICellGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
         #endregion
         #region Flags
         public Cell.Flag? Flags { get; set; }
@@ -1499,6 +1509,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ICell :
         ICellGetter,
         IPlace,
+        INamedRequired,
         INamed,
         IMajorRecordEnumerable,
         ILoquiObjectSetter<ICellInternal>,
@@ -1536,6 +1547,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ICellGetter :
         IPlaceGetter,
+        INamedRequiredGetter,
         INamedGetter,
         IMajorRecordGetterEnumerable,
         ILoquiObject<ICellGetter>,
@@ -4463,6 +4475,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Name
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        #endregion
         #endregion
         #region Flags
         private int? _FlagsLocation;

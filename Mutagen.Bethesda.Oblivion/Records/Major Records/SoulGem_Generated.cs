@@ -46,6 +46,16 @@ namespace Mutagen.Bethesda.Oblivion
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ISoulGemGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
         #endregion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -664,6 +674,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ISoulGem :
         ISoulGemGetter,
         IAItem,
+        INamedRequired,
         INamed,
         ILoquiObjectSetter<ISoulGemInternal>,
         IFormLinkContainer
@@ -686,6 +697,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ISoulGemGetter :
         IAItemGetter,
+        INamedRequiredGetter,
         INamedGetter,
         ILoquiObject<ISoulGemGetter>,
         IFormLinkContainerGetter,
@@ -1922,6 +1934,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Name
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        #endregion
         #endregion
         public IModelGetter? Model { get; private set; }
         #region Icon

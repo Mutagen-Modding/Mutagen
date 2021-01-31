@@ -563,6 +563,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IScriptEntry :
         IScriptEntryGetter,
+        INamedRequired,
         ILoquiObjectSetter<IScriptEntry>,
         IFormLinkContainer
     {
@@ -573,6 +574,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IScriptEntryGetter :
         ILoquiObject,
+        INamedRequiredGetter,
         ILoquiObject<IScriptEntryGetter>,
         IFormLinkContainerGetter,
         IBinaryItem

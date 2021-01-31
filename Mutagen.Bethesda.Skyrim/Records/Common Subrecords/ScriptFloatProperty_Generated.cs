@@ -402,6 +402,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IScriptFloatProperty :
         IScriptFloatPropertyGetter,
         IScriptProperty,
+        INamedRequired,
         ILoquiObjectSetter<IScriptFloatProperty>
     {
         new Single Data { get; set; }
@@ -409,6 +410,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IScriptFloatPropertyGetter :
         IScriptPropertyGetter,
+        INamedRequiredGetter,
         ILoquiObject<IScriptFloatPropertyGetter>,
         IBinaryItem
     {

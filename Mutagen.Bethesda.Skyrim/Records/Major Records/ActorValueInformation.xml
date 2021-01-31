@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="ActorValueInformation" objType="Record" recordType="AVIF" baseClass="SkyrimMajorRecord" GUID="18758352-21f6-4d31-8846-afe6d29f48f8" ID="434">
-    <Interface>ITranslatedNamed</Interface>
     <Fields>
       <String name="Name" recordType="FULL" translated="Normal" />
       <String name="Description" recordType="DESC" translated="DL" />

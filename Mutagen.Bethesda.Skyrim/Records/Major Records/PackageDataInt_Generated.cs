@@ -402,6 +402,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPackageDataInt :
         IPackageDataIntGetter,
         IAPackageData,
+        INamedRequired,
+        INamed,
         ILoquiObjectSetter<IPackageDataInt>
     {
         new UInt32 Data { get; set; }
@@ -409,6 +411,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IPackageDataIntGetter :
         IAPackageDataGetter,
+        INamedRequiredGetter,
+        INamedGetter,
         ILoquiObject<IPackageDataIntGetter>,
         IBinaryItem
     {

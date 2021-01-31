@@ -9,16 +9,6 @@ namespace Mutagen.Bethesda.Skyrim
     {
         #region Interfaces
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequired.Name
-        {
-            get => this.Name?.String ?? string.Empty;
-            set => this.Name = new TranslatedString(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ObjectBounds? IObjectBoundedOptional.ObjectBounds
@@ -34,17 +24,6 @@ namespace Mutagen.Bethesda.Skyrim
         public enum MajorFlag
         {
             NonPlayable = 0x0000_0004
-        }
-    }
-
-    namespace Internals
-    {
-        public partial class KeyBinaryOverlay
-        {
-            #region Interfaces
-            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
-            #endregion
         }
     }
 }

@@ -486,6 +486,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IScriptFloatListProperty :
         IScriptFloatListPropertyGetter,
         IScriptProperty,
+        INamedRequired,
         ILoquiObjectSetter<IScriptFloatListProperty>
     {
         new ExtendedList<Single> Data { get; }
@@ -493,6 +494,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IScriptFloatListPropertyGetter :
         IScriptPropertyGetter,
+        INamedRequiredGetter,
         ILoquiObject<IScriptFloatListPropertyGetter>,
         IBinaryItem
     {

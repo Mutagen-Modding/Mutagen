@@ -9,32 +9,6 @@ namespace Mutagen.Bethesda.Skyrim
     {
         #region Interfaces
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string? INamedGetter.Name => this.Name?.String;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequired.Name
-        {
-            get => this.Name?.String ?? string.Empty;
-            set => this.Name = new TranslatedString(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        TranslatedString ITranslatedNamedRequired.Name
-        {
-            get => this.Name ?? string.Empty;
-            set => this.Name = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string? INamed.Name
-        {
-            get => this.Name?.String;
-            set => this.Name = value == null ? null : new TranslatedString(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IModeledGetter.Model => this.Model;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
@@ -54,21 +28,6 @@ namespace Mutagen.Bethesda.Skyrim
             HiddenFromLocalMap = 0x0000_0200,
             RandomAnimStart = 0x0001_0000,
             RadioStation = 0x0002_0000,
-        }
-    }
-
-    namespace Internals
-    {
-        public partial class TalkingActivatorBinaryOverlay
-        {
-            #region Interfaces
-            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
-            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            string? INamedGetter.Name => this.Name?.String;
-            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
-            #endregion
         }
     }
 }

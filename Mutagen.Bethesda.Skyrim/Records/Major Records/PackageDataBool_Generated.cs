@@ -402,6 +402,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPackageDataBool :
         IPackageDataBoolGetter,
         IAPackageData,
+        INamedRequired,
+        INamed,
         ILoquiObjectSetter<IPackageDataBool>
     {
         new Boolean Data { get; set; }
@@ -409,6 +411,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IPackageDataBoolGetter :
         IAPackageDataGetter,
+        INamedRequiredGetter,
+        INamedGetter,
         ILoquiObject<IPackageDataBoolGetter>,
         IBinaryItem
     {

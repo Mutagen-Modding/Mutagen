@@ -402,6 +402,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPackageDataFloat :
         IPackageDataFloatGetter,
         IAPackageData,
+        INamedRequired,
+        INamed,
         ILoquiObjectSetter<IPackageDataFloat>
     {
         new Single Data { get; set; }
@@ -409,6 +411,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IPackageDataFloatGetter :
         IAPackageDataGetter,
+        INamedRequiredGetter,
+        INamedGetter,
         ILoquiObject<IPackageDataFloatGetter>,
         IBinaryItem
     {

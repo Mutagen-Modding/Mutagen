@@ -50,6 +50,16 @@ namespace Mutagen.Bethesda.Skyrim
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IMaterialTypeGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
         #endregion
         #region HavokDisplayColor
         public Color? HavokDisplayColor { get; set; }
@@ -623,6 +633,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IMaterialType :
         IMaterialTypeGetter,
         ISkyrimMajorRecord,
+        INamedRequired,
+        INamed,
         ILoquiObjectSetter<IMaterialTypeInternal>,
         IFormLinkContainer
     {
@@ -643,6 +655,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IMaterialTypeGetter :
         ISkyrimMajorRecordGetter,
+        INamedRequiredGetter,
+        INamedGetter,
         ILoquiObject<IMaterialTypeGetter>,
         IFormLinkContainerGetter,
         IBinaryItem
@@ -1698,6 +1712,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Name
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        #endregion
         #endregion
         #region HavokDisplayColor
         private int? _HavokDisplayColorLocation;

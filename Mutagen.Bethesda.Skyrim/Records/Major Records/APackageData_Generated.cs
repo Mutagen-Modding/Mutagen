@@ -46,6 +46,16 @@ namespace Mutagen.Bethesda.Skyrim
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IAPackageDataGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
         #endregion
         #region Flags
         public APackageData.Flag? Flags { get; set; }
@@ -455,6 +465,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public partial interface IAPackageData :
         IAPackageDataGetter,
+        INamedRequired,
+        INamed,
         ILoquiObjectSetter<IAPackageData>,
         IFormLinkContainer
     {
@@ -467,6 +479,8 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public partial interface IAPackageDataGetter :
         ILoquiObject,
+        INamedRequiredGetter,
+        INamedGetter,
         ILoquiObject<IAPackageDataGetter>,
         IFormLinkContainerGetter,
         IBinaryItem

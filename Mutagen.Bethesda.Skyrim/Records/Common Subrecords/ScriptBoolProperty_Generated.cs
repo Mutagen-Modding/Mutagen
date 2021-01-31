@@ -402,6 +402,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IScriptBoolProperty :
         IScriptBoolPropertyGetter,
         IScriptProperty,
+        INamedRequired,
         ILoquiObjectSetter<IScriptBoolProperty>
     {
         new Boolean Data { get; set; }
@@ -409,6 +410,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IScriptBoolPropertyGetter :
         IScriptPropertyGetter,
+        INamedRequiredGetter,
         ILoquiObject<IScriptBoolPropertyGetter>,
         IBinaryItem
     {

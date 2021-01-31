@@ -486,6 +486,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IScriptBoolListProperty :
         IScriptBoolListPropertyGetter,
         IScriptProperty,
+        INamedRequired,
         ILoquiObjectSetter<IScriptBoolListProperty>
     {
         new ExtendedList<Boolean> Data { get; }
@@ -493,6 +494,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IScriptBoolListPropertyGetter :
         IScriptPropertyGetter,
+        INamedRequiredGetter,
         ILoquiObject<IScriptBoolListPropertyGetter>,
         IBinaryItem
     {

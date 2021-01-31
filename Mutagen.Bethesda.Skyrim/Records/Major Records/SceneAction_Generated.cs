@@ -47,6 +47,16 @@ namespace Mutagen.Bethesda.Skyrim
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ISceneActionGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
         #endregion
         #region ActorID
         public Int32? ActorID { get; set; }
@@ -1043,6 +1053,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface ISceneAction :
         ISceneActionGetter,
+        INamedRequired,
+        INamed,
         ILoquiObjectSetter<ISceneAction>,
         IFormLinkContainer
     {
@@ -1067,6 +1079,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ISceneActionGetter :
         ILoquiObject,
+        INamedRequiredGetter,
+        INamedGetter,
         ILoquiObject<ISceneActionGetter>,
         IFormLinkContainerGetter,
         IBinaryItem
@@ -2277,6 +2291,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Name
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        #endregion
         #endregion
         #region ActorID
         private int? _ActorIDLocation;

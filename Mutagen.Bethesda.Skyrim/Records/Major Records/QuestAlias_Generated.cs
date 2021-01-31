@@ -50,6 +50,16 @@ namespace Mutagen.Bethesda.Skyrim
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IQuestAliasGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
         #endregion
         #region Flags
         public QuestAlias.Flag? Flags { get; set; }
@@ -1753,6 +1763,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IQuestAlias :
         IQuestAliasGetter,
         IKeyworded<IKeywordGetter>,
+        INamedRequired,
+        INamed,
         ILoquiObjectSetter<IQuestAlias>,
         IFormLinkContainer
     {
@@ -1786,6 +1798,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IQuestAliasGetter :
         ILoquiObject,
         IKeywordedGetter<IKeywordGetter>,
+        INamedRequiredGetter,
+        INamedGetter,
         ILoquiObject<IQuestAliasGetter>,
         IFormLinkContainerGetter,
         IBinaryItem
@@ -3686,6 +3700,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Name
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        #endregion
         #endregion
         #region Flags
         private int? _FlagsLocation;

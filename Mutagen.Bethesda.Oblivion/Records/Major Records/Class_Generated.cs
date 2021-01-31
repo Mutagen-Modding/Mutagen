@@ -46,6 +46,16 @@ namespace Mutagen.Bethesda.Oblivion
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IClassGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
         #endregion
         #region Description
         public String? Description { get; set; }
@@ -552,6 +562,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IClass :
         IClassGetter,
         IOblivionMajorRecord,
+        INamedRequired,
         INamed,
         ILoquiObjectSetter<IClassInternal>
     {
@@ -570,6 +581,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IClassGetter :
         IOblivionMajorRecordGetter,
+        INamedRequiredGetter,
         INamedGetter,
         ILoquiObject<IClassGetter>,
         IBinaryItem
@@ -1587,6 +1599,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Name
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        #endregion
         #endregion
         #region Description
         private int? _DescriptionLocation;
