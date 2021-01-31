@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     public partial interface IGlobalGetter
     {
-        char TypeChar { get; set; }
+        char TypeChar { get; }
     }
 
     public partial class Global : GlobalCustomParsing.IGlobalCommon
@@ -24,7 +24,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected static readonly RecordType FNAM = new RecordType("FNAM");
 
         public abstract float? RawFloat { get; set; }
-        public abstract char TypeChar { get; set; }
+        public abstract char TypeChar { get; }
 
         [Flags]
         public enum MajorFlag
@@ -47,13 +47,11 @@ namespace Mutagen.Bethesda.Fallout4
                         case GlobalShort.TRIGGER_CHAR:
                             return GlobalShort.CreateFromBinary(f);
                         case GlobalFloat.TRIGGER_CHAR:
-                            var ret = GlobalFloat.CreateFromBinary(f);
-                            ret.TypeChar = 'f';
-                            return ret;
+                            return GlobalFloat.CreateFromBinary(f);
                         case null:
-                            var ret2 = GlobalFloat.CreateFromBinary(f);
-                            ret2.TypeChar = '0';
-                            return ret2;
+                            var ret = GlobalFloat.CreateFromBinary(f);
+                            ret.NoTypeDeclaration = true;
+                            return ret;
                         default:
                             throw new ArgumentException($"Unknown trigger char: {triggerChar}");
                     }
@@ -69,11 +67,14 @@ namespace Mutagen.Bethesda.Fallout4
                 MutagenWriter writer,
                 IGlobalGetter item)
             {
-                if (item.TypeChar != '0')
+                if (item is not IGlobalFloatGetter f
+                    || !f.NoTypeDeclaration)
+                {
                     Mutagen.Bethesda.Binary.CharBinaryTranslation.Instance.Write(
                         writer,
                         item.TypeChar,
                         header: RecordTypes.FNAM);
+                }
             }
         }
 
@@ -100,17 +101,15 @@ namespace Mutagen.Bethesda.Fallout4
                             stream,
                             package);
                     case GlobalFloat.TRIGGER_CHAR:
+                        return GlobalFloatBinaryOverlay.GlobalFloatFactory(
+                            stream,
+                            package);
+                    case null:
                         var ret = GlobalFloatBinaryOverlay.GlobalFloatFactory(
                             stream,
                             package);
-                        ret.TypeChar = 'f';
+                        ret.NoTypeDeclaration = true;
                         return ret;
-                    case null:
-                        var ret2 = GlobalFloatBinaryOverlay.GlobalFloatFactory(
-                            stream,
-                            package);
-                        ret2.TypeChar = '0';
-                        return ret2;
                     default:
                         throw new ArgumentException($"Unknown trigger char: {globalChar}");
                 }

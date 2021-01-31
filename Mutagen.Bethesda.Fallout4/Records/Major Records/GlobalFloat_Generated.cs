@@ -47,6 +47,9 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? IGlobalFloatGetter.Data => this.Data;
         #endregion
+        #region NoTypeDeclaration
+        public Boolean NoTypeDeclaration { get; set; } = default;
+        #endregion
 
         #region To String
 
@@ -88,6 +91,7 @@ namespace Mutagen.Bethesda.Fallout4
             : base(initialValue)
             {
                 this.Data = initialValue;
+                this.NoTypeDeclaration = initialValue;
             }
 
             public Mask(
@@ -97,7 +101,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem Data)
+                TItem Data,
+                TItem NoTypeDeclaration)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -107,6 +112,7 @@ namespace Mutagen.Bethesda.Fallout4
                 Version2: Version2)
             {
                 this.Data = Data;
+                this.NoTypeDeclaration = NoTypeDeclaration;
             }
 
             #pragma warning disable CS8618
@@ -119,6 +125,7 @@ namespace Mutagen.Bethesda.Fallout4
 
             #region Members
             public TItem Data;
+            public TItem NoTypeDeclaration;
             #endregion
 
             #region Equals
@@ -133,12 +140,14 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.Data, rhs.Data)) return false;
+                if (!object.Equals(this.NoTypeDeclaration, rhs.NoTypeDeclaration)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.Data);
+                hash.Add(this.NoTypeDeclaration);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -150,6 +159,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.Data)) return false;
+                if (!eval(this.NoTypeDeclaration)) return false;
                 return true;
             }
             #endregion
@@ -159,6 +169,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.Data)) return true;
+                if (eval(this.NoTypeDeclaration)) return true;
                 return false;
             }
             #endregion
@@ -175,6 +186,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.Data = eval(this.Data);
+                obj.NoTypeDeclaration = eval(this.NoTypeDeclaration);
             }
             #endregion
 
@@ -201,6 +213,10 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         fg.AppendItem(Data, "Data");
                     }
+                    if (printMask?.NoTypeDeclaration ?? true)
+                    {
+                        fg.AppendItem(NoTypeDeclaration, "NoTypeDeclaration");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -214,6 +230,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             #region Members
             public Exception? Data;
+            public Exception? NoTypeDeclaration;
             #endregion
 
             #region IErrorMask
@@ -224,6 +241,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     case GlobalFloat_FieldIndex.Data:
                         return Data;
+                    case GlobalFloat_FieldIndex.NoTypeDeclaration:
+                        return NoTypeDeclaration;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -236,6 +255,9 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     case GlobalFloat_FieldIndex.Data:
                         this.Data = ex;
+                        break;
+                    case GlobalFloat_FieldIndex.NoTypeDeclaration:
+                        this.NoTypeDeclaration = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -251,6 +273,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case GlobalFloat_FieldIndex.Data:
                         this.Data = (Exception?)obj;
                         break;
+                    case GlobalFloat_FieldIndex.NoTypeDeclaration:
+                        this.NoTypeDeclaration = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -261,6 +286,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (Overall != null) return true;
                 if (Data != null) return true;
+                if (NoTypeDeclaration != null) return true;
                 return false;
             }
             #endregion
@@ -297,6 +323,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 base.ToString_FillInternal(fg);
                 fg.AppendItem(Data, "Data");
+                fg.AppendItem(NoTypeDeclaration, "NoTypeDeclaration");
             }
             #endregion
 
@@ -306,6 +333,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Data = this.Data.Combine(rhs.Data);
+                ret.NoTypeDeclaration = this.NoTypeDeclaration.Combine(rhs.NoTypeDeclaration);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -329,6 +357,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             #region Members
             public bool Data;
+            public bool NoTypeDeclaration;
             #endregion
 
             #region Ctors
@@ -338,6 +367,7 @@ namespace Mutagen.Bethesda.Fallout4
                 : base(defaultOn, onOverall)
             {
                 this.Data = defaultOn;
+                this.NoTypeDeclaration = defaultOn;
             }
 
             #endregion
@@ -346,6 +376,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 base.GetCrystal(ret);
                 ret.Add((Data, null));
+                ret.Add((NoTypeDeclaration, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -455,6 +486,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObjectSetter<IGlobalFloatInternal>
     {
         new Single? Data { get; set; }
+        new Boolean NoTypeDeclaration { get; set; }
     }
 
     public partial interface IGlobalFloatInternal :
@@ -471,6 +503,7 @@ namespace Mutagen.Bethesda.Fallout4
     {
         static new ILoquiRegistration Registration => GlobalFloat_Registration.Instance;
         Single? Data { get; }
+        Boolean NoTypeDeclaration { get; }
 
     }
 
@@ -634,6 +667,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         FormVersion = 4,
         Version2 = 5,
         Data = 6,
+        NoTypeDeclaration = 7,
     }
     #endregion
 
@@ -651,9 +685,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public const string GUID = "5bfe4364-b00f-48be-840e-b79a252985b5";
 
-        public const ushort AdditionalFieldCount = 1;
+        public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(GlobalFloat.Mask<>);
 
@@ -723,6 +757,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             ClearPartial();
             item.Data = default;
+            item.NoTypeDeclaration = default;
             base.Clear(item);
         }
         
@@ -825,6 +860,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             if (rhs == null) return;
             ret.Data = item.Data.EqualsWithin(rhs.Data);
+            ret.NoTypeDeclaration = item.NoTypeDeclaration == rhs.NoTypeDeclaration;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -880,6 +916,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 && item.Data.TryGet(out var DataItem))
             {
                 fg.AppendItem(DataItem, "Data");
+            }
+            if (printMask?.NoTypeDeclaration ?? true)
+            {
+                fg.AppendItem(item.NoTypeDeclaration, "NoTypeDeclaration");
             }
         }
         
@@ -951,6 +991,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             if (lhs == null || rhs == null) return false;
             if (!base.Equals((IGlobalGetter)lhs, (IGlobalGetter)rhs)) return false;
             if (!lhs.Data.EqualsWithin(rhs.Data)) return false;
+            if (lhs.NoTypeDeclaration != rhs.NoTypeDeclaration) return false;
             return true;
         }
         
@@ -988,6 +1029,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 hash.Add(Dataitem);
             }
+            hash.Add(item.NoTypeDeclaration);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1110,6 +1152,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             if ((copyMask?.GetShouldTranslate((int)GlobalFloat_FieldIndex.Data) ?? true))
             {
                 item.Data = rhs.Data;
+            }
+            if ((copyMask?.GetShouldTranslate((int)GlobalFloat_FieldIndex.NoTypeDeclaration) ?? true))
+            {
+                item.NoTypeDeclaration = rhs.NoTypeDeclaration;
             }
         }
         
@@ -1289,6 +1335,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     {
         public new readonly static GlobalFloatBinaryWriteTranslation Instance = new GlobalFloatBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            IGlobalFloatGetter item,
+            MutagenWriter writer)
+        {
+            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
         public static void WriteRecordTypes(
             IGlobalFloatGetter item,
             MutagenWriter writer,
@@ -1316,7 +1371,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 try
                 {
-                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                    WriteEmbedded(
                         item: item,
                         writer: writer);
                     writer.MetaData.FormVersion = item.FormVersion;

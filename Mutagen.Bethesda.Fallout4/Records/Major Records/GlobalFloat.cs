@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial class GlobalFloat
     {
         public const char TRIGGER_CHAR = 'f';
-        public override char TypeChar { get; set; }
+        public override char TypeChar => TRIGGER_CHAR;
 
         public override float? RawFloat
         {
@@ -22,8 +22,9 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public partial class GlobalFloatBinaryOverlay
         {
-            public override char TypeChar { get { return base.TypeChar; } set { base.TypeChar = value; } }
+            public override char TypeChar => GlobalFloat.TRIGGER_CHAR;
             public override float? RawFloat => this.Data;
+            public bool NoTypeDeclaration { get; internal set; }
         }
     }
 }

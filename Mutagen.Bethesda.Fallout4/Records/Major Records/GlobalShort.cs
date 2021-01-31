@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial class GlobalShort
     {
         public const char TRIGGER_CHAR = 's';
-        public override char TypeChar { get { return TRIGGER_CHAR; } set { } }
+        public override char TypeChar => TRIGGER_CHAR;
 
         public override float? RawFloat
         {

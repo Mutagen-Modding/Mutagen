@@ -18,6 +18,7 @@
   <Object name="GlobalFloat" recordType="GLOB" baseClass="Global" objType="Record" GUID="5bfe4364-b00f-48be-840e-b79a252985b5" ID="45">
     <Fields>
       <Float name="Data" recordType="FLTV" />
+      <Bool name="NoTypeDeclaration" binary="NoGeneration" />
     </Fields>
   </Object>
   <!--<Object name="GlobalBool" recordType="GLOB" baseClass="Global" objType="Record" GUID="f1f69742-d1da-4bbd-951c-f2bac3f7ea98" ID="46">
