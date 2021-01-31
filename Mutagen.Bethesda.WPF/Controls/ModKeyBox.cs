@@ -9,6 +9,7 @@ using Noggog;
 using System.Linq;
 using System.IO;
 using Noggog.WPF;
+using System.ComponentModel;
 
 namespace Mutagen.Bethesda.WPF
 {
@@ -25,6 +26,7 @@ namespace Mutagen.Bethesda.WPF
         public static readonly DependencyProperty ModKeyProperty = DependencyProperty.Register(nameof(ModKey), typeof(ModKey), typeof(ModKeyBox),
              new FrameworkPropertyMetadata(default(ModKey), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public string FileName
         {
             get => (string)GetValue(FileNameProperty);
@@ -33,6 +35,7 @@ namespace Mutagen.Bethesda.WPF
         public static readonly DependencyProperty FileNameProperty = DependencyProperty.Register(nameof(FileName), typeof(string), typeof(ModKeyBox),
              new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public ModType ModType
         {
             get => (ModType)GetValue(ModTypeProperty);
