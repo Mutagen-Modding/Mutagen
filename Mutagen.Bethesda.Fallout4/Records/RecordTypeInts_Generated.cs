@@ -11,6 +11,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public const int DELE = 0x454C4544;
         public const int DNAM = 0x4D414E44;
         public const int DODT = 0x54444F44;
+        public const int FLTV = 0x56544C46;
+        public const int FNAM = 0x4D414E46;
         public const int FULL = 0x4C4C5546;
         public const int GLOB = 0x424F4C47;
         public const int GMST = 0x54534D47;

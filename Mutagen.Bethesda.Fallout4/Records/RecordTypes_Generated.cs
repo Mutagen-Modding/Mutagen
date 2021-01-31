@@ -11,6 +11,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly RecordType DELE = new RecordType(0x454C4544);
         public static readonly RecordType DNAM = new RecordType(0x4D414E44);
         public static readonly RecordType DODT = new RecordType(0x54444F44);
+        public static readonly RecordType FLTV = new RecordType(0x56544C46);
+        public static readonly RecordType FNAM = new RecordType(0x4D414E46);
         public static readonly RecordType FULL = new RecordType(0x4C4C5546);
         public static readonly RecordType GLOB = new RecordType(0x424F4C47);
         public static readonly RecordType GMST = new RecordType(0x54534D47);
