@@ -25,6 +25,18 @@ namespace Mutagen.Bethesda
         bool TryResolve(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec);
 
         /// <summary>
+        /// Retrieves the record that matches the EditorID relative to the source the package was attached to.<br/>
+        /// <br/>
+        /// NOTE:  This call is much slower than the alternative that uses generics, as all records in the entire mod must be
+        /// processed, rather than being able to scope the search to a specific area.
+        /// </summary>
+        /// <param name="editorId">EditorID to look for</param>
+        /// <param name="majorRec">Out parameter containing the record if successful</param>
+        /// <returns>True if a matching record was found</returns>
+        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
+        bool TryResolve(string editorId, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec);
+
+        /// <summary>
         /// Retrieves the record that matches the FormKey relative to the source the package was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
@@ -44,6 +56,25 @@ namespace Mutagen.Bethesda
             where TMajor : class, IMajorRecordCommonGetter;
 
         /// <summary>
+        /// Retrieves the record that matches the EditorID relative to the source the package was attached to.<br/>
+        /// <br/>
+        /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will not be returned, and 
+        /// the function will return false.
+        /// </summary>
+        /// <param name="editorId">EditorID to look for</param>
+        /// <param name="majorRec">Out parameter containing the record if successful</param>
+        /// <returns>True if a matching record was found</returns>
+        /// <typeparam name="TMajor">The type of Major Record to look up</typeparam>
+        /// <exception cref="ArgumentException">
+        /// An unexpected TMajor type will throw an exception.<br/>
+        /// Unexpected types include:<br/>
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
+        bool TryResolve<TMajor>(string editorId, [MaybeNullWhen(false)] out TMajor majorRec)
+            where TMajor : class, IMajorRecordCommonGetter;
+
+        /// <summary>
         /// Retrieves the record that matches the FormKey relative to the source the package was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
@@ -60,6 +91,24 @@ namespace Mutagen.Bethesda
         /// </exception>
         /// <returns>True if a matching record was found</returns>
         bool TryResolve(FormKey formKey, Type type, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec);
+
+        /// <summary>
+        /// Retrieves the record that matches the EditorID relative to the source the package was attached to.<br/>
+        /// <br/>
+        /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will not be returned, and 
+        /// the function will return false.
+        /// </summary>
+        /// <param name="editorId">EditorID to look for</param>
+        /// <param name="type">The type of Major Record to look up</param>
+        /// <param name="majorRec">Out parameter containing the record if successful</param>
+        /// <exception cref="ArgumentException">
+        /// An unexpected type will throw an exception.<br/>
+        /// Unexpected types include:<br/>
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
+        /// <returns>True if a matching record was found</returns>
+        bool TryResolve(string editorId, Type type, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec);
 
         /// <summary>
         /// Retrieves the record that matches the FormKey relative to the source the package was attached to.<br/>
@@ -83,6 +132,27 @@ namespace Mutagen.Bethesda
         bool TryResolve(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec, params Type[] types);
 
         /// <summary>
+        /// Retrieves the record that matches the EditorID relative to the source the package was attached to.<br/>
+        /// <br/>
+        /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will not be returned, and 
+        /// the function will return false. <br />
+        /// <br />
+        /// NOTE: <br />
+        /// In the case of two records existing with the same target EditorID of different types exist, the first found to match will be returned.
+        /// </summary>
+        /// <param name="editorId">EditorID to look for</param>
+        /// <param name="types">The types of Major Record to look up</param>
+        /// <param name="majorRec">Out parameter containing the record if successful</param>
+        /// <exception cref="ArgumentException">
+        /// An unexpected type will throw an exception.<br/>
+        /// Unexpected types include:<br/>
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
+        /// <returns>True if a matching record was found</returns>
+        bool TryResolve(string editorId, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec, params Type[] types);
+
+        /// <summary>
         /// Retrieves the record that matches the FormKey relative to the source the package was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
@@ -104,6 +174,27 @@ namespace Mutagen.Bethesda
         bool TryResolve(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec);
 
         /// <summary>
+        /// Retrieves the record that matches the EditorID relative to the source the package was attached to.<br/>
+        /// <br/>
+        /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will not be returned, and 
+        /// the function will return false. <br />
+        /// <br />
+        /// NOTE: <br />
+        /// In the case of two records existing with the same target EditorID of different types exist, the first found to match will be returned.
+        /// </summary>
+        /// <param name="editorId">EditorID to look for</param>
+        /// <param name="types">The types of Major Record to look up</param>
+        /// <param name="majorRec">Out parameter containing the record if successful</param>
+        /// <exception cref="ArgumentException">
+        /// An unexpected type will throw an exception.<br/>
+        /// Unexpected types include:<br/>
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
+        /// <returns>True if a matching record was found</returns>
+        bool TryResolve(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec);
+
+        /// <summary>
         /// Retrieves the record that matches the FormKey relative to the source the cache was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
@@ -119,6 +210,23 @@ namespace Mutagen.Bethesda
         /// <returns>Matching record</returns>
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
         IMajorRecordCommonGetter Resolve(FormKey formKey);
+
+        /// <summary>
+        /// Retrieves the record that matches the EditorID relative to the source the cache was attached to.<br/>
+        /// <br/>
+        /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will not be returned, and 
+        /// the function will throw a KeyNotFoundException.<br />
+        /// <br/>
+        /// NOTE:  This call is much slower than the alternative that uses generics, as all records in the entire mod must be
+        /// processed, rather than being able to scope the search to a specific area.
+        /// </summary>
+        /// <param name="editorId">EditorID to look for</param>
+        /// <exception cref="KeyNotFoundException">
+        /// When the EditorID cannot be found under the attached cache.<br/>
+        /// </exception>
+        /// <returns>Matching record</returns>
+        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
+        IMajorRecordCommonGetter Resolve(string editorId);
 
         /// <summary>
         /// Retrieves the record that matches the FormKey relative to the source the package was attached to.<br/>
@@ -138,6 +246,25 @@ namespace Mutagen.Bethesda
         /// When the FormKey having the specified Major Record type cannot be found under the attached cache.<br/>
         /// </exception>
         IMajorRecordCommonGetter Resolve(FormKey formKey, Type type);
+
+        /// <summary>
+        /// Retrieves the record that matches the EditorID relative to the source the package was attached to.<br/>
+        /// <br/>
+        /// If a record exists that matches the EditorID, but does not inherit from the given type, it will be seen as not a match.
+        /// </summary>
+        /// <param name="editorId">EditorID to look for</param>
+        /// <param name="type">The type of Major Record to look up</param>
+        /// <exception cref="ArgumentException">
+        /// An unexpected type will throw an exception.<br/>
+        /// Unexpected types include:<br/>
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
+        /// <returns>Matching record</returns>
+        /// <exception cref="KeyNotFoundException">
+        /// When the EditorID having the specified Major Record type cannot be found under the attached cache.<br/>
+        /// </exception>
+        IMajorRecordCommonGetter Resolve(string editorId, Type type);
 
         /// <summary>
         /// Retrieves the record that matches the FormKey relative to the source the package was attached to.<br/>
@@ -162,6 +289,28 @@ namespace Mutagen.Bethesda
         IMajorRecordCommonGetter Resolve(FormKey formKey, params Type[] types);
 
         /// <summary>
+        /// Retrieves the record that matches the EditorID relative to the source the package was attached to.<br/>
+        /// <br/>
+        /// If a record exists that matches the EditorID, but does not inherit from one of the given types, it will be seen as not a match.<br />
+        /// <br />
+        /// NOTE: <br />
+        /// In the case of two records existing with the same target EditorID of different types exist, the first found to match will be returned.
+        /// </summary>
+        /// <param name="editorId">EditorID to look for</param>
+        /// <param name="types">The types of Major Record to look up</param>
+        /// <exception cref="ArgumentException">
+        /// An unexpected type will throw an exception.<br/>
+        /// Unexpected types include:<br/>
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
+        /// <returns>Matching record</returns>
+        /// <exception cref="KeyNotFoundException">
+        /// When the EditorID having the specified Major Record type cannot be found under the attached cache.<br/>
+        /// </exception>
+        IMajorRecordCommonGetter Resolve(string editorId, params Type[] types);
+
+        /// <summary>
         /// Retrieves the record that matches the FormKey relative to the source the package was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the FormKey, but does not inherit from one of the given types, it will be seen as not a match.<br />
@@ -184,6 +333,28 @@ namespace Mutagen.Bethesda
         IMajorRecordCommonGetter Resolve(FormKey formKey, IEnumerable<Type> types);
 
         /// <summary>
+        /// Retrieves the record that matches the EditorID relative to the source the package was attached to.<br/>
+        /// <br/>
+        /// If a record exists that matches the EditorID, but does not inherit from one of the given types, it will be seen as not a match.<br />
+        /// <br />
+        /// NOTE: <br />
+        /// In the case of two records existing with the same target EditorID of different types exist, the first found to match will be returned.
+        /// </summary>
+        /// <param name="editorId">EditorID to look for</param>
+        /// <param name="types">The types of Major Record to look up</param>
+        /// <exception cref="ArgumentException">
+        /// An unexpected type will throw an exception.<br/>
+        /// Unexpected types include:<br/>
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
+        /// <returns>Matching record</returns>
+        /// <exception cref="KeyNotFoundException">
+        /// When the EditorID having the specified Major Record type cannot be found under the attached cache.<br/>
+        /// </exception>
+        IMajorRecordCommonGetter Resolve(string editorId, IEnumerable<Type> types);
+
+        /// <summary>
         /// Retrieves the record that matches the FormKey relative to the source the package was attached to.
         /// <br/>
         /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will be seen as not a match.
@@ -201,6 +372,26 @@ namespace Mutagen.Bethesda
         /// When the FormKey having the specified Major Record type cannot be found under the attached cache.<br/>
         /// </exception>
         TMajor Resolve<TMajor>(FormKey formKey)
+            where TMajor : class, IMajorRecordCommonGetter;
+
+        /// <summary>
+        /// Retrieves the record that matches the EditorID relative to the source the package was attached to.
+        /// <br/>
+        /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will be seen as not a match.
+        /// </summary>
+        /// <param name="editorId">EditorID to look for</param>
+        /// <typeparam name="TMajor">The type of Major Record to look up</typeparam>
+        /// <returns>Matching record</returns>
+        /// <exception cref="ArgumentException">
+        /// An unexpected TMajor type will throw an exception.<br/>
+        /// Unexpected types include:<br/>
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
+        /// <exception cref="KeyNotFoundException">
+        /// When the EditorID having the specified Major Record type cannot be found under the attached cache.<br/>
+        /// </exception>
+        TMajor Resolve<TMajor>(string editorId)
             where TMajor : class, IMajorRecordCommonGetter;
 
         /// <summary>
@@ -276,6 +467,18 @@ namespace Mutagen.Bethesda
         bool TryResolveContext(FormKey formKey, [MaybeNullWhen(false)] out IModContext<TModSetter, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec);
 
         /// <summary>
+        /// Retrieves the record that matches the EditorID relative to the source the package was attached to.<br/>
+        /// <br/>
+        /// NOTE:  This call is much slower than the alternative that uses generics, as all records in the entire mod must be
+        /// processed, rather than being able to scope the search to a specific area.
+        /// </summary>
+        /// <param name="editorId">EditorID to look for</param>
+        /// <param name="majorRec">Out parameter containing the record with context if successful</param>
+        /// <returns>True if a matching record was found</returns>
+        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
+        bool TryResolveContext(string editorId, [MaybeNullWhen(false)] out IModContext<TModSetter, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec);
+
+        /// <summary>
         /// Retrieves the record that matches the FormKey relative to the source the package was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
@@ -291,6 +494,25 @@ namespace Mutagen.Bethesda
         ///   - A setter type is requested from a getter only object.
         /// </exception>
         bool TryResolveContext<TMajorSetter, TMajorGetter>(FormKey formKey, [MaybeNullWhen(false)] out IModContext<TModSetter, TMajorSetter, TMajorGetter> majorRec)
+            where TMajorSetter : class, IMajorRecordCommon, TMajorGetter
+            where TMajorGetter : class, IMajorRecordCommonGetter;
+
+        /// <summary>
+        /// Retrieves the record that matches the EditorID relative to the source the package was attached to.<br/>
+        /// <br/>
+        /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will not be returned, and 
+        /// the function will return false.
+        /// </summary>
+        /// <param name="editorId">EditorID to look for</param>
+        /// <param name="majorRec">Out parameter containing the record with context if successful</param>
+        /// <returns>True if a matching record was found</returns>
+        /// <exception cref="ArgumentException">
+        /// An unexpected TMajor type will throw an exception.<br/>
+        /// Unexpected types include:<br/>
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
+        bool TryResolveContext<TMajorSetter, TMajorGetter>(string editorId, [MaybeNullWhen(false)] out IModContext<TModSetter, TMajorSetter, TMajorGetter> majorRec)
             where TMajorSetter : class, IMajorRecordCommon, TMajorGetter
             where TMajorGetter : class, IMajorRecordCommonGetter;
 
@@ -313,6 +535,24 @@ namespace Mutagen.Bethesda
         bool TryResolveContext(FormKey formKey, Type type, [MaybeNullWhen(false)] out IModContext<TModSetter, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec);
 
         /// <summary>
+        /// Retrieves the record that matches the EditorID relative to the source the package was attached to.<br/>
+        /// <br/>
+        /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will not be returned, and 
+        /// the function will return false.
+        /// </summary>
+        /// <param name="editorId">EditorID to look for</param>
+        /// <param name="type">The type of Major Record to look up</param>
+        /// <param name="majorRec">Out parameter containing the record with context if successful</param>
+        /// <exception cref="ArgumentException">
+        /// An unexpected TMajor type will throw an exception.<br/>
+        /// Unexpected types include:<br/>
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
+        /// <returns>True if a matching record was found</returns>
+        bool TryResolveContext(string editorId, Type type, [MaybeNullWhen(false)] out IModContext<TModSetter, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec);
+
+        /// <summary>
         /// Retrieves the record that matches the FormKey relative to the source the cache was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
@@ -328,6 +568,23 @@ namespace Mutagen.Bethesda
         /// <returns>Matching record with context</returns>
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
         IModContext<TModSetter, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(FormKey formKey);
+
+        /// <summary>
+        /// Retrieves the record that matches the EditorID relative to the source the cache was attached to.<br/>
+        /// <br/>
+        /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will not be returned, and 
+        /// the function will throw a KeyNotFoundException.<br />
+        /// <br/>
+        /// NOTE:  This call is much slower than the alternative that uses generics, as all records in the entire mod must be
+        /// processed, rather than being able to scope the search to a specific area.
+        /// </summary>
+        /// <param name="editorId">EditorID to look for</param>
+        /// <exception cref="KeyNotFoundException">
+        /// When the EditorID cannot be found under the attached cache.<br/>
+        /// </exception>
+        /// <returns>Matching record with context</returns>
+        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
+        IModContext<TModSetter, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(string editorId);
 
         /// <summary>
         /// Retrieves the record that matches the FormKey relative to the source the package was attached to.<br/>
@@ -349,6 +606,25 @@ namespace Mutagen.Bethesda
         IModContext<TModSetter, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(FormKey formKey, Type type);
 
         /// <summary>
+        /// Retrieves the record that matches the EditorID relative to the source the package was attached to.<br/>
+        /// <br/>
+        /// If a record exists that matches the EditorID, but does not inherit from the given type, it will be seen as not a match.
+        /// </summary>
+        /// <param name="editorId">EditorID to look for</param>
+        /// <param name="type">The type of Major Record to look up</param>
+        /// <exception cref="ArgumentException">
+        /// An unexpected TMajor type will throw an exception.<br/>
+        /// Unexpected types include:<br/>
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
+        /// <returns>Matching record with context</returns>
+        /// <exception cref="KeyNotFoundException">
+        /// When the EditorID having the specified Major Record type cannot be found under the attached cache.<br/>
+        /// </exception>
+        IModContext<TModSetter, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(string editorId, Type type);
+
+        /// <summary>
         /// Retrieves the record that matches the FormKey relative to the source the package was attached to.
         /// <br/>
         /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will be seen as not a match.
@@ -367,6 +643,28 @@ namespace Mutagen.Bethesda
         /// When the FormKey having the specified Major Record type cannot be found under the attached cache.<br/>
         /// </exception>
         IModContext<TModSetter, TMajorSetter, TMajorGetter> ResolveContext<TMajorSetter, TMajorGetter>(FormKey formKey)
+            where TMajorSetter : class, IMajorRecordCommon, TMajorGetter
+            where TMajorGetter : class, IMajorRecordCommonGetter;
+
+        /// <summary>
+        /// Retrieves the record that matches the EditorID relative to the source the package was attached to.
+        /// <br/>
+        /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will be seen as not a match.
+        /// </summary>
+        /// <param name="editorId">EditorID to look for</param>
+        /// <typeparam name="TMajorSetter">The setter type of Major Record to look up</typeparam>
+        /// <typeparam name="TMajorGetter">The getter type of Major Record to look up</typeparam>
+        /// <returns>Matching record with context</returns>
+        /// <exception cref="ArgumentException">
+        /// An unexpected TMajor type will throw an exception.<br/>
+        /// Unexpected types include:<br/>
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
+        /// <exception cref="KeyNotFoundException">
+        /// When the EditorID having the specified Major Record type cannot be found under the attached cache.<br/>
+        /// </exception>
+        IModContext<TModSetter, TMajorSetter, TMajorGetter> ResolveContext<TMajorSetter, TMajorGetter>(string editorId)
             where TMajorSetter : class, IMajorRecordCommon, TMajorGetter
             where TMajorGetter : class, IMajorRecordCommonGetter;
 

@@ -27,8 +27,11 @@ namespace Mutagen.Bethesda.UnitTests
     public abstract class Linking_Abstract_Tests : IClassFixture<LinkingInit>
     {
         public static FormKey UnusedFormKey = new FormKey(Utility.PluginModKey, 123456);
+        public static string UnusedEditorID = "Unused";
         public static FormKey TestFileFormKey = new FormKey(Utility.SkyrimTestMod.ModKey, 0x800);
         public static FormKey TestFileFormKey2 = new FormKey(Utility.SkyrimTestMod.ModKey, 0x801);
+        public static string TestFileEditorID = "Record1";
+        public static string TestFileEditorID2 = "Record2";
 
         public abstract IDisposable ConvertMod(SkyrimMod mod, out ISkyrimModGetter getter);
         public abstract bool ReadOnly { get; }
@@ -44,7 +47,7 @@ namespace Mutagen.Bethesda.UnitTests
             using var disp = ConvertMod(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE), out var mod);
             var package = GetLinkCache(mod);
 
-            // Test query fails
+            // Test FormKey fails
             Assert.False(package.TryResolve(UnusedFormKey, out var _));
             Assert.False(package.TryResolve(FormKey.Null, out var _));
             Assert.False(package.TryResolve<IMajorRecordCommonGetter>(UnusedFormKey, out var _));
@@ -61,6 +64,24 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.False(package.TryResolve<IEffectRecord>(FormKey.Null, out var _));
             Assert.False(package.TryResolve<IEffectRecordGetter>(UnusedFormKey, out var _));
             Assert.False(package.TryResolve<IEffectRecordGetter>(FormKey.Null, out var _));
+
+            // Test EditorID fails
+            Assert.False(package.TryResolve(UnusedEditorID, out var _));
+            Assert.False(package.TryResolve(string.Empty, out var _));
+            Assert.False(package.TryResolve<IMajorRecordCommonGetter>(UnusedEditorID, out var _));
+            Assert.False(package.TryResolve<IMajorRecordCommonGetter>(string.Empty, out var _));
+            Assert.False(package.TryResolve<ISkyrimMajorRecordGetter>(UnusedEditorID, out var _));
+            Assert.False(package.TryResolve<ISkyrimMajorRecordGetter>(string.Empty, out var _));
+            Assert.False(package.TryResolve<IObjectEffectGetter>(UnusedEditorID, out var _));
+            Assert.False(package.TryResolve<IObjectEffectGetter>(string.Empty, out var _));
+            Assert.False(package.TryResolve<IObjectEffect>(UnusedEditorID, out var _));
+            Assert.False(package.TryResolve<IObjectEffect>(string.Empty, out var _));
+            Assert.False(package.TryResolve<ObjectEffect>(UnusedEditorID, out var _));
+            Assert.False(package.TryResolve<ObjectEffect>(string.Empty, out var _));
+            Assert.False(package.TryResolve<IEffectRecord>(UnusedEditorID, out var _));
+            Assert.False(package.TryResolve<IEffectRecord>(string.Empty, out var _));
+            Assert.False(package.TryResolve<IEffectRecordGetter>(UnusedEditorID, out var _));
+            Assert.False(package.TryResolve<IEffectRecordGetter>(string.Empty, out var _));
         }
 
         [Fact]
@@ -71,7 +92,7 @@ namespace Mutagen.Bethesda.UnitTests
             using var disp = ConvertMod(prototype, out var mod);
             var package = GetLinkCache(mod);
 
-            // Test query fails
+            // Test FormKey fails
             Assert.False(package.TryResolve(UnusedFormKey, out var _));
             Assert.False(package.TryResolve(FormKey.Null, out var _));
             Assert.False(package.TryResolve<IMajorRecordCommonGetter>(UnusedFormKey, out var _));
@@ -88,14 +109,32 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.False(package.TryResolve<IEffectRecord>(FormKey.Null, out var _));
             Assert.False(package.TryResolve<IEffectRecordGetter>(UnusedFormKey, out var _));
             Assert.False(package.TryResolve<IEffectRecordGetter>(FormKey.Null, out var _));
+
+            // Test EditorID fails
+            Assert.False(package.TryResolve(UnusedEditorID, out var _));
+            Assert.False(package.TryResolve(string.Empty, out var _));
+            Assert.False(package.TryResolve<IMajorRecordCommonGetter>(UnusedEditorID, out var _));
+            Assert.False(package.TryResolve<IMajorRecordCommonGetter>(string.Empty, out var _));
+            Assert.False(package.TryResolve<ISkyrimMajorRecordGetter>(UnusedEditorID, out var _));
+            Assert.False(package.TryResolve<ISkyrimMajorRecordGetter>(string.Empty, out var _));
+            Assert.False(package.TryResolve<IObjectEffectGetter>(UnusedEditorID, out var _));
+            Assert.False(package.TryResolve<IObjectEffectGetter>(string.Empty, out var _));
+            Assert.False(package.TryResolve<IObjectEffect>(UnusedEditorID, out var _));
+            Assert.False(package.TryResolve<IObjectEffect>(string.Empty, out var _));
+            Assert.False(package.TryResolve<ObjectEffect>(UnusedEditorID, out var _));
+            Assert.False(package.TryResolve<ObjectEffect>(string.Empty, out var _));
+            Assert.False(package.TryResolve<IEffectRecord>(UnusedEditorID, out var _));
+            Assert.False(package.TryResolve<IEffectRecord>(string.Empty, out var _));
+            Assert.False(package.TryResolve<IEffectRecordGetter>(UnusedEditorID, out var _));
+            Assert.False(package.TryResolve<IEffectRecordGetter>(string.Empty, out var _));
         }
 
         [Fact]
         public void Direct_Typical()
         {
             var prototype = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
-            var objEffect1 = prototype.ObjectEffects.AddNew();
-            var objEffect2 = prototype.ObjectEffects.AddNew();
+            var objEffect1 = prototype.ObjectEffects.AddNew("EDID1");
+            var objEffect2 = prototype.ObjectEffects.AddNew("EDID2");
             using var disp = ConvertMod(prototype, out var mod);
             var package = GetLinkCache(mod);
 
@@ -105,7 +144,15 @@ namespace Mutagen.Bethesda.UnitTests
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             }
             {
+                Assert.True(package.TryResolve<IEffectRecordGetter>(objEffect1.EditorID, out var rec));
+                Assert.Equal(rec.FormKey, objEffect1.FormKey);
+            }
+            {
                 Assert.True(package.TryResolve<IEffectRecordGetter>(objEffect2.FormKey, out var rec));
+                Assert.Equal(rec.FormKey, objEffect2.FormKey);
+            }
+            {
+                Assert.True(package.TryResolve<IEffectRecordGetter>(objEffect2.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             }
 
@@ -114,7 +161,15 @@ namespace Mutagen.Bethesda.UnitTests
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             }
             {
+                Assert.True(package.TryResolve(objEffect1.EditorID, out var rec));
+                Assert.Equal(rec.FormKey, objEffect1.FormKey);
+            }
+            {
                 Assert.True(package.TryResolve(objEffect2.FormKey, out var rec));
+                Assert.Equal(rec.FormKey, objEffect2.FormKey);
+            }
+            {
+                Assert.True(package.TryResolve(objEffect2.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             }
             {
@@ -122,7 +177,15 @@ namespace Mutagen.Bethesda.UnitTests
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             }
             {
+                Assert.True(package.TryResolve<IMajorRecordCommonGetter>(objEffect1.EditorID, out var rec));
+                Assert.Equal(rec.FormKey, objEffect1.FormKey);
+            }
+            {
                 Assert.True(package.TryResolve<IMajorRecordCommonGetter>(objEffect2.FormKey, out var rec));
+                Assert.Equal(rec.FormKey, objEffect2.FormKey);
+            }
+            {
+                Assert.True(package.TryResolve<IMajorRecordCommonGetter>(objEffect2.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             }
             {
@@ -130,7 +193,15 @@ namespace Mutagen.Bethesda.UnitTests
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             }
             {
+                Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(objEffect1.EditorID, out var rec));
+                Assert.Equal(rec.FormKey, objEffect1.FormKey);
+            }
+            {
                 Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(objEffect2.FormKey, out var rec));
+                Assert.Equal(rec.FormKey, objEffect2.FormKey);
+            }
+            {
+                Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(objEffect2.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             }
             {
@@ -138,7 +209,15 @@ namespace Mutagen.Bethesda.UnitTests
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             }
             {
+                Assert.True(package.TryResolve<IObjectEffectGetter>(objEffect1.EditorID, out var rec));
+                Assert.Equal(rec.FormKey, objEffect1.FormKey);
+            }
+            {
                 Assert.True(package.TryResolve<IObjectEffectGetter>(objEffect2.FormKey, out var rec));
+                Assert.Equal(rec.FormKey, objEffect2.FormKey);
+            }
+            {
+                Assert.True(package.TryResolve<IObjectEffectGetter>(objEffect2.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             }
             if (ReadOnly)
@@ -149,6 +228,12 @@ namespace Mutagen.Bethesda.UnitTests
                 Assert.False(package.TryResolve<IObjectEffect>(objEffect2.FormKey, out var _));
                 Assert.False(package.TryResolve<IEffectRecord>(objEffect1.FormKey, out var _));
                 Assert.False(package.TryResolve<IEffectRecord>(objEffect2.FormKey, out var _));
+                Assert.False(package.TryResolve<ObjectEffect>(objEffect1.EditorID, out var _));
+                Assert.False(package.TryResolve<ObjectEffect>(objEffect2.EditorID, out var _));
+                Assert.False(package.TryResolve<IObjectEffect>(objEffect1.EditorID, out var _));
+                Assert.False(package.TryResolve<IObjectEffect>(objEffect2.EditorID, out var _));
+                Assert.False(package.TryResolve<IEffectRecord>(objEffect1.EditorID, out var _));
+                Assert.False(package.TryResolve<IEffectRecord>(objEffect2.EditorID, out var _));
             }
             else
             {
@@ -157,7 +242,15 @@ namespace Mutagen.Bethesda.UnitTests
                     Assert.Equal(rec.FormKey, objEffect1.FormKey);
                 }
                 {
+                    Assert.True(package.TryResolve<ObjectEffect>(objEffect1.EditorID, out var rec));
+                    Assert.Equal(rec.FormKey, objEffect1.FormKey);
+                }
+                {
                     Assert.True(package.TryResolve<ObjectEffect>(objEffect2.FormKey, out var rec));
+                    Assert.Equal(rec.FormKey, objEffect2.FormKey);
+                }
+                {
+                    Assert.True(package.TryResolve<ObjectEffect>(objEffect2.EditorID, out var rec));
                     Assert.Equal(rec.FormKey, objEffect2.FormKey);
                 }
                 {
@@ -165,7 +258,15 @@ namespace Mutagen.Bethesda.UnitTests
                     Assert.Equal(rec.FormKey, objEffect1.FormKey);
                 }
                 {
+                    Assert.True(package.TryResolve<IObjectEffect>(objEffect1.EditorID, out var rec));
+                    Assert.Equal(rec.FormKey, objEffect1.FormKey);
+                }
+                {
                     Assert.True(package.TryResolve<IObjectEffect>(objEffect2.FormKey, out var rec));
+                    Assert.Equal(rec.FormKey, objEffect2.FormKey);
+                }
+                {
+                    Assert.True(package.TryResolve<IObjectEffect>(objEffect2.EditorID, out var rec));
                     Assert.Equal(rec.FormKey, objEffect2.FormKey);
                 }
                 {
@@ -173,7 +274,15 @@ namespace Mutagen.Bethesda.UnitTests
                     Assert.Equal(rec.FormKey, objEffect1.FormKey);
                 }
                 {
+                    Assert.True(package.TryResolve<IEffectRecord>(objEffect1.EditorID, out var rec));
+                    Assert.Equal(rec.FormKey, objEffect1.FormKey);
+                }
+                {
                     Assert.True(package.TryResolve<IEffectRecord>(objEffect2.FormKey, out var rec));
+                    Assert.Equal(rec.FormKey, objEffect2.FormKey);
+                }
+                {
+                    Assert.True(package.TryResolve<IEffectRecord>(objEffect2.EditorID, out var rec));
                     Assert.Equal(rec.FormKey, objEffect2.FormKey);
                 }
             }
@@ -188,10 +297,19 @@ namespace Mutagen.Bethesda.UnitTests
                 Assert.True(package.TryResolve<INpcGetter>(TestFileFormKey, out var rec));
             }
             {
+                Assert.True(package.TryResolve<INpcGetter>(TestFileEditorID, out var rec));
+            }
+            {
                 Assert.False(package.TryResolve<INpc>(TestFileFormKey, out var rec));
             }
             {
+                Assert.False(package.TryResolve<INpc>(TestFileEditorID, out var rec));
+            }
+            {
                 Assert.False(package.TryResolve<Npc>(TestFileFormKey, out var rec));
+            }
+            {
+                Assert.False(package.TryResolve<Npc>(TestFileEditorID, out var rec));
             }
         }
         #endregion
@@ -202,13 +320,21 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var package = new LoadOrder<ISkyrimModGetter>().ToImmutableLinkCache();
 
-            // Test query fails
+            // Test FormKey fails
             Assert.False(package.TryResolve(UnusedFormKey, out var _));
             Assert.False(package.TryResolve(FormKey.Null, out var _));
             Assert.False(package.TryResolve<IMajorRecordCommonGetter>(UnusedFormKey, out var _));
             Assert.False(package.TryResolve<IMajorRecordCommonGetter>(FormKey.Null, out var _));
             Assert.False(package.TryResolve<ISkyrimMajorRecordGetter>(UnusedFormKey, out var _));
             Assert.False(package.TryResolve<ISkyrimMajorRecordGetter>(FormKey.Null, out var _));
+
+            // Test EditorID fails
+            Assert.False(package.TryResolve(UnusedEditorID, out var _));
+            Assert.False(package.TryResolve(string.Empty, out var _));
+            Assert.False(package.TryResolve<IMajorRecordCommonGetter>(UnusedEditorID, out var _));
+            Assert.False(package.TryResolve<IMajorRecordCommonGetter>(string.Empty, out var _));
+            Assert.False(package.TryResolve<ISkyrimMajorRecordGetter>(UnusedEditorID, out var _));
+            Assert.False(package.TryResolve<ISkyrimMajorRecordGetter>(string.Empty, out var _));
         }
 
         [Fact]
@@ -221,21 +347,29 @@ namespace Mutagen.Bethesda.UnitTests
             loadOrder.Add(mod);
             var package = GetLinkCache(loadOrder);
 
-            // Test query fails
+            // Test FormKey fails
             Assert.False(package.TryResolve(UnusedFormKey, out var _));
             Assert.False(package.TryResolve(FormKey.Null, out var _));
             Assert.False(package.TryResolve<IMajorRecordCommonGetter>(UnusedFormKey, out var _));
             Assert.False(package.TryResolve<IMajorRecordCommonGetter>(FormKey.Null, out var _));
             Assert.False(package.TryResolve<ISkyrimMajorRecordGetter>(UnusedFormKey, out var _));
             Assert.False(package.TryResolve<ISkyrimMajorRecordGetter>(FormKey.Null, out var _));
+
+            // Test EditorID fails
+            Assert.False(package.TryResolve(UnusedEditorID, out var _));
+            Assert.False(package.TryResolve(string.Empty, out var _));
+            Assert.False(package.TryResolve<IMajorRecordCommonGetter>(UnusedEditorID, out var _));
+            Assert.False(package.TryResolve<IMajorRecordCommonGetter>(string.Empty, out var _));
+            Assert.False(package.TryResolve<ISkyrimMajorRecordGetter>(UnusedEditorID, out var _));
+            Assert.False(package.TryResolve<ISkyrimMajorRecordGetter>(string.Empty, out var _));
         }
 
         [Fact]
         public void LoadOrder_Single()
         {
             var prototype = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
-            var objEffect1 = prototype.ObjectEffects.AddNew();
-            var objEffect2 = prototype.ObjectEffects.AddNew();
+            var objEffect1 = prototype.ObjectEffects.AddNew("EditorID1");
+            var objEffect2 = prototype.ObjectEffects.AddNew("EditorID2");
             using var disp = ConvertMod(prototype, out var mod);
             var loadOrder = new LoadOrder<ISkyrimModGetter>();
             loadOrder.Add(mod);
@@ -249,7 +383,15 @@ namespace Mutagen.Bethesda.UnitTests
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             }
             {
+                Assert.True(package.TryResolve<IEffectRecordGetter>(objEffect1.EditorID, out var rec));
+                Assert.Equal(rec.FormKey, objEffect1.FormKey);
+            }
+            {
                 Assert.True(package.TryResolve<IEffectRecordGetter>(objEffect2.FormKey, out var rec));
+                Assert.Equal(rec.FormKey, objEffect2.FormKey);
+            }
+            {
+                Assert.True(package.TryResolve<IEffectRecordGetter>(objEffect2.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             }
 
@@ -258,7 +400,15 @@ namespace Mutagen.Bethesda.UnitTests
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             }
             {
+                Assert.True(package.TryResolve(objEffect1.EditorID, out var rec));
+                Assert.Equal(rec.FormKey, objEffect1.FormKey);
+            }
+            {
                 Assert.True(package.TryResolve(objEffect2.FormKey, out var rec));
+                Assert.Equal(rec.FormKey, objEffect2.FormKey);
+            }
+            {
+                Assert.True(package.TryResolve(objEffect2.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             }
             {
@@ -266,7 +416,15 @@ namespace Mutagen.Bethesda.UnitTests
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             }
             {
+                Assert.True(package.TryResolve<IMajorRecordCommonGetter>(objEffect1.EditorID, out var rec));
+                Assert.Equal(rec.FormKey, objEffect1.FormKey);
+            }
+            {
                 Assert.True(package.TryResolve<IMajorRecordCommonGetter>(objEffect2.FormKey, out var rec));
+                Assert.Equal(rec.FormKey, objEffect2.FormKey);
+            }
+            {
+                Assert.True(package.TryResolve<IMajorRecordCommonGetter>(objEffect2.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             }
             {
@@ -274,7 +432,15 @@ namespace Mutagen.Bethesda.UnitTests
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             }
             {
+                Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(objEffect1.EditorID, out var rec));
+                Assert.Equal(rec.FormKey, objEffect1.FormKey);
+            }
+            {
                 Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(objEffect2.FormKey, out var rec));
+                Assert.Equal(rec.FormKey, objEffect2.FormKey);
+            }
+            {
+                Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(objEffect2.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             }
             {
@@ -282,7 +448,15 @@ namespace Mutagen.Bethesda.UnitTests
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             }
             {
+                Assert.True(package.TryResolve<IObjectEffectGetter>(objEffect1.EditorID, out var rec));
+                Assert.Equal(rec.FormKey, objEffect1.FormKey);
+            }
+            {
                 Assert.True(package.TryResolve<IObjectEffectGetter>(objEffect2.FormKey, out var rec));
+                Assert.Equal(rec.FormKey, objEffect2.FormKey);
+            }
+            {
+                Assert.True(package.TryResolve<IObjectEffectGetter>(objEffect2.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             }
             if (ReadOnly)
@@ -293,6 +467,12 @@ namespace Mutagen.Bethesda.UnitTests
                 Assert.False(package.TryResolve<IObjectEffect>(objEffect2.FormKey, out var _));
                 Assert.False(package.TryResolve<ObjectEffect>(objEffect1.FormKey, out var _));
                 Assert.False(package.TryResolve<ObjectEffect>(objEffect2.FormKey, out var _));
+                Assert.False(package.TryResolve<IEffectRecord>(objEffect1.EditorID, out var _));
+                Assert.False(package.TryResolve<IEffectRecord>(objEffect2.EditorID, out var _));
+                Assert.False(package.TryResolve<IObjectEffect>(objEffect1.EditorID, out var _));
+                Assert.False(package.TryResolve<IObjectEffect>(objEffect2.EditorID, out var _));
+                Assert.False(package.TryResolve<ObjectEffect>(objEffect1.EditorID, out var _));
+                Assert.False(package.TryResolve<ObjectEffect>(objEffect2.EditorID, out var _));
             }
             else
             {
@@ -301,7 +481,15 @@ namespace Mutagen.Bethesda.UnitTests
                     Assert.Equal(rec.FormKey, objEffect1.FormKey);
                 }
                 {
+                    Assert.True(package.TryResolve<IEffectRecord>(objEffect1.EditorID, out var rec));
+                    Assert.Equal(rec.FormKey, objEffect1.FormKey);
+                }
+                {
                     Assert.True(package.TryResolve<IEffectRecord>(objEffect2.FormKey, out var rec));
+                    Assert.Equal(rec.FormKey, objEffect2.FormKey);
+                }
+                {
+                    Assert.True(package.TryResolve<IEffectRecord>(objEffect2.EditorID, out var rec));
                     Assert.Equal(rec.FormKey, objEffect2.FormKey);
                 }
                 {
@@ -309,7 +497,15 @@ namespace Mutagen.Bethesda.UnitTests
                     Assert.Equal(rec.FormKey, objEffect1.FormKey);
                 }
                 {
+                    Assert.True(package.TryResolve<IObjectEffect>(objEffect1.EditorID, out var rec));
+                    Assert.Equal(rec.FormKey, objEffect1.FormKey);
+                }
+                {
                     Assert.True(package.TryResolve<IObjectEffect>(objEffect2.FormKey, out var rec));
+                    Assert.Equal(rec.FormKey, objEffect2.FormKey);
+                }
+                {
+                    Assert.True(package.TryResolve<IObjectEffect>(objEffect2.EditorID, out var rec));
                     Assert.Equal(rec.FormKey, objEffect2.FormKey);
                 }
                 {
@@ -317,7 +513,15 @@ namespace Mutagen.Bethesda.UnitTests
                     Assert.Equal(rec.FormKey, objEffect1.FormKey);
                 }
                 {
+                    Assert.True(package.TryResolve<ObjectEffect>(objEffect1.EditorID, out var rec));
+                    Assert.Equal(rec.FormKey, objEffect1.FormKey);
+                }
+                {
                     Assert.True(package.TryResolve<ObjectEffect>(objEffect2.FormKey, out var rec));
+                    Assert.Equal(rec.FormKey, objEffect2.FormKey);
+                }
+                {
+                    Assert.True(package.TryResolve<ObjectEffect>(objEffect2.EditorID, out var rec));
                     Assert.Equal(rec.FormKey, objEffect2.FormKey);
                 }
             }
@@ -328,8 +532,8 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var prototype1 = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var prototype2 = new SkyrimMod(new ModKey("Dummy2", ModType.Master), SkyrimRelease.SkyrimLE);
-            var objEffect1 = prototype1.ObjectEffects.AddNew();
-            var objEffect2 = prototype2.ObjectEffects.AddNew();
+            var objEffect1 = prototype1.ObjectEffects.AddNew("EditorID1");
+            var objEffect2 = prototype2.ObjectEffects.AddNew("EditorID2");
             using var disp1 = ConvertMod(prototype1, out var mod1);
             using var disp2 = ConvertMod(prototype2, out var mod2);
             var loadOrder = new LoadOrder<ISkyrimModGetter>();
@@ -345,7 +549,15 @@ namespace Mutagen.Bethesda.UnitTests
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             }
             {
+                Assert.True(package.TryResolve<IEffectRecordGetter>(objEffect1.EditorID, out var rec));
+                Assert.Equal(rec.FormKey, objEffect1.FormKey);
+            }
+            {
                 Assert.True(package.TryResolve<IEffectRecordGetter>(objEffect2.FormKey, out var rec));
+                Assert.Equal(rec.FormKey, objEffect2.FormKey);
+            }
+            {
+                Assert.True(package.TryResolve<IEffectRecordGetter>(objEffect2.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             }
 
@@ -354,7 +566,15 @@ namespace Mutagen.Bethesda.UnitTests
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             }
             {
+                Assert.True(package.TryResolve(objEffect1.EditorID, out var rec));
+                Assert.Equal(rec.FormKey, objEffect1.FormKey);
+            }
+            {
                 Assert.True(package.TryResolve(objEffect2.FormKey, out var rec));
+                Assert.Equal(rec.FormKey, objEffect2.FormKey);
+            }
+            {
+                Assert.True(package.TryResolve(objEffect2.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             }
             {
@@ -362,7 +582,15 @@ namespace Mutagen.Bethesda.UnitTests
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             }
             {
+                Assert.True(package.TryResolve<IMajorRecordCommonGetter>(objEffect1.EditorID, out var rec));
+                Assert.Equal(rec.FormKey, objEffect1.FormKey);
+            }
+            {
                 Assert.True(package.TryResolve<IMajorRecordCommonGetter>(objEffect2.FormKey, out var rec));
+                Assert.Equal(rec.FormKey, objEffect2.FormKey);
+            }
+            {
+                Assert.True(package.TryResolve<IMajorRecordCommonGetter>(objEffect2.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             }
             {
@@ -370,7 +598,15 @@ namespace Mutagen.Bethesda.UnitTests
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             }
             {
+                Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(objEffect1.EditorID, out var rec));
+                Assert.Equal(rec.FormKey, objEffect1.FormKey);
+            }
+            {
                 Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(objEffect2.FormKey, out var rec));
+                Assert.Equal(rec.FormKey, objEffect2.FormKey);
+            }
+            {
+                Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(objEffect2.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             }
             {
@@ -378,7 +614,15 @@ namespace Mutagen.Bethesda.UnitTests
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             }
             {
+                Assert.True(package.TryResolve<IObjectEffectGetter>(objEffect1.EditorID, out var rec));
+                Assert.Equal(rec.FormKey, objEffect1.FormKey);
+            }
+            {
                 Assert.True(package.TryResolve<IObjectEffectGetter>(objEffect2.FormKey, out var rec));
+                Assert.Equal(rec.FormKey, objEffect2.FormKey);
+            }
+            {
+                Assert.True(package.TryResolve<IObjectEffectGetter>(objEffect2.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             }
             if (ReadOnly)
@@ -389,6 +633,12 @@ namespace Mutagen.Bethesda.UnitTests
                 Assert.False(package.TryResolve<IObjectEffect>(objEffect2.FormKey, out var _));
                 Assert.False(package.TryResolve<IEffectRecord>(objEffect1.FormKey, out var _));
                 Assert.False(package.TryResolve<IEffectRecord>(objEffect2.FormKey, out var _));
+                Assert.False(package.TryResolve<ObjectEffect>(objEffect1.EditorID, out var _));
+                Assert.False(package.TryResolve<ObjectEffect>(objEffect2.EditorID, out var _));
+                Assert.False(package.TryResolve<IObjectEffect>(objEffect1.EditorID, out var _));
+                Assert.False(package.TryResolve<IObjectEffect>(objEffect2.EditorID, out var _));
+                Assert.False(package.TryResolve<IEffectRecord>(objEffect1.EditorID, out var _));
+                Assert.False(package.TryResolve<IEffectRecord>(objEffect2.EditorID, out var _));
             }
             else
             {
@@ -397,7 +647,15 @@ namespace Mutagen.Bethesda.UnitTests
                     Assert.Equal(rec.FormKey, objEffect1.FormKey);
                 }
                 {
+                    Assert.True(package.TryResolve<ObjectEffect>(objEffect1.EditorID, out var rec));
+                    Assert.Equal(rec.FormKey, objEffect1.FormKey);
+                }
+                {
                     Assert.True(package.TryResolve<ObjectEffect>(objEffect2.FormKey, out var rec));
+                    Assert.Equal(rec.FormKey, objEffect2.FormKey);
+                }
+                {
+                    Assert.True(package.TryResolve<ObjectEffect>(objEffect2.EditorID, out var rec));
                     Assert.Equal(rec.FormKey, objEffect2.FormKey);
                 }
                 {
@@ -405,7 +663,15 @@ namespace Mutagen.Bethesda.UnitTests
                     Assert.Equal(rec.FormKey, objEffect1.FormKey);
                 }
                 {
+                    Assert.True(package.TryResolve<IObjectEffect>(objEffect1.EditorID, out var rec));
+                    Assert.Equal(rec.FormKey, objEffect1.FormKey);
+                }
+                {
                     Assert.True(package.TryResolve<IObjectEffect>(objEffect2.FormKey, out var rec));
+                    Assert.Equal(rec.FormKey, objEffect2.FormKey);
+                }
+                {
+                    Assert.True(package.TryResolve<IObjectEffect>(objEffect2.EditorID, out var rec));
                     Assert.Equal(rec.FormKey, objEffect2.FormKey);
                 }
                 {
@@ -413,7 +679,15 @@ namespace Mutagen.Bethesda.UnitTests
                     Assert.Equal(rec.FormKey, objEffect1.FormKey);
                 }
                 {
+                    Assert.True(package.TryResolve<IEffectRecord>(objEffect1.EditorID, out var rec));
+                    Assert.Equal(rec.FormKey, objEffect1.FormKey);
+                }
+                {
                     Assert.True(package.TryResolve<IEffectRecord>(objEffect2.FormKey, out var rec));
+                    Assert.Equal(rec.FormKey, objEffect2.FormKey);
+                }
+                {
+                    Assert.True(package.TryResolve<IEffectRecord>(objEffect2.EditorID, out var rec));
                     Assert.Equal(rec.FormKey, objEffect2.FormKey);
                 }
             }
@@ -424,9 +698,9 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var prototype1 = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var prototype2 = new SkyrimMod(new ModKey("Dummy2", ModType.Master), SkyrimRelease.SkyrimLE);
-            var unoverriddenRec = prototype1.ObjectEffects.AddNew();
-            var overriddenRec = prototype1.ObjectEffects.AddNew();
-            var topModRec = prototype2.ObjectEffects.AddNew();
+            var unoverriddenRec = prototype1.ObjectEffects.AddNew("EditorID1");
+            var overriddenRec = prototype1.ObjectEffects.AddNew("EditorID2");
+            var topModRec = prototype2.ObjectEffects.AddNew("EditorID3");
             var overrideRec = (ObjectEffect)overriddenRec.DeepCopy();
             prototype2.ObjectEffects.RecordCache.Set(overrideRec);
             using var disp1 = ConvertMod(prototype1, out var mod1);
@@ -448,6 +722,12 @@ namespace Mutagen.Bethesda.UnitTests
                 Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
                 Assert.True(package.TryResolve<IEffectRecordGetter>(topModRec.FormKey, out rec));
                 Assert.Equal(rec.FormKey, topModRec.FormKey);
+                Assert.True(package.TryResolve<IEffectRecordGetter>(overriddenRec.EditorID, out rec));
+                Assert.Equal(rec.FormKey, overrideRec.FormKey);
+                Assert.True(package.TryResolve<IEffectRecordGetter>(unoverriddenRec.EditorID, out rec));
+                Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
+                Assert.True(package.TryResolve<IEffectRecordGetter>(topModRec.EditorID, out rec));
+                Assert.Equal(rec.FormKey, topModRec.FormKey);
             }
 
             {
@@ -457,6 +737,12 @@ namespace Mutagen.Bethesda.UnitTests
                 Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
                 Assert.True(package.TryResolve(topModRec.FormKey, out rec));
                 Assert.Equal(rec.FormKey, topModRec.FormKey);
+                Assert.True(package.TryResolve(overriddenRec.EditorID, out rec));
+                Assert.Equal(rec.FormKey, overrideRec.FormKey);
+                Assert.True(package.TryResolve(unoverriddenRec.EditorID, out rec));
+                Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
+                Assert.True(package.TryResolve(topModRec.EditorID, out rec));
+                Assert.Equal(rec.FormKey, topModRec.FormKey);
             }
             {
                 Assert.True(package.TryResolve<IMajorRecordCommonGetter>(overriddenRec.FormKey, out var rec));
@@ -464,6 +750,12 @@ namespace Mutagen.Bethesda.UnitTests
                 Assert.True(package.TryResolve<IMajorRecordCommonGetter>(unoverriddenRec.FormKey, out rec));
                 Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
                 Assert.True(package.TryResolve<IMajorRecordCommonGetter>(topModRec.FormKey, out rec));
+                Assert.Equal(rec.FormKey, topModRec.FormKey);
+                Assert.True(package.TryResolve<IMajorRecordCommonGetter>(overriddenRec.EditorID, out rec));
+                Assert.Equal(rec.FormKey, overrideRec.FormKey);
+                Assert.True(package.TryResolve<IMajorRecordCommonGetter>(unoverriddenRec.EditorID, out rec));
+                Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
+                Assert.True(package.TryResolve<IMajorRecordCommonGetter>(topModRec.EditorID, out rec));
                 Assert.Equal(rec.FormKey, topModRec.FormKey);
             }
             {
@@ -473,6 +765,12 @@ namespace Mutagen.Bethesda.UnitTests
                 Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
                 Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(topModRec.FormKey, out rec));
                 Assert.Equal(rec.FormKey, topModRec.FormKey);
+                Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(overriddenRec.EditorID, out rec));
+                Assert.Equal(rec.FormKey, overrideRec.FormKey);
+                Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(unoverriddenRec.EditorID, out rec));
+                Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
+                Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(topModRec.EditorID, out rec));
+                Assert.Equal(rec.FormKey, topModRec.FormKey);
             }
             {
                 Assert.True(package.TryResolve<IObjectEffectGetter>(overriddenRec.FormKey, out var rec));
@@ -480,6 +778,12 @@ namespace Mutagen.Bethesda.UnitTests
                 Assert.True(package.TryResolve<IObjectEffectGetter>(unoverriddenRec.FormKey, out rec));
                 Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
                 Assert.True(package.TryResolve<IObjectEffectGetter>(topModRec.FormKey, out rec));
+                Assert.Equal(rec.FormKey, topModRec.FormKey);
+                Assert.True(package.TryResolve<IObjectEffectGetter>(overriddenRec.EditorID, out rec));
+                Assert.Equal(rec.FormKey, overrideRec.FormKey);
+                Assert.True(package.TryResolve<IObjectEffectGetter>(unoverriddenRec.EditorID, out rec));
+                Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
+                Assert.True(package.TryResolve<IObjectEffectGetter>(topModRec.EditorID, out rec));
                 Assert.Equal(rec.FormKey, topModRec.FormKey);
             }
             if (ReadOnly)
@@ -493,6 +797,15 @@ namespace Mutagen.Bethesda.UnitTests
                 Assert.False(package.TryResolve<IEffectRecord>(overriddenRec.FormKey, out var _));
                 Assert.False(package.TryResolve<IEffectRecord>(unoverriddenRec.FormKey, out _));
                 Assert.False(package.TryResolve<IEffectRecord>(topModRec.FormKey, out _));
+                Assert.False(package.TryResolve<IObjectEffect>(overriddenRec.EditorID, out var _));
+                Assert.False(package.TryResolve<IObjectEffect>(unoverriddenRec.EditorID, out _));
+                Assert.False(package.TryResolve<IObjectEffect>(topModRec.EditorID, out _));
+                Assert.False(package.TryResolve<ObjectEffect>(overriddenRec.EditorID, out var _));
+                Assert.False(package.TryResolve<ObjectEffect>(unoverriddenRec.EditorID, out _));
+                Assert.False(package.TryResolve<ObjectEffect>(topModRec.EditorID, out _));
+                Assert.False(package.TryResolve<IEffectRecord>(overriddenRec.EditorID, out var _));
+                Assert.False(package.TryResolve<IEffectRecord>(unoverriddenRec.EditorID, out _));
+                Assert.False(package.TryResolve<IEffectRecord>(topModRec.EditorID, out _));
             }
             else
             {
@@ -503,6 +816,12 @@ namespace Mutagen.Bethesda.UnitTests
                     Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
                     Assert.True(package.TryResolve<IObjectEffect>(topModRec.FormKey, out rec));
                     Assert.Equal(rec.FormKey, topModRec.FormKey);
+                    Assert.True(package.TryResolve<IObjectEffect>(overriddenRec.EditorID, out rec));
+                    Assert.Equal(rec.FormKey, overrideRec.FormKey);
+                    Assert.True(package.TryResolve<IObjectEffect>(unoverriddenRec.EditorID, out rec));
+                    Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
+                    Assert.True(package.TryResolve<IObjectEffect>(topModRec.EditorID, out rec));
+                    Assert.Equal(rec.FormKey, topModRec.FormKey);
                 }
                 {
                     Assert.True(package.TryResolve<ObjectEffect>(overriddenRec.FormKey, out var rec));
@@ -511,6 +830,12 @@ namespace Mutagen.Bethesda.UnitTests
                     Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
                     Assert.True(package.TryResolve<ObjectEffect>(topModRec.FormKey, out rec));
                     Assert.Equal(rec.FormKey, topModRec.FormKey);
+                    Assert.True(package.TryResolve<ObjectEffect>(overriddenRec.EditorID, out rec));
+                    Assert.Equal(rec.FormKey, overrideRec.FormKey);
+                    Assert.True(package.TryResolve<ObjectEffect>(unoverriddenRec.EditorID, out rec));
+                    Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
+                    Assert.True(package.TryResolve<ObjectEffect>(topModRec.EditorID, out rec));
+                    Assert.Equal(rec.FormKey, topModRec.FormKey);
                 }
                 {
                     Assert.True(package.TryResolve<IEffectRecord>(overriddenRec.FormKey, out var rec));
@@ -518,6 +843,12 @@ namespace Mutagen.Bethesda.UnitTests
                     Assert.True(package.TryResolve<IEffectRecord>(unoverriddenRec.FormKey, out rec));
                     Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
                     Assert.True(package.TryResolve<IEffectRecord>(topModRec.FormKey, out rec));
+                    Assert.Equal(rec.FormKey, topModRec.FormKey);
+                    Assert.True(package.TryResolve<IEffectRecord>(overriddenRec.EditorID, out rec));
+                    Assert.Equal(rec.FormKey, overrideRec.FormKey);
+                    Assert.True(package.TryResolve<IEffectRecord>(unoverriddenRec.EditorID, out rec));
+                    Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
+                    Assert.True(package.TryResolve<IEffectRecord>(topModRec.EditorID, out rec));
                     Assert.Equal(rec.FormKey, topModRec.FormKey);
                 }
             }

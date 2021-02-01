@@ -22,9 +22,12 @@ namespace Mutagen.Bethesda
     public class ImmutableModLinkCache : ILinkCache
     {
         private readonly IModGetter _sourceMod;
+        private readonly GameCategory _category;
 
-        protected readonly Lazy<IReadOnlyCache<IMajorRecordCommonGetter, FormKey>> _untypedMajorRecords;
-        protected readonly Dictionary<Type, IReadOnlyCache<IMajorRecordCommonGetter, FormKey>> _majorRecords = new Dictionary<Type, IReadOnlyCache<IMajorRecordCommonGetter, FormKey>>();
+        protected readonly Lazy<IReadOnlyCache<IMajorRecordCommonGetter, FormKey>> _untypedFormKeyMajorRecords;
+        protected readonly Dictionary<Type, IReadOnlyCache<IMajorRecordCommonGetter, FormKey>> _majorFormKeyRecords = new Dictionary<Type, IReadOnlyCache<IMajorRecordCommonGetter, FormKey>>();
+        protected readonly Lazy<IReadOnlyCache<IMajorRecordCommonGetter, string>> _untypedEditorIdMajorRecords;
+        protected readonly Dictionary<Type, IReadOnlyCache<IMajorRecordCommonGetter, string>> _majorEditorIdRecords = new Dictionary<Type, IReadOnlyCache<IMajorRecordCommonGetter, string>>();
 
         /// <inheritdoc />
         public IReadOnlyList<IModGetter> ListedOrder { get; }
@@ -35,32 +38,53 @@ namespace Mutagen.Bethesda
         public ImmutableModLinkCache(IModGetter sourceMod)
         {
             _sourceMod = sourceMod;
-            this._untypedMajorRecords = new Lazy<IReadOnlyCache<IMajorRecordCommonGetter, FormKey>>(
+            _category = sourceMod.GameRelease.ToCategory();
+            this._untypedFormKeyMajorRecords = new Lazy<IReadOnlyCache<IMajorRecordCommonGetter, FormKey>>(
                 isThreadSafe: true,
-                valueFactory: () => ConstructCache());
+                valueFactory: () => ConstructUntypedFormKeyCache());
+            this._untypedEditorIdMajorRecords = new Lazy<IReadOnlyCache<IMajorRecordCommonGetter, string>>(
+                isThreadSafe: true,
+                valueFactory: () => ConstructUntypedEditorIdCache());
             this.ListedOrder = new List<IModGetter>()
             {
                 sourceMod
             };
         }
 
-        protected IReadOnlyCache<IMajorRecordCommonGetter, FormKey> ConstructCache(Type type)
+        protected static IReadOnlyCache<IMajorRecordCommonGetter, K> ConstructCache<K>(
+            Type type,
+            IModGetter sourceMod,
+            Func<IMajorRecordCommonGetter, TryGet<K>> keyGetter)
+            where K : notnull
         {
-            var cache = new Cache<IMajorRecordCommonGetter, FormKey>(x => x.FormKey);
+            var cache = new Cache<IMajorRecordCommonGetter, K>(x => keyGetter(x).Value);
             // ToDo
             // Upgrade to call EnumerateGroups(), which will perform much better
-            foreach (var majorRec in this._sourceMod.EnumerateMajorRecords(type))
+            foreach (var majorRec in sourceMod.EnumerateMajorRecords(type))
             {
+                var key = keyGetter(majorRec);
+                if (key.Failed) continue;
                 cache.Set(majorRec);
             }
             return cache;
         }
 
-        protected IReadOnlyCache<IMajorRecordCommonGetter, FormKey> ConstructCache()
+        protected IReadOnlyCache<IMajorRecordCommonGetter, FormKey> ConstructUntypedFormKeyCache()
         {
             var majorRecords = new Cache<IMajorRecordCommonGetter, FormKey>(x => x.FormKey);
             foreach (var majorRec in this._sourceMod.EnumerateMajorRecords())
             {
+                majorRecords.Set(majorRec);
+            }
+            return majorRecords;
+        }
+
+        protected IReadOnlyCache<IMajorRecordCommonGetter, string> ConstructUntypedEditorIdCache()
+        {
+            var majorRecords = new Cache<IMajorRecordCommonGetter, string>(x => x.EditorID!);
+            foreach (var majorRec in this._sourceMod.EnumerateMajorRecords())
+            {
+                if (majorRec.EditorID.IsNullOrWhitespace()) continue;
                 majorRecords.Set(majorRec);
             }
             return majorRecords;
@@ -71,29 +95,66 @@ namespace Mutagen.Bethesda
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
         public bool TryResolve(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
         {
-            if (formKey == null)
+            if (formKey.IsNull)
             {
                 majorRec = default;
                 return false;
             }
-            return _untypedMajorRecords.Value.TryGetValue(formKey, out majorRec);
+            return _untypedFormKeyMajorRecords.Value.TryGetValue(formKey, out majorRec);
+        }
+
+
+        /// <inheritdoc />
+        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
+        public bool TryResolve(string editorId, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
+        {
+            if (string.IsNullOrWhiteSpace(editorId))
+            {
+                majorRec = default;
+                return false;
+            }
+            return _untypedEditorIdMajorRecords.Value.TryGetValue(editorId, out majorRec);
         }
 
         /// <inheritdoc />
         public bool TryResolve<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out TMajor majorRec)
             where TMajor : class, IMajorRecordCommonGetter
         {
-            if (formKey == null)
+            if (formKey.IsNull)
             {
                 majorRec = default;
                 return false;
             }
-            IReadOnlyCache<IMajorRecordCommonGetter, FormKey> cache;
-            lock (_majorRecords)
-            {
-                cache = GetCache(typeof(TMajor));
-            }
+            var cache = GetCache(typeof(TMajor), _category, _sourceMod, x => TryGet<FormKey>.Succeed(x.FormKey), _majorFormKeyRecords);
             if (!cache.TryGetValue(formKey, out var majorRecObj))
+            {
+                majorRec = default;
+                return false;
+            }
+            majorRec = (majorRecObj as TMajor)!;
+            return majorRec != null;
+        }
+
+        /// <inheritdoc />
+        public bool TryResolve<TMajor>(string editorId, [MaybeNullWhen(false)] out TMajor majorRec)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            if (string.IsNullOrWhiteSpace(editorId))
+            {
+                majorRec = default;
+                return false;
+            }
+            var cache = GetCache(
+                typeof(TMajor),
+                _category,
+                _sourceMod,
+                m =>
+                {
+                    var edid = m.EditorID;
+                    return TryGet<string>.Create(successful: !string.IsNullOrWhiteSpace(edid), edid!);
+                },
+                _majorEditorIdRecords);
+            if (!cache.TryGetValue(editorId, out var majorRecObj))
             {
                 majorRec = default;
                 return false;
@@ -105,17 +166,39 @@ namespace Mutagen.Bethesda
         /// <inheritdoc />
         public bool TryResolve(FormKey formKey, Type type, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
         {
-            if (formKey == null)
+            if (formKey.IsNull)
             {
                 majorRec = default;
                 return false;
             }
-            IReadOnlyCache<IMajorRecordCommonGetter, FormKey> cache;
-            lock (_majorRecords)
-            {
-                cache = GetCache(type);
-            }
+            var cache = GetCache(type, _category, _sourceMod, x => TryGet<FormKey>.Succeed(x.FormKey), _majorFormKeyRecords);
             if (!cache.TryGetValue(formKey, out majorRec))
+            {
+                majorRec = default;
+                return false;
+            }
+            return true;
+        }
+
+        /// <inheritdoc />
+        public bool TryResolve(string editorId, Type type, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
+        {
+            if (editorId.IsNullOrWhitespace())
+            {
+                majorRec = default;
+                return false;
+            }
+            var cache = GetCache(
+                type,
+                _category,
+                _sourceMod,
+                m =>
+                {
+                    var edid = m.EditorID;
+                    return TryGet<string>.Create(successful: !string.IsNullOrWhiteSpace(edid), edid!);
+                },
+                _majorEditorIdRecords);
+            if (!cache.TryGetValue(editorId, out majorRec))
             {
                 majorRec = default;
                 return false;
@@ -132,10 +215,25 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
+        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
+        public IMajorRecordCommonGetter Resolve(string editorId)
+        {
+            if (TryResolve<IMajorRecordCommonGetter>(editorId, out var majorRec)) return majorRec;
+            throw new KeyNotFoundException($"EditorID {editorId} could not be found.");
+        }
+
+        /// <inheritdoc />
         public IMajorRecordCommonGetter Resolve(FormKey formKey, Type type)
         {
             if (TryResolve(formKey, type, out var commonRec)) return commonRec;
             throw new KeyNotFoundException($"FormKey {formKey} could not be found.");
+        }
+
+        /// <inheritdoc />
+        public IMajorRecordCommonGetter Resolve(string editorId, Type type)
+        {
+            if (TryResolve(editorId, type, out var commonRec)) return commonRec;
+            throw new KeyNotFoundException($"EditorID {editorId} could not be found.");
         }
 
         /// <inheritdoc />
@@ -146,49 +244,72 @@ namespace Mutagen.Bethesda
             throw new KeyNotFoundException($"FormKey {formKey} could not be found.");
         }
 
-        private IReadOnlyCache<IMajorRecordCommonGetter, FormKey> GetCache(Type type)
+        /// <inheritdoc />
+        public TMajor Resolve<TMajor>(string editorId)
+            where TMajor : class, IMajorRecordCommonGetter
         {
-            if (!_majorRecords.TryGetValue(type, out var cache))
+            if (TryResolve<TMajor>(editorId, out var commonRec)) return commonRec;
+            throw new KeyNotFoundException($"EditorID {editorId} could not be found.");
+        }
+
+        private static IReadOnlyCache<IMajorRecordCommonGetter, K> GetCache<K>(
+            Type type,
+            GameCategory category,
+            IModGetter sourceMod,
+            Func<IMajorRecordCommonGetter, TryGet<K>> keyGetter,
+            Dictionary<Type, IReadOnlyCache<IMajorRecordCommonGetter, K>> typeCache)
+            where K : notnull
+        {
+            lock (typeCache)
             {
-                if (type.Equals(typeof(IMajorRecordCommon))
-                    || type.Equals(typeof(IMajorRecordCommonGetter)))
+                if (!typeCache.TryGetValue(type, out var cache))
                 {
-                    cache = ConstructCache(type);
-                    _majorRecords[typeof(IMajorRecordCommon)] = cache;
-                    _majorRecords[typeof(IMajorRecordCommonGetter)] = cache;
+                    if (type.Equals(typeof(IMajorRecordCommon))
+                        || type.Equals(typeof(IMajorRecordCommonGetter)))
+                    {
+                        cache = ConstructCache(type, sourceMod, keyGetter);
+                        typeCache[typeof(IMajorRecordCommon)] = cache;
+                        typeCache[typeof(IMajorRecordCommonGetter)] = cache;
+                    }
+                    else if (LoquiRegistration.TryGetRegister(type, out var registration))
+                    {
+                        cache = ConstructCache(type, sourceMod, keyGetter);
+                        typeCache[registration.ClassType] = cache;
+                        typeCache[registration.GetterType] = cache;
+                        typeCache[registration.SetterType] = cache;
+                        if (registration.InternalGetterType != null)
+                        {
+                            typeCache[registration.InternalGetterType] = cache;
+                        }
+                        if (registration.InternalSetterType != null)
+                        {
+                            typeCache[registration.InternalSetterType] = cache;
+                        }
+                    }
+                    else
+                    {
+                        var interfaceMappings = LinkInterfaceMapping.InterfaceToObjectTypes(category);
+                        if (!interfaceMappings.TryGetValue(type, out var objs))
+                        {
+                            throw new ArgumentException($"A lookup was queried for an unregistered type: {type.Name}");
+                        }
+                        var majorRecords = new Cache<IMajorRecordCommonGetter, K>(x => keyGetter(x).Value);
+                        foreach (var objType in objs)
+                        {
+                            majorRecords.Set(
+                                GetCache<K>(
+                                    type: LoquiRegistration.GetRegister(objType).GetterType,
+                                    category: category,
+                                    typeCache: typeCache,
+                                    keyGetter: keyGetter,
+                                    sourceMod: sourceMod).Items);
+                        }
+                        typeCache[type] = majorRecords;
+                        cache = majorRecords;
+                    }
                 }
-                else if (LoquiRegistration.TryGetRegister(type, out var registration))
-                {
-                    cache = ConstructCache(type);
-                    _majorRecords[registration.ClassType] = cache;
-                    _majorRecords[registration.GetterType] = cache;
-                    _majorRecords[registration.SetterType] = cache;
-                    if (registration.InternalGetterType != null)
-                    {
-                        _majorRecords[registration.InternalGetterType] = cache;
-                    }
-                    if (registration.InternalSetterType != null)
-                    {
-                        _majorRecords[registration.InternalSetterType] = cache;
-                    }
-                }
-                else
-                {
-                    var interfaceMappings = LinkInterfaceMapping.InterfaceToObjectTypes(_sourceMod.GameRelease.ToCategory());
-                    if (!interfaceMappings.TryGetValue(type, out var objs))
-                    {
-                        throw new ArgumentException($"A lookup was queried for an unregistered type: {type.Name}");
-                    }
-                    var majorRecords = new Cache<IMajorRecordCommonGetter, FormKey>(x => x.FormKey);
-                    foreach (var objType in objs)
-                    {
-                        majorRecords.Set(GetCache(LoquiRegistration.GetRegister(objType).GetterType).Items);
-                    }
-                    _majorRecords[type] = majorRecords;
-                    cache = majorRecords;
-                }
+                return cache;
             }
-            return cache;
         }
 
         /// <inheritdoc />
@@ -202,9 +323,28 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
+        public IEnumerable<TMajor> ResolveAll<TMajor>(string editorId)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            if (TryResolve<TMajor>(editorId, out var rec))
+            {
+                yield return rec;
+            }
+        }
+
+        /// <inheritdoc />
         public IEnumerable<IMajorRecordCommonGetter> ResolveAll(FormKey formKey, Type type)
         {
             if (TryResolve(formKey, type, out var rec))
+            {
+                yield return rec;
+            }
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<IMajorRecordCommonGetter> ResolveAll(string editorId, Type type)
+        {
+            if (TryResolve(editorId, type, out var rec))
             {
                 yield return rec;
             }
@@ -221,9 +361,25 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
+        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
+        public IEnumerable<IMajorRecordCommonGetter> ResolveAll(string editorId)
+        {
+            if (TryResolve(editorId, out var rec))
+            {
+                yield return rec;
+            }
+        }
+
+        /// <inheritdoc />
         public bool TryResolve(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec, params Type[] types)
         {
             return TryResolve(formKey, (IEnumerable<Type>)types, out majorRec);
+        }
+
+        /// <inheritdoc />
+        public bool TryResolve(string editorId, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec, params Type[] types)
+        {
+            return TryResolve(editorId, (IEnumerable<Type>)types, out majorRec);
         }
 
         /// <inheritdoc />
@@ -241,9 +397,29 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
+        public bool TryResolve(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
+        {
+            foreach (var type in types)
+            {
+                if (TryResolve(editorId, type, out majorRec))
+                {
+                    return true;
+                }
+            }
+            majorRec = default;
+            return false;
+        }
+
+        /// <inheritdoc />
         public IMajorRecordCommonGetter Resolve(FormKey formKey, params Type[] types)
         {
             return Resolve(formKey, (IEnumerable<Type>)types);
+        }
+
+        /// <inheritdoc />
+        public IMajorRecordCommonGetter Resolve(string editorId, params Type[] types)
+        {
+            return Resolve(editorId, (IEnumerable<Type>)types);
         }
 
         /// <inheritdoc />
@@ -251,6 +427,13 @@ namespace Mutagen.Bethesda
         {
             if (TryResolve(formKey, types, out var commonRec)) return commonRec;
             throw new KeyNotFoundException($"FormKey {formKey} could not be found.");
+        }
+
+        /// <inheritdoc />
+        public IMajorRecordCommonGetter Resolve(string editorId, IEnumerable<Type> types)
+        {
+            if (TryResolve(editorId, types, out var commonRec)) return commonRec;
+            throw new KeyNotFoundException($"EditorID {editorId} could not be found.");
         }
     }
 
@@ -270,9 +453,12 @@ namespace Mutagen.Bethesda
     {
         private readonly TModGetter _sourceMod;
 
-        private readonly Lazy<IReadOnlyCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>, FormKey>> _untypedContexts;
-        private readonly Dictionary<Type, IReadOnlyCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>, FormKey>> _contexts = new Dictionary<Type, IReadOnlyCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>, FormKey>>();
-
+        private readonly Lazy<IReadOnlyCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>, FormKey>> _untypedFormKeyContexts;
+        private readonly Dictionary<Type, IReadOnlyCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>, FormKey>> _formKeyContexts
+            = new Dictionary<Type, IReadOnlyCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>, FormKey>>();
+        private readonly Lazy<IReadOnlyCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>, string>> _untypedEditorIdContexts;
+        private readonly Dictionary<Type, IReadOnlyCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>, string>> _editorIdContexts
+            = new Dictionary<Type, IReadOnlyCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>, string>>();
 
         /// <summary>
         /// Constructs a link cache around a target mod
@@ -282,21 +468,40 @@ namespace Mutagen.Bethesda
             : base(sourceMod)
         {
             this._sourceMod = sourceMod;
-            this._untypedContexts = new Lazy<IReadOnlyCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>, FormKey>>(
+            this._untypedFormKeyContexts = new Lazy<IReadOnlyCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>, FormKey>>(
                 isThreadSafe: true,
-                valueFactory: () => ConstructContextCache());
+                valueFactory: () => ConstructUntypedContextCache(x => TryGet<FormKey>.Succeed(x.FormKey)));
+            this._untypedEditorIdContexts = new Lazy<IReadOnlyCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>, string>>(
+                isThreadSafe: true,
+                valueFactory: () => ConstructUntypedContextCache(m =>
+                {
+                    var edid = m.EditorID;
+                    return TryGet<string>.Create(successful: !string.IsNullOrWhiteSpace(edid), edid!);
+                }));
         }
 
         /// <inheritdoc />
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
         public bool TryResolveContext(FormKey formKey, [MaybeNullWhen(false)] out IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec)
         {
-            if (formKey == null)
+            if (formKey.IsNull)
             {
                 majorRec = default;
                 return false;
             }
-            return _untypedContexts.Value.TryGetValue(formKey, out majorRec);
+            return _untypedFormKeyContexts.Value.TryGetValue(formKey, out majorRec);
+        }
+
+        /// <inheritdoc />
+        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
+        public bool TryResolveContext(string editorId, [MaybeNullWhen(false)] out IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec)
+        {
+            if (editorId.IsNullOrWhitespace())
+            {
+                majorRec = default;
+                return false;
+            }
+            return _untypedEditorIdContexts.Value.TryGetValue(editorId, out majorRec);
         }
 
         /// <inheritdoc />
@@ -304,17 +509,48 @@ namespace Mutagen.Bethesda
             where TMajorSetter : class, IMajorRecordCommon, TMajorGetter
             where TMajorGetter : class, IMajorRecordCommonGetter
         {
-            if (formKey == null)
+            if (formKey.IsNull)
             {
                 majorRec = default;
                 return false;
             }
-            IReadOnlyCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>, FormKey> cache;
-            lock (_contexts)
-            {
-                cache = GetContextCache(typeof(TMajorGetter));
-            }
+            var cache = GetContextCache(
+                typeof(TMajorGetter),
+                sourceMod: _sourceMod,
+                linkCache: this,
+                keyGetter: m => TryGet<FormKey>.Succeed(m.FormKey),
+                typedContexts: _formKeyContexts);
             if (!cache.TryGetValue(formKey, out var majorRecObj)
+                || !(majorRecObj.Record is TMajorGetter))
+            {
+                majorRec = default;
+                return false;
+            }
+            majorRec = majorRecObj.AsType<TMod, IMajorRecordCommon, IMajorRecordCommonGetter, TMajorSetter, TMajorGetter>();
+            return true;
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveContext<TMajorSetter, TMajorGetter>(string editorId, [MaybeNullWhen(false)] out IModContext<TMod, TMajorSetter, TMajorGetter> majorRec)
+            where TMajorSetter : class, IMajorRecordCommon, TMajorGetter
+            where TMajorGetter : class, IMajorRecordCommonGetter
+        {
+            if (editorId.IsNullOrWhitespace())
+            {
+                majorRec = default;
+                return false;
+            }
+            var cache = GetContextCache(
+                typeof(TMajorGetter),
+                sourceMod: _sourceMod,
+                linkCache: this,
+                keyGetter: m =>
+                {
+                    var edid = m.EditorID;
+                    return TryGet<string>.Create(successful: !string.IsNullOrWhiteSpace(edid), edid!);
+                },
+                typedContexts: _editorIdContexts);
+            if (!cache.TryGetValue(editorId, out var majorRecObj)
                 || !(majorRecObj.Record is TMajorGetter))
             {
                 majorRec = default;
@@ -327,17 +563,44 @@ namespace Mutagen.Bethesda
         /// <inheritdoc />
         public bool TryResolveContext(FormKey formKey, Type type, [MaybeNullWhen(false)] out IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec)
         {
-            if (formKey == null)
+            if (formKey.IsNull)
             {
                 majorRec = default;
                 return false;
             }
-            IReadOnlyCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>, FormKey> cache;
-            lock (_contexts)
-            {
-                cache = GetContextCache(type);
-            }
+            var cache = GetContextCache(
+                type,
+                sourceMod: _sourceMod,
+                linkCache: this,
+                keyGetter: m => TryGet<FormKey>.Succeed(m.FormKey),
+                typedContexts: _formKeyContexts);
             if (!cache.TryGetValue(formKey, out majorRec))
+            {
+                majorRec = default;
+                return false;
+            }
+            return true;
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveContext(string editorId, Type type, [MaybeNullWhen(false)] out IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec)
+        {
+            if (editorId.IsNullOrWhitespace())
+            {
+                majorRec = default;
+                return false;
+            }
+            var cache = GetContextCache(
+                type,
+                sourceMod: _sourceMod,
+                linkCache: this,
+                keyGetter: m =>
+                {
+                    var edid = m.EditorID;
+                    return TryGet<string>.Create(successful: !string.IsNullOrWhiteSpace(edid), edid!);
+                },
+                typedContexts: _editorIdContexts);
+            if (!cache.TryGetValue(editorId, out majorRec))
             {
                 majorRec = default;
                 return false;
@@ -354,10 +617,25 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
+        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
+        public IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(string editorId)
+        {
+            if (TryResolveContext<IMajorRecordCommon, IMajorRecordCommonGetter>(editorId, out var majorRec)) return majorRec;
+            throw new KeyNotFoundException($"EditorID {editorId} could not be found.");
+        }
+
+        /// <inheritdoc />
         public IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(FormKey formKey, Type type)
         {
             if (TryResolveContext(formKey, type, out var commonRec)) return commonRec;
             throw new KeyNotFoundException($"FormKey {formKey} could not be found.");
+        }
+
+        /// <inheritdoc />
+        public IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(string editorId, Type type)
+        {
+            if (TryResolveContext(editorId, type, out var commonRec)) return commonRec;
+            throw new KeyNotFoundException($"EditorID {editorId} could not be found.");
         }
 
         /// <inheritdoc />
@@ -369,68 +647,102 @@ namespace Mutagen.Bethesda
             throw new KeyNotFoundException($"FormKey {formKey} could not be found.");
         }
 
-        private IReadOnlyCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>, FormKey> GetContextCache(Type type)
+        /// <inheritdoc />
+        public IModContext<TMod, TMajorSetter, TMajorGetter> ResolveContext<TMajorSetter, TMajorGetter>(string editorId)
+            where TMajorSetter : class, IMajorRecordCommon, TMajorGetter
+            where TMajorGetter : class, IMajorRecordCommonGetter
         {
-            if (!_contexts.TryGetValue(type, out var cache))
-            {
-                if (type.Equals(typeof(IMajorRecordCommon))
-                    || type.Equals(typeof(IMajorRecordCommonGetter)))
-                {
-                    cache = ConstructContextCache(type);
-                    _contexts[typeof(IMajorRecordCommon)] = cache;
-                    _contexts[typeof(IMajorRecordCommonGetter)] = cache;
-                }
-                else if (LoquiRegistration.TryGetRegister(type, out var registration))
-                {
-                    cache = ConstructContextCache(type);
-                    _contexts[registration.ClassType] = cache;
-                    _contexts[registration.GetterType] = cache;
-                    _contexts[registration.SetterType] = cache;
-                    if (registration.InternalGetterType != null)
-                    {
-                        _contexts[registration.InternalGetterType] = cache;
-                    }
-                    if (registration.InternalSetterType != null)
-                    {
-                        _contexts[registration.InternalSetterType] = cache;
-                    }
-                }
-                else
-                {
-                    var interfaceMappings = LinkInterfaceMapping.InterfaceToObjectTypes(_sourceMod.GameRelease.ToCategory());
-                    if (!interfaceMappings.TryGetValue(type, out var objs))
-                    {
-                        throw new ArgumentException($"A lookup was queried for an unregistered type: {type.Name}");
-                    }
-                    var majorRecords = new Cache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>, FormKey>(x => x.Record.FormKey);
-                    foreach (var objType in objs)
-                    {
-                        majorRecords.Set(GetContextCache(LoquiRegistration.GetRegister(objType).GetterType).Items);
-                    }
-                    _contexts[type] = majorRecords;
-                    cache = majorRecords;
-                }
-            }
-            return cache;
+            if (TryResolveContext<TMajorSetter, TMajorGetter>(editorId, out var commonRec)) return commonRec;
+            throw new KeyNotFoundException($"EditorID {editorId} could not be found.");
         }
 
-        private IReadOnlyCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>, FormKey> ConstructContextCache(Type type)
+        private static IReadOnlyCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>, K> GetContextCache<K>(
+            Type type,
+            TModGetter sourceMod,
+            ILinkCache linkCache,
+            Func<IMajorRecordCommonGetter, TryGet<K>> keyGetter,
+            Dictionary<Type, IReadOnlyCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>, K>> typedContexts)
+            where K : notnull
         {
-            var cache = new Cache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>, FormKey>(x => x.Record.FormKey);
+            lock (typedContexts)
+            {
+                if (!typedContexts.TryGetValue(type, out var cache))
+                {
+                    if (type.Equals(typeof(IMajorRecordCommon))
+                        || type.Equals(typeof(IMajorRecordCommonGetter)))
+                    {
+                        cache = ConstructContextCache(type, sourceMod, linkCache, keyGetter);
+                        typedContexts[typeof(IMajorRecordCommon)] = cache;
+                        typedContexts[typeof(IMajorRecordCommonGetter)] = cache;
+                    }
+                    else if (LoquiRegistration.TryGetRegister(type, out var registration))
+                    {
+                        cache = ConstructContextCache(type, sourceMod, linkCache, keyGetter);
+                        typedContexts[registration.ClassType] = cache;
+                        typedContexts[registration.GetterType] = cache;
+                        typedContexts[registration.SetterType] = cache;
+                        if (registration.InternalGetterType != null)
+                        {
+                            typedContexts[registration.InternalGetterType] = cache;
+                        }
+                        if (registration.InternalSetterType != null)
+                        {
+                            typedContexts[registration.InternalSetterType] = cache;
+                        }
+                    }
+                    else
+                    {
+                        var interfaceMappings = LinkInterfaceMapping.InterfaceToObjectTypes(sourceMod.GameRelease.ToCategory());
+                        if (!interfaceMappings.TryGetValue(type, out var objs))
+                        {
+                            throw new ArgumentException($"A lookup was queried for an unregistered type: {type.Name}");
+                        }
+                        var majorRecords = new Cache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>, K>(x => keyGetter(x.Record).Value);
+                        foreach (var objType in objs)
+                        {
+                            majorRecords.Set(
+                                GetContextCache(
+                                    LoquiRegistration.GetRegister(objType).GetterType,
+                                    sourceMod: sourceMod,
+                                    linkCache: linkCache,
+                                    keyGetter: keyGetter,
+                                    typedContexts: typedContexts).Items);
+                        }
+                        typedContexts[type] = majorRecords;
+                        cache = majorRecords;
+                    }
+                }
+                return cache;
+            }
+        }
+
+        private static IReadOnlyCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>, K> ConstructContextCache<K>(
+            Type type,
+            TModGetter sourceMod,
+            ILinkCache linkCache,
+            Func<IMajorRecordCommonGetter, TryGet<K>> keyGetter)
+            where K : notnull
+        {
+            var cache = new Cache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>, K>(x => keyGetter(x.Record).Value);
             // ToDo
             // Upgrade to call EnumerateGroups(), which will perform much better
-            foreach (var majorRec in this._sourceMod.EnumerateMajorRecordContexts(this, type))
+            foreach (var majorRec in sourceMod.EnumerateMajorRecordContexts(linkCache, type))
             {
+                var key = keyGetter(majorRec.Record);
+                if (key.Failed) continue;
                 cache.Set(majorRec);
             }
             return cache;
         }
 
-        private IReadOnlyCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>, FormKey> ConstructContextCache()
+        private IReadOnlyCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>, K> ConstructUntypedContextCache<K>(Func<IMajorRecordCommonGetter, TryGet<K>> keyGetter)
+            where K : notnull
         {
-            var majorRecords = new Cache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>, FormKey>(x => x.Record.FormKey);
+            var majorRecords = new Cache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>, K>(x => keyGetter(x.Record).Value);
             foreach (var majorRec in this._sourceMod.EnumerateMajorRecordContexts<IMajorRecordCommon, IMajorRecordCommonGetter>(this))
             {
+                var key = keyGetter(majorRec.Record);
+                if (key.Failed) continue;
                 majorRecords.Set(majorRec);
             }
             return majorRecords;
@@ -448,9 +760,29 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
+        public IEnumerable<IModContext<TMod, TMajorSetter, TMajorGetter>> ResolveAllContexts<TMajorSetter, TMajorGetter>(string editorId)
+            where TMajorSetter : class, IMajorRecordCommon, TMajorGetter
+            where TMajorGetter : class, IMajorRecordCommonGetter
+        {
+            if (TryResolveContext<TMajorSetter, TMajorGetter>(editorId, out var rec))
+            {
+                yield return rec;
+            }
+        }
+
+        /// <inheritdoc />
         public IEnumerable<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(FormKey formKey, Type type)
         {
             if (TryResolveContext(formKey, type, out var rec))
+            {
+                yield return rec;
+            }
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(string editorId, Type type)
+        {
+            if (TryResolveContext(editorId, type, out var rec))
             {
                 yield return rec;
             }
@@ -461,6 +793,16 @@ namespace Mutagen.Bethesda
         public IEnumerable<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(FormKey formKey)
         {
             if (TryResolveContext(formKey, out var rec))
+            {
+                yield return rec;
+            }
+        }
+
+        /// <inheritdoc />
+        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
+        public IEnumerable<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(string editorId)
+        {
+            if (TryResolveContext(editorId, out var rec))
             {
                 yield return rec;
             }
