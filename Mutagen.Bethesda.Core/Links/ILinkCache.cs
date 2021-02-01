@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda
         /// <param name="type">The type of Major Record to look up</param>
         /// <param name="majorRec">Out parameter containing the record if successful</param>
         /// <exception cref="ArgumentException">
-        /// An unexpected TMajor type will throw an exception.<br/>
+        /// An unexpected type will throw an exception.<br/>
         /// Unexpected types include:<br/>
         ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
         ///   - A setter type is requested from a getter only object.
@@ -61,8 +61,46 @@ namespace Mutagen.Bethesda
         /// <returns>True if a matching record was found</returns>
         bool TryResolve(FormKey formKey, Type type, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec);
 
+        /// <summary>
+        /// Retrieves the record that matches the FormKey relative to the source the package was attached to.<br/>
+        /// <br/>
+        /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
+        /// the function will return false. <br />
+        /// <br />
+        /// NOTE: <br />
+        /// In the case of two records existing with the same target FormKey of different types exist, the first found to match will be returned.
+        /// </summary>
+        /// <param name="formKey">FormKey to look for</param>
+        /// <param name="types">The types of Major Record to look up</param>
+        /// <param name="majorRec">Out parameter containing the record if successful</param>
+        /// <exception cref="ArgumentException">
+        /// An unexpected type will throw an exception.<br/>
+        /// Unexpected types include:<br/>
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
+        /// <returns>True if a matching record was found</returns>
         bool TryResolve(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec, params Type[] types);
 
+        /// <summary>
+        /// Retrieves the record that matches the FormKey relative to the source the package was attached to.<br/>
+        /// <br/>
+        /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
+        /// the function will return false. <br />
+        /// <br />
+        /// NOTE: <br />
+        /// In the case of two records existing with the same target FormKey of different types exist, the first found to match will be returned.
+        /// </summary>
+        /// <param name="formKey">FormKey to look for</param>
+        /// <param name="types">The types of Major Record to look up</param>
+        /// <param name="majorRec">Out parameter containing the record if successful</param>
+        /// <exception cref="ArgumentException">
+        /// An unexpected type will throw an exception.<br/>
+        /// Unexpected types include:<br/>
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
+        /// <returns>True if a matching record was found</returns>
         bool TryResolve(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec);
 
         /// <summary>
@@ -90,7 +128,7 @@ namespace Mutagen.Bethesda
         /// <param name="formKey">FormKey to look for</param>
         /// <param name="type">The type of Major Record to look up</param>
         /// <exception cref="ArgumentException">
-        /// An unexpected TMajor type will throw an exception.<br/>
+        /// An unexpected type will throw an exception.<br/>
         /// Unexpected types include:<br/>
         ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
         ///   - A setter type is requested from a getter only object.
@@ -101,9 +139,48 @@ namespace Mutagen.Bethesda
         /// </exception>
         IMajorRecordCommonGetter Resolve(FormKey formKey, Type type);
 
-
+        /// <summary>
+        /// Retrieves the record that matches the FormKey relative to the source the package was attached to.<br/>
+        /// <br/>
+        /// If a record exists that matches the FormKey, but does not inherit from one of the given types, it will be seen as not a match.<br />
+        /// <br />
+        /// NOTE: <br />
+        /// In the case of two records existing with the same target FormKey of different types exist, the first found to match will be returned.
+        /// </summary>
+        /// <param name="formKey">FormKey to look for</param>
+        /// <param name="types">The types of Major Record to look up</param>
+        /// <exception cref="ArgumentException">
+        /// An unexpected type will throw an exception.<br/>
+        /// Unexpected types include:<br/>
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
+        /// <returns>Matching record</returns>
+        /// <exception cref="KeyNotFoundException">
+        /// When the FormKey having the specified Major Record type cannot be found under the attached cache.<br/>
+        /// </exception>
         IMajorRecordCommonGetter Resolve(FormKey formKey, params Type[] types);
 
+        /// <summary>
+        /// Retrieves the record that matches the FormKey relative to the source the package was attached to.<br/>
+        /// <br/>
+        /// If a record exists that matches the FormKey, but does not inherit from one of the given types, it will be seen as not a match.<br />
+        /// <br />
+        /// NOTE: <br />
+        /// In the case of two records existing with the same target FormKey of different types exist, the first found to match will be returned.
+        /// </summary>
+        /// <param name="formKey">FormKey to look for</param>
+        /// <param name="types">The types of Major Record to look up</param>
+        /// <exception cref="ArgumentException">
+        /// An unexpected type will throw an exception.<br/>
+        /// Unexpected types include:<br/>
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
+        /// <returns>Matching record</returns>
+        /// <exception cref="KeyNotFoundException">
+        /// When the FormKey having the specified Major Record type cannot be found under the attached cache.<br/>
+        /// </exception>
         IMajorRecordCommonGetter Resolve(FormKey formKey, IEnumerable<Type> types);
 
         /// <summary>
