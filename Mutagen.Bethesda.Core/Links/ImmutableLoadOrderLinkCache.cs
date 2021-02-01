@@ -30,8 +30,10 @@ namespace Mutagen.Bethesda
 
         private readonly IReadOnlyList<IModGetter> _listedOrder;
         private readonly IReadOnlyList<IModGetter> _priorityOrder;
-        private readonly Dictionary<Type, DepthCache<IMajorRecordCommonGetter>> _winningRecords = new Dictionary<Type, DepthCache<IMajorRecordCommonGetter>>();
-        private readonly Dictionary<Type, DepthCache<ImmutableList<IMajorRecordCommonGetter>>> _allRecords = new Dictionary<Type, DepthCache<ImmutableList<IMajorRecordCommonGetter>>>();
+        private readonly Dictionary<Type, DepthCache<FormKey, IMajorRecordCommonGetter>> _winningFormKeyRecords
+            = new Dictionary<Type, DepthCache<FormKey, IMajorRecordCommonGetter>>();
+        private readonly Dictionary<Type, DepthCache<FormKey, ImmutableList<IMajorRecordCommonGetter>>> _allFormKeyRecords 
+            = new Dictionary<Type, DepthCache<FormKey, ImmutableList<IMajorRecordCommonGetter>>>();
         protected readonly IReadOnlyDictionary<Type, Type[]> _linkInterfaces;
 
         /// <inheritdoc />
@@ -52,7 +54,8 @@ namespace Mutagen.Bethesda
             this._linkInterfaces = LinkInterfaceMapping.InterfaceToObjectTypes(_gameCategory);
         }
 
-        internal bool ShouldStopQuery<T>(FormKey targetKey, DepthCache<T> cache)
+        internal bool ShouldStopQuery<K, T>(FormKey targetKey, DepthCache<K, T> cache)
+            where K : notnull
         {
             if (cache.Depth >= this._listedOrder.Count)
             {
@@ -104,31 +107,31 @@ namespace Mutagen.Bethesda
                 return false;
             }
 
-            DepthCache<IMajorRecordCommonGetter>? cache;
-            lock (this._winningRecords)
+            DepthCache<FormKey, IMajorRecordCommonGetter>? cache;
+            lock (this._winningFormKeyRecords)
             {
                 // Get cache object by type
-                if (!this._winningRecords.TryGetValue(type, out cache))
+                if (!this._winningFormKeyRecords.TryGetValue(type, out cache))
                 {
-                    cache = new DepthCache<IMajorRecordCommonGetter>();
+                    cache = new DepthCache<FormKey, IMajorRecordCommonGetter>();
                     if (type.Equals(typeof(IMajorRecordCommon))
                         || type.Equals(typeof(IMajorRecordCommonGetter)))
                     {
-                        this._winningRecords[typeof(IMajorRecordCommon)] = cache;
-                        this._winningRecords[typeof(IMajorRecordCommonGetter)] = cache;
+                        this._winningFormKeyRecords[typeof(IMajorRecordCommon)] = cache;
+                        this._winningFormKeyRecords[typeof(IMajorRecordCommonGetter)] = cache;
                     }
                     else if (LoquiRegistration.TryGetRegister(type, out var registration))
                     {
-                        this._winningRecords[registration.ClassType] = cache;
-                        this._winningRecords[registration.GetterType] = cache;
-                        this._winningRecords[registration.SetterType] = cache;
+                        this._winningFormKeyRecords[registration.ClassType] = cache;
+                        this._winningFormKeyRecords[registration.GetterType] = cache;
+                        this._winningFormKeyRecords[registration.SetterType] = cache;
                         if (registration.InternalGetterType != null)
                         {
-                            this._winningRecords[registration.InternalGetterType] = cache;
+                            this._winningFormKeyRecords[registration.InternalGetterType] = cache;
                         }
                         if (registration.InternalSetterType != null)
                         {
-                            this._winningRecords[registration.InternalSetterType] = cache;
+                            this._winningFormKeyRecords[registration.InternalSetterType] = cache;
                         }
                     }
                     else
@@ -137,7 +140,7 @@ namespace Mutagen.Bethesda
                         {
                             throw new ArgumentException($"A lookup was queried for an unregistered type: {type.Name}");
                         }
-                        this._winningRecords[type] = cache;
+                        this._winningFormKeyRecords[type] = cache;
                     }
                 }
             }
@@ -239,10 +242,10 @@ namespace Mutagen.Bethesda
             }
 
             // Grab the type cache
-            DepthCache<ImmutableList<IMajorRecordCommonGetter>> cache;
-            lock (_allRecords)
+            DepthCache<FormKey, ImmutableList<IMajorRecordCommonGetter>> cache;
+            lock (_allFormKeyRecords)
             {
-                cache = _allRecords.GetOrAdd(type);
+                cache = _allFormKeyRecords.GetOrAdd(type);
             }
 
             // Grab the formkey's list
@@ -384,8 +387,10 @@ namespace Mutagen.Bethesda
         where TMod : class, IContextMod<TMod>, TModGetter
         where TModGetter : class, IContextGetterMod<TMod>
     {
-        private readonly Dictionary<Type, DepthCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>> _winningContexts = new Dictionary<Type, DepthCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>>();
-        private readonly Dictionary<Type, DepthCache<ImmutableList<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>>> _allContexts = new Dictionary<Type, DepthCache<ImmutableList<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>>>();
+        private readonly Dictionary<Type, DepthCache<FormKey, IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>> _winningFormKeyContexts 
+            = new Dictionary<Type, DepthCache<FormKey, IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>>();
+        private readonly Dictionary<Type, DepthCache<FormKey, ImmutableList<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>>> _allFormKeyContexts
+            = new Dictionary<Type, DepthCache<FormKey, ImmutableList<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>>>();
 
         private readonly IReadOnlyList<TModGetter> _listedOrder;
 
@@ -431,31 +436,31 @@ namespace Mutagen.Bethesda
                 return false;
             }
 
-            DepthCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>? cache;
-            lock (this._winningContexts)
+            DepthCache<FormKey, IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>? cache;
+            lock (this._winningFormKeyContexts)
             {
                 // Get cache object by type
-                if (!this._winningContexts.TryGetValue(type, out cache))
+                if (!this._winningFormKeyContexts.TryGetValue(type, out cache))
                 {
-                    cache = new DepthCache<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>();
+                    cache = new DepthCache<FormKey, IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>();
                     if (type.Equals(typeof(IMajorRecordCommon))
                         || type.Equals(typeof(IMajorRecordCommonGetter)))
                     {
-                        this._winningContexts[typeof(IMajorRecordCommon)] = cache;
-                        this._winningContexts[typeof(IMajorRecordCommonGetter)] = cache;
+                        this._winningFormKeyContexts[typeof(IMajorRecordCommon)] = cache;
+                        this._winningFormKeyContexts[typeof(IMajorRecordCommonGetter)] = cache;
                     }
                     else if (LoquiRegistration.TryGetRegister(type, out var registration))
                     {
-                        this._winningContexts[registration.ClassType] = cache;
-                        this._winningContexts[registration.GetterType] = cache;
-                        this._winningContexts[registration.SetterType] = cache;
+                        this._winningFormKeyContexts[registration.ClassType] = cache;
+                        this._winningFormKeyContexts[registration.GetterType] = cache;
+                        this._winningFormKeyContexts[registration.SetterType] = cache;
                         if (registration.InternalGetterType != null)
                         {
-                            this._winningContexts[registration.InternalGetterType] = cache;
+                            this._winningFormKeyContexts[registration.InternalGetterType] = cache;
                         }
                         if (registration.InternalSetterType != null)
                         {
-                            this._winningContexts[registration.InternalSetterType] = cache;
+                            this._winningFormKeyContexts[registration.InternalSetterType] = cache;
                         }
                     }
                     else
@@ -464,7 +469,7 @@ namespace Mutagen.Bethesda
                         {
                             throw new ArgumentException($"A lookup was queried for an unregistered type: {type.Name}");
                         }
-                        this._winningContexts[type] = cache;
+                        this._winningFormKeyContexts[type] = cache;
                     }
                 }
             }
@@ -564,10 +569,10 @@ namespace Mutagen.Bethesda
             }
 
             // Grab the type cache
-            DepthCache<ImmutableList<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>> cache;
-            lock (_allContexts)
+            DepthCache<FormKey, ImmutableList<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>> cache;
+            lock (_allFormKeyContexts)
             {
-                cache = _allContexts.GetOrAdd(type);
+                cache = _allFormKeyContexts.GetOrAdd(type);
             }
 
             // Grab the formkey's list
@@ -658,18 +663,19 @@ namespace Mutagen.Bethesda
         }
     }
 
-    internal class DepthCache<T>
+    internal class DepthCache<K, T>
+        where K : notnull
     {
-        private readonly Dictionary<FormKey, T> _dictionary = new Dictionary<FormKey, T>();
+        private readonly Dictionary<K, T> _dictionary = new Dictionary<K, T>();
         public HashSet<ModKey> PassedMods = new HashSet<ModKey>();
         public int Depth;
 
-        public bool TryGetValue(FormKey key, [MaybeNullWhen(false)] out T value)
+        public bool TryGetValue(K key, [MaybeNullWhen(false)] out T value)
         {
             return _dictionary.TryGetValue(key, out value);
         }
 
-        public void AddIfMissing(FormKey key, T item)
+        public void AddIfMissing(K key, T item)
         {
             if (!_dictionary.ContainsKey(key))
             {
@@ -677,12 +683,12 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public void Add(FormKey key, T item)
+        public void Add(K key, T item)
         {
             _dictionary.Add(key, item);
         }
 
-        public void Set(FormKey key, T item)
+        public void Set(K key, T item)
         {
             _dictionary[key] = item;
         }
