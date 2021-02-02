@@ -553,9 +553,9 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<TMajor>(records, throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IModContext<IFallout4Mod, TSetter, TGetter>> IMajorRecordContextEnumerable<IFallout4Mod>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IModContext<IFallout4Mod, IFallout4ModGetter, TSetter, TGetter>> IMajorRecordContextEnumerable<IFallout4Mod, IFallout4ModGetter>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IModContext<IFallout4Mod, IMajorRecordCommon, IMajorRecordCommonGetter>> IMajorRecordContextEnumerable<IFallout4Mod>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IModContext<IFallout4Mod, IFallout4ModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> IMajorRecordContextEnumerable<IFallout4Mod, IFallout4ModGetter>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
         #endregion
 
         #region Binary Translation
@@ -727,7 +727,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IFallout4Mod :
-        IContextMod<IFallout4Mod>,
+        IContextMod<IFallout4Mod, IFallout4ModGetter>,
         IFallout4ModGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IFallout4Mod>,
@@ -741,10 +741,10 @@ namespace Mutagen.Bethesda.Fallout4
 
     public partial interface IFallout4ModGetter :
         ILoquiObject,
-        IContextGetterMod<IFallout4Mod>,
+        IContextGetterMod<IFallout4Mod, IFallout4ModGetter>,
         IFormLinkContainerGetter,
         ILoquiObject<IFallout4ModGetter>,
-        IMajorRecordContextEnumerable<IFallout4Mod>,
+        IMajorRecordContextEnumerable<IFallout4Mod, IFallout4ModGetter>,
         IMajorRecordGetterEnumerable,
         IModGetter
     {
@@ -1168,7 +1168,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<IModContext<IFallout4Mod, TSetter, TGetter>> EnumerateMajorRecordContexts<TSetter, TGetter>(
+        public static IEnumerable<IModContext<IFallout4Mod, IFallout4ModGetter, TSetter, TGetter>> EnumerateMajorRecordContexts<TSetter, TGetter>(
             this IFallout4ModGetter obj,
             ILinkCache linkCache,
             bool throwIfUnknown = true)
@@ -1180,12 +1180,12 @@ namespace Mutagen.Bethesda.Fallout4
                 linkCache: linkCache,
                 type: typeof(TGetter),
                 throwIfUnknown: throwIfUnknown)
-                .Select(m => m.AsType<IFallout4Mod, IMajorRecordCommon, IMajorRecordCommonGetter, TSetter, TGetter>())
+                .Select(m => m.AsType<IFallout4Mod, IFallout4ModGetter, IMajorRecordCommon, IMajorRecordCommonGetter, TSetter, TGetter>())
                 .Catch(e => throw RecordException.Factory(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<IModContext<IFallout4Mod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        public static IEnumerable<IModContext<IFallout4Mod, IFallout4ModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             this IFallout4ModGetter obj,
             ILinkCache linkCache,
             Type type,
@@ -1775,13 +1775,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
         }
         
-        public IEnumerable<IModContext<IFallout4Mod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        public IEnumerable<IModContext<IFallout4Mod, IFallout4ModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             IFallout4ModGetter obj,
             ILinkCache linkCache)
         {
             foreach (var item in obj.GameSettings)
             {
-                yield return new ModContext<IFallout4Mod, IGameSettingInternal, IGameSettingGetter>(
+                yield return new ModContext<IFallout4Mod, IFallout4ModGetter, IGameSettingInternal, IGameSettingGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.GameSettings.GetOrAddAsOverride(r),
@@ -1789,7 +1789,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
             foreach (var item in obj.Keywords)
             {
-                yield return new ModContext<IFallout4Mod, IKeywordInternal, IKeywordGetter>(
+                yield return new ModContext<IFallout4Mod, IFallout4ModGetter, IKeywordInternal, IKeywordGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Keywords.GetOrAddAsOverride(r),
@@ -1797,7 +1797,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
         }
         
-        public IEnumerable<IModContext<IFallout4Mod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        public IEnumerable<IModContext<IFallout4Mod, IFallout4ModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             IFallout4ModGetter obj,
             ILinkCache linkCache,
             Type type,
@@ -1834,7 +1834,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "IGameSettingInternal":
                     foreach (var item in obj.GameSettings)
                     {
-                        yield return new ModContext<IFallout4Mod, IGameSettingInternal, IGameSettingGetter>(
+                        yield return new ModContext<IFallout4Mod, IFallout4ModGetter, IGameSettingInternal, IGameSettingGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.GameSettings.GetOrAddAsOverride(r),
@@ -1847,7 +1847,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "IKeywordInternal":
                     foreach (var item in obj.Keywords)
                     {
-                        yield return new ModContext<IFallout4Mod, IKeywordInternal, IKeywordGetter>(
+                        yield return new ModContext<IFallout4Mod, IFallout4ModGetter, IKeywordInternal, IKeywordGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Keywords.GetOrAddAsOverride(r),
@@ -2320,9 +2320,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public bool UsingLocalization => this.ModHeader.Flags.HasFlag(Fallout4ModHeader.HeaderFlag.Localized);
         public IEnumerable<FormLinkInformation> ContainedFormLinks => Fallout4ModCommon.Instance.GetContainedFormLinks(this);
         [DebuggerStepThrough]
-        IEnumerable<IModContext<IFallout4Mod, TSetter, TGetter>> IMajorRecordContextEnumerable<IFallout4Mod>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IModContext<IFallout4Mod, IFallout4ModGetter, TSetter, TGetter>> IMajorRecordContextEnumerable<IFallout4Mod, IFallout4ModGetter>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IModContext<IFallout4Mod, IMajorRecordCommon, IMajorRecordCommonGetter>> IMajorRecordContextEnumerable<IFallout4Mod>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IModContext<IFallout4Mod, IFallout4ModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> IMajorRecordContextEnumerable<IFallout4Mod, IFallout4ModGetter>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

@@ -4,17 +4,18 @@ using System.Text;
 
 namespace Mutagen.Bethesda.Internals
 {
-    public struct TypedLoadOrderAccess<TModSetter, TMajorSetter, TMajorGetter>
-        where TModSetter : IModGetter
-        where TMajorSetter : IMajorRecordCommon, TMajorGetter
+    public struct TypedLoadOrderAccess<TMod, TModGetter, TMajor, TMajorGetter>
+        where TModGetter : IModGetter
+        where TMod : IMod, TModGetter
+        where TMajor : IMajorRecordCommon, TMajorGetter
         where TMajorGetter : IMajorRecordCommonGetter
     {
         private Func<bool, IEnumerable<TMajorGetter>> _winningOverrides;
-        private Func<ILinkCache, bool, IEnumerable<IModContext<TModSetter, TMajorSetter, TMajorGetter>>> _winningContextOverrides;
+        private Func<ILinkCache, bool, IEnumerable<IModContext<TMod, TModGetter, TMajor, TMajorGetter>>> _winningContextOverrides;
 
         public TypedLoadOrderAccess(
             Func<bool, IEnumerable<TMajorGetter>> winningOverrides,
-            Func<ILinkCache, bool, IEnumerable<IModContext<TModSetter, TMajorSetter, TMajorGetter>>> winningContextOverrides)
+            Func<ILinkCache, bool, IEnumerable<IModContext<TMod, TModGetter, TMajor, TMajorGetter>>> winningContextOverrides)
         {
             _winningOverrides = winningOverrides;
             _winningContextOverrides = winningContextOverrides;
@@ -39,6 +40,6 @@ namespace Mutagen.Bethesda.Internals
         /// <param name="linkCache">LinkCache to use when creating parent objects</param> 
         /// <param name="includeDeletedRecords">Whether to include deleted records in the output</param>
         /// <returns>Enumerable of the most overridden version of each record of the given type, optionally including deleted ones</returns>
-        public IEnumerable<IModContext<TModSetter, TMajorSetter, TMajorGetter>> WinningContextOverrides(ILinkCache linkCache, bool includeDeletedRecords = false) => _winningContextOverrides(linkCache, includeDeletedRecords);
+        public IEnumerable<IModContext<TMod, TModGetter, TMajor, TMajorGetter>> WinningContextOverrides(ILinkCache linkCache, bool includeDeletedRecords = false) => _winningContextOverrides(linkCache, includeDeletedRecords);
     }
 }

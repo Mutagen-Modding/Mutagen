@@ -103,7 +103,7 @@ namespace Mutagen.Bethesda.UnitTests
             IEnumerable<IModListing<ISkyrimModGetter>> listings = Enumerable.Empty<IModListing<ISkyrimModGetter>>();
             IEnumerable<IAmmunitionGetter> ammun = listings.Ammunition().WinningOverrides();
             IEnumerable<IPlacedGetter> placed = listings.IPlaced().WinningOverrides();
-            IEnumerable<IModContext<ISkyrimMod, ICell, ICellGetter>> cells = listings.Cell().WinningContextOverrides(linkCache: null!);
+            IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, ICell, ICellGetter>> cells = listings.Cell().WinningContextOverrides(linkCache: null!);
             IEnumerable<ISkyrimModGetter> mods = Enumerable.Empty<ISkyrimModGetter>();
             ammun = mods.Ammunition().WinningOverrides();
             placed = mods.IPlaced().WinningOverrides();
@@ -187,22 +187,22 @@ namespace Mutagen.Bethesda.UnitTests
             //link.TryResolveContext<ISkyrimMod, ISkyrimMajorRecord>(cache, out var _);
             //link.TryResolveContext<ISkyrimMod, ISkyrimMajorRecord>(cache, out IModContext<ISkyrimMod, ISkyrimMajorRecord, ISkyrimMajorRecordGetter> _);
             //link.ResolveContext<ISkyrimMod, ISkyrimMajorRecord>(cache);
-            link.TryResolveContext<ISkyrimMod, ILight, ILightGetter>(cache, out var _);
-            link.TryResolveContext(cache, out IModContext<ISkyrimMod, ILight, ILightGetter> _);
-            link.ResolveContext<ISkyrimMod, ILight, ILightGetter>(cache);
+            link.TryResolveContext<ISkyrimMod, ISkyrimModGetter, ILight, ILightGetter>(cache, out var _);
+            link.TryResolveContext(cache, out IModContext<ISkyrimMod, ISkyrimModGetter, ILight, ILightGetter> _);
+            link.ResolveContext<ISkyrimMod, ISkyrimModGetter, ILight, ILightGetter>(cache);
 
             //nullableLink.TryResolveContext<ISkyrimMod, ISkyrimMajorRecord>(cache, out var _);
             //nullableLink.TryResolveContext<ISkyrimMod, ISkyrimMajorRecord>(cache, out IModContext<ISkyrimMod, ISkyrimMajorRecord, ISkyrimMajorRecordGetter> _);
             //nullableLink.ResolveContext<ISkyrimMod, ISkyrimMajorRecord>(cache);
-            nullableLink.TryResolveContext<ISkyrimMod, ILight, ILightGetter>(cache, out var _);
-            nullableLink.TryResolveContext(cache, out IModContext<ISkyrimMod, ILight, ILightGetter> _);
-            nullableLink.ResolveContext<ISkyrimMod, ILight, ILightGetter>(cache);
+            nullableLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, ILight, ILightGetter>(cache, out var _);
+            nullableLink.TryResolveContext(cache, out IModContext<ISkyrimMod, ISkyrimModGetter, ILight, ILightGetter> _);
+            nullableLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, ILight, ILightGetter>(cache);
 
             //iLink.TryResolveContext<ISkyrimMod, ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(cache, out var _);
             //iLink.ResolveContext<ISkyrimMod, ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(cache);
-            iLink.TryResolveContext<ISkyrimMod, ISkyrimMajorRecordGetter, ILight, ILightGetter>(cache, out var _);
-            iLink.TryResolveContext(cache, out IModContext<ISkyrimMod, ILight, ILightGetter> _);
-            iLink.ResolveContext<ISkyrimMod, ISkyrimMajorRecordGetter, ILight, ILightGetter>(cache);
+            iLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecordGetter, ILight, ILightGetter>(cache, out var _);
+            iLink.TryResolveContext(cache, out IModContext<ISkyrimMod, ISkyrimModGetter, ILight, ILightGetter> _);
+            iLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecordGetter, ILight, ILightGetter>(cache);
         }
 
         [Fact]

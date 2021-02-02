@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "LookupOverlay.TypicalFactory(Path.GetDirectoryName(path.Path)!, stringsPara";
+            string testString = "IContextGetterMod<ISkyrimMod>";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

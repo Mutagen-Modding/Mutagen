@@ -18,7 +18,7 @@ namespace Mutagen.Bethesda.Generation
         {
             if (obj.GetObjectType() == ObjectType.Mod)
             {
-                obj.Interfaces.Add(LoquiInterfaceDefinitionType.IGetter, $"IMajorRecordContextEnumerable<{obj.Interface(getter: false)}>");
+                obj.Interfaces.Add(LoquiInterfaceDefinitionType.IGetter, $"IMajorRecordContextEnumerable<{obj.Interface(getter: false)}, {obj.Interface(getter: true)}>");
             }
             if (await MajorRecordModule.HasMajorRecordsInTree(obj, false) == Case.No) return;
         }
@@ -34,9 +34,9 @@ namespace Mutagen.Bethesda.Generation
             if (obj.GetObjectType() == ObjectType.Mod)
             {
                 fg.AppendLine("[DebuggerStepThrough]");
-                fg.AppendLine($"IEnumerable<IModContext<{obj.Interface(getter: false)}, TSetter, TGetter>> IMajorRecordContextEnumerable<{obj.Interface(getter: false)}>.EnumerateMajorRecordContexts<TSetter, TGetter>({nameof(ILinkCache)} linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts{obj.GetGenericTypes(MaskType.Normal, "TSetter".AsEnumerable().And("TGetter").ToArray())}(linkCache, throwIfUnknown: throwIfUnknown);");
+                fg.AppendLine($"IEnumerable<IModContext<{obj.Interface(getter: false)}, {obj.Interface(getter: true)}, TSetter, TGetter>> IMajorRecordContextEnumerable<{obj.Interface(getter: false)}, {obj.Interface(getter: true)}>.EnumerateMajorRecordContexts<TSetter, TGetter>({nameof(ILinkCache)} linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts{obj.GetGenericTypes(MaskType.Normal, "TSetter".AsEnumerable().And("TGetter").ToArray())}(linkCache, throwIfUnknown: throwIfUnknown);");
                 fg.AppendLine("[DebuggerStepThrough]");
-                fg.AppendLine($"IEnumerable<IModContext<{obj.Interface(getter: false)}, IMajorRecordCommon, IMajorRecordCommonGetter>> IMajorRecordContextEnumerable<{obj.Interface(getter: false)}>.EnumerateMajorRecordContexts({nameof(ILinkCache)} linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);");
+                fg.AppendLine($"IEnumerable<IModContext<{obj.Interface(getter: false)}, {obj.Interface(getter: true)}, IMajorRecordCommon, IMajorRecordCommonGetter>> IMajorRecordContextEnumerable<{obj.Interface(getter: false)}, {obj.Interface(getter: true)}>.EnumerateMajorRecordContexts({nameof(ILinkCache)} linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);");
             }
         }
 
@@ -46,10 +46,12 @@ namespace Mutagen.Bethesda.Generation
             var needsCatch = obj.GetObjectType() == ObjectType.Mod;
             string catchLine = needsCatch ? ".Catch(e => throw RecordException.Factory(e, obj.ModKey))" : string.Empty;
             string enderSemi = needsCatch ? string.Empty : ";";
+            var modGetter = obj.GetObjectData().GameCategory.Value.ModInterface(getter: true);
+            var modSetter = obj.GetObjectData().GameCategory.Value.ModInterface(getter: false);
 
             fg.AppendLine("[DebuggerStepThrough]");
             using (var args = new FunctionWrapper(fg,
-                $"public static IEnumerable<IModContext<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, TSetter, TGetter>> EnumerateMajorRecordContexts{obj.GetGenericTypes(MaskType.Normal, new string[] { "TSetter", "TGetter" })}"))
+                $"public static IEnumerable<IModContext<{modSetter}, {modGetter}, TSetter, TGetter>> EnumerateMajorRecordContexts{obj.GetGenericTypes(MaskType.Normal, new string[] { "TSetter", "TGetter" })}"))
             {
                 args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, obj.Generics));
                 args.Wheres.Add($"where TSetter : class, IMajorRecordCommon, TGetter");
@@ -70,7 +72,7 @@ namespace Mutagen.Bethesda.Generation
                 }
                 using (new DepthWrapper(fg))
                 {
-                    fg.AppendLine($".Select(m => m.AsType<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, {nameof(IMajorRecordCommon)}, {nameof(IMajorRecordCommonGetter)}, TSetter, TGetter>()){enderSemi}");
+                    fg.AppendLine($".Select(m => m.AsType<{modSetter}, {modGetter}, {nameof(IMajorRecordCommon)}, {nameof(IMajorRecordCommonGetter)}, TSetter, TGetter>()){enderSemi}");
                     if (needsCatch)
                     {
                         fg.AppendLine($"{catchLine};");
@@ -81,7 +83,7 @@ namespace Mutagen.Bethesda.Generation
 
             fg.AppendLine("[DebuggerStepThrough]");
             using (var args = new FunctionWrapper(fg,
-                $"public static IEnumerable<IModContext<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts{obj.GetGenericTypes(MaskType.Normal)}"))
+                $"public static IEnumerable<IModContext<{modSetter}, {modGetter}, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts{obj.GetGenericTypes(MaskType.Normal)}"))
             {
                 args.Add($"this {obj.Interface(getter: true, internalInterface: true)} obj");
                 args.Add($"{nameof(ILinkCache)} linkCache");
@@ -115,6 +117,9 @@ namespace Mutagen.Bethesda.Generation
             bool checkType,
             bool includeSelf = true)
         {
+            var modGetter = obj.GetObjectData().GameCategory.Value.ModInterface(getter: true);
+            var modSetter = obj.GetObjectData().GameCategory.Value.ModInterface(getter: false);
+
             // ToDo  
             // Quick hack.  Real solution should use reflection to investigate the interface  
             if (loquiType.RefType == LoquiType.LoquiRefType.Interface)
@@ -126,7 +131,7 @@ namespace Mutagen.Bethesda.Generation
                 using (new BraceWrapper(fg, doIt: checkType))
                 {
                     using (var args = new ArgsWrapper(fg,
-                        $"yield return new ModContext<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, {loquiType.Interface(getter: false)}, {loquiType.Interface(getter: true)}>"))
+                        $"yield return new ModContext<{modSetter}, {modGetter}, {loquiType.Interface(getter: false)}, {loquiType.Interface(getter: true)}>"))
                     {
                         args.Add($"modKey: {(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}");
                         args.Add($"record: {loquiAccessor}");
@@ -149,7 +154,7 @@ namespace Mutagen.Bethesda.Generation
                 using (new BraceWrapper(fg, doIt: checkType))
                 {
                     using (var args = new ArgsWrapper(fg,
-                        $"yield return new ModContext<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, {loquiType.Interface(getter: false, internalInterface: true)}, {loquiType.Interface(getter: true, internalInterface: true)}>"))
+                        $"yield return new ModContext<{modSetter}, {modGetter}, {loquiType.Interface(getter: false, internalInterface: true)}, {loquiType.Interface(getter: true, internalInterface: true)}>"))
                     {
                         args.Add($"modKey: {(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}");
                         args.Add($"record: {loquiAccessor}");
@@ -171,7 +176,7 @@ namespace Mutagen.Bethesda.Generation
                 using (new BraceWrapper(fg))
                 {
                     using (var args = new ArgsWrapper(fg,
-                        $"yield return new ModContext<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, {loquiType.Interface(getter: false, internalInterface: true)}, {loquiType.Interface(getter: true, internalInterface: true)}>"))
+                        $"yield return new ModContext<{modSetter}, {modGetter}, {loquiType.Interface(getter: false, internalInterface: true)}, {loquiType.Interface(getter: true, internalInterface: true)}>"))
                     {
                         args.Add($"modKey: {(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}");
                         args.Add("record: item");
@@ -220,9 +225,11 @@ namespace Mutagen.Bethesda.Generation
             if (obj.GetObjectType() == ObjectType.Group) return;
             if (await MajorRecordModule.HasMajorRecordsInTree(obj, includeBaseClass: false) == Case.No) return;
             var overrideStr = await obj.FunctionOverride(async c => await MajorRecordModule.HasMajorRecords(c, includeBaseClass: false, includeSelf: true) != Case.No);
+            var modGetter = obj.GetObjectData().GameCategory.Value.ModInterface(getter: true);
+            var modSetter = obj.GetObjectData().GameCategory.Value.ModInterface(getter: false);
 
             using (var args = new FunctionWrapper(fg,
-                $"public{overrideStr}IEnumerable<IModContext<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts"))
+                $"public{overrideStr}IEnumerable<IModContext<{modSetter}, {modGetter}, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts"))
             {
                 args.Add($"{obj.Interface(getter: getter, internalInterface: true)} obj");
                 args.Add($"{nameof(ILinkCache)} linkCache");
@@ -233,8 +240,8 @@ namespace Mutagen.Bethesda.Generation
                 }
                 if (obj.GetObjectType() == ObjectType.Record)
                 {
-                    args.Add($"Func<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, {obj.Interface(getter: true)}, {obj.Interface(getter: false)}> getOrAddAsOverride");
-                    args.Add($"Func<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, {obj.Interface(getter: true)}, string?, {obj.Interface(getter: false)}> duplicateInto");
+                    args.Add($"Func<{modSetter}, {obj.Interface(getter: true)}, {obj.Interface(getter: false)}> getOrAddAsOverride");
+                    args.Add($"Func<{modSetter}, {obj.Interface(getter: true)}, string?, {obj.Interface(getter: false)}> duplicateInto");
                 }
             }
             using (new BraceWrapper(fg))
@@ -242,7 +249,7 @@ namespace Mutagen.Bethesda.Generation
                 if (obj.GetObjectType() == ObjectType.Record)
                 {
                     using (var args = new ArgsWrapper(fg,
-                        $"var curContext = new ModContext<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}>"))
+                        $"var curContext = new ModContext<{modSetter}, {modGetter}, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}>"))
                     {
                         args.Add($"{(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}");
                         args.Add("record: obj");
@@ -335,7 +342,7 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine();
 
             using (var args = new FunctionWrapper(fg,
-                $"public{overrideStr}IEnumerable<IModContext<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts"))
+                $"public{overrideStr}IEnumerable<IModContext<{modSetter}, {modGetter}, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts"))
             {
                 args.Add($"{obj.Interface(getter: getter, internalInterface: true)} obj");
                 args.Add($"{nameof(ILinkCache)} linkCache");
@@ -348,8 +355,8 @@ namespace Mutagen.Bethesda.Generation
                 args.Add($"bool throwIfUnknown");
                 if (obj.GetObjectType() == ObjectType.Record)
                 {
-                    args.Add($"Func<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, {obj.Interface(getter: true)}, {obj.Interface(getter: false)}> getOrAddAsOverride");
-                    args.Add($"Func<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, {obj.Interface(getter: true)}, string?, {obj.Interface(getter: false)}> duplicateInto");
+                    args.Add($"Func<{modSetter}, {obj.Interface(getter: true)}, {obj.Interface(getter: false)}> getOrAddAsOverride");
+                    args.Add($"Func<{modSetter}, {obj.Interface(getter: true)}, string?, {obj.Interface(getter: false)}> duplicateInto");
                 }
             }
             using (new BraceWrapper(fg))
@@ -357,7 +364,7 @@ namespace Mutagen.Bethesda.Generation
                 if (obj.GetObjectType() == ObjectType.Record)
                 {
                     using (var args = new ArgsWrapper(fg,
-                        $"var curContext = new ModContext<{obj.GetObjectData().GameCategory.Value.ModInterface(getter: false)}, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}>"))
+                        $"var curContext = new ModContext<{modSetter}, {modGetter}, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}>"))
                     {
                         args.Add($"{(obj.GetObjectType() == ObjectType.Mod ? "obj.ModKey" : "modKey")}");
                         args.Add("record: obj");
@@ -705,7 +712,7 @@ namespace Mutagen.Bethesda.Generation
                     using (new BraceWrapper(fieldGen))
                     {
                         using (var args = new ArgsWrapper(fieldGen,
-                            $"yield return new ModContext<{obj.Interface(getter: false)}, {groupTargetSetter}, {groupTargetGetter}>"))
+                            $"yield return new ModContext<{obj.Interface(getter: false)}, {obj.Interface(getter: true)}, {groupTargetSetter}, {groupTargetGetter}>"))
                         {
                             args.Add("modKey: obj.ModKey");
                             args.Add("record: item");

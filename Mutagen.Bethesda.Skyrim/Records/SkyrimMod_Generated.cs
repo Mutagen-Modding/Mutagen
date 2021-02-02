@@ -5997,9 +5997,9 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<TMajor>(records, throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IModContext<ISkyrimMod, TSetter, TGetter>> IMajorRecordContextEnumerable<ISkyrimMod>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, TSetter, TGetter>> IMajorRecordContextEnumerable<ISkyrimMod, ISkyrimModGetter>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> IMajorRecordContextEnumerable<ISkyrimMod>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> IMajorRecordContextEnumerable<ISkyrimMod, ISkyrimModGetter>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
         #endregion
 
         #region Binary Translation
@@ -6191,7 +6191,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ISkyrimMod :
-        IContextMod<ISkyrimMod>,
+        IContextMod<ISkyrimMod, ISkyrimModGetter>,
         IFormLinkContainer,
         ILoquiObjectSetter<ISkyrimMod>,
         IMajorRecordEnumerable,
@@ -6316,10 +6316,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ISkyrimModGetter :
         ILoquiObject,
-        IContextGetterMod<ISkyrimMod>,
+        IContextGetterMod<ISkyrimMod, ISkyrimModGetter>,
         IFormLinkContainerGetter,
         ILoquiObject<ISkyrimModGetter>,
-        IMajorRecordContextEnumerable<ISkyrimMod>,
+        IMajorRecordContextEnumerable<ISkyrimMod, ISkyrimModGetter>,
         IMajorRecordGetterEnumerable,
         IModGetter
     {
@@ -6858,7 +6858,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<IModContext<ISkyrimMod, TSetter, TGetter>> EnumerateMajorRecordContexts<TSetter, TGetter>(
+        public static IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, TSetter, TGetter>> EnumerateMajorRecordContexts<TSetter, TGetter>(
             this ISkyrimModGetter obj,
             ILinkCache linkCache,
             bool throwIfUnknown = true)
@@ -6870,12 +6870,12 @@ namespace Mutagen.Bethesda.Skyrim
                 linkCache: linkCache,
                 type: typeof(TGetter),
                 throwIfUnknown: throwIfUnknown)
-                .Select(m => m.AsType<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter, TSetter, TGetter>())
+                .Select(m => m.AsType<ISkyrimMod, ISkyrimModGetter, IMajorRecordCommon, IMajorRecordCommonGetter, TSetter, TGetter>())
                 .Catch(e => throw RecordException.Factory(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<IModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        public static IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             this ISkyrimModGetter obj,
             ILinkCache linkCache,
             Type type,
@@ -13888,13 +13888,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public IEnumerable<IModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        public IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             ISkyrimModGetter obj,
             ILinkCache linkCache)
         {
             foreach (var item in obj.GameSettings)
             {
-                yield return new ModContext<ISkyrimMod, IGameSettingInternal, IGameSettingGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IGameSettingInternal, IGameSettingGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.GameSettings.GetOrAddAsOverride(r),
@@ -13902,7 +13902,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Keywords)
             {
-                yield return new ModContext<ISkyrimMod, IKeywordInternal, IKeywordGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IKeywordInternal, IKeywordGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Keywords.GetOrAddAsOverride(r),
@@ -13910,7 +13910,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.LocationReferenceTypes)
             {
-                yield return new ModContext<ISkyrimMod, ILocationReferenceTypeInternal, ILocationReferenceTypeGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ILocationReferenceTypeInternal, ILocationReferenceTypeGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.LocationReferenceTypes.GetOrAddAsOverride(r),
@@ -13918,7 +13918,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Actions)
             {
-                yield return new ModContext<ISkyrimMod, IActionRecordInternal, IActionRecordGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IActionRecordInternal, IActionRecordGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Actions.GetOrAddAsOverride(r),
@@ -13926,7 +13926,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.TextureSets)
             {
-                yield return new ModContext<ISkyrimMod, ITextureSetInternal, ITextureSetGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ITextureSetInternal, ITextureSetGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.TextureSets.GetOrAddAsOverride(r),
@@ -13934,7 +13934,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Globals)
             {
-                yield return new ModContext<ISkyrimMod, IGlobalInternal, IGlobalGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IGlobalInternal, IGlobalGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Globals.GetOrAddAsOverride(r),
@@ -13942,7 +13942,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Classes)
             {
-                yield return new ModContext<ISkyrimMod, IClassInternal, IClassGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IClassInternal, IClassGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Classes.GetOrAddAsOverride(r),
@@ -13950,7 +13950,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Factions)
             {
-                yield return new ModContext<ISkyrimMod, IFactionInternal, IFactionGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IFactionInternal, IFactionGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Factions.GetOrAddAsOverride(r),
@@ -13958,7 +13958,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.HeadParts)
             {
-                yield return new ModContext<ISkyrimMod, IHeadPartInternal, IHeadPartGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IHeadPartInternal, IHeadPartGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.HeadParts.GetOrAddAsOverride(r),
@@ -13966,7 +13966,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Hairs)
             {
-                yield return new ModContext<ISkyrimMod, IHairInternal, IHairGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IHairInternal, IHairGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Hairs.GetOrAddAsOverride(r),
@@ -13974,7 +13974,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Eyes)
             {
-                yield return new ModContext<ISkyrimMod, IEyesInternal, IEyesGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IEyesInternal, IEyesGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Eyes.GetOrAddAsOverride(r),
@@ -13982,7 +13982,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Races)
             {
-                yield return new ModContext<ISkyrimMod, IRaceInternal, IRaceGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IRaceInternal, IRaceGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Races.GetOrAddAsOverride(r),
@@ -13990,7 +13990,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.SoundMarkers)
             {
-                yield return new ModContext<ISkyrimMod, ISoundMarkerInternal, ISoundMarkerGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ISoundMarkerInternal, ISoundMarkerGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.SoundMarkers.GetOrAddAsOverride(r),
@@ -13998,7 +13998,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.AcousticSpaces)
             {
-                yield return new ModContext<ISkyrimMod, IAcousticSpaceInternal, IAcousticSpaceGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IAcousticSpaceInternal, IAcousticSpaceGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.AcousticSpaces.GetOrAddAsOverride(r),
@@ -14006,7 +14006,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.MagicEffects)
             {
-                yield return new ModContext<ISkyrimMod, IMagicEffectInternal, IMagicEffectGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IMagicEffectInternal, IMagicEffectGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.MagicEffects.GetOrAddAsOverride(r),
@@ -14014,7 +14014,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.LandscapeTextures)
             {
-                yield return new ModContext<ISkyrimMod, ILandscapeTextureInternal, ILandscapeTextureGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ILandscapeTextureInternal, ILandscapeTextureGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.LandscapeTextures.GetOrAddAsOverride(r),
@@ -14022,7 +14022,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.ObjectEffects)
             {
-                yield return new ModContext<ISkyrimMod, IObjectEffectInternal, IObjectEffectGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IObjectEffectInternal, IObjectEffectGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.ObjectEffects.GetOrAddAsOverride(r),
@@ -14030,7 +14030,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Spells)
             {
-                yield return new ModContext<ISkyrimMod, ISpellInternal, ISpellGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ISpellInternal, ISpellGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Spells.GetOrAddAsOverride(r),
@@ -14038,7 +14038,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Scrolls)
             {
-                yield return new ModContext<ISkyrimMod, IScrollInternal, IScrollGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IScrollInternal, IScrollGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Scrolls.GetOrAddAsOverride(r),
@@ -14046,7 +14046,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Activators)
             {
-                yield return new ModContext<ISkyrimMod, IActivatorInternal, IActivatorGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IActivatorInternal, IActivatorGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Activators.GetOrAddAsOverride(r),
@@ -14054,7 +14054,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.TalkingActivators)
             {
-                yield return new ModContext<ISkyrimMod, ITalkingActivatorInternal, ITalkingActivatorGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ITalkingActivatorInternal, ITalkingActivatorGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.TalkingActivators.GetOrAddAsOverride(r),
@@ -14062,7 +14062,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Armors)
             {
-                yield return new ModContext<ISkyrimMod, IArmorInternal, IArmorGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IArmorInternal, IArmorGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Armors.GetOrAddAsOverride(r),
@@ -14070,7 +14070,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Books)
             {
-                yield return new ModContext<ISkyrimMod, IBookInternal, IBookGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IBookInternal, IBookGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Books.GetOrAddAsOverride(r),
@@ -14078,7 +14078,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Containers)
             {
-                yield return new ModContext<ISkyrimMod, IContainerInternal, IContainerGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IContainerInternal, IContainerGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Containers.GetOrAddAsOverride(r),
@@ -14086,7 +14086,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Doors)
             {
-                yield return new ModContext<ISkyrimMod, IDoorInternal, IDoorGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IDoorInternal, IDoorGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Doors.GetOrAddAsOverride(r),
@@ -14094,7 +14094,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Ingredients)
             {
-                yield return new ModContext<ISkyrimMod, IIngredientInternal, IIngredientGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IIngredientInternal, IIngredientGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Ingredients.GetOrAddAsOverride(r),
@@ -14102,7 +14102,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Lights)
             {
-                yield return new ModContext<ISkyrimMod, ILightInternal, ILightGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ILightInternal, ILightGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Lights.GetOrAddAsOverride(r),
@@ -14110,7 +14110,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.MiscItems)
             {
-                yield return new ModContext<ISkyrimMod, IMiscItemInternal, IMiscItemGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IMiscItemInternal, IMiscItemGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.MiscItems.GetOrAddAsOverride(r),
@@ -14118,7 +14118,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.AlchemicalApparatuses)
             {
-                yield return new ModContext<ISkyrimMod, IAlchemicalApparatusInternal, IAlchemicalApparatusGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IAlchemicalApparatusInternal, IAlchemicalApparatusGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.AlchemicalApparatuses.GetOrAddAsOverride(r),
@@ -14126,7 +14126,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Statics)
             {
-                yield return new ModContext<ISkyrimMod, IStaticInternal, IStaticGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IStaticInternal, IStaticGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Statics.GetOrAddAsOverride(r),
@@ -14134,7 +14134,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.MoveableStatics)
             {
-                yield return new ModContext<ISkyrimMod, IMoveableStaticInternal, IMoveableStaticGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IMoveableStaticInternal, IMoveableStaticGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.MoveableStatics.GetOrAddAsOverride(r),
@@ -14142,7 +14142,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Grasses)
             {
-                yield return new ModContext<ISkyrimMod, IGrassInternal, IGrassGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IGrassInternal, IGrassGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Grasses.GetOrAddAsOverride(r),
@@ -14150,7 +14150,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Trees)
             {
-                yield return new ModContext<ISkyrimMod, ITreeInternal, ITreeGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ITreeInternal, ITreeGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Trees.GetOrAddAsOverride(r),
@@ -14158,7 +14158,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Florae)
             {
-                yield return new ModContext<ISkyrimMod, IFloraInternal, IFloraGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IFloraInternal, IFloraGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Florae.GetOrAddAsOverride(r),
@@ -14166,7 +14166,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Furniture)
             {
-                yield return new ModContext<ISkyrimMod, IFurnitureInternal, IFurnitureGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IFurnitureInternal, IFurnitureGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Furniture.GetOrAddAsOverride(r),
@@ -14174,7 +14174,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Weapons)
             {
-                yield return new ModContext<ISkyrimMod, IWeaponInternal, IWeaponGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IWeaponInternal, IWeaponGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Weapons.GetOrAddAsOverride(r),
@@ -14182,7 +14182,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Ammunitions)
             {
-                yield return new ModContext<ISkyrimMod, IAmmunitionInternal, IAmmunitionGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IAmmunitionInternal, IAmmunitionGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Ammunitions.GetOrAddAsOverride(r),
@@ -14190,7 +14190,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Npcs)
             {
-                yield return new ModContext<ISkyrimMod, INpcInternal, INpcGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, INpcInternal, INpcGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Npcs.GetOrAddAsOverride(r),
@@ -14198,7 +14198,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.LeveledNpcs)
             {
-                yield return new ModContext<ISkyrimMod, ILeveledNpcInternal, ILeveledNpcGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ILeveledNpcInternal, ILeveledNpcGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.LeveledNpcs.GetOrAddAsOverride(r),
@@ -14206,7 +14206,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Keys)
             {
-                yield return new ModContext<ISkyrimMod, IKeyInternal, IKeyGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IKeyInternal, IKeyGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Keys.GetOrAddAsOverride(r),
@@ -14214,7 +14214,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Ingestibles)
             {
-                yield return new ModContext<ISkyrimMod, IIngestibleInternal, IIngestibleGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IIngestibleInternal, IIngestibleGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Ingestibles.GetOrAddAsOverride(r),
@@ -14222,7 +14222,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.IdleMarkers)
             {
-                yield return new ModContext<ISkyrimMod, IIdleMarkerInternal, IIdleMarkerGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IIdleMarkerInternal, IIdleMarkerGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.IdleMarkers.GetOrAddAsOverride(r),
@@ -14230,7 +14230,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.ConstructibleObjects)
             {
-                yield return new ModContext<ISkyrimMod, IConstructibleObjectInternal, IConstructibleObjectGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IConstructibleObjectInternal, IConstructibleObjectGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.ConstructibleObjects.GetOrAddAsOverride(r),
@@ -14238,7 +14238,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Projectiles)
             {
-                yield return new ModContext<ISkyrimMod, IProjectileInternal, IProjectileGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IProjectileInternal, IProjectileGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Projectiles.GetOrAddAsOverride(r),
@@ -14246,7 +14246,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Hazards)
             {
-                yield return new ModContext<ISkyrimMod, IHazardInternal, IHazardGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IHazardInternal, IHazardGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Hazards.GetOrAddAsOverride(r),
@@ -14254,7 +14254,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.SoulGems)
             {
-                yield return new ModContext<ISkyrimMod, ISoulGemInternal, ISoulGemGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ISoulGemInternal, ISoulGemGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.SoulGems.GetOrAddAsOverride(r),
@@ -14262,7 +14262,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.LeveledItems)
             {
-                yield return new ModContext<ISkyrimMod, ILeveledItemInternal, ILeveledItemGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ILeveledItemInternal, ILeveledItemGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.LeveledItems.GetOrAddAsOverride(r),
@@ -14270,7 +14270,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Weathers)
             {
-                yield return new ModContext<ISkyrimMod, IWeatherInternal, IWeatherGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IWeatherInternal, IWeatherGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Weathers.GetOrAddAsOverride(r),
@@ -14278,7 +14278,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Climates)
             {
-                yield return new ModContext<ISkyrimMod, IClimateInternal, IClimateGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IClimateInternal, IClimateGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Climates.GetOrAddAsOverride(r),
@@ -14286,7 +14286,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.ShaderParticleGeometries)
             {
-                yield return new ModContext<ISkyrimMod, IShaderParticleGeometryInternal, IShaderParticleGeometryGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IShaderParticleGeometryInternal, IShaderParticleGeometryGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.ShaderParticleGeometries.GetOrAddAsOverride(r),
@@ -14294,7 +14294,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.VisualEffects)
             {
-                yield return new ModContext<ISkyrimMod, IVisualEffectInternal, IVisualEffectGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IVisualEffectInternal, IVisualEffectGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.VisualEffects.GetOrAddAsOverride(r),
@@ -14302,7 +14302,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Regions)
             {
-                yield return new ModContext<ISkyrimMod, IRegionInternal, IRegionGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IRegionInternal, IRegionGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Regions.GetOrAddAsOverride(r),
@@ -14310,7 +14310,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.NavigationMeshInfoMaps)
             {
-                yield return new ModContext<ISkyrimMod, INavigationMeshInfoMapInternal, INavigationMeshInfoMapGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, INavigationMeshInfoMapInternal, INavigationMeshInfoMapGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.NavigationMeshInfoMaps.GetOrAddAsOverride(r),
@@ -14318,7 +14318,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Worldspaces)
             {
-                yield return new ModContext<ISkyrimMod, IWorldspaceInternal, IWorldspaceGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IWorldspaceInternal, IWorldspaceGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(r),
@@ -14339,7 +14339,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.DialogTopics)
             {
-                yield return new ModContext<ISkyrimMod, IDialogTopicInternal, IDialogTopicGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IDialogTopicInternal, IDialogTopicGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.DialogTopics.GetOrAddAsOverride(r),
@@ -14360,7 +14360,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Quests)
             {
-                yield return new ModContext<ISkyrimMod, IQuestInternal, IQuestGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IQuestInternal, IQuestGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Quests.GetOrAddAsOverride(r),
@@ -14368,7 +14368,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.IdleAnimations)
             {
-                yield return new ModContext<ISkyrimMod, IIdleAnimationInternal, IIdleAnimationGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IIdleAnimationInternal, IIdleAnimationGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.IdleAnimations.GetOrAddAsOverride(r),
@@ -14376,7 +14376,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Packages)
             {
-                yield return new ModContext<ISkyrimMod, IPackageInternal, IPackageGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IPackageInternal, IPackageGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Packages.GetOrAddAsOverride(r),
@@ -14384,7 +14384,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.CombatStyles)
             {
-                yield return new ModContext<ISkyrimMod, ICombatStyleInternal, ICombatStyleGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ICombatStyleInternal, ICombatStyleGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.CombatStyles.GetOrAddAsOverride(r),
@@ -14392,7 +14392,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.LoadScreens)
             {
-                yield return new ModContext<ISkyrimMod, ILoadScreenInternal, ILoadScreenGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ILoadScreenInternal, ILoadScreenGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.LoadScreens.GetOrAddAsOverride(r),
@@ -14400,7 +14400,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.LeveledSpells)
             {
-                yield return new ModContext<ISkyrimMod, ILeveledSpellInternal, ILeveledSpellGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ILeveledSpellInternal, ILeveledSpellGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.LeveledSpells.GetOrAddAsOverride(r),
@@ -14408,7 +14408,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.AnimatedObjects)
             {
-                yield return new ModContext<ISkyrimMod, IAnimatedObjectInternal, IAnimatedObjectGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IAnimatedObjectInternal, IAnimatedObjectGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.AnimatedObjects.GetOrAddAsOverride(r),
@@ -14416,7 +14416,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Waters)
             {
-                yield return new ModContext<ISkyrimMod, IWaterInternal, IWaterGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IWaterInternal, IWaterGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Waters.GetOrAddAsOverride(r),
@@ -14424,7 +14424,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.EffectShaders)
             {
-                yield return new ModContext<ISkyrimMod, IEffectShaderInternal, IEffectShaderGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IEffectShaderInternal, IEffectShaderGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.EffectShaders.GetOrAddAsOverride(r),
@@ -14432,7 +14432,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Explosions)
             {
-                yield return new ModContext<ISkyrimMod, IExplosionInternal, IExplosionGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IExplosionInternal, IExplosionGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Explosions.GetOrAddAsOverride(r),
@@ -14440,7 +14440,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Debris)
             {
-                yield return new ModContext<ISkyrimMod, IDebrisInternal, IDebrisGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IDebrisInternal, IDebrisGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Debris.GetOrAddAsOverride(r),
@@ -14448,7 +14448,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.ImageSpaces)
             {
-                yield return new ModContext<ISkyrimMod, IImageSpaceInternal, IImageSpaceGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IImageSpaceInternal, IImageSpaceGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.ImageSpaces.GetOrAddAsOverride(r),
@@ -14456,7 +14456,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.ImageSpaceAdapters)
             {
-                yield return new ModContext<ISkyrimMod, IImageSpaceAdapterInternal, IImageSpaceAdapterGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IImageSpaceAdapterInternal, IImageSpaceAdapterGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.ImageSpaceAdapters.GetOrAddAsOverride(r),
@@ -14464,7 +14464,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.FormLists)
             {
-                yield return new ModContext<ISkyrimMod, IFormListInternal, IFormListGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IFormListInternal, IFormListGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.FormLists.GetOrAddAsOverride(r),
@@ -14472,7 +14472,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Perks)
             {
-                yield return new ModContext<ISkyrimMod, IPerkInternal, IPerkGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IPerkInternal, IPerkGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Perks.GetOrAddAsOverride(r),
@@ -14480,7 +14480,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.BodyParts)
             {
-                yield return new ModContext<ISkyrimMod, IBodyPartDataInternal, IBodyPartDataGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IBodyPartDataInternal, IBodyPartDataGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.BodyParts.GetOrAddAsOverride(r),
@@ -14488,7 +14488,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.AddonNodes)
             {
-                yield return new ModContext<ISkyrimMod, IAddonNodeInternal, IAddonNodeGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IAddonNodeInternal, IAddonNodeGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.AddonNodes.GetOrAddAsOverride(r),
@@ -14496,7 +14496,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.ActorValueInformation)
             {
-                yield return new ModContext<ISkyrimMod, IActorValueInformationInternal, IActorValueInformationGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IActorValueInformationInternal, IActorValueInformationGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.ActorValueInformation.GetOrAddAsOverride(r),
@@ -14504,7 +14504,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.CameraShots)
             {
-                yield return new ModContext<ISkyrimMod, ICameraShotInternal, ICameraShotGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ICameraShotInternal, ICameraShotGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.CameraShots.GetOrAddAsOverride(r),
@@ -14512,7 +14512,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.CameraPaths)
             {
-                yield return new ModContext<ISkyrimMod, ICameraPathInternal, ICameraPathGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ICameraPathInternal, ICameraPathGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.CameraPaths.GetOrAddAsOverride(r),
@@ -14520,7 +14520,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.VoiceTypes)
             {
-                yield return new ModContext<ISkyrimMod, IVoiceTypeInternal, IVoiceTypeGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IVoiceTypeInternal, IVoiceTypeGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.VoiceTypes.GetOrAddAsOverride(r),
@@ -14528,7 +14528,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.MaterialTypes)
             {
-                yield return new ModContext<ISkyrimMod, IMaterialTypeInternal, IMaterialTypeGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IMaterialTypeInternal, IMaterialTypeGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.MaterialTypes.GetOrAddAsOverride(r),
@@ -14536,7 +14536,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Impacts)
             {
-                yield return new ModContext<ISkyrimMod, IImpactInternal, IImpactGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IImpactInternal, IImpactGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Impacts.GetOrAddAsOverride(r),
@@ -14544,7 +14544,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.ImpactDataSets)
             {
-                yield return new ModContext<ISkyrimMod, IImpactDataSetInternal, IImpactDataSetGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IImpactDataSetInternal, IImpactDataSetGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.ImpactDataSets.GetOrAddAsOverride(r),
@@ -14552,7 +14552,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.ArmorAddons)
             {
-                yield return new ModContext<ISkyrimMod, IArmorAddonInternal, IArmorAddonGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IArmorAddonInternal, IArmorAddonGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.ArmorAddons.GetOrAddAsOverride(r),
@@ -14560,7 +14560,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.EncounterZones)
             {
-                yield return new ModContext<ISkyrimMod, IEncounterZoneInternal, IEncounterZoneGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IEncounterZoneInternal, IEncounterZoneGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.EncounterZones.GetOrAddAsOverride(r),
@@ -14568,7 +14568,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Locations)
             {
-                yield return new ModContext<ISkyrimMod, ILocationInternal, ILocationGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ILocationInternal, ILocationGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Locations.GetOrAddAsOverride(r),
@@ -14576,7 +14576,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Messages)
             {
-                yield return new ModContext<ISkyrimMod, IMessageInternal, IMessageGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IMessageInternal, IMessageGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Messages.GetOrAddAsOverride(r),
@@ -14584,7 +14584,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.DefaultObjectManagers)
             {
-                yield return new ModContext<ISkyrimMod, IDefaultObjectManagerInternal, IDefaultObjectManagerGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IDefaultObjectManagerInternal, IDefaultObjectManagerGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.DefaultObjectManagers.GetOrAddAsOverride(r),
@@ -14592,7 +14592,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.LightingTemplates)
             {
-                yield return new ModContext<ISkyrimMod, ILightingTemplateInternal, ILightingTemplateGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ILightingTemplateInternal, ILightingTemplateGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.LightingTemplates.GetOrAddAsOverride(r),
@@ -14600,7 +14600,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.MusicTypes)
             {
-                yield return new ModContext<ISkyrimMod, IMusicTypeInternal, IMusicTypeGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IMusicTypeInternal, IMusicTypeGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.MusicTypes.GetOrAddAsOverride(r),
@@ -14608,7 +14608,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Footsteps)
             {
-                yield return new ModContext<ISkyrimMod, IFootstepInternal, IFootstepGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IFootstepInternal, IFootstepGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Footsteps.GetOrAddAsOverride(r),
@@ -14616,7 +14616,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.FootstepSets)
             {
-                yield return new ModContext<ISkyrimMod, IFootstepSetInternal, IFootstepSetGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IFootstepSetInternal, IFootstepSetGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.FootstepSets.GetOrAddAsOverride(r),
@@ -14624,7 +14624,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.StoryManagerBranchNodes)
             {
-                yield return new ModContext<ISkyrimMod, IStoryManagerBranchNodeInternal, IStoryManagerBranchNodeGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IStoryManagerBranchNodeInternal, IStoryManagerBranchNodeGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.StoryManagerBranchNodes.GetOrAddAsOverride(r),
@@ -14632,7 +14632,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.StoryManagerQuestNodes)
             {
-                yield return new ModContext<ISkyrimMod, IStoryManagerQuestNodeInternal, IStoryManagerQuestNodeGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IStoryManagerQuestNodeInternal, IStoryManagerQuestNodeGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.StoryManagerQuestNodes.GetOrAddAsOverride(r),
@@ -14640,7 +14640,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.StoryManagerEventNodes)
             {
-                yield return new ModContext<ISkyrimMod, IStoryManagerEventNodeInternal, IStoryManagerEventNodeGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IStoryManagerEventNodeInternal, IStoryManagerEventNodeGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.StoryManagerEventNodes.GetOrAddAsOverride(r),
@@ -14648,7 +14648,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.DialogBranches)
             {
-                yield return new ModContext<ISkyrimMod, IDialogBranchInternal, IDialogBranchGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IDialogBranchInternal, IDialogBranchGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.DialogBranches.GetOrAddAsOverride(r),
@@ -14656,7 +14656,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.MusicTracks)
             {
-                yield return new ModContext<ISkyrimMod, IMusicTrackInternal, IMusicTrackGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IMusicTrackInternal, IMusicTrackGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.MusicTracks.GetOrAddAsOverride(r),
@@ -14664,7 +14664,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.DialogViews)
             {
-                yield return new ModContext<ISkyrimMod, IDialogViewInternal, IDialogViewGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IDialogViewInternal, IDialogViewGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.DialogViews.GetOrAddAsOverride(r),
@@ -14672,7 +14672,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.WordsOfPower)
             {
-                yield return new ModContext<ISkyrimMod, IWordOfPowerInternal, IWordOfPowerGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IWordOfPowerInternal, IWordOfPowerGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.WordsOfPower.GetOrAddAsOverride(r),
@@ -14680,7 +14680,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Shouts)
             {
-                yield return new ModContext<ISkyrimMod, IShoutInternal, IShoutGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IShoutInternal, IShoutGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Shouts.GetOrAddAsOverride(r),
@@ -14688,7 +14688,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.EquipTypes)
             {
-                yield return new ModContext<ISkyrimMod, IEquipTypeInternal, IEquipTypeGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IEquipTypeInternal, IEquipTypeGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.EquipTypes.GetOrAddAsOverride(r),
@@ -14696,7 +14696,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Relationships)
             {
-                yield return new ModContext<ISkyrimMod, IRelationshipInternal, IRelationshipGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IRelationshipInternal, IRelationshipGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Relationships.GetOrAddAsOverride(r),
@@ -14704,7 +14704,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Scenes)
             {
-                yield return new ModContext<ISkyrimMod, ISceneInternal, ISceneGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ISceneInternal, ISceneGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Scenes.GetOrAddAsOverride(r),
@@ -14712,7 +14712,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.AssociationTypes)
             {
-                yield return new ModContext<ISkyrimMod, IAssociationTypeInternal, IAssociationTypeGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IAssociationTypeInternal, IAssociationTypeGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.AssociationTypes.GetOrAddAsOverride(r),
@@ -14720,7 +14720,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Outfits)
             {
-                yield return new ModContext<ISkyrimMod, IOutfitInternal, IOutfitGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IOutfitInternal, IOutfitGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Outfits.GetOrAddAsOverride(r),
@@ -14728,7 +14728,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.ArtObjects)
             {
-                yield return new ModContext<ISkyrimMod, IArtObjectInternal, IArtObjectGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IArtObjectInternal, IArtObjectGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.ArtObjects.GetOrAddAsOverride(r),
@@ -14736,7 +14736,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.MaterialObjects)
             {
-                yield return new ModContext<ISkyrimMod, IMaterialObjectInternal, IMaterialObjectGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IMaterialObjectInternal, IMaterialObjectGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.MaterialObjects.GetOrAddAsOverride(r),
@@ -14744,7 +14744,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.MovementTypes)
             {
-                yield return new ModContext<ISkyrimMod, IMovementTypeInternal, IMovementTypeGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IMovementTypeInternal, IMovementTypeGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.MovementTypes.GetOrAddAsOverride(r),
@@ -14752,7 +14752,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.SoundDescriptors)
             {
-                yield return new ModContext<ISkyrimMod, ISoundDescriptorInternal, ISoundDescriptorGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ISoundDescriptorInternal, ISoundDescriptorGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.SoundDescriptors.GetOrAddAsOverride(r),
@@ -14760,7 +14760,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.DualCastData)
             {
-                yield return new ModContext<ISkyrimMod, IDualCastDataInternal, IDualCastDataGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IDualCastDataInternal, IDualCastDataGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.DualCastData.GetOrAddAsOverride(r),
@@ -14768,7 +14768,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.SoundCategories)
             {
-                yield return new ModContext<ISkyrimMod, ISoundCategoryInternal, ISoundCategoryGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ISoundCategoryInternal, ISoundCategoryGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.SoundCategories.GetOrAddAsOverride(r),
@@ -14776,7 +14776,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.SoundOutputModels)
             {
-                yield return new ModContext<ISkyrimMod, ISoundOutputModelInternal, ISoundOutputModelGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ISoundOutputModelInternal, ISoundOutputModelGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.SoundOutputModels.GetOrAddAsOverride(r),
@@ -14784,7 +14784,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.CollisionLayers)
             {
-                yield return new ModContext<ISkyrimMod, ICollisionLayerInternal, ICollisionLayerGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ICollisionLayerInternal, ICollisionLayerGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.CollisionLayers.GetOrAddAsOverride(r),
@@ -14792,7 +14792,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Colors)
             {
-                yield return new ModContext<ISkyrimMod, IColorRecordInternal, IColorRecordGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IColorRecordInternal, IColorRecordGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Colors.GetOrAddAsOverride(r),
@@ -14800,7 +14800,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.ReverbParameters)
             {
-                yield return new ModContext<ISkyrimMod, IReverbParametersInternal, IReverbParametersGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IReverbParametersInternal, IReverbParametersGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.ReverbParameters.GetOrAddAsOverride(r),
@@ -14808,7 +14808,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.VolumetricLightings)
             {
-                yield return new ModContext<ISkyrimMod, IVolumetricLightingInternal, IVolumetricLightingGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IVolumetricLightingInternal, IVolumetricLightingGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.VolumetricLightings.GetOrAddAsOverride(r),
@@ -14816,7 +14816,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public IEnumerable<IModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        public IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             ISkyrimModGetter obj,
             ILinkCache linkCache,
             Type type,
@@ -14853,7 +14853,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IGameSettingInternal":
                     foreach (var item in obj.GameSettings)
                     {
-                        yield return new ModContext<ISkyrimMod, IGameSettingInternal, IGameSettingGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IGameSettingInternal, IGameSettingGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.GameSettings.GetOrAddAsOverride(r),
@@ -14866,7 +14866,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IKeywordInternal":
                     foreach (var item in obj.Keywords)
                     {
-                        yield return new ModContext<ISkyrimMod, IKeywordInternal, IKeywordGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IKeywordInternal, IKeywordGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Keywords.GetOrAddAsOverride(r),
@@ -14879,7 +14879,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILocationReferenceTypeInternal":
                     foreach (var item in obj.LocationReferenceTypes)
                     {
-                        yield return new ModContext<ISkyrimMod, ILocationReferenceTypeInternal, ILocationReferenceTypeGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ILocationReferenceTypeInternal, ILocationReferenceTypeGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.LocationReferenceTypes.GetOrAddAsOverride(r),
@@ -14892,7 +14892,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IActionRecordInternal":
                     foreach (var item in obj.Actions)
                     {
-                        yield return new ModContext<ISkyrimMod, IActionRecordInternal, IActionRecordGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IActionRecordInternal, IActionRecordGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Actions.GetOrAddAsOverride(r),
@@ -14905,7 +14905,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ITextureSetInternal":
                     foreach (var item in obj.TextureSets)
                     {
-                        yield return new ModContext<ISkyrimMod, ITextureSetInternal, ITextureSetGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ITextureSetInternal, ITextureSetGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.TextureSets.GetOrAddAsOverride(r),
@@ -14918,7 +14918,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IGlobalInternal":
                     foreach (var item in obj.Globals)
                     {
-                        yield return new ModContext<ISkyrimMod, IGlobalInternal, IGlobalGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IGlobalInternal, IGlobalGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Globals.GetOrAddAsOverride(r),
@@ -14931,7 +14931,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IClassInternal":
                     foreach (var item in obj.Classes)
                     {
-                        yield return new ModContext<ISkyrimMod, IClassInternal, IClassGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IClassInternal, IClassGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Classes.GetOrAddAsOverride(r),
@@ -14944,7 +14944,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IFactionInternal":
                     foreach (var item in obj.Factions)
                     {
-                        yield return new ModContext<ISkyrimMod, IFactionInternal, IFactionGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IFactionInternal, IFactionGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Factions.GetOrAddAsOverride(r),
@@ -14957,7 +14957,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IHeadPartInternal":
                     foreach (var item in obj.HeadParts)
                     {
-                        yield return new ModContext<ISkyrimMod, IHeadPartInternal, IHeadPartGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IHeadPartInternal, IHeadPartGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.HeadParts.GetOrAddAsOverride(r),
@@ -14970,7 +14970,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IHairInternal":
                     foreach (var item in obj.Hairs)
                     {
-                        yield return new ModContext<ISkyrimMod, IHairInternal, IHairGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IHairInternal, IHairGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Hairs.GetOrAddAsOverride(r),
@@ -14983,7 +14983,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IEyesInternal":
                     foreach (var item in obj.Eyes)
                     {
-                        yield return new ModContext<ISkyrimMod, IEyesInternal, IEyesGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IEyesInternal, IEyesGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Eyes.GetOrAddAsOverride(r),
@@ -14996,7 +14996,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IRaceInternal":
                     foreach (var item in obj.Races)
                     {
-                        yield return new ModContext<ISkyrimMod, IRaceInternal, IRaceGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IRaceInternal, IRaceGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Races.GetOrAddAsOverride(r),
@@ -15009,7 +15009,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ISoundMarkerInternal":
                     foreach (var item in obj.SoundMarkers)
                     {
-                        yield return new ModContext<ISkyrimMod, ISoundMarkerInternal, ISoundMarkerGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ISoundMarkerInternal, ISoundMarkerGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.SoundMarkers.GetOrAddAsOverride(r),
@@ -15022,7 +15022,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IAcousticSpaceInternal":
                     foreach (var item in obj.AcousticSpaces)
                     {
-                        yield return new ModContext<ISkyrimMod, IAcousticSpaceInternal, IAcousticSpaceGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IAcousticSpaceInternal, IAcousticSpaceGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.AcousticSpaces.GetOrAddAsOverride(r),
@@ -15035,7 +15035,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IMagicEffectInternal":
                     foreach (var item in obj.MagicEffects)
                     {
-                        yield return new ModContext<ISkyrimMod, IMagicEffectInternal, IMagicEffectGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IMagicEffectInternal, IMagicEffectGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.MagicEffects.GetOrAddAsOverride(r),
@@ -15048,7 +15048,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILandscapeTextureInternal":
                     foreach (var item in obj.LandscapeTextures)
                     {
-                        yield return new ModContext<ISkyrimMod, ILandscapeTextureInternal, ILandscapeTextureGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ILandscapeTextureInternal, ILandscapeTextureGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.LandscapeTextures.GetOrAddAsOverride(r),
@@ -15061,7 +15061,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IObjectEffectInternal":
                     foreach (var item in obj.ObjectEffects)
                     {
-                        yield return new ModContext<ISkyrimMod, IObjectEffectInternal, IObjectEffectGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IObjectEffectInternal, IObjectEffectGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.ObjectEffects.GetOrAddAsOverride(r),
@@ -15074,7 +15074,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ISpellInternal":
                     foreach (var item in obj.Spells)
                     {
-                        yield return new ModContext<ISkyrimMod, ISpellInternal, ISpellGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ISpellInternal, ISpellGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Spells.GetOrAddAsOverride(r),
@@ -15087,7 +15087,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IScrollInternal":
                     foreach (var item in obj.Scrolls)
                     {
-                        yield return new ModContext<ISkyrimMod, IScrollInternal, IScrollGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IScrollInternal, IScrollGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Scrolls.GetOrAddAsOverride(r),
@@ -15100,7 +15100,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IActivatorInternal":
                     foreach (var item in obj.Activators)
                     {
-                        yield return new ModContext<ISkyrimMod, IActivatorInternal, IActivatorGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IActivatorInternal, IActivatorGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Activators.GetOrAddAsOverride(r),
@@ -15113,7 +15113,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ITalkingActivatorInternal":
                     foreach (var item in obj.TalkingActivators)
                     {
-                        yield return new ModContext<ISkyrimMod, ITalkingActivatorInternal, ITalkingActivatorGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ITalkingActivatorInternal, ITalkingActivatorGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.TalkingActivators.GetOrAddAsOverride(r),
@@ -15126,7 +15126,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IArmorInternal":
                     foreach (var item in obj.Armors)
                     {
-                        yield return new ModContext<ISkyrimMod, IArmorInternal, IArmorGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IArmorInternal, IArmorGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Armors.GetOrAddAsOverride(r),
@@ -15139,7 +15139,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IBookInternal":
                     foreach (var item in obj.Books)
                     {
-                        yield return new ModContext<ISkyrimMod, IBookInternal, IBookGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IBookInternal, IBookGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Books.GetOrAddAsOverride(r),
@@ -15152,7 +15152,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IContainerInternal":
                     foreach (var item in obj.Containers)
                     {
-                        yield return new ModContext<ISkyrimMod, IContainerInternal, IContainerGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IContainerInternal, IContainerGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Containers.GetOrAddAsOverride(r),
@@ -15165,7 +15165,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IDoorInternal":
                     foreach (var item in obj.Doors)
                     {
-                        yield return new ModContext<ISkyrimMod, IDoorInternal, IDoorGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IDoorInternal, IDoorGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Doors.GetOrAddAsOverride(r),
@@ -15178,7 +15178,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IIngredientInternal":
                     foreach (var item in obj.Ingredients)
                     {
-                        yield return new ModContext<ISkyrimMod, IIngredientInternal, IIngredientGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IIngredientInternal, IIngredientGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Ingredients.GetOrAddAsOverride(r),
@@ -15191,7 +15191,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILightInternal":
                     foreach (var item in obj.Lights)
                     {
-                        yield return new ModContext<ISkyrimMod, ILightInternal, ILightGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ILightInternal, ILightGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Lights.GetOrAddAsOverride(r),
@@ -15204,7 +15204,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IMiscItemInternal":
                     foreach (var item in obj.MiscItems)
                     {
-                        yield return new ModContext<ISkyrimMod, IMiscItemInternal, IMiscItemGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IMiscItemInternal, IMiscItemGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.MiscItems.GetOrAddAsOverride(r),
@@ -15217,7 +15217,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IAlchemicalApparatusInternal":
                     foreach (var item in obj.AlchemicalApparatuses)
                     {
-                        yield return new ModContext<ISkyrimMod, IAlchemicalApparatusInternal, IAlchemicalApparatusGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IAlchemicalApparatusInternal, IAlchemicalApparatusGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.AlchemicalApparatuses.GetOrAddAsOverride(r),
@@ -15230,7 +15230,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IStaticInternal":
                     foreach (var item in obj.Statics)
                     {
-                        yield return new ModContext<ISkyrimMod, IStaticInternal, IStaticGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IStaticInternal, IStaticGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Statics.GetOrAddAsOverride(r),
@@ -15243,7 +15243,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IMoveableStaticInternal":
                     foreach (var item in obj.MoveableStatics)
                     {
-                        yield return new ModContext<ISkyrimMod, IMoveableStaticInternal, IMoveableStaticGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IMoveableStaticInternal, IMoveableStaticGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.MoveableStatics.GetOrAddAsOverride(r),
@@ -15256,7 +15256,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IGrassInternal":
                     foreach (var item in obj.Grasses)
                     {
-                        yield return new ModContext<ISkyrimMod, IGrassInternal, IGrassGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IGrassInternal, IGrassGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Grasses.GetOrAddAsOverride(r),
@@ -15269,7 +15269,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ITreeInternal":
                     foreach (var item in obj.Trees)
                     {
-                        yield return new ModContext<ISkyrimMod, ITreeInternal, ITreeGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ITreeInternal, ITreeGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Trees.GetOrAddAsOverride(r),
@@ -15282,7 +15282,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IFloraInternal":
                     foreach (var item in obj.Florae)
                     {
-                        yield return new ModContext<ISkyrimMod, IFloraInternal, IFloraGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IFloraInternal, IFloraGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Florae.GetOrAddAsOverride(r),
@@ -15295,7 +15295,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IFurnitureInternal":
                     foreach (var item in obj.Furniture)
                     {
-                        yield return new ModContext<ISkyrimMod, IFurnitureInternal, IFurnitureGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IFurnitureInternal, IFurnitureGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Furniture.GetOrAddAsOverride(r),
@@ -15308,7 +15308,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IWeaponInternal":
                     foreach (var item in obj.Weapons)
                     {
-                        yield return new ModContext<ISkyrimMod, IWeaponInternal, IWeaponGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IWeaponInternal, IWeaponGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Weapons.GetOrAddAsOverride(r),
@@ -15321,7 +15321,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IAmmunitionInternal":
                     foreach (var item in obj.Ammunitions)
                     {
-                        yield return new ModContext<ISkyrimMod, IAmmunitionInternal, IAmmunitionGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IAmmunitionInternal, IAmmunitionGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Ammunitions.GetOrAddAsOverride(r),
@@ -15334,7 +15334,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "INpcInternal":
                     foreach (var item in obj.Npcs)
                     {
-                        yield return new ModContext<ISkyrimMod, INpcInternal, INpcGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, INpcInternal, INpcGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Npcs.GetOrAddAsOverride(r),
@@ -15347,7 +15347,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILeveledNpcInternal":
                     foreach (var item in obj.LeveledNpcs)
                     {
-                        yield return new ModContext<ISkyrimMod, ILeveledNpcInternal, ILeveledNpcGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ILeveledNpcInternal, ILeveledNpcGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.LeveledNpcs.GetOrAddAsOverride(r),
@@ -15360,7 +15360,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IKeyInternal":
                     foreach (var item in obj.Keys)
                     {
-                        yield return new ModContext<ISkyrimMod, IKeyInternal, IKeyGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IKeyInternal, IKeyGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Keys.GetOrAddAsOverride(r),
@@ -15373,7 +15373,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IIngestibleInternal":
                     foreach (var item in obj.Ingestibles)
                     {
-                        yield return new ModContext<ISkyrimMod, IIngestibleInternal, IIngestibleGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IIngestibleInternal, IIngestibleGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Ingestibles.GetOrAddAsOverride(r),
@@ -15386,7 +15386,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IIdleMarkerInternal":
                     foreach (var item in obj.IdleMarkers)
                     {
-                        yield return new ModContext<ISkyrimMod, IIdleMarkerInternal, IIdleMarkerGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IIdleMarkerInternal, IIdleMarkerGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.IdleMarkers.GetOrAddAsOverride(r),
@@ -15399,7 +15399,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IConstructibleObjectInternal":
                     foreach (var item in obj.ConstructibleObjects)
                     {
-                        yield return new ModContext<ISkyrimMod, IConstructibleObjectInternal, IConstructibleObjectGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IConstructibleObjectInternal, IConstructibleObjectGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.ConstructibleObjects.GetOrAddAsOverride(r),
@@ -15412,7 +15412,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IProjectileInternal":
                     foreach (var item in obj.Projectiles)
                     {
-                        yield return new ModContext<ISkyrimMod, IProjectileInternal, IProjectileGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IProjectileInternal, IProjectileGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Projectiles.GetOrAddAsOverride(r),
@@ -15425,7 +15425,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IHazardInternal":
                     foreach (var item in obj.Hazards)
                     {
-                        yield return new ModContext<ISkyrimMod, IHazardInternal, IHazardGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IHazardInternal, IHazardGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Hazards.GetOrAddAsOverride(r),
@@ -15438,7 +15438,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ISoulGemInternal":
                     foreach (var item in obj.SoulGems)
                     {
-                        yield return new ModContext<ISkyrimMod, ISoulGemInternal, ISoulGemGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ISoulGemInternal, ISoulGemGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.SoulGems.GetOrAddAsOverride(r),
@@ -15451,7 +15451,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILeveledItemInternal":
                     foreach (var item in obj.LeveledItems)
                     {
-                        yield return new ModContext<ISkyrimMod, ILeveledItemInternal, ILeveledItemGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ILeveledItemInternal, ILeveledItemGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.LeveledItems.GetOrAddAsOverride(r),
@@ -15464,7 +15464,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IWeatherInternal":
                     foreach (var item in obj.Weathers)
                     {
-                        yield return new ModContext<ISkyrimMod, IWeatherInternal, IWeatherGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IWeatherInternal, IWeatherGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Weathers.GetOrAddAsOverride(r),
@@ -15477,7 +15477,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IClimateInternal":
                     foreach (var item in obj.Climates)
                     {
-                        yield return new ModContext<ISkyrimMod, IClimateInternal, IClimateGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IClimateInternal, IClimateGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Climates.GetOrAddAsOverride(r),
@@ -15490,7 +15490,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IShaderParticleGeometryInternal":
                     foreach (var item in obj.ShaderParticleGeometries)
                     {
-                        yield return new ModContext<ISkyrimMod, IShaderParticleGeometryInternal, IShaderParticleGeometryGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IShaderParticleGeometryInternal, IShaderParticleGeometryGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.ShaderParticleGeometries.GetOrAddAsOverride(r),
@@ -15503,7 +15503,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IVisualEffectInternal":
                     foreach (var item in obj.VisualEffects)
                     {
-                        yield return new ModContext<ISkyrimMod, IVisualEffectInternal, IVisualEffectGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IVisualEffectInternal, IVisualEffectGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.VisualEffects.GetOrAddAsOverride(r),
@@ -15516,7 +15516,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IRegionInternal":
                     foreach (var item in obj.Regions)
                     {
-                        yield return new ModContext<ISkyrimMod, IRegionInternal, IRegionGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IRegionInternal, IRegionGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Regions.GetOrAddAsOverride(r),
@@ -15529,7 +15529,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "INavigationMeshInfoMapInternal":
                     foreach (var item in obj.NavigationMeshInfoMaps)
                     {
-                        yield return new ModContext<ISkyrimMod, INavigationMeshInfoMapInternal, INavigationMeshInfoMapGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, INavigationMeshInfoMapInternal, INavigationMeshInfoMapGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.NavigationMeshInfoMaps.GetOrAddAsOverride(r),
@@ -15542,7 +15542,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IWorldspaceInternal":
                     foreach (var item in obj.Worldspaces)
                     {
-                        yield return new ModContext<ISkyrimMod, IWorldspaceInternal, IWorldspaceGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IWorldspaceInternal, IWorldspaceGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(r),
@@ -15555,7 +15555,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IDialogTopicInternal":
                     foreach (var item in obj.DialogTopics)
                     {
-                        yield return new ModContext<ISkyrimMod, IDialogTopicInternal, IDialogTopicGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IDialogTopicInternal, IDialogTopicGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.DialogTopics.GetOrAddAsOverride(r),
@@ -15568,7 +15568,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IQuestInternal":
                     foreach (var item in obj.Quests)
                     {
-                        yield return new ModContext<ISkyrimMod, IQuestInternal, IQuestGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IQuestInternal, IQuestGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Quests.GetOrAddAsOverride(r),
@@ -15581,7 +15581,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IIdleAnimationInternal":
                     foreach (var item in obj.IdleAnimations)
                     {
-                        yield return new ModContext<ISkyrimMod, IIdleAnimationInternal, IIdleAnimationGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IIdleAnimationInternal, IIdleAnimationGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.IdleAnimations.GetOrAddAsOverride(r),
@@ -15594,7 +15594,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPackageInternal":
                     foreach (var item in obj.Packages)
                     {
-                        yield return new ModContext<ISkyrimMod, IPackageInternal, IPackageGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IPackageInternal, IPackageGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Packages.GetOrAddAsOverride(r),
@@ -15607,7 +15607,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ICombatStyleInternal":
                     foreach (var item in obj.CombatStyles)
                     {
-                        yield return new ModContext<ISkyrimMod, ICombatStyleInternal, ICombatStyleGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ICombatStyleInternal, ICombatStyleGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.CombatStyles.GetOrAddAsOverride(r),
@@ -15620,7 +15620,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILoadScreenInternal":
                     foreach (var item in obj.LoadScreens)
                     {
-                        yield return new ModContext<ISkyrimMod, ILoadScreenInternal, ILoadScreenGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ILoadScreenInternal, ILoadScreenGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.LoadScreens.GetOrAddAsOverride(r),
@@ -15633,7 +15633,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILeveledSpellInternal":
                     foreach (var item in obj.LeveledSpells)
                     {
-                        yield return new ModContext<ISkyrimMod, ILeveledSpellInternal, ILeveledSpellGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ILeveledSpellInternal, ILeveledSpellGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.LeveledSpells.GetOrAddAsOverride(r),
@@ -15646,7 +15646,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IAnimatedObjectInternal":
                     foreach (var item in obj.AnimatedObjects)
                     {
-                        yield return new ModContext<ISkyrimMod, IAnimatedObjectInternal, IAnimatedObjectGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IAnimatedObjectInternal, IAnimatedObjectGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.AnimatedObjects.GetOrAddAsOverride(r),
@@ -15659,7 +15659,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IWaterInternal":
                     foreach (var item in obj.Waters)
                     {
-                        yield return new ModContext<ISkyrimMod, IWaterInternal, IWaterGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IWaterInternal, IWaterGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Waters.GetOrAddAsOverride(r),
@@ -15672,7 +15672,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IEffectShaderInternal":
                     foreach (var item in obj.EffectShaders)
                     {
-                        yield return new ModContext<ISkyrimMod, IEffectShaderInternal, IEffectShaderGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IEffectShaderInternal, IEffectShaderGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.EffectShaders.GetOrAddAsOverride(r),
@@ -15685,7 +15685,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IExplosionInternal":
                     foreach (var item in obj.Explosions)
                     {
-                        yield return new ModContext<ISkyrimMod, IExplosionInternal, IExplosionGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IExplosionInternal, IExplosionGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Explosions.GetOrAddAsOverride(r),
@@ -15698,7 +15698,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IDebrisInternal":
                     foreach (var item in obj.Debris)
                     {
-                        yield return new ModContext<ISkyrimMod, IDebrisInternal, IDebrisGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IDebrisInternal, IDebrisGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Debris.GetOrAddAsOverride(r),
@@ -15711,7 +15711,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IImageSpaceInternal":
                     foreach (var item in obj.ImageSpaces)
                     {
-                        yield return new ModContext<ISkyrimMod, IImageSpaceInternal, IImageSpaceGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IImageSpaceInternal, IImageSpaceGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.ImageSpaces.GetOrAddAsOverride(r),
@@ -15724,7 +15724,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IImageSpaceAdapterInternal":
                     foreach (var item in obj.ImageSpaceAdapters)
                     {
-                        yield return new ModContext<ISkyrimMod, IImageSpaceAdapterInternal, IImageSpaceAdapterGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IImageSpaceAdapterInternal, IImageSpaceAdapterGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.ImageSpaceAdapters.GetOrAddAsOverride(r),
@@ -15737,7 +15737,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IFormListInternal":
                     foreach (var item in obj.FormLists)
                     {
-                        yield return new ModContext<ISkyrimMod, IFormListInternal, IFormListGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IFormListInternal, IFormListGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.FormLists.GetOrAddAsOverride(r),
@@ -15750,7 +15750,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPerkInternal":
                     foreach (var item in obj.Perks)
                     {
-                        yield return new ModContext<ISkyrimMod, IPerkInternal, IPerkGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IPerkInternal, IPerkGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Perks.GetOrAddAsOverride(r),
@@ -15763,7 +15763,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IBodyPartDataInternal":
                     foreach (var item in obj.BodyParts)
                     {
-                        yield return new ModContext<ISkyrimMod, IBodyPartDataInternal, IBodyPartDataGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IBodyPartDataInternal, IBodyPartDataGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.BodyParts.GetOrAddAsOverride(r),
@@ -15776,7 +15776,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IAddonNodeInternal":
                     foreach (var item in obj.AddonNodes)
                     {
-                        yield return new ModContext<ISkyrimMod, IAddonNodeInternal, IAddonNodeGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IAddonNodeInternal, IAddonNodeGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.AddonNodes.GetOrAddAsOverride(r),
@@ -15789,7 +15789,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IActorValueInformationInternal":
                     foreach (var item in obj.ActorValueInformation)
                     {
-                        yield return new ModContext<ISkyrimMod, IActorValueInformationInternal, IActorValueInformationGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IActorValueInformationInternal, IActorValueInformationGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.ActorValueInformation.GetOrAddAsOverride(r),
@@ -15802,7 +15802,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ICameraShotInternal":
                     foreach (var item in obj.CameraShots)
                     {
-                        yield return new ModContext<ISkyrimMod, ICameraShotInternal, ICameraShotGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ICameraShotInternal, ICameraShotGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.CameraShots.GetOrAddAsOverride(r),
@@ -15815,7 +15815,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ICameraPathInternal":
                     foreach (var item in obj.CameraPaths)
                     {
-                        yield return new ModContext<ISkyrimMod, ICameraPathInternal, ICameraPathGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ICameraPathInternal, ICameraPathGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.CameraPaths.GetOrAddAsOverride(r),
@@ -15828,7 +15828,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IVoiceTypeInternal":
                     foreach (var item in obj.VoiceTypes)
                     {
-                        yield return new ModContext<ISkyrimMod, IVoiceTypeInternal, IVoiceTypeGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IVoiceTypeInternal, IVoiceTypeGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.VoiceTypes.GetOrAddAsOverride(r),
@@ -15841,7 +15841,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IMaterialTypeInternal":
                     foreach (var item in obj.MaterialTypes)
                     {
-                        yield return new ModContext<ISkyrimMod, IMaterialTypeInternal, IMaterialTypeGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IMaterialTypeInternal, IMaterialTypeGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.MaterialTypes.GetOrAddAsOverride(r),
@@ -15854,7 +15854,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IImpactInternal":
                     foreach (var item in obj.Impacts)
                     {
-                        yield return new ModContext<ISkyrimMod, IImpactInternal, IImpactGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IImpactInternal, IImpactGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Impacts.GetOrAddAsOverride(r),
@@ -15867,7 +15867,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IImpactDataSetInternal":
                     foreach (var item in obj.ImpactDataSets)
                     {
-                        yield return new ModContext<ISkyrimMod, IImpactDataSetInternal, IImpactDataSetGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IImpactDataSetInternal, IImpactDataSetGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.ImpactDataSets.GetOrAddAsOverride(r),
@@ -15880,7 +15880,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IArmorAddonInternal":
                     foreach (var item in obj.ArmorAddons)
                     {
-                        yield return new ModContext<ISkyrimMod, IArmorAddonInternal, IArmorAddonGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IArmorAddonInternal, IArmorAddonGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.ArmorAddons.GetOrAddAsOverride(r),
@@ -15893,7 +15893,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IEncounterZoneInternal":
                     foreach (var item in obj.EncounterZones)
                     {
-                        yield return new ModContext<ISkyrimMod, IEncounterZoneInternal, IEncounterZoneGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IEncounterZoneInternal, IEncounterZoneGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.EncounterZones.GetOrAddAsOverride(r),
@@ -15906,7 +15906,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILocationInternal":
                     foreach (var item in obj.Locations)
                     {
-                        yield return new ModContext<ISkyrimMod, ILocationInternal, ILocationGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ILocationInternal, ILocationGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Locations.GetOrAddAsOverride(r),
@@ -15919,7 +15919,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IMessageInternal":
                     foreach (var item in obj.Messages)
                     {
-                        yield return new ModContext<ISkyrimMod, IMessageInternal, IMessageGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IMessageInternal, IMessageGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Messages.GetOrAddAsOverride(r),
@@ -15932,7 +15932,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IDefaultObjectManagerInternal":
                     foreach (var item in obj.DefaultObjectManagers)
                     {
-                        yield return new ModContext<ISkyrimMod, IDefaultObjectManagerInternal, IDefaultObjectManagerGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IDefaultObjectManagerInternal, IDefaultObjectManagerGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.DefaultObjectManagers.GetOrAddAsOverride(r),
@@ -15945,7 +15945,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILightingTemplateInternal":
                     foreach (var item in obj.LightingTemplates)
                     {
-                        yield return new ModContext<ISkyrimMod, ILightingTemplateInternal, ILightingTemplateGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ILightingTemplateInternal, ILightingTemplateGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.LightingTemplates.GetOrAddAsOverride(r),
@@ -15958,7 +15958,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IMusicTypeInternal":
                     foreach (var item in obj.MusicTypes)
                     {
-                        yield return new ModContext<ISkyrimMod, IMusicTypeInternal, IMusicTypeGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IMusicTypeInternal, IMusicTypeGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.MusicTypes.GetOrAddAsOverride(r),
@@ -15971,7 +15971,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IFootstepInternal":
                     foreach (var item in obj.Footsteps)
                     {
-                        yield return new ModContext<ISkyrimMod, IFootstepInternal, IFootstepGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IFootstepInternal, IFootstepGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Footsteps.GetOrAddAsOverride(r),
@@ -15984,7 +15984,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IFootstepSetInternal":
                     foreach (var item in obj.FootstepSets)
                     {
-                        yield return new ModContext<ISkyrimMod, IFootstepSetInternal, IFootstepSetGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IFootstepSetInternal, IFootstepSetGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.FootstepSets.GetOrAddAsOverride(r),
@@ -15997,7 +15997,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IStoryManagerBranchNodeInternal":
                     foreach (var item in obj.StoryManagerBranchNodes)
                     {
-                        yield return new ModContext<ISkyrimMod, IStoryManagerBranchNodeInternal, IStoryManagerBranchNodeGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IStoryManagerBranchNodeInternal, IStoryManagerBranchNodeGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.StoryManagerBranchNodes.GetOrAddAsOverride(r),
@@ -16010,7 +16010,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IStoryManagerQuestNodeInternal":
                     foreach (var item in obj.StoryManagerQuestNodes)
                     {
-                        yield return new ModContext<ISkyrimMod, IStoryManagerQuestNodeInternal, IStoryManagerQuestNodeGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IStoryManagerQuestNodeInternal, IStoryManagerQuestNodeGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.StoryManagerQuestNodes.GetOrAddAsOverride(r),
@@ -16023,7 +16023,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IStoryManagerEventNodeInternal":
                     foreach (var item in obj.StoryManagerEventNodes)
                     {
-                        yield return new ModContext<ISkyrimMod, IStoryManagerEventNodeInternal, IStoryManagerEventNodeGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IStoryManagerEventNodeInternal, IStoryManagerEventNodeGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.StoryManagerEventNodes.GetOrAddAsOverride(r),
@@ -16036,7 +16036,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IDialogBranchInternal":
                     foreach (var item in obj.DialogBranches)
                     {
-                        yield return new ModContext<ISkyrimMod, IDialogBranchInternal, IDialogBranchGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IDialogBranchInternal, IDialogBranchGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.DialogBranches.GetOrAddAsOverride(r),
@@ -16049,7 +16049,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IMusicTrackInternal":
                     foreach (var item in obj.MusicTracks)
                     {
-                        yield return new ModContext<ISkyrimMod, IMusicTrackInternal, IMusicTrackGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IMusicTrackInternal, IMusicTrackGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.MusicTracks.GetOrAddAsOverride(r),
@@ -16062,7 +16062,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IDialogViewInternal":
                     foreach (var item in obj.DialogViews)
                     {
-                        yield return new ModContext<ISkyrimMod, IDialogViewInternal, IDialogViewGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IDialogViewInternal, IDialogViewGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.DialogViews.GetOrAddAsOverride(r),
@@ -16075,7 +16075,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IWordOfPowerInternal":
                     foreach (var item in obj.WordsOfPower)
                     {
-                        yield return new ModContext<ISkyrimMod, IWordOfPowerInternal, IWordOfPowerGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IWordOfPowerInternal, IWordOfPowerGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.WordsOfPower.GetOrAddAsOverride(r),
@@ -16088,7 +16088,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IShoutInternal":
                     foreach (var item in obj.Shouts)
                     {
-                        yield return new ModContext<ISkyrimMod, IShoutInternal, IShoutGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IShoutInternal, IShoutGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Shouts.GetOrAddAsOverride(r),
@@ -16101,7 +16101,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IEquipTypeInternal":
                     foreach (var item in obj.EquipTypes)
                     {
-                        yield return new ModContext<ISkyrimMod, IEquipTypeInternal, IEquipTypeGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IEquipTypeInternal, IEquipTypeGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.EquipTypes.GetOrAddAsOverride(r),
@@ -16114,7 +16114,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IRelationshipInternal":
                     foreach (var item in obj.Relationships)
                     {
-                        yield return new ModContext<ISkyrimMod, IRelationshipInternal, IRelationshipGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IRelationshipInternal, IRelationshipGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Relationships.GetOrAddAsOverride(r),
@@ -16127,7 +16127,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ISceneInternal":
                     foreach (var item in obj.Scenes)
                     {
-                        yield return new ModContext<ISkyrimMod, ISceneInternal, ISceneGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ISceneInternal, ISceneGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Scenes.GetOrAddAsOverride(r),
@@ -16140,7 +16140,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IAssociationTypeInternal":
                     foreach (var item in obj.AssociationTypes)
                     {
-                        yield return new ModContext<ISkyrimMod, IAssociationTypeInternal, IAssociationTypeGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IAssociationTypeInternal, IAssociationTypeGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.AssociationTypes.GetOrAddAsOverride(r),
@@ -16153,7 +16153,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IOutfitInternal":
                     foreach (var item in obj.Outfits)
                     {
-                        yield return new ModContext<ISkyrimMod, IOutfitInternal, IOutfitGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IOutfitInternal, IOutfitGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Outfits.GetOrAddAsOverride(r),
@@ -16166,7 +16166,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IArtObjectInternal":
                     foreach (var item in obj.ArtObjects)
                     {
-                        yield return new ModContext<ISkyrimMod, IArtObjectInternal, IArtObjectGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IArtObjectInternal, IArtObjectGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.ArtObjects.GetOrAddAsOverride(r),
@@ -16179,7 +16179,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IMaterialObjectInternal":
                     foreach (var item in obj.MaterialObjects)
                     {
-                        yield return new ModContext<ISkyrimMod, IMaterialObjectInternal, IMaterialObjectGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IMaterialObjectInternal, IMaterialObjectGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.MaterialObjects.GetOrAddAsOverride(r),
@@ -16192,7 +16192,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IMovementTypeInternal":
                     foreach (var item in obj.MovementTypes)
                     {
-                        yield return new ModContext<ISkyrimMod, IMovementTypeInternal, IMovementTypeGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IMovementTypeInternal, IMovementTypeGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.MovementTypes.GetOrAddAsOverride(r),
@@ -16205,7 +16205,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ISoundDescriptorInternal":
                     foreach (var item in obj.SoundDescriptors)
                     {
-                        yield return new ModContext<ISkyrimMod, ISoundDescriptorInternal, ISoundDescriptorGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ISoundDescriptorInternal, ISoundDescriptorGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.SoundDescriptors.GetOrAddAsOverride(r),
@@ -16218,7 +16218,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IDualCastDataInternal":
                     foreach (var item in obj.DualCastData)
                     {
-                        yield return new ModContext<ISkyrimMod, IDualCastDataInternal, IDualCastDataGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IDualCastDataInternal, IDualCastDataGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.DualCastData.GetOrAddAsOverride(r),
@@ -16231,7 +16231,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ISoundCategoryInternal":
                     foreach (var item in obj.SoundCategories)
                     {
-                        yield return new ModContext<ISkyrimMod, ISoundCategoryInternal, ISoundCategoryGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ISoundCategoryInternal, ISoundCategoryGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.SoundCategories.GetOrAddAsOverride(r),
@@ -16244,7 +16244,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ISoundOutputModelInternal":
                     foreach (var item in obj.SoundOutputModels)
                     {
-                        yield return new ModContext<ISkyrimMod, ISoundOutputModelInternal, ISoundOutputModelGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ISoundOutputModelInternal, ISoundOutputModelGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.SoundOutputModels.GetOrAddAsOverride(r),
@@ -16257,7 +16257,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ICollisionLayerInternal":
                     foreach (var item in obj.CollisionLayers)
                     {
-                        yield return new ModContext<ISkyrimMod, ICollisionLayerInternal, ICollisionLayerGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ICollisionLayerInternal, ICollisionLayerGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.CollisionLayers.GetOrAddAsOverride(r),
@@ -16270,7 +16270,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IColorRecordInternal":
                     foreach (var item in obj.Colors)
                     {
-                        yield return new ModContext<ISkyrimMod, IColorRecordInternal, IColorRecordGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IColorRecordInternal, IColorRecordGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Colors.GetOrAddAsOverride(r),
@@ -16283,7 +16283,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IReverbParametersInternal":
                     foreach (var item in obj.ReverbParameters)
                     {
-                        yield return new ModContext<ISkyrimMod, IReverbParametersInternal, IReverbParametersGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IReverbParametersInternal, IReverbParametersGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.ReverbParameters.GetOrAddAsOverride(r),
@@ -16296,7 +16296,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IVolumetricLightingInternal":
                     foreach (var item in obj.VolumetricLightings)
                     {
-                        yield return new ModContext<ISkyrimMod, IVolumetricLightingInternal, IVolumetricLightingGetter>(
+                        yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IVolumetricLightingInternal, IVolumetricLightingGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.VolumetricLightings.GetOrAddAsOverride(r),
@@ -23234,9 +23234,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public bool UsingLocalization => this.ModHeader.Flags.HasFlag(SkyrimModHeader.HeaderFlag.Localized);
         public IEnumerable<FormLinkInformation> ContainedFormLinks => SkyrimModCommon.Instance.GetContainedFormLinks(this);
         [DebuggerStepThrough]
-        IEnumerable<IModContext<ISkyrimMod, TSetter, TGetter>> IMajorRecordContextEnumerable<ISkyrimMod>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, TSetter, TGetter>> IMajorRecordContextEnumerable<ISkyrimMod, ISkyrimModGetter>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> IMajorRecordContextEnumerable<ISkyrimMod>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> IMajorRecordContextEnumerable<ISkyrimMod, ISkyrimModGetter>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

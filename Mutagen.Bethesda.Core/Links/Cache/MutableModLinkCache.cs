@@ -15,8 +15,8 @@ namespace Mutagen.Bethesda
     /// this cache must be locked alongside any mutations to the mod the cache wraps
     /// </summary>
     public class MutableModLinkCache<TMod, TModGetter> : ILinkCache<TMod, TModGetter>
-        where TMod : class, IContextMod<TMod>, TModGetter
-        where TModGetter : class, IContextGetterMod<TMod>
+        where TMod : class, IContextMod<TMod, TModGetter>, TModGetter
+        where TModGetter : class, IContextGetterMod<TMod, TModGetter>
     {
         private readonly TModGetter _sourceMod;
 
@@ -225,7 +225,7 @@ namespace Mutagen.Bethesda
 
         /// <inheritdoc />
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        public bool TryResolveContext(FormKey formKey, [MaybeNullWhen(false)] out IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec)
+        public bool TryResolveContext(FormKey formKey, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec)
         {
             if (formKey.IsNull)
             {
@@ -248,7 +248,7 @@ namespace Mutagen.Bethesda
 
         /// <inheritdoc />
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        public bool TryResolveContext(string editorId, [MaybeNullWhen(false)] out IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec)
+        public bool TryResolveContext(string editorId, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec)
         {
             if (editorId.IsNullOrWhitespace())
             {
@@ -270,8 +270,8 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public bool TryResolveContext<TMajorSetter, TMajorGetter>(FormKey formKey, [MaybeNullWhen(false)] out IModContext<TMod, TMajorSetter, TMajorGetter> majorRec)
-            where TMajorSetter : class, IMajorRecordCommon, TMajorGetter
+        public bool TryResolveContext<TMajor, TMajorGetter>(FormKey formKey, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, TMajor, TMajorGetter> majorRec)
+            where TMajor : class, IMajorRecordCommon, TMajorGetter
             where TMajorGetter : class, IMajorRecordCommonGetter
         {
             if (formKey.IsNull)
@@ -281,7 +281,7 @@ namespace Mutagen.Bethesda
             }
             // ToDo
             // Upgrade to EnumerateGroups<TMajor>()
-            foreach (var major in this._sourceMod.EnumerateMajorRecordContexts<TMajorSetter, TMajorGetter>(this))
+            foreach (var major in this._sourceMod.EnumerateMajorRecordContexts<TMajor, TMajorGetter>(this))
             {
                 if (major.Record.FormKey == formKey)
                 {
@@ -295,8 +295,8 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public bool TryResolveContext<TMajorSetter, TMajorGetter>(string editorId, [MaybeNullWhen(false)] out IModContext<TMod, TMajorSetter, TMajorGetter> majorRec)
-            where TMajorSetter : class, IMajorRecordCommon, TMajorGetter
+        public bool TryResolveContext<TMajor, TMajorGetter>(string editorId, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, TMajor, TMajorGetter> majorRec)
+            where TMajor : class, IMajorRecordCommon, TMajorGetter
             where TMajorGetter : class, IMajorRecordCommonGetter
         {
             if (editorId.IsNullOrWhitespace())
@@ -306,7 +306,7 @@ namespace Mutagen.Bethesda
             }
             // ToDo
             // Upgrade to EnumerateGroups<TMajor>()
-            foreach (var major in this._sourceMod.EnumerateMajorRecordContexts<TMajorSetter, TMajorGetter>(this))
+            foreach (var major in this._sourceMod.EnumerateMajorRecordContexts<TMajor, TMajorGetter>(this))
             {
                 if (editorId.Equals(major.Record.EditorID))
                 {
@@ -320,7 +320,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public bool TryResolveContext(FormKey formKey, Type type, [MaybeNullWhen(false)] out IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec)
+        public bool TryResolveContext(FormKey formKey, Type type, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec)
         {
             if (formKey.IsNull)
             {
@@ -343,7 +343,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public bool TryResolveContext(string editorId, Type type, [MaybeNullWhen(false)] out IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec)
+        public bool TryResolveContext(string editorId, Type type, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec)
         {
             if (editorId.IsNullOrWhitespace())
             {
@@ -367,7 +367,7 @@ namespace Mutagen.Bethesda
 
         /// <inheritdoc />
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        public IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(FormKey formKey)
+        public IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(FormKey formKey)
         {
             if (TryResolveContext<IMajorRecordCommon, IMajorRecordCommonGetter>(formKey, out var majorRec)) return majorRec;
             throw new KeyNotFoundException($"FormKey {formKey} could not be found.");
@@ -375,41 +375,41 @@ namespace Mutagen.Bethesda
 
         /// <inheritdoc />
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        public IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(string editorId)
+        public IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(string editorId)
         {
             if (TryResolveContext<IMajorRecordCommon, IMajorRecordCommonGetter>(editorId, out var majorRec)) return majorRec;
             throw new KeyNotFoundException($"EditorID {editorId} could not be found.");
         }
 
         /// <inheritdoc />
-        public IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(FormKey formKey, Type type)
+        public IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(FormKey formKey, Type type)
         {
             if (TryResolveContext(formKey, type, out var commonRec)) return commonRec;
             throw new KeyNotFoundException($"FormKey {formKey} could not be found.");
         }
 
         /// <inheritdoc />
-        public IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(string editorId, Type type)
+        public IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(string editorId, Type type)
         {
             if (TryResolveContext(editorId, type, out var commonRec)) return commonRec;
             throw new KeyNotFoundException($"EditorID {editorId} could not be found.");
         }
 
         /// <inheritdoc />
-        public IModContext<TMod, TMajorSetter, TMajorGetter> ResolveContext<TMajorSetter, TMajorGetter>(FormKey formKey)
-            where TMajorSetter : class, IMajorRecordCommon, TMajorGetter
+        public IModContext<TMod, TModGetter, TMajor, TMajorGetter> ResolveContext<TMajor, TMajorGetter>(FormKey formKey)
+            where TMajor : class, IMajorRecordCommon, TMajorGetter
             where TMajorGetter : class, IMajorRecordCommonGetter
         {
-            if (TryResolveContext<TMajorSetter, TMajorGetter>(formKey, out var commonRec)) return commonRec;
+            if (TryResolveContext<TMajor, TMajorGetter>(formKey, out var commonRec)) return commonRec;
             throw new KeyNotFoundException($"FormKey {formKey} could not be found.");
         }
 
         /// <inheritdoc />
-        public IModContext<TMod, TMajorSetter, TMajorGetter> ResolveContext<TMajorSetter, TMajorGetter>(string editorId)
-            where TMajorSetter : class, IMajorRecordCommon, TMajorGetter
+        public IModContext<TMod, TModGetter, TMajor, TMajorGetter> ResolveContext<TMajor, TMajorGetter>(string editorId)
+            where TMajor : class, IMajorRecordCommon, TMajorGetter
             where TMajorGetter : class, IMajorRecordCommonGetter
         {
-            if (TryResolveContext<TMajorSetter, TMajorGetter>(editorId, out var commonRec)) return commonRec;
+            if (TryResolveContext<TMajor, TMajorGetter>(editorId, out var commonRec)) return commonRec;
             throw new KeyNotFoundException($"EditorID {editorId} could not be found.");
         }
 
@@ -472,29 +472,29 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public IEnumerable<IModContext<TMod, TMajorSetter, TMajorGetter>> ResolveAllContexts<TMajorSetter, TMajorGetter>(FormKey formKey)
-            where TMajorSetter : class, IMajorRecordCommon, TMajorGetter
+        public IEnumerable<IModContext<TMod, TModGetter, TMajor, TMajorGetter>> ResolveAllContexts<TMajor, TMajorGetter>(FormKey formKey)
+            where TMajor : class, IMajorRecordCommon, TMajorGetter
             where TMajorGetter : class, IMajorRecordCommonGetter
         {
-            if (TryResolveContext<TMajorSetter, TMajorGetter>(formKey, out var rec))
+            if (TryResolveContext<TMajor, TMajorGetter>(formKey, out var rec))
             {
                 yield return rec;
             }
         }
 
         /// <inheritdoc />
-        public IEnumerable<IModContext<TMod, TMajorSetter, TMajorGetter>> ResolveAllContexts<TMajorSetter, TMajorGetter>(string editorId)
-            where TMajorSetter : class, IMajorRecordCommon, TMajorGetter
+        public IEnumerable<IModContext<TMod, TModGetter, TMajor, TMajorGetter>> ResolveAllContexts<TMajor, TMajorGetter>(string editorId)
+            where TMajor : class, IMajorRecordCommon, TMajorGetter
             where TMajorGetter : class, IMajorRecordCommonGetter
         {
-            if (TryResolveContext<TMajorSetter, TMajorGetter>(editorId, out var rec))
+            if (TryResolveContext<TMajor, TMajorGetter>(editorId, out var rec))
             {
                 yield return rec;
             }
         }
 
         /// <inheritdoc />
-        public IEnumerable<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(FormKey formKey, Type type)
+        public IEnumerable<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(FormKey formKey, Type type)
         {
             if (TryResolveContext(formKey, type, out var rec))
             {
@@ -503,7 +503,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public IEnumerable<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(string editorId, Type type)
+        public IEnumerable<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(string editorId, Type type)
         {
             if (TryResolveContext(editorId, type, out var rec))
             {
@@ -513,7 +513,7 @@ namespace Mutagen.Bethesda
 
         /// <inheritdoc />
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        public IEnumerable<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(FormKey formKey)
+        public IEnumerable<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(FormKey formKey)
         {
             if (TryResolveContext(formKey, out var rec))
             {
@@ -523,7 +523,7 @@ namespace Mutagen.Bethesda
 
         /// <inheritdoc />
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        public IEnumerable<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(string editorId)
+        public IEnumerable<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(string editorId)
         {
             if (TryResolveContext(editorId, out var rec))
             {

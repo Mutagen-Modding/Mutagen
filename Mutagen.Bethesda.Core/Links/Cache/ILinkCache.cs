@@ -451,8 +451,9 @@ namespace Mutagen.Bethesda
         IReadOnlyList<IModGetter> PriorityOrder { get; }
     }
 
-    public interface ILinkCache<TModSetter> : ILinkCache
-        where TModSetter : class, IMod
+    public interface ILinkCache<TMod, TModGetter> : ILinkCache
+        where TModGetter : class, IModGetter
+        where TMod : class, TModGetter, IMod
     {
         /// <summary>
         /// Retrieves the record that matches the FormKey relative to the source the package was attached to.<br/>
@@ -464,7 +465,7 @@ namespace Mutagen.Bethesda
         /// <param name="majorRec">Out parameter containing the record with context if successful</param>
         /// <returns>True if a matching record was found</returns>
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        bool TryResolveContext(FormKey formKey, [MaybeNullWhen(false)] out IModContext<TModSetter, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec);
+        bool TryResolveContext(FormKey formKey, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec);
 
         /// <summary>
         /// Retrieves the record that matches the EditorID relative to the source the package was attached to.<br/>
@@ -476,7 +477,7 @@ namespace Mutagen.Bethesda
         /// <param name="majorRec">Out parameter containing the record with context if successful</param>
         /// <returns>True if a matching record was found</returns>
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        bool TryResolveContext(string editorId, [MaybeNullWhen(false)] out IModContext<TModSetter, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec);
+        bool TryResolveContext(string editorId, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec);
 
         /// <summary>
         /// Retrieves the record that matches the FormKey relative to the source the package was attached to.<br/>
@@ -493,8 +494,8 @@ namespace Mutagen.Bethesda
         ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
         ///   - A setter type is requested from a getter only object.
         /// </exception>
-        bool TryResolveContext<TMajorSetter, TMajorGetter>(FormKey formKey, [MaybeNullWhen(false)] out IModContext<TModSetter, TMajorSetter, TMajorGetter> majorRec)
-            where TMajorSetter : class, IMajorRecordCommon, TMajorGetter
+        bool TryResolveContext<TMajor, TMajorGetter>(FormKey formKey, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, TMajor, TMajorGetter> majorRec)
+            where TMajor : class, IMajorRecordCommon, TMajorGetter
             where TMajorGetter : class, IMajorRecordCommonGetter;
 
         /// <summary>
@@ -512,8 +513,8 @@ namespace Mutagen.Bethesda
         ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
         ///   - A setter type is requested from a getter only object.
         /// </exception>
-        bool TryResolveContext<TMajorSetter, TMajorGetter>(string editorId, [MaybeNullWhen(false)] out IModContext<TModSetter, TMajorSetter, TMajorGetter> majorRec)
-            where TMajorSetter : class, IMajorRecordCommon, TMajorGetter
+        bool TryResolveContext<TMajor, TMajorGetter>(string editorId, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, TMajor, TMajorGetter> majorRec)
+            where TMajor : class, IMajorRecordCommon, TMajorGetter
             where TMajorGetter : class, IMajorRecordCommonGetter;
 
         /// <summary>
@@ -532,7 +533,7 @@ namespace Mutagen.Bethesda
         ///   - A setter type is requested from a getter only object.
         /// </exception>
         /// <returns>True if a matching record was found</returns>
-        bool TryResolveContext(FormKey formKey, Type type, [MaybeNullWhen(false)] out IModContext<TModSetter, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec);
+        bool TryResolveContext(FormKey formKey, Type type, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec);
 
         /// <summary>
         /// Retrieves the record that matches the EditorID relative to the source the package was attached to.<br/>
@@ -550,7 +551,7 @@ namespace Mutagen.Bethesda
         ///   - A setter type is requested from a getter only object.
         /// </exception>
         /// <returns>True if a matching record was found</returns>
-        bool TryResolveContext(string editorId, Type type, [MaybeNullWhen(false)] out IModContext<TModSetter, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec);
+        bool TryResolveContext(string editorId, Type type, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec);
 
         /// <summary>
         /// Retrieves the record that matches the FormKey relative to the source the cache was attached to.<br/>
@@ -567,7 +568,7 @@ namespace Mutagen.Bethesda
         /// </exception>
         /// <returns>Matching record with context</returns>
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        IModContext<TModSetter, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(FormKey formKey);
+        IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(FormKey formKey);
 
         /// <summary>
         /// Retrieves the record that matches the EditorID relative to the source the cache was attached to.<br/>
@@ -584,7 +585,7 @@ namespace Mutagen.Bethesda
         /// </exception>
         /// <returns>Matching record with context</returns>
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        IModContext<TModSetter, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(string editorId);
+        IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(string editorId);
 
         /// <summary>
         /// Retrieves the record that matches the FormKey relative to the source the package was attached to.<br/>
@@ -603,7 +604,7 @@ namespace Mutagen.Bethesda
         /// <exception cref="KeyNotFoundException">
         /// When the FormKey having the specified Major Record type cannot be found under the attached cache.<br/>
         /// </exception>
-        IModContext<TModSetter, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(FormKey formKey, Type type);
+        IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(FormKey formKey, Type type);
 
         /// <summary>
         /// Retrieves the record that matches the EditorID relative to the source the package was attached to.<br/>
@@ -622,7 +623,7 @@ namespace Mutagen.Bethesda
         /// <exception cref="KeyNotFoundException">
         /// When the EditorID having the specified Major Record type cannot be found under the attached cache.<br/>
         /// </exception>
-        IModContext<TModSetter, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(string editorId, Type type);
+        IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(string editorId, Type type);
 
         /// <summary>
         /// Retrieves the record that matches the FormKey relative to the source the package was attached to.
@@ -630,7 +631,7 @@ namespace Mutagen.Bethesda
         /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will be seen as not a match.
         /// </summary>
         /// <param name="formKey">FormKey to look for</param>
-        /// <typeparam name="TMajorSetter">The setter type of Major Record to look up</typeparam>
+        /// <typeparam name="TMajor">The setter type of Major Record to look up</typeparam>
         /// <typeparam name="TMajorGetter">The getter type of Major Record to look up</typeparam>
         /// <returns>Matching record with context</returns>
         /// <exception cref="ArgumentException">
@@ -642,8 +643,8 @@ namespace Mutagen.Bethesda
         /// <exception cref="KeyNotFoundException">
         /// When the FormKey having the specified Major Record type cannot be found under the attached cache.<br/>
         /// </exception>
-        IModContext<TModSetter, TMajorSetter, TMajorGetter> ResolveContext<TMajorSetter, TMajorGetter>(FormKey formKey)
-            where TMajorSetter : class, IMajorRecordCommon, TMajorGetter
+        IModContext<TMod, TModGetter, TMajor, TMajorGetter> ResolveContext<TMajor, TMajorGetter>(FormKey formKey)
+            where TMajor : class, IMajorRecordCommon, TMajorGetter
             where TMajorGetter : class, IMajorRecordCommonGetter;
 
         /// <summary>
@@ -652,7 +653,7 @@ namespace Mutagen.Bethesda
         /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will be seen as not a match.
         /// </summary>
         /// <param name="editorId">EditorID to look for</param>
-        /// <typeparam name="TMajorSetter">The setter type of Major Record to look up</typeparam>
+        /// <typeparam name="TMajor">The setter type of Major Record to look up</typeparam>
         /// <typeparam name="TMajorGetter">The getter type of Major Record to look up</typeparam>
         /// <returns>Matching record with context</returns>
         /// <exception cref="ArgumentException">
@@ -664,8 +665,8 @@ namespace Mutagen.Bethesda
         /// <exception cref="KeyNotFoundException">
         /// When the EditorID having the specified Major Record type cannot be found under the attached cache.<br/>
         /// </exception>
-        IModContext<TModSetter, TMajorSetter, TMajorGetter> ResolveContext<TMajorSetter, TMajorGetter>(string editorId)
-            where TMajorSetter : class, IMajorRecordCommon, TMajorGetter
+        IModContext<TMod, TModGetter, TMajor, TMajorGetter> ResolveContext<TMajor, TMajorGetter>(string editorId)
+            where TMajor : class, IMajorRecordCommon, TMajorGetter
             where TMajorGetter : class, IMajorRecordCommonGetter;
 
         /// <summary>
@@ -674,7 +675,7 @@ namespace Mutagen.Bethesda
         /// If attached to a load order, many records may be returned, depending on how many mods overrode the FormKey.
         /// </summary>
         /// <param name="formKey">FormKey to look for</param>
-        /// <typeparam name="TMajorSetter">The setter type of Major Record to look up</typeparam>
+        /// <typeparam name="TMajor">The setter type of Major Record to look up</typeparam>
         /// <typeparam name="TMajorGetter">The getter type of Major Record to look up</typeparam>
         /// <exception cref="ArgumentException">
         /// An unexpected TMajor type will throw an exception.<br/>
@@ -683,8 +684,8 @@ namespace Mutagen.Bethesda
         ///   - A setter type is requested from a getter only object.
         /// </exception>
         /// <returns>Enumerable of all located record contexts that match the FormKey in the cache</returns>
-        IEnumerable<IModContext<TModSetter, TMajorSetter, TMajorGetter>> ResolveAllContexts<TMajorSetter, TMajorGetter>(FormKey formKey)
-            where TMajorSetter : class, IMajorRecordCommon, TMajorGetter
+        IEnumerable<IModContext<TMod, TModGetter, TMajor, TMajorGetter>> ResolveAllContexts<TMajor, TMajorGetter>(FormKey formKey)
+            where TMajor : class, IMajorRecordCommon, TMajorGetter
             where TMajorGetter : class, IMajorRecordCommonGetter;
 
         /// <summary>
@@ -701,7 +702,7 @@ namespace Mutagen.Bethesda
         ///   - A setter type is requested from a getter only object.
         /// </exception>
         /// <returns>Enumerable of all located record contexts that match the FormKey in the cache</returns>
-        IEnumerable<IModContext<TModSetter, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(FormKey formKey, Type type);
+        IEnumerable<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(FormKey formKey, Type type);
 
         /// <summary>
         /// Iterates all record contexts that match the FormKey relative to the source the package was attached to.<br />
@@ -714,13 +715,7 @@ namespace Mutagen.Bethesda
         /// <param name="formKey">FormKey to look for</param>
         /// <returns>Enumerable of all located record contexts that match the FormKey in the cache</returns>
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        IEnumerable<IModContext<TModSetter, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(FormKey formKey);
-    }
-
-    public interface ILinkCache<TModSetter, TModGetter> : ILinkCache<TModSetter>
-        where TModSetter : class, IMod, TModGetter
-        where TModGetter : class, IModGetter
-    {
+        IEnumerable<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(FormKey formKey);
     }
 
     public static class ILinkCacheExt
@@ -823,8 +818,8 @@ namespace Mutagen.Bethesda
         public static ImmutableModLinkCache<TMod, TModGetter> ToImmutableLinkCache<TMod, TModGetter>(
             this TModGetter mod,
             LinkCachePreferences? prefs = null)
-            where TMod : class, IContextMod<TMod>, TModGetter
-            where TModGetter : class, IContextGetterMod<TMod>
+            where TMod : class, IContextMod<TMod, TModGetter>, TModGetter
+            where TModGetter : class, IContextGetterMod<TMod, TModGetter>
         {
             return new ImmutableModLinkCache<TMod, TModGetter>(mod, prefs ?? LinkCachePreferences.Default);
         }
@@ -840,8 +835,8 @@ namespace Mutagen.Bethesda
         public static MutableModLinkCache<TMod, TModGetter> ToMutableLinkCache<TMod, TModGetter>(
             this TModGetter mod,
             LinkCachePreferences? prefs = null)
-            where TMod : class, IContextMod<TMod>, TModGetter
-            where TModGetter : class, IContextGetterMod<TMod>
+            where TMod : class, IContextMod<TMod, TModGetter>, TModGetter
+            where TModGetter : class, IContextGetterMod<TMod, TModGetter>
         {
             return new MutableModLinkCache<TMod, TModGetter>(mod, prefs ?? LinkCachePreferences.Default);
         }
@@ -858,8 +853,8 @@ namespace Mutagen.Bethesda
         public static ImmutableLoadOrderLinkCache<TMod, TModGetter> ToImmutableLinkCache<TMod, TModGetter>(
             this LoadOrder<TModGetter> loadOrder,
             LinkCachePreferences? prefs = null)
-            where TMod : class, IContextMod<TMod>, TModGetter
-            where TModGetter : class, IContextGetterMod<TMod>
+            where TMod : class, IContextMod<TMod, TModGetter>, TModGetter
+            where TModGetter : class, IContextGetterMod<TMod, TModGetter>
         {
             return new ImmutableLoadOrderLinkCache<TMod, TModGetter>(loadOrder.ListedOrder, prefs ?? LinkCachePreferences.Default);
         }
@@ -876,8 +871,8 @@ namespace Mutagen.Bethesda
         public static ImmutableLoadOrderLinkCache<TMod, TModGetter> ToImmutableLinkCache<TMod, TModGetter>(
             this LoadOrder<IModListing<TModGetter>> loadOrder,
             LinkCachePreferences? prefs = null)
-            where TMod : class, IContextMod<TMod>, TModGetter
-            where TModGetter : class, IContextGetterMod<TMod>
+            where TMod : class, IContextMod<TMod, TModGetter>, TModGetter
+            where TModGetter : class, IContextGetterMod<TMod, TModGetter>
         {
             return new ImmutableLoadOrderLinkCache<TMod, TModGetter>(
                 loadOrder
@@ -898,8 +893,8 @@ namespace Mutagen.Bethesda
         public static ImmutableLoadOrderLinkCache<TMod, TModGetter> ToImmutableLinkCache<TMod, TModGetter>(
             this IEnumerable<IModListing<TModGetter>> loadOrder,
             LinkCachePreferences? prefs = null)
-            where TMod : class, IContextMod<TMod>, TModGetter
-            where TModGetter : class, IContextGetterMod<TMod>
+            where TMod : class, IContextMod<TMod, TModGetter>, TModGetter
+            where TModGetter : class, IContextGetterMod<TMod, TModGetter>
         {
             return new ImmutableLoadOrderLinkCache<TMod, TModGetter>(
                 loadOrder
@@ -920,8 +915,8 @@ namespace Mutagen.Bethesda
         public static ImmutableLoadOrderLinkCache<TMod, TModGetter> ToImmutableLinkCache<TMod, TModGetter>(
             this IEnumerable<TModGetter> loadOrder,
             LinkCachePreferences? prefs = null)
-            where TMod : class, IContextMod<TMod>, TModGetter
-            where TModGetter : class, IContextGetterMod<TMod>
+            where TMod : class, IContextMod<TMod, TModGetter>, TModGetter
+            where TModGetter : class, IContextGetterMod<TMod, TModGetter>
         {
             return new ImmutableLoadOrderLinkCache<TMod, TModGetter>(loadOrder, prefs ?? LinkCachePreferences.Default);
         }
@@ -938,8 +933,8 @@ namespace Mutagen.Bethesda
             this LoadOrder<TModGetter> immutableBaseCache,
             LinkCachePreferences prefs,
             params TMod[] mutableMods)
-            where TMod : class, IContextMod<TMod>, TModGetter
-            where TModGetter : class, IContextGetterMod<TMod>
+            where TMod : class, IContextMod<TMod, TModGetter>, TModGetter
+            where TModGetter : class, IContextGetterMod<TMod, TModGetter>
         {
             return new MutableLoadOrderLinkCache<TMod, TModGetter>(
                 immutableBaseCache.ToImmutableLinkCache<TMod, TModGetter>(),
@@ -959,8 +954,8 @@ namespace Mutagen.Bethesda
             this LoadOrder<IModListing<TModGetter>> immutableBaseCache,
             LinkCachePreferences prefs,
             params TMod[] mutableMods)
-            where TMod : class, IContextMod<TMod>, TModGetter
-            where TModGetter : class, IContextGetterMod<TMod>
+            where TMod : class, IContextMod<TMod, TModGetter>, TModGetter
+            where TModGetter : class, IContextGetterMod<TMod, TModGetter>
         {
             return new MutableLoadOrderLinkCache<TMod, TModGetter>(
                 immutableBaseCache.ToImmutableLinkCache<TMod, TModGetter>(),
@@ -980,8 +975,8 @@ namespace Mutagen.Bethesda
             this IEnumerable<TModGetter> immutableBaseCache,
             LinkCachePreferences prefs,
             params TMod[] mutableMods)
-            where TMod : class, IContextMod<TMod>, TModGetter
-            where TModGetter : class, IContextGetterMod<TMod>
+            where TMod : class, IContextMod<TMod, TModGetter>, TModGetter
+            where TModGetter : class, IContextGetterMod<TMod, TModGetter>
         {
             return new MutableLoadOrderLinkCache<TMod, TModGetter>(
                 immutableBaseCache.ToImmutableLinkCache<TMod, TModGetter>(),
@@ -999,8 +994,8 @@ namespace Mutagen.Bethesda
         public static MutableLoadOrderLinkCache<TMod, TModGetter> ToMutableLinkCache<TMod, TModGetter>(
             this LoadOrder<TModGetter> immutableBaseCache,
             params TMod[] mutableMods)
-            where TMod : class, IContextMod<TMod>, TModGetter
-            where TModGetter : class, IContextGetterMod<TMod>
+            where TMod : class, IContextMod<TMod, TModGetter>, TModGetter
+            where TModGetter : class, IContextGetterMod<TMod, TModGetter>
         {
             return new MutableLoadOrderLinkCache<TMod, TModGetter>(
                 immutableBaseCache.ToImmutableLinkCache<TMod, TModGetter>(),
@@ -1018,8 +1013,8 @@ namespace Mutagen.Bethesda
         public static MutableLoadOrderLinkCache<TMod, TModGetter> ToMutableLinkCache<TMod, TModGetter>(
             this LoadOrder<IModListing<TModGetter>> immutableBaseCache,
             params TMod[] mutableMods)
-            where TMod : class, IContextMod<TMod>, TModGetter
-            where TModGetter : class, IContextGetterMod<TMod>
+            where TMod : class, IContextMod<TMod, TModGetter>, TModGetter
+            where TModGetter : class, IContextGetterMod<TMod, TModGetter>
         {
             return new MutableLoadOrderLinkCache<TMod, TModGetter>(
                 immutableBaseCache.ToImmutableLinkCache<TMod, TModGetter>(),
@@ -1037,8 +1032,8 @@ namespace Mutagen.Bethesda
         public static MutableLoadOrderLinkCache<TMod, TModGetter> ToMutableLinkCache<TMod, TModGetter>(
             this IEnumerable<TModGetter> immutableBaseCache,
             params TMod[] mutableMods)
-            where TMod : class, IContextMod<TMod>, TModGetter
-            where TModGetter : class, IContextGetterMod<TMod>
+            where TMod : class, IContextMod<TMod, TModGetter>, TModGetter
+            where TModGetter : class, IContextGetterMod<TMod, TModGetter>
         {
             return new MutableLoadOrderLinkCache<TMod, TModGetter>(
                 immutableBaseCache.ToImmutableLinkCache<TMod, TModGetter>(),

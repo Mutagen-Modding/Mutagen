@@ -3200,9 +3200,9 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<TMajor>(records, throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IModContext<IOblivionMod, TSetter, TGetter>> IMajorRecordContextEnumerable<IOblivionMod>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, TSetter, TGetter>> IMajorRecordContextEnumerable<IOblivionMod, IOblivionModGetter>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>> IMajorRecordContextEnumerable<IOblivionMod>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> IMajorRecordContextEnumerable<IOblivionMod, IOblivionModGetter>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
         #endregion
 
         #region Binary Translation
@@ -3348,7 +3348,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IOblivionMod :
-        IContextMod<IOblivionMod>,
+        IContextMod<IOblivionMod, IOblivionModGetter>,
         IFormLinkContainer,
         ILoquiObjectSetter<IOblivionMod>,
         IMajorRecordEnumerable,
@@ -3416,10 +3416,10 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IOblivionModGetter :
         ILoquiObject,
-        IContextGetterMod<IOblivionMod>,
+        IContextGetterMod<IOblivionMod, IOblivionModGetter>,
         IFormLinkContainerGetter,
         ILoquiObject<IOblivionModGetter>,
-        IMajorRecordContextEnumerable<IOblivionMod>,
+        IMajorRecordContextEnumerable<IOblivionMod, IOblivionModGetter>,
         IMajorRecordGetterEnumerable,
         IModGetter
     {
@@ -3891,7 +3891,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<IModContext<IOblivionMod, TSetter, TGetter>> EnumerateMajorRecordContexts<TSetter, TGetter>(
+        public static IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, TSetter, TGetter>> EnumerateMajorRecordContexts<TSetter, TGetter>(
             this IOblivionModGetter obj,
             ILinkCache linkCache,
             bool throwIfUnknown = true)
@@ -3903,12 +3903,12 @@ namespace Mutagen.Bethesda.Oblivion
                 linkCache: linkCache,
                 type: typeof(TGetter),
                 throwIfUnknown: throwIfUnknown)
-                .Select(m => m.AsType<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter, TSetter, TGetter>())
+                .Select(m => m.AsType<IOblivionMod, IOblivionModGetter, IMajorRecordCommon, IMajorRecordCommonGetter, TSetter, TGetter>())
                 .Catch(e => throw RecordException.Factory(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<IModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        public static IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             this IOblivionModGetter obj,
             ILinkCache linkCache,
             Type type,
@@ -7126,13 +7126,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public IEnumerable<IModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        public IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             IOblivionModGetter obj,
             ILinkCache linkCache)
         {
             foreach (var item in obj.GameSettings)
             {
-                yield return new ModContext<IOblivionMod, IGameSettingInternal, IGameSettingGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, IGameSettingInternal, IGameSettingGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.GameSettings.GetOrAddAsOverride(r),
@@ -7140,7 +7140,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.Globals)
             {
-                yield return new ModContext<IOblivionMod, IGlobalInternal, IGlobalGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, IGlobalInternal, IGlobalGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Globals.GetOrAddAsOverride(r),
@@ -7148,7 +7148,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.Classes)
             {
-                yield return new ModContext<IOblivionMod, IClassInternal, IClassGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, IClassInternal, IClassGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Classes.GetOrAddAsOverride(r),
@@ -7156,7 +7156,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.Factions)
             {
-                yield return new ModContext<IOblivionMod, IFactionInternal, IFactionGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, IFactionInternal, IFactionGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Factions.GetOrAddAsOverride(r),
@@ -7164,7 +7164,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.Hairs)
             {
-                yield return new ModContext<IOblivionMod, IHairInternal, IHairGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, IHairInternal, IHairGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Hairs.GetOrAddAsOverride(r),
@@ -7172,7 +7172,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.Eyes)
             {
-                yield return new ModContext<IOblivionMod, IEyeInternal, IEyeGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, IEyeInternal, IEyeGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Eyes.GetOrAddAsOverride(r),
@@ -7180,7 +7180,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.Races)
             {
-                yield return new ModContext<IOblivionMod, IRaceInternal, IRaceGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, IRaceInternal, IRaceGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Races.GetOrAddAsOverride(r),
@@ -7188,7 +7188,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.Sounds)
             {
-                yield return new ModContext<IOblivionMod, ISoundInternal, ISoundGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, ISoundInternal, ISoundGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Sounds.GetOrAddAsOverride(r),
@@ -7196,7 +7196,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.Skills)
             {
-                yield return new ModContext<IOblivionMod, ISkillRecordInternal, ISkillRecordGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, ISkillRecordInternal, ISkillRecordGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Skills.GetOrAddAsOverride(r),
@@ -7204,7 +7204,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.MagicEffects)
             {
-                yield return new ModContext<IOblivionMod, IMagicEffectInternal, IMagicEffectGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, IMagicEffectInternal, IMagicEffectGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.MagicEffects.GetOrAddAsOverride(r),
@@ -7212,7 +7212,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.Scripts)
             {
-                yield return new ModContext<IOblivionMod, IScriptInternal, IScriptGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, IScriptInternal, IScriptGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Scripts.GetOrAddAsOverride(r),
@@ -7220,7 +7220,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.LandTextures)
             {
-                yield return new ModContext<IOblivionMod, ILandTextureInternal, ILandTextureGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, ILandTextureInternal, ILandTextureGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.LandTextures.GetOrAddAsOverride(r),
@@ -7228,7 +7228,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.Enchantments)
             {
-                yield return new ModContext<IOblivionMod, IEnchantmentInternal, IEnchantmentGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, IEnchantmentInternal, IEnchantmentGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Enchantments.GetOrAddAsOverride(r),
@@ -7236,7 +7236,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.Spells)
             {
-                yield return new ModContext<IOblivionMod, ISpellUnleveledInternal, ISpellUnleveledGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, ISpellUnleveledInternal, ISpellUnleveledGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Spells.GetOrAddAsOverride(r),
@@ -7244,7 +7244,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.Birthsigns)
             {
-                yield return new ModContext<IOblivionMod, IBirthsignInternal, IBirthsignGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, IBirthsignInternal, IBirthsignGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Birthsigns.GetOrAddAsOverride(r),
@@ -7252,7 +7252,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.Activators)
             {
-                yield return new ModContext<IOblivionMod, IActivatorInternal, IActivatorGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, IActivatorInternal, IActivatorGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Activators.GetOrAddAsOverride(r),
@@ -7260,7 +7260,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.AlchemicalApparatus)
             {
-                yield return new ModContext<IOblivionMod, IAlchemicalApparatusInternal, IAlchemicalApparatusGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, IAlchemicalApparatusInternal, IAlchemicalApparatusGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.AlchemicalApparatus.GetOrAddAsOverride(r),
@@ -7268,7 +7268,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.Armors)
             {
-                yield return new ModContext<IOblivionMod, IArmorInternal, IArmorGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, IArmorInternal, IArmorGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Armors.GetOrAddAsOverride(r),
@@ -7276,7 +7276,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.Books)
             {
-                yield return new ModContext<IOblivionMod, IBookInternal, IBookGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, IBookInternal, IBookGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Books.GetOrAddAsOverride(r),
@@ -7284,7 +7284,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.Clothes)
             {
-                yield return new ModContext<IOblivionMod, IClothingInternal, IClothingGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, IClothingInternal, IClothingGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Clothes.GetOrAddAsOverride(r),
@@ -7292,7 +7292,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.Containers)
             {
-                yield return new ModContext<IOblivionMod, IContainerInternal, IContainerGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, IContainerInternal, IContainerGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Containers.GetOrAddAsOverride(r),
@@ -7300,7 +7300,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.Doors)
             {
-                yield return new ModContext<IOblivionMod, IDoorInternal, IDoorGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, IDoorInternal, IDoorGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Doors.GetOrAddAsOverride(r),
@@ -7308,7 +7308,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.Ingredients)
             {
-                yield return new ModContext<IOblivionMod, IIngredientInternal, IIngredientGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, IIngredientInternal, IIngredientGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Ingredients.GetOrAddAsOverride(r),
@@ -7316,7 +7316,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.Lights)
             {
-                yield return new ModContext<IOblivionMod, ILightInternal, ILightGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, ILightInternal, ILightGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Lights.GetOrAddAsOverride(r),
@@ -7324,7 +7324,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.Miscellaneous)
             {
-                yield return new ModContext<IOblivionMod, IMiscellaneousInternal, IMiscellaneousGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, IMiscellaneousInternal, IMiscellaneousGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Miscellaneous.GetOrAddAsOverride(r),
@@ -7332,7 +7332,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.Statics)
             {
-                yield return new ModContext<IOblivionMod, IStaticInternal, IStaticGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, IStaticInternal, IStaticGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Statics.GetOrAddAsOverride(r),
@@ -7340,7 +7340,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.Grasses)
             {
-                yield return new ModContext<IOblivionMod, IGrassInternal, IGrassGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, IGrassInternal, IGrassGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Grasses.GetOrAddAsOverride(r),
@@ -7348,7 +7348,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.Trees)
             {
-                yield return new ModContext<IOblivionMod, ITreeInternal, ITreeGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, ITreeInternal, ITreeGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Trees.GetOrAddAsOverride(r),
@@ -7356,7 +7356,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.Flora)
             {
-                yield return new ModContext<IOblivionMod, IFloraInternal, IFloraGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, IFloraInternal, IFloraGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Flora.GetOrAddAsOverride(r),
@@ -7364,7 +7364,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.Furniture)
             {
-                yield return new ModContext<IOblivionMod, IFurnitureInternal, IFurnitureGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, IFurnitureInternal, IFurnitureGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Furniture.GetOrAddAsOverride(r),
@@ -7372,7 +7372,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.Weapons)
             {
-                yield return new ModContext<IOblivionMod, IWeaponInternal, IWeaponGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, IWeaponInternal, IWeaponGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Weapons.GetOrAddAsOverride(r),
@@ -7380,7 +7380,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.Ammunitions)
             {
-                yield return new ModContext<IOblivionMod, IAmmunitionInternal, IAmmunitionGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, IAmmunitionInternal, IAmmunitionGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Ammunitions.GetOrAddAsOverride(r),
@@ -7388,7 +7388,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.Npcs)
             {
-                yield return new ModContext<IOblivionMod, INpcInternal, INpcGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, INpcInternal, INpcGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Npcs.GetOrAddAsOverride(r),
@@ -7396,7 +7396,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.Creatures)
             {
-                yield return new ModContext<IOblivionMod, ICreatureInternal, ICreatureGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, ICreatureInternal, ICreatureGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Creatures.GetOrAddAsOverride(r),
@@ -7404,7 +7404,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.LeveledCreatures)
             {
-                yield return new ModContext<IOblivionMod, ILeveledCreatureInternal, ILeveledCreatureGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, ILeveledCreatureInternal, ILeveledCreatureGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.LeveledCreatures.GetOrAddAsOverride(r),
@@ -7412,7 +7412,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.SoulGems)
             {
-                yield return new ModContext<IOblivionMod, ISoulGemInternal, ISoulGemGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, ISoulGemInternal, ISoulGemGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.SoulGems.GetOrAddAsOverride(r),
@@ -7420,7 +7420,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.Keys)
             {
-                yield return new ModContext<IOblivionMod, IKeyInternal, IKeyGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, IKeyInternal, IKeyGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Keys.GetOrAddAsOverride(r),
@@ -7428,7 +7428,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.Potions)
             {
-                yield return new ModContext<IOblivionMod, IPotionInternal, IPotionGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, IPotionInternal, IPotionGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Potions.GetOrAddAsOverride(r),
@@ -7436,7 +7436,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.Subspaces)
             {
-                yield return new ModContext<IOblivionMod, ISubspaceInternal, ISubspaceGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, ISubspaceInternal, ISubspaceGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Subspaces.GetOrAddAsOverride(r),
@@ -7444,7 +7444,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.SigilStones)
             {
-                yield return new ModContext<IOblivionMod, ISigilStoneInternal, ISigilStoneGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, ISigilStoneInternal, ISigilStoneGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.SigilStones.GetOrAddAsOverride(r),
@@ -7452,7 +7452,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.LeveledItems)
             {
-                yield return new ModContext<IOblivionMod, ILeveledItemInternal, ILeveledItemGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, ILeveledItemInternal, ILeveledItemGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.LeveledItems.GetOrAddAsOverride(r),
@@ -7460,7 +7460,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.Weathers)
             {
-                yield return new ModContext<IOblivionMod, IWeatherInternal, IWeatherGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, IWeatherInternal, IWeatherGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Weathers.GetOrAddAsOverride(r),
@@ -7468,7 +7468,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.Climates)
             {
-                yield return new ModContext<IOblivionMod, IClimateInternal, IClimateGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, IClimateInternal, IClimateGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Climates.GetOrAddAsOverride(r),
@@ -7476,7 +7476,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.Regions)
             {
-                yield return new ModContext<IOblivionMod, IRegionInternal, IRegionGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, IRegionInternal, IRegionGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Regions.GetOrAddAsOverride(r),
@@ -7484,7 +7484,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.Worldspaces)
             {
-                yield return new ModContext<IOblivionMod, IWorldspaceInternal, IWorldspaceGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, IWorldspaceInternal, IWorldspaceGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(r),
@@ -7505,7 +7505,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.DialogTopics)
             {
-                yield return new ModContext<IOblivionMod, IDialogTopicInternal, IDialogTopicGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, IDialogTopicInternal, IDialogTopicGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.DialogTopics.GetOrAddAsOverride(r),
@@ -7526,7 +7526,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.Quests)
             {
-                yield return new ModContext<IOblivionMod, IQuestInternal, IQuestGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, IQuestInternal, IQuestGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Quests.GetOrAddAsOverride(r),
@@ -7534,7 +7534,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.IdleAnimations)
             {
-                yield return new ModContext<IOblivionMod, IIdleAnimationInternal, IIdleAnimationGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, IIdleAnimationInternal, IIdleAnimationGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.IdleAnimations.GetOrAddAsOverride(r),
@@ -7542,7 +7542,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.AIPackages)
             {
-                yield return new ModContext<IOblivionMod, IAIPackageInternal, IAIPackageGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, IAIPackageInternal, IAIPackageGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.AIPackages.GetOrAddAsOverride(r),
@@ -7550,7 +7550,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.CombatStyles)
             {
-                yield return new ModContext<IOblivionMod, ICombatStyleInternal, ICombatStyleGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, ICombatStyleInternal, ICombatStyleGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.CombatStyles.GetOrAddAsOverride(r),
@@ -7558,7 +7558,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.LoadScreens)
             {
-                yield return new ModContext<IOblivionMod, ILoadScreenInternal, ILoadScreenGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, ILoadScreenInternal, ILoadScreenGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.LoadScreens.GetOrAddAsOverride(r),
@@ -7566,7 +7566,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.LeveledSpells)
             {
-                yield return new ModContext<IOblivionMod, ILeveledSpellInternal, ILeveledSpellGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, ILeveledSpellInternal, ILeveledSpellGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.LeveledSpells.GetOrAddAsOverride(r),
@@ -7574,7 +7574,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.AnimatedObjects)
             {
-                yield return new ModContext<IOblivionMod, IAnimatedObjectInternal, IAnimatedObjectGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, IAnimatedObjectInternal, IAnimatedObjectGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.AnimatedObjects.GetOrAddAsOverride(r),
@@ -7582,7 +7582,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.Waters)
             {
-                yield return new ModContext<IOblivionMod, IWaterInternal, IWaterGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, IWaterInternal, IWaterGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.Waters.GetOrAddAsOverride(r),
@@ -7590,7 +7590,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.EffectShaders)
             {
-                yield return new ModContext<IOblivionMod, IEffectShaderInternal, IEffectShaderGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, IEffectShaderInternal, IEffectShaderGetter>(
                     modKey: obj.ModKey,
                     record: item,
                     getOrAddAsOverride: (m, r) => m.EffectShaders.GetOrAddAsOverride(r),
@@ -7598,7 +7598,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public IEnumerable<IModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        public IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             IOblivionModGetter obj,
             ILinkCache linkCache,
             Type type,
@@ -7635,7 +7635,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IGameSettingInternal":
                     foreach (var item in obj.GameSettings)
                     {
-                        yield return new ModContext<IOblivionMod, IGameSettingInternal, IGameSettingGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IGameSettingInternal, IGameSettingGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.GameSettings.GetOrAddAsOverride(r),
@@ -7648,7 +7648,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IGlobalInternal":
                     foreach (var item in obj.Globals)
                     {
-                        yield return new ModContext<IOblivionMod, IGlobalInternal, IGlobalGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IGlobalInternal, IGlobalGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Globals.GetOrAddAsOverride(r),
@@ -7661,7 +7661,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IClassInternal":
                     foreach (var item in obj.Classes)
                     {
-                        yield return new ModContext<IOblivionMod, IClassInternal, IClassGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IClassInternal, IClassGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Classes.GetOrAddAsOverride(r),
@@ -7674,7 +7674,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IFactionInternal":
                     foreach (var item in obj.Factions)
                     {
-                        yield return new ModContext<IOblivionMod, IFactionInternal, IFactionGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IFactionInternal, IFactionGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Factions.GetOrAddAsOverride(r),
@@ -7687,7 +7687,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IHairInternal":
                     foreach (var item in obj.Hairs)
                     {
-                        yield return new ModContext<IOblivionMod, IHairInternal, IHairGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IHairInternal, IHairGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Hairs.GetOrAddAsOverride(r),
@@ -7700,7 +7700,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IEyeInternal":
                     foreach (var item in obj.Eyes)
                     {
-                        yield return new ModContext<IOblivionMod, IEyeInternal, IEyeGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IEyeInternal, IEyeGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Eyes.GetOrAddAsOverride(r),
@@ -7713,7 +7713,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IRaceInternal":
                     foreach (var item in obj.Races)
                     {
-                        yield return new ModContext<IOblivionMod, IRaceInternal, IRaceGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IRaceInternal, IRaceGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Races.GetOrAddAsOverride(r),
@@ -7726,7 +7726,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ISoundInternal":
                     foreach (var item in obj.Sounds)
                     {
-                        yield return new ModContext<IOblivionMod, ISoundInternal, ISoundGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, ISoundInternal, ISoundGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Sounds.GetOrAddAsOverride(r),
@@ -7739,7 +7739,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ISkillRecordInternal":
                     foreach (var item in obj.Skills)
                     {
-                        yield return new ModContext<IOblivionMod, ISkillRecordInternal, ISkillRecordGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, ISkillRecordInternal, ISkillRecordGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Skills.GetOrAddAsOverride(r),
@@ -7752,7 +7752,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IMagicEffectInternal":
                     foreach (var item in obj.MagicEffects)
                     {
-                        yield return new ModContext<IOblivionMod, IMagicEffectInternal, IMagicEffectGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IMagicEffectInternal, IMagicEffectGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.MagicEffects.GetOrAddAsOverride(r),
@@ -7765,7 +7765,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IScriptInternal":
                     foreach (var item in obj.Scripts)
                     {
-                        yield return new ModContext<IOblivionMod, IScriptInternal, IScriptGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IScriptInternal, IScriptGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Scripts.GetOrAddAsOverride(r),
@@ -7778,7 +7778,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ILandTextureInternal":
                     foreach (var item in obj.LandTextures)
                     {
-                        yield return new ModContext<IOblivionMod, ILandTextureInternal, ILandTextureGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, ILandTextureInternal, ILandTextureGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.LandTextures.GetOrAddAsOverride(r),
@@ -7791,7 +7791,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IEnchantmentInternal":
                     foreach (var item in obj.Enchantments)
                     {
-                        yield return new ModContext<IOblivionMod, IEnchantmentInternal, IEnchantmentGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IEnchantmentInternal, IEnchantmentGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Enchantments.GetOrAddAsOverride(r),
@@ -7804,7 +7804,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ISpellUnleveledInternal":
                     foreach (var item in obj.Spells)
                     {
-                        yield return new ModContext<IOblivionMod, ISpellUnleveledInternal, ISpellUnleveledGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, ISpellUnleveledInternal, ISpellUnleveledGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Spells.GetOrAddAsOverride(r),
@@ -7817,7 +7817,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IBirthsignInternal":
                     foreach (var item in obj.Birthsigns)
                     {
-                        yield return new ModContext<IOblivionMod, IBirthsignInternal, IBirthsignGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IBirthsignInternal, IBirthsignGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Birthsigns.GetOrAddAsOverride(r),
@@ -7830,7 +7830,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IActivatorInternal":
                     foreach (var item in obj.Activators)
                     {
-                        yield return new ModContext<IOblivionMod, IActivatorInternal, IActivatorGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IActivatorInternal, IActivatorGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Activators.GetOrAddAsOverride(r),
@@ -7843,7 +7843,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IAlchemicalApparatusInternal":
                     foreach (var item in obj.AlchemicalApparatus)
                     {
-                        yield return new ModContext<IOblivionMod, IAlchemicalApparatusInternal, IAlchemicalApparatusGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IAlchemicalApparatusInternal, IAlchemicalApparatusGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.AlchemicalApparatus.GetOrAddAsOverride(r),
@@ -7856,7 +7856,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IArmorInternal":
                     foreach (var item in obj.Armors)
                     {
-                        yield return new ModContext<IOblivionMod, IArmorInternal, IArmorGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IArmorInternal, IArmorGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Armors.GetOrAddAsOverride(r),
@@ -7869,7 +7869,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IBookInternal":
                     foreach (var item in obj.Books)
                     {
-                        yield return new ModContext<IOblivionMod, IBookInternal, IBookGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IBookInternal, IBookGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Books.GetOrAddAsOverride(r),
@@ -7882,7 +7882,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IClothingInternal":
                     foreach (var item in obj.Clothes)
                     {
-                        yield return new ModContext<IOblivionMod, IClothingInternal, IClothingGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IClothingInternal, IClothingGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Clothes.GetOrAddAsOverride(r),
@@ -7895,7 +7895,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IContainerInternal":
                     foreach (var item in obj.Containers)
                     {
-                        yield return new ModContext<IOblivionMod, IContainerInternal, IContainerGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IContainerInternal, IContainerGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Containers.GetOrAddAsOverride(r),
@@ -7908,7 +7908,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IDoorInternal":
                     foreach (var item in obj.Doors)
                     {
-                        yield return new ModContext<IOblivionMod, IDoorInternal, IDoorGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IDoorInternal, IDoorGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Doors.GetOrAddAsOverride(r),
@@ -7921,7 +7921,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IIngredientInternal":
                     foreach (var item in obj.Ingredients)
                     {
-                        yield return new ModContext<IOblivionMod, IIngredientInternal, IIngredientGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IIngredientInternal, IIngredientGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Ingredients.GetOrAddAsOverride(r),
@@ -7934,7 +7934,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ILightInternal":
                     foreach (var item in obj.Lights)
                     {
-                        yield return new ModContext<IOblivionMod, ILightInternal, ILightGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, ILightInternal, ILightGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Lights.GetOrAddAsOverride(r),
@@ -7947,7 +7947,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IMiscellaneousInternal":
                     foreach (var item in obj.Miscellaneous)
                     {
-                        yield return new ModContext<IOblivionMod, IMiscellaneousInternal, IMiscellaneousGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IMiscellaneousInternal, IMiscellaneousGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Miscellaneous.GetOrAddAsOverride(r),
@@ -7960,7 +7960,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IStaticInternal":
                     foreach (var item in obj.Statics)
                     {
-                        yield return new ModContext<IOblivionMod, IStaticInternal, IStaticGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IStaticInternal, IStaticGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Statics.GetOrAddAsOverride(r),
@@ -7973,7 +7973,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IGrassInternal":
                     foreach (var item in obj.Grasses)
                     {
-                        yield return new ModContext<IOblivionMod, IGrassInternal, IGrassGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IGrassInternal, IGrassGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Grasses.GetOrAddAsOverride(r),
@@ -7986,7 +7986,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ITreeInternal":
                     foreach (var item in obj.Trees)
                     {
-                        yield return new ModContext<IOblivionMod, ITreeInternal, ITreeGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, ITreeInternal, ITreeGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Trees.GetOrAddAsOverride(r),
@@ -7999,7 +7999,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IFloraInternal":
                     foreach (var item in obj.Flora)
                     {
-                        yield return new ModContext<IOblivionMod, IFloraInternal, IFloraGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IFloraInternal, IFloraGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Flora.GetOrAddAsOverride(r),
@@ -8012,7 +8012,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IFurnitureInternal":
                     foreach (var item in obj.Furniture)
                     {
-                        yield return new ModContext<IOblivionMod, IFurnitureInternal, IFurnitureGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IFurnitureInternal, IFurnitureGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Furniture.GetOrAddAsOverride(r),
@@ -8025,7 +8025,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IWeaponInternal":
                     foreach (var item in obj.Weapons)
                     {
-                        yield return new ModContext<IOblivionMod, IWeaponInternal, IWeaponGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IWeaponInternal, IWeaponGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Weapons.GetOrAddAsOverride(r),
@@ -8038,7 +8038,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IAmmunitionInternal":
                     foreach (var item in obj.Ammunitions)
                     {
-                        yield return new ModContext<IOblivionMod, IAmmunitionInternal, IAmmunitionGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IAmmunitionInternal, IAmmunitionGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Ammunitions.GetOrAddAsOverride(r),
@@ -8051,7 +8051,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "INpcInternal":
                     foreach (var item in obj.Npcs)
                     {
-                        yield return new ModContext<IOblivionMod, INpcInternal, INpcGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, INpcInternal, INpcGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Npcs.GetOrAddAsOverride(r),
@@ -8064,7 +8064,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ICreatureInternal":
                     foreach (var item in obj.Creatures)
                     {
-                        yield return new ModContext<IOblivionMod, ICreatureInternal, ICreatureGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, ICreatureInternal, ICreatureGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Creatures.GetOrAddAsOverride(r),
@@ -8077,7 +8077,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ILeveledCreatureInternal":
                     foreach (var item in obj.LeveledCreatures)
                     {
-                        yield return new ModContext<IOblivionMod, ILeveledCreatureInternal, ILeveledCreatureGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, ILeveledCreatureInternal, ILeveledCreatureGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.LeveledCreatures.GetOrAddAsOverride(r),
@@ -8090,7 +8090,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ISoulGemInternal":
                     foreach (var item in obj.SoulGems)
                     {
-                        yield return new ModContext<IOblivionMod, ISoulGemInternal, ISoulGemGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, ISoulGemInternal, ISoulGemGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.SoulGems.GetOrAddAsOverride(r),
@@ -8103,7 +8103,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IKeyInternal":
                     foreach (var item in obj.Keys)
                     {
-                        yield return new ModContext<IOblivionMod, IKeyInternal, IKeyGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IKeyInternal, IKeyGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Keys.GetOrAddAsOverride(r),
@@ -8116,7 +8116,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IPotionInternal":
                     foreach (var item in obj.Potions)
                     {
-                        yield return new ModContext<IOblivionMod, IPotionInternal, IPotionGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IPotionInternal, IPotionGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Potions.GetOrAddAsOverride(r),
@@ -8129,7 +8129,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ISubspaceInternal":
                     foreach (var item in obj.Subspaces)
                     {
-                        yield return new ModContext<IOblivionMod, ISubspaceInternal, ISubspaceGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, ISubspaceInternal, ISubspaceGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Subspaces.GetOrAddAsOverride(r),
@@ -8142,7 +8142,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ISigilStoneInternal":
                     foreach (var item in obj.SigilStones)
                     {
-                        yield return new ModContext<IOblivionMod, ISigilStoneInternal, ISigilStoneGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, ISigilStoneInternal, ISigilStoneGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.SigilStones.GetOrAddAsOverride(r),
@@ -8155,7 +8155,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ILeveledItemInternal":
                     foreach (var item in obj.LeveledItems)
                     {
-                        yield return new ModContext<IOblivionMod, ILeveledItemInternal, ILeveledItemGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, ILeveledItemInternal, ILeveledItemGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.LeveledItems.GetOrAddAsOverride(r),
@@ -8168,7 +8168,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IWeatherInternal":
                     foreach (var item in obj.Weathers)
                     {
-                        yield return new ModContext<IOblivionMod, IWeatherInternal, IWeatherGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IWeatherInternal, IWeatherGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Weathers.GetOrAddAsOverride(r),
@@ -8181,7 +8181,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IClimateInternal":
                     foreach (var item in obj.Climates)
                     {
-                        yield return new ModContext<IOblivionMod, IClimateInternal, IClimateGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IClimateInternal, IClimateGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Climates.GetOrAddAsOverride(r),
@@ -8194,7 +8194,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IRegionInternal":
                     foreach (var item in obj.Regions)
                     {
-                        yield return new ModContext<IOblivionMod, IRegionInternal, IRegionGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IRegionInternal, IRegionGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Regions.GetOrAddAsOverride(r),
@@ -8207,7 +8207,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IWorldspaceInternal":
                     foreach (var item in obj.Worldspaces)
                     {
-                        yield return new ModContext<IOblivionMod, IWorldspaceInternal, IWorldspaceGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IWorldspaceInternal, IWorldspaceGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(r),
@@ -8220,7 +8220,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IDialogTopicInternal":
                     foreach (var item in obj.DialogTopics)
                     {
-                        yield return new ModContext<IOblivionMod, IDialogTopicInternal, IDialogTopicGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IDialogTopicInternal, IDialogTopicGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.DialogTopics.GetOrAddAsOverride(r),
@@ -8233,7 +8233,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IQuestInternal":
                     foreach (var item in obj.Quests)
                     {
-                        yield return new ModContext<IOblivionMod, IQuestInternal, IQuestGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IQuestInternal, IQuestGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Quests.GetOrAddAsOverride(r),
@@ -8246,7 +8246,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IIdleAnimationInternal":
                     foreach (var item in obj.IdleAnimations)
                     {
-                        yield return new ModContext<IOblivionMod, IIdleAnimationInternal, IIdleAnimationGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IIdleAnimationInternal, IIdleAnimationGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.IdleAnimations.GetOrAddAsOverride(r),
@@ -8259,7 +8259,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IAIPackageInternal":
                     foreach (var item in obj.AIPackages)
                     {
-                        yield return new ModContext<IOblivionMod, IAIPackageInternal, IAIPackageGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IAIPackageInternal, IAIPackageGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.AIPackages.GetOrAddAsOverride(r),
@@ -8272,7 +8272,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ICombatStyleInternal":
                     foreach (var item in obj.CombatStyles)
                     {
-                        yield return new ModContext<IOblivionMod, ICombatStyleInternal, ICombatStyleGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, ICombatStyleInternal, ICombatStyleGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.CombatStyles.GetOrAddAsOverride(r),
@@ -8285,7 +8285,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ILoadScreenInternal":
                     foreach (var item in obj.LoadScreens)
                     {
-                        yield return new ModContext<IOblivionMod, ILoadScreenInternal, ILoadScreenGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, ILoadScreenInternal, ILoadScreenGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.LoadScreens.GetOrAddAsOverride(r),
@@ -8298,7 +8298,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ILeveledSpellInternal":
                     foreach (var item in obj.LeveledSpells)
                     {
-                        yield return new ModContext<IOblivionMod, ILeveledSpellInternal, ILeveledSpellGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, ILeveledSpellInternal, ILeveledSpellGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.LeveledSpells.GetOrAddAsOverride(r),
@@ -8311,7 +8311,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IAnimatedObjectInternal":
                     foreach (var item in obj.AnimatedObjects)
                     {
-                        yield return new ModContext<IOblivionMod, IAnimatedObjectInternal, IAnimatedObjectGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IAnimatedObjectInternal, IAnimatedObjectGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.AnimatedObjects.GetOrAddAsOverride(r),
@@ -8324,7 +8324,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IWaterInternal":
                     foreach (var item in obj.Waters)
                     {
-                        yield return new ModContext<IOblivionMod, IWaterInternal, IWaterGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IWaterInternal, IWaterGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.Waters.GetOrAddAsOverride(r),
@@ -8337,7 +8337,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IEffectShaderInternal":
                     foreach (var item in obj.EffectShaders)
                     {
-                        yield return new ModContext<IOblivionMod, IEffectShaderInternal, IEffectShaderGetter>(
+                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IEffectShaderInternal, IEffectShaderGetter>(
                             modKey: obj.ModKey,
                             record: item,
                             getOrAddAsOverride: (m, r) => m.EffectShaders.GetOrAddAsOverride(r),
@@ -11592,9 +11592,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool UsingLocalization => false;
         public IEnumerable<FormLinkInformation> ContainedFormLinks => OblivionModCommon.Instance.GetContainedFormLinks(this);
         [DebuggerStepThrough]
-        IEnumerable<IModContext<IOblivionMod, TSetter, TGetter>> IMajorRecordContextEnumerable<IOblivionMod>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, TSetter, TGetter>> IMajorRecordContextEnumerable<IOblivionMod, IOblivionModGetter>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>> IMajorRecordContextEnumerable<IOblivionMod>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> IMajorRecordContextEnumerable<IOblivionMod, IOblivionModGetter>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

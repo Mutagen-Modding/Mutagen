@@ -15,14 +15,15 @@ namespace Mutagen.Bethesda
         new T Record { get; }
     }
 
-    public interface IModContext<TModSetter, out TMajorSetter, out TMajorGetter> : IModContext<TMajorGetter>
-        where TModSetter : IModGetter
-        where TMajorSetter : IMajorRecordCommon, TMajorGetter
+    public interface IModContext<TMod, TModGetter, out TMajor, out TMajorGetter> : IModContext<TMajorGetter>
+        where TModGetter : IModGetter
+        where TMod : TModGetter, IMod
+        where TMajor : IMajorRecordCommon, TMajorGetter
         where TMajorGetter : IMajorRecordCommonGetter
     {
-        TMajorSetter GetOrAddAsOverride(TModSetter mod);
-        TMajorSetter DuplicateIntoAsNewRecord(TModSetter mod, string? editorID = null);
-        bool TryGetParentContext<TTargetMajorSetter, TTargetMajorGetter>([MaybeNullWhen(false)] out IModContext<TModSetter, TTargetMajorSetter, TTargetMajorGetter> parent)
+        TMajor GetOrAddAsOverride(TMod mod);
+        TMajor DuplicateIntoAsNewRecord(TMod mod, string? editorID = null);
+        bool TryGetParentContext<TTargetMajorSetter, TTargetMajorGetter>([MaybeNullWhen(false)] out IModContext<TMod, TModGetter, TTargetMajorSetter, TTargetMajorGetter> parent)
             where TTargetMajorSetter : IMajorRecordCommon, TTargetMajorGetter
             where TTargetMajorGetter : IMajorRecordCommonGetter;
     }
@@ -51,16 +52,18 @@ namespace Mutagen.Bethesda
     /// <br />
     /// This is typically only useful for deeper nested records such as Cell/PlacedObjects/Navmeshes/etc
     /// </summary>
-    /// <typeparam name="TModSetter">The setter interface of the mod type to target</typeparam>
-    /// <typeparam name="TMajorSetter">The setter interface of the contained record</typeparam>
+    /// <typeparam name="TMod">The setter interface of the mod type to target</typeparam>
+    /// <typeparam name="TModGetter">The getter interface of the mod type to target</typeparam>
+    /// <typeparam name="TMajor">The setter interface of the contained record</typeparam>
     /// <typeparam name="TMajorGetter">The getter interface of the contained record</typeparam>
-    public class ModContext<TModSetter, TMajorSetter, TMajorGetter> : IModContext<TModSetter, TMajorSetter, TMajorGetter>
-        where TModSetter : IModGetter
-        where TMajorSetter : IMajorRecordCommon, TMajorGetter
+    public class ModContext<TMod, TModGetter, TMajor, TMajorGetter> : IModContext<TMod, TModGetter, TMajor, TMajorGetter>
+        where TModGetter : IModGetter
+        where TMod : TModGetter, IMod
+        where TMajor : IMajorRecordCommon, TMajorGetter
         where TMajorGetter : IMajorRecordCommonGetter
     {
-        private readonly Func<TModSetter, TMajorGetter, TMajorSetter> _getOrAddAsOverride;
-        private readonly Func<TModSetter, TMajorGetter, string?, TMajorSetter> _duplicateInto;
+        private readonly Func<TMod, TMajorGetter, TMajor> _getOrAddAsOverride;
+        private readonly Func<TMod, TMajorGetter, string?, TMajor> _duplicateInto;
 
         /// <summary>
         /// The contained record
@@ -89,8 +92,8 @@ namespace Mutagen.Bethesda
         public ModContext(
             ModKey modKey,
             TMajorGetter record,
-            Func<TModSetter, TMajorGetter, TMajorSetter> getOrAddAsOverride,
-            Func<TModSetter, TMajorGetter, string?, TMajorSetter> duplicateInto,
+            Func<TMod, TMajorGetter, TMajor> getOrAddAsOverride,
+            Func<TMod, TMajorGetter, string?, TMajor> duplicateInto,
             IModContext? parent = null)
         {
             ModKey = modKey;
@@ -100,7 +103,7 @@ namespace Mutagen.Bethesda
             Parent = parent;
         }
 
-        public static implicit operator TMajorGetter(ModContext<TModSetter, TMajorSetter, TMajorGetter> context)
+        public static implicit operator TMajorGetter(ModContext<TMod, TModGetter, TMajor, TMajorGetter> context)
         {
             return context.Record;
         }
@@ -112,7 +115,7 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="mod">Mod to search/insert into</param>
         /// <returns>An override of the wrapped record, which is sourced from the target mod</returns>
-        public TMajorSetter GetOrAddAsOverride(TModSetter mod)
+        public TMajor GetOrAddAsOverride(TMod mod)
         {
             try
             {
@@ -124,7 +127,7 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public bool TryGetParentContext<TTargetMajorSetter, TTargetMajorGetter>([MaybeNullWhen(false)] out IModContext<TModSetter, TTargetMajorSetter, TTargetMajorGetter> parent)
+        public bool TryGetParentContext<TTargetMajorSetter, TTargetMajorGetter>([MaybeNullWhen(false)] out IModContext<TMod, TModGetter, TTargetMajorSetter, TTargetMajorGetter> parent)
             where TTargetMajorSetter : IMajorRecordCommon, TTargetMajorGetter
             where TTargetMajorGetter : IMajorRecordCommonGetter
         {
@@ -133,7 +136,7 @@ namespace Mutagen.Bethesda
             {
                 if (targetContext.Record is TTargetMajorGetter)
                 {
-                    parent = (ModContext<TModSetter, TTargetMajorSetter, TTargetMajorGetter>)targetContext;
+                    parent = (ModContext<TMod, TModGetter, TTargetMajorSetter, TTargetMajorGetter>)targetContext;
                     return true;
                 }
                 targetContext = targetContext.Parent;
@@ -142,7 +145,7 @@ namespace Mutagen.Bethesda
             return false;
         }
 
-        public TMajorSetter DuplicateIntoAsNewRecord(TModSetter mod, string? editorID = null)
+        public TMajor DuplicateIntoAsNewRecord(TMod mod, string? editorID = null)
         {
             return _duplicateInto(mod, this.Record, editorID);
         }
@@ -171,14 +174,15 @@ namespace Mutagen.Bethesda
             return false;
         }
 
-        public static ModContext<TModSetter, RMajorSetter, RMajorGetter> AsType<TModSetter, TMajorSetter, TMajorGetter, RMajorSetter, RMajorGetter>(this IModContext<TModSetter, TMajorSetter, TMajorGetter> context)
-            where TModSetter : IModGetter
-            where TMajorSetter : IMajorRecordCommon, TMajorGetter
+        public static ModContext<TMod, TModGetter, RMajorSetter, RMajorGetter> AsType<TMod, TModGetter, TMajor, TMajorGetter, RMajorSetter, RMajorGetter>(this IModContext<TMod, TModGetter, TMajor, TMajorGetter> context)
+            where TModGetter : IModGetter
+            where TMod : TModGetter, IMod
+            where TMajor : IMajorRecordCommon, TMajorGetter
             where TMajorGetter : IMajorRecordCommonGetter
-            where RMajorSetter : TMajorSetter, RMajorGetter
+            where RMajorSetter : TMajor, RMajorGetter
             where RMajorGetter : TMajorGetter
         {
-            return new ModContext<TModSetter, RMajorSetter, RMajorGetter>(
+            return new ModContext<TMod, TModGetter, RMajorSetter, RMajorGetter>(
                 context.ModKey,
                 (RMajorGetter)context.Record,
                 (mod, rec) => (RMajorSetter)context.GetOrAddAsOverride(mod),

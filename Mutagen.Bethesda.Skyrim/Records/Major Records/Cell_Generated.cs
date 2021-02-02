@@ -3893,7 +3893,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public IEnumerable<IModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        public IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             ICellGetter obj,
             ILinkCache linkCache,
             ModKey modKey,
@@ -3901,7 +3901,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Func<ISkyrimMod, ICellGetter, ICell> getOrAddAsOverride,
             Func<ISkyrimMod, ICellGetter, string?, ICell> duplicateInto)
         {
-            var curContext = new ModContext<ISkyrimMod, ICell, ICellGetter>(
+            var curContext = new ModContext<ISkyrimMod, ISkyrimModGetter, ICell, ICellGetter>(
                 modKey,
                 record: obj,
                 getOrAddAsOverride: getOrAddAsOverride,
@@ -3910,7 +3910,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 if (obj.Landscape.TryGet(out var CellLandscapeitem))
                 {
-                    yield return new ModContext<ISkyrimMod, ILandscapeInternal, ILandscapeGetter>(
+                    yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ILandscapeInternal, ILandscapeGetter>(
                         modKey: modKey,
                         record: CellLandscapeitem,
                         parent: curContext,
@@ -3933,7 +3933,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var subItem in obj.NavigationMeshes)
             {
-                yield return new ModContext<ISkyrimMod, IANavigationMeshInternal, IANavigationMeshGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IANavigationMeshInternal, IANavigationMeshGetter>(
                     modKey: modKey,
                     record: subItem,
                     parent: curContext,
@@ -3952,7 +3952,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var subItem in obj.Persistent)
             {
-                yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IPlaced, IPlacedGetter>(
                     modKey: modKey,
                     record: subItem,
                     parent: curContext,
@@ -3971,7 +3971,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var subItem in obj.Temporary)
             {
-                yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IPlaced, IPlacedGetter>(
                     modKey: modKey,
                     record: subItem,
                     parent: curContext,
@@ -3990,7 +3990,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public IEnumerable<IModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        public IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             ICellGetter obj,
             ILinkCache linkCache,
             Type type,
@@ -4000,7 +4000,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Func<ISkyrimMod, ICellGetter, ICell> getOrAddAsOverride,
             Func<ISkyrimMod, ICellGetter, string?, ICell> duplicateInto)
         {
-            var curContext = new ModContext<ISkyrimMod, ICell, ICellGetter>(
+            var curContext = new ModContext<ISkyrimMod, ISkyrimModGetter, ICell, ICellGetter>(
                 modKey,
                 record: obj,
                 getOrAddAsOverride: getOrAddAsOverride,
@@ -4046,7 +4046,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (obj.Landscape.TryGet(out var CellLandscapeitem))
                         {
-                            yield return new ModContext<ISkyrimMod, ILandscapeInternal, ILandscapeGetter>(
+                            yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ILandscapeInternal, ILandscapeGetter>(
                                 modKey: modKey,
                                 record: CellLandscapeitem,
                                 parent: curContext,
@@ -4076,7 +4076,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IANavigationMeshInternal, IANavigationMeshGetter>(
+                            yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IANavigationMeshInternal, IANavigationMeshGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
@@ -4101,7 +4101,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
+                            yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
@@ -4123,7 +4123,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
+                            yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
@@ -4150,7 +4150,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
+                            yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
@@ -4172,7 +4172,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
+                            yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
@@ -4199,7 +4199,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
+                            yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
@@ -4221,7 +4221,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
+                            yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
@@ -4248,7 +4248,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
+                            yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
@@ -4270,7 +4270,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
+                            yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
@@ -4297,7 +4297,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
+                            yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
@@ -4319,7 +4319,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
+                            yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
@@ -4345,7 +4345,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
+                            yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
@@ -4367,7 +4367,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
+                            yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
@@ -4394,7 +4394,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
+                            yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
@@ -4416,7 +4416,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
+                            yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
@@ -4443,7 +4443,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
+                            yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
@@ -4465,7 +4465,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
+                            yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
@@ -4492,7 +4492,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
+                            yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
@@ -4514,7 +4514,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
+                            yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
@@ -4541,7 +4541,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
+                            yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
@@ -4563,7 +4563,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
+                            yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
@@ -4590,7 +4590,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
+                            yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
@@ -4612,7 +4612,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IPlaced, IPlacedGetter>(
+                            yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,
