@@ -683,7 +683,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ISkillRecord :
         ILoquiObjectSetter<ISkillRecordInternal>,
-        IOblivionMajorRecord,
+        IOblivionMajorRecordInternal,
         ISkillRecordGetter
     {
         new ActorValue? Skill { get; set; }

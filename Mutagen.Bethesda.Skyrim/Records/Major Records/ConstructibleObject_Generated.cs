@@ -758,7 +758,7 @@ namespace Mutagen.Bethesda.Skyrim
         IConstructibleObjectGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IConstructibleObjectInternal>,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new ExtendedList<ContainerEntry>? Items { get; set; }
         new ExtendedList<Condition> Conditions { get; }

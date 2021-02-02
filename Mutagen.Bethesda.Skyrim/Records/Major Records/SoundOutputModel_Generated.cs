@@ -713,7 +713,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface ISoundOutputModel :
         ILoquiObjectSetter<ISoundOutputModelInternal>,
-        ISkyrimMajorRecord,
+        ISkyrimMajorRecordInternal,
         ISoundOutputModelGetter
     {
         new SoundOutputData? Data { get; set; }

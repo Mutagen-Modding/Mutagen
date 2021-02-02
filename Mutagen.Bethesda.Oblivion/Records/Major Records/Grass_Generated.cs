@@ -504,7 +504,7 @@ namespace Mutagen.Bethesda.Oblivion
         IGrassGetter,
         ILoquiObjectSetter<IGrassInternal>,
         IModeled,
-        IOblivionMajorRecord
+        IOblivionMajorRecordInternal
     {
         new Model? Model { get; set; }
         new GrassData? Data { get; set; }

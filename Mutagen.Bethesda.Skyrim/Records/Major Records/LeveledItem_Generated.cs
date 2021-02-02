@@ -696,7 +696,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBounded,
         IObjectBoundedOptional,
         IOutfitTarget,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new ObjectBounds ObjectBounds { get; set; }
         new Byte ChanceNone { get; set; }

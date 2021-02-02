@@ -2023,7 +2023,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMajorRecordEnumerable,
         INamed,
         INamedRequired,
-        ISkyrimMajorRecord,
+        ISkyrimMajorRecordInternal,
         ITranslatedNamed,
         ITranslatedNamedRequired
     {

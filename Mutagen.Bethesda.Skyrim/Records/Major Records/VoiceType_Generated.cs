@@ -456,7 +456,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IVoiceType :
         ILoquiObjectSetter<IVoiceTypeInternal>,
-        ISkyrimMajorRecord,
+        ISkyrimMajorRecordInternal,
         IVoiceTypeGetter
     {
         new VoiceType.Flag Flags { get; set; }

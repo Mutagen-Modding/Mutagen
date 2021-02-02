@@ -491,7 +491,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPlacedTrap :
-        IAPlacedTrap,
+        IAPlacedTrapInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<IPlacedTrapInternal>,
         IPlacedTrapGetter

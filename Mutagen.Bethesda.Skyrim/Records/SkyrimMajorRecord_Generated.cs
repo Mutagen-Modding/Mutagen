@@ -500,8 +500,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ISkyrimMajorRecord :
         IFormLinkContainer,
         ILoquiObjectSetter<ISkyrimMajorRecordInternal>,
-        IMajorRecord,
         IMajorRecordEnumerable,
+        IMajorRecordInternal,
         ISkyrimMajorRecordGetter
     {
         new UInt16 FormVersion { get; set; }

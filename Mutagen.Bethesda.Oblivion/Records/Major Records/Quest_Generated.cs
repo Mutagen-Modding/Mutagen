@@ -915,7 +915,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IQuestInternal>,
         INamed,
         INamedRequired,
-        IOblivionMajorRecord,
+        IOblivionMajorRecordInternal,
         IQuestGetter
     {
         new FormLinkNullable<IScriptGetter> Script { get; set; }

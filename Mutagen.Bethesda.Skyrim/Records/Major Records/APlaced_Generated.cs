@@ -421,7 +421,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILoquiObjectSetter<IAPlacedInternal>,
         IPlaced,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
     }
 

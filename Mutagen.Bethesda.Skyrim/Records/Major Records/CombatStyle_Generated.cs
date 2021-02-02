@@ -1103,7 +1103,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ICombatStyle :
         ICombatStyleGetter,
         ILoquiObjectSetter<ICombatStyleInternal>,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new Single OffensiveMult { get; set; }
         new Single DefensiveMult { get; set; }

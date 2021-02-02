@@ -1451,7 +1451,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundedOptional,
         IObjectId,
         IScrollGetter,
-        ISkyrimMajorRecord,
+        ISkyrimMajorRecordInternal,
         ITranslatedNamed,
         ITranslatedNamedRequired,
         IWeightValue

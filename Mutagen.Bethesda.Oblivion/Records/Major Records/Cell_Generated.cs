@@ -1513,7 +1513,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMajorRecordEnumerable,
         INamed,
         INamedRequired,
-        IPlace
+        IPlaceInternal
     {
         new String? Name { get; set; }
         new Cell.Flag? Flags { get; set; }

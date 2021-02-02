@@ -702,7 +702,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILoquiObjectSetter<ICollisionLayerInternal>,
         INamedRequired,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new TranslatedString Description { get; set; }
         new UInt32 Index { get; set; }

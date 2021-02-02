@@ -576,7 +576,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<ISpellUnleveledInternal>,
         INamed,
         INamedRequired,
-        ISpell,
+        ISpellInternal,
         ISpellUnleveledGetter
     {
         new SpellData? Data { get; set; }

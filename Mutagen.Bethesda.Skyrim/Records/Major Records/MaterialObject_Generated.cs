@@ -913,7 +913,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IMaterialObjectInternal>,
         IMaterialObjectGetter,
         IModeled,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new Model? Model { get; set; }
         new SliceList<byte> DNAMs { get; }

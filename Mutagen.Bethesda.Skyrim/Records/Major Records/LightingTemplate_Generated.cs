@@ -1299,7 +1299,7 @@ namespace Mutagen.Bethesda.Skyrim
         IAmbientColorsCommon,
         ILightingTemplateGetter,
         ILoquiObjectSetter<ILightingTemplateInternal>,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new Color AmbientColor { get; set; }
         new Color DirectionalColor { get; set; }

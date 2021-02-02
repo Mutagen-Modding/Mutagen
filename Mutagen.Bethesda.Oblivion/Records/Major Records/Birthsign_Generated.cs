@@ -636,7 +636,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IBirthsignInternal>,
         INamed,
         INamedRequired,
-        IOblivionMajorRecord
+        IOblivionMajorRecordInternal
     {
         new String? Name { get; set; }
         new String? Icon { get; set; }

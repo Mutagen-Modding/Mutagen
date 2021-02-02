@@ -544,7 +544,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILoquiObjectSetter<IOutfitInternal>,
         IOutfitGetter,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new ExtendedList<IFormLink<IOutfitTargetGetter>>? Items { get; set; }
     }

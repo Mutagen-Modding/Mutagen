@@ -918,7 +918,7 @@ namespace Mutagen.Bethesda.Skyrim
         IIdleAnimationGetter,
         IIdleRelation,
         ILoquiObjectSetter<IIdleAnimationInternal>,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new ExtendedList<Condition> Conditions { get; }
         new String? Filename { get; set; }

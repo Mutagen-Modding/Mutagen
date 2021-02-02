@@ -350,7 +350,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IMagicEffectEnchantmentArchetype :
         ILoquiObjectSetter<IMagicEffectEnchantmentArchetypeInternal>,
-        IMagicEffectArchetype,
+        IMagicEffectArchetypeInternal,
         IMagicEffectEnchantmentArchetypeGetter
     {
     }

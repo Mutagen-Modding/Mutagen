@@ -820,7 +820,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBounded,
         IObjectBoundedOptional,
         IObjectId,
-        ISkyrimMajorRecord,
+        ISkyrimMajorRecordInternal,
         ITranslatedNamed,
         ITranslatedNamedRequired
     {

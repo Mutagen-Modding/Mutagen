@@ -450,7 +450,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IGameSettingUInt :
-        IGameSetting,
+        IGameSettingInternal,
         IGameSettingUIntGetter,
         ILoquiObjectSetter<IGameSettingUIntInternal>
     {

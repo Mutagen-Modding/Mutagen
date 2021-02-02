@@ -649,7 +649,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IImageSpace :
         IImageSpaceGetter,
         ILoquiObjectSetter<IImageSpaceInternal>,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new MemorySlice<Byte>? ENAM { get; set; }
         new ImageSpaceHdr? Hdr { get; set; }

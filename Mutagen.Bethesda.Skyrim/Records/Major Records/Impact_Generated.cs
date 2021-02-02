@@ -964,7 +964,7 @@ namespace Mutagen.Bethesda.Skyrim
         IImpactGetter,
         ILoquiObjectSetter<IImpactInternal>,
         IModeled,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new Model? Model { get; set; }
         new Single Duration { get; set; }

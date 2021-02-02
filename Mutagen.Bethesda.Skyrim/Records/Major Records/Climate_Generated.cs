@@ -916,7 +916,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILoquiObjectSetter<IClimateInternal>,
         IModeled,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new ExtendedList<WeatherType>? WeatherTypes { get; set; }
         new String? SunTexture { get; set; }

@@ -721,7 +721,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBounded,
         IObjectBoundedOptional,
         IObjectId,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new ObjectBounds ObjectBounds { get; set; }
         new IdleMarker.Flag? Flags { get; set; }

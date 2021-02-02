@@ -394,7 +394,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IGameSetting :
         IGameSettingGetter,
         ILoquiObjectSetter<IGameSettingInternal>,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
     }
 

@@ -439,7 +439,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ISubspace :
         ILoquiObjectSetter<ISubspaceInternal>,
-        IOblivionMajorRecord,
+        IOblivionMajorRecordInternal,
         ISubspaceGetter
     {
         new P3Float? Point { get; set; }

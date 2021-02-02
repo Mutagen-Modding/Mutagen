@@ -790,7 +790,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IPlacedNpc :
         IFormLinkContainer,
         ILoquiObjectSetter<IPlacedNpcInternal>,
-        IOblivionMajorRecord,
+        IOblivionMajorRecordInternal,
         IPlaced,
         IPlacedNpcGetter
     {

@@ -786,7 +786,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMajorRecordEnumerable,
         INamed,
         INamedRequired,
-        IOblivionMajorRecord
+        IOblivionMajorRecordInternal
     {
         new ExtendedList<IFormLink<IQuestGetter>> Quests { get; }
         new String? Name { get; set; }

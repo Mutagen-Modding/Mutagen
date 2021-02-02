@@ -690,7 +690,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkContainer,
         ILoquiObjectSetter<IClimateInternal>,
         IModeled,
-        IOblivionMajorRecord
+        IOblivionMajorRecordInternal
     {
         new ExtendedList<WeatherType>? Weathers { get; set; }
         new String? SunTexture { get; set; }

@@ -1072,7 +1072,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMajorRecordEnumerable,
         INamed,
         INamedRequired,
-        IPlace,
+        IPlaceInternal,
         IWorldspaceGetter
     {
         new String? Name { get; set; }

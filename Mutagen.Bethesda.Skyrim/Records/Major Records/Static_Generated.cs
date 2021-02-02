@@ -766,7 +766,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundedOptional,
         IObjectId,
         IRegionTarget,
-        ISkyrimMajorRecord,
+        ISkyrimMajorRecordInternal,
         IStaticGetter
     {
         new ObjectBounds ObjectBounds { get; set; }

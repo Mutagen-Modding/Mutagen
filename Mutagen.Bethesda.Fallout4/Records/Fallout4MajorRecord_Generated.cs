@@ -457,7 +457,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IFallout4MajorRecord :
         IFallout4MajorRecordGetter,
         ILoquiObjectSetter<IFallout4MajorRecordInternal>,
-        IMajorRecord
+        IMajorRecordInternal
     {
         new UInt16 FormVersion { get; set; }
         new UInt16 Version2 { get; set; }

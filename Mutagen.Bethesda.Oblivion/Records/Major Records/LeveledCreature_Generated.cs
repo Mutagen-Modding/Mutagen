@@ -652,7 +652,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ILeveledCreature :
-        IANpcSpawn,
+        IANpcSpawnInternal,
         IFormLinkContainer,
         ILeveledCreatureGetter,
         ILoquiObjectSetter<ILeveledCreatureInternal>

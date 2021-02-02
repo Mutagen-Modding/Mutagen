@@ -412,7 +412,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILensFlare :
         ILensFlareGetter,
         ILoquiObjectSetter<ILensFlareInternal>,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
     }
 

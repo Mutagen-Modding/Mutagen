@@ -457,8 +457,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IGlobalFloat :
-        IGlobal,
         IGlobalFloatGetter,
+        IGlobalInternal,
         ILoquiObjectSetter<IGlobalFloatInternal>
     {
         new Single? Data { get; set; }

@@ -1604,7 +1604,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPlacedNpc :
-        IAPlaced,
+        IAPlacedInternal,
         IFormLinkContainer,
         IKeywordLinkedReference,
         ILinkedReference,

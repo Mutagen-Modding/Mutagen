@@ -557,7 +557,7 @@ namespace Mutagen.Bethesda.Skyrim
         IDialogBranchGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IDialogBranchInternal>,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new FormLink<IQuestGetter> Quest { get; set; }
         new Int32? TNAM { get; set; }

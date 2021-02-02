@@ -502,7 +502,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IStoryManagerBranchNode :
-        IAStoryManagerNode,
+        IAStoryManagerNodeInternal,
         ILoquiObjectSetter<IStoryManagerBranchNodeInternal>,
         IStoryManagerBranchNodeGetter
     {

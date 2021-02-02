@@ -1017,7 +1017,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBounded,
         IObjectBoundedOptional,
         IRegionTarget,
-        ISkyrimMajorRecord,
+        ISkyrimMajorRecordInternal,
         ITranslatedNamedRequired
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }

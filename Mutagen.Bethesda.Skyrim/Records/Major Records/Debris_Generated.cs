@@ -543,7 +543,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IDebris :
         IDebrisGetter,
         ILoquiObjectSetter<IDebrisInternal>,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new ExtendedList<DebrisModel> Models { get; }
     }

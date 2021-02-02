@@ -1368,7 +1368,7 @@ namespace Mutagen.Bethesda.Skyrim
     /// Implemented by: [PlacedArrow, PlacedBeam, PlacedFlame, PlacedCone, PlacedBarrier, PlacedTrap, PlacedHazard, PlacedMissile]
     /// </summary>
     public partial interface IAPlacedTrap :
-        IAPlaced,
+        IAPlacedInternal,
         IAPlacedTrapGetter,
         IFormLinkContainer,
         IKeywordLinkedReference,

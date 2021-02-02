@@ -431,7 +431,7 @@ namespace Mutagen.Bethesda.Oblivion
     /// Implemented by: [SpellLeveled, SpellUnleveled]
     /// </summary>
     public partial interface ISpell :
-        IASpell,
+        IASpellInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<ISpellInternal>,
         INamed,

@@ -980,7 +980,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModeled,
         IObjectBounded,
         IObjectBoundedOptional,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new ObjectBounds ObjectBounds { get; set; }
         new Model? Model { get; set; }

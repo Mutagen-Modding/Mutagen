@@ -985,7 +985,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILoquiObjectSetter<IMusicTrackInternal>,
         IMusicTrackGetter,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new MusicTrack.TypeEnum Type { get; set; }
         new Single? Duration { get; set; }

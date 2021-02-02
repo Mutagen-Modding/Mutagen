@@ -438,8 +438,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IGameSettingFloat :
-        IGameSetting,
         IGameSettingFloatGetter,
+        IGameSettingInternal,
         ILoquiObjectSetter<IGameSettingFloatInternal>
     {
         new Single? Data { get; set; }

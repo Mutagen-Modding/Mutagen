@@ -592,7 +592,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBounded,
         IObjectBoundedOptional,
         IObjectId,
-        ISkyrimMajorRecord,
+        ISkyrimMajorRecordInternal,
         ISound,
         ISoundMarkerGetter
     {

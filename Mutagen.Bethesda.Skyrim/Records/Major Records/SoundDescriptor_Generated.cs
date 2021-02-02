@@ -1061,7 +1061,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ISoundDescriptor :
         IFormLinkContainer,
         ILoquiObjectSetter<ISoundDescriptorInternal>,
-        ISkyrimMajorRecord,
+        ISkyrimMajorRecordInternal,
         ISound,
         ISoundDescriptorGetter
     {

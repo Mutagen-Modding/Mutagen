@@ -590,7 +590,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ILeveledItem :
-        IAItem,
+        IAItemInternal,
         IFormLinkContainer,
         ILeveledItemGetter,
         ILoquiObjectSetter<ILeveledItemInternal>

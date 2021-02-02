@@ -823,7 +823,7 @@ namespace Mutagen.Bethesda.Oblivion
     /// </summary>
     public partial interface IAClothing :
         IAClothingGetter,
-        IAItem,
+        IAItemInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<IAClothingInternal>,
         INamed,

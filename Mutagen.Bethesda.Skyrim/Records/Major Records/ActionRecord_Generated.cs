@@ -461,7 +461,7 @@ namespace Mutagen.Bethesda.Skyrim
         IActionRecordGetter,
         IIdleRelation,
         ILoquiObjectSetter<IActionRecordInternal>,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new Color? Color { get; set; }
     }

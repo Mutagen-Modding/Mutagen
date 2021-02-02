@@ -375,7 +375,7 @@ namespace Mutagen.Bethesda.Oblivion
     /// </summary>
     public partial interface IANpc :
         IANpcGetter,
-        IANpcSpawn,
+        IANpcSpawnInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<IANpcInternal>
     {

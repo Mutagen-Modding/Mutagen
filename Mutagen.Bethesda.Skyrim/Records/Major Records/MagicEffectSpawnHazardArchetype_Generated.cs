@@ -350,7 +350,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IMagicEffectSpawnHazardArchetype :
         ILoquiObjectSetter<IMagicEffectSpawnHazardArchetypeInternal>,
-        IMagicEffectArchetype,
+        IMagicEffectArchetypeInternal,
         IMagicEffectSpawnHazardArchetypeGetter
     {
     }
