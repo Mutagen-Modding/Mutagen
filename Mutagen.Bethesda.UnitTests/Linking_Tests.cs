@@ -36,9 +36,9 @@ namespace Mutagen.Bethesda.UnitTests
         public abstract IDisposable ConvertMod(SkyrimMod mod, out ISkyrimModGetter getter);
         public abstract bool ReadOnly { get; }
 
-        protected abstract ILinkCache<ISkyrimMod> GetLinkCache(ISkyrimModGetter modGetter);
+        protected abstract ILinkCache<ISkyrimMod> GetLinkCache(ISkyrimModGetter modGetter, LinkCachePreferences prefs = null);
 
-        protected abstract ILinkCache<ISkyrimMod> GetLinkCache(LoadOrder<ISkyrimModGetter> loadOrder);
+        protected abstract ILinkCache<ISkyrimMod> GetLinkCache(LoadOrder<ISkyrimModGetter> loadOrder, LinkCachePreferences prefs = null);
 
         #region Direct Mod
         [Fact]
@@ -1984,14 +1984,14 @@ namespace Mutagen.Bethesda.UnitTests
             return Disposable.Empty;
         }
 
-        protected override ILinkCache<ISkyrimMod> GetLinkCache(ISkyrimModGetter modGetter)
+        protected override ILinkCache<ISkyrimMod> GetLinkCache(ISkyrimModGetter modGetter, LinkCachePreferences prefs)
         {
-            return new ImmutableModLinkCache<ISkyrimMod, ISkyrimModGetter>(modGetter);
+            return new ImmutableModLinkCache<ISkyrimMod, ISkyrimModGetter>(modGetter, prefs);
         }
 
-        protected override ILinkCache<ISkyrimMod> GetLinkCache(LoadOrder<ISkyrimModGetter> loadOrder)
+        protected override ILinkCache<ISkyrimMod> GetLinkCache(LoadOrder<ISkyrimModGetter> loadOrder, LinkCachePreferences prefs)
         {
-            return loadOrder.ToImmutableLinkCache<ISkyrimMod, ISkyrimModGetter>();
+            return loadOrder.ToImmutableLinkCache<ISkyrimMod, ISkyrimModGetter>(prefs);
         }
     }
 
@@ -2023,14 +2023,14 @@ namespace Mutagen.Bethesda.UnitTests
             });
         }
 
-        protected override ILinkCache<ISkyrimMod> GetLinkCache(ISkyrimModGetter modGetter)
+        protected override ILinkCache<ISkyrimMod> GetLinkCache(ISkyrimModGetter modGetter, LinkCachePreferences prefs)
         {
-            return new ImmutableModLinkCache<ISkyrimMod, ISkyrimModGetter>(modGetter);
+            return new ImmutableModLinkCache<ISkyrimMod, ISkyrimModGetter>(modGetter, prefs);
         }
 
-        protected override ILinkCache<ISkyrimMod> GetLinkCache(LoadOrder<ISkyrimModGetter> loadOrder)
+        protected override ILinkCache<ISkyrimMod> GetLinkCache(LoadOrder<ISkyrimModGetter> loadOrder, LinkCachePreferences prefs)
         {
-            return loadOrder.ToImmutableLinkCache<ISkyrimMod, ISkyrimModGetter>();
+            return loadOrder.ToImmutableLinkCache<ISkyrimMod, ISkyrimModGetter>(prefs);
         }
     }
 
@@ -2044,14 +2044,14 @@ namespace Mutagen.Bethesda.UnitTests
             return Disposable.Empty;
         }
 
-        protected override ILinkCache<ISkyrimMod> GetLinkCache(ISkyrimModGetter modGetter)
+        protected override ILinkCache<ISkyrimMod> GetLinkCache(ISkyrimModGetter modGetter, LinkCachePreferences prefs)
         {
-            return new MutableModLinkCache<ISkyrimMod, ISkyrimModGetter>(modGetter);
+            return new MutableModLinkCache<ISkyrimMod, ISkyrimModGetter>(modGetter, prefs);
         }
 
-        protected override ILinkCache<ISkyrimMod> GetLinkCache(LoadOrder<ISkyrimModGetter> loadOrder)
+        protected override ILinkCache<ISkyrimMod> GetLinkCache(LoadOrder<ISkyrimModGetter> loadOrder, LinkCachePreferences prefs)
         {
-            return new MutableLoadOrderLinkCache<ISkyrimMod, ISkyrimModGetter>(loadOrder.ToImmutableLinkCache<ISkyrimMod, ISkyrimModGetter>());
+            return new MutableLoadOrderLinkCache<ISkyrimMod, ISkyrimModGetter>(loadOrder.ToImmutableLinkCache<ISkyrimMod, ISkyrimModGetter>(), prefs);
         }
     }
 
@@ -2078,14 +2078,14 @@ namespace Mutagen.Bethesda.UnitTests
             });
         }
 
-        protected override ILinkCache<ISkyrimMod> GetLinkCache(ISkyrimModGetter modGetter)
+        protected override ILinkCache<ISkyrimMod> GetLinkCache(ISkyrimModGetter modGetter, LinkCachePreferences prefs)
         {
-            return new MutableModLinkCache<ISkyrimMod, ISkyrimModGetter>(modGetter);
+            return new MutableModLinkCache<ISkyrimMod, ISkyrimModGetter>(modGetter, prefs);
         }
 
-        protected override ILinkCache<ISkyrimMod> GetLinkCache(LoadOrder<ISkyrimModGetter> loadOrder)
+        protected override ILinkCache<ISkyrimMod> GetLinkCache(LoadOrder<ISkyrimModGetter> loadOrder, LinkCachePreferences prefs)
         {
-            return new MutableLoadOrderLinkCache<ISkyrimMod, ISkyrimModGetter>(loadOrder.ToImmutableLinkCache<ISkyrimMod, ISkyrimModGetter>());
+            return new MutableLoadOrderLinkCache<ISkyrimMod, ISkyrimModGetter>(loadOrder.ToImmutableLinkCache<ISkyrimMod, ISkyrimModGetter>(), prefs);
         }
     }
 }
