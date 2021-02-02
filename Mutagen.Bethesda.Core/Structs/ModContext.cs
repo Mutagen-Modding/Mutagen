@@ -1,3 +1,6 @@
+using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Internals;
+using Noggog;
 using System;
 using System.Diagnostics.CodeAnalysis;
 
@@ -18,14 +21,14 @@ namespace Mutagen.Bethesda
     public interface IModContext<TMod, TModGetter, out TMajor, out TMajorGetter> : IModContext<TMajorGetter>
         where TModGetter : IModGetter
         where TMod : TModGetter, IMod
-        where TMajor : IMajorRecordCommon, TMajorGetter
-        where TMajorGetter : IMajorRecordCommonGetter
+        where TMajor : class, IMajorRecordCommon, TMajorGetter
+        where TMajorGetter : class, IMajorRecordCommonGetter
     {
         TMajor GetOrAddAsOverride(TMod mod);
         TMajor DuplicateIntoAsNewRecord(TMod mod, string? editorID = null);
         bool TryGetParentContext<TTargetMajorSetter, TTargetMajorGetter>([MaybeNullWhen(false)] out IModContext<TMod, TModGetter, TTargetMajorSetter, TTargetMajorGetter> parent)
-            where TTargetMajorSetter : IMajorRecordCommon, TTargetMajorGetter
-            where TTargetMajorGetter : IMajorRecordCommonGetter;
+            where TTargetMajorSetter : class, IMajorRecordCommon, TTargetMajorGetter
+            where TTargetMajorGetter : class, IMajorRecordCommonGetter;
     }
 
     public class ModContext<T> : IModContext<T>
@@ -59,8 +62,8 @@ namespace Mutagen.Bethesda
     public class ModContext<TMod, TModGetter, TMajor, TMajorGetter> : IModContext<TMod, TModGetter, TMajor, TMajorGetter>
         where TModGetter : IModGetter
         where TMod : TModGetter, IMod
-        where TMajor : IMajorRecordCommon, TMajorGetter
-        where TMajorGetter : IMajorRecordCommonGetter
+        where TMajor : class, IMajorRecordCommon, TMajorGetter
+        where TMajorGetter : class, IMajorRecordCommonGetter
     {
         private readonly Func<TMod, TMajorGetter, TMajor> _getOrAddAsOverride;
         private readonly Func<TMod, TMajorGetter, string?, TMajor> _duplicateInto;
@@ -128,8 +131,8 @@ namespace Mutagen.Bethesda
         }
 
         public bool TryGetParentContext<TTargetMajorSetter, TTargetMajorGetter>([MaybeNullWhen(false)] out IModContext<TMod, TModGetter, TTargetMajorSetter, TTargetMajorGetter> parent)
-            where TTargetMajorSetter : IMajorRecordCommon, TTargetMajorGetter
-            where TTargetMajorGetter : IMajorRecordCommonGetter
+            where TTargetMajorSetter : class, IMajorRecordCommon, TTargetMajorGetter
+            where TTargetMajorGetter : class, IMajorRecordCommonGetter
         {
             var targetContext = this.Parent;
             while (targetContext != null)
@@ -174,20 +177,59 @@ namespace Mutagen.Bethesda
             return false;
         }
 
-        public static ModContext<TMod, TModGetter, RMajorSetter, RMajorGetter> AsType<TMod, TModGetter, TMajor, TMajorGetter, RMajorSetter, RMajorGetter>(this IModContext<TMod, TModGetter, TMajor, TMajorGetter> context)
+        public static IModContext<TMod, TModGetter, RMajorSetter, RMajorGetter> AsType<TMod, TModGetter, TMajor, TMajorGetter, RMajorSetter, RMajorGetter>(this IModContext<TMod, TModGetter, TMajor, TMajorGetter> context)
             where TModGetter : IModGetter
             where TMod : TModGetter, IMod
-            where TMajor : IMajorRecordCommon, TMajorGetter
-            where TMajorGetter : IMajorRecordCommonGetter
-            where RMajorSetter : TMajor, RMajorGetter
-            where RMajorGetter : TMajorGetter
+            where TMajor : class, IMajorRecordCommon, TMajorGetter
+            where TMajorGetter : class, IMajorRecordCommonGetter
+            where RMajorSetter : class, TMajor, RMajorGetter
+            where RMajorGetter : class, TMajorGetter
         {
-            return new ModContext<TMod, TModGetter, RMajorSetter, RMajorGetter>(
-                context.ModKey,
-                (RMajorGetter)context.Record,
-                (mod, rec) => (RMajorSetter)context.GetOrAddAsOverride(mod),
-                (mod, rec, edid) => (RMajorSetter)context.DuplicateIntoAsNewRecord(mod, edid),
-                context.Parent);
+            return new ModContextCaster<TMod, TModGetter, TMajor, TMajorGetter, RMajorSetter, RMajorGetter>(context);
+        }
+    }
+    
+    namespace Internals
+    {
+        class ModContextCaster<TMod, TModGetter, TMajor, TMajorGetter, RMajorSetter, RMajorGetter> : IModContext<TMod, TModGetter, RMajorSetter, RMajorGetter>
+            where TModGetter : IModGetter
+            where TMod : TModGetter, IMod
+            where TMajor : class, IMajorRecordCommon, TMajorGetter
+            where TMajorGetter : class, IMajorRecordCommonGetter
+            where RMajorSetter : class, TMajor, RMajorGetter
+            where RMajorGetter : class, TMajorGetter
+        {
+            private readonly IModContext<TMod, TModGetter, TMajor, TMajorGetter> _context;
+
+            public ModKey ModKey => _context.ModKey;
+
+            public IModContext? Parent => _context.Parent;
+
+            object? IModContext.Record => _context.Record;
+
+            public RMajorGetter Record => (RMajorGetter)_context.Record;
+
+            public ModContextCaster(IModContext<TMod, TModGetter, TMajor, TMajorGetter> source)
+            {
+                _context = source;
+            }
+
+            public RMajorSetter GetOrAddAsOverride(TMod mod)
+            {
+                return (RMajorSetter)_context.GetOrAddAsOverride(mod);
+            }
+
+            public RMajorSetter DuplicateIntoAsNewRecord(TMod mod, string? editorID = null)
+            {
+                return (RMajorSetter)_context.DuplicateIntoAsNewRecord(mod, editorID);
+            }
+
+            public bool TryGetParentContext<TTargetMajorSetter, TTargetMajorGetter>([MaybeNullWhen(false)] out IModContext<TMod, TModGetter, TTargetMajorSetter, TTargetMajorGetter> parent)
+                where TTargetMajorSetter : class, IMajorRecordCommon, TTargetMajorGetter
+                where TTargetMajorGetter : class, IMajorRecordCommonGetter
+            {
+                return _context.TryGetParentContext(out parent);
+            }
         }
     }
 }

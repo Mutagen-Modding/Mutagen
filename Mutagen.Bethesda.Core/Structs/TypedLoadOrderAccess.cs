@@ -7,8 +7,8 @@ namespace Mutagen.Bethesda.Internals
     public struct TypedLoadOrderAccess<TMod, TModGetter, TMajor, TMajorGetter>
         where TModGetter : IModGetter
         where TMod : IMod, TModGetter
-        where TMajor : IMajorRecordCommon, TMajorGetter
-        where TMajorGetter : IMajorRecordCommonGetter
+        where TMajor : class, IMajorRecordCommon, TMajorGetter
+        where TMajorGetter : class, IMajorRecordCommonGetter
     {
         private Func<bool, IEnumerable<TMajorGetter>> _winningOverrides;
         private Func<ILinkCache, bool, IEnumerable<IModContext<TMod, TModGetter, TMajor, TMajorGetter>>> _winningContextOverrides;
