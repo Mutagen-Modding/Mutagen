@@ -25,20 +25,14 @@ namespace Mutagen.Bethesda
     /// </summary>
     public class ImmutableLoadOrderLinkCache : ILinkCache
     {
-        protected readonly bool _hasAny;
+        internal readonly bool _hasAny;
         protected readonly GameCategory _gameCategory;
 
         private readonly IReadOnlyList<IModGetter> _listedOrder;
         private readonly IReadOnlyList<IModGetter> _priorityOrder;
-        private readonly Dictionary<Type, DepthCache<FormKey, IMajorRecordCommonGetter>> _winningFormKeyRecords
-            = new Dictionary<Type, DepthCache<FormKey, IMajorRecordCommonGetter>>();
-        private readonly Dictionary<Type, DepthCache<FormKey, ImmutableList<IMajorRecordCommonGetter>>> _allFormKeyRecords
-            = new Dictionary<Type, DepthCache<FormKey, ImmutableList<IMajorRecordCommonGetter>>>();
-        private readonly Dictionary<Type, DepthCache<string, IMajorRecordCommonGetter>> _winningEditorIdRecords
-            = new Dictionary<Type, DepthCache<string, IMajorRecordCommonGetter>>();
-        private readonly Dictionary<Type, DepthCache<string, ImmutableList<IMajorRecordCommonGetter>>> _allEditorIdRecords
-            = new Dictionary<Type, DepthCache<string, ImmutableList<IMajorRecordCommonGetter>>>();
-        protected readonly IReadOnlyDictionary<Type, Type[]> _linkInterfaces;
+        private readonly ImmutableLoadOrderLinkCacheCategory<FormKey> _formKeyCache;
+        private readonly ImmutableLoadOrderLinkCacheCategory<string> _editorIdCache;
+        internal readonly IReadOnlyDictionary<Type, Type[]> _linkInterfaces;
 
         /// <inheritdoc />
         public IReadOnlyList<IModGetter> ListedOrder => _listedOrder;
@@ -56,9 +50,21 @@ namespace Mutagen.Bethesda
             // Upgrade to bounce off ModInstantiator systems
             this._gameCategory = firstMod?.GameRelease.ToCategory() ?? GameCategory.Oblivion;
             this._linkInterfaces = LinkInterfaceMapping.InterfaceToObjectTypes(_gameCategory);
+            this._formKeyCache = new ImmutableLoadOrderLinkCacheCategory<FormKey>(
+                this,
+                m => TryGet<FormKey>.Succeed(m.FormKey),
+                f => f.IsNull);
+            this._editorIdCache = new ImmutableLoadOrderLinkCacheCategory<string>(
+                this,
+                m =>
+                {
+                    var edid = m.EditorID;
+                    return TryGet<string>.Create(successful: !string.IsNullOrWhiteSpace(edid), edid!);
+                },
+                e => e.IsNullOrWhitespace());
         }
 
-        internal static bool ShouldStopQuery<K, T>(K targetKey, ModKey? modKey, int modCount, DepthCache<K, T> cache)
+        internal static bool ShouldStopQuery<K, T>(ModKey? modKey, int modCount, DepthCache<K, T> cache)
             where K : notnull
         {
             if (cache.Depth >= modCount)
@@ -131,157 +137,12 @@ namespace Mutagen.Bethesda
 
         private bool TryResolve(FormKey formKey, Type type, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec, [MaybeNullWhen(false)] out int depth)
         {
-            if (formKey.IsNull)
-            {
-                majorRec = default;
-                depth = default;
-                return false;
-            }
-
-            return TryResolve(
-                key: formKey,
-                modKey: formKey.ModKey,
-                keyGetter: m => TryGet<FormKey>.Succeed(m.FormKey),
-                type: type,
-                winningRecs: _winningFormKeyRecords,
-                linkInterfaces: _linkInterfaces,
-                listedOrder: _listedOrder,
-                majorRec: out majorRec,
-                depth: out depth);
+            return _formKeyCache.TryResolve(formKey, formKey.ModKey, type, out majorRec, out depth);
         }
 
         private bool TryResolve(string editorId, Type type, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec, [MaybeNullWhen(false)] out int depth)
         {
-            if (string.IsNullOrWhiteSpace(editorId))
-            {
-                majorRec = default;
-                depth = default;
-                return false;
-            }
-
-            return TryResolve<string>(
-                key: editorId,
-                modKey: null,
-                keyGetter: m =>
-                {
-                    var edid = m.EditorID;
-                    return TryGet<string>.Create(successful: !string.IsNullOrWhiteSpace(edid), edid!);
-                },
-                type: type,
-                winningRecs: _winningEditorIdRecords,
-                linkInterfaces: _linkInterfaces,
-                listedOrder: _listedOrder,
-                majorRec: out majorRec,
-                depth: out depth);
-        }
-
-        private static bool TryResolve<K>(
-            K key,
-            ModKey? modKey,
-            Type type,
-            Func<IMajorRecordCommonGetter, TryGet<K>> keyGetter,
-            Dictionary<Type, DepthCache<K, IMajorRecordCommonGetter>> winningRecs,
-            IReadOnlyDictionary<Type, Type[]> linkInterfaces,
-            IReadOnlyList<IModGetter> listedOrder,
-            [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec,
-            [MaybeNullWhen(false)] out int depth)
-            where K : notnull
-        {
-            DepthCache<K, IMajorRecordCommonGetter>? cache;
-            lock (winningRecs)
-            {
-                // Get cache object by type 
-                if (!winningRecs.TryGetValue(type, out cache))
-                {
-                    cache = new DepthCache<K, IMajorRecordCommonGetter>();
-                    if (type.Equals(typeof(IMajorRecordCommon))
-                        || type.Equals(typeof(IMajorRecordCommonGetter)))
-                    {
-                        winningRecs[typeof(IMajorRecordCommon)] = cache;
-                        winningRecs[typeof(IMajorRecordCommonGetter)] = cache;
-                    }
-                    else if (LoquiRegistration.TryGetRegister(type, out var registration))
-                    {
-                        winningRecs[registration.ClassType] = cache;
-                        winningRecs[registration.GetterType] = cache;
-                        winningRecs[registration.SetterType] = cache;
-                        if (registration.InternalGetterType != null)
-                        {
-                            winningRecs[registration.InternalGetterType] = cache;
-                        }
-                        if (registration.InternalSetterType != null)
-                        {
-                            winningRecs[registration.InternalSetterType] = cache;
-                        }
-                    }
-                    else
-                    {
-                        if (!linkInterfaces.TryGetValue(type, out var objs))
-                        {
-                            throw new ArgumentException($"A lookup was queried for an unregistered type: {type.Name}");
-                        }
-                        winningRecs[type] = cache;
-                    }
-                }
-            }
-
-            lock (cache)
-            {
-                // Check for record 
-                if (cache.TryGetValue(key, out majorRec))
-                {
-                    depth = cache.Depth;
-                    return true;
-                }
-                if (ShouldStopQuery(key, modKey, listedOrder.Count, cache))
-                {
-                    depth = default;
-                    majorRec = default!;
-                    return false;
-                }
-
-                while (!ShouldStopQuery(key, modKey, listedOrder.Count, cache))
-                {
-                    // Get next unprocessed mod 
-                    var targetIndex = listedOrder.Count - cache.Depth - 1;
-                    var targetMod = listedOrder[targetIndex];
-                    cache.Depth++;
-                    cache.PassedMods.Add(targetMod.ModKey);
-
-                    void AddRecords(IModGetter mod, Type type)
-                    {
-                        foreach (var record in mod.EnumerateMajorRecords(type))
-                        {
-                            var key = keyGetter(record);
-                            if (key.Failed) continue;
-                            cache.AddIfMissing(key.Value, record);
-                        }
-                    }
-
-                    // Add records from that mod that aren't already cached 
-                    if (linkInterfaces.TryGetValue(type, out var objs))
-                    {
-                        foreach (var objType in objs)
-                        {
-                            AddRecords(targetMod, LoquiRegistration.GetRegister(objType).GetterType);
-                        }
-                    }
-                    else
-                    {
-                        AddRecords(targetMod, type);
-                    }
-                    // Check again 
-                    if (cache.TryGetValue(key, out majorRec))
-                    {
-                        depth = cache.Depth;
-                        return true;
-                    }
-                }
-                // Record doesn't exist 
-                majorRec = default;
-                depth = default;
-                return false;
-            }
+            return _editorIdCache.TryResolve(editorId, default(ModKey?), type, out majorRec, out depth);
         }
 
         /// <inheritdoc />
@@ -347,141 +208,13 @@ namespace Mutagen.Bethesda
         /// <inheritdoc />
         public IEnumerable<IMajorRecordCommonGetter> ResolveAll(FormKey formKey, Type type)
         {
-            // Break early if no content
-            if (!_hasAny || formKey.IsNull)
-            {
-                return Enumerable.Empty<IMajorRecordCommonGetter>();
-            }
-
-            return ResolveAll(
-                key: formKey,
-                modKey: formKey.ModKey,
-                type: type,
-                keyGetter: m => TryGet<FormKey>.Succeed(m.FormKey),
-                allRecs: _allFormKeyRecords,
-                linkInterfaces: _linkInterfaces,
-                listedOrder: _listedOrder);
+            return _formKeyCache.ResolveAll(formKey, formKey.ModKey, type);
         }
 
         /// <inheritdoc />
         public IEnumerable<IMajorRecordCommonGetter> ResolveAll(string editorId, Type type)
         {
-            // Break early if no content
-            if (!_hasAny || string.IsNullOrWhiteSpace(editorId))
-            {
-                return Enumerable.Empty<IMajorRecordCommonGetter>();
-            }
-
-            return ResolveAll(
-                key: editorId,
-                modKey: null,
-                type: type,
-                keyGetter: m =>
-                {
-                    var edid = m.EditorID;
-                    return TryGet<string>.Create(successful: !string.IsNullOrWhiteSpace(edid), edid!);
-                },
-                allRecs: _allEditorIdRecords,
-                linkInterfaces: _linkInterfaces,
-                listedOrder: _listedOrder);
-        }
-
-        private static IEnumerable<IMajorRecordCommonGetter> ResolveAll<K>(
-            K key,
-            ModKey? modKey,
-            Type type,
-            Func<IMajorRecordCommonGetter, TryGet<K>> keyGetter,
-            Dictionary<Type, DepthCache<K, ImmutableList<IMajorRecordCommonGetter>>> allRecs,
-            IReadOnlyDictionary<Type, Type[]> linkInterfaces,
-            IReadOnlyList<IModGetter> listedOrder)
-            where K : notnull
-        {
-            // Grab the type cache
-            DepthCache<K, ImmutableList<IMajorRecordCommonGetter>> cache;
-            lock (allRecs)
-            {
-                cache = allRecs.GetOrAdd(type);
-            }
-
-            // Grab the formkey's list
-            ImmutableList<IMajorRecordCommonGetter>? list;
-            int consideredDepth;
-            lock (cache)
-            {
-                if (!cache.TryGetValue(key, out list))
-                {
-                    list = ImmutableList<IMajorRecordCommonGetter>.Empty;
-                    cache.Add(key, list);
-                }
-                consideredDepth = cache.Depth;
-            }
-
-            // Return everyhing we have already
-            foreach (var item in list)
-            {
-                yield return item;
-            }
-
-            int iteratedCount = list.Count;
-            bool more = !ShouldStopQuery(key, modKey, listedOrder.Count, cache);
-
-            // While there's more depth to consider
-            while (more)
-            {
-                // Process one more mod
-                lock (cache)
-                {
-                    // Only process if no one else has done some work
-                    if (consideredDepth == cache.Depth)
-                    {
-                        // Get next unprocessed mod
-                        var targetIndex = listedOrder.Count - cache.Depth - 1;
-                        var targetMod = listedOrder[targetIndex];
-                        cache.Depth++;
-                        cache.PassedMods.Add(targetMod.ModKey);
-
-                        void AddRecords(IModGetter mod, Type type)
-                        {
-                            foreach (var item in mod.EnumerateMajorRecords(type))
-                            {
-                                var iterKey = keyGetter(item);
-                                if (iterKey.Failed) continue;
-                                if (!cache.TryGetValue(iterKey.Value, out var targetList))
-                                {
-                                    targetList = ImmutableList<IMajorRecordCommonGetter>.Empty;
-                                }
-                                cache.Set(iterKey.Value, targetList.Add(item));
-                            }
-                            if (cache.TryGetValue(key, out var requeriedList))
-                            {
-                                list = requeriedList;
-                            }
-                        }
-
-                        // Add records from that mod that aren't already cached
-                        if (linkInterfaces.TryGetValue(type, out var objs))
-                        {
-                            foreach (var objType in objs)
-                            {
-                                AddRecords(targetMod, LoquiRegistration.GetRegister(objType).GetterType);
-                            }
-                        }
-                        else
-                        {
-                            AddRecords(targetMod, type);
-                        }
-                    }
-                    consideredDepth = cache.Depth;
-                    more = !ShouldStopQuery(key, modKey, listedOrder.Count, cache);
-                }
-
-                // Return any new data
-                for (int i = iteratedCount; i < list.Count; i++)
-                {
-                    yield return list[i];
-                }
-                iteratedCount = list.Count;
-            }
+            return _editorIdCache.ResolveAll(editorId, default(ModKey?), type);
         }
 
         /// <inheritdoc />
@@ -565,6 +298,237 @@ namespace Mutagen.Bethesda
         }
     }
 
+    internal class ImmutableLoadOrderLinkCacheCategory<K>
+        where K : notnull
+    {
+        private readonly ImmutableLoadOrderLinkCache _parent;
+        private readonly Func<IMajorRecordCommonGetter, TryGet<K>> _keyGetter;
+        private readonly Func<K, bool> _shortCircuit;
+        private readonly Dictionary<Type, DepthCache<K, IMajorRecordCommonGetter>> _winningRecords
+            = new Dictionary<Type, DepthCache<K, IMajorRecordCommonGetter>>();
+        private readonly Dictionary<Type, DepthCache<K, ImmutableList<IMajorRecordCommonGetter>>> _allRecords
+            = new Dictionary<Type, DepthCache<K, ImmutableList<IMajorRecordCommonGetter>>>();
+
+        public ImmutableLoadOrderLinkCacheCategory(
+            ImmutableLoadOrderLinkCache parent,
+            Func<IMajorRecordCommonGetter, TryGet<K>> keyGetter,
+            Func<K, bool> shortCircuit)
+        {
+            _parent = parent;
+            _keyGetter = keyGetter;
+            _shortCircuit = shortCircuit;
+        }
+
+        public bool TryResolve(
+            K key,
+            ModKey? modKey,
+            Type type,
+            [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec,
+            [MaybeNullWhen(false)] out int depth)
+        {
+            if (!_parent._hasAny || _shortCircuit(key))
+            {
+                majorRec = default;
+                depth = default;
+                return false;
+            }
+
+            DepthCache<K, IMajorRecordCommonGetter>? cache;
+            lock (_winningRecords)
+            {
+                // Get cache object by type 
+                if (!_winningRecords.TryGetValue(type, out cache))
+                {
+                    cache = new DepthCache<K, IMajorRecordCommonGetter>();
+                    if (type.Equals(typeof(IMajorRecordCommon))
+                        || type.Equals(typeof(IMajorRecordCommonGetter)))
+                    {
+                        _winningRecords[typeof(IMajorRecordCommon)] = cache;
+                        _winningRecords[typeof(IMajorRecordCommonGetter)] = cache;
+                    }
+                    else if (LoquiRegistration.TryGetRegister(type, out var registration))
+                    {
+                        _winningRecords[registration.ClassType] = cache;
+                        _winningRecords[registration.GetterType] = cache;
+                        _winningRecords[registration.SetterType] = cache;
+                        if (registration.InternalGetterType != null)
+                        {
+                            _winningRecords[registration.InternalGetterType] = cache;
+                        }
+                        if (registration.InternalSetterType != null)
+                        {
+                            _winningRecords[registration.InternalSetterType] = cache;
+                        }
+                    }
+                    else
+                    {
+                        if (!_parent._linkInterfaces.TryGetValue(type, out var objs))
+                        {
+                            throw new ArgumentException($"A lookup was queried for an unregistered type: {type.Name}");
+                        }
+                        _winningRecords[type] = cache;
+                    }
+                }
+            }
+
+            lock (cache)
+            {
+                // Check for record 
+                if (cache.TryGetValue(key, out majorRec))
+                {
+                    depth = cache.Depth;
+                    return true;
+                }
+                if (ImmutableLoadOrderLinkCache.ShouldStopQuery(modKey, _parent.ListedOrder.Count, cache))
+                {
+                    depth = default;
+                    majorRec = default!;
+                    return false;
+                }
+
+                while (!ImmutableLoadOrderLinkCache.ShouldStopQuery(modKey, _parent.ListedOrder.Count, cache))
+                {
+                    // Get next unprocessed mod 
+                    var targetIndex = _parent.ListedOrder.Count - cache.Depth - 1;
+                    var targetMod = _parent.ListedOrder[targetIndex];
+                    cache.Depth++;
+                    cache.PassedMods.Add(targetMod.ModKey);
+
+                    void AddRecords(IModGetter mod, Type type)
+                    {
+                        foreach (var record in mod.EnumerateMajorRecords(type))
+                        {
+                            var key = _keyGetter(record);
+                            if (key.Failed) continue;
+                            cache.AddIfMissing(key.Value, record);
+                        }
+                    }
+
+                    // Add records from that mod that aren't already cached 
+                    if (_parent._linkInterfaces.TryGetValue(type, out var objs))
+                    {
+                        foreach (var objType in objs)
+                        {
+                            AddRecords(targetMod, LoquiRegistration.GetRegister(objType).GetterType);
+                        }
+                    }
+                    else
+                    {
+                        AddRecords(targetMod, type);
+                    }
+                    // Check again 
+                    if (cache.TryGetValue(key, out majorRec))
+                    {
+                        depth = cache.Depth;
+                        return true;
+                    }
+                }
+                // Record doesn't exist 
+                majorRec = default;
+                depth = default;
+                return false;
+            }
+        }
+
+        public IEnumerable<IMajorRecordCommonGetter> ResolveAll(
+            K key,
+            ModKey? modKey,
+            Type type)
+        {
+            if (!_parent._hasAny || _shortCircuit(key))
+            {
+                yield break;
+            }
+
+            // Grab the type cache
+            DepthCache<K, ImmutableList<IMajorRecordCommonGetter>> cache;
+            lock (_allRecords)
+            {
+                cache = _allRecords.GetOrAdd(type);
+            }
+
+            // Grab the formkey's list
+            ImmutableList<IMajorRecordCommonGetter>? list;
+            int consideredDepth;
+            lock (cache)
+            {
+                if (!cache.TryGetValue(key, out list))
+                {
+                    list = ImmutableList<IMajorRecordCommonGetter>.Empty;
+                    cache.Add(key, list);
+                }
+                consideredDepth = cache.Depth;
+            }
+
+            // Return everyhing we have already
+            foreach (var item in list)
+            {
+                yield return item;
+            }
+
+            int iteratedCount = list.Count;
+            bool more = !ImmutableLoadOrderLinkCache.ShouldStopQuery(modKey, _parent.ListedOrder.Count, cache);
+
+            // While there's more depth to consider
+            while (more)
+            {
+                // Process one more mod
+                lock (cache)
+                {
+                    // Only process if no one else has done some work
+                    if (consideredDepth == cache.Depth)
+                    {
+                        // Get next unprocessed mod
+                        var targetIndex = _parent.ListedOrder.Count - cache.Depth - 1;
+                        var targetMod = _parent.ListedOrder[targetIndex];
+                        cache.Depth++;
+                        cache.PassedMods.Add(targetMod.ModKey);
+
+                        void AddRecords(IModGetter mod, Type type)
+                        {
+                            foreach (var item in mod.EnumerateMajorRecords(type))
+                            {
+                                var iterKey = _keyGetter(item);
+                                if (iterKey.Failed) continue;
+                                if (!cache.TryGetValue(iterKey.Value, out var targetList))
+                                {
+                                    targetList = ImmutableList<IMajorRecordCommonGetter>.Empty;
+                                }
+                                cache.Set(iterKey.Value, targetList.Add(item));
+                            }
+                            if (cache.TryGetValue(key, out var requeriedList))
+                            {
+                                list = requeriedList;
+                            }
+                        }
+
+                        // Add records from that mod that aren't already cached
+                        if (_parent._linkInterfaces.TryGetValue(type, out var objs))
+                        {
+                            foreach (var objType in objs)
+                            {
+                                AddRecords(targetMod, LoquiRegistration.GetRegister(objType).GetterType);
+                            }
+                        }
+                        else
+                        {
+                            AddRecords(targetMod, type);
+                        }
+                    }
+                    consideredDepth = cache.Depth;
+                    more = !ImmutableLoadOrderLinkCache.ShouldStopQuery(modKey, _parent.ListedOrder.Count, cache);
+                }
+
+                // Return any new data
+                for (int i = iteratedCount; i < list.Count; i++)
+                {
+                    yield return list[i];
+                }
+                iteratedCount = list.Count;
+            }
+        }
+    }
+
     /// <summary>
     /// A Link Cache using a LoadOrder as its link target. <br/>
     /// Will resolve links to the highest overriding mod containing the record being sought. <br/>
@@ -583,16 +547,10 @@ namespace Mutagen.Bethesda
         where TMod : class, IContextMod<TMod>, TModGetter
         where TModGetter : class, IContextGetterMod<TMod>
     {
-        private readonly Dictionary<Type, DepthCache<FormKey, IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>> _winningFormKeyContexts
-            = new Dictionary<Type, DepthCache<FormKey, IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>>();
-        private readonly Dictionary<Type, DepthCache<FormKey, ImmutableList<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>>> _allFormKeyContexts
-            = new Dictionary<Type, DepthCache<FormKey, ImmutableList<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>>>();
-        private readonly Dictionary<Type, DepthCache<string, IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>> _winningEditorIdContexts
-            = new Dictionary<Type, DepthCache<string, IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>>();
-        private readonly Dictionary<Type, DepthCache<string, ImmutableList<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>>> _allEditorIdContexts
-            = new Dictionary<Type, DepthCache<string, ImmutableList<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>>>();
+        private readonly ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGetter, FormKey> _formKeyContextCache;
+        private readonly ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGetter, string> _editorIdContextCache;
 
-        private readonly IReadOnlyList<TModGetter> _listedOrder;
+        internal readonly IReadOnlyList<TModGetter> _listedOrder;
 
         /// <summary>
         /// Constructs a LoadOrderLinkCache around a target load order
@@ -602,6 +560,18 @@ namespace Mutagen.Bethesda
             : base(loadOrder)
         {
             this._listedOrder = loadOrder.ToList();
+            this._formKeyContextCache = new ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGetter, FormKey>(
+                this,
+                m => TryGet<FormKey>.Succeed(m.FormKey),
+                f => f.IsNull);
+            this._editorIdContextCache = new ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGetter, string>(
+                this,
+                m =>
+                {
+                    var edid = m.EditorID;
+                    return TryGet<string>.Create(successful: !string.IsNullOrWhiteSpace(edid), edid!);
+                },
+                e => e.IsNullOrWhitespace());
         }
 
         /// <inheritdoc />
@@ -653,22 +623,7 @@ namespace Mutagen.Bethesda
         /// <inheritdoc />
         public bool TryResolveContext(FormKey formKey, Type type, [MaybeNullWhen(false)] out IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec)
         {
-            if (!_hasAny || formKey.IsNull)
-            {
-                majorRec = default;
-                return false;
-            }
-
-            return TryResolveContext(
-                key: formKey,
-                modKey: formKey.ModKey,
-                type: type,
-                keyGetter: m => TryGet<FormKey>.Succeed(m.FormKey),
-                winningContexts: _winningFormKeyContexts,
-                linkInterfaces: _linkInterfaces,
-                listedOrder: _listedOrder,
-                linkCache: this,
-                majorRec: out majorRec);
+            return _formKeyContextCache.TryResolveContext(formKey, formKey.ModKey, type, out majorRec);
         }
 
         /// <inheritdoc />
@@ -680,125 +635,7 @@ namespace Mutagen.Bethesda
                 return false;
             }
 
-            return TryResolveContext(
-                key: editorId,
-                modKey: null,
-                type: type,
-                keyGetter: m =>
-                {
-                    var edid = m.EditorID;
-                    return TryGet<string>.Create(successful: !string.IsNullOrWhiteSpace(edid), edid!);
-                },
-                winningContexts: _winningEditorIdContexts,
-                linkInterfaces: _linkInterfaces,
-                listedOrder: _listedOrder,
-                linkCache: this,
-                majorRec: out majorRec);
-        }
-
-        private static bool TryResolveContext<K>(
-            K key,
-            ModKey? modKey,
-            Type type,
-            Func<IMajorRecordCommonGetter, TryGet<K>> keyGetter,
-            Dictionary<Type, DepthCache<K, IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>> winningContexts,
-            IReadOnlyDictionary<Type, Type[]> linkInterfaces,
-            IReadOnlyList<TModGetter> listedOrder,
-            ILinkCache linkCache,
-            [MaybeNullWhen(false)] out IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec)
-            where K : notnull
-        {
-            DepthCache<K, IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>? cache;
-            lock (winningContexts)
-            {
-                // Get cache object by type
-                if (!winningContexts.TryGetValue(type, out cache))
-                {
-                    cache = new DepthCache<K, IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>();
-                    if (type.Equals(typeof(IMajorRecordCommon))
-                        || type.Equals(typeof(IMajorRecordCommonGetter)))
-                    {
-                        winningContexts[typeof(IMajorRecordCommon)] = cache;
-                        winningContexts[typeof(IMajorRecordCommonGetter)] = cache;
-                    }
-                    else if (LoquiRegistration.TryGetRegister(type, out var registration))
-                    {
-                        winningContexts[registration.ClassType] = cache;
-                        winningContexts[registration.GetterType] = cache;
-                        winningContexts[registration.SetterType] = cache;
-                        if (registration.InternalGetterType != null)
-                        {
-                            winningContexts[registration.InternalGetterType] = cache;
-                        }
-                        if (registration.InternalSetterType != null)
-                        {
-                            winningContexts[registration.InternalSetterType] = cache;
-                        }
-                    }
-                    else
-                    {
-                        if (!linkInterfaces.TryGetValue(type, out var objs))
-                        {
-                            throw new ArgumentException($"A lookup was queried for an unregistered type: {type.Name}");
-                        }
-                        winningContexts[type] = cache;
-                    }
-                }
-            }
-
-            lock (cache)
-            {
-                // Check for record
-                if (cache.TryGetValue(key, out majorRec))
-                {
-                    return true;
-                }
-                if (ShouldStopQuery(key, modKey, listedOrder.Count, cache))
-                {
-                    majorRec = default!;
-                    return false;
-                }
-
-                while (!ShouldStopQuery(key, modKey, listedOrder.Count, cache))
-                {
-                    // Get next unprocessed mod
-                    var targetIndex = listedOrder.Count - cache.Depth - 1;
-                    var targetMod = listedOrder[targetIndex];
-                    cache.Depth++;
-                    cache.PassedMods.Add(targetMod.ModKey);
-
-                    void AddRecords(TModGetter mod, Type type)
-                    {
-                        foreach (var record in mod.EnumerateMajorRecordContexts(linkCache, type))
-                        {
-                            var key = keyGetter(record.Record);
-                            if (key.Failed) continue;
-                            cache.AddIfMissing(key.Value, record);
-                        }
-                    }
-
-                    // Add records from that mod that aren't already cached
-                    if (linkInterfaces.TryGetValue(type, out var objs))
-                    {
-                        foreach (var objType in objs)
-                        {
-                            AddRecords(targetMod, LoquiRegistration.GetRegister(objType).GetterType);
-                        }
-                    }
-                    else
-                    {
-                        AddRecords(targetMod, type);
-                    }
-                    // Check again
-                    if (cache.TryGetValue(key, out majorRec))
-                    {
-                        return true;
-                    }
-                }
-                // Record doesn't exist
-                majorRec = default;
-                return false;
-            }
+            return _editorIdContextCache.TryResolveContext(editorId, default(ModKey?), type, out majorRec);
         }
 
         /// <inheritdoc />
@@ -874,15 +711,7 @@ namespace Mutagen.Bethesda
                 return Enumerable.Empty<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>();
             }
 
-            return ResolveAllContexts(
-                key: formKey,
-                modKey: formKey.ModKey,
-                type: type,
-                keyGetter: m => TryGet<FormKey>.Succeed(m.FormKey),
-                allContexts: _allFormKeyContexts,
-                linkInterfaces: _linkInterfaces,
-                listedOrder: _listedOrder,
-                linkCache: this);
+            return _formKeyContextCache.ResolveAllContexts(formKey, formKey.ModKey, type);
         }
 
         /// <inheritdoc />
@@ -894,37 +723,167 @@ namespace Mutagen.Bethesda
                 return Enumerable.Empty<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>();
             }
 
-            return ResolveAllContexts(
-                key: editorId,
-                modKey: null,
-                type: type,
-                keyGetter: m =>
-                {
-                    var edid = m.EditorID;
-                    return TryGet<string>.Create(successful: !string.IsNullOrWhiteSpace(edid), edid!);
-                },
-                allContexts: _allEditorIdContexts,
-                linkInterfaces: _linkInterfaces,
-                listedOrder: _listedOrder,
-                linkCache: this);
+            return _editorIdContextCache.ResolveAllContexts(editorId, default(ModKey?), type);
         }
 
-        private static IEnumerable<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts<K>(
-            K key, 
+        /// <inheritdoc />
+        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
+        public IEnumerable<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(FormKey formKey)
+        {
+            return ResolveAllContexts(formKey, typeof(IMajorRecordCommonGetter));
+        }
+
+        /// <inheritdoc />
+        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
+        public IEnumerable<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(string editorId)
+        {
+            return ResolveAllContexts(editorId, typeof(IMajorRecordCommonGetter));
+        }
+    }
+
+    internal class ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGetter, K>
+        where K : notnull
+        where TMod : class, IContextMod<TMod>, TModGetter
+        where TModGetter : class, IContextGetterMod<TMod>
+    {
+        private readonly ImmutableLoadOrderLinkCache<TMod, TModGetter> _parent;
+        private readonly Func<IMajorRecordCommonGetter, TryGet<K>> _keyGetter;
+        private readonly Func<K, bool> _shortCircuit;
+        private readonly Dictionary<Type, DepthCache<K, IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>> _winningContexts
+            = new Dictionary<Type, DepthCache<K, IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>>();
+        private readonly Dictionary<Type, DepthCache<K, ImmutableList<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>>> _allContexts
+            = new Dictionary<Type, DepthCache<K, ImmutableList<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>>>();
+
+        public ImmutableLoadOrderLinkCacheContextCategory(
+            ImmutableLoadOrderLinkCache<TMod, TModGetter> parent,
+            Func<IMajorRecordCommonGetter, TryGet<K>> keyGetter,
+            Func<K, bool> shortCircuit)
+        {
+            _parent = parent;
+            _keyGetter = keyGetter;
+            _shortCircuit = shortCircuit;
+        }
+
+        public bool TryResolveContext(
+            K key,
             ModKey? modKey,
             Type type,
-            Func<IMajorRecordCommonGetter, TryGet<K>> keyGetter,
-            Dictionary<Type, DepthCache<K, ImmutableList<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>>> allContexts,
-            IReadOnlyDictionary<Type, Type[]> linkInterfaces,
-            IReadOnlyList<TModGetter> listedOrder,
-            ILinkCache linkCache)
-            where K : notnull
+            [MaybeNullWhen(false)] out IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec)
         {
+            if (!_parent._hasAny || _shortCircuit(key))
+            {
+                majorRec = default;
+                return false;
+            }
+
+            DepthCache<K, IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>? cache;
+            lock (_winningContexts)
+            {
+                // Get cache object by type
+                if (!_winningContexts.TryGetValue(type, out cache))
+                {
+                    cache = new DepthCache<K, IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>();
+                    if (type.Equals(typeof(IMajorRecordCommon))
+                        || type.Equals(typeof(IMajorRecordCommonGetter)))
+                    {
+                        _winningContexts[typeof(IMajorRecordCommon)] = cache;
+                        _winningContexts[typeof(IMajorRecordCommonGetter)] = cache;
+                    }
+                    else if (LoquiRegistration.TryGetRegister(type, out var registration))
+                    {
+                        _winningContexts[registration.ClassType] = cache;
+                        _winningContexts[registration.GetterType] = cache;
+                        _winningContexts[registration.SetterType] = cache;
+                        if (registration.InternalGetterType != null)
+                        {
+                            _winningContexts[registration.InternalGetterType] = cache;
+                        }
+                        if (registration.InternalSetterType != null)
+                        {
+                            _winningContexts[registration.InternalSetterType] = cache;
+                        }
+                    }
+                    else
+                    {
+                        if (!_parent._linkInterfaces.TryGetValue(type, out var objs))
+                        {
+                            throw new ArgumentException($"A lookup was queried for an unregistered type: {type.Name}");
+                        }
+                        _winningContexts[type] = cache;
+                    }
+                }
+            }
+
+            lock (cache)
+            {
+                // Check for record
+                if (cache.TryGetValue(key, out majorRec))
+                {
+                    return true;
+                }
+                if (ImmutableLoadOrderLinkCache.ShouldStopQuery(modKey, _parent._listedOrder.Count, cache))
+                {
+                    majorRec = default!;
+                    return false;
+                }
+
+                while (!ImmutableLoadOrderLinkCache.ShouldStopQuery(modKey, _parent._listedOrder.Count, cache))
+                {
+                    // Get next unprocessed mod
+                    var targetIndex = _parent._listedOrder.Count - cache.Depth - 1;
+                    var targetMod = _parent._listedOrder[targetIndex];
+                    cache.Depth++;
+                    cache.PassedMods.Add(targetMod.ModKey);
+
+                    void AddRecords(TModGetter mod, Type type)
+                    {
+                        foreach (var record in mod.EnumerateMajorRecordContexts(_parent, type))
+                        {
+                            var key = _keyGetter(record.Record);
+                            if (key.Failed) continue;
+                            cache.AddIfMissing(key.Value, record);
+                        }
+                    }
+
+                    // Add records from that mod that aren't already cached
+                    if (_parent._linkInterfaces.TryGetValue(type, out var objs))
+                    {
+                        foreach (var objType in objs)
+                        {
+                            AddRecords(targetMod, LoquiRegistration.GetRegister(objType).GetterType);
+                        }
+                    }
+                    else
+                    {
+                        AddRecords(targetMod, type);
+                    }
+                    // Check again
+                    if (cache.TryGetValue(key, out majorRec))
+                    {
+                        return true;
+                    }
+                }
+                // Record doesn't exist
+                majorRec = default;
+                return false;
+            }
+        }
+
+        public IEnumerable<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(
+            K key,
+            ModKey? modKey,
+            Type type)
+        {
+            if (!_parent._hasAny || _shortCircuit(key))
+            {
+                yield break;
+            }
+
             // Grab the type cache
             DepthCache<K, ImmutableList<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>>> cache;
-            lock (allContexts)
+            lock (_allContexts)
             {
-                cache = allContexts.GetOrAdd(type);
+                cache = _allContexts.GetOrAdd(type);
             }
 
             // Grab the formkey's list
@@ -947,7 +906,7 @@ namespace Mutagen.Bethesda
             }
 
             int iteratedCount = list.Count;
-            bool more = !ShouldStopQuery(key, modKey, listedOrder.Count, cache);
+            bool more = !ImmutableLoadOrderLinkCache.ShouldStopQuery(modKey, _parent._listedOrder.Count, cache);
 
             // While there's more depth to consider
             while (more)
@@ -959,16 +918,16 @@ namespace Mutagen.Bethesda
                     if (consideredDepth == cache.Depth)
                     {
                         // Get next unprocessed mod
-                        var targetIndex = listedOrder.Count - cache.Depth - 1;
-                        var targetMod = listedOrder[targetIndex];
+                        var targetIndex = _parent._listedOrder.Count - cache.Depth - 1;
+                        var targetMod = _parent._listedOrder[targetIndex];
                         cache.Depth++;
                         cache.PassedMods.Add(targetMod.ModKey);
 
                         void AddRecords(TModGetter mod, Type type)
                         {
-                            foreach (var item in mod.EnumerateMajorRecordContexts(linkCache, type))
+                            foreach (var item in mod.EnumerateMajorRecordContexts(_parent, type))
                             {
-                                var iterKey = keyGetter(item.Record);
+                                var iterKey = _keyGetter(item.Record);
                                 if (iterKey.Failed) continue;
                                 if (!cache.TryGetValue(iterKey.Value, out var targetList))
                                 {
@@ -983,7 +942,7 @@ namespace Mutagen.Bethesda
                         }
 
                         // Add records from that mod that aren't already cached
-                        if (linkInterfaces.TryGetValue(type, out var objs))
+                        if (_parent._linkInterfaces.TryGetValue(type, out var objs))
                         {
                             foreach (var objType in objs)
                             {
@@ -996,7 +955,7 @@ namespace Mutagen.Bethesda
                         }
                     }
                     consideredDepth = cache.Depth;
-                    more = !ShouldStopQuery(key, modKey, listedOrder.Count, cache);
+                    more = !ImmutableLoadOrderLinkCache.ShouldStopQuery(modKey, _parent._listedOrder.Count, cache);
                 }
 
                 // Return any new data
@@ -1008,19 +967,6 @@ namespace Mutagen.Bethesda
             }
         }
 
-        /// <inheritdoc />
-        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        public IEnumerable<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(FormKey formKey)
-        {
-            return ResolveAllContexts(formKey, typeof(IMajorRecordCommonGetter));
-        }
-
-        /// <inheritdoc />
-        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        public IEnumerable<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(string editorId)
-        {
-            return ResolveAllContexts(editorId, typeof(IMajorRecordCommonGetter));
-        }
     }
 
     internal class DepthCache<K, T>
