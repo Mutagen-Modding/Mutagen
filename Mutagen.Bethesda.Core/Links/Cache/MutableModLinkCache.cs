@@ -596,5 +596,9 @@ namespace Mutagen.Bethesda
             if (TryResolve(editorId, types, out var commonRec)) return commonRec;
             throw new KeyNotFoundException($"EditorID {editorId} could not be found.");
         }
+
+        public void Dispose()
+        {
+        }
     }
 }

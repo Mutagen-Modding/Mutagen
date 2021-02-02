@@ -10,7 +10,7 @@ namespace Mutagen.Bethesda
     /// <summary>
     /// An interface for retriving records given a FormKey.
     /// </summary>
-    public interface ILinkCache
+    public interface ILinkCache : IDisposable
     {
         /// <summary>
         /// Retrieves the record that matches the FormKey relative to the source the package was attached to.<br/>
