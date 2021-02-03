@@ -1,3 +1,4 @@
+using Loqui;
 using Mutagen.Bethesda.Binary;
 using Noggog;
 using System;
@@ -49,7 +50,7 @@ namespace Mutagen.Bethesda
         bool ContainsKey(FormKey key);
     }
 
-    public interface IGroupCommon<TMajor> : IGroupCommonGetter<TMajor>
+    public interface IGroupCommon<TMajor> : IGroupCommonGetter<TMajor>, IClearable
         where TMajor : IMajorRecordCommonGetter, IBinaryItem
     {
         /// <summary>
@@ -86,11 +87,6 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="keys">The keys.</param>
         void Remove(IEnumerable<FormKey> keys);
-
-        /// <summary>
-        /// Clears all items
-        /// </summary>
-        void Clear();
 
         TMajor AddNew(FormKey formKey);
 
