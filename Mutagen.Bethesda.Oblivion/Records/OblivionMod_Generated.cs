@@ -7132,363 +7132,363 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             foreach (var item in obj.GameSettings)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, IGameSettingInternal, IGameSettingGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, GameSetting, IGameSettingGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.GameSettings.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.GameSettings.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.GameSettings,
+                    groupGetter: (m) => m.GameSettings);
             }
             foreach (var item in obj.Globals)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, IGlobalInternal, IGlobalGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Global, IGlobalGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Globals.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Globals.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Globals,
+                    groupGetter: (m) => m.Globals);
             }
             foreach (var item in obj.Classes)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, IClassInternal, IClassGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Class, IClassGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Classes.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Classes.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Classes,
+                    groupGetter: (m) => m.Classes);
             }
             foreach (var item in obj.Factions)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, IFactionInternal, IFactionGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Faction, IFactionGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Factions.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Factions.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Factions,
+                    groupGetter: (m) => m.Factions);
             }
             foreach (var item in obj.Hairs)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, IHairInternal, IHairGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Hair, IHairGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Hairs.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Hairs.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Hairs,
+                    groupGetter: (m) => m.Hairs);
             }
             foreach (var item in obj.Eyes)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, IEyeInternal, IEyeGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Eye, IEyeGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Eyes.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Eyes.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Eyes,
+                    groupGetter: (m) => m.Eyes);
             }
             foreach (var item in obj.Races)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, IRaceInternal, IRaceGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Race, IRaceGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Races.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Races.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Races,
+                    groupGetter: (m) => m.Races);
             }
             foreach (var item in obj.Sounds)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, ISoundInternal, ISoundGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Sound, ISoundGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Sounds.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Sounds.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Sounds,
+                    groupGetter: (m) => m.Sounds);
             }
             foreach (var item in obj.Skills)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, ISkillRecordInternal, ISkillRecordGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, SkillRecord, ISkillRecordGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Skills.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Skills.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Skills,
+                    groupGetter: (m) => m.Skills);
             }
             foreach (var item in obj.MagicEffects)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, IMagicEffectInternal, IMagicEffectGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, MagicEffect, IMagicEffectGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.MagicEffects.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.MagicEffects.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.MagicEffects,
+                    groupGetter: (m) => m.MagicEffects);
             }
             foreach (var item in obj.Scripts)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, IScriptInternal, IScriptGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Script, IScriptGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Scripts.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Scripts.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Scripts,
+                    groupGetter: (m) => m.Scripts);
             }
             foreach (var item in obj.LandTextures)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, ILandTextureInternal, ILandTextureGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, LandTexture, ILandTextureGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.LandTextures.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.LandTextures.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.LandTextures,
+                    groupGetter: (m) => m.LandTextures);
             }
             foreach (var item in obj.Enchantments)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, IEnchantmentInternal, IEnchantmentGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Enchantment, IEnchantmentGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Enchantments.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Enchantments.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Enchantments,
+                    groupGetter: (m) => m.Enchantments);
             }
             foreach (var item in obj.Spells)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, ISpellUnleveledInternal, ISpellUnleveledGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, SpellUnleveled, ISpellUnleveledGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Spells.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Spells.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Spells,
+                    groupGetter: (m) => m.Spells);
             }
             foreach (var item in obj.Birthsigns)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, IBirthsignInternal, IBirthsignGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Birthsign, IBirthsignGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Birthsigns.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Birthsigns.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Birthsigns,
+                    groupGetter: (m) => m.Birthsigns);
             }
             foreach (var item in obj.Activators)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, IActivatorInternal, IActivatorGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Activator, IActivatorGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Activators.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Activators.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Activators,
+                    groupGetter: (m) => m.Activators);
             }
             foreach (var item in obj.AlchemicalApparatus)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, IAlchemicalApparatusInternal, IAlchemicalApparatusGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, AlchemicalApparatus, IAlchemicalApparatusGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.AlchemicalApparatus.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.AlchemicalApparatus.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.AlchemicalApparatus,
+                    groupGetter: (m) => m.AlchemicalApparatus);
             }
             foreach (var item in obj.Armors)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, IArmorInternal, IArmorGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Armor, IArmorGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Armors.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Armors.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Armors,
+                    groupGetter: (m) => m.Armors);
             }
             foreach (var item in obj.Books)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, IBookInternal, IBookGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Book, IBookGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Books.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Books.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Books,
+                    groupGetter: (m) => m.Books);
             }
             foreach (var item in obj.Clothes)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, IClothingInternal, IClothingGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Clothing, IClothingGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Clothes.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Clothes.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Clothes,
+                    groupGetter: (m) => m.Clothes);
             }
             foreach (var item in obj.Containers)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, IContainerInternal, IContainerGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Container, IContainerGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Containers.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Containers.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Containers,
+                    groupGetter: (m) => m.Containers);
             }
             foreach (var item in obj.Doors)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, IDoorInternal, IDoorGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Door, IDoorGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Doors.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Doors.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Doors,
+                    groupGetter: (m) => m.Doors);
             }
             foreach (var item in obj.Ingredients)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, IIngredientInternal, IIngredientGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Ingredient, IIngredientGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Ingredients.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Ingredients.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Ingredients,
+                    groupGetter: (m) => m.Ingredients);
             }
             foreach (var item in obj.Lights)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, ILightInternal, ILightGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Light, ILightGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Lights.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Lights.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Lights,
+                    groupGetter: (m) => m.Lights);
             }
             foreach (var item in obj.Miscellaneous)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, IMiscellaneousInternal, IMiscellaneousGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Miscellaneous, IMiscellaneousGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Miscellaneous.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Miscellaneous.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Miscellaneous,
+                    groupGetter: (m) => m.Miscellaneous);
             }
             foreach (var item in obj.Statics)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, IStaticInternal, IStaticGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Static, IStaticGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Statics.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Statics.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Statics,
+                    groupGetter: (m) => m.Statics);
             }
             foreach (var item in obj.Grasses)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, IGrassInternal, IGrassGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Grass, IGrassGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Grasses.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Grasses.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Grasses,
+                    groupGetter: (m) => m.Grasses);
             }
             foreach (var item in obj.Trees)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, ITreeInternal, ITreeGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Tree, ITreeGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Trees.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Trees.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Trees,
+                    groupGetter: (m) => m.Trees);
             }
             foreach (var item in obj.Flora)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, IFloraInternal, IFloraGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Flora, IFloraGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Flora.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Flora.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Flora,
+                    groupGetter: (m) => m.Flora);
             }
             foreach (var item in obj.Furniture)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, IFurnitureInternal, IFurnitureGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Furniture, IFurnitureGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Furniture.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Furniture.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Furniture,
+                    groupGetter: (m) => m.Furniture);
             }
             foreach (var item in obj.Weapons)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, IWeaponInternal, IWeaponGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Weapon, IWeaponGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Weapons.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Weapons.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Weapons,
+                    groupGetter: (m) => m.Weapons);
             }
             foreach (var item in obj.Ammunitions)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, IAmmunitionInternal, IAmmunitionGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Ammunition, IAmmunitionGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Ammunitions.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Ammunitions.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Ammunitions,
+                    groupGetter: (m) => m.Ammunitions);
             }
             foreach (var item in obj.Npcs)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, INpcInternal, INpcGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Npc, INpcGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Npcs.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Npcs.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Npcs,
+                    groupGetter: (m) => m.Npcs);
             }
             foreach (var item in obj.Creatures)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, ICreatureInternal, ICreatureGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Creature, ICreatureGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Creatures.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Creatures.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Creatures,
+                    groupGetter: (m) => m.Creatures);
             }
             foreach (var item in obj.LeveledCreatures)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, ILeveledCreatureInternal, ILeveledCreatureGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, LeveledCreature, ILeveledCreatureGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.LeveledCreatures.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.LeveledCreatures.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.LeveledCreatures,
+                    groupGetter: (m) => m.LeveledCreatures);
             }
             foreach (var item in obj.SoulGems)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, ISoulGemInternal, ISoulGemGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, SoulGem, ISoulGemGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.SoulGems.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.SoulGems.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.SoulGems,
+                    groupGetter: (m) => m.SoulGems);
             }
             foreach (var item in obj.Keys)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, IKeyInternal, IKeyGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Key, IKeyGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Keys.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Keys.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Keys,
+                    groupGetter: (m) => m.Keys);
             }
             foreach (var item in obj.Potions)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, IPotionInternal, IPotionGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Potion, IPotionGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Potions.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Potions.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Potions,
+                    groupGetter: (m) => m.Potions);
             }
             foreach (var item in obj.Subspaces)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, ISubspaceInternal, ISubspaceGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Subspace, ISubspaceGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Subspaces.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Subspaces.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Subspaces,
+                    groupGetter: (m) => m.Subspaces);
             }
             foreach (var item in obj.SigilStones)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, ISigilStoneInternal, ISigilStoneGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, SigilStone, ISigilStoneGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.SigilStones.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.SigilStones.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.SigilStones,
+                    groupGetter: (m) => m.SigilStones);
             }
             foreach (var item in obj.LeveledItems)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, ILeveledItemInternal, ILeveledItemGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, LeveledItem, ILeveledItemGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.LeveledItems.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.LeveledItems.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.LeveledItems,
+                    groupGetter: (m) => m.LeveledItems);
             }
             foreach (var item in obj.Weathers)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, IWeatherInternal, IWeatherGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Weather, IWeatherGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Weathers.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Weathers.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Weathers,
+                    groupGetter: (m) => m.Weathers);
             }
             foreach (var item in obj.Climates)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, IClimateInternal, IClimateGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Climate, IClimateGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Climates.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Climates.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Climates,
+                    groupGetter: (m) => m.Climates);
             }
             foreach (var item in obj.Regions)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, IRegionInternal, IRegionGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Region, IRegionGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Regions.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Regions.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Regions,
+                    groupGetter: (m) => m.Regions);
             }
             foreach (var item in obj.Worldspaces)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, IWorldspaceInternal, IWorldspaceGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Worldspace, IWorldspaceGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Worldspaces,
+                    groupGetter: (m) => m.Worldspaces);
             }
             foreach (var groupItem in obj.Worldspaces)
             {
@@ -7505,11 +7505,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.DialogTopics)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, IDialogTopicInternal, IDialogTopicGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, DialogTopic, IDialogTopicGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.DialogTopics.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.DialogTopics.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.DialogTopics,
+                    groupGetter: (m) => m.DialogTopics);
             }
             foreach (var groupItem in obj.DialogTopics)
             {
@@ -7526,75 +7526,75 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             foreach (var item in obj.Quests)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, IQuestInternal, IQuestGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Quest, IQuestGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Quests.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Quests.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Quests,
+                    groupGetter: (m) => m.Quests);
             }
             foreach (var item in obj.IdleAnimations)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, IIdleAnimationInternal, IIdleAnimationGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, IdleAnimation, IIdleAnimationGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.IdleAnimations.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.IdleAnimations.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.IdleAnimations,
+                    groupGetter: (m) => m.IdleAnimations);
             }
             foreach (var item in obj.AIPackages)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, IAIPackageInternal, IAIPackageGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, AIPackage, IAIPackageGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.AIPackages.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.AIPackages.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.AIPackages,
+                    groupGetter: (m) => m.AIPackages);
             }
             foreach (var item in obj.CombatStyles)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, ICombatStyleInternal, ICombatStyleGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, CombatStyle, ICombatStyleGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.CombatStyles.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.CombatStyles.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.CombatStyles,
+                    groupGetter: (m) => m.CombatStyles);
             }
             foreach (var item in obj.LoadScreens)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, ILoadScreenInternal, ILoadScreenGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, LoadScreen, ILoadScreenGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.LoadScreens.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.LoadScreens.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.LoadScreens,
+                    groupGetter: (m) => m.LoadScreens);
             }
             foreach (var item in obj.LeveledSpells)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, ILeveledSpellInternal, ILeveledSpellGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, LeveledSpell, ILeveledSpellGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.LeveledSpells.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.LeveledSpells.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.LeveledSpells,
+                    groupGetter: (m) => m.LeveledSpells);
             }
             foreach (var item in obj.AnimatedObjects)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, IAnimatedObjectInternal, IAnimatedObjectGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, AnimatedObject, IAnimatedObjectGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.AnimatedObjects.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.AnimatedObjects.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.AnimatedObjects,
+                    groupGetter: (m) => m.AnimatedObjects);
             }
             foreach (var item in obj.Waters)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, IWaterInternal, IWaterGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Water, IWaterGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Waters.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Waters.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Waters,
+                    groupGetter: (m) => m.Waters);
             }
             foreach (var item in obj.EffectShaders)
             {
-                yield return new ModContext<IOblivionMod, IOblivionModGetter, IEffectShaderInternal, IEffectShaderGetter>(
+                yield return new GroupModContext<IOblivionMod, IOblivionModGetter, EffectShader, IEffectShaderGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.EffectShaders.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.EffectShaders.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.EffectShaders,
+                    groupGetter: (m) => m.EffectShaders);
             }
         }
         
@@ -7635,11 +7635,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IGameSettingInternal":
                     foreach (var item in obj.GameSettings)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IGameSettingInternal, IGameSettingGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, GameSetting, IGameSettingGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.GameSettings.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.GameSettings.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.GameSettings,
+                            groupGetter: (m) => m.GameSettings);
                     }
                     yield break;
                 case "Global":
@@ -7648,11 +7648,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IGlobalInternal":
                     foreach (var item in obj.Globals)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IGlobalInternal, IGlobalGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Global, IGlobalGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Globals.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Globals.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Globals,
+                            groupGetter: (m) => m.Globals);
                     }
                     yield break;
                 case "Class":
@@ -7661,11 +7661,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IClassInternal":
                     foreach (var item in obj.Classes)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IClassInternal, IClassGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Class, IClassGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Classes.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Classes.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Classes,
+                            groupGetter: (m) => m.Classes);
                     }
                     yield break;
                 case "Faction":
@@ -7674,11 +7674,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IFactionInternal":
                     foreach (var item in obj.Factions)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IFactionInternal, IFactionGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Faction, IFactionGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Factions.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Factions.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Factions,
+                            groupGetter: (m) => m.Factions);
                     }
                     yield break;
                 case "Hair":
@@ -7687,11 +7687,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IHairInternal":
                     foreach (var item in obj.Hairs)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IHairInternal, IHairGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Hair, IHairGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Hairs.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Hairs.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Hairs,
+                            groupGetter: (m) => m.Hairs);
                     }
                     yield break;
                 case "Eye":
@@ -7700,11 +7700,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IEyeInternal":
                     foreach (var item in obj.Eyes)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IEyeInternal, IEyeGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Eye, IEyeGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Eyes.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Eyes.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Eyes,
+                            groupGetter: (m) => m.Eyes);
                     }
                     yield break;
                 case "Race":
@@ -7713,11 +7713,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IRaceInternal":
                     foreach (var item in obj.Races)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IRaceInternal, IRaceGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Race, IRaceGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Races.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Races.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Races,
+                            groupGetter: (m) => m.Races);
                     }
                     yield break;
                 case "Sound":
@@ -7726,11 +7726,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ISoundInternal":
                     foreach (var item in obj.Sounds)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, ISoundInternal, ISoundGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Sound, ISoundGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Sounds.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Sounds.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Sounds,
+                            groupGetter: (m) => m.Sounds);
                     }
                     yield break;
                 case "SkillRecord":
@@ -7739,11 +7739,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ISkillRecordInternal":
                     foreach (var item in obj.Skills)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, ISkillRecordInternal, ISkillRecordGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, SkillRecord, ISkillRecordGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Skills.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Skills.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Skills,
+                            groupGetter: (m) => m.Skills);
                     }
                     yield break;
                 case "MagicEffect":
@@ -7752,11 +7752,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IMagicEffectInternal":
                     foreach (var item in obj.MagicEffects)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IMagicEffectInternal, IMagicEffectGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, MagicEffect, IMagicEffectGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.MagicEffects.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.MagicEffects.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.MagicEffects,
+                            groupGetter: (m) => m.MagicEffects);
                     }
                     yield break;
                 case "Script":
@@ -7765,11 +7765,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IScriptInternal":
                     foreach (var item in obj.Scripts)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IScriptInternal, IScriptGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Script, IScriptGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Scripts.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Scripts.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Scripts,
+                            groupGetter: (m) => m.Scripts);
                     }
                     yield break;
                 case "LandTexture":
@@ -7778,11 +7778,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ILandTextureInternal":
                     foreach (var item in obj.LandTextures)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, ILandTextureInternal, ILandTextureGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, LandTexture, ILandTextureGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.LandTextures.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.LandTextures.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.LandTextures,
+                            groupGetter: (m) => m.LandTextures);
                     }
                     yield break;
                 case "Enchantment":
@@ -7791,11 +7791,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IEnchantmentInternal":
                     foreach (var item in obj.Enchantments)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IEnchantmentInternal, IEnchantmentGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Enchantment, IEnchantmentGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Enchantments.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Enchantments.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Enchantments,
+                            groupGetter: (m) => m.Enchantments);
                     }
                     yield break;
                 case "SpellUnleveled":
@@ -7804,11 +7804,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ISpellUnleveledInternal":
                     foreach (var item in obj.Spells)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, ISpellUnleveledInternal, ISpellUnleveledGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, SpellUnleveled, ISpellUnleveledGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Spells.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Spells.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Spells,
+                            groupGetter: (m) => m.Spells);
                     }
                     yield break;
                 case "Birthsign":
@@ -7817,11 +7817,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IBirthsignInternal":
                     foreach (var item in obj.Birthsigns)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IBirthsignInternal, IBirthsignGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Birthsign, IBirthsignGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Birthsigns.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Birthsigns.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Birthsigns,
+                            groupGetter: (m) => m.Birthsigns);
                     }
                     yield break;
                 case "Activator":
@@ -7830,11 +7830,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IActivatorInternal":
                     foreach (var item in obj.Activators)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IActivatorInternal, IActivatorGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Activator, IActivatorGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Activators.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Activators.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Activators,
+                            groupGetter: (m) => m.Activators);
                     }
                     yield break;
                 case "AlchemicalApparatus":
@@ -7843,11 +7843,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IAlchemicalApparatusInternal":
                     foreach (var item in obj.AlchemicalApparatus)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IAlchemicalApparatusInternal, IAlchemicalApparatusGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, AlchemicalApparatus, IAlchemicalApparatusGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.AlchemicalApparatus.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.AlchemicalApparatus.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.AlchemicalApparatus,
+                            groupGetter: (m) => m.AlchemicalApparatus);
                     }
                     yield break;
                 case "Armor":
@@ -7856,11 +7856,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IArmorInternal":
                     foreach (var item in obj.Armors)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IArmorInternal, IArmorGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Armor, IArmorGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Armors.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Armors.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Armors,
+                            groupGetter: (m) => m.Armors);
                     }
                     yield break;
                 case "Book":
@@ -7869,11 +7869,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IBookInternal":
                     foreach (var item in obj.Books)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IBookInternal, IBookGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Book, IBookGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Books.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Books.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Books,
+                            groupGetter: (m) => m.Books);
                     }
                     yield break;
                 case "Clothing":
@@ -7882,11 +7882,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IClothingInternal":
                     foreach (var item in obj.Clothes)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IClothingInternal, IClothingGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Clothing, IClothingGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Clothes.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Clothes.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Clothes,
+                            groupGetter: (m) => m.Clothes);
                     }
                     yield break;
                 case "Container":
@@ -7895,11 +7895,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IContainerInternal":
                     foreach (var item in obj.Containers)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IContainerInternal, IContainerGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Container, IContainerGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Containers.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Containers.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Containers,
+                            groupGetter: (m) => m.Containers);
                     }
                     yield break;
                 case "Door":
@@ -7908,11 +7908,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IDoorInternal":
                     foreach (var item in obj.Doors)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IDoorInternal, IDoorGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Door, IDoorGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Doors.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Doors.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Doors,
+                            groupGetter: (m) => m.Doors);
                     }
                     yield break;
                 case "Ingredient":
@@ -7921,11 +7921,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IIngredientInternal":
                     foreach (var item in obj.Ingredients)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IIngredientInternal, IIngredientGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Ingredient, IIngredientGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Ingredients.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Ingredients.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Ingredients,
+                            groupGetter: (m) => m.Ingredients);
                     }
                     yield break;
                 case "Light":
@@ -7934,11 +7934,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ILightInternal":
                     foreach (var item in obj.Lights)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, ILightInternal, ILightGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Light, ILightGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Lights.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Lights.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Lights,
+                            groupGetter: (m) => m.Lights);
                     }
                     yield break;
                 case "Miscellaneous":
@@ -7947,11 +7947,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IMiscellaneousInternal":
                     foreach (var item in obj.Miscellaneous)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IMiscellaneousInternal, IMiscellaneousGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Miscellaneous, IMiscellaneousGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Miscellaneous.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Miscellaneous.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Miscellaneous,
+                            groupGetter: (m) => m.Miscellaneous);
                     }
                     yield break;
                 case "Static":
@@ -7960,11 +7960,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IStaticInternal":
                     foreach (var item in obj.Statics)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IStaticInternal, IStaticGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Static, IStaticGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Statics.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Statics.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Statics,
+                            groupGetter: (m) => m.Statics);
                     }
                     yield break;
                 case "Grass":
@@ -7973,11 +7973,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IGrassInternal":
                     foreach (var item in obj.Grasses)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IGrassInternal, IGrassGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Grass, IGrassGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Grasses.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Grasses.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Grasses,
+                            groupGetter: (m) => m.Grasses);
                     }
                     yield break;
                 case "Tree":
@@ -7986,11 +7986,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ITreeInternal":
                     foreach (var item in obj.Trees)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, ITreeInternal, ITreeGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Tree, ITreeGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Trees.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Trees.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Trees,
+                            groupGetter: (m) => m.Trees);
                     }
                     yield break;
                 case "Flora":
@@ -7999,11 +7999,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IFloraInternal":
                     foreach (var item in obj.Flora)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IFloraInternal, IFloraGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Flora, IFloraGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Flora.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Flora.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Flora,
+                            groupGetter: (m) => m.Flora);
                     }
                     yield break;
                 case "Furniture":
@@ -8012,11 +8012,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IFurnitureInternal":
                     foreach (var item in obj.Furniture)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IFurnitureInternal, IFurnitureGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Furniture, IFurnitureGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Furniture.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Furniture.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Furniture,
+                            groupGetter: (m) => m.Furniture);
                     }
                     yield break;
                 case "Weapon":
@@ -8025,11 +8025,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IWeaponInternal":
                     foreach (var item in obj.Weapons)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IWeaponInternal, IWeaponGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Weapon, IWeaponGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Weapons.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Weapons.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Weapons,
+                            groupGetter: (m) => m.Weapons);
                     }
                     yield break;
                 case "Ammunition":
@@ -8038,11 +8038,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IAmmunitionInternal":
                     foreach (var item in obj.Ammunitions)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IAmmunitionInternal, IAmmunitionGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Ammunition, IAmmunitionGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Ammunitions.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Ammunitions.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Ammunitions,
+                            groupGetter: (m) => m.Ammunitions);
                     }
                     yield break;
                 case "Npc":
@@ -8051,11 +8051,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "INpcInternal":
                     foreach (var item in obj.Npcs)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, INpcInternal, INpcGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Npc, INpcGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Npcs.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Npcs.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Npcs,
+                            groupGetter: (m) => m.Npcs);
                     }
                     yield break;
                 case "Creature":
@@ -8064,11 +8064,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ICreatureInternal":
                     foreach (var item in obj.Creatures)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, ICreatureInternal, ICreatureGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Creature, ICreatureGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Creatures.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Creatures.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Creatures,
+                            groupGetter: (m) => m.Creatures);
                     }
                     yield break;
                 case "LeveledCreature":
@@ -8077,11 +8077,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ILeveledCreatureInternal":
                     foreach (var item in obj.LeveledCreatures)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, ILeveledCreatureInternal, ILeveledCreatureGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, LeveledCreature, ILeveledCreatureGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.LeveledCreatures.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.LeveledCreatures.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.LeveledCreatures,
+                            groupGetter: (m) => m.LeveledCreatures);
                     }
                     yield break;
                 case "SoulGem":
@@ -8090,11 +8090,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ISoulGemInternal":
                     foreach (var item in obj.SoulGems)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, ISoulGemInternal, ISoulGemGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, SoulGem, ISoulGemGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.SoulGems.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.SoulGems.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.SoulGems,
+                            groupGetter: (m) => m.SoulGems);
                     }
                     yield break;
                 case "Key":
@@ -8103,11 +8103,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IKeyInternal":
                     foreach (var item in obj.Keys)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IKeyInternal, IKeyGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Key, IKeyGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Keys.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Keys.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Keys,
+                            groupGetter: (m) => m.Keys);
                     }
                     yield break;
                 case "Potion":
@@ -8116,11 +8116,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IPotionInternal":
                     foreach (var item in obj.Potions)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IPotionInternal, IPotionGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Potion, IPotionGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Potions.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Potions.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Potions,
+                            groupGetter: (m) => m.Potions);
                     }
                     yield break;
                 case "Subspace":
@@ -8129,11 +8129,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ISubspaceInternal":
                     foreach (var item in obj.Subspaces)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, ISubspaceInternal, ISubspaceGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Subspace, ISubspaceGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Subspaces.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Subspaces.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Subspaces,
+                            groupGetter: (m) => m.Subspaces);
                     }
                     yield break;
                 case "SigilStone":
@@ -8142,11 +8142,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ISigilStoneInternal":
                     foreach (var item in obj.SigilStones)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, ISigilStoneInternal, ISigilStoneGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, SigilStone, ISigilStoneGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.SigilStones.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.SigilStones.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.SigilStones,
+                            groupGetter: (m) => m.SigilStones);
                     }
                     yield break;
                 case "LeveledItem":
@@ -8155,11 +8155,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ILeveledItemInternal":
                     foreach (var item in obj.LeveledItems)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, ILeveledItemInternal, ILeveledItemGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, LeveledItem, ILeveledItemGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.LeveledItems.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.LeveledItems.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.LeveledItems,
+                            groupGetter: (m) => m.LeveledItems);
                     }
                     yield break;
                 case "Weather":
@@ -8168,11 +8168,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IWeatherInternal":
                     foreach (var item in obj.Weathers)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IWeatherInternal, IWeatherGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Weather, IWeatherGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Weathers.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Weathers.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Weathers,
+                            groupGetter: (m) => m.Weathers);
                     }
                     yield break;
                 case "Climate":
@@ -8181,11 +8181,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IClimateInternal":
                     foreach (var item in obj.Climates)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IClimateInternal, IClimateGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Climate, IClimateGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Climates.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Climates.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Climates,
+                            groupGetter: (m) => m.Climates);
                     }
                     yield break;
                 case "Region":
@@ -8194,11 +8194,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IRegionInternal":
                     foreach (var item in obj.Regions)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IRegionInternal, IRegionGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Region, IRegionGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Regions.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Regions.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Regions,
+                            groupGetter: (m) => m.Regions);
                     }
                     yield break;
                 case "Worldspace":
@@ -8207,11 +8207,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IWorldspaceInternal":
                     foreach (var item in obj.Worldspaces)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IWorldspaceInternal, IWorldspaceGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Worldspace, IWorldspaceGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Worldspaces,
+                            groupGetter: (m) => m.Worldspaces);
                     }
                     yield break;
                 case "DialogTopic":
@@ -8220,11 +8220,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IDialogTopicInternal":
                     foreach (var item in obj.DialogTopics)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IDialogTopicInternal, IDialogTopicGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, DialogTopic, IDialogTopicGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.DialogTopics.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.DialogTopics.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.DialogTopics,
+                            groupGetter: (m) => m.DialogTopics);
                     }
                     yield break;
                 case "Quest":
@@ -8233,11 +8233,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IQuestInternal":
                     foreach (var item in obj.Quests)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IQuestInternal, IQuestGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Quest, IQuestGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Quests.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Quests.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Quests,
+                            groupGetter: (m) => m.Quests);
                     }
                     yield break;
                 case "IdleAnimation":
@@ -8246,11 +8246,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IIdleAnimationInternal":
                     foreach (var item in obj.IdleAnimations)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IIdleAnimationInternal, IIdleAnimationGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, IdleAnimation, IIdleAnimationGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.IdleAnimations.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.IdleAnimations.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.IdleAnimations,
+                            groupGetter: (m) => m.IdleAnimations);
                     }
                     yield break;
                 case "AIPackage":
@@ -8259,11 +8259,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IAIPackageInternal":
                     foreach (var item in obj.AIPackages)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IAIPackageInternal, IAIPackageGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, AIPackage, IAIPackageGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.AIPackages.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.AIPackages.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.AIPackages,
+                            groupGetter: (m) => m.AIPackages);
                     }
                     yield break;
                 case "CombatStyle":
@@ -8272,11 +8272,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ICombatStyleInternal":
                     foreach (var item in obj.CombatStyles)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, ICombatStyleInternal, ICombatStyleGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, CombatStyle, ICombatStyleGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.CombatStyles.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.CombatStyles.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.CombatStyles,
+                            groupGetter: (m) => m.CombatStyles);
                     }
                     yield break;
                 case "LoadScreen":
@@ -8285,11 +8285,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ILoadScreenInternal":
                     foreach (var item in obj.LoadScreens)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, ILoadScreenInternal, ILoadScreenGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, LoadScreen, ILoadScreenGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.LoadScreens.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.LoadScreens.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.LoadScreens,
+                            groupGetter: (m) => m.LoadScreens);
                     }
                     yield break;
                 case "LeveledSpell":
@@ -8298,11 +8298,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ILeveledSpellInternal":
                     foreach (var item in obj.LeveledSpells)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, ILeveledSpellInternal, ILeveledSpellGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, LeveledSpell, ILeveledSpellGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.LeveledSpells.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.LeveledSpells.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.LeveledSpells,
+                            groupGetter: (m) => m.LeveledSpells);
                     }
                     yield break;
                 case "AnimatedObject":
@@ -8311,11 +8311,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IAnimatedObjectInternal":
                     foreach (var item in obj.AnimatedObjects)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IAnimatedObjectInternal, IAnimatedObjectGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, AnimatedObject, IAnimatedObjectGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.AnimatedObjects.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.AnimatedObjects.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.AnimatedObjects,
+                            groupGetter: (m) => m.AnimatedObjects);
                     }
                     yield break;
                 case "Water":
@@ -8324,11 +8324,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IWaterInternal":
                     foreach (var item in obj.Waters)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IWaterInternal, IWaterGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Water, IWaterGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Waters.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Waters.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Waters,
+                            groupGetter: (m) => m.Waters);
                     }
                     yield break;
                 case "EffectShader":
@@ -8337,11 +8337,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IEffectShaderInternal":
                     foreach (var item in obj.EffectShaders)
                     {
-                        yield return new ModContext<IOblivionMod, IOblivionModGetter, IEffectShaderInternal, IEffectShaderGetter>(
+                        yield return new GroupModContext<IOblivionMod, IOblivionModGetter, EffectShader, IEffectShaderGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.EffectShaders.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.EffectShaders.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.EffectShaders,
+                            groupGetter: (m) => m.EffectShaders);
                     }
                     yield break;
                 case "Cell":

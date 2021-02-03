@@ -231,5 +231,61 @@ namespace Mutagen.Bethesda
                 return _context.TryGetParentContext(out parent);
             }
         }
+
+        public class GroupModContext<TMod, TModGetter, TMajor, TMajorGetter> : IModContext<TMod, TModGetter, TMajor, TMajorGetter>
+            where TModGetter : IModGetter
+            where TMod : TModGetter, IMod
+            where TMajor : class, IMajorRecordInternal, TMajorGetter, IBinaryItem
+            where TMajorGetter : class, IMajorRecordGetter, IBinaryItem
+        {
+            private readonly Func<TMod, IGroupCommon<TMajor>> _group;
+            private readonly Func<TModGetter, IGroupCommonGetter<TMajorGetter>> _groupGetter;
+
+            public TMajorGetter Record { get; }
+
+            public ModKey ModKey { get; }
+
+            public IModContext? Parent => null;
+
+            object? IModContext.Record => this.Record;
+
+            public GroupModContext(
+                ModKey modKey,
+                TMajorGetter record,
+                Func<TMod, IGroupCommon<TMajor>> group,
+                Func<TModGetter, IGroupCommonGetter<TMajorGetter>> groupGetter)
+            {
+                ModKey = modKey;
+                Record = record;
+                _group = group;
+                _groupGetter = groupGetter;
+            }
+
+            public TMajor DuplicateIntoAsNewRecord(TMod mod, string? editorID = null)
+            {
+                return _group(mod).DuplicateInAsNewRecord(this.Record, editorID);
+            }
+
+            public TMajor GetOrAddAsOverride(TMod mod)
+            {
+                return _group(mod).GetOrAddAsOverride(this.Record);
+            }
+
+            public TMajor? TryRetrieve(TMod mod)
+            {
+                return _group(mod).TryGetValue(this.Record.FormKey);
+            }
+
+            public TMajorGetter? TryRetrieveGetter(TModGetter mod)
+            {
+                return _groupGetter(mod).TryGetValue(this.Record.FormKey);
+            }
+
+            bool IModContext<TMod, TModGetter, TMajor, TMajorGetter>.TryGetParentContext<TTargetMajorSetter, TTargetMajorGetter>([MaybeNullWhen(false)] out IModContext<TMod, TModGetter, TTargetMajorSetter, TTargetMajorGetter> parent)
+            {
+                parent = default;
+                return false;
+            }
+        }
     }
 }

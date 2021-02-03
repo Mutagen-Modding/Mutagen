@@ -705,19 +705,19 @@ namespace Mutagen.Bethesda.Generation
                 if (blackList?.Contains(group.GetGroupTarget()) ?? false) return;
 
                 var groupTargetGetter = group.GetGroupTarget().Interface(getter: true, internalInterface: true);
-                var groupTargetSetter = group.GetGroupTarget().Interface(getter: false, internalInterface: true);
+                var groupTargetSetter = group.GetGroupTarget().GetTypeName(LoquiInterfaceType.Direct);
                 if (includeSelf)
                 {
                     fieldGen.AppendLine($"foreach (var item in obj.{field.Name})");
                     using (new BraceWrapper(fieldGen))
                     {
                         using (var args = new ArgsWrapper(fieldGen,
-                            $"yield return new ModContext<{obj.Interface(getter: false)}, {obj.Interface(getter: true)}, {groupTargetSetter}, {groupTargetGetter}>"))
+                            $"yield return new GroupModContext<{obj.Interface(getter: false)}, {obj.Interface(getter: true)}, {groupTargetSetter}, {groupTargetGetter}>"))
                         {
                             args.Add("modKey: obj.ModKey");
                             args.Add("record: item");
-                            args.Add($"getOrAddAsOverride: (m, r) => m.{group.Name}.GetOrAddAsOverride(r)");
-                            args.Add($"duplicateInto: (m, r, e) => m.{group.Name}.DuplicateInAsNewRecord(r, e)");
+                            args.Add($"group: (m) => m.{group.Name}");
+                            args.Add($"groupGetter: (m) => m.{group.Name}");
                         }
                     }
                 }

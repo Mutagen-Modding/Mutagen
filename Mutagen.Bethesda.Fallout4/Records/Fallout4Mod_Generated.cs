@@ -1781,19 +1781,19 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             foreach (var item in obj.GameSettings)
             {
-                yield return new ModContext<IFallout4Mod, IFallout4ModGetter, IGameSettingInternal, IGameSettingGetter>(
+                yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, GameSetting, IGameSettingGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.GameSettings.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.GameSettings.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.GameSettings,
+                    groupGetter: (m) => m.GameSettings);
             }
             foreach (var item in obj.Keywords)
             {
-                yield return new ModContext<IFallout4Mod, IFallout4ModGetter, IKeywordInternal, IKeywordGetter>(
+                yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, Keyword, IKeywordGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Keywords.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Keywords.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Keywords,
+                    groupGetter: (m) => m.Keywords);
             }
         }
         
@@ -1834,11 +1834,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "IGameSettingInternal":
                     foreach (var item in obj.GameSettings)
                     {
-                        yield return new ModContext<IFallout4Mod, IFallout4ModGetter, IGameSettingInternal, IGameSettingGetter>(
+                        yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, GameSetting, IGameSettingGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.GameSettings.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.GameSettings.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.GameSettings,
+                            groupGetter: (m) => m.GameSettings);
                     }
                     yield break;
                 case "Keyword":
@@ -1847,11 +1847,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "IKeywordInternal":
                     foreach (var item in obj.Keywords)
                     {
-                        yield return new ModContext<IFallout4Mod, IFallout4ModGetter, IKeywordInternal, IKeywordGetter>(
+                        yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, Keyword, IKeywordGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Keywords.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Keywords.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Keywords,
+                            groupGetter: (m) => m.Keywords);
                     }
                     yield break;
                 case "IKeywordLinkedReference":
