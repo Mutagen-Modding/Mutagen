@@ -149,8 +149,7 @@ namespace Mutagen.Bethesda.Oblivion
             ModKey modKey,
             IModContext? parent,
             bool throwIfUnknown,
-            Func<IOblivionMod, IWorldspaceGetter, IWorldspace> getOrAddAsOverride,
-            Func<IOblivionMod, IWorldspaceGetter, string?, IWorldspace> duplicateInto)
+            Func<IOblivionMod, IWorldspaceGetter, IWorldspace> getOrAddAsOverride)
         {
             foreach (var readOnlyBlock in worldspaceBlocks)
             {

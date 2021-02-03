@@ -151,8 +151,7 @@ namespace Mutagen.Bethesda.Skyrim
             ModKey modKey,
             IModContext? parent,
             bool throwIfUnknown,
-            Func<ISkyrimMod, IWorldspaceGetter, IWorldspace> getOrAddAsOverride,
-            Func<ISkyrimMod, IWorldspaceGetter, string?, IWorldspace> duplicateInto)
+            Func<ISkyrimMod, IWorldspaceGetter, IWorldspace> getOrAddAsOverride)
         {
             foreach (var readOnlyBlock in worldspaceBlocks)
             {

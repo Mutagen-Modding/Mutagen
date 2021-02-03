@@ -886,7 +886,6 @@ namespace Mutagen.Bethesda.Generation
                         args.Add("throwIfUnknown: false");
                         args.Add("worldspace: obj");
                         args.AddPassArg("getOrAddAsOverride");
-                        args.AddPassArg("duplicateInto");
                     }
                     using (new BraceWrapper(fieldGen))
                     {
