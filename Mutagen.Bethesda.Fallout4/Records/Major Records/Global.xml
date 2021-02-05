@@ -21,9 +21,9 @@
       <Bool name="NoTypeDeclaration" binary="NoGeneration" />
     </Fields>
   </Object>
-  <!--<Object name="GlobalBool" recordType="GLOB" baseClass="Global" objType="Record" GUID="f1f69742-d1da-4bbd-951c-f2bac3f7ea98" ID="46">
+  <Object name="GlobalBool" recordType="GLOB" baseClass="Global" objType="Record" GUID="f1f69742-d1da-4bbd-951c-f2bac3f7ea98" ID="46">
     <Fields>
-      <Bool name="Data" recordType="FLTV" />
+      <Bool name="Data" recordType="FLTV" binary="Custom" />
     </Fields>
-  </Object>-->
+  </Object>
 </Loqui>

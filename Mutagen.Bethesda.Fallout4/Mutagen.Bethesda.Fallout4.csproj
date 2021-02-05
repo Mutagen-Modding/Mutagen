@@ -177,6 +177,9 @@
     <Compile Include="Interfaces\IIdleRelation_Generated.cs" />
     <Compile Include="Interfaces\ILocationRecord_Generated.cs" />
     <Compile Include="Interfaces\IObjectId_Generated.cs" />
+    <Compile Include="Records\Major Records\GlobalBool_Generated.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.1.2">

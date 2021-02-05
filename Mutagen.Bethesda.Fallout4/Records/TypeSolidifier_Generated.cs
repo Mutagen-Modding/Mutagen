@@ -271,6 +271,30 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         /// <summary>
+        /// Scope a load order query to GlobalBool
+        /// </summary>
+        /// <param name="listings">ModListings to query</param>
+        /// <returns>A typed object to do further queries on GlobalBool</returns>
+        public static TypedLoadOrderAccess<IFallout4Mod, IGlobalBool, IGlobalBoolGetter> GlobalBool(this IEnumerable<IModListing<IFallout4ModGetter>> listings)
+        {
+            return new TypedLoadOrderAccess<IFallout4Mod, IGlobalBool, IGlobalBoolGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<IGlobalBoolGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IFallout4Mod, IFallout4ModGetter, IGlobalBool, IGlobalBoolGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to GlobalBool
+        /// </summary>
+        /// <param name="mods">Mods to query</param>
+        /// <returns>A typed object to do further queries on GlobalBool</returns>
+        public static TypedLoadOrderAccess<IFallout4Mod, IGlobalBool, IGlobalBoolGetter> GlobalBool(this IEnumerable<IFallout4ModGetter> mods)
+        {
+            return new TypedLoadOrderAccess<IFallout4Mod, IGlobalBool, IGlobalBoolGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<IGlobalBoolGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IFallout4Mod, IFallout4ModGetter, IGlobalBool, IGlobalBoolGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
         /// Scope a load order query to GlobalFloat
         /// </summary>
         /// <param name="listings">ModListings to query</param>
