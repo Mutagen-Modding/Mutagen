@@ -8,8 +8,10 @@ namespace Mutagen.Bethesda
 {
     public abstract class LinkCachePreferences
     {
-        public static LinkCachePreferences WholeRecord => LinkCachePreferenceWholeRecord.Instance;
+        public static LinkCachePreferences Default => WholeRecord();
 
-        public static LinkCachePreferences Default => WholeRecord;
+        public static LinkCachePreferences WholeRecord() => LinkCachePreferenceWholeRecord.Instance;
+
+        public static LinkCachePreferences OnlySimple() => LinkCachePreferenceOnlySimple.Instance;
     }
 }

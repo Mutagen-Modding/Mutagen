@@ -24,7 +24,7 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="immutableBaseCache">LoadOrderCache to use as the immutable base</param>
         /// <param name="mutableMods">Set of mods to place at the end of the load order, which are allowed to be modified afterwards</param>
-        public MutableLoadOrderLinkCache(ImmutableLoadOrderLinkCache<TMod, TModGetter> immutableBaseCache, LinkCachePreferences prefs, params TMod[] mutableMods)
+        public MutableLoadOrderLinkCache(ImmutableLoadOrderLinkCache<TMod, TModGetter> immutableBaseCache, params TMod[] mutableMods)
         {
             WrappedImmutableCache = immutableBaseCache;
             _mutableMods = mutableMods.Select(m => m.ToMutableLinkCache<TMod, TModGetter>()).ToList();
@@ -593,6 +593,120 @@ namespace Mutagen.Bethesda
         {
             if (TryResolve(editorId, types, out var commonRec)) return commonRec;
             throw new KeyNotFoundException($"EditorID {editorId} could not be found.");
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimple(FormKey formKey, [MaybeNullWhen(false)] out string? editorId)
+        {
+            if (formKey.IsNull)
+            {
+                editorId = default;
+                return false;
+            }
+            for (int i = _mutableMods.Count - 1; i >= 0; i--)
+            {
+                if (_mutableMods[i].TryResolveSimple(formKey, out editorId)) return true;
+            }
+            return WrappedImmutableCache.TryResolveSimple(formKey, out editorId);
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimple(string editorId, [MaybeNullWhen(false)] out FormKey formKey)
+        {
+            if (editorId.IsNullOrWhitespace())
+            {
+                formKey = default;
+                return false;
+            }
+            for (int i = _mutableMods.Count - 1; i >= 0; i--)
+            {
+                if (_mutableMods[i].TryResolveSimple(editorId, out formKey)) return true;
+            }
+            return WrappedImmutableCache.TryResolveSimple(editorId, out formKey);
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimple(FormKey formKey, Type type, [MaybeNullWhen(false)] out string? editorId)
+        {
+            if (formKey.IsNull)
+            {
+                editorId = default;
+                return false;
+            }
+            for (int i = _mutableMods.Count - 1; i >= 0; i--)
+            {
+                if (_mutableMods[i].TryResolveSimple(formKey, type, out editorId)) return true;
+            }
+            return WrappedImmutableCache.TryResolveSimple(formKey, type, out editorId);
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimple(string editorId, Type type, [MaybeNullWhen(false)] out FormKey formKey)
+        {
+            if (editorId.IsNullOrWhitespace())
+            {
+                formKey = default;
+                return false;
+            }
+            for (int i = _mutableMods.Count - 1; i >= 0; i--)
+            {
+                if (_mutableMods[i].TryResolveSimple(editorId, type, out formKey)) return true;
+            }
+            return WrappedImmutableCache.TryResolveSimple(editorId, type, out formKey);
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimple<TMajor>(FormKey formKey, out string? editorId)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            return TryResolveSimple(formKey, typeof(TMajor), out editorId);
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimple<TMajor>(string editorId, out FormKey formKey)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            return TryResolveSimple(editorId, typeof(TMajor), out formKey);
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimple(FormKey formKey, [MaybeNullWhen(false)] out string? editorId, params Type[] types)
+        {
+            return TryResolveSimple(formKey, (IEnumerable<Type>)types, out editorId);
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimple(string editorId, [MaybeNullWhen(false)] out FormKey formKey, params Type[] types)
+        {
+            return TryResolveSimple(editorId, (IEnumerable<Type>)types, out formKey);
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimple(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out string? editorId)
+        {
+            foreach (var type in types)
+            {
+                if (TryResolveSimple(formKey, type, out editorId))
+                {
+                    return true;
+                }
+            }
+            editorId = default;
+            return false;
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimple(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out FormKey formKey)
+        {
+            foreach (var type in types)
+            {
+                if (TryResolveSimple(editorId, type, out formKey))
+                {
+                    return true;
+                }
+            }
+            formKey = default;
+            return false;
         }
 
         public void Dispose()

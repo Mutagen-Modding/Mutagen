@@ -441,6 +441,182 @@ namespace Mutagen.Bethesda
         IEnumerable<IMajorRecordCommonGetter> ResolveAll(FormKey formKey);
 
         /// <summary>
+        /// Retrieves the EditorID that matches the FormKey relative to the source the package was attached to.<br/>
+        /// <br/>
+        /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
+        /// the function will return false.
+        /// <br/>
+        /// NOTE:  This call is much slower than the alternative that uses generics, as all records in the entire mod must be
+        /// processed, rather than being able to scope the search to a specific area.
+        /// </summary>
+        /// <param name="formKey">FormKey to look for</param>
+        /// <param name="editorId">Out parameter containing the EditorID if successful</param>
+        /// <returns>True if a matching record was found</returns>
+        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
+        bool TryResolveSimple(FormKey formKey, [MaybeNullWhen(false)] out string? editorId);
+
+        /// <summary>
+        /// Retrieves the FormKey that matches the EditorID relative to the source the package was attached to.<br/>
+        /// <br/>
+        /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will not be returned, and 
+        /// the function will return false.
+        /// <br/>
+        /// NOTE:  This call is much slower than the alternative that uses generics, as all records in the entire mod must be
+        /// processed, rather than being able to scope the search to a specific area.
+        /// </summary>
+        /// <param name="editorId">EditorID to look for</param>
+        /// <param name="formKey">Out parameter containing the FormKey if successful</param>
+        /// <returns>True if a matching record was found</returns>
+        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
+        bool TryResolveSimple(string editorId, [MaybeNullWhen(false)] out FormKey formKey);
+
+        /// <summary>
+        /// Retrieves the EditorID that matches the FormKey relative to the source the package was attached to.<br/>
+        /// <br/>
+        /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
+        /// the function will return false.
+        /// </summary>
+        /// <param name="formKey">FormKey to look for</param>
+        /// <param name="type">The type of Major Record to look up</param>
+        /// <param name="editorId">Out parameter containing the EditorID if successful</param>
+        /// <exception cref="ArgumentException">
+        /// An unexpected type will throw an exception.<br/>
+        /// Unexpected types include:<br/>
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
+        /// <returns>True if a matching record was found</returns>
+        bool TryResolveSimple(FormKey formKey, Type type, [MaybeNullWhen(false)] out string? editorId);
+
+        /// <summary>
+        /// Retrieves the FormKey that matches the EditorID relative to the source the package was attached to.<br/>
+        /// <br/>
+        /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will not be returned, and 
+        /// the function will return false.
+        /// </summary>
+        /// <param name="editorId">EditorID to look for</param>
+        /// <param name="type">The type of Major Record to look up</param>
+        /// <param name="formKey">Out parameter containing the FormKey if successful</param>
+        /// <exception cref="ArgumentException">
+        /// An unexpected type will throw an exception.<br/>
+        /// Unexpected types include:<br/>
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
+        /// <returns>True if a matching record was found</returns>
+        bool TryResolveSimple(string editorId, Type type, [MaybeNullWhen(false)] out FormKey formKey);
+
+        /// <summary>
+        /// Retrieves the EditorID that matches the FormKey relative to the source the package was attached to.<br/>
+        /// <br/>
+        /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
+        /// the function will return false.
+        /// </summary>
+        /// <param name="formKey">FormKey to look for</param>
+        /// <param name="editorId">Out parameter containing the EditorID if successful</param>
+        /// <typeparam name="TMajor">The type of Major Record to look up</typeparam>
+        /// <exception cref="ArgumentException">
+        /// An unexpected type will throw an exception.<br/>
+        /// Unexpected types include:<br/>
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
+        /// <returns>True if a matching record was found</returns>
+        bool TryResolveSimple<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out string? editorId)
+            where TMajor : class, IMajorRecordCommonGetter;
+
+        /// <summary>
+        /// Retrieves the FormKey that matches the EditorID relative to the source the package was attached to.<br/>
+        /// <br/>
+        /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will not be returned, and 
+        /// the function will return false.
+        /// </summary>
+        /// <param name="editorId">EditorID to look for</param>
+        /// <param name="formKey">Out parameter containing the FormKey if successful</param>
+        /// <typeparam name="TMajor">The type of Major Record to look up</typeparam>
+        /// <exception cref="ArgumentException">
+        /// An unexpected type will throw an exception.<br/>
+        /// Unexpected types include:<br/>
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
+        /// <returns>True if a matching record was found</returns>
+        bool TryResolveSimple<TMajor>(string editorId, [MaybeNullWhen(false)] out FormKey formKey)
+            where TMajor : class, IMajorRecordCommonGetter;
+
+        /// <summary>
+        /// Retrieves the FormKey that matches the EditorID relative to the source the package was attached to.<br/>
+        /// <br/>
+        /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will not be returned, and 
+        /// the function will return false.
+        /// </summary>
+        /// <param name="editorId">EditorID to look for</param>
+        /// <param name="types">The types of Major Records to look up</param>
+        /// <param name="formKey">Out parameter containing the FormKey if successful</param>
+        /// <exception cref="ArgumentException">
+        /// An unexpected type will throw an exception.<br/>
+        /// Unexpected types include:<br/>
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
+        /// <returns>True if a matching record was found</returns>
+        bool TryResolveSimple(FormKey formKey, [MaybeNullWhen(false)] out string? editorId, params Type[] types);
+
+        /// <summary>
+        /// Retrieves the FormKey that matches the EditorID relative to the source the package was attached to.<br/>
+        /// <br/>
+        /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will not be returned, and 
+        /// the function will return false.
+        /// </summary>
+        /// <param name="editorId">EditorID to look for</param>
+        /// <param name="types">The types of Major Records to look up</param>
+        /// <param name="formKey">Out parameter containing the FormKey if successful</param>
+        /// <exception cref="ArgumentException">
+        /// An unexpected type will throw an exception.<br/>
+        /// Unexpected types include:<br/>
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
+        /// <returns>True if a matching record was found</returns>
+        bool TryResolveSimple(string editorId, [MaybeNullWhen(false)] out FormKey formKey, params Type[] types);
+
+        /// <summary>
+        /// Retrieves the FormKey that matches the EditorID relative to the source the package was attached to.<br/>
+        /// <br/>
+        /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will not be returned, and 
+        /// the function will return false.
+        /// </summary>
+        /// <param name="editorId">EditorID to look for</param>
+        /// <param name="types">The types of Major Records to look up</param>
+        /// <param name="formKey">Out parameter containing the FormKey if successful</param>
+        /// <exception cref="ArgumentException">
+        /// An unexpected type will throw an exception.<br/>
+        /// Unexpected types include:<br/>
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
+        /// <returns>True if a matching record was found</returns>
+        bool TryResolveSimple(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out string? editorId);
+
+        /// <summary>
+        /// Retrieves the FormKey that matches the EditorID relative to the source the package was attached to.<br/>
+        /// <br/>
+        /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will not be returned, and 
+        /// the function will return false.
+        /// </summary>
+        /// <param name="editorId">EditorID to look for</param>
+        /// <param name="types">The types of Major Records to look up</param>
+        /// <param name="formKey">Out parameter containing the FormKey if successful</param>
+        /// <exception cref="ArgumentException">
+        /// An unexpected type will throw an exception.<br/>
+        /// Unexpected types include:<br/>
+        ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+        ///   - A setter type is requested from a getter only object.
+        /// </exception>
+        /// <returns>True if a matching record was found</returns>
+        bool TryResolveSimple(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out FormKey formKey);
+
+        /// <summary>
         /// Iterates through the contained mods in the order they were listed, with the least prioritized mod first.
         /// </summary>
         IReadOnlyList<IModGetter> ListedOrder { get; }
@@ -830,15 +1006,13 @@ namespace Mutagen.Bethesda
         /// be modified afterwards, use ImmutableModLinkCache instead.<br/>
         /// </summary>
         /// <param name="mod">Mod to construct the package relative to</param>
-        /// <param name="prefs">Caching preferences</param>
         /// <returns>LinkPackage attached to given mod</returns>
         public static MutableModLinkCache<TMod, TModGetter> ToMutableLinkCache<TMod, TModGetter>(
-            this TModGetter mod,
-            LinkCachePreferences? prefs = null)
+            this TModGetter mod)
             where TMod : class, IContextMod<TMod, TModGetter>, TModGetter
             where TModGetter : class, IContextGetterMod<TMod, TModGetter>
         {
-            return new MutableModLinkCache<TMod, TModGetter>(mod, prefs ?? LinkCachePreferences.Default);
+            return new MutableModLinkCache<TMod, TModGetter>(mod);
         }
 
         /// <summary>
@@ -926,69 +1100,6 @@ namespace Mutagen.Bethesda
         /// plus a set of mods to be put at the end of the load order and allow to be mutable.
         /// </summary>
         /// <param name="immutableBaseCache">LoadOrderCache to use as the immutable base</param>
-        /// <param name="prefs">Caching preferences</param>
-        /// <param name="mutableMods">Set of mods to place at the end of the load order, which are allowed to be modified afterwards</param>
-        /// <returns>LinkPackage attached to given LoadOrder</returns>
-        public static MutableLoadOrderLinkCache<TMod, TModGetter> ToMutableLinkCache<TMod, TModGetter>(
-            this LoadOrder<TModGetter> immutableBaseCache,
-            LinkCachePreferences prefs,
-            params TMod[] mutableMods)
-            where TMod : class, IContextMod<TMod, TModGetter>, TModGetter
-            where TModGetter : class, IContextGetterMod<TMod, TModGetter>
-        {
-            return new MutableLoadOrderLinkCache<TMod, TModGetter>(
-                immutableBaseCache.ToImmutableLinkCache<TMod, TModGetter>(),
-                prefs ?? LinkCachePreferences.Default,
-                mutableMods);
-        }
-
-        /// <summary>
-        /// Creates a mutable load order link cache by combining an existing immutable load order cache,
-        /// plus a set of mods to be put at the end of the load order and allow to be mutable.
-        /// </summary>
-        /// <param name="immutableBaseCache">LoadOrderCache to use as the immutable base</param>
-        /// <param name="prefs">Caching preferences</param>
-        /// <param name="mutableMods">Set of mods to place at the end of the load order, which are allowed to be modified afterwards</param>
-        /// <returns>LinkPackage attached to given LoadOrder</returns>
-        public static MutableLoadOrderLinkCache<TMod, TModGetter> ToMutableLinkCache<TMod, TModGetter>(
-            this LoadOrder<IModListing<TModGetter>> immutableBaseCache,
-            LinkCachePreferences prefs,
-            params TMod[] mutableMods)
-            where TMod : class, IContextMod<TMod, TModGetter>, TModGetter
-            where TModGetter : class, IContextGetterMod<TMod, TModGetter>
-        {
-            return new MutableLoadOrderLinkCache<TMod, TModGetter>(
-                immutableBaseCache.ToImmutableLinkCache<TMod, TModGetter>(),
-                prefs ?? LinkCachePreferences.Default,
-                mutableMods);
-        }
-
-        /// <summary>
-        /// Creates a mutable load order link cache by combining an existing immutable load order cache,
-        /// plus a set of mods to be put at the end of the load order and allow to be mutable.
-        /// </summary>
-        /// <param name="immutableBaseCache">LoadOrderCache to use as the immutable base</param>
-        /// <param name="prefs">Caching preferences</param>
-        /// <param name="mutableMods">Set of mods to place at the end of the load order, which are allowed to be modified afterwards</param>
-        /// <returns>LinkPackage attached to given LoadOrder</returns>
-        public static MutableLoadOrderLinkCache<TMod, TModGetter> ToMutableLinkCache<TMod, TModGetter>(
-            this IEnumerable<TModGetter> immutableBaseCache,
-            LinkCachePreferences prefs,
-            params TMod[] mutableMods)
-            where TMod : class, IContextMod<TMod, TModGetter>, TModGetter
-            where TModGetter : class, IContextGetterMod<TMod, TModGetter>
-        {
-            return new MutableLoadOrderLinkCache<TMod, TModGetter>(
-                immutableBaseCache.ToImmutableLinkCache<TMod, TModGetter>(),
-                prefs ?? LinkCachePreferences.Default,
-                mutableMods);
-        }
-
-        /// <summary>
-        /// Creates a mutable load order link cache by combining an existing immutable load order cache,
-        /// plus a set of mods to be put at the end of the load order and allow to be mutable.
-        /// </summary>
-        /// <param name="immutableBaseCache">LoadOrderCache to use as the immutable base</param>
         /// <param name="mutableMods">Set of mods to place at the end of the load order, which are allowed to be modified afterwards</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
         public static MutableLoadOrderLinkCache<TMod, TModGetter> ToMutableLinkCache<TMod, TModGetter>(
@@ -999,7 +1110,6 @@ namespace Mutagen.Bethesda
         {
             return new MutableLoadOrderLinkCache<TMod, TModGetter>(
                 immutableBaseCache.ToImmutableLinkCache<TMod, TModGetter>(),
-                LinkCachePreferences.Default,
                 mutableMods);
         }
 
@@ -1018,7 +1128,6 @@ namespace Mutagen.Bethesda
         {
             return new MutableLoadOrderLinkCache<TMod, TModGetter>(
                 immutableBaseCache.ToImmutableLinkCache<TMod, TModGetter>(),
-                LinkCachePreferences.Default,
                 mutableMods);
         }
 
@@ -1037,7 +1146,6 @@ namespace Mutagen.Bethesda
         {
             return new MutableLoadOrderLinkCache<TMod, TModGetter>(
                 immutableBaseCache.ToImmutableLinkCache<TMod, TModGetter>(),
-                LinkCachePreferences.Default,
                 mutableMods);
         }
     }

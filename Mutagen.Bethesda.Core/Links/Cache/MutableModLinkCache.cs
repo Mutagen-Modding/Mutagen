@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda
         /// Constructs a link cache around a target mod
         /// </summary>
         /// <param name="sourceMod">Mod to resolve against when linking</param>
-        public MutableModLinkCache(TModGetter sourceMod, LinkCachePreferences prefs)
+        public MutableModLinkCache(TModGetter sourceMod)
         {
             this._sourceMod = sourceMod;
             this.ListedOrder = new List<IModGetter>()
@@ -595,6 +595,128 @@ namespace Mutagen.Bethesda
         {
             if (TryResolve(editorId, types, out var commonRec)) return commonRec;
             throw new KeyNotFoundException($"EditorID {editorId} could not be found.");
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimple(FormKey formKey, [MaybeNullWhen(false)] out string? editorId)
+        {
+            if (TryResolve(formKey, out var rec))
+            {
+                editorId = rec.EditorID;
+                return false;
+            }
+            editorId = default;
+            return false;
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimple(string editorId, [MaybeNullWhen(false)] out FormKey formKey)
+        {
+            if (TryResolve(editorId, out var rec))
+            {
+                formKey = rec.FormKey;
+                return false;
+            }
+            formKey = default;
+            return false;
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimple(FormKey formKey, Type type, [MaybeNullWhen(false)] out string? editorId)
+        {
+            if (TryResolve(formKey, type, out var rec))
+            {
+                editorId = rec.EditorID;
+                return false;
+            }
+            editorId = default;
+            return false;
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimple(string editorId, Type type, [MaybeNullWhen(false)] out FormKey formKey)
+        {
+            if (TryResolve(editorId, type, out var rec))
+            {
+                formKey = rec.FormKey;
+                return false;
+            }
+            formKey = default;
+            return false;
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimple<TMajor>(FormKey formKey, out string? editorId)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            if (TryResolve<TMajor>(formKey, out var rec))
+            {
+                editorId = rec.EditorID;
+                return false;
+            }
+            editorId = default;
+            return false;
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimple<TMajor>(string editorId, out FormKey formKey)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            if (TryResolve<TMajor>(editorId, out var rec))
+            {
+                formKey = rec.FormKey;
+                return false;
+            }
+            formKey = default;
+            return false;
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimple(FormKey formKey, [MaybeNullWhen(false)] out string? editorId, params Type[] types)
+        {
+            if (TryResolve(formKey, out var rec, types))
+            {
+                editorId = rec.EditorID;
+                return false;
+            }
+            editorId = default;
+            return false;
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimple(string editorId, [MaybeNullWhen(false)] out FormKey formKey, params Type[] types)
+        {
+            if (TryResolve(editorId, out var rec, types))
+            {
+                formKey = rec.FormKey;
+                return false;
+            }
+            formKey = default;
+            return false;
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimple(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out string? editorId)
+        {
+            if (TryResolve(formKey, types, out var rec))
+            {
+                editorId = rec.EditorID;
+                return false;
+            }
+            editorId = default;
+            return false;
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimple(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out FormKey formKey)
+        {
+            if (TryResolve(editorId, types, out var rec))
+            {
+                formKey = rec.FormKey;
+                return false;
+            }
+            formKey = default;
+            return false;
         }
 
         public void Dispose()

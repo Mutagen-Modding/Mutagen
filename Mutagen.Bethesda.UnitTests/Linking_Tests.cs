@@ -26,6 +26,18 @@ namespace Mutagen.Bethesda.UnitTests
 
     public abstract class Linking_Abstract_Tests : IClassFixture<LinkingInit>
     {
+        public enum LinkCacheTestTypes
+        {
+            Simple,
+            WholeRecord
+        }
+
+        public enum LinkCacheStyle
+        {
+            HasCaching,
+            OnlyDirect
+        }
+
         public static FormKey UnusedFormKey = new FormKey(Utility.PluginModKey, 123456);
         public static string UnusedEditorID = "Unused";
         public static FormKey TestFileFormKey = new FormKey(Utility.SkyrimTestMod.ModKey, 0x800);
@@ -36,16 +48,42 @@ namespace Mutagen.Bethesda.UnitTests
         public abstract IDisposable ConvertMod(SkyrimMod mod, out ISkyrimModGetter getter);
         public abstract bool ReadOnly { get; }
 
-        protected abstract ILinkCache<ISkyrimMod, ISkyrimModGetter> GetLinkCache(ISkyrimModGetter modGetter, LinkCachePreferences prefs = null);
+        protected abstract (LinkCacheStyle Style, ILinkCache<ISkyrimMod, ISkyrimModGetter> Cache) GetLinkCache(ISkyrimModGetter modGetter, LinkCachePreferences prefs);
 
-        protected abstract ILinkCache<ISkyrimMod, ISkyrimModGetter> GetLinkCache(LoadOrder<ISkyrimModGetter> loadOrder, LinkCachePreferences prefs = null);
+        protected abstract (LinkCacheStyle Style, ILinkCache<ISkyrimMod, ISkyrimModGetter> Cache) GetLinkCache(LoadOrder<ISkyrimModGetter> loadOrder, LinkCachePreferences prefs);
+
+        protected LinkCachePreferences GetPrefs(LinkCacheTestTypes type) => type switch
+        {
+            LinkCacheTestTypes.Simple => LinkCachePreferences.OnlySimple(),
+            LinkCacheTestTypes.WholeRecord => LinkCachePreferences.WholeRecord(),
+            _ => throw new NotImplementedException()
+        };
+
+        protected (LinkCacheStyle Style, ILinkCache<ISkyrimMod, ISkyrimModGetter> Cache) GetLinkCache(ISkyrimModGetter modGetter, LinkCacheTestTypes type) => GetLinkCache(modGetter, GetPrefs(type));
+
+        protected (LinkCacheStyle Style, ILinkCache<ISkyrimMod, ISkyrimModGetter> Cache) GetLinkCache(LoadOrder<ISkyrimModGetter> loadOrder, LinkCacheTestTypes type) => GetLinkCache(loadOrder, GetPrefs(type));
+
+        protected void WrapPotentialThrow(LinkCacheTestTypes cacheType, LinkCacheStyle style, Action a)
+        {
+            switch (cacheType)
+            {
+                case LinkCacheTestTypes.Simple when style != LinkCacheStyle.OnlyDirect:
+                    Assert.Throws<ArgumentException>(a);
+                    break;
+                default:
+                    a();
+                    break;
+            }
+        }
 
         #region Direct Mod
-        [Fact]
-        public void Direct_Empty()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void Direct_Empty(LinkCacheTestTypes cacheType)
         {
             using var disp = ConvertMod(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE), out var mod);
-            var package = GetLinkCache(mod);
+            var (style, package) = GetLinkCache(mod, cacheType);
 
             // Test FormKey fails
             Assert.False(package.TryResolve(UnusedFormKey, out var _));
@@ -84,13 +122,15 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.False(package.TryResolve<IEffectRecordGetter>(string.Empty, out var _));
         }
 
-        [Fact]
-        public void Direct_NoMatch()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void Direct_NoMatch(LinkCacheTestTypes cacheType)
         {
             var prototype = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             prototype.ObjectEffects.AddNew();
             using var disp = ConvertMod(prototype, out var mod);
-            var package = GetLinkCache(mod);
+            var (style, package) = GetLinkCache(mod, cacheType);
 
             // Test FormKey fails
             Assert.False(package.TryResolve(UnusedFormKey, out var _));
@@ -129,188 +169,272 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.False(package.TryResolve<IEffectRecordGetter>(string.Empty, out var _));
         }
 
-        [Fact]
-        public void Direct_Typical()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void Direct_Typical(LinkCacheTestTypes cacheType)
         {
             var prototype = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var objEffect1 = prototype.ObjectEffects.AddNew("EDID1");
             var objEffect2 = prototype.ObjectEffects.AddNew("EDID2");
             using var disp = ConvertMod(prototype, out var mod);
-            var package = GetLinkCache(mod);
+            var (style, package) = GetLinkCache(mod, cacheType);
 
             // Do linked interfaces first, as this tests a specific edge case
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<IEffectRecordGetter>(objEffect1.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<IEffectRecordGetter>(objEffect1.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<IEffectRecordGetter>(objEffect2.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<IEffectRecordGetter>(objEffect2.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
-            }
-
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve(objEffect1.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve(objEffect1.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve(objEffect2.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve(objEffect2.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<IMajorRecordCommonGetter>(objEffect1.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<IMajorRecordCommonGetter>(objEffect1.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<IMajorRecordCommonGetter>(objEffect2.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<IMajorRecordCommonGetter>(objEffect2.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(objEffect1.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(objEffect1.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(objEffect2.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(objEffect2.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<IObjectEffectGetter>(objEffect1.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<IObjectEffectGetter>(objEffect1.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<IObjectEffectGetter>(objEffect2.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<IObjectEffectGetter>(objEffect2.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
-            }
+            });
             if (ReadOnly)
             {
-                Assert.False(package.TryResolve<ObjectEffect>(objEffect1.FormKey, out var _));
-                Assert.False(package.TryResolve<ObjectEffect>(objEffect2.FormKey, out var _));
-                Assert.False(package.TryResolve<IObjectEffect>(objEffect1.FormKey, out var _));
-                Assert.False(package.TryResolve<IObjectEffect>(objEffect2.FormKey, out var _));
-                Assert.False(package.TryResolve<IEffectRecord>(objEffect1.FormKey, out var _));
-                Assert.False(package.TryResolve<IEffectRecord>(objEffect2.FormKey, out var _));
-                Assert.False(package.TryResolve<ObjectEffect>(objEffect1.EditorID, out var _));
-                Assert.False(package.TryResolve<ObjectEffect>(objEffect2.EditorID, out var _));
-                Assert.False(package.TryResolve<IObjectEffect>(objEffect1.EditorID, out var _));
-                Assert.False(package.TryResolve<IObjectEffect>(objEffect2.EditorID, out var _));
-                Assert.False(package.TryResolve<IEffectRecord>(objEffect1.EditorID, out var _));
-                Assert.False(package.TryResolve<IEffectRecord>(objEffect2.EditorID, out var _));
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<ObjectEffect>(objEffect1.FormKey, out var _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<ObjectEffect>(objEffect2.FormKey, out var _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<IObjectEffect>(objEffect1.FormKey, out var _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<IObjectEffect>(objEffect2.FormKey, out var _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<IEffectRecord>(objEffect1.FormKey, out var _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<IEffectRecord>(objEffect2.FormKey, out var _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<ObjectEffect>(objEffect1.EditorID, out var _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<ObjectEffect>(objEffect2.EditorID, out var _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<IObjectEffect>(objEffect1.EditorID, out var _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<IObjectEffect>(objEffect2.EditorID, out var _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<IEffectRecord>(objEffect1.EditorID, out var _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<IEffectRecord>(objEffect2.EditorID, out var _));
+                });
+
+                Assert.False(package.TryResolve<ObjectEffect>(Utility.UnusedForm, out var _));
+                Assert.False(package.TryResolve<IObjectEffect>(Utility.UnusedForm, out var _));
+                Assert.False(package.TryResolve<IEffectRecord>(Utility.UnusedForm, out var _));
+                Assert.False(package.TryResolve<ObjectEffect>(Utility.UnusedEdid, out var _));
+                Assert.False(package.TryResolve<IObjectEffect>(Utility.UnusedEdid, out var _));
+                Assert.False(package.TryResolve<IEffectRecord>(Utility.UnusedEdid, out var _));
             }
             else
             {
+                WrapPotentialThrow(cacheType, style, () =>
                 {
                     Assert.True(package.TryResolve<ObjectEffect>(objEffect1.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, objEffect1.FormKey);
-                }
+                });
+                WrapPotentialThrow(cacheType, style, () =>
                 {
                     Assert.True(package.TryResolve<ObjectEffect>(objEffect1.EditorID, out var rec));
                     Assert.Equal(rec.FormKey, objEffect1.FormKey);
-                }
+                });
+                WrapPotentialThrow(cacheType, style, () =>
                 {
                     Assert.True(package.TryResolve<ObjectEffect>(objEffect2.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, objEffect2.FormKey);
-                }
+                });
+                WrapPotentialThrow(cacheType, style, () =>
                 {
                     Assert.True(package.TryResolve<ObjectEffect>(objEffect2.EditorID, out var rec));
                     Assert.Equal(rec.FormKey, objEffect2.FormKey);
-                }
+                });
+                WrapPotentialThrow(cacheType, style, () =>
                 {
                     Assert.True(package.TryResolve<IObjectEffect>(objEffect1.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, objEffect1.FormKey);
-                }
+                });
+                WrapPotentialThrow(cacheType, style, () =>
                 {
                     Assert.True(package.TryResolve<IObjectEffect>(objEffect1.EditorID, out var rec));
                     Assert.Equal(rec.FormKey, objEffect1.FormKey);
-                }
+                });
+                WrapPotentialThrow(cacheType, style, () =>
                 {
                     Assert.True(package.TryResolve<IObjectEffect>(objEffect2.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, objEffect2.FormKey);
-                }
+                });
+                WrapPotentialThrow(cacheType, style, () =>
                 {
                     Assert.True(package.TryResolve<IObjectEffect>(objEffect2.EditorID, out var rec));
                     Assert.Equal(rec.FormKey, objEffect2.FormKey);
-                }
+                });
+                WrapPotentialThrow(cacheType, style, () =>
                 {
                     Assert.True(package.TryResolve<IEffectRecord>(objEffect1.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, objEffect1.FormKey);
-                }
+                });
+                WrapPotentialThrow(cacheType, style, () =>
                 {
                     Assert.True(package.TryResolve<IEffectRecord>(objEffect1.EditorID, out var rec));
                     Assert.Equal(rec.FormKey, objEffect1.FormKey);
-                }
+                });
+                WrapPotentialThrow(cacheType, style, () =>
                 {
                     Assert.True(package.TryResolve<IEffectRecord>(objEffect2.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, objEffect2.FormKey);
-                }
+                });
+                WrapPotentialThrow(cacheType, style, () =>
                 {
                     Assert.True(package.TryResolve<IEffectRecord>(objEffect2.EditorID, out var rec));
                     Assert.Equal(rec.FormKey, objEffect2.FormKey);
-                }
+                });
             }
         }
 
-        [Fact]
-        public void Direct_ReadOnlyMechanics()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void Direct_ReadOnlyMechanics(LinkCacheTestTypes cacheType)
         {
             var wrapper = SkyrimMod.CreateFromBinaryOverlay(Utility.SkyrimTestMod, SkyrimRelease.SkyrimSE);
-            var package = GetLinkCache(wrapper);
+            var (style, package) = GetLinkCache(wrapper, cacheType);
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<INpcGetter>(TestFileFormKey, out var rec));
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<INpcGetter>(TestFileEditorID, out var rec));
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.False(package.TryResolve<INpc>(TestFileFormKey, out var rec));
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.False(package.TryResolve<INpc>(TestFileEditorID, out var rec));
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.False(package.TryResolve<Npc>(TestFileFormKey, out var rec));
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.False(package.TryResolve<Npc>(TestFileEditorID, out var rec));
-            }
+            });
         }
         #endregion
 
@@ -337,15 +461,17 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.False(package.TryResolve<ISkyrimMajorRecordGetter>(string.Empty, out var _));
         }
 
-        [Fact]
-        public void LoadOrder_NoMatch()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void LoadOrder_NoMatch(LinkCacheTestTypes cacheType)
         {
             var prototype = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             prototype.Npcs.AddNew();
             using var disp = ConvertMod(prototype, out var mod);
             var loadOrder = new LoadOrder<ISkyrimModGetter>();
             loadOrder.Add(mod);
-            var package = GetLinkCache(loadOrder);
+            var (style, package) = GetLinkCache(loadOrder, cacheType);
 
             // Test FormKey fails
             Assert.False(package.TryResolve(UnusedFormKey, out var _));
@@ -364,8 +490,10 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.False(package.TryResolve<ISkyrimMajorRecordGetter>(string.Empty, out var _));
         }
 
-        [Fact]
-        public void LoadOrder_Single()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void LoadOrder_Single(LinkCacheTestTypes cacheType)
         {
             var prototype = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var objEffect1 = prototype.ObjectEffects.AddNew("EditorID1");
@@ -373,162 +501,233 @@ namespace Mutagen.Bethesda.UnitTests
             using var disp = ConvertMod(prototype, out var mod);
             var loadOrder = new LoadOrder<ISkyrimModGetter>();
             loadOrder.Add(mod);
-            var package = GetLinkCache(loadOrder);
+            var (style, package) = GetLinkCache(loadOrder, cacheType);
 
             // Test query successes
 
             // Do linked interfaces first, as this tests a specific edge case
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<IEffectRecordGetter>(objEffect1.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<IEffectRecordGetter>(objEffect1.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<IEffectRecordGetter>(objEffect2.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<IEffectRecordGetter>(objEffect2.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
-            }
+            });
 
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve(objEffect1.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve(objEffect1.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve(objEffect2.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve(objEffect2.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<IMajorRecordCommonGetter>(objEffect1.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<IMajorRecordCommonGetter>(objEffect1.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<IMajorRecordCommonGetter>(objEffect2.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<IMajorRecordCommonGetter>(objEffect2.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(objEffect1.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(objEffect1.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(objEffect2.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(objEffect2.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<IObjectEffectGetter>(objEffect1.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<IObjectEffectGetter>(objEffect1.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<IObjectEffectGetter>(objEffect2.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<IObjectEffectGetter>(objEffect2.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
-            }
+            });
+
             if (ReadOnly)
             {
-                Assert.False(package.TryResolve<IEffectRecord>(objEffect1.FormKey, out var _));
-                Assert.False(package.TryResolve<IEffectRecord>(objEffect2.FormKey, out var _));
-                Assert.False(package.TryResolve<IObjectEffect>(objEffect1.FormKey, out var _));
-                Assert.False(package.TryResolve<IObjectEffect>(objEffect2.FormKey, out var _));
-                Assert.False(package.TryResolve<ObjectEffect>(objEffect1.FormKey, out var _));
-                Assert.False(package.TryResolve<ObjectEffect>(objEffect2.FormKey, out var _));
-                Assert.False(package.TryResolve<IEffectRecord>(objEffect1.EditorID, out var _));
-                Assert.False(package.TryResolve<IEffectRecord>(objEffect2.EditorID, out var _));
-                Assert.False(package.TryResolve<IObjectEffect>(objEffect1.EditorID, out var _));
-                Assert.False(package.TryResolve<IObjectEffect>(objEffect2.EditorID, out var _));
-                Assert.False(package.TryResolve<ObjectEffect>(objEffect1.EditorID, out var _));
-                Assert.False(package.TryResolve<ObjectEffect>(objEffect2.EditorID, out var _));
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<IEffectRecord>(objEffect1.FormKey, out var _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<IEffectRecord>(objEffect2.FormKey, out var _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<IObjectEffect>(objEffect1.FormKey, out var _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<IObjectEffect>(objEffect2.FormKey, out var _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<ObjectEffect>(objEffect1.FormKey, out var _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<ObjectEffect>(objEffect2.FormKey, out var _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<IEffectRecord>(objEffect1.EditorID, out var _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<IEffectRecord>(objEffect2.EditorID, out var _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<IObjectEffect>(objEffect1.EditorID, out var _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<IObjectEffect>(objEffect2.EditorID, out var _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<ObjectEffect>(objEffect1.EditorID, out var _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<ObjectEffect>(objEffect2.EditorID, out var _));
+                });
             }
             else
             {
+                WrapPotentialThrow(cacheType, style, () =>
                 {
                     Assert.True(package.TryResolve<IEffectRecord>(objEffect1.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, objEffect1.FormKey);
-                }
+                });
+                WrapPotentialThrow(cacheType, style, () =>
                 {
                     Assert.True(package.TryResolve<IEffectRecord>(objEffect1.EditorID, out var rec));
                     Assert.Equal(rec.FormKey, objEffect1.FormKey);
-                }
+                });
+                WrapPotentialThrow(cacheType, style, () =>
                 {
                     Assert.True(package.TryResolve<IEffectRecord>(objEffect2.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, objEffect2.FormKey);
-                }
+                });
+                WrapPotentialThrow(cacheType, style, () =>
                 {
                     Assert.True(package.TryResolve<IEffectRecord>(objEffect2.EditorID, out var rec));
                     Assert.Equal(rec.FormKey, objEffect2.FormKey);
-                }
+                });
+                WrapPotentialThrow(cacheType, style, () =>
                 {
                     Assert.True(package.TryResolve<IObjectEffect>(objEffect1.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, objEffect1.FormKey);
-                }
+                });
+                WrapPotentialThrow(cacheType, style, () =>
                 {
                     Assert.True(package.TryResolve<IObjectEffect>(objEffect1.EditorID, out var rec));
                     Assert.Equal(rec.FormKey, objEffect1.FormKey);
-                }
+                });
+                WrapPotentialThrow(cacheType, style, () =>
                 {
                     Assert.True(package.TryResolve<IObjectEffect>(objEffect2.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, objEffect2.FormKey);
-                }
+                });
+                WrapPotentialThrow(cacheType, style, () =>
                 {
                     Assert.True(package.TryResolve<IObjectEffect>(objEffect2.EditorID, out var rec));
                     Assert.Equal(rec.FormKey, objEffect2.FormKey);
-                }
+                });
+                WrapPotentialThrow(cacheType, style, () =>
                 {
                     Assert.True(package.TryResolve<ObjectEffect>(objEffect1.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, objEffect1.FormKey);
-                }
+                });
+                WrapPotentialThrow(cacheType, style, () =>
                 {
                     Assert.True(package.TryResolve<ObjectEffect>(objEffect1.EditorID, out var rec));
                     Assert.Equal(rec.FormKey, objEffect1.FormKey);
-                }
+                });
+                WrapPotentialThrow(cacheType, style, () =>
                 {
                     Assert.True(package.TryResolve<ObjectEffect>(objEffect2.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, objEffect2.FormKey);
-                }
+                });
+                WrapPotentialThrow(cacheType, style, () =>
                 {
                     Assert.True(package.TryResolve<ObjectEffect>(objEffect2.EditorID, out var rec));
                     Assert.Equal(rec.FormKey, objEffect2.FormKey);
-                }
+                });
             }
         }
 
-        [Fact]
-        public void LoadOrder_OneInEach()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void LoadOrder_OneInEach(LinkCacheTestTypes cacheType)
         {
             var prototype1 = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var prototype2 = new SkyrimMod(new ModKey("Dummy2", ModType.Master), SkyrimRelease.SkyrimLE);
@@ -539,162 +738,231 @@ namespace Mutagen.Bethesda.UnitTests
             var loadOrder = new LoadOrder<ISkyrimModGetter>();
             loadOrder.Add(mod1);
             loadOrder.Add(mod2);
-            var package = GetLinkCache(loadOrder);
+            var (style, package) = GetLinkCache(loadOrder, cacheType);
 
             // Test query successes
 
             // Do linked interfaces first, as this tests a specific edge case
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<IEffectRecordGetter>(objEffect1.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<IEffectRecordGetter>(objEffect1.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<IEffectRecordGetter>(objEffect2.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<IEffectRecordGetter>(objEffect2.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
-            }
-
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve(objEffect1.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve(objEffect1.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve(objEffect2.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve(objEffect2.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<IMajorRecordCommonGetter>(objEffect1.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<IMajorRecordCommonGetter>(objEffect1.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<IMajorRecordCommonGetter>(objEffect2.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<IMajorRecordCommonGetter>(objEffect2.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(objEffect1.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(objEffect1.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(objEffect2.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(objEffect2.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<IObjectEffectGetter>(objEffect1.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<IObjectEffectGetter>(objEffect1.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<IObjectEffectGetter>(objEffect2.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<IObjectEffectGetter>(objEffect2.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
-            }
+            });
             if (ReadOnly)
             {
-                Assert.False(package.TryResolve<ObjectEffect>(objEffect1.FormKey, out var _));
-                Assert.False(package.TryResolve<ObjectEffect>(objEffect2.FormKey, out var _));
-                Assert.False(package.TryResolve<IObjectEffect>(objEffect1.FormKey, out var _));
-                Assert.False(package.TryResolve<IObjectEffect>(objEffect2.FormKey, out var _));
-                Assert.False(package.TryResolve<IEffectRecord>(objEffect1.FormKey, out var _));
-                Assert.False(package.TryResolve<IEffectRecord>(objEffect2.FormKey, out var _));
-                Assert.False(package.TryResolve<ObjectEffect>(objEffect1.EditorID, out var _));
-                Assert.False(package.TryResolve<ObjectEffect>(objEffect2.EditorID, out var _));
-                Assert.False(package.TryResolve<IObjectEffect>(objEffect1.EditorID, out var _));
-                Assert.False(package.TryResolve<IObjectEffect>(objEffect2.EditorID, out var _));
-                Assert.False(package.TryResolve<IEffectRecord>(objEffect1.EditorID, out var _));
-                Assert.False(package.TryResolve<IEffectRecord>(objEffect2.EditorID, out var _));
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<ObjectEffect>(objEffect1.FormKey, out var _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<ObjectEffect>(objEffect2.FormKey, out var _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<IObjectEffect>(objEffect1.FormKey, out var _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<IObjectEffect>(objEffect2.FormKey, out var _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<IEffectRecord>(objEffect1.FormKey, out var _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<IEffectRecord>(objEffect2.FormKey, out var _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<ObjectEffect>(objEffect1.EditorID, out var _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<ObjectEffect>(objEffect2.EditorID, out var _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<IObjectEffect>(objEffect1.EditorID, out var _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<IObjectEffect>(objEffect2.EditorID, out var _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<IEffectRecord>(objEffect1.EditorID, out var _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<IEffectRecord>(objEffect2.EditorID, out var _));
+                });
             }
             else
             {
+                WrapPotentialThrow(cacheType, style, () =>
                 {
                     Assert.True(package.TryResolve<ObjectEffect>(objEffect1.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, objEffect1.FormKey);
-                }
+                });
+                WrapPotentialThrow(cacheType, style, () =>
                 {
                     Assert.True(package.TryResolve<ObjectEffect>(objEffect1.EditorID, out var rec));
                     Assert.Equal(rec.FormKey, objEffect1.FormKey);
-                }
+                });
+                WrapPotentialThrow(cacheType, style, () =>
                 {
                     Assert.True(package.TryResolve<ObjectEffect>(objEffect2.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, objEffect2.FormKey);
-                }
+                });
+                WrapPotentialThrow(cacheType, style, () =>
                 {
                     Assert.True(package.TryResolve<ObjectEffect>(objEffect2.EditorID, out var rec));
                     Assert.Equal(rec.FormKey, objEffect2.FormKey);
-                }
+                });
+                WrapPotentialThrow(cacheType, style, () =>
                 {
                     Assert.True(package.TryResolve<IObjectEffect>(objEffect1.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, objEffect1.FormKey);
-                }
+                });
+                WrapPotentialThrow(cacheType, style, () =>
                 {
                     Assert.True(package.TryResolve<IObjectEffect>(objEffect1.EditorID, out var rec));
                     Assert.Equal(rec.FormKey, objEffect1.FormKey);
-                }
+                });
+                WrapPotentialThrow(cacheType, style, () =>
                 {
                     Assert.True(package.TryResolve<IObjectEffect>(objEffect2.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, objEffect2.FormKey);
-                }
+                });
+                WrapPotentialThrow(cacheType, style, () =>
                 {
                     Assert.True(package.TryResolve<IObjectEffect>(objEffect2.EditorID, out var rec));
                     Assert.Equal(rec.FormKey, objEffect2.FormKey);
-                }
+                });
+                WrapPotentialThrow(cacheType, style, () =>
                 {
                     Assert.True(package.TryResolve<IEffectRecord>(objEffect1.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, objEffect1.FormKey);
-                }
+                });
+                WrapPotentialThrow(cacheType, style, () =>
                 {
                     Assert.True(package.TryResolve<IEffectRecord>(objEffect1.EditorID, out var rec));
                     Assert.Equal(rec.FormKey, objEffect1.FormKey);
-                }
+                });
+                WrapPotentialThrow(cacheType, style, () =>
                 {
                     Assert.True(package.TryResolve<IEffectRecord>(objEffect2.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, objEffect2.FormKey);
-                }
+                });
+                WrapPotentialThrow(cacheType, style, () =>
                 {
                     Assert.True(package.TryResolve<IEffectRecord>(objEffect2.EditorID, out var rec));
                     Assert.Equal(rec.FormKey, objEffect2.FormKey);
-                }
+                });
             }
         }
 
-        [Fact]
-        public void LoadOrder_Overridden()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void LoadOrder_Overridden(LinkCacheTestTypes cacheType)
         {
             var prototype1 = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var prototype2 = new SkyrimMod(new ModKey("Dummy2", ModType.Master), SkyrimRelease.SkyrimLE);
@@ -710,206 +978,412 @@ namespace Mutagen.Bethesda.UnitTests
                 mod1,
                 mod2
             };
-            var package = GetLinkCache(loadOrder);
+            var (style, package) = GetLinkCache(loadOrder, cacheType);
 
             // Test query successes
 
             // Do linked interfaces first, as this tests a specific edge case
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<IEffectRecordGetter>(overriddenRec.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, overrideRec.FormKey);
-                Assert.True(package.TryResolve<IEffectRecordGetter>(unoverriddenRec.FormKey, out rec));
+            });
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(package.TryResolve<IEffectRecordGetter>(unoverriddenRec.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
-                Assert.True(package.TryResolve<IEffectRecordGetter>(topModRec.FormKey, out rec));
+            });
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(package.TryResolve<IEffectRecordGetter>(topModRec.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, topModRec.FormKey);
-                Assert.True(package.TryResolve<IEffectRecordGetter>(overriddenRec.EditorID, out rec));
+            });
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(package.TryResolve<IEffectRecordGetter>(overriddenRec.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, overrideRec.FormKey);
-                Assert.True(package.TryResolve<IEffectRecordGetter>(unoverriddenRec.EditorID, out rec));
+            });
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(package.TryResolve<IEffectRecordGetter>(unoverriddenRec.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
-                Assert.True(package.TryResolve<IEffectRecordGetter>(topModRec.EditorID, out rec));
+            });
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(package.TryResolve<IEffectRecordGetter>(topModRec.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, topModRec.FormKey);
-            }
+            });
 
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve(overriddenRec.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, overrideRec.FormKey);
-                Assert.True(package.TryResolve(unoverriddenRec.FormKey, out rec));
+            });
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(package.TryResolve(unoverriddenRec.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
-                Assert.True(package.TryResolve(topModRec.FormKey, out rec));
+            });
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(package.TryResolve(topModRec.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, topModRec.FormKey);
-                Assert.True(package.TryResolve(overriddenRec.EditorID, out rec));
+            });
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(package.TryResolve(overriddenRec.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, overrideRec.FormKey);
-                Assert.True(package.TryResolve(unoverriddenRec.EditorID, out rec));
+            });
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(package.TryResolve(unoverriddenRec.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
-                Assert.True(package.TryResolve(topModRec.EditorID, out rec));
+            });
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(package.TryResolve(topModRec.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, topModRec.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<IMajorRecordCommonGetter>(overriddenRec.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, overrideRec.FormKey);
-                Assert.True(package.TryResolve<IMajorRecordCommonGetter>(unoverriddenRec.FormKey, out rec));
+            });
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(package.TryResolve<IMajorRecordCommonGetter>(unoverriddenRec.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
-                Assert.True(package.TryResolve<IMajorRecordCommonGetter>(topModRec.FormKey, out rec));
+            });
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(package.TryResolve<IMajorRecordCommonGetter>(topModRec.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, topModRec.FormKey);
-                Assert.True(package.TryResolve<IMajorRecordCommonGetter>(overriddenRec.EditorID, out rec));
+            });
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(package.TryResolve<IMajorRecordCommonGetter>(overriddenRec.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, overrideRec.FormKey);
-                Assert.True(package.TryResolve<IMajorRecordCommonGetter>(unoverriddenRec.EditorID, out rec));
+            });
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(package.TryResolve<IMajorRecordCommonGetter>(unoverriddenRec.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
-                Assert.True(package.TryResolve<IMajorRecordCommonGetter>(topModRec.EditorID, out rec));
+            });
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(package.TryResolve<IMajorRecordCommonGetter>(topModRec.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, topModRec.FormKey);
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(overriddenRec.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, overrideRec.FormKey);
-                Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(unoverriddenRec.FormKey, out rec));
+            });
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(unoverriddenRec.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
-                Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(topModRec.FormKey, out rec));
+            });
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(topModRec.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, topModRec.FormKey);
-                Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(overriddenRec.EditorID, out rec));
+            });
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(overriddenRec.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, overrideRec.FormKey);
-                Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(unoverriddenRec.EditorID, out rec));
+            });
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(unoverriddenRec.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
-                Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(topModRec.EditorID, out rec));
+            });
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(topModRec.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, topModRec.FormKey);
-            }
+            });
+
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(package.TryResolve<IObjectEffectGetter>(overriddenRec.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, overrideRec.FormKey);
-                Assert.True(package.TryResolve<IObjectEffectGetter>(unoverriddenRec.FormKey, out rec));
+            });
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(package.TryResolve<IObjectEffectGetter>(unoverriddenRec.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
-                Assert.True(package.TryResolve<IObjectEffectGetter>(topModRec.FormKey, out rec));
+            });
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(package.TryResolve<IObjectEffectGetter>(topModRec.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, topModRec.FormKey);
-                Assert.True(package.TryResolve<IObjectEffectGetter>(overriddenRec.EditorID, out rec));
+            });
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(package.TryResolve<IObjectEffectGetter>(overriddenRec.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, overrideRec.FormKey);
-                Assert.True(package.TryResolve<IObjectEffectGetter>(unoverriddenRec.EditorID, out rec));
+            });
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(package.TryResolve<IObjectEffectGetter>(unoverriddenRec.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
-                Assert.True(package.TryResolve<IObjectEffectGetter>(topModRec.EditorID, out rec));
+            });
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(package.TryResolve<IObjectEffectGetter>(topModRec.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, topModRec.FormKey);
-            }
+            });
+
             if (ReadOnly)
             {
-                Assert.False(package.TryResolve<IObjectEffect>(overriddenRec.FormKey, out var _));
-                Assert.False(package.TryResolve<IObjectEffect>(unoverriddenRec.FormKey, out _));
-                Assert.False(package.TryResolve<IObjectEffect>(topModRec.FormKey, out _));
-                Assert.False(package.TryResolve<ObjectEffect>(overriddenRec.FormKey, out var _));
-                Assert.False(package.TryResolve<ObjectEffect>(unoverriddenRec.FormKey, out _));
-                Assert.False(package.TryResolve<ObjectEffect>(topModRec.FormKey, out _));
-                Assert.False(package.TryResolve<IEffectRecord>(overriddenRec.FormKey, out var _));
-                Assert.False(package.TryResolve<IEffectRecord>(unoverriddenRec.FormKey, out _));
-                Assert.False(package.TryResolve<IEffectRecord>(topModRec.FormKey, out _));
-                Assert.False(package.TryResolve<IObjectEffect>(overriddenRec.EditorID, out var _));
-                Assert.False(package.TryResolve<IObjectEffect>(unoverriddenRec.EditorID, out _));
-                Assert.False(package.TryResolve<IObjectEffect>(topModRec.EditorID, out _));
-                Assert.False(package.TryResolve<ObjectEffect>(overriddenRec.EditorID, out var _));
-                Assert.False(package.TryResolve<ObjectEffect>(unoverriddenRec.EditorID, out _));
-                Assert.False(package.TryResolve<ObjectEffect>(topModRec.EditorID, out _));
-                Assert.False(package.TryResolve<IEffectRecord>(overriddenRec.EditorID, out var _));
-                Assert.False(package.TryResolve<IEffectRecord>(unoverriddenRec.EditorID, out _));
-                Assert.False(package.TryResolve<IEffectRecord>(topModRec.EditorID, out _));
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<IObjectEffect>(overriddenRec.FormKey, out var _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<IObjectEffect>(unoverriddenRec.FormKey, out _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<IObjectEffect>(topModRec.FormKey, out _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<ObjectEffect>(overriddenRec.FormKey, out var _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<ObjectEffect>(unoverriddenRec.FormKey, out _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<ObjectEffect>(topModRec.FormKey, out _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<IEffectRecord>(overriddenRec.FormKey, out var _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<IEffectRecord>(unoverriddenRec.FormKey, out _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<IEffectRecord>(topModRec.FormKey, out _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<IObjectEffect>(overriddenRec.EditorID, out var _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<IObjectEffect>(unoverriddenRec.EditorID, out _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<IObjectEffect>(topModRec.EditorID, out _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<ObjectEffect>(overriddenRec.EditorID, out var _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<ObjectEffect>(unoverriddenRec.EditorID, out _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<ObjectEffect>(topModRec.EditorID, out _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<IEffectRecord>(overriddenRec.EditorID, out var _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<IEffectRecord>(unoverriddenRec.EditorID, out _));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<IEffectRecord>(topModRec.EditorID, out _));
+                });
             }
             else
             {
+                WrapPotentialThrow(cacheType, style, () =>
                 {
                     Assert.True(package.TryResolve<IObjectEffect>(overriddenRec.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, overrideRec.FormKey);
-                    Assert.True(package.TryResolve<IObjectEffect>(unoverriddenRec.FormKey, out rec));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.True(package.TryResolve<IObjectEffect>(unoverriddenRec.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
-                    Assert.True(package.TryResolve<IObjectEffect>(topModRec.FormKey, out rec));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.True(package.TryResolve<IObjectEffect>(topModRec.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, topModRec.FormKey);
-                    Assert.True(package.TryResolve<IObjectEffect>(overriddenRec.EditorID, out rec));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.True(package.TryResolve<IObjectEffect>(overriddenRec.EditorID, out var rec));
                     Assert.Equal(rec.FormKey, overrideRec.FormKey);
-                    Assert.True(package.TryResolve<IObjectEffect>(unoverriddenRec.EditorID, out rec));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.True(package.TryResolve<IObjectEffect>(unoverriddenRec.EditorID, out var rec));
                     Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
-                    Assert.True(package.TryResolve<IObjectEffect>(topModRec.EditorID, out rec));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.True(package.TryResolve<IObjectEffect>(topModRec.EditorID, out var rec));
                     Assert.Equal(rec.FormKey, topModRec.FormKey);
-                }
+                });
+                WrapPotentialThrow(cacheType, style, () =>
                 {
                     Assert.True(package.TryResolve<ObjectEffect>(overriddenRec.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, overrideRec.FormKey);
-                    Assert.True(package.TryResolve<ObjectEffect>(unoverriddenRec.FormKey, out rec));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.True(package.TryResolve<ObjectEffect>(unoverriddenRec.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
-                    Assert.True(package.TryResolve<ObjectEffect>(topModRec.FormKey, out rec));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.True(package.TryResolve<ObjectEffect>(topModRec.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, topModRec.FormKey);
-                    Assert.True(package.TryResolve<ObjectEffect>(overriddenRec.EditorID, out rec));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.True(package.TryResolve<ObjectEffect>(overriddenRec.EditorID, out var rec));
                     Assert.Equal(rec.FormKey, overrideRec.FormKey);
-                    Assert.True(package.TryResolve<ObjectEffect>(unoverriddenRec.EditorID, out rec));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.True(package.TryResolve<ObjectEffect>(unoverriddenRec.EditorID, out var rec));
                     Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
-                    Assert.True(package.TryResolve<ObjectEffect>(topModRec.EditorID, out rec));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.True(package.TryResolve<ObjectEffect>(topModRec.EditorID, out var rec));
                     Assert.Equal(rec.FormKey, topModRec.FormKey);
-                }
+                });
+
+                WrapPotentialThrow(cacheType, style, () =>
                 {
                     Assert.True(package.TryResolve<IEffectRecord>(overriddenRec.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, overrideRec.FormKey);
-                    Assert.True(package.TryResolve<IEffectRecord>(unoverriddenRec.FormKey, out rec));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.True(package.TryResolve<IEffectRecord>(unoverriddenRec.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
-                    Assert.True(package.TryResolve<IEffectRecord>(topModRec.FormKey, out rec));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.True(package.TryResolve<IEffectRecord>(topModRec.FormKey, out var rec));
                     Assert.Equal(rec.FormKey, topModRec.FormKey);
-                    Assert.True(package.TryResolve<IEffectRecord>(overriddenRec.EditorID, out rec));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.True(package.TryResolve<IEffectRecord>(overriddenRec.EditorID, out var rec));
                     Assert.Equal(rec.FormKey, overrideRec.FormKey);
-                    Assert.True(package.TryResolve<IEffectRecord>(unoverriddenRec.EditorID, out rec));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.True(package.TryResolve<IEffectRecord>(unoverriddenRec.EditorID, out var rec));
                     Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
-                    Assert.True(package.TryResolve<IEffectRecord>(topModRec.EditorID, out rec));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.True(package.TryResolve<IEffectRecord>(topModRec.EditorID, out var rec));
                     Assert.Equal(rec.FormKey, topModRec.FormKey);
-                }
+                });
             }
         }
 
-        [Fact]
-        public void LoadOrder_ReadOnlyMechanics()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void LoadOrder_ReadOnlyMechanics(LinkCacheTestTypes cacheType)
         {
             var wrapper = SkyrimMod.CreateFromBinaryOverlay(Utility.SkyrimTestMod, SkyrimRelease.SkyrimSE);
             var overrideWrapper = SkyrimMod.CreateFromBinaryOverlay(Utility.SkyrimOverrideMod, SkyrimRelease.SkyrimSE);
             var loadOrder = new LoadOrder<ISkyrimModGetter>();
             loadOrder.Add(wrapper);
             loadOrder.Add(overrideWrapper);
-            var package = GetLinkCache(loadOrder);
+            var (style, package) = GetLinkCache(loadOrder, cacheType);
             {
-                Assert.True(package.TryResolve<INpcGetter>(TestFileFormKey, out var rec));
-                Assert.True(package.TryResolve<INpcGetter>(TestFileFormKey2, out rec));
-                Assert.True(rec.Name.TryGet(out var name));
-                Assert.Equal("A Name", name.String);
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.True(package.TryResolve<INpcGetter>(TestFileFormKey, out var rec));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.True(package.TryResolve<INpcGetter>(TestFileFormKey2, out var rec));
+                    Assert.True(rec.Name.TryGet(out var name));
+                    Assert.Equal("A Name", name.String);
+                });
             }
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.False(package.TryResolve<INpc>(TestFileFormKey, out var rec));
                 Assert.False(package.TryResolve<INpc>(TestFileFormKey2, out rec));
-            }
+            });
+            WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.False(package.TryResolve<Npc>(TestFileFormKey, out var rec));
                 Assert.False(package.TryResolve<Npc>(TestFileFormKey2, out rec));
-            }
+            });
         }
         #endregion
 
         #region Direct FormLink Resolves
-        [Fact]
-        public void FormLink_Direct_TryResolve_NoLink()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_Direct_TryResolve_NoLink(LinkCacheTestTypes cacheType)
         {
             var formLink = new FormLink<INpcGetter>(UnusedFormKey);
-            var package = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE));
+            var (style, package) = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
             Assert.False(formLink.TryResolve(package, out var _));
         }
 
-        [Fact]
-        public void FormLink_Direct_TryResolve_Linked()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_Direct_TryResolve_Linked(LinkCacheTestTypes cacheType)
         {
             var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var npc = mod.Npcs.AddNew();
-            var package = GetLinkCache(mod);
+            var (style, package) = GetLinkCache(mod, cacheType);
             FormLink<INpc> formLink = new FormLink<INpc>(npc.FormKey);
-            Assert.True(formLink.TryResolve(package, out var linkedRec));
-            Assert.Same(npc, linkedRec);
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(formLink.TryResolve(package, out var linkedRec));
+                Assert.Same(npc, linkedRec);
+            });
         }
 
-        [Fact]
-        public void FormLink_Direct_TryResolve_DeepRecord_NoLink()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_Direct_TryResolve_DeepRecord_NoLink(LinkCacheTestTypes cacheType)
         {
             var formLink = new FormLink<IPlacedNpcGetter>(UnusedFormKey);
-            var package = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE));
+            var (style, package) = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
             Assert.False(formLink.TryResolve(package, out var _));
         }
 
-        [Fact]
-        public void FormLink_Direct_TryResolve_DeepRecord_Linked()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_Direct_TryResolve_DeepRecord_Linked(LinkCacheTestTypes cacheType)
         {
             var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var worldspace = mod.Worldspaces.AddNew();
@@ -921,46 +1395,66 @@ namespace Mutagen.Bethesda.UnitTests
             var block = new WorldspaceBlock();
             block.Items.Add(subBlock);
             worldspace.SubCells.Add(block);
-            var package = GetLinkCache(mod);
+            var (style, package) = GetLinkCache(mod, cacheType);
             var placedFormLink = new FormLink<IPlacedNpcGetter>(placedNpc.FormKey);
-            Assert.True(placedFormLink.TryResolve(package, out var linkedPlacedNpc));
-            Assert.Same(placedNpc, linkedPlacedNpc);
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(placedFormLink.TryResolve(package, out var linkedPlacedNpc));
+                Assert.Same(placedNpc, linkedPlacedNpc);
+            });
             var cellFormLink = new FormLink<ICellGetter>(cell.FormKey);
-            Assert.True(cellFormLink.TryResolve(package, out var linkedCell));
-            Assert.Same(cell, linkedCell);
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(cellFormLink.TryResolve(package, out var linkedCell));
+                Assert.Same(cell, linkedCell);
+            });
             var worldspaceFormLink = new FormLink<IWorldspaceGetter>(worldspace.FormKey);
-            Assert.True(worldspaceFormLink.TryResolve(package, out var linkedWorldspace));
-            Assert.Same(worldspace, linkedWorldspace);
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(worldspaceFormLink.TryResolve(package, out var linkedWorldspace));
+                Assert.Same(worldspace, linkedWorldspace);
+            });
         }
 
-        [Fact]
-        public void FormLink_Direct_Resolve_NoLink()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_Direct_Resolve_NoLink(LinkCacheTestTypes cacheType)
         {
             var formLink = new FormLink<INpcGetter>(UnusedFormKey);
-            var package = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE));
+            var (style, package) = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
             Assert.Null(formLink.Resolve(package));
         }
 
-        [Fact]
-        public void FormLink_Direct_Resolve_Linked()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_Direct_Resolve_Linked(LinkCacheTestTypes cacheType)
         {
             var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var npc = mod.Npcs.AddNew();
-            var package = GetLinkCache(mod);
+            var (style, package) = GetLinkCache(mod, cacheType);
             FormLink<INpc> formLink = new FormLink<INpc>(npc.FormKey);
-            Assert.Same(npc, formLink.Resolve(package));
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.Same(npc, formLink.Resolve(package));
+            });
         }
 
-        [Fact]
-        public void FormLink_Direct_Resolve_DeepRecord_NoLink()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_Direct_Resolve_DeepRecord_NoLink(LinkCacheTestTypes cacheType)
         {
             var formLink = new FormLink<IPlacedNpcGetter>(UnusedFormKey);
-            var package = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE));
+            var (style, package) = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
             Assert.Null(formLink.Resolve(package));
         }
 
-        [Fact]
-        public void FormLink_Direct_Resolve_DeepRecord_Linked()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_Direct_Resolve_DeepRecord_Linked(LinkCacheTestTypes cacheType)
         {
             var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var worldspace = mod.Worldspaces.AddNew();
@@ -972,44 +1466,64 @@ namespace Mutagen.Bethesda.UnitTests
             var block = new WorldspaceBlock();
             block.Items.Add(subBlock);
             worldspace.SubCells.Add(block);
-            var package = GetLinkCache(mod);
+            var (style, package) = GetLinkCache(mod, cacheType);
             var placedFormLink = new FormLink<IPlacedNpcGetter>(placedNpc.FormKey);
-            Assert.Same(placedNpc, placedFormLink.Resolve(package));
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.Same(placedNpc, placedFormLink.Resolve(package));
+            });
             var cellFormLink = new FormLink<ICellGetter>(cell.FormKey);
-            Assert.Same(cell, cellFormLink.Resolve(package));
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.Same(cell, cellFormLink.Resolve(package));
+            });
             var worldspaceFormLink = new FormLink<IWorldspaceGetter>(worldspace.FormKey);
-            Assert.Same(worldspace, worldspaceFormLink.Resolve(package));
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.Same(worldspace, worldspaceFormLink.Resolve(package));
+            });
         }
 
-        [Fact]
-        public void FormLink_Direct_TryResolve_MarkerInterface()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_Direct_TryResolve_MarkerInterface(LinkCacheTestTypes cacheType)
         {
             var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var spell = mod.Spells.AddNew();
-            var package = GetLinkCache(mod);
+            var (style, package) = GetLinkCache(mod, cacheType);
             var formLink = new FormLink<IEffectRecordGetter>(spell.FormKey);
-            Assert.True(formLink.TryResolve(package, out var linkedRec));
-            Assert.Same(spell, linkedRec);
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(formLink.TryResolve(package, out var linkedRec));
+                Assert.Same(spell, linkedRec);
+            });
         }
 
-        [Fact]
-        public void FormLink_Direct_TryResolve_MarkerInterface_NoLink()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_Direct_TryResolve_MarkerInterface_NoLink(LinkCacheTestTypes cacheType)
         {
             var formLink = new FormLink<IEffectRecordGetter>(UnusedFormKey);
-            var package = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE));
+            var (style, package) = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
             Assert.False(formLink.TryResolve(package, out var _));
         }
 
-        [Fact]
-        public void FormLink_Direct_TryResolve_MarkerInterface_DeepRecord_NoLink()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_Direct_TryResolve_MarkerInterface_DeepRecord_NoLink(LinkCacheTestTypes cacheType)
         {
             var formLink = new FormLink<IPlacedGetter>(UnusedFormKey);
-            var package = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE));
+            var (style, package) = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
             Assert.False(formLink.TryResolve(package, out var _));
         }
 
-        [Fact]
-        public void FormLink_Direct_TryResolve_MarkerInterface_DeepRecord_Linked()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_Direct_TryResolve_MarkerInterface_DeepRecord_Linked(LinkCacheTestTypes cacheType)
         {
             var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var worldspace = mod.Worldspaces.AddNew();
@@ -1021,46 +1535,66 @@ namespace Mutagen.Bethesda.UnitTests
             var block = new WorldspaceBlock();
             block.Items.Add(subBlock);
             worldspace.SubCells.Add(block);
-            var package = GetLinkCache(mod);
+            var (style, package) = GetLinkCache(mod, cacheType);
             var placedFormLink = new FormLink<IPlacedGetter>(placedNpc.FormKey);
-            Assert.True(placedFormLink.TryResolve(package, out var linkedPlacedNpc));
-            Assert.Same(placedNpc, linkedPlacedNpc);
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(placedFormLink.TryResolve(package, out var linkedPlacedNpc));
+                Assert.Same(placedNpc, linkedPlacedNpc);
+            });
             var cellFormLink = new FormLink<ICellGetter>(cell.FormKey);
-            Assert.True(cellFormLink.TryResolve(package, out var linkedCell));
-            Assert.Same(cell, linkedCell);
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(cellFormLink.TryResolve(package, out var linkedCell));
+                Assert.Same(cell, linkedCell);
+            });
             var worldspaceFormLink = new FormLink<IWorldspaceGetter>(worldspace.FormKey);
-            Assert.True(worldspaceFormLink.TryResolve(package, out var linkedWorldspace));
-            Assert.Same(worldspace, linkedWorldspace);
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(worldspaceFormLink.TryResolve(package, out var linkedWorldspace));
+                Assert.Same(worldspace, linkedWorldspace);
+            });
         }
 
-        [Fact]
-        public void FormLink_Direct_Resolve_MarkerInterface()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_Direct_Resolve_MarkerInterface(LinkCacheTestTypes cacheType)
         {
             var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var spell = mod.Spells.AddNew();
-            var package = GetLinkCache(mod);
+            var (style, package) = GetLinkCache(mod, cacheType);
             var formLink = new FormLink<IEffectRecordGetter>(spell.FormKey);
-            Assert.Same(spell, formLink.Resolve(package));
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.Same(spell, formLink.Resolve(package));
+            });
         }
 
-        [Fact]
-        public void FormLink_Direct_Resolve_MarkerInterface_NoLink()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_Direct_Resolve_MarkerInterface_NoLink(LinkCacheTestTypes cacheType)
         {
             var formLink = new FormLink<IEffectRecordGetter>(UnusedFormKey);
-            var package = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE));
+            var (style, package) = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
             Assert.Null(formLink.Resolve(package));
         }
 
-        [Fact]
-        public void FormLink_Direct_Resolve_MarkerInterface_DeepRecord_NoLink()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_Direct_Resolve_MarkerInterface_DeepRecord_NoLink(LinkCacheTestTypes cacheType)
         {
             var formLink = new FormLink<IPlacedGetter>(UnusedFormKey);
-            var package = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE));
+            var (style, package) = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
             Assert.Null(formLink.Resolve(package));
         }
 
-        [Fact]
-        public void FormLink_Direct_Resolve_MarkerInterface_DeepRecord_Linked()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_Direct_Resolve_MarkerInterface_DeepRecord_Linked(LinkCacheTestTypes cacheType)
         {
             var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var worldspace = mod.Worldspaces.AddNew();
@@ -1072,13 +1606,22 @@ namespace Mutagen.Bethesda.UnitTests
             var block = new WorldspaceBlock();
             block.Items.Add(subBlock);
             worldspace.SubCells.Add(block);
-            var package = GetLinkCache(mod);
+            var (style, package) = GetLinkCache(mod, cacheType);
             var placedFormLink = new FormLink<IPlacedGetter>(placedNpc.FormKey);
-            Assert.Same(placedNpc, placedFormLink.Resolve(package));
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.Same(placedNpc, placedFormLink.Resolve(package));
+            });
             var cellFormLink = new FormLink<ICellGetter>(cell.FormKey);
-            Assert.Same(cell, cellFormLink.Resolve(package));
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.Same(cell, cellFormLink.Resolve(package));
+            });
             var worldspaceFormLink = new FormLink<IWorldspaceGetter>(worldspace.FormKey);
-            Assert.Same(worldspace, worldspaceFormLink.Resolve(package));
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.Same(worldspace, worldspaceFormLink.Resolve(package));
+            });
         }
         #endregion
 
@@ -1100,8 +1643,10 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.False(formLink.TryResolve(package, out var _));
         }
 
-        [Fact]
-        public void FormLink_LoadOrder_TryResolve_Linked()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_LoadOrder_TryResolve_Linked(LinkCacheTestTypes cacheType)
         {
             var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var npc = mod.Npcs.AddNew();
@@ -1110,10 +1655,13 @@ namespace Mutagen.Bethesda.UnitTests
                 mod,
                 new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimLE),
             };
-            var package = GetLinkCache(loadOrder);
+            var (style, package) = GetLinkCache(loadOrder, cacheType);
             FormLink<INpc> formLink = new FormLink<INpc>(npc.FormKey);
-            Assert.True(formLink.TryResolve(package, out var linkedRec));
-            Assert.Same(npc, linkedRec);
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(formLink.TryResolve(package, out var linkedRec));
+                Assert.Same(npc, linkedRec);
+            });
         }
 
         [Fact]
@@ -1124,8 +1672,10 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.False(formLink.TryResolve(package, out var _));
         }
 
-        [Fact]
-        public void FormLink_LoadOrder_TryResolve_DeepRecord_Linked()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_LoadOrder_TryResolve_DeepRecord_Linked(LinkCacheTestTypes cacheType)
         {
             var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var worldspace = mod.Worldspaces.AddNew();
@@ -1142,16 +1692,25 @@ namespace Mutagen.Bethesda.UnitTests
                 mod,
                 new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimLE),
             };
-            var package = GetLinkCache(loadOrder);
+            var (style, package) = GetLinkCache(loadOrder, cacheType);
             FormLink<IPlacedNpc> placedFormLink = new FormLink<IPlacedNpc>(placedNpc.FormKey);
-            Assert.True(placedFormLink.TryResolve(package, out var linkedPlacedNpc));
-            Assert.Same(placedNpc, linkedPlacedNpc);
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(placedFormLink.TryResolve(package, out var linkedPlacedNpc));
+                Assert.Same(placedNpc, linkedPlacedNpc);
+            });
             FormLink<ICell> cellFormLink = new FormLink<ICell>(cell.FormKey);
-            Assert.True(cellFormLink.TryResolve(package, out var linkedCell));
-            Assert.Same(cell, linkedCell);
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(cellFormLink.TryResolve(package, out var linkedCell));
+                Assert.Same(cell, linkedCell);
+            });
             FormLink<IWorldspace> worldspaceFormLink = new FormLink<IWorldspace>(worldspace.FormKey);
-            Assert.True(worldspaceFormLink.TryResolve(package, out var linkedWorldspace));
-            Assert.Same(worldspace, linkedWorldspace);
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(worldspaceFormLink.TryResolve(package, out var linkedWorldspace));
+                Assert.Same(worldspace, linkedWorldspace);
+            });
         }
 
         [Fact]
@@ -1162,8 +1721,10 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.Null(formLink.Resolve(package));
         }
 
-        [Fact]
-        public void FormLink_LoadOrder_Resolve_Linked()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_LoadOrder_Resolve_Linked(LinkCacheTestTypes cacheType)
         {
             var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var npc = mod.Npcs.AddNew();
@@ -1172,9 +1733,12 @@ namespace Mutagen.Bethesda.UnitTests
                 mod,
                 new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimLE),
             };
-            var package = GetLinkCache(loadOrder);
+            var (style, package) = GetLinkCache(loadOrder, cacheType);
             FormLink<INpc> formLink = new FormLink<INpc>(npc.FormKey);
-            Assert.Same(npc, formLink.Resolve(package));
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.Same(npc, formLink.Resolve(package));
+            });
         }
 
         [Fact]
@@ -1185,8 +1749,10 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.Null(formLink.Resolve(package));
         }
 
-        [Fact]
-        public void FormLink_LoadOrder_Resolve_DeepRecord_Linked()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_LoadOrder_Resolve_DeepRecord_Linked(LinkCacheTestTypes cacheType)
         {
             var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var worldspace = mod.Worldspaces.AddNew();
@@ -1203,17 +1769,28 @@ namespace Mutagen.Bethesda.UnitTests
                 mod,
                 new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimLE),
             };
-            var package = GetLinkCache(loadOrder);
+            var (style, package) = GetLinkCache(loadOrder, cacheType);
             FormLink<IPlacedNpc> placedFormLink = new FormLink<IPlacedNpc>(placedNpc.FormKey);
-            Assert.Same(placedNpc, placedFormLink.Resolve(package));
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.Same(placedNpc, placedFormLink.Resolve(package));
+            });
             FormLink<ICell> cellFormLink = new FormLink<ICell>(cell.FormKey);
-            Assert.Same(cell, cellFormLink.Resolve(package));
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.Same(cell, cellFormLink.Resolve(package));
+            });
             FormLink<IWorldspace> worldspaceFormLink = new FormLink<IWorldspace>(worldspace.FormKey);
-            Assert.Same(worldspace, worldspaceFormLink.Resolve(package));
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.Same(worldspace, worldspaceFormLink.Resolve(package));
+            });
         }
 
-        [Fact]
-        public void FormLink_LoadOrder_TryResolve_MarkerInterface()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_LoadOrder_TryResolve_MarkerInterface(LinkCacheTestTypes cacheType)
         {
             var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var spell = mod.Spells.AddNew();
@@ -1222,10 +1799,13 @@ namespace Mutagen.Bethesda.UnitTests
                 mod,
                 new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimLE),
             };
-            var package = GetLinkCache(loadOrder);
+            var (style, package) = GetLinkCache(loadOrder, cacheType);
             FormLink<IEffectRecord> formLink = new FormLink<IEffectRecord>(spell.FormKey);
-            Assert.True(formLink.TryResolve(package, out var linkedRec));
-            Assert.Same(spell, linkedRec);
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(formLink.TryResolve(package, out var linkedRec));
+                Assert.Same(spell, linkedRec);
+            });
         }
 
         [Fact]
@@ -1244,8 +1824,10 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.False(formLink.TryResolve(package, out var _));
         }
 
-        [Fact]
-        public void FormLink_LoadOrder_TryResolve_MarkerInterface_DeepRecord_Linked()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_LoadOrder_TryResolve_MarkerInterface_DeepRecord_Linked(LinkCacheTestTypes cacheType)
         {
             var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var worldspace = mod.Worldspaces.AddNew();
@@ -1262,20 +1844,31 @@ namespace Mutagen.Bethesda.UnitTests
                 mod,
                 new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimLE),
             };
-            var package = GetLinkCache(loadOrder);
+            var (style, package) = GetLinkCache(loadOrder, cacheType);
             FormLink<IPlaced> placedFormLink = new FormLink<IPlaced>(placedNpc.FormKey);
-            Assert.True(placedFormLink.TryResolve(package, out var linkedPlacedNpc));
-            Assert.Same(placedNpc, linkedPlacedNpc);
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(placedFormLink.TryResolve(package, out var linkedPlacedNpc));
+                Assert.Same(placedNpc, linkedPlacedNpc);
+            });
             FormLink<ICell> cellFormLink = new FormLink<ICell>(cell.FormKey);
-            Assert.True(cellFormLink.TryResolve(package, out var linkedCell));
-            Assert.Same(cell, linkedCell);
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(cellFormLink.TryResolve(package, out var linkedCell));
+                Assert.Same(cell, linkedCell);
+            });
             FormLink<IWorldspace> worldspaceFormLink = new FormLink<IWorldspace>(worldspace.FormKey);
-            Assert.True(worldspaceFormLink.TryResolve(package, out var linkedWorldspace));
-            Assert.Same(worldspace, linkedWorldspace);
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(worldspaceFormLink.TryResolve(package, out var linkedWorldspace));
+                Assert.Same(worldspace, linkedWorldspace);
+            });
         }
 
-        [Fact]
-        public void FormLink_LoadOrder_Resolve_MarkerInterface()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_LoadOrder_Resolve_MarkerInterface(LinkCacheTestTypes cacheType)
         {
             var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var spell = mod.Spells.AddNew();
@@ -1284,9 +1877,12 @@ namespace Mutagen.Bethesda.UnitTests
                 mod,
                 new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimLE),
             };
-            var package = GetLinkCache(loadOrder);
+            var (style, package) = GetLinkCache(loadOrder, cacheType);
             FormLink<IEffectRecord> formLink = new FormLink<IEffectRecord>(spell.FormKey);
-            Assert.Same(spell, formLink.Resolve(package));
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.Same(spell, formLink.Resolve(package));
+            });
         }
 
         [Fact]
@@ -1305,8 +1901,10 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.Null(formLink.Resolve(package));
         }
 
-        [Fact]
-        public void FormLink_LoadOrder_Resolve_MarkerInterface_DeepRecord_Linked()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_LoadOrder_Resolve_MarkerInterface_DeepRecord_Linked(LinkCacheTestTypes cacheType)
         {
             var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var worldspace = mod.Worldspaces.AddNew();
@@ -1323,31 +1921,44 @@ namespace Mutagen.Bethesda.UnitTests
                 mod,
                 new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimLE),
             };
-            var package = GetLinkCache(loadOrder);
+            var (style, package) = GetLinkCache(loadOrder, cacheType);
             FormLink<IPlaced> placedFormLink = new FormLink<IPlaced>(placedNpc.FormKey);
-            Assert.Same(placedNpc, placedFormLink.Resolve(package));
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.Same(placedNpc, placedFormLink.Resolve(package));
+            });
             FormLink<ICell> cellFormLink = new FormLink<ICell>(cell.FormKey);
-            Assert.Same(cell, cellFormLink.Resolve(package));
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.Same(cell, cellFormLink.Resolve(package));
+            });
             FormLink<IWorldspace> worldspaceFormLink = new FormLink<IWorldspace>(worldspace.FormKey);
-            Assert.Same(worldspace, worldspaceFormLink.Resolve(package));
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.Same(worldspace, worldspaceFormLink.Resolve(package));
+            });
         }
         #endregion
 
         #region Direct FormLink Context Resolves
-        [Fact]
-        public void FormLink_Direct_TryResolveContext_NoLink()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_Direct_TryResolveContext_NoLink(LinkCacheTestTypes cacheType)
         {
             var formLink = new FormLink<INpcGetter>(UnusedFormKey);
-            var package = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE));
+            var (style, package) = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
             Assert.False(formLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, INpc>(package, out var _));
         }
 
-        [Fact]
-        public void FormLink_Direct_TryResolveContext_Linked()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_Direct_TryResolveContext_Linked(LinkCacheTestTypes cacheType)
         {
             var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var npc = mod.Npcs.AddNew();
-            var package = GetLinkCache(mod);
+            var (style, package) = GetLinkCache(mod, cacheType);
             var formLink = new FormLink<INpcGetter>(npc.FormKey);
             Assert.True(formLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, INpc>(package, out var linkedRec));
             linkedRec.Record.Should().BeSameAs(npc);
@@ -1355,16 +1966,20 @@ namespace Mutagen.Bethesda.UnitTests
             linkedRec.Parent.Should().BeNull();
         }
 
-        [Fact]
-        public void FormLink_Direct_TryResolveContext_DeepRecord_NoLink()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_Direct_TryResolveContext_DeepRecord_NoLink(LinkCacheTestTypes cacheType)
         {
             var formLink = new FormLink<IPlacedNpcGetter>(UnusedFormKey);
-            var package = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE));
+            var (style, package) = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
             Assert.False(formLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, IPlacedNpc>(package, out var _));
         }
 
-        [Fact]
-        public void FormLink_Direct_TryResolveContext_DeepRecord_Linked()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_Direct_TryResolveContext_DeepRecord_Linked(LinkCacheTestTypes cacheType)
         {
             var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var worldspace = mod.Worldspaces.AddNew();
@@ -1376,7 +1991,7 @@ namespace Mutagen.Bethesda.UnitTests
             var block = new WorldspaceBlock();
             block.Items.Add(subBlock);
             worldspace.SubCells.Add(block);
-            var package = GetLinkCache(mod);
+            var (style, package) = GetLinkCache(mod, cacheType);
             var placedFormLink = new FormLink<IPlacedNpcGetter>(placedNpc.FormKey);
             Assert.True(placedFormLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, IPlacedNpc>(package, out var linkedPlacedNpc));
             linkedPlacedNpc.Record.Should().BeSameAs(placedNpc);
@@ -1394,20 +2009,24 @@ namespace Mutagen.Bethesda.UnitTests
             linkedWorldspace.Parent.Should().BeNull();
         }
 
-        [Fact]
-        public void FormLink_Direct_ResolveContext_NoLink()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_Direct_ResolveContext_NoLink(LinkCacheTestTypes cacheType)
         {
             var formLink = new FormLink<INpcGetter>(UnusedFormKey);
-            var package = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE));
+            var (style, package) = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
             Assert.Null(formLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, INpc>(package));
         }
 
-        [Fact]
-        public void FormLink_Direct_ResolveContext_Linked()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_Direct_ResolveContext_Linked(LinkCacheTestTypes cacheType)
         {
             var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var npc = mod.Npcs.AddNew();
-            var package = GetLinkCache(mod);
+            var (style, package) = GetLinkCache(mod, cacheType);
             var formLink = new FormLink<INpcGetter>(npc.FormKey);
             var resolvedNpc = formLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, INpc>(package);
             resolvedNpc.Record.Should().BeSameAs(npc);
@@ -1415,16 +2034,20 @@ namespace Mutagen.Bethesda.UnitTests
             resolvedNpc.Parent.Should().BeNull();
         }
 
-        [Fact]
-        public void FormLink_Direct_ResolveContext_DeepRecord_NoLink()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_Direct_ResolveContext_DeepRecord_NoLink(LinkCacheTestTypes cacheType)
         {
             var formLink = new FormLink<IPlacedNpcGetter>(UnusedFormKey);
-            var package = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE));
+            var (style, package) = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
             Assert.Null(formLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, IPlacedNpc>(package));
         }
 
-        [Fact]
-        public void FormLink_Direct_ResolveContext_DeepRecord_Linked()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_Direct_ResolveContext_DeepRecord_Linked(LinkCacheTestTypes cacheType)
         {
             var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var worldspace = mod.Worldspaces.AddNew();
@@ -1436,7 +2059,7 @@ namespace Mutagen.Bethesda.UnitTests
             var block = new WorldspaceBlock();
             block.Items.Add(subBlock);
             worldspace.SubCells.Add(block);
-            var package = GetLinkCache(mod);
+            var (style, package) = GetLinkCache(mod, cacheType);
             var placedFormLink = new FormLink<IPlacedNpc>(placedNpc.FormKey);
             var linkedPlacedNpc = placedFormLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, IPlacedNpc>(package);
             linkedPlacedNpc.Record.Should().BeSameAs(placedNpc);
@@ -1454,12 +2077,14 @@ namespace Mutagen.Bethesda.UnitTests
             linkedWorldspace.Parent.Should().BeNull();
         }
 
-        [Fact]
-        public void FormLink_Direct_TryResolveContext_MarkerInterface()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_Direct_TryResolveContext_MarkerInterface(LinkCacheTestTypes cacheType)
         {
             var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var spell = mod.Spells.AddNew();
-            var package = GetLinkCache(mod);
+            var (style, package) = GetLinkCache(mod, cacheType);
             var formLink = new FormLink<IEffectRecordGetter>(spell.FormKey);
             Assert.True(formLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, IEffectRecord>(package, out var linkedRec));
             linkedRec.Record.Should().BeSameAs(spell);
@@ -1467,24 +2092,30 @@ namespace Mutagen.Bethesda.UnitTests
             linkedRec.Parent.Should().BeNull();
         }
 
-        [Fact]
-        public void FormLink_Direct_TryResolveContext_MarkerInterface_NoLink()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_Direct_TryResolveContext_MarkerInterface_NoLink(LinkCacheTestTypes cacheType)
         {
             var formLink = new FormLink<IEffectRecordGetter>(UnusedFormKey);
-            var package = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE));
+            var (style, package) = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
             Assert.False(formLink.TryResolve(package, out var _));
         }
 
-        [Fact]
-        public void FormLink_Direct_TryResolveContext_MarkerInterface_DeepRecord_NoLink()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_Direct_TryResolveContext_MarkerInterface_DeepRecord_NoLink(LinkCacheTestTypes cacheType)
         {
             var formLink = new FormLink<IPlacedGetter>(UnusedFormKey);
-            var package = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE));
+            var (style, package) = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
             Assert.False(formLink.TryResolve(package, out var _));
         }
 
-        [Fact]
-        public void FormLink_Direct_TryResolveContext_MarkerInterface_DeepRecord_Linked()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_Direct_TryResolveContext_MarkerInterface_DeepRecord_Linked(LinkCacheTestTypes cacheType)
         {
             var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var worldspace = mod.Worldspaces.AddNew();
@@ -1496,7 +2127,7 @@ namespace Mutagen.Bethesda.UnitTests
             var block = new WorldspaceBlock();
             block.Items.Add(subBlock);
             worldspace.SubCells.Add(block);
-            var package = GetLinkCache(mod);
+            var (style, package) = GetLinkCache(mod, cacheType);
             var placedFormLink = new FormLink<IPlacedGetter>(placedNpc.FormKey);
             Assert.True(placedFormLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, IPlaced>(package, out var linkedPlacedNpc));
             linkedPlacedNpc.Record.Should().BeSameAs(placedNpc);
@@ -1514,12 +2145,14 @@ namespace Mutagen.Bethesda.UnitTests
             linkedWorldspace.Parent.Should().BeNull();
         }
 
-        [Fact]
-        public void FormLink_Direct_ResolveContext_MarkerInterface()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_Direct_ResolveContext_MarkerInterface(LinkCacheTestTypes cacheType)
         {
             var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var spell = mod.Spells.AddNew();
-            var package = GetLinkCache(mod);
+            var (style, package) = GetLinkCache(mod, cacheType);
             var formLink = new FormLink<IEffectRecordGetter>(spell.FormKey);
             var resolved = formLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, IEffectRecord>(package);
             resolved.Record.Should().BeSameAs(spell);
@@ -1527,26 +2160,32 @@ namespace Mutagen.Bethesda.UnitTests
             resolved.Parent.Should().BeNull();
         }
 
-        [Fact]
-        public void FormLink_Direct_ResolveContext_MarkerInterface_NoLink()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_Direct_ResolveContext_MarkerInterface_NoLink(LinkCacheTestTypes cacheType)
         {
             var formLink = new FormLink<IEffectRecordGetter>(UnusedFormKey);
-            var package = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE));
+            var (style, package) = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
             var resolved = formLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, IEffectRecord>(package);
             Assert.Null(resolved);
         }
 
-        [Fact]
-        public void FormLink_Direct_ResolveContext_MarkerInterface_DeepRecord_NoLink()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_Direct_ResolveContext_MarkerInterface_DeepRecord_NoLink(LinkCacheTestTypes cacheType)
         {
             var formLink = new FormLink<IPlacedGetter>(UnusedFormKey);
-            var package = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE));
+            var (style, package) = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
             var resolved = formLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, IPlaced>(package);
             Assert.Null(resolved);
         }
 
-        [Fact]
-        public void FormLink_Direct_ResolveContext_MarkerInterface_DeepRecord_Linked()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_Direct_ResolveContext_MarkerInterface_DeepRecord_Linked(LinkCacheTestTypes cacheType)
         {
             var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var worldspace = mod.Worldspaces.AddNew();
@@ -1558,7 +2197,7 @@ namespace Mutagen.Bethesda.UnitTests
             var block = new WorldspaceBlock();
             block.Items.Add(subBlock);
             worldspace.SubCells.Add(block);
-            var package = GetLinkCache(mod);
+            var (style, package) = GetLinkCache(mod, cacheType);
             var placedFormLink = new FormLink<IPlacedGetter>(placedNpc.FormKey);
             var resolvedPlaced = placedFormLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, IPlaced>(package);
             resolvedPlaced.Record.Should().BeSameAs(placedNpc);
@@ -1578,32 +2217,41 @@ namespace Mutagen.Bethesda.UnitTests
         #endregion
 
         #region FormLink Direct ResolveAll
-        [Fact]
-        public void FormLink_Direct_ResolveAll_Empty()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_Direct_ResolveAll_Empty(LinkCacheTestTypes cacheType)
         {
             var formLink = new FormLink<IEffectRecordGetter>(UnusedFormKey);
-            var package = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE));
+            var (style, package) = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
             formLink.ResolveAll(package).Should().BeEmpty();
         }
 
-        [Fact]
-        public void FormLink_Direct_ResolveAll_Typed_Empty()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_Direct_ResolveAll_Typed_Empty(LinkCacheTestTypes cacheType)
         {
             var formLink = new FormLink<IPlacedGetter>(UnusedFormKey);
-            var package = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE));
+            var (style, package) = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
             formLink.ResolveAll<IPlacedNpcGetter>(package).Should().BeEmpty();
         }
 
-        [Fact]
-        public void FormLink_Direct_ResolveAll_Linked()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_Direct_ResolveAll_Linked(LinkCacheTestTypes cacheType)
         {
             var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var npc = mod.Npcs.AddNew();
-            var package = GetLinkCache(mod);
+            var (style, package) = GetLinkCache(mod, cacheType);
             FormLink<INpc> formLink = new FormLink<INpc>(npc.FormKey);
-            var resolved = formLink.ResolveAll(package).ToArray();
-            resolved.Should().HaveCount(1);
-            resolved.First().Should().BeSameAs(npc);
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                var resolved = formLink.ResolveAll(package).ToArray();
+                resolved.Should().HaveCount(1);
+                resolved.First().Should().BeSameAs(npc);
+            });
         }
         #endregion
 
@@ -1616,8 +2264,10 @@ namespace Mutagen.Bethesda.UnitTests
             formLink.ResolveAll(package).Should().BeEmpty();
         }
 
-        [Fact]
-        public void FormLink_LoadOrder_ResolveAll_Linked()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_LoadOrder_ResolveAll_Linked(LinkCacheTestTypes cacheType)
         {
             var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var npc = mod.Npcs.AddNew();
@@ -1626,37 +2276,20 @@ namespace Mutagen.Bethesda.UnitTests
                 mod,
                 new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimLE),
             };
-            var package = GetLinkCache(loadOrder);
+            var (style, package) = GetLinkCache(loadOrder, cacheType);
             var formLink = new FormLink<INpcGetter>(npc.FormKey);
-            var resolved = formLink.ResolveAll(package).ToArray();
-            resolved.Should().HaveCount(1);
-            resolved.First().Should().BeSameAs(npc);
-        }
-
-        [Fact]
-        public void FormLink_LoadOrder_ResolveAll_MultipleLinks()
-        {
-            var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
-            var npc = mod.Npcs.AddNew();
-            var mod2 = new SkyrimMod(Utility.PluginModKey3, SkyrimRelease.SkyrimLE);
-            var npcOverride = mod2.Npcs.GetOrAddAsOverride(npc);
-            npcOverride.FaceParts = new NpcFaceParts();
-            var loadOrder = new LoadOrder<ISkyrimModGetter>()
+            WrapPotentialThrow(cacheType, style, () =>
             {
-                mod,
-                new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimLE),
-                mod2
-            };
-            var package = GetLinkCache(loadOrder);
-            var formLink = new FormLink<INpcGetter>(npc.FormKey);
-            var resolved = formLink.ResolveAll(package).ToArray();
-            resolved.Should().HaveCount(2);
-            resolved.First().Should().BeSameAs(npcOverride);
-            resolved.Last().Should().BeSameAs(npc);
+                var resolved = formLink.ResolveAll(package).ToArray();
+                resolved.Should().HaveCount(1);
+                resolved.First().Should().BeSameAs(npc);
+            });
         }
 
-        [Fact]
-        public void FormLink_LoadOrder_ResolveAll_DoubleQuery()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_LoadOrder_ResolveAll_MultipleLinks(LinkCacheTestTypes cacheType)
         {
             var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var npc = mod.Npcs.AddNew();
@@ -1669,17 +2302,48 @@ namespace Mutagen.Bethesda.UnitTests
                 new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimLE),
                 mod2
             };
-            var package = GetLinkCache(loadOrder);
+            var (style, package) = GetLinkCache(loadOrder, cacheType);
             var formLink = new FormLink<INpcGetter>(npc.FormKey);
-            var resolved = formLink.ResolveAll(package).ToArray();
-            resolved = formLink.ResolveAll(package).ToArray();
-            resolved.Should().HaveCount(2);
-            resolved.First().Should().BeSameAs(npcOverride);
-            resolved.Last().Should().BeSameAs(npc);
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                var resolved = formLink.ResolveAll(package).ToArray();
+                resolved.Should().HaveCount(2);
+                resolved.First().Should().BeSameAs(npcOverride);
+                resolved.Last().Should().BeSameAs(npc);
+            });
         }
 
-        [Fact]
-        public void FormLink_LoadOrder_ResolveAll_UnrelatedNotIncluded()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_LoadOrder_ResolveAll_DoubleQuery(LinkCacheTestTypes cacheType)
+        {
+            var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
+            var npc = mod.Npcs.AddNew();
+            var mod2 = new SkyrimMod(Utility.PluginModKey3, SkyrimRelease.SkyrimLE);
+            var npcOverride = mod2.Npcs.GetOrAddAsOverride(npc);
+            npcOverride.FaceParts = new NpcFaceParts();
+            var loadOrder = new LoadOrder<ISkyrimModGetter>()
+            {
+                mod,
+                new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimLE),
+                mod2
+            };
+            var (style, package) = GetLinkCache(loadOrder, cacheType);
+            var formLink = new FormLink<INpcGetter>(npc.FormKey);
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                var resolved = formLink.ResolveAll(package).ToArray();
+                resolved.Should().HaveCount(2);
+                resolved.First().Should().BeSameAs(npcOverride);
+                resolved.Last().Should().BeSameAs(npc);
+            });
+        }
+
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_LoadOrder_ResolveAll_UnrelatedNotIncluded(LinkCacheTestTypes cacheType)
         {
             var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var npc = mod.Npcs.AddNew();
@@ -1693,16 +2357,21 @@ namespace Mutagen.Bethesda.UnitTests
                 new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimLE),
                 mod2
             };
-            var package = GetLinkCache(loadOrder);
+            var (style, package) = GetLinkCache(loadOrder, cacheType);
             var formLink = new FormLink<INpcGetter>(npc.FormKey);
-            var resolved = formLink.ResolveAll(package).ToArray();
-            resolved.Should().HaveCount(2);
-            resolved.First().Should().BeSameAs(npcOverride);
-            resolved.Last().Should().BeSameAs(npc);
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                var resolved = formLink.ResolveAll(package).ToArray();
+                resolved.Should().HaveCount(2);
+                resolved.First().Should().BeSameAs(npcOverride);
+                resolved.Last().Should().BeSameAs(npc);
+            });
         }
 
-        [Fact]
-        public void FormLink_LoadOrder_ResolveAll_SeparateQueries()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_LoadOrder_ResolveAll_SeparateQueries(LinkCacheTestTypes cacheType)
         {
             var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var npc = mod.Npcs.AddNew();
@@ -1716,42 +2385,54 @@ namespace Mutagen.Bethesda.UnitTests
                 new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimLE),
                 mod2
             };
-            var package = GetLinkCache(loadOrder);
+            var (style, package) = GetLinkCache(loadOrder, cacheType);
             var formLink = new FormLink<INpcGetter>(npc.FormKey);
-            var resolved = formLink.ResolveAll(package).ToArray();
-            resolved.Should().HaveCount(2);
-            resolved.First().Should().BeSameAs(npcOverride);
-            resolved.Last().Should().BeSameAs(npc);
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                var resolved = formLink.ResolveAll(package).ToArray();
+                resolved.Should().HaveCount(2);
+                resolved.First().Should().BeSameAs(npcOverride);
+                resolved.Last().Should().BeSameAs(npc);
+            });
             formLink = new FormLink<INpcGetter>(unrelatedNpc.FormKey);
-            resolved = formLink.ResolveAll(package).ToArray();
-            resolved.Should().HaveCount(1);
-            resolved.First().Should().BeSameAs(unrelatedNpc);
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                var resolved = formLink.ResolveAll(package).ToArray();
+                resolved.Should().HaveCount(1);
+                resolved.First().Should().BeSameAs(unrelatedNpc);
+            });
         }
         #endregion
 
         #region FormLink Direct ResolveAllContexts
-        [Fact]
-        public void FormLink_Direct_ResolveAllContexts_Empty()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_Direct_ResolveAllContexts_Empty(LinkCacheTestTypes cacheType)
         {
             var formLink = new FormLink<IEffectRecordGetter>(UnusedFormKey);
-            var package = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE));
+            var (style, package) = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
             formLink.ResolveAllContexts<ISkyrimMod, ISkyrimModGetter, IEffectRecord>(package).Should().BeEmpty();
         }
 
-        [Fact]
-        public void FormLink_Direct_ResolveAllContexts_Typed_Empty()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_Direct_ResolveAllContexts_Typed_Empty(LinkCacheTestTypes cacheType)
         {
             var formLink = new FormLink<IPlacedGetter>(UnusedFormKey);
-            var package = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE));
+            var (style, package) = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
             formLink.ResolveAllContexts<ISkyrimMod, ISkyrimModGetter, IPlacedNpc, IPlacedNpcGetter>(package).Should().BeEmpty();
         }
 
-        [Fact]
-        public void FormLink_Direct_ResolveAllContexts_Linked()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_Direct_ResolveAllContexts_Linked(LinkCacheTestTypes cacheType)
         {
             var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var npc = mod.Npcs.AddNew();
-            var package = GetLinkCache(mod);
+            var (style, package) = GetLinkCache(mod, cacheType);
             var formLink = new FormLink<INpcGetter>(npc.FormKey);
             var resolved = formLink.ResolveAllContexts<ISkyrimMod, ISkyrimModGetter, INpc>(package).ToArray();
             resolved.Should().HaveCount(1);
@@ -1770,8 +2451,10 @@ namespace Mutagen.Bethesda.UnitTests
             formLink.ResolveAllContexts<ISkyrimMod, ISkyrimModGetter, INpc>(package).Should().BeEmpty();
         }
 
-        [Fact]
-        public void FormLink_LoadOrder_ResolveAllContexts_Linked()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_LoadOrder_ResolveAllContexts_Linked(LinkCacheTestTypes cacheType)
         {
             var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var npc = mod.Npcs.AddNew();
@@ -1780,7 +2463,7 @@ namespace Mutagen.Bethesda.UnitTests
                 mod,
                 new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimLE),
             };
-            var package = GetLinkCache(loadOrder);
+            var (style, package) = GetLinkCache(loadOrder, cacheType);
             var formLink = new FormLink<INpcGetter>(npc.FormKey);
             var resolved = formLink.ResolveAllContexts<ISkyrimMod, ISkyrimModGetter, INpc>(package).ToArray();
             resolved.Should().HaveCount(1);
@@ -1789,8 +2472,10 @@ namespace Mutagen.Bethesda.UnitTests
             resolved.First().Parent.Should().BeNull();
         }
 
-        [Fact]
-        public void FormLink_LoadOrder_ResolveAllContexts_MultipleLinks()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_LoadOrder_ResolveAllContexts_MultipleLinks(LinkCacheTestTypes cacheType)
         {
             var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var npc = mod.Npcs.AddNew();
@@ -1803,7 +2488,7 @@ namespace Mutagen.Bethesda.UnitTests
                 new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimLE),
                 mod2
             };
-            var package = GetLinkCache(loadOrder);
+            var (style, package) = GetLinkCache(loadOrder, cacheType);
             var formLink = new FormLink<INpcGetter>(npc.FormKey);
             var resolved = formLink.ResolveAllContexts<ISkyrimMod, ISkyrimModGetter, INpc>(package).ToArray();
             resolved.Should().HaveCount(2);
@@ -1815,8 +2500,10 @@ namespace Mutagen.Bethesda.UnitTests
             resolved.Last().Parent.Should().BeNull();
         }
 
-        [Fact]
-        public void FormLink_LoadOrder_ResolveAllContexts_DoubleQuery()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_LoadOrder_ResolveAllContexts_DoubleQuery(LinkCacheTestTypes cacheType)
         {
             var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var npc = mod.Npcs.AddNew();
@@ -1829,7 +2516,7 @@ namespace Mutagen.Bethesda.UnitTests
                 new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimLE),
                 mod2
             };
-            var package = GetLinkCache(loadOrder);
+            var (style, package) = GetLinkCache(loadOrder, cacheType);
             var formLink = new FormLink<INpcGetter>(npc.FormKey);
             var resolved = formLink.ResolveAllContexts<ISkyrimMod, ISkyrimModGetter, INpc>(package).ToArray();
             resolved = formLink.ResolveAllContexts<ISkyrimMod, ISkyrimModGetter, INpc>(package).ToArray();
@@ -1842,8 +2529,10 @@ namespace Mutagen.Bethesda.UnitTests
             resolved.Last().Parent.Should().BeNull();
         }
 
-        [Fact]
-        public void FormLink_LoadOrder_ResolveAllContexts_UnrelatedNotIncluded()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_LoadOrder_ResolveAllContexts_UnrelatedNotIncluded(LinkCacheTestTypes cacheType)
         {
             var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var npc = mod.Npcs.AddNew();
@@ -1857,7 +2546,7 @@ namespace Mutagen.Bethesda.UnitTests
                 new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimLE),
                 mod2
             };
-            var package = GetLinkCache(loadOrder);
+            var (style, package) = GetLinkCache(loadOrder, cacheType);
             var formLink = new FormLink<INpcGetter>(npc.FormKey);
             var resolved = formLink.ResolveAllContexts<ISkyrimMod, ISkyrimModGetter, INpc>(package).ToArray();
             resolved.Should().HaveCount(2);
@@ -1869,8 +2558,10 @@ namespace Mutagen.Bethesda.UnitTests
             resolved.Last().Parent.Should().BeNull();
         }
 
-        [Fact]
-        public void FormLink_LoadOrder_ResolveAllContexts_SeparateQueries()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void FormLink_LoadOrder_ResolveAllContexts_SeparateQueries(LinkCacheTestTypes cacheType)
         {
             var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var npc = mod.Npcs.AddNew();
@@ -1884,7 +2575,7 @@ namespace Mutagen.Bethesda.UnitTests
                 new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimLE),
                 mod2
             };
-            var package = GetLinkCache(loadOrder);
+            var (style, package) = GetLinkCache(loadOrder, cacheType);
             var formLink = new FormLink<INpcGetter>(npc.FormKey);
             var resolved = formLink.ResolveAllContexts<ISkyrimMod, ISkyrimModGetter, INpc>(package).ToArray();
             resolved.Should().HaveCount(2);
@@ -1904,55 +2595,65 @@ namespace Mutagen.Bethesda.UnitTests
         #endregion
 
         #region EDIDLink Resolves
-        [Fact]
-        public void EDIDLink_TryResolve_NoLink()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void EDIDLink_TryResolve_NoLink(LinkCacheTestTypes cacheType)
         {
             var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var effect = mod.MagicEffects.AddNew();
             effect.EditorID = "NULL";
             EDIDLink<IMagicEffect> link = new EDIDLink<IMagicEffect>(new RecordType("LINK"));
-            var package = GetLinkCache(mod);
+            var (style, package) = GetLinkCache(mod, cacheType);
             Assert.False(link.TryResolve(package, out var _));
         }
 
-        [Fact]
-        public void EDIDLink_TryResolve_Linked()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void EDIDLink_TryResolve_Linked(LinkCacheTestTypes cacheType)
         {
             var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var effect = mod.MagicEffects.AddNew();
             effect.EditorID = "LINK";
-            var package = GetLinkCache(mod);
+            var (style, package) = GetLinkCache(mod, cacheType);
             EDIDLink<IMagicEffect> link = new EDIDLink<IMagicEffect>(new RecordType("LINK"));
             Assert.True(link.TryResolve(package, out var linkedRec));
             Assert.Same(effect, linkedRec);
         }
 
-        [Fact]
-        public void EDIDLink_Resolve_NoLink()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void EDIDLink_Resolve_NoLink(LinkCacheTestTypes cacheType)
         {
             var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var effect = mod.MagicEffects.AddNew();
             effect.EditorID = "NULL";
             EDIDLink<IMagicEffect> link = new EDIDLink<IMagicEffect>(new RecordType("LINK"));
-            var package = GetLinkCache(mod);
+            var (style, package) = GetLinkCache(mod, cacheType);
             Assert.Null(link.TryResolve(package).Value);
         }
 
-        [Fact]
-        public void EDIDLink_Resolve_Linked()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void EDIDLink_Resolve_Linked(LinkCacheTestTypes cacheType)
         {
             var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var effect = mod.MagicEffects.AddNew();
             effect.EditorID = "LINK";
-            var package = GetLinkCache(mod);
+            var (style, package) = GetLinkCache(mod, cacheType);
             EDIDLink<IMagicEffect> link = new EDIDLink<IMagicEffect>(new RecordType("LINK"));
             Assert.Same(effect, link.TryResolve(package).Value);
         }
         #endregion
 
         #region Subtype Linking
-        [Fact]
-        public void SubtypeLinking_Typical()
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void SubtypeLinking_Typical(LinkCacheTestTypes cacheType)
         {
             var prototype = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
             var armor = prototype.Armors.AddNew();
@@ -1968,8 +2669,11 @@ namespace Mutagen.Bethesda.UnitTests
                 }
             };
             using var disp = ConvertMod(prototype, out var mod);
-            var package = GetLinkCache(mod);
-            Assert.True(mod.LeveledItems.First().Entries[0].Data.Reference.TryResolve(package, out IArmorGetter armorGetterLink));
+            var (style, package) = GetLinkCache(mod, cacheType);
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(mod.LeveledItems.First().Entries[0].Data.Reference.TryResolve(package, out IArmorGetter armorGetterLink));
+            });
         }
         #endregion
     }
@@ -1984,14 +2688,14 @@ namespace Mutagen.Bethesda.UnitTests
             return Disposable.Empty;
         }
 
-        protected override ILinkCache<ISkyrimMod, ISkyrimModGetter> GetLinkCache(ISkyrimModGetter modGetter, LinkCachePreferences prefs)
+        protected override (LinkCacheStyle Style, ILinkCache<ISkyrimMod, ISkyrimModGetter> Cache) GetLinkCache(ISkyrimModGetter modGetter, LinkCachePreferences prefs)
         {
-            return new ImmutableModLinkCache<ISkyrimMod, ISkyrimModGetter>(modGetter, prefs);
+            return (LinkCacheStyle.HasCaching, new ImmutableModLinkCache<ISkyrimMod, ISkyrimModGetter>(modGetter, prefs));
         }
 
-        protected override ILinkCache<ISkyrimMod, ISkyrimModGetter> GetLinkCache(LoadOrder<ISkyrimModGetter> loadOrder, LinkCachePreferences prefs)
+        protected override (LinkCacheStyle Style, ILinkCache<ISkyrimMod, ISkyrimModGetter> Cache) GetLinkCache(LoadOrder<ISkyrimModGetter> loadOrder, LinkCachePreferences prefs)
         {
-            return loadOrder.ToImmutableLinkCache<ISkyrimMod, ISkyrimModGetter>(prefs);
+            return (LinkCacheStyle.HasCaching, loadOrder.ToImmutableLinkCache<ISkyrimMod, ISkyrimModGetter>(prefs));
         }
     }
 
@@ -2023,14 +2727,14 @@ namespace Mutagen.Bethesda.UnitTests
             });
         }
 
-        protected override ILinkCache<ISkyrimMod, ISkyrimModGetter> GetLinkCache(ISkyrimModGetter modGetter, LinkCachePreferences prefs)
+        protected override (LinkCacheStyle Style, ILinkCache<ISkyrimMod, ISkyrimModGetter> Cache) GetLinkCache(ISkyrimModGetter modGetter, LinkCachePreferences prefs)
         {
-            return new ImmutableModLinkCache<ISkyrimMod, ISkyrimModGetter>(modGetter, prefs);
+            return (LinkCacheStyle.HasCaching, new ImmutableModLinkCache<ISkyrimMod, ISkyrimModGetter>(modGetter, prefs));
         }
 
-        protected override ILinkCache<ISkyrimMod, ISkyrimModGetter> GetLinkCache(LoadOrder<ISkyrimModGetter> loadOrder, LinkCachePreferences prefs)
+        protected override (LinkCacheStyle Style, ILinkCache<ISkyrimMod, ISkyrimModGetter> Cache) GetLinkCache(LoadOrder<ISkyrimModGetter> loadOrder, LinkCachePreferences prefs)
         {
-            return loadOrder.ToImmutableLinkCache<ISkyrimMod, ISkyrimModGetter>(prefs);
+            return (LinkCacheStyle.HasCaching, loadOrder.ToImmutableLinkCache<ISkyrimMod, ISkyrimModGetter>(prefs));
         }
     }
 
@@ -2044,14 +2748,14 @@ namespace Mutagen.Bethesda.UnitTests
             return Disposable.Empty;
         }
 
-        protected override ILinkCache<ISkyrimMod, ISkyrimModGetter> GetLinkCache(ISkyrimModGetter modGetter, LinkCachePreferences prefs)
+        protected override (LinkCacheStyle Style, ILinkCache<ISkyrimMod, ISkyrimModGetter> Cache) GetLinkCache(ISkyrimModGetter modGetter, LinkCachePreferences prefs)
         {
-            return new MutableModLinkCache<ISkyrimMod, ISkyrimModGetter>(modGetter, prefs);
+            return (LinkCacheStyle.OnlyDirect, new MutableModLinkCache<ISkyrimMod, ISkyrimModGetter>(modGetter));
         }
 
-        protected override ILinkCache<ISkyrimMod, ISkyrimModGetter> GetLinkCache(LoadOrder<ISkyrimModGetter> loadOrder, LinkCachePreferences prefs)
+        protected override (LinkCacheStyle Style, ILinkCache<ISkyrimMod, ISkyrimModGetter> Cache) GetLinkCache(LoadOrder<ISkyrimModGetter> loadOrder, LinkCachePreferences prefs)
         {
-            return new MutableLoadOrderLinkCache<ISkyrimMod, ISkyrimModGetter>(loadOrder.ToImmutableLinkCache<ISkyrimMod, ISkyrimModGetter>(), prefs);
+            return (LinkCacheStyle.HasCaching, new MutableLoadOrderLinkCache<ISkyrimMod, ISkyrimModGetter>(loadOrder.ToImmutableLinkCache<ISkyrimMod, ISkyrimModGetter>(prefs)));
         }
     }
 
@@ -2078,14 +2782,14 @@ namespace Mutagen.Bethesda.UnitTests
             });
         }
 
-        protected override ILinkCache<ISkyrimMod, ISkyrimModGetter> GetLinkCache(ISkyrimModGetter modGetter, LinkCachePreferences prefs)
+        protected override (LinkCacheStyle Style, ILinkCache<ISkyrimMod, ISkyrimModGetter> Cache) GetLinkCache(ISkyrimModGetter modGetter, LinkCachePreferences prefs)
         {
-            return new MutableModLinkCache<ISkyrimMod, ISkyrimModGetter>(modGetter, prefs);
+            return (LinkCacheStyle.OnlyDirect, new MutableModLinkCache<ISkyrimMod, ISkyrimModGetter>(modGetter));
         }
 
-        protected override ILinkCache<ISkyrimMod, ISkyrimModGetter> GetLinkCache(LoadOrder<ISkyrimModGetter> loadOrder, LinkCachePreferences prefs)
+        protected override (LinkCacheStyle Style, ILinkCache<ISkyrimMod, ISkyrimModGetter> Cache) GetLinkCache(LoadOrder<ISkyrimModGetter> loadOrder, LinkCachePreferences prefs)
         {
-            return new MutableLoadOrderLinkCache<ISkyrimMod, ISkyrimModGetter>(loadOrder.ToImmutableLinkCache<ISkyrimMod, ISkyrimModGetter>(), prefs);
+            return (LinkCacheStyle.OnlyDirect, new MutableLoadOrderLinkCache<ISkyrimMod, ISkyrimModGetter>(loadOrder.ToImmutableLinkCache<ISkyrimMod, ISkyrimModGetter>()));
         }
     }
 }

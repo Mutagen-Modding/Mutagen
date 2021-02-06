@@ -102,6 +102,8 @@
     <Compile Include="IsExternalInit.cs" />
     <Compile Include="Interfaces\Aspect\IWeightValue.cs" />
     <Compile Include="Links\Cache\ImmutableModLinkCache.cs" />
+    <Compile Include="Links\Cache\LinkCacheItem.cs" />
+    <Compile Include="Links\Cache\Preferences\LinkCachePreferenceOnlySimple.cs" />
     <Compile Include="Links\Cache\Preferences\LinkCachePreferenceWholeRecord.cs" />
     <Compile Include="Links\FormLinkNullable.cs" />
     <Compile Include="Links\IFormLink.cs" />

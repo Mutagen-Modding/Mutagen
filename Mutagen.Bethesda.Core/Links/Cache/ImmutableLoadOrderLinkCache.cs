@@ -27,6 +27,7 @@ namespace Mutagen.Bethesda
     {
         internal readonly bool _hasAny;
         protected readonly GameCategory _gameCategory;
+        internal bool _simple;
 
         private readonly IReadOnlyList<IModGetter> _listedOrder;
         private readonly IReadOnlyList<IModGetter> _priorityOrder;
@@ -40,12 +41,14 @@ namespace Mutagen.Bethesda
         /// <inheritdoc />
         public IReadOnlyList<IModGetter> PriorityOrder => _priorityOrder;
 
-        public ImmutableLoadOrderLinkCache(IEnumerable<IModGetter> loadOrder, LinkCachePreferences prefs)
+        public ImmutableLoadOrderLinkCache(IEnumerable<IModGetter> loadOrder, LinkCachePreferences? prefs = null)
         {
+            prefs ??= LinkCachePreferences.Default;
             this._listedOrder = loadOrder.ToList();
             this._priorityOrder = _listedOrder.Reverse().ToList();
             var firstMod = _listedOrder.FirstOrDefault();
             this._hasAny = firstMod != null;
+            this._simple = prefs is LinkCachePreferenceOnlySimple;
             // ToDo
             // Upgrade to bounce off ModInstantiator systems
             this._gameCategory = firstMod?.GameRelease.ToCategory() ?? GameCategory.Oblivion;
@@ -126,23 +129,25 @@ namespace Mutagen.Bethesda
         /// <inheritdoc />
         public bool TryResolve(FormKey formKey, Type type, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
         {
-            return TryResolve(formKey, type, out majorRec, out _);
+            if (_formKeyCache.TryResolve(formKey, formKey.ModKey, type, out var item))
+            {
+                majorRec = item.Record;
+                return true;
+            }
+            majorRec = default;
+            return false;
         }
 
         /// <inheritdoc />
         public bool TryResolve(string editorId, Type type, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
         {
-            return TryResolve(editorId, type, out majorRec, out _);
-        }
-
-        private bool TryResolve(FormKey formKey, Type type, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec, [MaybeNullWhen(false)] out int depth)
-        {
-            return _formKeyCache.TryResolve(formKey, formKey.ModKey, type, out majorRec, out depth);
-        }
-
-        private bool TryResolve(string editorId, Type type, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec, [MaybeNullWhen(false)] out int depth)
-        {
-            return _editorIdCache.TryResolve(editorId, default(ModKey?), type, out majorRec, out depth);
+            if (_editorIdCache.TryResolve(editorId, default(ModKey?), type, out var item))
+            {
+                majorRec = item.Record;
+                return true;
+            }
+            majorRec = default;
+            return false;
         }
 
         /// <inheritdoc />
@@ -208,13 +213,13 @@ namespace Mutagen.Bethesda
         /// <inheritdoc />
         public IEnumerable<IMajorRecordCommonGetter> ResolveAll(FormKey formKey, Type type)
         {
-            return _formKeyCache.ResolveAll(formKey, formKey.ModKey, type);
+            return _formKeyCache.ResolveAll(formKey, formKey.ModKey, type).Select(i => i.Record);
         }
 
         /// <inheritdoc />
         public IEnumerable<IMajorRecordCommonGetter> ResolveAll(string editorId, Type type)
         {
-            return _editorIdCache.ResolveAll(editorId, default(ModKey?), type);
+            return _editorIdCache.ResolveAll(editorId, default(ModKey?), type).Select(i => i.Record);
         }
 
         /// <inheritdoc />
@@ -297,6 +302,130 @@ namespace Mutagen.Bethesda
             throw new KeyNotFoundException($"EditorID {editorId} could not be found.");
         }
 
+        /// <inheritdoc />
+        public bool TryResolveSimple(FormKey formKey, [MaybeNullWhen(false)] out string? editorId)
+        {
+            if (_formKeyCache.TryResolve(formKey, formKey.ModKey, typeof(IMajorRecordCommonGetter), out var rec))
+            {
+                editorId = rec.EditorID;
+                return true;
+            }
+
+            editorId = default;
+            return false;
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimple(string editorId, [MaybeNullWhen(false)] out FormKey formKey)
+        {
+            if (_editorIdCache.TryResolve(editorId, default, typeof(IMajorRecordCommonGetter), out var rec))
+            {
+                formKey = rec.FormKey;
+                return true;
+            }
+
+            formKey = default;
+            return false;
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimple(FormKey formKey, Type type, [MaybeNullWhen(false)] out string? editorId)
+        {
+            if (_formKeyCache.TryResolve(formKey, formKey.ModKey, type, out var rec))
+            {
+                editorId = rec.EditorID;
+                return true;
+            }
+
+            editorId = default;
+            return false;
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimple(string editorId, Type type, [MaybeNullWhen(false)] out FormKey formKey)
+        {
+            if (_editorIdCache.TryResolve(editorId, default, type, out var rec))
+            {
+                formKey = rec.FormKey;
+                return true;
+            }
+
+            formKey = default;
+            return false;
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimple<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out string? editorId)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            if (_formKeyCache.TryResolve(formKey, formKey.ModKey, typeof(TMajor), out var rec))
+            {
+                editorId = rec.EditorID;
+                return true;
+            }
+
+            editorId = default;
+            return false;
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimple<TMajor>(string editorId, [MaybeNullWhen(false)] out FormKey formKey)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            if (_editorIdCache.TryResolve(editorId, default, typeof(TMajor), out var rec))
+            {
+                formKey = rec.FormKey;
+                return true;
+            }
+
+            formKey = default;
+            return false;
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimple(FormKey formKey, [MaybeNullWhen(false)] out string? editorId, params Type[] types)
+        {
+            return TryResolveSimple(formKey, (IEnumerable<Type>)types, out editorId);
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimple(string editorId, [MaybeNullWhen(false)] out FormKey formKey, params Type[] types)
+        {
+            return TryResolveSimple(editorId, (IEnumerable<Type>)types, out formKey);
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimple(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out string? editorId)
+        {
+            foreach (var type in types)
+            {
+                if (_formKeyCache.TryResolve(formKey, formKey.ModKey, type, out var rec))
+                {
+                    editorId = rec.EditorID;
+                    return true;
+                }
+            }
+
+            editorId = default;
+            return false;
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimple(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out FormKey formKey)
+        {
+            foreach (var type in types)
+            {
+                if (_editorIdCache.TryResolve(editorId, default, type, out var rec))
+                {
+                    formKey = rec.FormKey;
+                    return true;
+                }
+            }
+
+            formKey = default;
+            return false;
+        }
+
         public void Dispose()
         {
         }
@@ -308,10 +437,10 @@ namespace Mutagen.Bethesda
         private readonly ImmutableLoadOrderLinkCache _parent;
         private readonly Func<IMajorRecordCommonGetter, TryGet<K>> _keyGetter;
         private readonly Func<K, bool> _shortCircuit;
-        private readonly Dictionary<Type, DepthCache<K, IMajorRecordCommonGetter>> _winningRecords
-            = new Dictionary<Type, DepthCache<K, IMajorRecordCommonGetter>>();
-        private readonly Dictionary<Type, DepthCache<K, ImmutableList<IMajorRecordCommonGetter>>> _allRecords
-            = new Dictionary<Type, DepthCache<K, ImmutableList<IMajorRecordCommonGetter>>>();
+        private readonly Dictionary<Type, DepthCache<K, LinkCacheItem>> _winningRecords
+            = new Dictionary<Type, DepthCache<K, LinkCacheItem>>();
+        private readonly Dictionary<Type, DepthCache<K, ImmutableList<LinkCacheItem>>> _allRecords
+            = new Dictionary<Type, DepthCache<K, ImmutableList<LinkCacheItem>>>();
 
         public ImmutableLoadOrderLinkCacheCategory(
             ImmutableLoadOrderLinkCache parent,
@@ -327,23 +456,21 @@ namespace Mutagen.Bethesda
             K key,
             ModKey? modKey,
             Type type,
-            [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec,
-            [MaybeNullWhen(false)] out int depth)
+            [MaybeNullWhen(false)] out LinkCacheItem majorRec)
         {
             if (!_parent._hasAny || _shortCircuit(key))
             {
                 majorRec = default;
-                depth = default;
                 return false;
             }
 
-            DepthCache<K, IMajorRecordCommonGetter>? cache;
+            DepthCache<K, LinkCacheItem>? cache;
             lock (_winningRecords)
             {
-                // Get cache object by type 
+                // Get cache object by type
                 if (!_winningRecords.TryGetValue(type, out cache))
                 {
-                    cache = new DepthCache<K, IMajorRecordCommonGetter>();
+                    cache = new DepthCache<K, LinkCacheItem>();
                     if (type.Equals(typeof(IMajorRecordCommon))
                         || type.Equals(typeof(IMajorRecordCommonGetter)))
                     {
@@ -380,12 +507,10 @@ namespace Mutagen.Bethesda
                 // Check for record 
                 if (cache.TryGetValue(key, out majorRec))
                 {
-                    depth = cache.Depth;
                     return true;
                 }
                 if (ImmutableLoadOrderLinkCache.ShouldStopQuery(modKey, _parent.ListedOrder.Count, cache))
                 {
-                    depth = default;
                     majorRec = default!;
                     return false;
                 }
@@ -404,7 +529,7 @@ namespace Mutagen.Bethesda
                         {
                             var key = _keyGetter(record);
                             if (key.Failed) continue;
-                            cache.AddIfMissing(key.Value, record);
+                            cache.AddIfMissing(key.Value, LinkCacheItem.Factory(record, _parent._simple));
                         }
                     }
 
@@ -423,18 +548,16 @@ namespace Mutagen.Bethesda
                     // Check again 
                     if (cache.TryGetValue(key, out majorRec))
                     {
-                        depth = cache.Depth;
                         return true;
                     }
                 }
                 // Record doesn't exist 
                 majorRec = default;
-                depth = default;
                 return false;
             }
         }
 
-        public IEnumerable<IMajorRecordCommonGetter> ResolveAll(
+        public IEnumerable<LinkCacheItem> ResolveAll(
             K key,
             ModKey? modKey,
             Type type)
@@ -445,20 +568,20 @@ namespace Mutagen.Bethesda
             }
 
             // Grab the type cache
-            DepthCache<K, ImmutableList<IMajorRecordCommonGetter>> cache;
+            DepthCache<K, ImmutableList<LinkCacheItem>> cache;
             lock (_allRecords)
             {
                 cache = _allRecords.GetOrAdd(type);
             }
 
             // Grab the formkey's list
-            ImmutableList<IMajorRecordCommonGetter>? list;
+            ImmutableList<LinkCacheItem>? list;
             int consideredDepth;
             lock (cache)
             {
                 if (!cache.TryGetValue(key, out list))
                 {
-                    list = ImmutableList<IMajorRecordCommonGetter>.Empty;
+                    list = ImmutableList<LinkCacheItem>.Empty;
                     cache.Add(key, list);
                 }
                 consideredDepth = cache.Depth;
@@ -496,9 +619,9 @@ namespace Mutagen.Bethesda
                                 if (iterKey.Failed) continue;
                                 if (!cache.TryGetValue(iterKey.Value, out var targetList))
                                 {
-                                    targetList = ImmutableList<IMajorRecordCommonGetter>.Empty;
+                                    targetList = ImmutableList<LinkCacheItem>.Empty;
                                 }
-                                cache.Set(iterKey.Value, targetList.Add(item));
+                                cache.Set(iterKey.Value, targetList.Add(LinkCacheItem.Factory(item, _parent._simple)));
                             }
                             if (cache.TryGetValue(key, out var requeriedList))
                             {

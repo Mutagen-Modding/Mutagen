@@ -24,6 +24,7 @@ namespace Mutagen.Bethesda
         internal readonly IModGetter _sourceMod;
         public GameCategory Category { get; }
 
+        internal readonly bool _simple;
         private readonly ImmutableModLinkCacheCategory<FormKey> _formKeyCache;
         private readonly ImmutableModLinkCacheCategory<string> _editorIdCache;
 
@@ -33,10 +34,11 @@ namespace Mutagen.Bethesda
         /// <inheritdoc />
         public IReadOnlyList<IModGetter> PriorityOrder => ListedOrder;
 
-        public ImmutableModLinkCache(IModGetter sourceMod, LinkCachePreferences prefs)
+        public ImmutableModLinkCache(IModGetter sourceMod, LinkCachePreferences? prefs = null)
         {
             _sourceMod = sourceMod;
             Category = sourceMod.GameRelease.ToCategory();
+            _simple = prefs is LinkCachePreferenceOnlySimple;
             _formKeyCache = new ImmutableModLinkCacheCategory<FormKey>(
                 this, 
                 x => TryGet<FormKey>.Succeed(x.FormKey),
@@ -64,9 +66,14 @@ namespace Mutagen.Bethesda
                 majorRec = default;
                 return false;
             }
-            return _formKeyCache._untypedMajorRecords.Value.TryGetValue(formKey, out majorRec);
+            if (_formKeyCache._untypedMajorRecords.Value.TryGetValue(formKey, out var item))
+            {
+                majorRec = item.Record;
+                return true;
+            }
+            majorRec = default;
+            return false;
         }
-
 
         /// <inheritdoc />
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
@@ -77,33 +84,63 @@ namespace Mutagen.Bethesda
                 majorRec = default;
                 return false;
             }
-            return _editorIdCache._untypedMajorRecords.Value.TryGetValue(editorId, out majorRec);
+            if (_editorIdCache._untypedMajorRecords.Value.TryGetValue(editorId, out var item))
+            {
+                majorRec = item.Record;
+                return true;
+            }
+            majorRec = default;
+            return false;
         }
 
         /// <inheritdoc />
         public bool TryResolve<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out TMajor majorRec)
             where TMajor : class, IMajorRecordCommonGetter
         {
-            return _formKeyCache.TryResolve(formKey, out majorRec);
+            if (_formKeyCache.TryResolve(formKey, typeof(TMajor), out var item))
+            {
+                majorRec = item.Record as TMajor;
+                return majorRec != null;
+            }
+            majorRec = default;
+            return false;
         }
 
         /// <inheritdoc />
         public bool TryResolve<TMajor>(string editorId, [MaybeNullWhen(false)] out TMajor majorRec)
             where TMajor : class, IMajorRecordCommonGetter
         {
-            return _editorIdCache.TryResolve(editorId, out majorRec);
+            if (_editorIdCache.TryResolve(editorId, typeof(TMajor), out var item))
+            {
+                majorRec = item.Record as TMajor;
+                return majorRec != null;
+            }
+            majorRec = default;
+            return false;
         }
 
         /// <inheritdoc />
         public bool TryResolve(FormKey formKey, Type type, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
         {
-            return _formKeyCache.TryResolve(formKey, type, out majorRec);
+            if (_formKeyCache.TryResolve(formKey, type, out var item))
+            {
+                majorRec = item.Record;
+                return true;
+            }
+            majorRec = default;
+            return false;
         }
 
         /// <inheritdoc />
         public bool TryResolve(string editorId, Type type, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
         {
-            return _editorIdCache.TryResolve(editorId, type, out majorRec);
+            if (_editorIdCache.TryResolve(editorId, type, out var item))
+            {
+                majorRec = item.Record;
+                return true;
+            }
+            majorRec = default;
+            return false;
         }
 
         /// <inheritdoc />
@@ -276,6 +313,128 @@ namespace Mutagen.Bethesda
             throw new KeyNotFoundException($"EditorID {editorId} could not be found.");
         }
 
+        /// <inheritdoc />
+        public bool TryResolveSimple(FormKey formKey, [MaybeNullWhen(false)] out string? editorId)
+        {
+            if (TryResolve(formKey, out var rec))
+            {
+                editorId = rec.EditorID;
+                return false;
+            }
+            editorId = default;
+            return false;
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimple(string editorId, [MaybeNullWhen(false)] out FormKey formKey)
+        {
+            if (TryResolve(editorId, out var rec))
+            {
+                formKey = rec.FormKey;
+                return false;
+            }
+            formKey = default;
+            return false;
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimple(FormKey formKey, Type type, [MaybeNullWhen(false)] out string? editorId)
+        {
+            if (TryResolve(formKey, type, out var rec))
+            {
+                editorId = rec.EditorID;
+                return false;
+            }
+            editorId = default;
+            return false;
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimple(string editorId, Type type, [MaybeNullWhen(false)] out FormKey formKey)
+        {
+            if (TryResolve(editorId, type, out var rec))
+            {
+                formKey = rec.FormKey;
+                return false;
+            }
+            formKey = default;
+            return false;
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimple<TMajor>(FormKey formKey, out string? editorId)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            if (TryResolve<TMajor>(formKey, out var rec))
+            {
+                editorId = rec.EditorID;
+                return false;
+            }
+            editorId = default;
+            return false;
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimple<TMajor>(string editorId, out FormKey formKey)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            if (TryResolve<TMajor>(editorId, out var rec))
+            {
+                formKey = rec.FormKey;
+                return false;
+            }
+            formKey = default;
+            return false;
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimple(FormKey formKey, [MaybeNullWhen(false)] out string? editorId, params Type[] types)
+        {
+            if (TryResolve(formKey, out var rec, types))
+            {
+                editorId = rec.EditorID;
+                return false;
+            }
+            editorId = default;
+            return false;
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimple(string editorId, [MaybeNullWhen(false)] out FormKey formKey, params Type[] types)
+        {
+            if (TryResolve(editorId, out var rec, types))
+            {
+                formKey = rec.FormKey;
+                return false;
+            }
+            formKey = default;
+            return false;
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimple(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out string? editorId)
+        {
+            if (TryResolve(formKey, types, out var rec))
+            {
+                editorId = rec.EditorID;
+                return false;
+            }
+            editorId = default;
+            return false;
+        }
+
+        /// <inheritdoc />
+        public bool TryResolveSimple(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out FormKey formKey)
+        {
+            if (TryResolve(editorId, types, out var rec))
+            {
+                formKey = rec.FormKey;
+                return false;
+            }
+            formKey = default;
+            return false;
+        }
+
         public void Dispose()
         {
         }
@@ -285,53 +444,53 @@ namespace Mutagen.Bethesda
         where K : notnull
     {
         private readonly ImmutableModLinkCache _parent;
-        private readonly Func<IMajorRecordCommonGetter, TryGet<K>> _keyGetter;
+        private readonly Func<LinkCacheItem, TryGet<K>> _keyGetter;
         private readonly Func<K, bool> _shortCircuit;
-        internal readonly Lazy<IReadOnlyCache<IMajorRecordCommonGetter, K>> _untypedMajorRecords;
-        private readonly Dictionary<Type, IReadOnlyCache<IMajorRecordCommonGetter, K>> _majorRecords = new Dictionary<Type, IReadOnlyCache<IMajorRecordCommonGetter, K>>();
+        internal readonly Lazy<IReadOnlyCache<LinkCacheItem, K>> _untypedMajorRecords;
+        private readonly Dictionary<Type, IReadOnlyCache<LinkCacheItem, K>> _majorRecords = new Dictionary<Type, IReadOnlyCache<LinkCacheItem, K>>();
 
         public ImmutableModLinkCacheCategory(
             ImmutableModLinkCache parent,
-            Func<IMajorRecordCommonGetter, TryGet<K>> keyGetter,
+            Func<LinkCacheItem, TryGet<K>> keyGetter,
             Func<K, bool> shortCircuit)
         {
             _parent = parent;
             _keyGetter = keyGetter;
             _shortCircuit = shortCircuit;
-            _untypedMajorRecords = new Lazy<IReadOnlyCache<IMajorRecordCommonGetter, K>>(
+            _untypedMajorRecords = new Lazy<IReadOnlyCache<LinkCacheItem, K>>(
                 isThreadSafe: true,
                 valueFactory: () => ConstructUntypedCache());
         }
 
-        protected IReadOnlyCache<IMajorRecordCommonGetter, K> ConstructUntypedCache()
+        protected IReadOnlyCache<LinkCacheItem, K> ConstructUntypedCache()
         {
-            var majorRecords = new Cache<IMajorRecordCommonGetter, K>(x => _keyGetter(x).Value);
+            var majorRecords = new Cache<LinkCacheItem, K>(x => _keyGetter(x).Value);
             foreach (var majorRec in _parent._sourceMod.EnumerateMajorRecords())
             {
-                var key = _keyGetter(majorRec);
+                var item = LinkCacheItem.Factory(majorRec, _parent._simple);
+                var key = _keyGetter(item);
                 if (key.Failed) continue;
-                majorRecords.Set(majorRec);
+                majorRecords.Set(item);
             }
             return majorRecords;
         }
 
-        private IReadOnlyCache<IMajorRecordCommonGetter, K> ConstructTypedCache(
+        private IReadOnlyCache<LinkCacheItem, K> ConstructTypedCache(
             Type type,
             IModGetter sourceMod)
         {
-            var cache = new Cache<IMajorRecordCommonGetter, K>(x => _keyGetter(x).Value);
-            // ToDo
-            // Upgrade to call EnumerateGroups(), which will perform much better
+            var cache = new Cache<LinkCacheItem, K>(x => _keyGetter(x).Value);
             foreach (var majorRec in sourceMod.EnumerateMajorRecords(type))
             {
-                var key = _keyGetter(majorRec);
+                var item = LinkCacheItem.Factory(majorRec, _parent._simple);
+                var key = _keyGetter(item);
                 if (key.Failed) continue;
-                cache.Set(majorRec);
+                cache.Set(item);
             }
             return cache;
         }
 
-        public IReadOnlyCache<IMajorRecordCommonGetter, K> GetCache(
+        public IReadOnlyCache<LinkCacheItem, K> GetCache(
             Type type,
             GameCategory category,
             IModGetter sourceMod)
@@ -369,7 +528,7 @@ namespace Mutagen.Bethesda
                         {
                             throw new ArgumentException($"A lookup was queried for an unregistered type: {type.Name}");
                         }
-                        var majorRecords = new Cache<IMajorRecordCommonGetter, K>(x => _keyGetter(x).Value);
+                        var majorRecords = new Cache<LinkCacheItem, K>(x => _keyGetter(x).Value);
                         foreach (var objType in objs)
                         {
                             majorRecords.Set(
@@ -386,25 +545,7 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public bool TryResolve<TMajor>(K key, [MaybeNullWhen(false)] out TMajor majorRec)
-            where TMajor : class, IMajorRecordCommonGetter
-        {
-            if (_shortCircuit(key))
-            {
-                majorRec = default;
-                return false;
-            }
-            var cache = GetCache(typeof(TMajor), _parent.Category, _parent._sourceMod);
-            if (!cache.TryGetValue(key, out var majorRecObj))
-            {
-                majorRec = default;
-                return false;
-            }
-            majorRec = (majorRecObj as TMajor)!;
-            return majorRec != null;
-        }
-
-        public bool TryResolve(K key, Type type, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
+        public bool TryResolve(K key, Type type, [MaybeNullWhen(false)] out LinkCacheItem majorRec)
         {
             if (_shortCircuit(key))
             {
