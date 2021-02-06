@@ -14,6 +14,8 @@ namespace Mutagen.Bethesda.WPF
 {
     public class FormKeyPicker : NoggogControl
     {
+        private bool _updating;
+
         public FormKey FormKey
         {
             get => (FormKey)GetValue(FormKeyProperty);
@@ -22,6 +24,14 @@ namespace Mutagen.Bethesda.WPF
         public static readonly DependencyProperty FormKeyProperty = DependencyProperty.Register(nameof(FormKey), typeof(FormKey), typeof(FormKeyPicker),
              new FrameworkPropertyMetadata(default(FormKey), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
+        public string EditorID
+        {
+            get => (string)GetValue(EditorIDProperty);
+            set => SetValue(EditorIDProperty, value);
+        }
+        public static readonly DependencyProperty EditorIDProperty = DependencyProperty.Register(nameof(EditorID), typeof(string), typeof(FormKeyPicker),
+             new FrameworkPropertyMetadata(default(string), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
         public ILinkCache LinkCache
         {
             get => (ILinkCache)GetValue(LinkCacheProperty);
@@ -29,14 +39,6 @@ namespace Mutagen.Bethesda.WPF
         }
         public static readonly DependencyProperty LinkCacheProperty = DependencyProperty.Register(nameof(LinkCache), typeof(ILinkCache), typeof(FormKeyPicker),
              new FrameworkPropertyMetadata(default(ILinkCache)));
-
-        public IMajorRecordCommonGetter? SelectedRecord
-        {
-            get => (IMajorRecordCommonGetter?)GetValue(SelectedRecordProperty);
-            set => SetValue(SelectedRecordProperty, value);
-        }
-        public static readonly DependencyProperty SelectedRecordProperty = DependencyProperty.Register(nameof(SelectedRecord), typeof(IMajorRecordCommonGetter), typeof(FormKeyPicker),
-             new FrameworkPropertyMetadata(default(IMajorRecordCommonGetter?), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public bool Found
         {
@@ -127,11 +129,14 @@ namespace Mutagen.Bethesda.WPF
 
         public FormKeyPicker()
         {
-            this.WhenAnyValue(
-                    x => x.FormKey,
-                    x => x.LinkCache,
-                    x => x.ScopedTypes)
-                .ObserveOn(RxApp.MainThreadScheduler)
+            this.WhenAnyValue(x => x.FormKey)
+                .DistinctUntilChanged()
+                .Where(x => !_updating)
+                .CombineLatest(
+                    this.WhenAnyValue(
+                        x => x.LinkCache,
+                        x => x.ScopedTypes),
+                    (form, sources) => (FormKey: form, LinkCache: sources.Item1, Types: sources.Item2))
                 .Do(_ =>
                 {
                     if (!Processing)
@@ -144,31 +149,31 @@ namespace Mutagen.Bethesda.WPF
                 {
                     try
                     {
-                        if (x.Item2 == null)
+                        if (x.LinkCache == null)
                         {
-                            return GetResponse<IMajorRecordCommonGetter?>.Succeed(default(IMajorRecordCommonGetter?), "No LinkCache is provided for lookup");
+                            return GetResponse<(FormKey, string?)?>.Succeed(default((FormKey, string?)?), "No LinkCache is provided for lookup");
                         }
-                        if (x.Item1.IsNull)
+                        if (x.FormKey.IsNull)
                         {
-                            return GetResponse<IMajorRecordCommonGetter?>.Succeed(default(IMajorRecordCommonGetter?), "FormKey is null.  No lookup required");
+                            return GetResponse<(FormKey, string?)?>.Succeed(default((FormKey, string?)?), "FormKey is null.  No lookup required");
                         }
-                        var scopedTypes = x.Item3 as IEnumerable<Type>;
+                        var scopedTypes = x.Types as IEnumerable<Type>;
                         if (scopedTypes == null || !scopedTypes.Any())
                         {
                             scopedTypes = typeof(IMajorRecordCommonGetter).AsEnumerable();
                         }
-                        if (x.Item2.TryResolve(x.Item1, scopedTypes, out var rec))
+                        if (x.LinkCache.TryResolveSimple(x.FormKey, scopedTypes, out var edid))
                         {
-                            return GetResponse<IMajorRecordCommonGetter?>.Succeed(rec, "Located record");
+                            return GetResponse<(FormKey, string?)?>.Succeed((x.FormKey, edid), "Located record");
                         }
                         else
                         {
-                            return GetResponse<IMajorRecordCommonGetter?>.Fail(default(IMajorRecordCommonGetter?), "Could not resolve record");
+                            return GetResponse<(FormKey, string?)?>.Fail(default((FormKey, string?)?), "Could not resolve record");
                         }
                     }
                     catch (Exception ex)
                     {
-                        return GetResponse<IMajorRecordCommonGetter?>.Fail(ex);
+                        return GetResponse<(FormKey, string?)?>.Fail(ex);
                     }
                 })
                 .ObserveOn(RxApp.MainThreadScheduler)
@@ -185,10 +190,6 @@ namespace Mutagen.Bethesda.WPF
                         {
                             Found = false;
                         }
-                        if (SelectedRecord != null)
-                        {
-                            SelectedRecord = null;
-                        }
                         if (rec.Failed)
                         {
                             Error = rec;
@@ -197,6 +198,12 @@ namespace Mutagen.Bethesda.WPF
                         {
                             Error = rec;
                         }
+                        if (EditorID != string.Empty)
+                        {
+                            _updating = true;
+                            EditorID = string.Empty;
+                            _updating = false;
+                        }
                     }
                     else
                     {
@@ -204,17 +211,117 @@ namespace Mutagen.Bethesda.WPF
                         {
                             Found = true;
                         }
-                        if (!ReferenceEquals(SelectedRecord, rec.Value))
-                        {
-                            SelectedRecord = rec.Value;
-                        }
                         if (Error.Failed)
                         {
                             Error = rec;
                         }
+                        var targetEdid = rec.Value.Value.Item2 ?? string.Empty;
+                        if (EditorID != targetEdid)
+                        {
+                            _updating = true;
+                            EditorID = targetEdid;
+                        }
+                        _updating = false;
                     }
                 })
                 .DisposeWith(_unloadDisposable);
+
+            this.WhenAnyValue(x => x.EditorID)
+                .DistinctUntilChanged()
+                .Where(x => !_updating)
+                .CombineLatest(
+                    this.WhenAnyValue(
+                        x => x.LinkCache,
+                        x => x.ScopedTypes),
+                    (edid, sources) => (EditorID: edid, LinkCache: sources.Item1, Types: sources.Item2))
+                .Do(_ =>
+                {
+                    if (!Processing)
+                    {
+                        Processing = true;
+                    }
+                })
+                .ObserveOn(RxApp.TaskpoolScheduler)
+                .Select(x =>
+                {
+                    try
+                    {
+                        if (x.LinkCache == null)
+                        {
+                            return GetResponse<(FormKey, string?)?>.Succeed(default((FormKey, string?)?), "No LinkCache is provided for lookup");
+                        }
+                        if (string.IsNullOrWhiteSpace(x.EditorID))
+                        {
+                            return GetResponse<(FormKey, string?)?>.Succeed(default((FormKey, string?)?), "EditorID is empty.  No lookup required");
+                        }
+                        var scopedTypes = x.Types as IEnumerable<Type>;
+                        if (scopedTypes == null || !scopedTypes.Any())
+                        {
+                            scopedTypes = typeof(IMajorRecordCommonGetter).AsEnumerable();
+                        }
+                        if (x.Item2.TryResolveSimple(x.EditorID, scopedTypes, out var formKey))
+                        {
+                            return GetResponse<(FormKey, string?)?>.Succeed((formKey, x.EditorID), "Located record");
+                        }
+                        else
+                        {
+                            return GetResponse<(FormKey, string?)?>.Fail(default((FormKey, string?)?), "Could not resolve record");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return GetResponse<(FormKey, string?)?>.Fail(ex);
+                    }
+                })
+            .ObserveOn(RxApp.MainThreadScheduler)
+            .Subscribe(rec =>
+            {
+                if (Processing)
+                {
+                    Processing = false;
+                }
+                if (rec.Failed
+                    || rec.Value == null)
+                {
+                    if (Found)
+                    {
+                        Found = false;
+                    }
+                    if (rec.Failed)
+                    {
+                        Error = rec;
+                    }
+                    else if (!Error.Succeeded)
+                    {
+                        Error = rec;
+                    }
+                    if (!FormKey.IsNull)
+                    {
+                        _updating = true;
+                        FormKey = FormKey.Null;
+                        _updating = false;
+                    }
+                }
+                else
+                {
+                    if (!Found)
+                    {
+                        Found = true;
+                    }
+                    if (Error.Failed)
+                    {
+                        Error = rec;
+                    }
+                    var targetEdid = rec.Value.Value.Item2 ?? string.Empty;
+                    if (FormKey != rec.Value.Value.Item1)
+                    {
+                        _updating = true;
+                        FormKey = rec.Value.Value.Item1;
+                    }
+                    _updating = false;
+                }
+            })
+            .DisposeWith(_unloadDisposable);
         }
     }
 }

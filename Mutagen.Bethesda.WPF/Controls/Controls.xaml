@@ -89,9 +89,9 @@
                             </Grid.ColumnDefinitions>
                             <local:FormKeyBox Grid.Column="0" FormKey="{Binding FormKey, RelativeSource={RelativeSource TemplatedParent}}" />
                             <TextBox Grid.Column="1"
+                                Margin="5,0,0,0"
                                 mahapps:TextBoxHelper.Watermark="EditorID"
-                                IsEnabled="False"
-                                Text="{Binding SelectedRecord.EditorID, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" />
+                                Text="{Binding EditorID, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}" />
                             <icon:PackIconMaterial Grid.Column="2"
                                 x:Name="PART_ErrorStateCircle"
                                 Width="7"
@@ -111,7 +111,7 @@
                                             <MultiDataTrigger>
                                                 <MultiDataTrigger.Conditions>
                                                     <Condition Binding="{Binding Error.Succeeded, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" Value="True" />
-                                                    <Condition Binding="{Binding SelectedRecord, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" Value="{x:Null}" />
+                                                    <Condition Binding="{Binding Found, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" Value="False" />
                                                 </MultiDataTrigger.Conditions>
                                                 <MultiDataTrigger.Setters>
                                                     <Setter Property="Foreground" Value="{Binding PassiveBrush, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" />
