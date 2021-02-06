@@ -7,7 +7,7 @@
     <Company>Mutagen</Company>
     <Product>Mutagen</Product>
     <Description>A C# library for manipulating, creating, and analyzing Bethesda mods.</Description>
-    <Copyright>2020</Copyright>
+    <Copyright>2021</Copyright>
     <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/Noggog/Mutagen</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Noggog/Mutagen</RepositoryUrl>
