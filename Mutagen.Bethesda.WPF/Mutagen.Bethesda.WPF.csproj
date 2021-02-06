@@ -13,6 +13,9 @@
     <PackageProjectUrl>https://github.com/Noggog/Mutagen</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Noggog/Mutagen</RepositoryUrl>
     <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Description>A C# library for Mutagen/Bethesda related WPF controls and styling</Description>
+    <Copyright>2021</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
@@ -46,5 +49,22 @@
   <PropertyGroup>
     <GitInfoReportImportance Condition="$(Configuration) == 'Release'">high</GitInfoReportImportance>
   </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>Mutagen.Bethesda.WPF.xml</DocumentationFile>
+  </PropertyGroup>
 
+  <Target Name="SetVersion"
+		  BeforeTargets="GetAssemblyVersion;GetPackageVersion"
+		  DependsOnTargets="GitVersion"
+		  Returns="$(PackageVersion)">
+    <PropertyGroup>
+      <DevLabel Condition="$(GitCommits) != '0'">.1-dev</DevLabel>
+      <AssemblyDevLabel Condition="$(GitCommits) != '0'">.1</AssemblyDevLabel>
+      <FileVersion>$(GitBaseVersionMajor).$(GitBaseVersionMinor).$(GitBaseVersionPatch)$(AssemblyDevLabel)</FileVersion>
+      <PackageVersion>$(GitBaseVersionMajor).$(GitBaseVersionMinor).$(GitBaseVersionPatch)$(DevLabel)</PackageVersion>
+      <InformationalVersion>$(PackageVersion)</InformationalVersion>
+    </PropertyGroup>
+  </Target>
+  
 </Project>

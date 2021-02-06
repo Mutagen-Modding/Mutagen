@@ -4,12 +4,13 @@
     <WarningsAsErrors>nullable</WarningsAsErrors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <LangVersion>preview</LangVersion>
+    <Version>0.25.1.1-dev</Version>
   </PropertyGroup>
 
   <!-- To be redefined by GitInfo after restore. -->
   <Target Name="GitVersion" />
 
-  <Target Name="SetVersion"
+  <!--<Target Name="SetVersion"
 		  BeforeTargets="GetAssemblyVersion;GetPackageVersion"
 		  DependsOnTargets="GitVersion"
 		  Returns="$(PackageVersion)">
@@ -18,7 +19,8 @@
       <AssemblyDevLabel Condition="$(GitCommits) != '0'">.1</AssemblyDevLabel>
       <FileVersion>$(GitBaseVersionMajor).$(GitBaseVersionMinor).$(GitBaseVersionPatch)$(AssemblyDevLabel)</FileVersion>
       <PackageVersion>$(GitBaseVersionMajor).$(GitBaseVersionMinor).$(GitBaseVersionPatch)$(DevLabel)</PackageVersion>
+      <Version>$(GitBaseVersionMajor).$(GitBaseVersionMinor).$(GitBaseVersionPatch)$(AssemblyDevLabel)</Version>
       <InformationalVersion>$(PackageVersion)</InformationalVersion>
     </PropertyGroup>
-  </Target>
+  </Target>-->
 </Project>
