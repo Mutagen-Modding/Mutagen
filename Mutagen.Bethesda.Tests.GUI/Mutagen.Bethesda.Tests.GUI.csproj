@@ -6,6 +6,8 @@
     <UseWPF>true</UseWPF>
     <IsPackable>false</IsPackable>
     <TargetPlatformIdentifier>Windows</TargetPlatformIdentifier>
+    <WarningsAsErrors>nullable</WarningsAsErrors>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
