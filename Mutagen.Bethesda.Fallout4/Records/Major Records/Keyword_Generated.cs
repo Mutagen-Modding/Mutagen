@@ -62,14 +62,32 @@ namespace Mutagen.Bethesda.Fallout4
         public FormLinkNullable<IAttractionRuleGetter> AttractionRule { get; set; } = new FormLinkNullable<IAttractionRuleGetter>();
         #endregion
         #region Name
-        public String? Name { get; set; }
+        public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IKeywordGetter.Name => this.Name;
+        ITranslatedStringGetter? IKeywordGetter.Name => this.Name;
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
         {
             get => this.Name ?? string.Empty;
             set => this.Name = value;
@@ -633,13 +651,15 @@ namespace Mutagen.Bethesda.Fallout4
         IKeywordLinkedReference,
         ILoquiObjectSetter<IKeywordInternal>,
         INamed,
-        INamedRequired
+        INamedRequired,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
         new Color? Color { get; set; }
         new String? Notes { get; set; }
         new Keyword.TypeEnum? Type { get; set; }
         new FormLinkNullable<IAttractionRuleGetter> AttractionRule { get; set; }
-        new String? Name { get; set; }
+        new TranslatedString? Name { get; set; }
         new String? DisplayName { get; set; }
     }
 
@@ -658,14 +678,16 @@ namespace Mutagen.Bethesda.Fallout4
         IKeywordLinkedReferenceGetter,
         ILoquiObject<IKeywordGetter>,
         INamedGetter,
-        INamedRequiredGetter
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Keyword_Registration.Instance;
         Color? Color { get; }
         String? Notes { get; }
         Keyword.TypeEnum? Type { get; }
         FormLinkNullable<IAttractionRuleGetter> AttractionRule { get; }
-        String? Name { get; }
+        ITranslatedStringGetter? Name { get; }
         String? DisplayName { get; }
 
     }
@@ -1019,7 +1041,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ret.Notes = string.Equals(item.Notes, rhs.Notes);
             ret.Type = item.Type == rhs.Type;
             ret.AttractionRule = item.AttractionRule.Equals(rhs.AttractionRule);
-            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Name = object.Equals(item.Name, rhs.Name);
             ret.DisplayName = string.Equals(item.DisplayName, rhs.DisplayName);
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -1153,7 +1175,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             if (!string.Equals(lhs.Notes, rhs.Notes)) return false;
             if (lhs.Type != rhs.Type) return false;
             if (!lhs.AttractionRule.Equals(rhs.AttractionRule)) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (!object.Equals(lhs.Name, rhs.Name)) return false;
             if (!string.Equals(lhs.DisplayName, rhs.DisplayName)) return false;
             return true;
         }
@@ -1325,7 +1347,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Keyword_FieldIndex.Name) ?? true))
             {
-                item.Name = rhs.Name;
+                item.Name = rhs.Name?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)Keyword_FieldIndex.DisplayName) ?? true))
             {
@@ -1510,7 +1532,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.DisplayName,
@@ -1640,6 +1663,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Keyword_FieldIndex.Name;
                 }
@@ -1724,10 +1748,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
         #endregion
         #endregion
         #region DisplayName

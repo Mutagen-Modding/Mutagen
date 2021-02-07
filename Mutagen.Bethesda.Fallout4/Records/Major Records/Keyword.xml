@@ -6,7 +6,7 @@
       <String name="Notes" recordType="DNAM" />
       <Enum name="Type" enumName="Keyword.TypeEnum" byteLength="4" recordType="TNAM" />
       <FormLink name="AttractionRule" refName="AttractionRule" recordType="DATA" />
-      <String name="Name" recordType="FULL" />
+      <String name="Name" recordType="FULL" translated="Normal" />
       <String name="DisplayName" recordType="NNAM"/>
     </Fields>
     <LinkInterface>IKeywordLinkedReference</LinkInterface>

@@ -96,7 +96,8 @@ namespace Mutagen.Bethesda.Tests
                             dataFolder,
                             language,
                             StringsSource.Normal,
-                            new StringsAlignmentCustom("GMST", GameSettingStringHandler)
+                            new StringsAlignmentCustom("GMST", GameSettingStringHandler),
+                            new RecordType[] { "KYWD", "FULL" }
                         ));
                     break;
                     //case StringsSource.DL:
