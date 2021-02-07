@@ -1,4 +1,3 @@
-using Alphaleonis.Win32.Filesystem;
 using DynamicData;
 using DynamicData.Binding;
 using Noggog.WPF;
@@ -7,6 +6,7 @@ using ReactiveUI.Fody.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;

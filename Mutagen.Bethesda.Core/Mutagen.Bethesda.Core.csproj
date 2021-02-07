@@ -24,7 +24,6 @@
     <None Remove="Translations\Binary\WriteParameters\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Compression.BSA" Version="2.2.1.1" />
     <PackageReference Include="DotNetZip" Version="1.15.0" />
     <PackageReference Include="DynamicData" Version="7.1.1" />
     <PackageReference Include="GitInfo" Version="2.1.2">
@@ -38,6 +37,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="SharpZipLib" Version="1.3.1" />
     <PackageReference Include="System.Collections.Immutable" Version="5.0.0" />
   </ItemGroup>
   <PropertyGroup>
@@ -93,10 +93,6 @@
     <Compile Include="Extensions\RemoveExt.cs" />
     <Compile Include="Extensions\LoadOrderExt.cs" />
     <Compile Include="Extensions\GameReleaseExt.cs" />
-    <Compile Include="Game Location\GameMetaData.cs" />
-    <Compile Include="Game Location\GogHandler.cs" />
-    <Compile Include="Game Location\SteamHandler.cs" />
-    <Compile Include="Game Location\GameLocations.cs" />
     <Compile Include="Interfaces\Aspect\IKeywordCommon.cs" />
     <Compile Include="Interfaces\IGameSettingCommon.cs" />
     <Compile Include="Interfaces\IGroup.cs" />

@@ -1,3 +1,4 @@
+using Mutagen.Bethesda.GameLocation;
 using Noggog;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda.GameLocation
+namespace Mutagen.Bethesda
 {
     public static class GameLocations
     {
