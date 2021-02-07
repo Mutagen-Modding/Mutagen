@@ -6,6 +6,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <WarningsAsErrors>nullable</WarningsAsErrors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>Mutagen.Bethesda.Core.xml</DocumentationFile>
@@ -56,9 +57,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Archives\Archive.cs" />
+    <Compile Include="Archives\Ba2\Ba2EntryType.cs" />
     <Compile Include="Archives\Ba2\Ba2FolderWrapper.cs" />
-    <Compile Include="Archives\Ba2\Ba2Wrapper.cs" />
-    <Compile Include="Archives\Ba2\Ba2FileWrapper.cs" />
+    <Compile Include="Archives\Ba2\Ba2Reader.cs" />
+    <Compile Include="Archives\Ba2\DDS.cs" />
     <Compile Include="Archives\Bsa\BsaArchiveFlags.cs" />
     <Compile Include="Archives\Bsa\BsaFileFlags.cs" />
     <Compile Include="Archives\Bsa\BsaFileRecord.cs" />
