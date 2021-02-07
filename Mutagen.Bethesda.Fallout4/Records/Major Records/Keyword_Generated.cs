@@ -626,7 +626,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IKeyword :
-        IFallout4MajorRecord,
+        IFallout4MajorRecordInternal,
         IFormLinkContainer,
         IKeywordCommon,
         IKeywordGetter,

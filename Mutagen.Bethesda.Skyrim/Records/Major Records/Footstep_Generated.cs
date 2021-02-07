@@ -491,7 +491,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFootstepGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IFootstepInternal>,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new FormLink<IImpactDataSetGetter> ImpactDataSet { get; set; }
         new String Tag { get; set; }

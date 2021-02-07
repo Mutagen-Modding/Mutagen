@@ -29,11 +29,12 @@ namespace Mutagen.Bethesda.UnitTests
             File.WriteAllText(Path.Combine(temp.Dir.Path, "MyMod.bsa"), string.Empty);
             var applicable = Archive.GetApplicableArchivePaths(GameRelease.SkyrimSE, temp.Dir.Path, Utility.Skyrim)
                 .ToArray();
-            applicable.Should().HaveCount(2);
             applicable.Should().BeEquivalentTo(new string[]
             {
                 Path.Combine(temp.Dir.Path, "Skyrim.bsa"),
-                Path.Combine(temp.Dir.Path, "Skyrim - Textures.bsa")
+                Path.Combine(temp.Dir.Path, "Skyrim - Textures.bsa"),
+                // Eventually this might not show?  Need to iron out what's applicable, still
+                Path.Combine(temp.Dir.Path, "MyMod.bsa")
             });
         }
         #endregion

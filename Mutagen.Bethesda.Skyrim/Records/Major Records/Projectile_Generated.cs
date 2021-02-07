@@ -1527,7 +1527,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectId,
         IPlacedTrapTarget,
         IProjectileGetter,
-        ISkyrimMajorRecord,
+        ISkyrimMajorRecordInternal,
         ITranslatedNamed,
         ITranslatedNamedRequired
     {

@@ -39,9 +39,9 @@ namespace Mutagen.Bethesda
                 case GameRelease.SkyrimLE:
                 case GameRelease.SkyrimSE:
                 case GameRelease.SkyrimVR:
-                    return new BsaWrapper(path);
+                    return new BsaReader(path);
                 case GameRelease.Fallout4:
-                    return new Ba2Wrapper(path);
+                    return new Ba2Reader(path);
                 default:
                     throw new NotImplementedException();
             }

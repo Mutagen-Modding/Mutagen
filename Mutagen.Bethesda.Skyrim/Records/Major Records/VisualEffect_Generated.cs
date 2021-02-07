@@ -556,7 +556,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IVisualEffect :
         IFormLinkContainer,
         ILoquiObjectSetter<IVisualEffectInternal>,
-        ISkyrimMajorRecord,
+        ISkyrimMajorRecordInternal,
         IVisualEffectGetter
     {
         new FormLink<IArtObjectGetter> EffectArt { get; set; }

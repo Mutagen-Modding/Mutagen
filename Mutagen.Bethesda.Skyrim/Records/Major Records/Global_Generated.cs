@@ -399,7 +399,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IGlobal :
         IGlobalGetter,
         ILoquiObjectSetter<IGlobalInternal>,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         #region Mutagen
         new Global.MajorFlag MajorFlags { get; set; }

@@ -1263,7 +1263,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectId,
         IOwner,
         IRelatable,
-        ISkyrimMajorRecord,
+        ISkyrimMajorRecordInternal,
         ITranslatedNamed,
         ITranslatedNamedRequired
     {

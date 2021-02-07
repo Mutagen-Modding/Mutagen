@@ -7051,7 +7051,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IImageSpaceAdapter :
         IImageSpaceAdapterGetter,
         ILoquiObjectSetter<IImageSpaceAdapterInternal>,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new ImageSpaceAdapter.Flag Flags { get; set; }
         new Single Duration { get; set; }

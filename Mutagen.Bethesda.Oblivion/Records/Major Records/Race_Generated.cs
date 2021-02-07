@@ -1456,7 +1456,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IRaceInternal>,
         INamed,
         INamedRequired,
-        IOblivionMajorRecord,
+        IOblivionMajorRecordInternal,
         IRaceGetter
     {
         new String? Name { get; set; }

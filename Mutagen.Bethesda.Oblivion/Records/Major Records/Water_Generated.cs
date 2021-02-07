@@ -664,7 +664,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IWater :
         IFormLinkContainer,
         ILoquiObjectSetter<IWaterInternal>,
-        IOblivionMajorRecord,
+        IOblivionMajorRecordInternal,
         IWaterGetter
     {
         new String? Texture { get; set; }

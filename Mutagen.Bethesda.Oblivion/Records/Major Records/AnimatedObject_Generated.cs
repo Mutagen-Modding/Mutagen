@@ -492,7 +492,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkContainer,
         ILoquiObjectSetter<IAnimatedObjectInternal>,
         IModeled,
-        IOblivionMajorRecord
+        IOblivionMajorRecordInternal
     {
         new Model? Model { get; set; }
         new FormLinkNullable<IIdleAnimationGetter> IdleAnimation { get; set; }

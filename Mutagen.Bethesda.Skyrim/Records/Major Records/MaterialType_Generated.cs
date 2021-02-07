@@ -636,7 +636,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMaterialTypeGetter,
         INamed,
         INamedRequired,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new FormLinkNullable<IMaterialTypeGetter> Parent { get; set; }
         new String? Name { get; set; }

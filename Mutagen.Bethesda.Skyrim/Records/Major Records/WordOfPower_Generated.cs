@@ -520,7 +520,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IWordOfPowerInternal>,
         INamed,
         INamedRequired,
-        ISkyrimMajorRecord,
+        ISkyrimMajorRecordInternal,
         ITranslatedNamed,
         ITranslatedNamedRequired,
         IWordOfPowerGetter

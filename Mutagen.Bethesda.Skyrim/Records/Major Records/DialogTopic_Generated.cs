@@ -959,7 +959,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMajorRecordEnumerable,
         INamed,
         INamedRequired,
-        ISkyrimMajorRecord,
+        ISkyrimMajorRecordInternal,
         ITranslatedNamed,
         ITranslatedNamedRequired
     {
@@ -1987,7 +1987,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public IEnumerable<IModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        public IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             IDialogTopicGetter obj,
             ILinkCache linkCache,
             ModKey modKey,
@@ -1995,7 +1995,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Func<ISkyrimMod, IDialogTopicGetter, IDialogTopic> getOrAddAsOverride,
             Func<ISkyrimMod, IDialogTopicGetter, string?, IDialogTopic> duplicateInto)
         {
-            var curContext = new ModContext<ISkyrimMod, IDialogTopic, IDialogTopicGetter>(
+            var curContext = new ModContext<ISkyrimMod, ISkyrimModGetter, IDialogTopic, IDialogTopicGetter>(
                 modKey,
                 record: obj,
                 getOrAddAsOverride: getOrAddAsOverride,
@@ -2003,7 +2003,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 parent: parent);
             foreach (var subItem in obj.Responses)
             {
-                yield return new ModContext<ISkyrimMod, IDialogResponsesInternal, IDialogResponsesGetter>(
+                yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IDialogResponsesInternal, IDialogResponsesGetter>(
                     modKey: modKey,
                     record: subItem,
                     parent: curContext,
@@ -2022,7 +2022,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public IEnumerable<IModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        public IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             IDialogTopicGetter obj,
             ILinkCache linkCache,
             Type type,
@@ -2032,7 +2032,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Func<ISkyrimMod, IDialogTopicGetter, IDialogTopic> getOrAddAsOverride,
             Func<ISkyrimMod, IDialogTopicGetter, string?, IDialogTopic> duplicateInto)
         {
-            var curContext = new ModContext<ISkyrimMod, IDialogTopic, IDialogTopicGetter>(
+            var curContext = new ModContext<ISkyrimMod, ISkyrimModGetter, IDialogTopic, IDialogTopicGetter>(
                 modKey,
                 record: obj,
                 getOrAddAsOverride: getOrAddAsOverride,
@@ -2079,7 +2079,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<ISkyrimMod, IDialogResponsesInternal, IDialogResponsesGetter>(
+                            yield return new ModContext<ISkyrimMod, ISkyrimModGetter, IDialogResponsesInternal, IDialogResponsesGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,

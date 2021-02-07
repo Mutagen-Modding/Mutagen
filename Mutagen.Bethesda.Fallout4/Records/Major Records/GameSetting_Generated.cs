@@ -385,7 +385,7 @@ namespace Mutagen.Bethesda.Fallout4
     /// Implemented by: [GameSettingInt, GameSettingFloat, GameSettingString, GameSettingBool, GameSettingUInt]
     /// </summary>
     public partial interface IGameSetting :
-        IFallout4MajorRecord,
+        IFallout4MajorRecordInternal,
         IGameSettingGetter,
         ILoquiObjectSetter<IGameSettingInternal>
     {

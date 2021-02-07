@@ -775,7 +775,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMessageGetter,
         INamed,
         INamedRequired,
-        ISkyrimMajorRecord,
+        ISkyrimMajorRecordInternal,
         ITranslatedNamed,
         ITranslatedNamedRequired
     {

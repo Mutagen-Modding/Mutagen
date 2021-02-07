@@ -461,7 +461,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILocationRecord,
         ILocationReferenceTypeGetter,
         ILoquiObjectSetter<ILocationReferenceTypeInternal>,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new Color? Color { get; set; }
     }

@@ -97,5 +97,33 @@ namespace Mutagen.Bethesda.UnitTests
             npc.Keywords.Add(keyword);
             npc.HasKeyword(Utility.Edid1, cache).Should().BeTrue();
         }
+
+        [Fact]
+        public void TryResolveKeyword_ByFormKey_Found()
+        {
+            SkyrimMod mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimSE);
+            var npc = mod.Npcs.AddNew();
+            var cache = mod.ToImmutableLinkCache();
+            Keyword keyword = mod.Keywords.AddNew();
+            keyword.EditorID = Utility.Edid1;
+            npc.Keywords = new ExtendedList<IFormLink<IKeywordGetter>>();
+            npc.Keywords.Add(keyword);
+            npc.TryResolveKeyword(keyword.FormKey, cache, out var kw).Should().BeTrue();
+            kw.Should().Be(keyword);
+        }
+
+        [Fact]
+        public void TryResolveKeyword_ByEditorID_Found()
+        {
+            SkyrimMod mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimSE);
+            var npc = mod.Npcs.AddNew();
+            var cache = mod.ToImmutableLinkCache();
+            Keyword keyword = mod.Keywords.AddNew();
+            keyword.EditorID = Utility.Edid1;
+            npc.Keywords = new ExtendedList<IFormLink<IKeywordGetter>>();
+            npc.Keywords.Add(keyword);
+            npc.TryResolveKeyword(Utility.Edid1, cache, out var kw).Should().BeTrue();
+            kw.Should().Be(keyword);
+        }
     }
 }

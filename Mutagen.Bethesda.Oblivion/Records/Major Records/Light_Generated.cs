@@ -674,7 +674,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ILight :
-        IAItem,
+        IAItemInternal,
         IFormLinkContainer,
         ILightGetter,
         ILoquiObjectSetter<ILightInternal>,

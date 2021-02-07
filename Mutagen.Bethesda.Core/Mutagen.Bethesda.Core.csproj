@@ -4,6 +4,9 @@
     <TargetFrameworks>net5.0;netstandard2.1</TargetFrameworks>
     <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <WarningsAsErrors>nullable</WarningsAsErrors>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>Mutagen.Bethesda.Core.xml</DocumentationFile>
@@ -28,8 +31,9 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Loqui" Version="2.5.0" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.5.0" />
+    <PackageReference Include="K4os.Compression.LZ4.Streams" Version="1.2.6" />
+    <PackageReference Include="Loqui" Version="2.5.0.1-dev" />
+    <PackageReference Include="Noggog.CSharpExt" Version="2.5.0.1-dev" />
     <PackageReference Include="NuGetizer" Version="0.6.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -42,7 +46,7 @@
     <Company>Mutagen</Company>
     <Product>Mutagen</Product>
     <Description>A C# library for manipulating, creating, and analyzing Bethesda mods.  Contains only the core components without the generated records.</Description>
-    <Copyright>2020</Copyright>
+    <Copyright>2021</Copyright>
     <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/Noggog/Mutagen</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Noggog/Mutagen</RepositoryUrl>
@@ -53,11 +57,18 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Archives\Archive.cs" />
+    <Compile Include="Archives\Ba2\Ba2EntryType.cs" />
     <Compile Include="Archives\Ba2\Ba2FolderWrapper.cs" />
-    <Compile Include="Archives\Ba2\Ba2Wrapper.cs" />
-    <Compile Include="Archives\Bsa\BsaFileWrapper.cs" />
-    <Compile Include="Archives\Bsa\BsaFolderWrapper.cs" />
-    <Compile Include="Archives\Bsa\BsaWrapper.cs" />
+    <Compile Include="Archives\Ba2\Ba2Reader.cs" />
+    <Compile Include="Archives\Ba2\DDS.cs" />
+    <Compile Include="Archives\Bsa\BsaArchiveFlags.cs" />
+    <Compile Include="Archives\Bsa\BsaFileFlags.cs" />
+    <Compile Include="Archives\Bsa\BsaFileRecord.cs" />
+    <Compile Include="Archives\Bsa\BsaFolderRecord.cs" />
+    <Compile Include="Archives\Bsa\BsaReader.cs" />
+    <Compile Include="Archives\Bsa\BsaUtility.cs" />
+    <Compile Include="Archives\Bsa\BsaVersionType.cs" />
+    <Compile Include="Archives\Bsa\BsaFileNameBlock.cs" />
     <Compile Include="Archives\IArchiveFile.cs" />
     <Compile Include="Archives\IArchiveFolder.cs" />
     <Compile Include="Enums\ColorBinaryType.cs" />
@@ -70,6 +81,7 @@
     <Compile Include="Enums\StringsSource.cs" />
     <Compile Include="Exceptions\BsaException.cs" />
     <Compile Include="Exceptions\MissingModException.cs" />
+    <Compile Include="Exceptions\RecordCollisionException.cs" />
     <Compile Include="Exceptions\RecordException.cs" />
     <Compile Include="Exceptions\SubrecordException.cs" />
     <Compile Include="Extensions\EnumerableExt.cs" />
@@ -81,6 +93,10 @@
     <Compile Include="Extensions\RemoveExt.cs" />
     <Compile Include="Extensions\LoadOrderExt.cs" />
     <Compile Include="Extensions\GameReleaseExt.cs" />
+    <Compile Include="Game Location\GameMetaData.cs" />
+    <Compile Include="Game Location\GogHandler.cs" />
+    <Compile Include="Game Location\SteamHandler.cs" />
+    <Compile Include="Game Location\GameLocations.cs" />
     <Compile Include="Interfaces\Aspect\IKeywordCommon.cs" />
     <Compile Include="Interfaces\IGameSettingCommon.cs" />
     <Compile Include="Interfaces\IGroup.cs" />
@@ -100,13 +116,17 @@
     <Compile Include="Interfaces\LinkInterfaceMapping.cs" />
     <Compile Include="IsExternalInit.cs" />
     <Compile Include="Interfaces\Aspect\IWeightValue.cs" />
-    <Compile Include="Links\ImmutableModLinkCache.cs" />
+    <Compile Include="Links\Cache\ImmutableModLinkCache.cs" />
+    <Compile Include="Links\Cache\LinkCacheItem.cs" />
+    <Compile Include="Links\Cache\Preferences\LinkCachePreferenceOnlySimple.cs" />
+    <Compile Include="Links\Cache\Preferences\LinkCachePreferenceWholeRecord.cs" />
     <Compile Include="Links\FormLinkNullable.cs" />
     <Compile Include="Links\IFormLink.cs" />
-    <Compile Include="Links\ILinkCache.cs" />
-    <Compile Include="Links\ImmutableLoadOrderLinkCache.cs" />
-    <Compile Include="Links\MutableModLinkCache.cs" />
-    <Compile Include="Links\MutableLoadOrderLinkCache.cs" />
+    <Compile Include="Links\Cache\ILinkCache.cs" />
+    <Compile Include="Links\Cache\ImmutableLoadOrderLinkCache.cs" />
+    <Compile Include="Links\Cache\Preferences\LinkCachePreferences.cs" />
+    <Compile Include="Links\Cache\MutableModLinkCache.cs" />
+    <Compile Include="Links\Cache\MutableLoadOrderLinkCache.cs" />
     <Compile Include="Load Order\CreationClubListings.cs" />
     <Compile Include="Load Order\ImplicitListings.cs" />
     <Compile Include="Load Order\LoadOrder.cs" />

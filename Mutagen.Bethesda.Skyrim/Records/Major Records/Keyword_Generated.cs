@@ -462,7 +462,7 @@ namespace Mutagen.Bethesda.Skyrim
         IKeywordGetter,
         IKeywordLinkedReference,
         ILoquiObjectSetter<IKeywordInternal>,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new Color? Color { get; set; }
     }

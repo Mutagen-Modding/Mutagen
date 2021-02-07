@@ -1,0 +1,9 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:Mutagen.Bethesda.WPF"
+    xmlns:mahapps="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+    xmlns:noggog="clr-namespace:Noggog.WPF;assembly=Noggog.WPF">
+
+    <local:ModTypeStringConverter x:Key="ModTypeStringConverter" />
+</ResourceDictionary>

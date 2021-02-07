@@ -546,7 +546,7 @@ namespace Mutagen.Bethesda.Skyrim
         IDefaultObjectManagerGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IDefaultObjectManagerInternal>,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new ExtendedList<DefaultObject>? Objects { get; set; }
     }

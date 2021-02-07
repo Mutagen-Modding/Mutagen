@@ -659,7 +659,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ILeveledSpell :
-        IASpell,
+        IASpellInternal,
         IFormLinkContainer,
         ILeveledSpellGetter,
         ILoquiObjectSetter<ILeveledSpellInternal>,

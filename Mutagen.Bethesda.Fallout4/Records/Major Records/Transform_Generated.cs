@@ -628,7 +628,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface ITransform :
-        IFallout4MajorRecord,
+        IFallout4MajorRecordInternal,
         ILoquiObjectSetter<ITransformInternal>,
         ITransformGetter
     {

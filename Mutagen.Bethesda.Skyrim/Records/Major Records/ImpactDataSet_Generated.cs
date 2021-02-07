@@ -546,7 +546,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         IImpactDataSetGetter,
         ILoquiObjectSetter<IImpactDataSetInternal>,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new ExtendedList<ImpactData> Impacts { get; }
     }

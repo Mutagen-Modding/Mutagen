@@ -499,7 +499,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ICombatStyle :
         ICombatStyleGetter,
         ILoquiObjectSetter<ICombatStyleInternal>,
-        IOblivionMajorRecord
+        IOblivionMajorRecordInternal
     {
         new CombatStyleData? Data { get; set; }
         new CombatStyleAdvanced? Advanced { get; set; }

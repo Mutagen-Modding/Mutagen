@@ -484,7 +484,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface ILocationReferenceType :
-        IFallout4MajorRecord,
+        IFallout4MajorRecordInternal,
         ILocationRecord,
         ILocationReferenceTypeGetter,
         ILoquiObjectSetter<ILocationReferenceTypeInternal>

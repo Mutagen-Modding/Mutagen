@@ -404,7 +404,7 @@ namespace Mutagen.Bethesda.Fallout4
     #region Interface
     public partial interface IAttractionRule :
         IAttractionRuleGetter,
-        IFallout4MajorRecord,
+        IFallout4MajorRecordInternal,
         ILoquiObjectSetter<IAttractionRuleInternal>
     {
     }

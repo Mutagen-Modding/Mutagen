@@ -450,7 +450,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IGlobalInt :
-        IGlobal,
+        IGlobalInternal,
         IGlobalIntGetter,
         ILoquiObjectSetter<IGlobalIntInternal>
     {

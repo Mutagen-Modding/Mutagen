@@ -697,7 +697,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ITree :
         ILoquiObjectSetter<ITreeInternal>,
         IModeled,
-        IOblivionMajorRecord,
+        IOblivionMajorRecordInternal,
         ITreeGetter
     {
         new Model? Model { get; set; }

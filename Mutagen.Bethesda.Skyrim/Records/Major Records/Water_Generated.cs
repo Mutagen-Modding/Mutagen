@@ -2724,7 +2724,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IWaterInternal>,
         INamed,
         INamedRequired,
-        ISkyrimMajorRecord,
+        ISkyrimMajorRecordInternal,
         ITranslatedNamed,
         ITranslatedNamedRequired,
         IWaterGetter

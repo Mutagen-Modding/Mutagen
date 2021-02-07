@@ -3016,7 +3016,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IWeather :
         IFormLinkContainer,
         ILoquiObjectSetter<IWeatherInternal>,
-        ISkyrimMajorRecord,
+        ISkyrimMajorRecordInternal,
         IWeatherGetter
     {
         new String?[] CloudTextures { get; }

@@ -637,7 +637,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkContainer,
         ILandTextureGetter,
         ILoquiObjectSetter<ILandTextureInternal>,
-        IOblivionMajorRecord
+        IOblivionMajorRecordInternal
     {
         new String? Icon { get; set; }
         new HavokData? Havok { get; set; }

@@ -184,14 +184,16 @@ namespace Mutagen.Bethesda
         /// <param name="majorRecord">Major Record if located</param>
         /// <returns>True if successful in linking to record</returns>
         /// <typeparam name="TMod">Mod setter type that can be overridden into</typeparam>
-        /// <typeparam name="TMajorSetter">Major Record setter type to resolve to</typeparam>
+        /// <typeparam name="TModGetter">Mod getter type that can be overridden into</typeparam>
+        /// <typeparam name="TMajor">Major Record setter type to resolve to</typeparam>
         /// <typeparam name="TMajorGetter">Major Record getter type to resolve to</typeparam>
-        public static bool TryResolveContext<TMod, TMajorSetter, TMajorGetter>(
+        public static bool TryResolveContext<TMod, TModGetter, TMajor, TMajorGetter>(
             this IFormLink<TMajorGetter> link,
-            ILinkCache<TMod> cache,
-            [MaybeNullWhen(false)] out IModContext<TMod, TMajorSetter, TMajorGetter> majorRecord)
-            where TMod : class, IContextMod<TMod>
-            where TMajorSetter : class, IMajorRecordCommon, TMajorGetter
+            ILinkCache<TMod, TModGetter> cache,
+            [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, TMajor, TMajorGetter> majorRecord)
+            where TModGetter : class, IModGetter
+            where TMod : class, TModGetter, IContextMod<TMod, TModGetter>
+            where TMajor : class, IMajorRecordCommon, TMajorGetter
             where TMajorGetter : class, IMajorRecordCommonGetter
         {
             if (!link.FormKeyNullable.TryGet(out var formKey))
@@ -199,7 +201,7 @@ namespace Mutagen.Bethesda
                 majorRecord = default;
                 return false;
             }
-            return cache.TryResolveContext<TMajorSetter, TMajorGetter>(formKey, out majorRecord);
+            return cache.TryResolveContext<TMajor, TMajorGetter>(formKey, out majorRecord);
         }
 
         /// <summary>
@@ -210,16 +212,18 @@ namespace Mutagen.Bethesda
         /// <returns>Located Major Record</returns>
         /// <exception cref="NullReferenceException">If link was not succesful</exception>
         /// <typeparam name="TMod">Mod setter type that can be overridden into</typeparam>
-        /// <typeparam name="TMajorSetter">Major Record setter type to resolve to</typeparam>
+        /// <typeparam name="TModGetter">Mod getter type that can be overridden into</typeparam>
+        /// <typeparam name="TMajor">Major Record setter type to resolve to</typeparam>
         /// <typeparam name="TMajorGetter">Major Record getter type to resolve to</typeparam>
-        public static IModContext<TMod, TMajorSetter, TMajorGetter>? ResolveContext<TMod, TMajorSetter, TMajorGetter>(
+        public static IModContext<TMod, TModGetter, TMajor, TMajorGetter>? ResolveContext<TMod, TModGetter, TMajor, TMajorGetter>(
             this IFormLink<TMajorGetter> link,
-            ILinkCache<TMod> cache)
-            where TMod : class, IContextMod<TMod>
-            where TMajorSetter : class, IMajorRecordCommon, TMajorGetter
+            ILinkCache<TMod, TModGetter> cache)
+            where TModGetter : class, IModGetter
+            where TMod : class, TModGetter, IContextMod<TMod, TModGetter>
+            where TMajor : class, IMajorRecordCommon, TMajorGetter
             where TMajorGetter : class, IMajorRecordCommonGetter
         {
-            if (link.TryResolveContext<TMod, TMajorSetter, TMajorGetter>(cache, out var majorRecord))
+            if (link.TryResolveContext<TMod, TModGetter, TMajor, TMajorGetter>(cache, out var majorRecord))
             {
                 return majorRecord;
             }
@@ -234,14 +238,16 @@ namespace Mutagen.Bethesda
         /// <param name="majorRecord">Located record if successful</param>
         /// <returns>True if link was resolved and a record was retrieved</returns>
         /// <typeparam name="TMod">Mod setter type that can be overridden into</typeparam>
+        /// <typeparam name="TModGetter">Mod getter type that can be overridden into</typeparam>
         /// <typeparam name="TMajorGetter">Original links Major Record type</typeparam>
         /// <typeparam name="TScopedSetter">Inheriting Major Record setter type to scope to</typeparam>
         /// <typeparam name="TScopedGetter">Inheriting Major Record getter type to scope to</typeparam>
-        public static bool TryResolveContext<TMod, TMajorGetter, TScopedSetter, TScopedGetter>(
+        public static bool TryResolveContext<TMod, TModGetter, TMajorGetter, TScopedSetter, TScopedGetter>(
             this IFormLink<TMajorGetter> link,
-            ILinkCache<TMod> cache,
-            [MaybeNullWhen(false)] out IModContext<TMod, TScopedSetter, TScopedGetter> majorRecord)
-            where TMod : class, IContextMod<TMod>
+            ILinkCache<TMod, TModGetter> cache,
+            [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, TScopedSetter, TScopedGetter> majorRecord)
+            where TModGetter : class, IModGetter
+            where TMod : class, TModGetter, IContextMod<TMod, TModGetter>
             where TMajorGetter : class, IMajorRecordCommonGetter
             where TScopedSetter : class, TScopedGetter, IMajorRecordCommon
             where TScopedGetter : class, TMajorGetter
@@ -262,18 +268,20 @@ namespace Mutagen.Bethesda
         /// <returns>Located Major Record</returns> 
         /// <exception cref="NullReferenceException">If link was not succesful</exception>
         /// <typeparam name="TMod">Mod setter type that can be overridden into</typeparam>
+        /// <typeparam name="TModGetter">Mod getter type that can be overridden into</typeparam>
         /// <typeparam name="TMajorGetter">Original links Major Record type</typeparam>
         /// <typeparam name="TScopedSetter">Inheriting Major Record setter type to scope to</typeparam>
         /// <typeparam name="TScopedGetter">Inheriting Major Record getter type to scope to</typeparam>
-        public static IModContext<TMod, TScopedSetter, TScopedGetter>? ResolveContext<TMod, TMajorGetter, TScopedSetter, TScopedGetter>(
+        public static IModContext<TMod, TModGetter, TScopedSetter, TScopedGetter>? ResolveContext<TMod, TModGetter, TMajorGetter, TScopedSetter, TScopedGetter>(
             this IFormLink<TMajorGetter> link,
-            ILinkCache<TMod> cache)
-            where TMod : class, IContextMod<TMod>
+            ILinkCache<TMod, TModGetter> cache)
+            where TModGetter : class, IModGetter
+            where TMod : class, TModGetter, IContextMod<TMod, TModGetter>
             where TMajorGetter : class, IMajorRecordCommonGetter
             where TScopedSetter : class, TScopedGetter, IMajorRecordCommon
             where TScopedGetter : class, TMajorGetter
         {
-            if (link.TryResolveContext<TMod, TMajorGetter, TScopedSetter, TScopedGetter>(cache, out var majorRecord))
+            if (link.TryResolveContext<TMod, TModGetter, TMajorGetter, TScopedSetter, TScopedGetter>(cache, out var majorRecord))
             {
                 return majorRecord;
             }
@@ -290,18 +298,22 @@ namespace Mutagen.Bethesda
         /// <param name="cache">Link Cache to resolve against</param>
         /// <returns>Enumerable of the linked records</returns>
         /// <typeparam name="TMod">Mod setter type that can be overridden into</typeparam>
-        /// <typeparam name="TMajorSetter">Major Record setter type to resolve to</typeparam>
+        /// <typeparam name="TModGetter">Mod getter type that can be overridden into</typeparam>
+        /// <typeparam name="TMajor">Major Record setter type to resolve to</typeparam>
         /// <typeparam name="TMajorGetter">Major Record getter type to resolve to</typeparam>
-        public static IEnumerable<IModContext<TMod, TMajorSetter, TMajorGetter>> ResolveAllContexts<TMod, TMajorSetter, TMajorGetter>(this IFormLink<TMajorGetter> link, ILinkCache<TMod> cache)
-            where TMod : class, IContextMod<TMod>
-            where TMajorSetter : class, IMajorRecordCommon, TMajorGetter
+        public static IEnumerable<IModContext<TMod, TModGetter, TMajor, TMajorGetter>> ResolveAllContexts<TMod, TModGetter, TMajor, TMajorGetter>(
+            this IFormLink<TMajorGetter> link,
+            ILinkCache<TMod, TModGetter> cache)
+            where TModGetter : class, IModGetter
+            where TMod : class, TModGetter, IContextMod<TMod, TModGetter>
+            where TMajor : class, IMajorRecordCommon, TMajorGetter
             where TMajorGetter : class, IMajorRecordCommonGetter
         {
             if (!link.FormKeyNullable.TryGet(out var formKey))
             {
-                return Enumerable.Empty<IModContext<TMod, TMajorSetter, TMajorGetter>>();
+                return Enumerable.Empty<IModContext<TMod, TModGetter, TMajor, TMajorGetter>>();
             }
-            return cache.ResolveAllContexts<TMajorSetter, TMajorGetter>(formKey);
+            return cache.ResolveAllContexts<TMajor, TMajorGetter>(formKey);
         }
 
         /// <summary>
@@ -312,18 +324,22 @@ namespace Mutagen.Bethesda
         /// <param name="cache">Link Cache to resolve against</param>
         /// <returns>Enumerable of the linked records</returns>
         /// <typeparam name="TMod">Mod setter type that can be overridden into</typeparam>
+        /// <typeparam name="TModGetter">Mod getter type that can be overridden into</typeparam>
         /// <typeparam name="TMajorGetter">Original links Major Record type</typeparam>
         /// <typeparam name="TScopedSetter">Inheriting Major Record setter type to scope to</typeparam>
         /// <typeparam name="TScopedGetter">Inheriting Major Record getter type to scope to</typeparam>
-        public static IEnumerable<IModContext<TMod, TScopedSetter, TScopedGetter>> ResolveAllContexts<TMod, TMajorGetter, TScopedSetter, TScopedGetter>(this IFormLink<TMajorGetter> link, ILinkCache<TMod> cache)
-            where TMod : class, IContextMod<TMod>
+        public static IEnumerable<IModContext<TMod, TModGetter, TScopedSetter, TScopedGetter>> ResolveAllContexts<TMod, TModGetter, TMajorGetter, TScopedSetter, TScopedGetter>(
+            this IFormLink<TMajorGetter> link, 
+            ILinkCache<TMod, TModGetter> cache)
+            where TModGetter : class, IModGetter
+            where TMod : class, TModGetter, IContextMod<TMod, TModGetter>
             where TMajorGetter : class, IMajorRecordCommonGetter
             where TScopedSetter : class, TScopedGetter, IMajorRecordCommon
             where TScopedGetter : class, TMajorGetter
         {
             if (!link.FormKeyNullable.TryGet(out var formKey))
             {
-                return Enumerable.Empty<IModContext<TMod, TScopedSetter, TScopedGetter>>();
+                return Enumerable.Empty<IModContext<TMod, TModGetter, TScopedSetter, TScopedGetter>>();
             }
             return cache.ResolveAllContexts<TScopedSetter, TScopedGetter>(formKey);
         }

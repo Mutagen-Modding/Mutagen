@@ -390,7 +390,7 @@ namespace Mutagen.Bethesda.Fallout4
     /// Implemented by: [GlobalInt, GlobalShort, GlobalFloat, GlobalBool]
     /// </summary>
     public partial interface IGlobal :
-        IFallout4MajorRecord,
+        IFallout4MajorRecordInternal,
         IGlobalGetter,
         ILoquiObjectSetter<IGlobalInternal>
     {

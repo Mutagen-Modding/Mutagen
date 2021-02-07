@@ -450,8 +450,8 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IGlobalBool :
-        IGlobal,
         IGlobalBoolGetter,
+        IGlobalInternal,
         ILoquiObjectSetter<IGlobalBoolInternal>
     {
         new Boolean? Data { get; set; }

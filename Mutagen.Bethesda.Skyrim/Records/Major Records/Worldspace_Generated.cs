@@ -1774,7 +1774,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMajorRecordEnumerable,
         INamed,
         INamedRequired,
-        ISkyrimMajorRecord,
+        ISkyrimMajorRecordInternal,
         ITranslatedNamed,
         ITranslatedNamedRequired,
         IWorldspaceGetter
@@ -3889,7 +3889,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public IEnumerable<IModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        public IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             IWorldspaceGetter obj,
             ILinkCache linkCache,
             ModKey modKey,
@@ -3897,7 +3897,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Func<ISkyrimMod, IWorldspaceGetter, IWorldspace> getOrAddAsOverride,
             Func<ISkyrimMod, IWorldspaceGetter, string?, IWorldspace> duplicateInto)
         {
-            var curContext = new ModContext<ISkyrimMod, IWorldspace, IWorldspaceGetter>(
+            var curContext = new ModContext<ISkyrimMod, ISkyrimModGetter, IWorldspace, IWorldspaceGetter>(
                 modKey,
                 record: obj,
                 getOrAddAsOverride: getOrAddAsOverride,
@@ -3906,7 +3906,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
                 {
-                    yield return new ModContext<ISkyrimMod, ICellInternal, ICellGetter>(
+                    yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ICellInternal, ICellGetter>(
                         modKey: modKey,
                         record: WorldspaceTopCellitem,
                         parent: curContext,
@@ -3957,14 +3957,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 linkCache: linkCache,
                 throwIfUnknown: false,
                 worldspace: obj,
-                getOrAddAsOverride: getOrAddAsOverride,
-                duplicateInto: duplicateInto))
+                getOrAddAsOverride: getOrAddAsOverride))
             {
                 yield return item;
             }
         }
         
-        public IEnumerable<IModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        public IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             IWorldspaceGetter obj,
             ILinkCache linkCache,
             Type type,
@@ -3974,7 +3973,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Func<ISkyrimMod, IWorldspaceGetter, IWorldspace> getOrAddAsOverride,
             Func<ISkyrimMod, IWorldspaceGetter, string?, IWorldspace> duplicateInto)
         {
-            var curContext = new ModContext<ISkyrimMod, IWorldspace, IWorldspaceGetter>(
+            var curContext = new ModContext<ISkyrimMod, ISkyrimModGetter, IWorldspace, IWorldspaceGetter>(
                 modKey,
                 record: obj,
                 getOrAddAsOverride: getOrAddAsOverride,
@@ -4024,7 +4023,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
                         {
-                            yield return new ModContext<ISkyrimMod, ICellInternal, ICellGetter>(
+                            yield return new ModContext<ISkyrimMod, ISkyrimModGetter, ICellInternal, ICellGetter>(
                                 modKey: modKey,
                                 record: WorldspaceTopCellitem,
                                 parent: curContext,
@@ -4077,8 +4076,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
-                        getOrAddAsOverride: getOrAddAsOverride,
-                        duplicateInto: duplicateInto))
+                        getOrAddAsOverride: getOrAddAsOverride))
                     {
                         yield return item;
                     }
@@ -4093,8 +4091,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
-                        getOrAddAsOverride: getOrAddAsOverride,
-                        duplicateInto: duplicateInto))
+                        getOrAddAsOverride: getOrAddAsOverride))
                     {
                         yield return item;
                     }
@@ -4140,8 +4137,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
-                        getOrAddAsOverride: getOrAddAsOverride,
-                        duplicateInto: duplicateInto))
+                        getOrAddAsOverride: getOrAddAsOverride))
                     {
                         yield return item;
                     }
@@ -4187,8 +4183,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
-                        getOrAddAsOverride: getOrAddAsOverride,
-                        duplicateInto: duplicateInto))
+                        getOrAddAsOverride: getOrAddAsOverride))
                     {
                         yield return item;
                     }
@@ -4234,8 +4229,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
-                        getOrAddAsOverride: getOrAddAsOverride,
-                        duplicateInto: duplicateInto))
+                        getOrAddAsOverride: getOrAddAsOverride))
                     {
                         yield return item;
                     }
@@ -4281,8 +4275,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
-                        getOrAddAsOverride: getOrAddAsOverride,
-                        duplicateInto: duplicateInto))
+                        getOrAddAsOverride: getOrAddAsOverride))
                     {
                         yield return item;
                     }
@@ -4328,8 +4321,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
-                        getOrAddAsOverride: getOrAddAsOverride,
-                        duplicateInto: duplicateInto))
+                        getOrAddAsOverride: getOrAddAsOverride))
                     {
                         yield return item;
                     }
@@ -4375,8 +4367,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
-                        getOrAddAsOverride: getOrAddAsOverride,
-                        duplicateInto: duplicateInto))
+                        getOrAddAsOverride: getOrAddAsOverride))
                     {
                         yield return item;
                     }
@@ -4391,8 +4382,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
-                        getOrAddAsOverride: getOrAddAsOverride,
-                        duplicateInto: duplicateInto))
+                        getOrAddAsOverride: getOrAddAsOverride))
                     {
                         yield return item;
                     }
@@ -4438,8 +4428,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
-                        getOrAddAsOverride: getOrAddAsOverride,
-                        duplicateInto: duplicateInto))
+                        getOrAddAsOverride: getOrAddAsOverride))
                     {
                         yield return item;
                     }
@@ -4485,8 +4474,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
-                        getOrAddAsOverride: getOrAddAsOverride,
-                        duplicateInto: duplicateInto))
+                        getOrAddAsOverride: getOrAddAsOverride))
                     {
                         yield return item;
                     }
@@ -4532,8 +4520,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
-                        getOrAddAsOverride: getOrAddAsOverride,
-                        duplicateInto: duplicateInto))
+                        getOrAddAsOverride: getOrAddAsOverride))
                     {
                         yield return item;
                     }
@@ -4579,8 +4566,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
-                        getOrAddAsOverride: getOrAddAsOverride,
-                        duplicateInto: duplicateInto))
+                        getOrAddAsOverride: getOrAddAsOverride))
                     {
                         yield return item;
                     }
@@ -4626,8 +4612,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
-                        getOrAddAsOverride: getOrAddAsOverride,
-                        duplicateInto: duplicateInto))
+                        getOrAddAsOverride: getOrAddAsOverride))
                     {
                         yield return item;
                     }
@@ -4673,8 +4658,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
-                        getOrAddAsOverride: getOrAddAsOverride,
-                        duplicateInto: duplicateInto))
+                        getOrAddAsOverride: getOrAddAsOverride))
                     {
                         yield return item;
                     }
@@ -4720,8 +4704,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
-                        getOrAddAsOverride: getOrAddAsOverride,
-                        duplicateInto: duplicateInto))
+                        getOrAddAsOverride: getOrAddAsOverride))
                     {
                         yield return item;
                     }

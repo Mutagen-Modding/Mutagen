@@ -898,7 +898,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkContainer,
         ILoquiObjectSetter<IWeatherInternal>,
         IModeled,
-        IOblivionMajorRecord,
+        IOblivionMajorRecordInternal,
         IWeatherGetter
     {
         new String? TextureLowerLayer { get; set; }

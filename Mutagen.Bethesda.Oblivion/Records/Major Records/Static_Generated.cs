@@ -457,7 +457,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IStatic :
         ILoquiObjectSetter<IStaticInternal>,
         IModeled,
-        IOblivionMajorRecord,
+        IOblivionMajorRecordInternal,
         IStaticGetter
     {
         new Model? Model { get; set; }

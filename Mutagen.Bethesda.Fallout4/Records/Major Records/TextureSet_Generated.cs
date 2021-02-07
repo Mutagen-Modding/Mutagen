@@ -843,7 +843,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface ITextureSet :
-        IFallout4MajorRecord,
+        IFallout4MajorRecordInternal,
         ILoquiObjectSetter<ITextureSetInternal>,
         IObjectBounded,
         IObjectBoundedOptional,

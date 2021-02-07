@@ -539,7 +539,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IAssociationType :
         IAssociationTypeGetter,
         ILoquiObjectSetter<IAssociationTypeInternal>,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new IGenderedItem<String?>? ParentTitle { get; set; }
         new IGenderedItem<String?>? Title { get; set; }

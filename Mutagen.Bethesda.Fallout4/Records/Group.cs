@@ -19,6 +19,11 @@ namespace Mutagen.Bethesda.Fallout4
         protected override ICache<T, FormKey> ProtectedCache => this.RecordCache;
     }
 
+    public partial interface IGroup<T> : IGroupCommon<T>
+        where T : class, IFallout4MajorRecordInternal, IBinaryItem
+    {
+    }
+
     public partial interface IGroupGetter<out T> : IGroupCommonGetter<T>
         where T : class, IFallout4MajorRecordGetter, IBinaryItem
     {

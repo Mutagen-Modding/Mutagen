@@ -547,7 +547,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILockList,
         ILoquiObjectSetter<IFormListInternal>,
         IObjectId,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new ExtendedList<IFormLink<ISkyrimMajorRecordGetter>> Items { get; }
     }

@@ -450,8 +450,8 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IGameSettingBool :
-        IGameSetting,
         IGameSettingBoolGetter,
+        IGameSettingInternal,
         ILoquiObjectSetter<IGameSettingBoolInternal>
     {
         new Boolean? Data { get; set; }

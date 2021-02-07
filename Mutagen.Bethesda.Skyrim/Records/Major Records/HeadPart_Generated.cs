@@ -937,7 +937,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModeled,
         INamed,
         INamedRequired,
-        ISkyrimMajorRecord,
+        ISkyrimMajorRecordInternal,
         ITranslatedNamed,
         ITranslatedNamedRequired
     {

@@ -768,7 +768,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILandscapeTextureGetter,
         ILoquiObjectSetter<ILandscapeTextureInternal>,
         IRegionTarget,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new FormLinkNullable<ITextureSetGetter> TextureSet { get; set; }
         new FormLink<IMaterialTypeGetter> MaterialType { get; set; }

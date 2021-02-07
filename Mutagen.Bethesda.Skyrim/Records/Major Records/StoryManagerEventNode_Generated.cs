@@ -535,7 +535,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IStoryManagerEventNode :
-        IAStoryManagerNode,
+        IAStoryManagerNodeInternal,
         ILoquiObjectSetter<IStoryManagerEventNodeInternal>,
         IStoryManagerEventNodeGetter
     {

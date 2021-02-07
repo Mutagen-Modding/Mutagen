@@ -847,9 +847,9 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<TMajor>(records, throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IModContext<IFallout4Mod, TSetter, TGetter>> IMajorRecordContextEnumerable<IFallout4Mod>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IModContext<IFallout4Mod, IFallout4ModGetter, TSetter, TGetter>> IMajorRecordContextEnumerable<IFallout4Mod, IFallout4ModGetter>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IModContext<IFallout4Mod, IMajorRecordCommon, IMajorRecordCommonGetter>> IMajorRecordContextEnumerable<IFallout4Mod>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IModContext<IFallout4Mod, IFallout4ModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> IMajorRecordContextEnumerable<IFallout4Mod, IFallout4ModGetter>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
         #endregion
 
         #region Binary Translation
@@ -1021,7 +1021,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IFallout4Mod :
-        IContextMod<IFallout4Mod>,
+        IContextMod<IFallout4Mod, IFallout4ModGetter>,
         IFallout4ModGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IFallout4Mod>,
@@ -1041,10 +1041,10 @@ namespace Mutagen.Bethesda.Fallout4
 
     public partial interface IFallout4ModGetter :
         ILoquiObject,
-        IContextGetterMod<IFallout4Mod>,
+        IContextGetterMod<IFallout4Mod, IFallout4ModGetter>,
         IFormLinkContainerGetter,
         ILoquiObject<IFallout4ModGetter>,
-        IMajorRecordContextEnumerable<IFallout4Mod>,
+        IMajorRecordContextEnumerable<IFallout4Mod, IFallout4ModGetter>,
         IMajorRecordGetterEnumerable,
         IModGetter
     {
@@ -1474,7 +1474,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<IModContext<IFallout4Mod, TSetter, TGetter>> EnumerateMajorRecordContexts<TSetter, TGetter>(
+        public static IEnumerable<IModContext<IFallout4Mod, IFallout4ModGetter, TSetter, TGetter>> EnumerateMajorRecordContexts<TSetter, TGetter>(
             this IFallout4ModGetter obj,
             ILinkCache linkCache,
             bool throwIfUnknown = true)
@@ -1486,12 +1486,12 @@ namespace Mutagen.Bethesda.Fallout4
                 linkCache: linkCache,
                 type: typeof(TGetter),
                 throwIfUnknown: throwIfUnknown)
-                .Select(m => m.AsType<IFallout4Mod, IMajorRecordCommon, IMajorRecordCommonGetter, TSetter, TGetter>())
+                .Select(m => m.AsType<IFallout4Mod, IFallout4ModGetter, IMajorRecordCommon, IMajorRecordCommonGetter, TSetter, TGetter>())
                 .Catch(e => throw RecordException.Factory(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<IModContext<IFallout4Mod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        public static IEnumerable<IModContext<IFallout4Mod, IFallout4ModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             this IFallout4ModGetter obj,
             ILinkCache linkCache,
             Type type,
@@ -2430,77 +2430,77 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
         }
         
-        public IEnumerable<IModContext<IFallout4Mod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        public IEnumerable<IModContext<IFallout4Mod, IFallout4ModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             IFallout4ModGetter obj,
             ILinkCache linkCache)
         {
             foreach (var item in obj.GameSettings)
             {
-                yield return new ModContext<IFallout4Mod, IGameSettingInternal, IGameSettingGetter>(
+                yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, GameSetting, IGameSettingGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.GameSettings.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.GameSettings.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.GameSettings,
+                    groupGetter: (m) => m.GameSettings);
             }
             foreach (var item in obj.Keywords)
             {
-                yield return new ModContext<IFallout4Mod, IKeywordInternal, IKeywordGetter>(
+                yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, Keyword, IKeywordGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Keywords.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Keywords.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Keywords,
+                    groupGetter: (m) => m.Keywords);
             }
             foreach (var item in obj.LocationReferenceTypes)
             {
-                yield return new ModContext<IFallout4Mod, ILocationReferenceTypeInternal, ILocationReferenceTypeGetter>(
+                yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, LocationReferenceType, ILocationReferenceTypeGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.LocationReferenceTypes.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.LocationReferenceTypes.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.LocationReferenceTypes,
+                    groupGetter: (m) => m.LocationReferenceTypes);
             }
             foreach (var item in obj.Actions)
             {
-                yield return new ModContext<IFallout4Mod, IActionRecordInternal, IActionRecordGetter>(
+                yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, ActionRecord, IActionRecordGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Actions.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Actions.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Actions,
+                    groupGetter: (m) => m.Actions);
             }
             foreach (var item in obj.Transforms)
             {
-                yield return new ModContext<IFallout4Mod, ITransformInternal, ITransformGetter>(
+                yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, Transform, ITransformGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Transforms.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Transforms.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Transforms,
+                    groupGetter: (m) => m.Transforms);
             }
             foreach (var item in obj.Components)
             {
-                yield return new ModContext<IFallout4Mod, IComponentInternal, IComponentGetter>(
+                yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, Component, IComponentGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Components.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Components.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Components,
+                    groupGetter: (m) => m.Components);
             }
             foreach (var item in obj.TextureSets)
             {
-                yield return new ModContext<IFallout4Mod, ITextureSetInternal, ITextureSetGetter>(
+                yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, TextureSet, ITextureSetGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.TextureSets.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.TextureSets.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.TextureSets,
+                    groupGetter: (m) => m.TextureSets);
             }
             foreach (var item in obj.Globals)
             {
-                yield return new ModContext<IFallout4Mod, IGlobalInternal, IGlobalGetter>(
+                yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, Global, IGlobalGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Globals.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Globals.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Globals,
+                    groupGetter: (m) => m.Globals);
             }
         }
         
-        public IEnumerable<IModContext<IFallout4Mod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        public IEnumerable<IModContext<IFallout4Mod, IFallout4ModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             IFallout4ModGetter obj,
             ILinkCache linkCache,
             Type type,
@@ -2537,11 +2537,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "IGameSettingInternal":
                     foreach (var item in obj.GameSettings)
                     {
-                        yield return new ModContext<IFallout4Mod, IGameSettingInternal, IGameSettingGetter>(
+                        yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, GameSetting, IGameSettingGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.GameSettings.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.GameSettings.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.GameSettings,
+                            groupGetter: (m) => m.GameSettings);
                     }
                     yield break;
                 case "Keyword":
@@ -2550,11 +2550,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "IKeywordInternal":
                     foreach (var item in obj.Keywords)
                     {
-                        yield return new ModContext<IFallout4Mod, IKeywordInternal, IKeywordGetter>(
+                        yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, Keyword, IKeywordGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Keywords.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Keywords.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Keywords,
+                            groupGetter: (m) => m.Keywords);
                     }
                     yield break;
                 case "LocationReferenceType":
@@ -2563,11 +2563,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "ILocationReferenceTypeInternal":
                     foreach (var item in obj.LocationReferenceTypes)
                     {
-                        yield return new ModContext<IFallout4Mod, ILocationReferenceTypeInternal, ILocationReferenceTypeGetter>(
+                        yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, LocationReferenceType, ILocationReferenceTypeGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.LocationReferenceTypes.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.LocationReferenceTypes.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.LocationReferenceTypes,
+                            groupGetter: (m) => m.LocationReferenceTypes);
                     }
                     yield break;
                 case "ActionRecord":
@@ -2576,11 +2576,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "IActionRecordInternal":
                     foreach (var item in obj.Actions)
                     {
-                        yield return new ModContext<IFallout4Mod, IActionRecordInternal, IActionRecordGetter>(
+                        yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, ActionRecord, IActionRecordGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Actions.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Actions.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Actions,
+                            groupGetter: (m) => m.Actions);
                     }
                     yield break;
                 case "Transform":
@@ -2589,11 +2589,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "ITransformInternal":
                     foreach (var item in obj.Transforms)
                     {
-                        yield return new ModContext<IFallout4Mod, ITransformInternal, ITransformGetter>(
+                        yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, Transform, ITransformGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Transforms.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Transforms.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Transforms,
+                            groupGetter: (m) => m.Transforms);
                     }
                     yield break;
                 case "Component":
@@ -2602,11 +2602,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "IComponentInternal":
                     foreach (var item in obj.Components)
                     {
-                        yield return new ModContext<IFallout4Mod, IComponentInternal, IComponentGetter>(
+                        yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, Component, IComponentGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Components.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Components.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Components,
+                            groupGetter: (m) => m.Components);
                     }
                     yield break;
                 case "TextureSet":
@@ -2615,11 +2615,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "ITextureSetInternal":
                     foreach (var item in obj.TextureSets)
                     {
-                        yield return new ModContext<IFallout4Mod, ITextureSetInternal, ITextureSetGetter>(
+                        yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, TextureSet, ITextureSetGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.TextureSets.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.TextureSets.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.TextureSets,
+                            groupGetter: (m) => m.TextureSets);
                     }
                     yield break;
                 case "Global":
@@ -2628,11 +2628,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "IGlobalInternal":
                     foreach (var item in obj.Globals)
                     {
-                        yield return new ModContext<IFallout4Mod, IGlobalInternal, IGlobalGetter>(
+                        yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, Global, IGlobalGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Globals.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Globals.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Globals,
+                            groupGetter: (m) => m.Globals);
                     }
                     yield break;
                 case "IIdleRelation":
@@ -3422,9 +3422,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public bool UsingLocalization => this.ModHeader.Flags.HasFlag(Fallout4ModHeader.HeaderFlag.Localized);
         public IEnumerable<FormLinkInformation> ContainedFormLinks => Fallout4ModCommon.Instance.GetContainedFormLinks(this);
         [DebuggerStepThrough]
-        IEnumerable<IModContext<IFallout4Mod, TSetter, TGetter>> IMajorRecordContextEnumerable<IFallout4Mod>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IModContext<IFallout4Mod, IFallout4ModGetter, TSetter, TGetter>> IMajorRecordContextEnumerable<IFallout4Mod, IFallout4ModGetter>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IModContext<IFallout4Mod, IMajorRecordCommon, IMajorRecordCommonGetter>> IMajorRecordContextEnumerable<IFallout4Mod>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IModContext<IFallout4Mod, IFallout4ModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> IMajorRecordContextEnumerable<IFallout4Mod, IFallout4ModGetter>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

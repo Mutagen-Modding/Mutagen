@@ -1004,7 +1004,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFootstepSetGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IFootstepSetInternal>,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new ExtendedList<IFormLink<IFootstepGetter>> WalkForwardFootsteps { get; }
         new ExtendedList<IFormLink<IFootstepGetter>> RunForwardFootsteps { get; }

@@ -760,7 +760,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IActorValueInformationInternal>,
         INamed,
         INamedRequired,
-        ISkyrimMajorRecord,
+        ISkyrimMajorRecordInternal,
         ITranslatedNamed,
         ITranslatedNamedRequired
     {

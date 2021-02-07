@@ -843,7 +843,7 @@ namespace Mutagen.Bethesda.Skyrim
         IHasIcons,
         ILoadScreenGetter,
         ILoquiObjectSetter<ILoadScreenInternal>,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new Icons? Icons { get; set; }
         new TranslatedString Description { get; set; }

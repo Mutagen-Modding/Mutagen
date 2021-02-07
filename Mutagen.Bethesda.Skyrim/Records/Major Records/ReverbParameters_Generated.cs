@@ -833,7 +833,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IReverbParameters :
         ILoquiObjectSetter<IReverbParametersInternal>,
         IReverbParametersGetter,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new UInt16 DecayMilliseconds { get; set; }
         new UInt16 HfReferenceHertz { get; set; }

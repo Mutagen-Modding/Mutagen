@@ -893,7 +893,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILoquiObjectSetter<IRegionInternal>,
         IRegionGetter,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new Color? MapColor { get; set; }
         new FormLinkNullable<IWorldspaceGetter> Worldspace { get; set; }

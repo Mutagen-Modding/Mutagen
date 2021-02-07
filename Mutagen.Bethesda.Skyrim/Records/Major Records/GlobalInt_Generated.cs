@@ -457,7 +457,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IGlobalInt :
-        IGlobal,
+        IGlobalInternal,
         IGlobalIntGetter,
         ILoquiObjectSetter<IGlobalIntInternal>
     {

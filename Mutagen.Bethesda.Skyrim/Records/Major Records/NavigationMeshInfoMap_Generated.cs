@@ -664,7 +664,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILoquiObjectSetter<INavigationMeshInfoMapInternal>,
         INavigationMeshInfoMapGetter,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new UInt32? NavMeshVersion { get; set; }
         new ExtendedList<NavigationMapInfo> MapInfos { get; }

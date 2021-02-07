@@ -711,7 +711,7 @@ namespace Mutagen.Bethesda.Oblivion
         IAIPackageGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IAIPackageInternal>,
-        IOblivionMajorRecord
+        IOblivionMajorRecordInternal
     {
         new AIPackageData? Data { get; set; }
         new AIPackageLocation? Location { get; set; }

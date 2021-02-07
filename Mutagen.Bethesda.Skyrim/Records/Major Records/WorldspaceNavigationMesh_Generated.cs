@@ -478,7 +478,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IWorldspaceNavigationMesh :
-        IANavigationMesh,
+        IANavigationMeshInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<IWorldspaceNavigationMeshInternal>,
         IWorldspaceNavigationMeshGetter

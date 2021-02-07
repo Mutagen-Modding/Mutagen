@@ -655,7 +655,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILoquiObjectSetter<IRelationshipInternal>,
         IRelationshipGetter,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new FormLink<INpcGetter> Parent { get; set; }
         new FormLink<INpcGetter> Child { get; set; }

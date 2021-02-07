@@ -1072,7 +1072,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMajorRecordEnumerable,
         INamed,
         INamedRequired,
-        IPlace,
+        IPlaceInternal,
         IWorldspaceGetter
     {
         new String? Name { get; set; }
@@ -2568,7 +2568,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public IEnumerable<IModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        public IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             IWorldspaceGetter obj,
             ILinkCache linkCache,
             ModKey modKey,
@@ -2576,7 +2576,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Func<IOblivionMod, IWorldspaceGetter, IWorldspace> getOrAddAsOverride,
             Func<IOblivionMod, IWorldspaceGetter, string?, IWorldspace> duplicateInto)
         {
-            var curContext = new ModContext<IOblivionMod, IWorldspace, IWorldspaceGetter>(
+            var curContext = new ModContext<IOblivionMod, IOblivionModGetter, IWorldspace, IWorldspaceGetter>(
                 modKey,
                 record: obj,
                 getOrAddAsOverride: getOrAddAsOverride,
@@ -2585,7 +2585,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (obj.Road.TryGet(out var WorldspaceRoaditem))
                 {
-                    yield return new ModContext<IOblivionMod, IRoadInternal, IRoadGetter>(
+                    yield return new ModContext<IOblivionMod, IOblivionModGetter, IRoadInternal, IRoadGetter>(
                         modKey: modKey,
                         record: WorldspaceRoaditem,
                         parent: curContext,
@@ -2609,7 +2609,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
                 {
-                    yield return new ModContext<IOblivionMod, ICellInternal, ICellGetter>(
+                    yield return new ModContext<IOblivionMod, IOblivionModGetter, ICellInternal, ICellGetter>(
                         modKey: modKey,
                         record: WorldspaceTopCellitem,
                         parent: curContext,
@@ -2660,14 +2660,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 linkCache: linkCache,
                 throwIfUnknown: false,
                 worldspace: obj,
-                getOrAddAsOverride: getOrAddAsOverride,
-                duplicateInto: duplicateInto))
+                getOrAddAsOverride: getOrAddAsOverride))
             {
                 yield return item;
             }
         }
         
-        public IEnumerable<IModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        public IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             IWorldspaceGetter obj,
             ILinkCache linkCache,
             Type type,
@@ -2677,7 +2676,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Func<IOblivionMod, IWorldspaceGetter, IWorldspace> getOrAddAsOverride,
             Func<IOblivionMod, IWorldspaceGetter, string?, IWorldspace> duplicateInto)
         {
-            var curContext = new ModContext<IOblivionMod, IWorldspace, IWorldspaceGetter>(
+            var curContext = new ModContext<IOblivionMod, IOblivionModGetter, IWorldspace, IWorldspaceGetter>(
                 modKey,
                 record: obj,
                 getOrAddAsOverride: getOrAddAsOverride,
@@ -2723,7 +2722,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         if (obj.Road.TryGet(out var WorldspaceRoaditem))
                         {
-                            yield return new ModContext<IOblivionMod, IRoadInternal, IRoadGetter>(
+                            yield return new ModContext<IOblivionMod, IOblivionModGetter, IRoadInternal, IRoadGetter>(
                                 modKey: modKey,
                                 record: WorldspaceRoaditem,
                                 parent: curContext,
@@ -2752,7 +2751,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         if (obj.TopCell.TryGet(out var WorldspaceTopCellitem))
                         {
-                            yield return new ModContext<IOblivionMod, ICellInternal, ICellGetter>(
+                            yield return new ModContext<IOblivionMod, IOblivionModGetter, ICellInternal, ICellGetter>(
                                 modKey: modKey,
                                 record: WorldspaceTopCellitem,
                                 parent: curContext,
@@ -2805,8 +2804,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
-                        getOrAddAsOverride: getOrAddAsOverride,
-                        duplicateInto: duplicateInto))
+                        getOrAddAsOverride: getOrAddAsOverride))
                     {
                         yield return item;
                     }
@@ -2821,8 +2819,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
-                        getOrAddAsOverride: getOrAddAsOverride,
-                        duplicateInto: duplicateInto))
+                        getOrAddAsOverride: getOrAddAsOverride))
                     {
                         yield return item;
                     }
@@ -2868,8 +2865,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
-                        getOrAddAsOverride: getOrAddAsOverride,
-                        duplicateInto: duplicateInto))
+                        getOrAddAsOverride: getOrAddAsOverride))
                     {
                         yield return item;
                     }
@@ -2915,8 +2911,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
-                        getOrAddAsOverride: getOrAddAsOverride,
-                        duplicateInto: duplicateInto))
+                        getOrAddAsOverride: getOrAddAsOverride))
                     {
                         yield return item;
                     }
@@ -2962,8 +2957,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
-                        getOrAddAsOverride: getOrAddAsOverride,
-                        duplicateInto: duplicateInto))
+                        getOrAddAsOverride: getOrAddAsOverride))
                     {
                         yield return item;
                     }
@@ -3009,8 +3003,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
-                        getOrAddAsOverride: getOrAddAsOverride,
-                        duplicateInto: duplicateInto))
+                        getOrAddAsOverride: getOrAddAsOverride))
                     {
                         yield return item;
                     }
@@ -3056,8 +3049,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
-                        getOrAddAsOverride: getOrAddAsOverride,
-                        duplicateInto: duplicateInto))
+                        getOrAddAsOverride: getOrAddAsOverride))
                     {
                         yield return item;
                     }
@@ -3102,8 +3094,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         linkCache: linkCache,
                         throwIfUnknown: false,
                         worldspace: obj,
-                        getOrAddAsOverride: getOrAddAsOverride,
-                        duplicateInto: duplicateInto))
+                        getOrAddAsOverride: getOrAddAsOverride))
                     {
                         yield return item;
                     }

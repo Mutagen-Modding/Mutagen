@@ -577,7 +577,7 @@ namespace Mutagen.Bethesda.Skyrim
         IEquipTypeGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IEquipTypeInternal>,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new ExtendedList<IFormLink<IEquipTypeGetter>>? SlotParents { get; set; }
         new Boolean? UseAllParents { get; set; }

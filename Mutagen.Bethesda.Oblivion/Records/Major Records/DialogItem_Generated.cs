@@ -1139,7 +1139,7 @@ namespace Mutagen.Bethesda.Oblivion
         IDialogItemGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IDialogItemInternal>,
-        IOblivionMajorRecord
+        IOblivionMajorRecordInternal
     {
         new DialogItemData? Data { get; set; }
         new FormLinkNullable<IQuestGetter> Quest { get; set; }

@@ -594,7 +594,7 @@ namespace Mutagen.Bethesda.Fallout4
     #region Interface
     public partial interface IActionRecord :
         IActionRecordGetter,
-        IFallout4MajorRecord,
+        IFallout4MajorRecordInternal,
         IFormLinkContainer,
         IIdleRelation,
         ILoquiObjectSetter<IActionRecordInternal>,

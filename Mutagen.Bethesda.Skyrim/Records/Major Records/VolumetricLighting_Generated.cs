@@ -825,7 +825,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IVolumetricLighting :
         ILoquiObjectSetter<IVolumetricLightingInternal>,
-        ISkyrimMajorRecord,
+        ISkyrimMajorRecordInternal,
         IVolumetricLightingGetter
     {
         new Single? Intensity { get; set; }

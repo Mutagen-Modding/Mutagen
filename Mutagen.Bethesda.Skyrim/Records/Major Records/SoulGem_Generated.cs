@@ -1069,7 +1069,7 @@ namespace Mutagen.Bethesda.Skyrim
         INamed,
         INamedRequired,
         IObjectBoundedOptional,
-        ISkyrimMajorRecord,
+        ISkyrimMajorRecordInternal,
         ISoulGemGetter,
         ITranslatedNamed,
         ITranslatedNamedRequired,

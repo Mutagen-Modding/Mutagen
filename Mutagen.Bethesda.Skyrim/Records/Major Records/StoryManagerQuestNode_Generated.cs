@@ -648,7 +648,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IStoryManagerQuestNode :
-        IAStoryManagerNode,
+        IAStoryManagerNodeInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<IStoryManagerQuestNodeInternal>,
         IStoryManagerQuestNodeGetter

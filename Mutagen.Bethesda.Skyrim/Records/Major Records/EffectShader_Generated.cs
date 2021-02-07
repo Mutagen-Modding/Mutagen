@@ -3999,7 +3999,7 @@ namespace Mutagen.Bethesda.Skyrim
         IEffectShaderGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IEffectShaderInternal>,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new String? FillTexture { get; set; }
         new String? ParticleShaderTexture { get; set; }

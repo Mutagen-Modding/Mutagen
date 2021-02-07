@@ -887,7 +887,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IShaderParticleGeometry :
         ILoquiObjectSetter<IShaderParticleGeometryInternal>,
         IShaderParticleGeometryGetter,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new Single GravityVelocity { get; set; }
         new Single RotationVelocity { get; set; }

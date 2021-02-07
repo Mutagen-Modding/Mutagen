@@ -1747,7 +1747,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILoquiObjectSetter<IPackageInternal>,
         IPackageGetter,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new PackageAdapter? VirtualMachineAdapter { get; set; }
         new Package.Flag Flags { get; set; }

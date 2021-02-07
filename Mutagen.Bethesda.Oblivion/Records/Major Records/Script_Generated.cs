@@ -451,7 +451,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IScript :
         IFormLinkContainer,
         ILoquiObjectSetter<IScriptInternal>,
-        IOblivionMajorRecord,
+        IOblivionMajorRecordInternal,
         IScriptGetter
     {
         new ScriptFields Fields { get; }

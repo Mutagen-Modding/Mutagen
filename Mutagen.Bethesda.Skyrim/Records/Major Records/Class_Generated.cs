@@ -1042,7 +1042,7 @@ namespace Mutagen.Bethesda.Skyrim
         IClassGetter,
         ILoquiObjectSetter<IClassInternal>,
         INamedRequired,
-        ISkyrimMajorRecord,
+        ISkyrimMajorRecordInternal,
         ITranslatedNamedRequired
     {
         new TranslatedString Name { get; set; }

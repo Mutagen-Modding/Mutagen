@@ -403,7 +403,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IMiscItem :
-        IFallout4MajorRecord,
+        IFallout4MajorRecordInternal,
         ILoquiObjectSetter<IMiscItemInternal>,
         IMiscItemGetter
     {

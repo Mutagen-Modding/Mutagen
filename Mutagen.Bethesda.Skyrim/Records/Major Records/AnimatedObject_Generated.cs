@@ -513,7 +513,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILoquiObjectSetter<IAnimatedObjectInternal>,
         IModeled,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new Model? Model { get; set; }
         new String? UnloadEvent { get; set; }

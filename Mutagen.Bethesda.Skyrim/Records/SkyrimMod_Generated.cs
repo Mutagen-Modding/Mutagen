@@ -5997,9 +5997,9 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<TMajor>(records, throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IModContext<ISkyrimMod, TSetter, TGetter>> IMajorRecordContextEnumerable<ISkyrimMod>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, TSetter, TGetter>> IMajorRecordContextEnumerable<ISkyrimMod, ISkyrimModGetter>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> IMajorRecordContextEnumerable<ISkyrimMod>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> IMajorRecordContextEnumerable<ISkyrimMod, ISkyrimModGetter>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
         #endregion
 
         #region Binary Translation
@@ -6191,7 +6191,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ISkyrimMod :
-        IContextMod<ISkyrimMod>,
+        IContextMod<ISkyrimMod, ISkyrimModGetter>,
         IFormLinkContainer,
         ILoquiObjectSetter<ISkyrimMod>,
         IMajorRecordEnumerable,
@@ -6316,10 +6316,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ISkyrimModGetter :
         ILoquiObject,
-        IContextGetterMod<ISkyrimMod>,
+        IContextGetterMod<ISkyrimMod, ISkyrimModGetter>,
         IFormLinkContainerGetter,
         ILoquiObject<ISkyrimModGetter>,
-        IMajorRecordContextEnumerable<ISkyrimMod>,
+        IMajorRecordContextEnumerable<ISkyrimMod, ISkyrimModGetter>,
         IMajorRecordGetterEnumerable,
         IModGetter
     {
@@ -6858,7 +6858,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<IModContext<ISkyrimMod, TSetter, TGetter>> EnumerateMajorRecordContexts<TSetter, TGetter>(
+        public static IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, TSetter, TGetter>> EnumerateMajorRecordContexts<TSetter, TGetter>(
             this ISkyrimModGetter obj,
             ILinkCache linkCache,
             bool throwIfUnknown = true)
@@ -6870,12 +6870,12 @@ namespace Mutagen.Bethesda.Skyrim
                 linkCache: linkCache,
                 type: typeof(TGetter),
                 throwIfUnknown: throwIfUnknown)
-                .Select(m => m.AsType<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter, TSetter, TGetter>())
+                .Select(m => m.AsType<ISkyrimMod, ISkyrimModGetter, IMajorRecordCommon, IMajorRecordCommonGetter, TSetter, TGetter>())
                 .Catch(e => throw RecordException.Factory(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
-        public static IEnumerable<IModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        public static IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             this ISkyrimModGetter obj,
             ILinkCache linkCache,
             Type type,
@@ -13888,441 +13888,441 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public IEnumerable<IModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        public IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             ISkyrimModGetter obj,
             ILinkCache linkCache)
         {
             foreach (var item in obj.GameSettings)
             {
-                yield return new ModContext<ISkyrimMod, IGameSettingInternal, IGameSettingGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, GameSetting, IGameSettingGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.GameSettings.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.GameSettings.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.GameSettings,
+                    groupGetter: (m) => m.GameSettings);
             }
             foreach (var item in obj.Keywords)
             {
-                yield return new ModContext<ISkyrimMod, IKeywordInternal, IKeywordGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Keyword, IKeywordGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Keywords.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Keywords.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Keywords,
+                    groupGetter: (m) => m.Keywords);
             }
             foreach (var item in obj.LocationReferenceTypes)
             {
-                yield return new ModContext<ISkyrimMod, ILocationReferenceTypeInternal, ILocationReferenceTypeGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, LocationReferenceType, ILocationReferenceTypeGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.LocationReferenceTypes.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.LocationReferenceTypes.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.LocationReferenceTypes,
+                    groupGetter: (m) => m.LocationReferenceTypes);
             }
             foreach (var item in obj.Actions)
             {
-                yield return new ModContext<ISkyrimMod, IActionRecordInternal, IActionRecordGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ActionRecord, IActionRecordGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Actions.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Actions.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Actions,
+                    groupGetter: (m) => m.Actions);
             }
             foreach (var item in obj.TextureSets)
             {
-                yield return new ModContext<ISkyrimMod, ITextureSetInternal, ITextureSetGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, TextureSet, ITextureSetGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.TextureSets.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.TextureSets.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.TextureSets,
+                    groupGetter: (m) => m.TextureSets);
             }
             foreach (var item in obj.Globals)
             {
-                yield return new ModContext<ISkyrimMod, IGlobalInternal, IGlobalGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Global, IGlobalGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Globals.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Globals.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Globals,
+                    groupGetter: (m) => m.Globals);
             }
             foreach (var item in obj.Classes)
             {
-                yield return new ModContext<ISkyrimMod, IClassInternal, IClassGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Class, IClassGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Classes.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Classes.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Classes,
+                    groupGetter: (m) => m.Classes);
             }
             foreach (var item in obj.Factions)
             {
-                yield return new ModContext<ISkyrimMod, IFactionInternal, IFactionGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Faction, IFactionGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Factions.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Factions.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Factions,
+                    groupGetter: (m) => m.Factions);
             }
             foreach (var item in obj.HeadParts)
             {
-                yield return new ModContext<ISkyrimMod, IHeadPartInternal, IHeadPartGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, HeadPart, IHeadPartGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.HeadParts.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.HeadParts.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.HeadParts,
+                    groupGetter: (m) => m.HeadParts);
             }
             foreach (var item in obj.Hairs)
             {
-                yield return new ModContext<ISkyrimMod, IHairInternal, IHairGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Hair, IHairGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Hairs.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Hairs.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Hairs,
+                    groupGetter: (m) => m.Hairs);
             }
             foreach (var item in obj.Eyes)
             {
-                yield return new ModContext<ISkyrimMod, IEyesInternal, IEyesGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Eyes, IEyesGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Eyes.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Eyes.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Eyes,
+                    groupGetter: (m) => m.Eyes);
             }
             foreach (var item in obj.Races)
             {
-                yield return new ModContext<ISkyrimMod, IRaceInternal, IRaceGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Race, IRaceGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Races.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Races.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Races,
+                    groupGetter: (m) => m.Races);
             }
             foreach (var item in obj.SoundMarkers)
             {
-                yield return new ModContext<ISkyrimMod, ISoundMarkerInternal, ISoundMarkerGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, SoundMarker, ISoundMarkerGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.SoundMarkers.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.SoundMarkers.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.SoundMarkers,
+                    groupGetter: (m) => m.SoundMarkers);
             }
             foreach (var item in obj.AcousticSpaces)
             {
-                yield return new ModContext<ISkyrimMod, IAcousticSpaceInternal, IAcousticSpaceGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, AcousticSpace, IAcousticSpaceGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.AcousticSpaces.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.AcousticSpaces.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.AcousticSpaces,
+                    groupGetter: (m) => m.AcousticSpaces);
             }
             foreach (var item in obj.MagicEffects)
             {
-                yield return new ModContext<ISkyrimMod, IMagicEffectInternal, IMagicEffectGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, MagicEffect, IMagicEffectGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.MagicEffects.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.MagicEffects.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.MagicEffects,
+                    groupGetter: (m) => m.MagicEffects);
             }
             foreach (var item in obj.LandscapeTextures)
             {
-                yield return new ModContext<ISkyrimMod, ILandscapeTextureInternal, ILandscapeTextureGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, LandscapeTexture, ILandscapeTextureGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.LandscapeTextures.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.LandscapeTextures.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.LandscapeTextures,
+                    groupGetter: (m) => m.LandscapeTextures);
             }
             foreach (var item in obj.ObjectEffects)
             {
-                yield return new ModContext<ISkyrimMod, IObjectEffectInternal, IObjectEffectGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ObjectEffect, IObjectEffectGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.ObjectEffects.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.ObjectEffects.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.ObjectEffects,
+                    groupGetter: (m) => m.ObjectEffects);
             }
             foreach (var item in obj.Spells)
             {
-                yield return new ModContext<ISkyrimMod, ISpellInternal, ISpellGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Spell, ISpellGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Spells.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Spells.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Spells,
+                    groupGetter: (m) => m.Spells);
             }
             foreach (var item in obj.Scrolls)
             {
-                yield return new ModContext<ISkyrimMod, IScrollInternal, IScrollGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Scroll, IScrollGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Scrolls.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Scrolls.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Scrolls,
+                    groupGetter: (m) => m.Scrolls);
             }
             foreach (var item in obj.Activators)
             {
-                yield return new ModContext<ISkyrimMod, IActivatorInternal, IActivatorGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Activator, IActivatorGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Activators.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Activators.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Activators,
+                    groupGetter: (m) => m.Activators);
             }
             foreach (var item in obj.TalkingActivators)
             {
-                yield return new ModContext<ISkyrimMod, ITalkingActivatorInternal, ITalkingActivatorGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, TalkingActivator, ITalkingActivatorGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.TalkingActivators.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.TalkingActivators.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.TalkingActivators,
+                    groupGetter: (m) => m.TalkingActivators);
             }
             foreach (var item in obj.Armors)
             {
-                yield return new ModContext<ISkyrimMod, IArmorInternal, IArmorGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Armor, IArmorGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Armors.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Armors.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Armors,
+                    groupGetter: (m) => m.Armors);
             }
             foreach (var item in obj.Books)
             {
-                yield return new ModContext<ISkyrimMod, IBookInternal, IBookGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Book, IBookGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Books.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Books.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Books,
+                    groupGetter: (m) => m.Books);
             }
             foreach (var item in obj.Containers)
             {
-                yield return new ModContext<ISkyrimMod, IContainerInternal, IContainerGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Container, IContainerGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Containers.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Containers.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Containers,
+                    groupGetter: (m) => m.Containers);
             }
             foreach (var item in obj.Doors)
             {
-                yield return new ModContext<ISkyrimMod, IDoorInternal, IDoorGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Door, IDoorGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Doors.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Doors.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Doors,
+                    groupGetter: (m) => m.Doors);
             }
             foreach (var item in obj.Ingredients)
             {
-                yield return new ModContext<ISkyrimMod, IIngredientInternal, IIngredientGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Ingredient, IIngredientGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Ingredients.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Ingredients.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Ingredients,
+                    groupGetter: (m) => m.Ingredients);
             }
             foreach (var item in obj.Lights)
             {
-                yield return new ModContext<ISkyrimMod, ILightInternal, ILightGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Light, ILightGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Lights.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Lights.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Lights,
+                    groupGetter: (m) => m.Lights);
             }
             foreach (var item in obj.MiscItems)
             {
-                yield return new ModContext<ISkyrimMod, IMiscItemInternal, IMiscItemGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, MiscItem, IMiscItemGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.MiscItems.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.MiscItems.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.MiscItems,
+                    groupGetter: (m) => m.MiscItems);
             }
             foreach (var item in obj.AlchemicalApparatuses)
             {
-                yield return new ModContext<ISkyrimMod, IAlchemicalApparatusInternal, IAlchemicalApparatusGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, AlchemicalApparatus, IAlchemicalApparatusGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.AlchemicalApparatuses.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.AlchemicalApparatuses.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.AlchemicalApparatuses,
+                    groupGetter: (m) => m.AlchemicalApparatuses);
             }
             foreach (var item in obj.Statics)
             {
-                yield return new ModContext<ISkyrimMod, IStaticInternal, IStaticGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Static, IStaticGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Statics.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Statics.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Statics,
+                    groupGetter: (m) => m.Statics);
             }
             foreach (var item in obj.MoveableStatics)
             {
-                yield return new ModContext<ISkyrimMod, IMoveableStaticInternal, IMoveableStaticGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, MoveableStatic, IMoveableStaticGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.MoveableStatics.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.MoveableStatics.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.MoveableStatics,
+                    groupGetter: (m) => m.MoveableStatics);
             }
             foreach (var item in obj.Grasses)
             {
-                yield return new ModContext<ISkyrimMod, IGrassInternal, IGrassGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Grass, IGrassGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Grasses.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Grasses.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Grasses,
+                    groupGetter: (m) => m.Grasses);
             }
             foreach (var item in obj.Trees)
             {
-                yield return new ModContext<ISkyrimMod, ITreeInternal, ITreeGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Tree, ITreeGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Trees.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Trees.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Trees,
+                    groupGetter: (m) => m.Trees);
             }
             foreach (var item in obj.Florae)
             {
-                yield return new ModContext<ISkyrimMod, IFloraInternal, IFloraGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Flora, IFloraGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Florae.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Florae.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Florae,
+                    groupGetter: (m) => m.Florae);
             }
             foreach (var item in obj.Furniture)
             {
-                yield return new ModContext<ISkyrimMod, IFurnitureInternal, IFurnitureGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Furniture, IFurnitureGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Furniture.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Furniture.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Furniture,
+                    groupGetter: (m) => m.Furniture);
             }
             foreach (var item in obj.Weapons)
             {
-                yield return new ModContext<ISkyrimMod, IWeaponInternal, IWeaponGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Weapon, IWeaponGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Weapons.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Weapons.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Weapons,
+                    groupGetter: (m) => m.Weapons);
             }
             foreach (var item in obj.Ammunitions)
             {
-                yield return new ModContext<ISkyrimMod, IAmmunitionInternal, IAmmunitionGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Ammunition, IAmmunitionGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Ammunitions.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Ammunitions.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Ammunitions,
+                    groupGetter: (m) => m.Ammunitions);
             }
             foreach (var item in obj.Npcs)
             {
-                yield return new ModContext<ISkyrimMod, INpcInternal, INpcGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Npc, INpcGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Npcs.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Npcs.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Npcs,
+                    groupGetter: (m) => m.Npcs);
             }
             foreach (var item in obj.LeveledNpcs)
             {
-                yield return new ModContext<ISkyrimMod, ILeveledNpcInternal, ILeveledNpcGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, LeveledNpc, ILeveledNpcGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.LeveledNpcs.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.LeveledNpcs.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.LeveledNpcs,
+                    groupGetter: (m) => m.LeveledNpcs);
             }
             foreach (var item in obj.Keys)
             {
-                yield return new ModContext<ISkyrimMod, IKeyInternal, IKeyGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Key, IKeyGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Keys.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Keys.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Keys,
+                    groupGetter: (m) => m.Keys);
             }
             foreach (var item in obj.Ingestibles)
             {
-                yield return new ModContext<ISkyrimMod, IIngestibleInternal, IIngestibleGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Ingestible, IIngestibleGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Ingestibles.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Ingestibles.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Ingestibles,
+                    groupGetter: (m) => m.Ingestibles);
             }
             foreach (var item in obj.IdleMarkers)
             {
-                yield return new ModContext<ISkyrimMod, IIdleMarkerInternal, IIdleMarkerGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, IdleMarker, IIdleMarkerGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.IdleMarkers.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.IdleMarkers.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.IdleMarkers,
+                    groupGetter: (m) => m.IdleMarkers);
             }
             foreach (var item in obj.ConstructibleObjects)
             {
-                yield return new ModContext<ISkyrimMod, IConstructibleObjectInternal, IConstructibleObjectGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ConstructibleObject, IConstructibleObjectGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.ConstructibleObjects.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.ConstructibleObjects.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.ConstructibleObjects,
+                    groupGetter: (m) => m.ConstructibleObjects);
             }
             foreach (var item in obj.Projectiles)
             {
-                yield return new ModContext<ISkyrimMod, IProjectileInternal, IProjectileGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Projectile, IProjectileGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Projectiles.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Projectiles.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Projectiles,
+                    groupGetter: (m) => m.Projectiles);
             }
             foreach (var item in obj.Hazards)
             {
-                yield return new ModContext<ISkyrimMod, IHazardInternal, IHazardGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Hazard, IHazardGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Hazards.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Hazards.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Hazards,
+                    groupGetter: (m) => m.Hazards);
             }
             foreach (var item in obj.SoulGems)
             {
-                yield return new ModContext<ISkyrimMod, ISoulGemInternal, ISoulGemGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, SoulGem, ISoulGemGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.SoulGems.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.SoulGems.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.SoulGems,
+                    groupGetter: (m) => m.SoulGems);
             }
             foreach (var item in obj.LeveledItems)
             {
-                yield return new ModContext<ISkyrimMod, ILeveledItemInternal, ILeveledItemGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, LeveledItem, ILeveledItemGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.LeveledItems.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.LeveledItems.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.LeveledItems,
+                    groupGetter: (m) => m.LeveledItems);
             }
             foreach (var item in obj.Weathers)
             {
-                yield return new ModContext<ISkyrimMod, IWeatherInternal, IWeatherGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Weather, IWeatherGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Weathers.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Weathers.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Weathers,
+                    groupGetter: (m) => m.Weathers);
             }
             foreach (var item in obj.Climates)
             {
-                yield return new ModContext<ISkyrimMod, IClimateInternal, IClimateGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Climate, IClimateGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Climates.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Climates.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Climates,
+                    groupGetter: (m) => m.Climates);
             }
             foreach (var item in obj.ShaderParticleGeometries)
             {
-                yield return new ModContext<ISkyrimMod, IShaderParticleGeometryInternal, IShaderParticleGeometryGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ShaderParticleGeometry, IShaderParticleGeometryGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.ShaderParticleGeometries.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.ShaderParticleGeometries.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.ShaderParticleGeometries,
+                    groupGetter: (m) => m.ShaderParticleGeometries);
             }
             foreach (var item in obj.VisualEffects)
             {
-                yield return new ModContext<ISkyrimMod, IVisualEffectInternal, IVisualEffectGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, VisualEffect, IVisualEffectGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.VisualEffects.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.VisualEffects.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.VisualEffects,
+                    groupGetter: (m) => m.VisualEffects);
             }
             foreach (var item in obj.Regions)
             {
-                yield return new ModContext<ISkyrimMod, IRegionInternal, IRegionGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Region, IRegionGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Regions.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Regions.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Regions,
+                    groupGetter: (m) => m.Regions);
             }
             foreach (var item in obj.NavigationMeshInfoMaps)
             {
-                yield return new ModContext<ISkyrimMod, INavigationMeshInfoMapInternal, INavigationMeshInfoMapGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, NavigationMeshInfoMap, INavigationMeshInfoMapGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.NavigationMeshInfoMaps.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.NavigationMeshInfoMaps.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.NavigationMeshInfoMaps,
+                    groupGetter: (m) => m.NavigationMeshInfoMaps);
             }
             foreach (var item in obj.Worldspaces)
             {
-                yield return new ModContext<ISkyrimMod, IWorldspaceInternal, IWorldspaceGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Worldspace, IWorldspaceGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Worldspaces,
+                    groupGetter: (m) => m.Worldspaces);
             }
             foreach (var groupItem in obj.Worldspaces)
             {
@@ -14339,11 +14339,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.DialogTopics)
             {
-                yield return new ModContext<ISkyrimMod, IDialogTopicInternal, IDialogTopicGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, DialogTopic, IDialogTopicGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.DialogTopics.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.DialogTopics.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.DialogTopics,
+                    groupGetter: (m) => m.DialogTopics);
             }
             foreach (var groupItem in obj.DialogTopics)
             {
@@ -14360,463 +14360,463 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             foreach (var item in obj.Quests)
             {
-                yield return new ModContext<ISkyrimMod, IQuestInternal, IQuestGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Quest, IQuestGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Quests.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Quests.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Quests,
+                    groupGetter: (m) => m.Quests);
             }
             foreach (var item in obj.IdleAnimations)
             {
-                yield return new ModContext<ISkyrimMod, IIdleAnimationInternal, IIdleAnimationGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, IdleAnimation, IIdleAnimationGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.IdleAnimations.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.IdleAnimations.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.IdleAnimations,
+                    groupGetter: (m) => m.IdleAnimations);
             }
             foreach (var item in obj.Packages)
             {
-                yield return new ModContext<ISkyrimMod, IPackageInternal, IPackageGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Package, IPackageGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Packages.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Packages.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Packages,
+                    groupGetter: (m) => m.Packages);
             }
             foreach (var item in obj.CombatStyles)
             {
-                yield return new ModContext<ISkyrimMod, ICombatStyleInternal, ICombatStyleGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, CombatStyle, ICombatStyleGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.CombatStyles.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.CombatStyles.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.CombatStyles,
+                    groupGetter: (m) => m.CombatStyles);
             }
             foreach (var item in obj.LoadScreens)
             {
-                yield return new ModContext<ISkyrimMod, ILoadScreenInternal, ILoadScreenGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, LoadScreen, ILoadScreenGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.LoadScreens.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.LoadScreens.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.LoadScreens,
+                    groupGetter: (m) => m.LoadScreens);
             }
             foreach (var item in obj.LeveledSpells)
             {
-                yield return new ModContext<ISkyrimMod, ILeveledSpellInternal, ILeveledSpellGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, LeveledSpell, ILeveledSpellGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.LeveledSpells.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.LeveledSpells.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.LeveledSpells,
+                    groupGetter: (m) => m.LeveledSpells);
             }
             foreach (var item in obj.AnimatedObjects)
             {
-                yield return new ModContext<ISkyrimMod, IAnimatedObjectInternal, IAnimatedObjectGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, AnimatedObject, IAnimatedObjectGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.AnimatedObjects.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.AnimatedObjects.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.AnimatedObjects,
+                    groupGetter: (m) => m.AnimatedObjects);
             }
             foreach (var item in obj.Waters)
             {
-                yield return new ModContext<ISkyrimMod, IWaterInternal, IWaterGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Water, IWaterGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Waters.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Waters.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Waters,
+                    groupGetter: (m) => m.Waters);
             }
             foreach (var item in obj.EffectShaders)
             {
-                yield return new ModContext<ISkyrimMod, IEffectShaderInternal, IEffectShaderGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, EffectShader, IEffectShaderGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.EffectShaders.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.EffectShaders.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.EffectShaders,
+                    groupGetter: (m) => m.EffectShaders);
             }
             foreach (var item in obj.Explosions)
             {
-                yield return new ModContext<ISkyrimMod, IExplosionInternal, IExplosionGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Explosion, IExplosionGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Explosions.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Explosions.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Explosions,
+                    groupGetter: (m) => m.Explosions);
             }
             foreach (var item in obj.Debris)
             {
-                yield return new ModContext<ISkyrimMod, IDebrisInternal, IDebrisGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Debris, IDebrisGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Debris.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Debris.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Debris,
+                    groupGetter: (m) => m.Debris);
             }
             foreach (var item in obj.ImageSpaces)
             {
-                yield return new ModContext<ISkyrimMod, IImageSpaceInternal, IImageSpaceGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ImageSpace, IImageSpaceGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.ImageSpaces.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.ImageSpaces.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.ImageSpaces,
+                    groupGetter: (m) => m.ImageSpaces);
             }
             foreach (var item in obj.ImageSpaceAdapters)
             {
-                yield return new ModContext<ISkyrimMod, IImageSpaceAdapterInternal, IImageSpaceAdapterGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ImageSpaceAdapter, IImageSpaceAdapterGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.ImageSpaceAdapters.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.ImageSpaceAdapters.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.ImageSpaceAdapters,
+                    groupGetter: (m) => m.ImageSpaceAdapters);
             }
             foreach (var item in obj.FormLists)
             {
-                yield return new ModContext<ISkyrimMod, IFormListInternal, IFormListGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, FormList, IFormListGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.FormLists.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.FormLists.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.FormLists,
+                    groupGetter: (m) => m.FormLists);
             }
             foreach (var item in obj.Perks)
             {
-                yield return new ModContext<ISkyrimMod, IPerkInternal, IPerkGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Perk, IPerkGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Perks.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Perks.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Perks,
+                    groupGetter: (m) => m.Perks);
             }
             foreach (var item in obj.BodyParts)
             {
-                yield return new ModContext<ISkyrimMod, IBodyPartDataInternal, IBodyPartDataGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, BodyPartData, IBodyPartDataGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.BodyParts.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.BodyParts.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.BodyParts,
+                    groupGetter: (m) => m.BodyParts);
             }
             foreach (var item in obj.AddonNodes)
             {
-                yield return new ModContext<ISkyrimMod, IAddonNodeInternal, IAddonNodeGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, AddonNode, IAddonNodeGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.AddonNodes.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.AddonNodes.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.AddonNodes,
+                    groupGetter: (m) => m.AddonNodes);
             }
             foreach (var item in obj.ActorValueInformation)
             {
-                yield return new ModContext<ISkyrimMod, IActorValueInformationInternal, IActorValueInformationGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ActorValueInformation, IActorValueInformationGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.ActorValueInformation.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.ActorValueInformation.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.ActorValueInformation,
+                    groupGetter: (m) => m.ActorValueInformation);
             }
             foreach (var item in obj.CameraShots)
             {
-                yield return new ModContext<ISkyrimMod, ICameraShotInternal, ICameraShotGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, CameraShot, ICameraShotGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.CameraShots.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.CameraShots.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.CameraShots,
+                    groupGetter: (m) => m.CameraShots);
             }
             foreach (var item in obj.CameraPaths)
             {
-                yield return new ModContext<ISkyrimMod, ICameraPathInternal, ICameraPathGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, CameraPath, ICameraPathGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.CameraPaths.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.CameraPaths.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.CameraPaths,
+                    groupGetter: (m) => m.CameraPaths);
             }
             foreach (var item in obj.VoiceTypes)
             {
-                yield return new ModContext<ISkyrimMod, IVoiceTypeInternal, IVoiceTypeGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, VoiceType, IVoiceTypeGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.VoiceTypes.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.VoiceTypes.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.VoiceTypes,
+                    groupGetter: (m) => m.VoiceTypes);
             }
             foreach (var item in obj.MaterialTypes)
             {
-                yield return new ModContext<ISkyrimMod, IMaterialTypeInternal, IMaterialTypeGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, MaterialType, IMaterialTypeGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.MaterialTypes.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.MaterialTypes.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.MaterialTypes,
+                    groupGetter: (m) => m.MaterialTypes);
             }
             foreach (var item in obj.Impacts)
             {
-                yield return new ModContext<ISkyrimMod, IImpactInternal, IImpactGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Impact, IImpactGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Impacts.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Impacts.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Impacts,
+                    groupGetter: (m) => m.Impacts);
             }
             foreach (var item in obj.ImpactDataSets)
             {
-                yield return new ModContext<ISkyrimMod, IImpactDataSetInternal, IImpactDataSetGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ImpactDataSet, IImpactDataSetGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.ImpactDataSets.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.ImpactDataSets.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.ImpactDataSets,
+                    groupGetter: (m) => m.ImpactDataSets);
             }
             foreach (var item in obj.ArmorAddons)
             {
-                yield return new ModContext<ISkyrimMod, IArmorAddonInternal, IArmorAddonGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ArmorAddon, IArmorAddonGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.ArmorAddons.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.ArmorAddons.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.ArmorAddons,
+                    groupGetter: (m) => m.ArmorAddons);
             }
             foreach (var item in obj.EncounterZones)
             {
-                yield return new ModContext<ISkyrimMod, IEncounterZoneInternal, IEncounterZoneGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, EncounterZone, IEncounterZoneGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.EncounterZones.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.EncounterZones.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.EncounterZones,
+                    groupGetter: (m) => m.EncounterZones);
             }
             foreach (var item in obj.Locations)
             {
-                yield return new ModContext<ISkyrimMod, ILocationInternal, ILocationGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Location, ILocationGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Locations.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Locations.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Locations,
+                    groupGetter: (m) => m.Locations);
             }
             foreach (var item in obj.Messages)
             {
-                yield return new ModContext<ISkyrimMod, IMessageInternal, IMessageGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Message, IMessageGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Messages.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Messages.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Messages,
+                    groupGetter: (m) => m.Messages);
             }
             foreach (var item in obj.DefaultObjectManagers)
             {
-                yield return new ModContext<ISkyrimMod, IDefaultObjectManagerInternal, IDefaultObjectManagerGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, DefaultObjectManager, IDefaultObjectManagerGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.DefaultObjectManagers.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.DefaultObjectManagers.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.DefaultObjectManagers,
+                    groupGetter: (m) => m.DefaultObjectManagers);
             }
             foreach (var item in obj.LightingTemplates)
             {
-                yield return new ModContext<ISkyrimMod, ILightingTemplateInternal, ILightingTemplateGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, LightingTemplate, ILightingTemplateGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.LightingTemplates.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.LightingTemplates.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.LightingTemplates,
+                    groupGetter: (m) => m.LightingTemplates);
             }
             foreach (var item in obj.MusicTypes)
             {
-                yield return new ModContext<ISkyrimMod, IMusicTypeInternal, IMusicTypeGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, MusicType, IMusicTypeGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.MusicTypes.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.MusicTypes.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.MusicTypes,
+                    groupGetter: (m) => m.MusicTypes);
             }
             foreach (var item in obj.Footsteps)
             {
-                yield return new ModContext<ISkyrimMod, IFootstepInternal, IFootstepGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Footstep, IFootstepGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Footsteps.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Footsteps.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Footsteps,
+                    groupGetter: (m) => m.Footsteps);
             }
             foreach (var item in obj.FootstepSets)
             {
-                yield return new ModContext<ISkyrimMod, IFootstepSetInternal, IFootstepSetGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, FootstepSet, IFootstepSetGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.FootstepSets.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.FootstepSets.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.FootstepSets,
+                    groupGetter: (m) => m.FootstepSets);
             }
             foreach (var item in obj.StoryManagerBranchNodes)
             {
-                yield return new ModContext<ISkyrimMod, IStoryManagerBranchNodeInternal, IStoryManagerBranchNodeGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, StoryManagerBranchNode, IStoryManagerBranchNodeGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.StoryManagerBranchNodes.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.StoryManagerBranchNodes.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.StoryManagerBranchNodes,
+                    groupGetter: (m) => m.StoryManagerBranchNodes);
             }
             foreach (var item in obj.StoryManagerQuestNodes)
             {
-                yield return new ModContext<ISkyrimMod, IStoryManagerQuestNodeInternal, IStoryManagerQuestNodeGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, StoryManagerQuestNode, IStoryManagerQuestNodeGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.StoryManagerQuestNodes.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.StoryManagerQuestNodes.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.StoryManagerQuestNodes,
+                    groupGetter: (m) => m.StoryManagerQuestNodes);
             }
             foreach (var item in obj.StoryManagerEventNodes)
             {
-                yield return new ModContext<ISkyrimMod, IStoryManagerEventNodeInternal, IStoryManagerEventNodeGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, StoryManagerEventNode, IStoryManagerEventNodeGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.StoryManagerEventNodes.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.StoryManagerEventNodes.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.StoryManagerEventNodes,
+                    groupGetter: (m) => m.StoryManagerEventNodes);
             }
             foreach (var item in obj.DialogBranches)
             {
-                yield return new ModContext<ISkyrimMod, IDialogBranchInternal, IDialogBranchGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, DialogBranch, IDialogBranchGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.DialogBranches.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.DialogBranches.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.DialogBranches,
+                    groupGetter: (m) => m.DialogBranches);
             }
             foreach (var item in obj.MusicTracks)
             {
-                yield return new ModContext<ISkyrimMod, IMusicTrackInternal, IMusicTrackGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, MusicTrack, IMusicTrackGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.MusicTracks.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.MusicTracks.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.MusicTracks,
+                    groupGetter: (m) => m.MusicTracks);
             }
             foreach (var item in obj.DialogViews)
             {
-                yield return new ModContext<ISkyrimMod, IDialogViewInternal, IDialogViewGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, DialogView, IDialogViewGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.DialogViews.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.DialogViews.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.DialogViews,
+                    groupGetter: (m) => m.DialogViews);
             }
             foreach (var item in obj.WordsOfPower)
             {
-                yield return new ModContext<ISkyrimMod, IWordOfPowerInternal, IWordOfPowerGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, WordOfPower, IWordOfPowerGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.WordsOfPower.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.WordsOfPower.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.WordsOfPower,
+                    groupGetter: (m) => m.WordsOfPower);
             }
             foreach (var item in obj.Shouts)
             {
-                yield return new ModContext<ISkyrimMod, IShoutInternal, IShoutGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Shout, IShoutGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Shouts.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Shouts.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Shouts,
+                    groupGetter: (m) => m.Shouts);
             }
             foreach (var item in obj.EquipTypes)
             {
-                yield return new ModContext<ISkyrimMod, IEquipTypeInternal, IEquipTypeGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, EquipType, IEquipTypeGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.EquipTypes.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.EquipTypes.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.EquipTypes,
+                    groupGetter: (m) => m.EquipTypes);
             }
             foreach (var item in obj.Relationships)
             {
-                yield return new ModContext<ISkyrimMod, IRelationshipInternal, IRelationshipGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Relationship, IRelationshipGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Relationships.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Relationships.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Relationships,
+                    groupGetter: (m) => m.Relationships);
             }
             foreach (var item in obj.Scenes)
             {
-                yield return new ModContext<ISkyrimMod, ISceneInternal, ISceneGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Scene, ISceneGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Scenes.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Scenes.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Scenes,
+                    groupGetter: (m) => m.Scenes);
             }
             foreach (var item in obj.AssociationTypes)
             {
-                yield return new ModContext<ISkyrimMod, IAssociationTypeInternal, IAssociationTypeGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, AssociationType, IAssociationTypeGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.AssociationTypes.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.AssociationTypes.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.AssociationTypes,
+                    groupGetter: (m) => m.AssociationTypes);
             }
             foreach (var item in obj.Outfits)
             {
-                yield return new ModContext<ISkyrimMod, IOutfitInternal, IOutfitGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Outfit, IOutfitGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Outfits.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Outfits.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Outfits,
+                    groupGetter: (m) => m.Outfits);
             }
             foreach (var item in obj.ArtObjects)
             {
-                yield return new ModContext<ISkyrimMod, IArtObjectInternal, IArtObjectGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ArtObject, IArtObjectGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.ArtObjects.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.ArtObjects.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.ArtObjects,
+                    groupGetter: (m) => m.ArtObjects);
             }
             foreach (var item in obj.MaterialObjects)
             {
-                yield return new ModContext<ISkyrimMod, IMaterialObjectInternal, IMaterialObjectGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, MaterialObject, IMaterialObjectGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.MaterialObjects.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.MaterialObjects.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.MaterialObjects,
+                    groupGetter: (m) => m.MaterialObjects);
             }
             foreach (var item in obj.MovementTypes)
             {
-                yield return new ModContext<ISkyrimMod, IMovementTypeInternal, IMovementTypeGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, MovementType, IMovementTypeGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.MovementTypes.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.MovementTypes.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.MovementTypes,
+                    groupGetter: (m) => m.MovementTypes);
             }
             foreach (var item in obj.SoundDescriptors)
             {
-                yield return new ModContext<ISkyrimMod, ISoundDescriptorInternal, ISoundDescriptorGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, SoundDescriptor, ISoundDescriptorGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.SoundDescriptors.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.SoundDescriptors.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.SoundDescriptors,
+                    groupGetter: (m) => m.SoundDescriptors);
             }
             foreach (var item in obj.DualCastData)
             {
-                yield return new ModContext<ISkyrimMod, IDualCastDataInternal, IDualCastDataGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, DualCastData, IDualCastDataGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.DualCastData.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.DualCastData.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.DualCastData,
+                    groupGetter: (m) => m.DualCastData);
             }
             foreach (var item in obj.SoundCategories)
             {
-                yield return new ModContext<ISkyrimMod, ISoundCategoryInternal, ISoundCategoryGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, SoundCategory, ISoundCategoryGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.SoundCategories.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.SoundCategories.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.SoundCategories,
+                    groupGetter: (m) => m.SoundCategories);
             }
             foreach (var item in obj.SoundOutputModels)
             {
-                yield return new ModContext<ISkyrimMod, ISoundOutputModelInternal, ISoundOutputModelGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, SoundOutputModel, ISoundOutputModelGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.SoundOutputModels.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.SoundOutputModels.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.SoundOutputModels,
+                    groupGetter: (m) => m.SoundOutputModels);
             }
             foreach (var item in obj.CollisionLayers)
             {
-                yield return new ModContext<ISkyrimMod, ICollisionLayerInternal, ICollisionLayerGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, CollisionLayer, ICollisionLayerGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.CollisionLayers.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.CollisionLayers.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.CollisionLayers,
+                    groupGetter: (m) => m.CollisionLayers);
             }
             foreach (var item in obj.Colors)
             {
-                yield return new ModContext<ISkyrimMod, IColorRecordInternal, IColorRecordGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ColorRecord, IColorRecordGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.Colors.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.Colors.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.Colors,
+                    groupGetter: (m) => m.Colors);
             }
             foreach (var item in obj.ReverbParameters)
             {
-                yield return new ModContext<ISkyrimMod, IReverbParametersInternal, IReverbParametersGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ReverbParameters, IReverbParametersGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.ReverbParameters.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.ReverbParameters.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.ReverbParameters,
+                    groupGetter: (m) => m.ReverbParameters);
             }
             foreach (var item in obj.VolumetricLightings)
             {
-                yield return new ModContext<ISkyrimMod, IVolumetricLightingInternal, IVolumetricLightingGetter>(
+                yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, VolumetricLighting, IVolumetricLightingGetter>(
                     modKey: obj.ModKey,
                     record: item,
-                    getOrAddAsOverride: (m, r) => m.VolumetricLightings.GetOrAddAsOverride(r),
-                    duplicateInto: (m, r, e) => m.VolumetricLightings.DuplicateInAsNewRecord(r, e));
+                    group: (m) => m.VolumetricLightings,
+                    groupGetter: (m) => m.VolumetricLightings);
             }
         }
         
-        public IEnumerable<IModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        public IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             ISkyrimModGetter obj,
             ILinkCache linkCache,
             Type type,
@@ -14853,11 +14853,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IGameSettingInternal":
                     foreach (var item in obj.GameSettings)
                     {
-                        yield return new ModContext<ISkyrimMod, IGameSettingInternal, IGameSettingGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, GameSetting, IGameSettingGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.GameSettings.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.GameSettings.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.GameSettings,
+                            groupGetter: (m) => m.GameSettings);
                     }
                     yield break;
                 case "Keyword":
@@ -14866,11 +14866,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IKeywordInternal":
                     foreach (var item in obj.Keywords)
                     {
-                        yield return new ModContext<ISkyrimMod, IKeywordInternal, IKeywordGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Keyword, IKeywordGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Keywords.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Keywords.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Keywords,
+                            groupGetter: (m) => m.Keywords);
                     }
                     yield break;
                 case "LocationReferenceType":
@@ -14879,11 +14879,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILocationReferenceTypeInternal":
                     foreach (var item in obj.LocationReferenceTypes)
                     {
-                        yield return new ModContext<ISkyrimMod, ILocationReferenceTypeInternal, ILocationReferenceTypeGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, LocationReferenceType, ILocationReferenceTypeGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.LocationReferenceTypes.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.LocationReferenceTypes.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.LocationReferenceTypes,
+                            groupGetter: (m) => m.LocationReferenceTypes);
                     }
                     yield break;
                 case "ActionRecord":
@@ -14892,11 +14892,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IActionRecordInternal":
                     foreach (var item in obj.Actions)
                     {
-                        yield return new ModContext<ISkyrimMod, IActionRecordInternal, IActionRecordGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ActionRecord, IActionRecordGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Actions.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Actions.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Actions,
+                            groupGetter: (m) => m.Actions);
                     }
                     yield break;
                 case "TextureSet":
@@ -14905,11 +14905,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ITextureSetInternal":
                     foreach (var item in obj.TextureSets)
                     {
-                        yield return new ModContext<ISkyrimMod, ITextureSetInternal, ITextureSetGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, TextureSet, ITextureSetGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.TextureSets.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.TextureSets.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.TextureSets,
+                            groupGetter: (m) => m.TextureSets);
                     }
                     yield break;
                 case "Global":
@@ -14918,11 +14918,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IGlobalInternal":
                     foreach (var item in obj.Globals)
                     {
-                        yield return new ModContext<ISkyrimMod, IGlobalInternal, IGlobalGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Global, IGlobalGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Globals.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Globals.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Globals,
+                            groupGetter: (m) => m.Globals);
                     }
                     yield break;
                 case "Class":
@@ -14931,11 +14931,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IClassInternal":
                     foreach (var item in obj.Classes)
                     {
-                        yield return new ModContext<ISkyrimMod, IClassInternal, IClassGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Class, IClassGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Classes.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Classes.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Classes,
+                            groupGetter: (m) => m.Classes);
                     }
                     yield break;
                 case "Faction":
@@ -14944,11 +14944,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IFactionInternal":
                     foreach (var item in obj.Factions)
                     {
-                        yield return new ModContext<ISkyrimMod, IFactionInternal, IFactionGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Faction, IFactionGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Factions.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Factions.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Factions,
+                            groupGetter: (m) => m.Factions);
                     }
                     yield break;
                 case "HeadPart":
@@ -14957,11 +14957,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IHeadPartInternal":
                     foreach (var item in obj.HeadParts)
                     {
-                        yield return new ModContext<ISkyrimMod, IHeadPartInternal, IHeadPartGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, HeadPart, IHeadPartGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.HeadParts.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.HeadParts.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.HeadParts,
+                            groupGetter: (m) => m.HeadParts);
                     }
                     yield break;
                 case "Hair":
@@ -14970,11 +14970,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IHairInternal":
                     foreach (var item in obj.Hairs)
                     {
-                        yield return new ModContext<ISkyrimMod, IHairInternal, IHairGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Hair, IHairGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Hairs.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Hairs.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Hairs,
+                            groupGetter: (m) => m.Hairs);
                     }
                     yield break;
                 case "Eyes":
@@ -14983,11 +14983,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IEyesInternal":
                     foreach (var item in obj.Eyes)
                     {
-                        yield return new ModContext<ISkyrimMod, IEyesInternal, IEyesGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Eyes, IEyesGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Eyes.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Eyes.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Eyes,
+                            groupGetter: (m) => m.Eyes);
                     }
                     yield break;
                 case "Race":
@@ -14996,11 +14996,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IRaceInternal":
                     foreach (var item in obj.Races)
                     {
-                        yield return new ModContext<ISkyrimMod, IRaceInternal, IRaceGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Race, IRaceGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Races.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Races.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Races,
+                            groupGetter: (m) => m.Races);
                     }
                     yield break;
                 case "SoundMarker":
@@ -15009,11 +15009,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ISoundMarkerInternal":
                     foreach (var item in obj.SoundMarkers)
                     {
-                        yield return new ModContext<ISkyrimMod, ISoundMarkerInternal, ISoundMarkerGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, SoundMarker, ISoundMarkerGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.SoundMarkers.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.SoundMarkers.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.SoundMarkers,
+                            groupGetter: (m) => m.SoundMarkers);
                     }
                     yield break;
                 case "AcousticSpace":
@@ -15022,11 +15022,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IAcousticSpaceInternal":
                     foreach (var item in obj.AcousticSpaces)
                     {
-                        yield return new ModContext<ISkyrimMod, IAcousticSpaceInternal, IAcousticSpaceGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, AcousticSpace, IAcousticSpaceGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.AcousticSpaces.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.AcousticSpaces.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.AcousticSpaces,
+                            groupGetter: (m) => m.AcousticSpaces);
                     }
                     yield break;
                 case "MagicEffect":
@@ -15035,11 +15035,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IMagicEffectInternal":
                     foreach (var item in obj.MagicEffects)
                     {
-                        yield return new ModContext<ISkyrimMod, IMagicEffectInternal, IMagicEffectGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, MagicEffect, IMagicEffectGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.MagicEffects.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.MagicEffects.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.MagicEffects,
+                            groupGetter: (m) => m.MagicEffects);
                     }
                     yield break;
                 case "LandscapeTexture":
@@ -15048,11 +15048,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILandscapeTextureInternal":
                     foreach (var item in obj.LandscapeTextures)
                     {
-                        yield return new ModContext<ISkyrimMod, ILandscapeTextureInternal, ILandscapeTextureGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, LandscapeTexture, ILandscapeTextureGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.LandscapeTextures.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.LandscapeTextures.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.LandscapeTextures,
+                            groupGetter: (m) => m.LandscapeTextures);
                     }
                     yield break;
                 case "ObjectEffect":
@@ -15061,11 +15061,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IObjectEffectInternal":
                     foreach (var item in obj.ObjectEffects)
                     {
-                        yield return new ModContext<ISkyrimMod, IObjectEffectInternal, IObjectEffectGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ObjectEffect, IObjectEffectGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.ObjectEffects.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.ObjectEffects.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.ObjectEffects,
+                            groupGetter: (m) => m.ObjectEffects);
                     }
                     yield break;
                 case "Spell":
@@ -15074,11 +15074,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ISpellInternal":
                     foreach (var item in obj.Spells)
                     {
-                        yield return new ModContext<ISkyrimMod, ISpellInternal, ISpellGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Spell, ISpellGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Spells.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Spells.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Spells,
+                            groupGetter: (m) => m.Spells);
                     }
                     yield break;
                 case "Scroll":
@@ -15087,11 +15087,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IScrollInternal":
                     foreach (var item in obj.Scrolls)
                     {
-                        yield return new ModContext<ISkyrimMod, IScrollInternal, IScrollGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Scroll, IScrollGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Scrolls.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Scrolls.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Scrolls,
+                            groupGetter: (m) => m.Scrolls);
                     }
                     yield break;
                 case "Activator":
@@ -15100,11 +15100,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IActivatorInternal":
                     foreach (var item in obj.Activators)
                     {
-                        yield return new ModContext<ISkyrimMod, IActivatorInternal, IActivatorGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Activator, IActivatorGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Activators.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Activators.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Activators,
+                            groupGetter: (m) => m.Activators);
                     }
                     yield break;
                 case "TalkingActivator":
@@ -15113,11 +15113,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ITalkingActivatorInternal":
                     foreach (var item in obj.TalkingActivators)
                     {
-                        yield return new ModContext<ISkyrimMod, ITalkingActivatorInternal, ITalkingActivatorGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, TalkingActivator, ITalkingActivatorGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.TalkingActivators.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.TalkingActivators.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.TalkingActivators,
+                            groupGetter: (m) => m.TalkingActivators);
                     }
                     yield break;
                 case "Armor":
@@ -15126,11 +15126,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IArmorInternal":
                     foreach (var item in obj.Armors)
                     {
-                        yield return new ModContext<ISkyrimMod, IArmorInternal, IArmorGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Armor, IArmorGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Armors.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Armors.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Armors,
+                            groupGetter: (m) => m.Armors);
                     }
                     yield break;
                 case "Book":
@@ -15139,11 +15139,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IBookInternal":
                     foreach (var item in obj.Books)
                     {
-                        yield return new ModContext<ISkyrimMod, IBookInternal, IBookGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Book, IBookGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Books.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Books.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Books,
+                            groupGetter: (m) => m.Books);
                     }
                     yield break;
                 case "Container":
@@ -15152,11 +15152,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IContainerInternal":
                     foreach (var item in obj.Containers)
                     {
-                        yield return new ModContext<ISkyrimMod, IContainerInternal, IContainerGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Container, IContainerGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Containers.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Containers.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Containers,
+                            groupGetter: (m) => m.Containers);
                     }
                     yield break;
                 case "Door":
@@ -15165,11 +15165,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IDoorInternal":
                     foreach (var item in obj.Doors)
                     {
-                        yield return new ModContext<ISkyrimMod, IDoorInternal, IDoorGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Door, IDoorGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Doors.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Doors.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Doors,
+                            groupGetter: (m) => m.Doors);
                     }
                     yield break;
                 case "Ingredient":
@@ -15178,11 +15178,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IIngredientInternal":
                     foreach (var item in obj.Ingredients)
                     {
-                        yield return new ModContext<ISkyrimMod, IIngredientInternal, IIngredientGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Ingredient, IIngredientGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Ingredients.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Ingredients.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Ingredients,
+                            groupGetter: (m) => m.Ingredients);
                     }
                     yield break;
                 case "Light":
@@ -15191,11 +15191,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILightInternal":
                     foreach (var item in obj.Lights)
                     {
-                        yield return new ModContext<ISkyrimMod, ILightInternal, ILightGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Light, ILightGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Lights.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Lights.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Lights,
+                            groupGetter: (m) => m.Lights);
                     }
                     yield break;
                 case "MiscItem":
@@ -15204,11 +15204,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IMiscItemInternal":
                     foreach (var item in obj.MiscItems)
                     {
-                        yield return new ModContext<ISkyrimMod, IMiscItemInternal, IMiscItemGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, MiscItem, IMiscItemGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.MiscItems.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.MiscItems.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.MiscItems,
+                            groupGetter: (m) => m.MiscItems);
                     }
                     yield break;
                 case "AlchemicalApparatus":
@@ -15217,11 +15217,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IAlchemicalApparatusInternal":
                     foreach (var item in obj.AlchemicalApparatuses)
                     {
-                        yield return new ModContext<ISkyrimMod, IAlchemicalApparatusInternal, IAlchemicalApparatusGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, AlchemicalApparatus, IAlchemicalApparatusGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.AlchemicalApparatuses.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.AlchemicalApparatuses.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.AlchemicalApparatuses,
+                            groupGetter: (m) => m.AlchemicalApparatuses);
                     }
                     yield break;
                 case "Static":
@@ -15230,11 +15230,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IStaticInternal":
                     foreach (var item in obj.Statics)
                     {
-                        yield return new ModContext<ISkyrimMod, IStaticInternal, IStaticGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Static, IStaticGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Statics.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Statics.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Statics,
+                            groupGetter: (m) => m.Statics);
                     }
                     yield break;
                 case "MoveableStatic":
@@ -15243,11 +15243,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IMoveableStaticInternal":
                     foreach (var item in obj.MoveableStatics)
                     {
-                        yield return new ModContext<ISkyrimMod, IMoveableStaticInternal, IMoveableStaticGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, MoveableStatic, IMoveableStaticGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.MoveableStatics.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.MoveableStatics.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.MoveableStatics,
+                            groupGetter: (m) => m.MoveableStatics);
                     }
                     yield break;
                 case "Grass":
@@ -15256,11 +15256,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IGrassInternal":
                     foreach (var item in obj.Grasses)
                     {
-                        yield return new ModContext<ISkyrimMod, IGrassInternal, IGrassGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Grass, IGrassGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Grasses.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Grasses.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Grasses,
+                            groupGetter: (m) => m.Grasses);
                     }
                     yield break;
                 case "Tree":
@@ -15269,11 +15269,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ITreeInternal":
                     foreach (var item in obj.Trees)
                     {
-                        yield return new ModContext<ISkyrimMod, ITreeInternal, ITreeGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Tree, ITreeGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Trees.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Trees.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Trees,
+                            groupGetter: (m) => m.Trees);
                     }
                     yield break;
                 case "Flora":
@@ -15282,11 +15282,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IFloraInternal":
                     foreach (var item in obj.Florae)
                     {
-                        yield return new ModContext<ISkyrimMod, IFloraInternal, IFloraGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Flora, IFloraGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Florae.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Florae.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Florae,
+                            groupGetter: (m) => m.Florae);
                     }
                     yield break;
                 case "Furniture":
@@ -15295,11 +15295,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IFurnitureInternal":
                     foreach (var item in obj.Furniture)
                     {
-                        yield return new ModContext<ISkyrimMod, IFurnitureInternal, IFurnitureGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Furniture, IFurnitureGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Furniture.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Furniture.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Furniture,
+                            groupGetter: (m) => m.Furniture);
                     }
                     yield break;
                 case "Weapon":
@@ -15308,11 +15308,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IWeaponInternal":
                     foreach (var item in obj.Weapons)
                     {
-                        yield return new ModContext<ISkyrimMod, IWeaponInternal, IWeaponGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Weapon, IWeaponGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Weapons.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Weapons.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Weapons,
+                            groupGetter: (m) => m.Weapons);
                     }
                     yield break;
                 case "Ammunition":
@@ -15321,11 +15321,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IAmmunitionInternal":
                     foreach (var item in obj.Ammunitions)
                     {
-                        yield return new ModContext<ISkyrimMod, IAmmunitionInternal, IAmmunitionGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Ammunition, IAmmunitionGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Ammunitions.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Ammunitions.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Ammunitions,
+                            groupGetter: (m) => m.Ammunitions);
                     }
                     yield break;
                 case "Npc":
@@ -15334,11 +15334,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "INpcInternal":
                     foreach (var item in obj.Npcs)
                     {
-                        yield return new ModContext<ISkyrimMod, INpcInternal, INpcGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Npc, INpcGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Npcs.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Npcs.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Npcs,
+                            groupGetter: (m) => m.Npcs);
                     }
                     yield break;
                 case "LeveledNpc":
@@ -15347,11 +15347,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILeveledNpcInternal":
                     foreach (var item in obj.LeveledNpcs)
                     {
-                        yield return new ModContext<ISkyrimMod, ILeveledNpcInternal, ILeveledNpcGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, LeveledNpc, ILeveledNpcGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.LeveledNpcs.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.LeveledNpcs.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.LeveledNpcs,
+                            groupGetter: (m) => m.LeveledNpcs);
                     }
                     yield break;
                 case "Key":
@@ -15360,11 +15360,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IKeyInternal":
                     foreach (var item in obj.Keys)
                     {
-                        yield return new ModContext<ISkyrimMod, IKeyInternal, IKeyGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Key, IKeyGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Keys.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Keys.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Keys,
+                            groupGetter: (m) => m.Keys);
                     }
                     yield break;
                 case "Ingestible":
@@ -15373,11 +15373,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IIngestibleInternal":
                     foreach (var item in obj.Ingestibles)
                     {
-                        yield return new ModContext<ISkyrimMod, IIngestibleInternal, IIngestibleGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Ingestible, IIngestibleGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Ingestibles.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Ingestibles.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Ingestibles,
+                            groupGetter: (m) => m.Ingestibles);
                     }
                     yield break;
                 case "IdleMarker":
@@ -15386,11 +15386,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IIdleMarkerInternal":
                     foreach (var item in obj.IdleMarkers)
                     {
-                        yield return new ModContext<ISkyrimMod, IIdleMarkerInternal, IIdleMarkerGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, IdleMarker, IIdleMarkerGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.IdleMarkers.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.IdleMarkers.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.IdleMarkers,
+                            groupGetter: (m) => m.IdleMarkers);
                     }
                     yield break;
                 case "ConstructibleObject":
@@ -15399,11 +15399,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IConstructibleObjectInternal":
                     foreach (var item in obj.ConstructibleObjects)
                     {
-                        yield return new ModContext<ISkyrimMod, IConstructibleObjectInternal, IConstructibleObjectGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ConstructibleObject, IConstructibleObjectGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.ConstructibleObjects.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.ConstructibleObjects.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.ConstructibleObjects,
+                            groupGetter: (m) => m.ConstructibleObjects);
                     }
                     yield break;
                 case "Projectile":
@@ -15412,11 +15412,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IProjectileInternal":
                     foreach (var item in obj.Projectiles)
                     {
-                        yield return new ModContext<ISkyrimMod, IProjectileInternal, IProjectileGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Projectile, IProjectileGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Projectiles.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Projectiles.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Projectiles,
+                            groupGetter: (m) => m.Projectiles);
                     }
                     yield break;
                 case "Hazard":
@@ -15425,11 +15425,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IHazardInternal":
                     foreach (var item in obj.Hazards)
                     {
-                        yield return new ModContext<ISkyrimMod, IHazardInternal, IHazardGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Hazard, IHazardGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Hazards.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Hazards.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Hazards,
+                            groupGetter: (m) => m.Hazards);
                     }
                     yield break;
                 case "SoulGem":
@@ -15438,11 +15438,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ISoulGemInternal":
                     foreach (var item in obj.SoulGems)
                     {
-                        yield return new ModContext<ISkyrimMod, ISoulGemInternal, ISoulGemGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, SoulGem, ISoulGemGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.SoulGems.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.SoulGems.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.SoulGems,
+                            groupGetter: (m) => m.SoulGems);
                     }
                     yield break;
                 case "LeveledItem":
@@ -15451,11 +15451,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILeveledItemInternal":
                     foreach (var item in obj.LeveledItems)
                     {
-                        yield return new ModContext<ISkyrimMod, ILeveledItemInternal, ILeveledItemGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, LeveledItem, ILeveledItemGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.LeveledItems.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.LeveledItems.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.LeveledItems,
+                            groupGetter: (m) => m.LeveledItems);
                     }
                     yield break;
                 case "Weather":
@@ -15464,11 +15464,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IWeatherInternal":
                     foreach (var item in obj.Weathers)
                     {
-                        yield return new ModContext<ISkyrimMod, IWeatherInternal, IWeatherGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Weather, IWeatherGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Weathers.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Weathers.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Weathers,
+                            groupGetter: (m) => m.Weathers);
                     }
                     yield break;
                 case "Climate":
@@ -15477,11 +15477,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IClimateInternal":
                     foreach (var item in obj.Climates)
                     {
-                        yield return new ModContext<ISkyrimMod, IClimateInternal, IClimateGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Climate, IClimateGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Climates.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Climates.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Climates,
+                            groupGetter: (m) => m.Climates);
                     }
                     yield break;
                 case "ShaderParticleGeometry":
@@ -15490,11 +15490,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IShaderParticleGeometryInternal":
                     foreach (var item in obj.ShaderParticleGeometries)
                     {
-                        yield return new ModContext<ISkyrimMod, IShaderParticleGeometryInternal, IShaderParticleGeometryGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ShaderParticleGeometry, IShaderParticleGeometryGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.ShaderParticleGeometries.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.ShaderParticleGeometries.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.ShaderParticleGeometries,
+                            groupGetter: (m) => m.ShaderParticleGeometries);
                     }
                     yield break;
                 case "VisualEffect":
@@ -15503,11 +15503,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IVisualEffectInternal":
                     foreach (var item in obj.VisualEffects)
                     {
-                        yield return new ModContext<ISkyrimMod, IVisualEffectInternal, IVisualEffectGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, VisualEffect, IVisualEffectGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.VisualEffects.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.VisualEffects.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.VisualEffects,
+                            groupGetter: (m) => m.VisualEffects);
                     }
                     yield break;
                 case "Region":
@@ -15516,11 +15516,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IRegionInternal":
                     foreach (var item in obj.Regions)
                     {
-                        yield return new ModContext<ISkyrimMod, IRegionInternal, IRegionGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Region, IRegionGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Regions.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Regions.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Regions,
+                            groupGetter: (m) => m.Regions);
                     }
                     yield break;
                 case "NavigationMeshInfoMap":
@@ -15529,11 +15529,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "INavigationMeshInfoMapInternal":
                     foreach (var item in obj.NavigationMeshInfoMaps)
                     {
-                        yield return new ModContext<ISkyrimMod, INavigationMeshInfoMapInternal, INavigationMeshInfoMapGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, NavigationMeshInfoMap, INavigationMeshInfoMapGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.NavigationMeshInfoMaps.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.NavigationMeshInfoMaps.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.NavigationMeshInfoMaps,
+                            groupGetter: (m) => m.NavigationMeshInfoMaps);
                     }
                     yield break;
                 case "Worldspace":
@@ -15542,11 +15542,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IWorldspaceInternal":
                     foreach (var item in obj.Worldspaces)
                     {
-                        yield return new ModContext<ISkyrimMod, IWorldspaceInternal, IWorldspaceGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Worldspace, IWorldspaceGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Worldspaces,
+                            groupGetter: (m) => m.Worldspaces);
                     }
                     yield break;
                 case "DialogTopic":
@@ -15555,11 +15555,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IDialogTopicInternal":
                     foreach (var item in obj.DialogTopics)
                     {
-                        yield return new ModContext<ISkyrimMod, IDialogTopicInternal, IDialogTopicGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, DialogTopic, IDialogTopicGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.DialogTopics.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.DialogTopics.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.DialogTopics,
+                            groupGetter: (m) => m.DialogTopics);
                     }
                     yield break;
                 case "Quest":
@@ -15568,11 +15568,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IQuestInternal":
                     foreach (var item in obj.Quests)
                     {
-                        yield return new ModContext<ISkyrimMod, IQuestInternal, IQuestGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Quest, IQuestGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Quests.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Quests.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Quests,
+                            groupGetter: (m) => m.Quests);
                     }
                     yield break;
                 case "IdleAnimation":
@@ -15581,11 +15581,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IIdleAnimationInternal":
                     foreach (var item in obj.IdleAnimations)
                     {
-                        yield return new ModContext<ISkyrimMod, IIdleAnimationInternal, IIdleAnimationGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, IdleAnimation, IIdleAnimationGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.IdleAnimations.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.IdleAnimations.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.IdleAnimations,
+                            groupGetter: (m) => m.IdleAnimations);
                     }
                     yield break;
                 case "Package":
@@ -15594,11 +15594,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPackageInternal":
                     foreach (var item in obj.Packages)
                     {
-                        yield return new ModContext<ISkyrimMod, IPackageInternal, IPackageGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Package, IPackageGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Packages.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Packages.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Packages,
+                            groupGetter: (m) => m.Packages);
                     }
                     yield break;
                 case "CombatStyle":
@@ -15607,11 +15607,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ICombatStyleInternal":
                     foreach (var item in obj.CombatStyles)
                     {
-                        yield return new ModContext<ISkyrimMod, ICombatStyleInternal, ICombatStyleGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, CombatStyle, ICombatStyleGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.CombatStyles.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.CombatStyles.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.CombatStyles,
+                            groupGetter: (m) => m.CombatStyles);
                     }
                     yield break;
                 case "LoadScreen":
@@ -15620,11 +15620,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILoadScreenInternal":
                     foreach (var item in obj.LoadScreens)
                     {
-                        yield return new ModContext<ISkyrimMod, ILoadScreenInternal, ILoadScreenGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, LoadScreen, ILoadScreenGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.LoadScreens.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.LoadScreens.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.LoadScreens,
+                            groupGetter: (m) => m.LoadScreens);
                     }
                     yield break;
                 case "LeveledSpell":
@@ -15633,11 +15633,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILeveledSpellInternal":
                     foreach (var item in obj.LeveledSpells)
                     {
-                        yield return new ModContext<ISkyrimMod, ILeveledSpellInternal, ILeveledSpellGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, LeveledSpell, ILeveledSpellGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.LeveledSpells.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.LeveledSpells.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.LeveledSpells,
+                            groupGetter: (m) => m.LeveledSpells);
                     }
                     yield break;
                 case "AnimatedObject":
@@ -15646,11 +15646,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IAnimatedObjectInternal":
                     foreach (var item in obj.AnimatedObjects)
                     {
-                        yield return new ModContext<ISkyrimMod, IAnimatedObjectInternal, IAnimatedObjectGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, AnimatedObject, IAnimatedObjectGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.AnimatedObjects.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.AnimatedObjects.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.AnimatedObjects,
+                            groupGetter: (m) => m.AnimatedObjects);
                     }
                     yield break;
                 case "Water":
@@ -15659,11 +15659,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IWaterInternal":
                     foreach (var item in obj.Waters)
                     {
-                        yield return new ModContext<ISkyrimMod, IWaterInternal, IWaterGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Water, IWaterGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Waters.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Waters.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Waters,
+                            groupGetter: (m) => m.Waters);
                     }
                     yield break;
                 case "EffectShader":
@@ -15672,11 +15672,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IEffectShaderInternal":
                     foreach (var item in obj.EffectShaders)
                     {
-                        yield return new ModContext<ISkyrimMod, IEffectShaderInternal, IEffectShaderGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, EffectShader, IEffectShaderGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.EffectShaders.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.EffectShaders.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.EffectShaders,
+                            groupGetter: (m) => m.EffectShaders);
                     }
                     yield break;
                 case "Explosion":
@@ -15685,11 +15685,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IExplosionInternal":
                     foreach (var item in obj.Explosions)
                     {
-                        yield return new ModContext<ISkyrimMod, IExplosionInternal, IExplosionGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Explosion, IExplosionGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Explosions.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Explosions.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Explosions,
+                            groupGetter: (m) => m.Explosions);
                     }
                     yield break;
                 case "Debris":
@@ -15698,11 +15698,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IDebrisInternal":
                     foreach (var item in obj.Debris)
                     {
-                        yield return new ModContext<ISkyrimMod, IDebrisInternal, IDebrisGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Debris, IDebrisGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Debris.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Debris.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Debris,
+                            groupGetter: (m) => m.Debris);
                     }
                     yield break;
                 case "ImageSpace":
@@ -15711,11 +15711,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IImageSpaceInternal":
                     foreach (var item in obj.ImageSpaces)
                     {
-                        yield return new ModContext<ISkyrimMod, IImageSpaceInternal, IImageSpaceGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ImageSpace, IImageSpaceGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.ImageSpaces.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.ImageSpaces.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.ImageSpaces,
+                            groupGetter: (m) => m.ImageSpaces);
                     }
                     yield break;
                 case "ImageSpaceAdapter":
@@ -15724,11 +15724,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IImageSpaceAdapterInternal":
                     foreach (var item in obj.ImageSpaceAdapters)
                     {
-                        yield return new ModContext<ISkyrimMod, IImageSpaceAdapterInternal, IImageSpaceAdapterGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ImageSpaceAdapter, IImageSpaceAdapterGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.ImageSpaceAdapters.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.ImageSpaceAdapters.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.ImageSpaceAdapters,
+                            groupGetter: (m) => m.ImageSpaceAdapters);
                     }
                     yield break;
                 case "FormList":
@@ -15737,11 +15737,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IFormListInternal":
                     foreach (var item in obj.FormLists)
                     {
-                        yield return new ModContext<ISkyrimMod, IFormListInternal, IFormListGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, FormList, IFormListGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.FormLists.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.FormLists.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.FormLists,
+                            groupGetter: (m) => m.FormLists);
                     }
                     yield break;
                 case "Perk":
@@ -15750,11 +15750,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPerkInternal":
                     foreach (var item in obj.Perks)
                     {
-                        yield return new ModContext<ISkyrimMod, IPerkInternal, IPerkGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Perk, IPerkGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Perks.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Perks.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Perks,
+                            groupGetter: (m) => m.Perks);
                     }
                     yield break;
                 case "BodyPartData":
@@ -15763,11 +15763,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IBodyPartDataInternal":
                     foreach (var item in obj.BodyParts)
                     {
-                        yield return new ModContext<ISkyrimMod, IBodyPartDataInternal, IBodyPartDataGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, BodyPartData, IBodyPartDataGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.BodyParts.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.BodyParts.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.BodyParts,
+                            groupGetter: (m) => m.BodyParts);
                     }
                     yield break;
                 case "AddonNode":
@@ -15776,11 +15776,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IAddonNodeInternal":
                     foreach (var item in obj.AddonNodes)
                     {
-                        yield return new ModContext<ISkyrimMod, IAddonNodeInternal, IAddonNodeGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, AddonNode, IAddonNodeGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.AddonNodes.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.AddonNodes.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.AddonNodes,
+                            groupGetter: (m) => m.AddonNodes);
                     }
                     yield break;
                 case "ActorValueInformation":
@@ -15789,11 +15789,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IActorValueInformationInternal":
                     foreach (var item in obj.ActorValueInformation)
                     {
-                        yield return new ModContext<ISkyrimMod, IActorValueInformationInternal, IActorValueInformationGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ActorValueInformation, IActorValueInformationGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.ActorValueInformation.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.ActorValueInformation.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.ActorValueInformation,
+                            groupGetter: (m) => m.ActorValueInformation);
                     }
                     yield break;
                 case "CameraShot":
@@ -15802,11 +15802,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ICameraShotInternal":
                     foreach (var item in obj.CameraShots)
                     {
-                        yield return new ModContext<ISkyrimMod, ICameraShotInternal, ICameraShotGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, CameraShot, ICameraShotGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.CameraShots.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.CameraShots.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.CameraShots,
+                            groupGetter: (m) => m.CameraShots);
                     }
                     yield break;
                 case "CameraPath":
@@ -15815,11 +15815,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ICameraPathInternal":
                     foreach (var item in obj.CameraPaths)
                     {
-                        yield return new ModContext<ISkyrimMod, ICameraPathInternal, ICameraPathGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, CameraPath, ICameraPathGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.CameraPaths.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.CameraPaths.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.CameraPaths,
+                            groupGetter: (m) => m.CameraPaths);
                     }
                     yield break;
                 case "VoiceType":
@@ -15828,11 +15828,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IVoiceTypeInternal":
                     foreach (var item in obj.VoiceTypes)
                     {
-                        yield return new ModContext<ISkyrimMod, IVoiceTypeInternal, IVoiceTypeGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, VoiceType, IVoiceTypeGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.VoiceTypes.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.VoiceTypes.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.VoiceTypes,
+                            groupGetter: (m) => m.VoiceTypes);
                     }
                     yield break;
                 case "MaterialType":
@@ -15841,11 +15841,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IMaterialTypeInternal":
                     foreach (var item in obj.MaterialTypes)
                     {
-                        yield return new ModContext<ISkyrimMod, IMaterialTypeInternal, IMaterialTypeGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, MaterialType, IMaterialTypeGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.MaterialTypes.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.MaterialTypes.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.MaterialTypes,
+                            groupGetter: (m) => m.MaterialTypes);
                     }
                     yield break;
                 case "Impact":
@@ -15854,11 +15854,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IImpactInternal":
                     foreach (var item in obj.Impacts)
                     {
-                        yield return new ModContext<ISkyrimMod, IImpactInternal, IImpactGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Impact, IImpactGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Impacts.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Impacts.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Impacts,
+                            groupGetter: (m) => m.Impacts);
                     }
                     yield break;
                 case "ImpactDataSet":
@@ -15867,11 +15867,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IImpactDataSetInternal":
                     foreach (var item in obj.ImpactDataSets)
                     {
-                        yield return new ModContext<ISkyrimMod, IImpactDataSetInternal, IImpactDataSetGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ImpactDataSet, IImpactDataSetGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.ImpactDataSets.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.ImpactDataSets.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.ImpactDataSets,
+                            groupGetter: (m) => m.ImpactDataSets);
                     }
                     yield break;
                 case "ArmorAddon":
@@ -15880,11 +15880,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IArmorAddonInternal":
                     foreach (var item in obj.ArmorAddons)
                     {
-                        yield return new ModContext<ISkyrimMod, IArmorAddonInternal, IArmorAddonGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ArmorAddon, IArmorAddonGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.ArmorAddons.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.ArmorAddons.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.ArmorAddons,
+                            groupGetter: (m) => m.ArmorAddons);
                     }
                     yield break;
                 case "EncounterZone":
@@ -15893,11 +15893,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IEncounterZoneInternal":
                     foreach (var item in obj.EncounterZones)
                     {
-                        yield return new ModContext<ISkyrimMod, IEncounterZoneInternal, IEncounterZoneGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, EncounterZone, IEncounterZoneGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.EncounterZones.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.EncounterZones.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.EncounterZones,
+                            groupGetter: (m) => m.EncounterZones);
                     }
                     yield break;
                 case "Location":
@@ -15906,11 +15906,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILocationInternal":
                     foreach (var item in obj.Locations)
                     {
-                        yield return new ModContext<ISkyrimMod, ILocationInternal, ILocationGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Location, ILocationGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Locations.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Locations.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Locations,
+                            groupGetter: (m) => m.Locations);
                     }
                     yield break;
                 case "Message":
@@ -15919,11 +15919,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IMessageInternal":
                     foreach (var item in obj.Messages)
                     {
-                        yield return new ModContext<ISkyrimMod, IMessageInternal, IMessageGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Message, IMessageGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Messages.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Messages.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Messages,
+                            groupGetter: (m) => m.Messages);
                     }
                     yield break;
                 case "DefaultObjectManager":
@@ -15932,11 +15932,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IDefaultObjectManagerInternal":
                     foreach (var item in obj.DefaultObjectManagers)
                     {
-                        yield return new ModContext<ISkyrimMod, IDefaultObjectManagerInternal, IDefaultObjectManagerGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, DefaultObjectManager, IDefaultObjectManagerGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.DefaultObjectManagers.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.DefaultObjectManagers.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.DefaultObjectManagers,
+                            groupGetter: (m) => m.DefaultObjectManagers);
                     }
                     yield break;
                 case "LightingTemplate":
@@ -15945,11 +15945,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILightingTemplateInternal":
                     foreach (var item in obj.LightingTemplates)
                     {
-                        yield return new ModContext<ISkyrimMod, ILightingTemplateInternal, ILightingTemplateGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, LightingTemplate, ILightingTemplateGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.LightingTemplates.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.LightingTemplates.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.LightingTemplates,
+                            groupGetter: (m) => m.LightingTemplates);
                     }
                     yield break;
                 case "MusicType":
@@ -15958,11 +15958,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IMusicTypeInternal":
                     foreach (var item in obj.MusicTypes)
                     {
-                        yield return new ModContext<ISkyrimMod, IMusicTypeInternal, IMusicTypeGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, MusicType, IMusicTypeGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.MusicTypes.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.MusicTypes.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.MusicTypes,
+                            groupGetter: (m) => m.MusicTypes);
                     }
                     yield break;
                 case "Footstep":
@@ -15971,11 +15971,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IFootstepInternal":
                     foreach (var item in obj.Footsteps)
                     {
-                        yield return new ModContext<ISkyrimMod, IFootstepInternal, IFootstepGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Footstep, IFootstepGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Footsteps.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Footsteps.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Footsteps,
+                            groupGetter: (m) => m.Footsteps);
                     }
                     yield break;
                 case "FootstepSet":
@@ -15984,11 +15984,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IFootstepSetInternal":
                     foreach (var item in obj.FootstepSets)
                     {
-                        yield return new ModContext<ISkyrimMod, IFootstepSetInternal, IFootstepSetGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, FootstepSet, IFootstepSetGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.FootstepSets.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.FootstepSets.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.FootstepSets,
+                            groupGetter: (m) => m.FootstepSets);
                     }
                     yield break;
                 case "StoryManagerBranchNode":
@@ -15997,11 +15997,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IStoryManagerBranchNodeInternal":
                     foreach (var item in obj.StoryManagerBranchNodes)
                     {
-                        yield return new ModContext<ISkyrimMod, IStoryManagerBranchNodeInternal, IStoryManagerBranchNodeGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, StoryManagerBranchNode, IStoryManagerBranchNodeGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.StoryManagerBranchNodes.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.StoryManagerBranchNodes.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.StoryManagerBranchNodes,
+                            groupGetter: (m) => m.StoryManagerBranchNodes);
                     }
                     yield break;
                 case "StoryManagerQuestNode":
@@ -16010,11 +16010,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IStoryManagerQuestNodeInternal":
                     foreach (var item in obj.StoryManagerQuestNodes)
                     {
-                        yield return new ModContext<ISkyrimMod, IStoryManagerQuestNodeInternal, IStoryManagerQuestNodeGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, StoryManagerQuestNode, IStoryManagerQuestNodeGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.StoryManagerQuestNodes.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.StoryManagerQuestNodes.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.StoryManagerQuestNodes,
+                            groupGetter: (m) => m.StoryManagerQuestNodes);
                     }
                     yield break;
                 case "StoryManagerEventNode":
@@ -16023,11 +16023,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IStoryManagerEventNodeInternal":
                     foreach (var item in obj.StoryManagerEventNodes)
                     {
-                        yield return new ModContext<ISkyrimMod, IStoryManagerEventNodeInternal, IStoryManagerEventNodeGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, StoryManagerEventNode, IStoryManagerEventNodeGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.StoryManagerEventNodes.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.StoryManagerEventNodes.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.StoryManagerEventNodes,
+                            groupGetter: (m) => m.StoryManagerEventNodes);
                     }
                     yield break;
                 case "DialogBranch":
@@ -16036,11 +16036,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IDialogBranchInternal":
                     foreach (var item in obj.DialogBranches)
                     {
-                        yield return new ModContext<ISkyrimMod, IDialogBranchInternal, IDialogBranchGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, DialogBranch, IDialogBranchGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.DialogBranches.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.DialogBranches.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.DialogBranches,
+                            groupGetter: (m) => m.DialogBranches);
                     }
                     yield break;
                 case "MusicTrack":
@@ -16049,11 +16049,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IMusicTrackInternal":
                     foreach (var item in obj.MusicTracks)
                     {
-                        yield return new ModContext<ISkyrimMod, IMusicTrackInternal, IMusicTrackGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, MusicTrack, IMusicTrackGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.MusicTracks.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.MusicTracks.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.MusicTracks,
+                            groupGetter: (m) => m.MusicTracks);
                     }
                     yield break;
                 case "DialogView":
@@ -16062,11 +16062,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IDialogViewInternal":
                     foreach (var item in obj.DialogViews)
                     {
-                        yield return new ModContext<ISkyrimMod, IDialogViewInternal, IDialogViewGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, DialogView, IDialogViewGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.DialogViews.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.DialogViews.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.DialogViews,
+                            groupGetter: (m) => m.DialogViews);
                     }
                     yield break;
                 case "WordOfPower":
@@ -16075,11 +16075,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IWordOfPowerInternal":
                     foreach (var item in obj.WordsOfPower)
                     {
-                        yield return new ModContext<ISkyrimMod, IWordOfPowerInternal, IWordOfPowerGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, WordOfPower, IWordOfPowerGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.WordsOfPower.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.WordsOfPower.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.WordsOfPower,
+                            groupGetter: (m) => m.WordsOfPower);
                     }
                     yield break;
                 case "Shout":
@@ -16088,11 +16088,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IShoutInternal":
                     foreach (var item in obj.Shouts)
                     {
-                        yield return new ModContext<ISkyrimMod, IShoutInternal, IShoutGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Shout, IShoutGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Shouts.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Shouts.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Shouts,
+                            groupGetter: (m) => m.Shouts);
                     }
                     yield break;
                 case "EquipType":
@@ -16101,11 +16101,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IEquipTypeInternal":
                     foreach (var item in obj.EquipTypes)
                     {
-                        yield return new ModContext<ISkyrimMod, IEquipTypeInternal, IEquipTypeGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, EquipType, IEquipTypeGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.EquipTypes.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.EquipTypes.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.EquipTypes,
+                            groupGetter: (m) => m.EquipTypes);
                     }
                     yield break;
                 case "Relationship":
@@ -16114,11 +16114,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IRelationshipInternal":
                     foreach (var item in obj.Relationships)
                     {
-                        yield return new ModContext<ISkyrimMod, IRelationshipInternal, IRelationshipGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Relationship, IRelationshipGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Relationships.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Relationships.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Relationships,
+                            groupGetter: (m) => m.Relationships);
                     }
                     yield break;
                 case "Scene":
@@ -16127,11 +16127,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ISceneInternal":
                     foreach (var item in obj.Scenes)
                     {
-                        yield return new ModContext<ISkyrimMod, ISceneInternal, ISceneGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Scene, ISceneGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Scenes.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Scenes.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Scenes,
+                            groupGetter: (m) => m.Scenes);
                     }
                     yield break;
                 case "AssociationType":
@@ -16140,11 +16140,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IAssociationTypeInternal":
                     foreach (var item in obj.AssociationTypes)
                     {
-                        yield return new ModContext<ISkyrimMod, IAssociationTypeInternal, IAssociationTypeGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, AssociationType, IAssociationTypeGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.AssociationTypes.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.AssociationTypes.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.AssociationTypes,
+                            groupGetter: (m) => m.AssociationTypes);
                     }
                     yield break;
                 case "Outfit":
@@ -16153,11 +16153,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IOutfitInternal":
                     foreach (var item in obj.Outfits)
                     {
-                        yield return new ModContext<ISkyrimMod, IOutfitInternal, IOutfitGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Outfit, IOutfitGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Outfits.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Outfits.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Outfits,
+                            groupGetter: (m) => m.Outfits);
                     }
                     yield break;
                 case "ArtObject":
@@ -16166,11 +16166,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IArtObjectInternal":
                     foreach (var item in obj.ArtObjects)
                     {
-                        yield return new ModContext<ISkyrimMod, IArtObjectInternal, IArtObjectGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ArtObject, IArtObjectGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.ArtObjects.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.ArtObjects.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.ArtObjects,
+                            groupGetter: (m) => m.ArtObjects);
                     }
                     yield break;
                 case "MaterialObject":
@@ -16179,11 +16179,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IMaterialObjectInternal":
                     foreach (var item in obj.MaterialObjects)
                     {
-                        yield return new ModContext<ISkyrimMod, IMaterialObjectInternal, IMaterialObjectGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, MaterialObject, IMaterialObjectGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.MaterialObjects.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.MaterialObjects.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.MaterialObjects,
+                            groupGetter: (m) => m.MaterialObjects);
                     }
                     yield break;
                 case "MovementType":
@@ -16192,11 +16192,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IMovementTypeInternal":
                     foreach (var item in obj.MovementTypes)
                     {
-                        yield return new ModContext<ISkyrimMod, IMovementTypeInternal, IMovementTypeGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, MovementType, IMovementTypeGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.MovementTypes.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.MovementTypes.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.MovementTypes,
+                            groupGetter: (m) => m.MovementTypes);
                     }
                     yield break;
                 case "SoundDescriptor":
@@ -16205,11 +16205,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ISoundDescriptorInternal":
                     foreach (var item in obj.SoundDescriptors)
                     {
-                        yield return new ModContext<ISkyrimMod, ISoundDescriptorInternal, ISoundDescriptorGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, SoundDescriptor, ISoundDescriptorGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.SoundDescriptors.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.SoundDescriptors.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.SoundDescriptors,
+                            groupGetter: (m) => m.SoundDescriptors);
                     }
                     yield break;
                 case "DualCastData":
@@ -16218,11 +16218,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IDualCastDataInternal":
                     foreach (var item in obj.DualCastData)
                     {
-                        yield return new ModContext<ISkyrimMod, IDualCastDataInternal, IDualCastDataGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, DualCastData, IDualCastDataGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.DualCastData.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.DualCastData.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.DualCastData,
+                            groupGetter: (m) => m.DualCastData);
                     }
                     yield break;
                 case "SoundCategory":
@@ -16231,11 +16231,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ISoundCategoryInternal":
                     foreach (var item in obj.SoundCategories)
                     {
-                        yield return new ModContext<ISkyrimMod, ISoundCategoryInternal, ISoundCategoryGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, SoundCategory, ISoundCategoryGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.SoundCategories.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.SoundCategories.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.SoundCategories,
+                            groupGetter: (m) => m.SoundCategories);
                     }
                     yield break;
                 case "SoundOutputModel":
@@ -16244,11 +16244,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ISoundOutputModelInternal":
                     foreach (var item in obj.SoundOutputModels)
                     {
-                        yield return new ModContext<ISkyrimMod, ISoundOutputModelInternal, ISoundOutputModelGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, SoundOutputModel, ISoundOutputModelGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.SoundOutputModels.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.SoundOutputModels.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.SoundOutputModels,
+                            groupGetter: (m) => m.SoundOutputModels);
                     }
                     yield break;
                 case "CollisionLayer":
@@ -16257,11 +16257,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ICollisionLayerInternal":
                     foreach (var item in obj.CollisionLayers)
                     {
-                        yield return new ModContext<ISkyrimMod, ICollisionLayerInternal, ICollisionLayerGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, CollisionLayer, ICollisionLayerGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.CollisionLayers.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.CollisionLayers.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.CollisionLayers,
+                            groupGetter: (m) => m.CollisionLayers);
                     }
                     yield break;
                 case "ColorRecord":
@@ -16270,11 +16270,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IColorRecordInternal":
                     foreach (var item in obj.Colors)
                     {
-                        yield return new ModContext<ISkyrimMod, IColorRecordInternal, IColorRecordGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ColorRecord, IColorRecordGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.Colors.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.Colors.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.Colors,
+                            groupGetter: (m) => m.Colors);
                     }
                     yield break;
                 case "ReverbParameters":
@@ -16283,11 +16283,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IReverbParametersInternal":
                     foreach (var item in obj.ReverbParameters)
                     {
-                        yield return new ModContext<ISkyrimMod, IReverbParametersInternal, IReverbParametersGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, ReverbParameters, IReverbParametersGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.ReverbParameters.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.ReverbParameters.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.ReverbParameters,
+                            groupGetter: (m) => m.ReverbParameters);
                     }
                     yield break;
                 case "VolumetricLighting":
@@ -16296,11 +16296,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IVolumetricLightingInternal":
                     foreach (var item in obj.VolumetricLightings)
                     {
-                        yield return new ModContext<ISkyrimMod, IVolumetricLightingInternal, IVolumetricLightingGetter>(
+                        yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, VolumetricLighting, IVolumetricLightingGetter>(
                             modKey: obj.ModKey,
                             record: item,
-                            getOrAddAsOverride: (m, r) => m.VolumetricLightings.GetOrAddAsOverride(r),
-                            duplicateInto: (m, r, e) => m.VolumetricLightings.DuplicateInAsNewRecord(r, e));
+                            group: (m) => m.VolumetricLightings,
+                            groupGetter: (m) => m.VolumetricLightings);
                     }
                     yield break;
                 case "Cell":
@@ -23234,9 +23234,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public bool UsingLocalization => this.ModHeader.Flags.HasFlag(SkyrimModHeader.HeaderFlag.Localized);
         public IEnumerable<FormLinkInformation> ContainedFormLinks => SkyrimModCommon.Instance.GetContainedFormLinks(this);
         [DebuggerStepThrough]
-        IEnumerable<IModContext<ISkyrimMod, TSetter, TGetter>> IMajorRecordContextEnumerable<ISkyrimMod>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, TSetter, TGetter>> IMajorRecordContextEnumerable<ISkyrimMod, ISkyrimModGetter>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IModContext<ISkyrimMod, IMajorRecordCommon, IMajorRecordCommonGetter>> IMajorRecordContextEnumerable<ISkyrimMod>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> IMajorRecordContextEnumerable<ISkyrimMod, ISkyrimModGetter>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache, type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

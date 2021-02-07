@@ -674,7 +674,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IWeapon :
-        IAItem,
+        IAItemInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<IWeaponInternal>,
         IModeled,

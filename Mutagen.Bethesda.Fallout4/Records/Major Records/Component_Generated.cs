@@ -641,7 +641,7 @@ namespace Mutagen.Bethesda.Fallout4
     #region Interface
     public partial interface IComponent :
         IComponentGetter,
-        IFallout4MajorRecord,
+        IFallout4MajorRecordInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<IComponentInternal>,
         INamed,

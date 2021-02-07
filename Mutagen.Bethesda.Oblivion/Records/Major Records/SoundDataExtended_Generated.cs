@@ -473,8 +473,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ISoundDataExtended :
         ILoquiObjectSetter<ISoundDataExtendedInternal>,
-        ISoundData,
-        ISoundDataExtendedInternalGetter
+        ISoundDataExtendedInternalGetter,
+        ISoundDataInternal
     {
         new Single StaticAttenuation { get; set; }
         new Single StopTime { get; set; }

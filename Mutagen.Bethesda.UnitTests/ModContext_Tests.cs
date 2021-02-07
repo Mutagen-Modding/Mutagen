@@ -512,7 +512,7 @@ namespace Mutagen.Bethesda.UnitTests
             contexts.Should().HaveCount(1);
             var baseContext = contexts[0];
             var cellContext = baseContext.Parent;
-            cellContext.Should().BeOfType(typeof(ModContext<ISkyrimMod, ICell, ICellGetter>));
+            cellContext.Should().BeOfType(typeof(ModContext<ISkyrimMod, ISkyrimModGetter, ICell, ICellGetter>));
             cellContext!.Record.Should().Be(cell);
             var subBlockContext = cellContext.Parent;
             subBlockContext!.Record.Should().Be(subBlock);

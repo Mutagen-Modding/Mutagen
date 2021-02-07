@@ -817,7 +817,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILandscapeGetter,
         ILoquiObjectSetter<ILandscapeInternal>,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new MemorySlice<Byte>? DATA { get; set; }
         new MemorySlice<Byte>? VertexNormals { get; set; }

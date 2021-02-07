@@ -1171,7 +1171,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILoquiObjectSetter<ISceneInternal>,
         ISceneGetter,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new SceneAdapter? VirtualMachineAdapter { get; set; }
         new Scene.Flag? Flags { get; set; }

@@ -2265,7 +2265,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMagicEffectGetter,
         INamed,
         INamedRequired,
-        ISkyrimMajorRecord,
+        ISkyrimMajorRecordInternal,
         ITranslatedNamed,
         ITranslatedNamedRequired
     {

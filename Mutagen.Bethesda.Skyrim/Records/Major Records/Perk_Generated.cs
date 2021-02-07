@@ -1081,7 +1081,7 @@ namespace Mutagen.Bethesda.Skyrim
         INamed,
         INamedRequired,
         IPerkGetter,
-        ISkyrimMajorRecord,
+        ISkyrimMajorRecordInternal,
         ITranslatedNamed,
         ITranslatedNamedRequired
     {
