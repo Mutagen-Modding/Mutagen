@@ -30,6 +30,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="K4os.Compression.LZ4.Streams" Version="1.2.6" />
     <PackageReference Include="Loqui" Version="2.5.0.1-dev" />
     <PackageReference Include="Noggog.CSharpExt" Version="2.5.0.1-dev" />
     <PackageReference Include="NuGetizer" Version="0.6.0">
@@ -57,9 +58,15 @@
     <Compile Include="Archives\Archive.cs" />
     <Compile Include="Archives\Ba2\Ba2FolderWrapper.cs" />
     <Compile Include="Archives\Ba2\Ba2Wrapper.cs" />
-    <Compile Include="Archives\Bsa\BsaFileWrapper.cs" />
-    <Compile Include="Archives\Bsa\BsaFolderWrapper.cs" />
-    <Compile Include="Archives\Bsa\BsaWrapper.cs" />
+    <Compile Include="Archives\Ba2\Ba2FileWrapper.cs" />
+    <Compile Include="Archives\Bsa\BsaArchiveFlags.cs" />
+    <Compile Include="Archives\Bsa\BsaFileFlags.cs" />
+    <Compile Include="Archives\Bsa\BsaFileRecord.cs" />
+    <Compile Include="Archives\Bsa\BsaFolderRecord.cs" />
+    <Compile Include="Archives\Bsa\BsaReader.cs" />
+    <Compile Include="Archives\Bsa\BsaUtility.cs" />
+    <Compile Include="Archives\Bsa\BsaVersionType.cs" />
+    <Compile Include="Archives\Bsa\BsaFileNameBlock.cs" />
     <Compile Include="Archives\IArchiveFile.cs" />
     <Compile Include="Archives\IArchiveFolder.cs" />
     <Compile Include="Enums\ColorBinaryType.cs" />
