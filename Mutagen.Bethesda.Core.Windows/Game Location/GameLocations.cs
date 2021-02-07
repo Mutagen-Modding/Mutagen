@@ -11,17 +11,19 @@ namespace Mutagen.Bethesda
 {
     public static class GameLocations
     {
-        private static readonly Lazy<SteamHandler> _steamHandler = new Lazy<SteamHandler>(() => new SteamHandler());
-        private static readonly Lazy<GOGHandler> _gogHandler = new Lazy<GOGHandler>(() => new GOGHandler());
+        private static readonly Lazy<GetResponse<SteamHandler>> _steamHandler = new Lazy<GetResponse<SteamHandler>>(() => SteamHandler.TryFactory());
+        private static readonly Lazy<GetResponse<GOGHandler>> _gogHandler = new Lazy<GetResponse<GOGHandler>>(() => GOGHandler.TryFactory());
 
-        public static bool TryGetGamePath(GameRelease release, [MaybeNullWhen(false)] out string path)
+        public static bool TryGetGameFolder(GameRelease release, [MaybeNullWhen(false)] out string path)
         {
-            if (_steamHandler.Value.Games.TryGetValue(release, out var game))
+            var steamGames = _steamHandler.Value;
+            if (steamGames.Succeeded && steamGames.Value.Games.TryGetValue(release, out var game))
             {
                 path = game.Path;
                 return true;
             }
-            if (_gogHandler.Value.Games.TryGetValue(release, out game))
+            var gogGames = _gogHandler.Value;
+            if (gogGames.Succeeded && gogGames.Value.Games.TryGetValue(release, out game))
             {
                 path = game.Path;
                 return true;

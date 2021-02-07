@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.GameLocation
                     return ErrorResponse.Fail("Path to the Steam Directory from registry is Null or Empty!");
                 }
 
-                if (!File.Exists(SteamPath))
+                if (!Directory.Exists(SteamPath))
                 {
                     return ErrorResponse.Fail($"Path to the Steam Directory from registry does not exists: {SteamPath}");
                 }
@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.GameLocation
                     if (!l.Contains("BaseInstallFolder_", StringComparison.OrdinalIgnoreCase)) return null;
                     var path = Path.Combine(GetVdfValue(l),"steamapps");
 
-                    if (!File.Exists(path))
+                    if (!Directory.Exists(path))
                     {
                         logging?.Invoke($"Directory {path} does not exist, skipping");
                         return null;
@@ -88,7 +88,7 @@ namespace Mutagen.Bethesda.GameLocation
 
             // Default path in the Steam folder isn't in the configs
             var defaultPath = Path.Combine(SteamPath, "steamapps");
-            if (File.Exists(defaultPath))
+            if (Directory.Exists(defaultPath))
                 ret.Add(defaultPath);
 
             return ret;
@@ -138,10 +138,10 @@ namespace Mutagen.Bethesda.GameLocation
                             }
                             else
                             {
-                                absPath = Path.Combine(u, value, "Common");
+                                absPath = Path.Combine(u, "Common", value);
                             }
 
-                            if (File.Exists(absPath))
+                            if (Directory.Exists(absPath))
                                 game.Path = absPath;
                         });
 
