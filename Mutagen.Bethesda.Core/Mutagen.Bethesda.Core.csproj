@@ -82,6 +82,10 @@
     <Compile Include="Extensions\RemoveExt.cs" />
     <Compile Include="Extensions\LoadOrderExt.cs" />
     <Compile Include="Extensions\GameReleaseExt.cs" />
+    <Compile Include="Game Location\GameMetaData.cs" />
+    <Compile Include="Game Location\GogHandler.cs" />
+    <Compile Include="Game Location\SteamHandler.cs" />
+    <Compile Include="Game Location\GameLocations.cs" />
     <Compile Include="Interfaces\Aspect\IKeywordCommon.cs" />
     <Compile Include="Interfaces\IGameSettingCommon.cs" />
     <Compile Include="Interfaces\IGroup.cs" />
