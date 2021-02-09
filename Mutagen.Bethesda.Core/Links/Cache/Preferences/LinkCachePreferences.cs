@@ -12,6 +12,7 @@ namespace Mutagen.Bethesda
 
         public static LinkCachePreferences WholeRecord() => LinkCachePreferenceWholeRecord.Instance;
 
-        public static LinkCachePreferences OnlySimple() => LinkCachePreferenceOnlySimple.Instance;
+        public static LinkCachePreferences OnlyIdentifiers() => LinkCachePreferenceOnlyIdentifiers
+            .Instance;
     }
 }

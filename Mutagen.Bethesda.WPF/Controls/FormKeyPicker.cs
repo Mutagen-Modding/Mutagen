@@ -162,7 +162,7 @@ namespace Mutagen.Bethesda.WPF
                         {
                             scopedTypes = typeof(IMajorRecordCommonGetter).AsEnumerable();
                         }
-                        if (x.LinkCache.TryResolveSimple(x.FormKey, scopedTypes, out var edid))
+                        if (x.LinkCache.TryResolveIdentifier(x.FormKey, scopedTypes, out var edid))
                         {
                             return GetResponse<(FormKey, string?)?>.Succeed((x.FormKey, edid), "Located record");
                         }
@@ -259,7 +259,7 @@ namespace Mutagen.Bethesda.WPF
                         {
                             scopedTypes = typeof(IMajorRecordCommonGetter).AsEnumerable();
                         }
-                        if (x.Item2.TryResolveSimple(x.EditorID, scopedTypes, out var formKey))
+                        if (x.Item2.TryResolveIdentifier(x.EditorID, scopedTypes, out var formKey))
                         {
                             return GetResponse<(FormKey, string?)?>.Succeed((formKey, x.EditorID), "Located record");
                         }

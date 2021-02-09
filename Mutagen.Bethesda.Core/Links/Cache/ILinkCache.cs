@@ -453,7 +453,7 @@ namespace Mutagen.Bethesda
         /// <param name="editorId">Out parameter containing the EditorID if successful</param>
         /// <returns>True if a matching record was found</returns>
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        bool TryResolveSimple(FormKey formKey, [MaybeNullWhen(false)] out string? editorId);
+        bool TryResolveIdentifier(FormKey formKey, [MaybeNullWhen(false)] out string? editorId);
 
         /// <summary>
         /// Retrieves the FormKey that matches the EditorID relative to the source the package was attached to.<br/>
@@ -468,7 +468,7 @@ namespace Mutagen.Bethesda
         /// <param name="formKey">Out parameter containing the FormKey if successful</param>
         /// <returns>True if a matching record was found</returns>
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        bool TryResolveSimple(string editorId, [MaybeNullWhen(false)] out FormKey formKey);
+        bool TryResolveIdentifier(string editorId, [MaybeNullWhen(false)] out FormKey formKey);
 
         /// <summary>
         /// Retrieves the EditorID that matches the FormKey relative to the source the package was attached to.<br/>
@@ -486,7 +486,7 @@ namespace Mutagen.Bethesda
         ///   - A setter type is requested from a getter only object.
         /// </exception>
         /// <returns>True if a matching record was found</returns>
-        bool TryResolveSimple(FormKey formKey, Type type, [MaybeNullWhen(false)] out string? editorId);
+        bool TryResolveIdentifier(FormKey formKey, Type type, [MaybeNullWhen(false)] out string? editorId);
 
         /// <summary>
         /// Retrieves the FormKey that matches the EditorID relative to the source the package was attached to.<br/>
@@ -504,7 +504,7 @@ namespace Mutagen.Bethesda
         ///   - A setter type is requested from a getter only object.
         /// </exception>
         /// <returns>True if a matching record was found</returns>
-        bool TryResolveSimple(string editorId, Type type, [MaybeNullWhen(false)] out FormKey formKey);
+        bool TryResolveIdentifier(string editorId, Type type, [MaybeNullWhen(false)] out FormKey formKey);
 
         /// <summary>
         /// Retrieves the EditorID that matches the FormKey relative to the source the package was attached to.<br/>
@@ -522,7 +522,7 @@ namespace Mutagen.Bethesda
         ///   - A setter type is requested from a getter only object.
         /// </exception>
         /// <returns>True if a matching record was found</returns>
-        bool TryResolveSimple<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out string? editorId)
+        bool TryResolveIdentifier<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out string? editorId)
             where TMajor : class, IMajorRecordCommonGetter;
 
         /// <summary>
@@ -541,7 +541,7 @@ namespace Mutagen.Bethesda
         ///   - A setter type is requested from a getter only object.
         /// </exception>
         /// <returns>True if a matching record was found</returns>
-        bool TryResolveSimple<TMajor>(string editorId, [MaybeNullWhen(false)] out FormKey formKey)
+        bool TryResolveIdentifier<TMajor>(string editorId, [MaybeNullWhen(false)] out FormKey formKey)
             where TMajor : class, IMajorRecordCommonGetter;
 
         /// <summary>
@@ -560,7 +560,7 @@ namespace Mutagen.Bethesda
         ///   - A setter type is requested from a getter only object.
         /// </exception>
         /// <returns>True if a matching record was found</returns>
-        bool TryResolveSimple(FormKey formKey, [MaybeNullWhen(false)] out string? editorId, params Type[] types);
+        bool TryResolveIdentifier(FormKey formKey, [MaybeNullWhen(false)] out string? editorId, params Type[] types);
 
         /// <summary>
         /// Retrieves the FormKey that matches the EditorID relative to the source the package was attached to.<br/>
@@ -578,7 +578,7 @@ namespace Mutagen.Bethesda
         ///   - A setter type is requested from a getter only object.
         /// </exception>
         /// <returns>True if a matching record was found</returns>
-        bool TryResolveSimple(string editorId, [MaybeNullWhen(false)] out FormKey formKey, params Type[] types);
+        bool TryResolveIdentifier(string editorId, [MaybeNullWhen(false)] out FormKey formKey, params Type[] types);
 
         /// <summary>
         /// Retrieves the FormKey that matches the EditorID relative to the source the package was attached to.<br/>
@@ -596,7 +596,7 @@ namespace Mutagen.Bethesda
         ///   - A setter type is requested from a getter only object.
         /// </exception>
         /// <returns>True if a matching record was found</returns>
-        bool TryResolveSimple(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out string? editorId);
+        bool TryResolveIdentifier(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out string? editorId);
 
         /// <summary>
         /// Retrieves the FormKey that matches the EditorID relative to the source the package was attached to.<br/>
@@ -614,7 +614,7 @@ namespace Mutagen.Bethesda
         ///   - A setter type is requested from a getter only object.
         /// </exception>
         /// <returns>True if a matching record was found</returns>
-        bool TryResolveSimple(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out FormKey formKey);
+        bool TryResolveIdentifier(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out FormKey formKey);
 
         /// <summary>
         /// Iterates through the contained mods in the order they were listed, with the least prioritized mod first.

@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda
             this._priorityOrder = _listedOrder.Reverse().ToList();
             var firstMod = _listedOrder.FirstOrDefault();
             this._hasAny = firstMod != null;
-            this._simple = prefs is LinkCachePreferenceOnlySimple;
+            this._simple = prefs is LinkCachePreferenceOnlyIdentifiers;
             // ToDo
             // Upgrade to bounce off ModInstantiator systems
             this._gameCategory = firstMod?.GameRelease.ToCategory() ?? GameCategory.Oblivion;
@@ -303,7 +303,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public bool TryResolveSimple(FormKey formKey, [MaybeNullWhen(false)] out string? editorId)
+        public bool TryResolveIdentifier(FormKey formKey, [MaybeNullWhen(false)] out string? editorId)
         {
             if (_formKeyCache.TryResolve(formKey, formKey.ModKey, typeof(IMajorRecordCommonGetter), out var rec))
             {
@@ -316,7 +316,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public bool TryResolveSimple(string editorId, [MaybeNullWhen(false)] out FormKey formKey)
+        public bool TryResolveIdentifier(string editorId, [MaybeNullWhen(false)] out FormKey formKey)
         {
             if (_editorIdCache.TryResolve(editorId, default, typeof(IMajorRecordCommonGetter), out var rec))
             {
@@ -329,7 +329,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public bool TryResolveSimple(FormKey formKey, Type type, [MaybeNullWhen(false)] out string? editorId)
+        public bool TryResolveIdentifier(FormKey formKey, Type type, [MaybeNullWhen(false)] out string? editorId)
         {
             if (_formKeyCache.TryResolve(formKey, formKey.ModKey, type, out var rec))
             {
@@ -342,7 +342,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public bool TryResolveSimple(string editorId, Type type, [MaybeNullWhen(false)] out FormKey formKey)
+        public bool TryResolveIdentifier(string editorId, Type type, [MaybeNullWhen(false)] out FormKey formKey)
         {
             if (_editorIdCache.TryResolve(editorId, default, type, out var rec))
             {
@@ -355,7 +355,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public bool TryResolveSimple<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out string? editorId)
+        public bool TryResolveIdentifier<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out string? editorId)
             where TMajor : class, IMajorRecordCommonGetter
         {
             if (_formKeyCache.TryResolve(formKey, formKey.ModKey, typeof(TMajor), out var rec))
@@ -369,7 +369,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public bool TryResolveSimple<TMajor>(string editorId, [MaybeNullWhen(false)] out FormKey formKey)
+        public bool TryResolveIdentifier<TMajor>(string editorId, [MaybeNullWhen(false)] out FormKey formKey)
             where TMajor : class, IMajorRecordCommonGetter
         {
             if (_editorIdCache.TryResolve(editorId, default, typeof(TMajor), out var rec))
@@ -383,19 +383,19 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public bool TryResolveSimple(FormKey formKey, [MaybeNullWhen(false)] out string? editorId, params Type[] types)
+        public bool TryResolveIdentifier(FormKey formKey, [MaybeNullWhen(false)] out string? editorId, params Type[] types)
         {
-            return TryResolveSimple(formKey, (IEnumerable<Type>)types, out editorId);
+            return TryResolveIdentifier(formKey, (IEnumerable<Type>)types, out editorId);
         }
 
         /// <inheritdoc />
-        public bool TryResolveSimple(string editorId, [MaybeNullWhen(false)] out FormKey formKey, params Type[] types)
+        public bool TryResolveIdentifier(string editorId, [MaybeNullWhen(false)] out FormKey formKey, params Type[] types)
         {
-            return TryResolveSimple(editorId, (IEnumerable<Type>)types, out formKey);
+            return TryResolveIdentifier(editorId, (IEnumerable<Type>)types, out formKey);
         }
 
         /// <inheritdoc />
-        public bool TryResolveSimple(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out string? editorId)
+        public bool TryResolveIdentifier(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out string? editorId)
         {
             foreach (var type in types)
             {
@@ -411,7 +411,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public bool TryResolveSimple(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out FormKey formKey)
+        public bool TryResolveIdentifier(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out FormKey formKey)
         {
             foreach (var type in types)
             {
