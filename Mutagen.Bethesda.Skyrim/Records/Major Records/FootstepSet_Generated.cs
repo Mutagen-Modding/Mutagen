@@ -1024,7 +1024,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IFootstepSetGetter>
+        ILoquiObject<IFootstepSetGetter>,
+        IMapsToGetter<IFootstepSetGetter>
     {
         static new ILoquiRegistration Registration => FootstepSet_Registration.Instance;
         IReadOnlyList<IFormLink<IFootstepGetter>> WalkForwardFootsteps { get; }

@@ -838,7 +838,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<ILandscapeGetter>
+        ILoquiObject<ILandscapeGetter>,
+        IMapsToGetter<ILandscapeGetter>
     {
         static new ILoquiRegistration Registration => Landscape_Registration.Instance;
         ReadOnlyMemorySlice<Byte>? DATA { get; }

@@ -611,7 +611,8 @@ namespace Mutagen.Bethesda.Oblivion
         IASpellGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<ILeveledSpellGetter>
+        ILoquiObject<ILeveledSpellGetter>,
+        IMapsToGetter<ILeveledSpellGetter>
     {
         static new ILoquiRegistration Registration => LeveledSpell_Registration.Instance;
         Byte? ChanceNone { get; }

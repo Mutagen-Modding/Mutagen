@@ -1267,6 +1267,7 @@ namespace Mutagen.Bethesda.Skyrim
         IHasIconsGetter,
         IItemGetter,
         ILoquiObject<ILightGetter>,
+        IMapsToGetter<ILightGetter>,
         IModeledGetter,
         INamedGetter,
         INamedRequiredGetter,

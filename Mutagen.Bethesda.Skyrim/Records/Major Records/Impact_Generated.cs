@@ -996,6 +996,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IImpactGetter>,
+        IMapsToGetter<IImpactGetter>,
         IModeledGetter
     {
         static new ILoquiRegistration Registration => Impact_Registration.Instance;

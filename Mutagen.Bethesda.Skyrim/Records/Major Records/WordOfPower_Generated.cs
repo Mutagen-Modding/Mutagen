@@ -540,6 +540,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IBinaryItem,
         ILoquiObject<IWordOfPowerGetter>,
+        IMapsToGetter<IWordOfPowerGetter>,
         INamedGetter,
         INamedRequiredGetter,
         ITranslatedNamedGetter,

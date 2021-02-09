@@ -808,6 +808,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkContainerGetter,
         ILoquiObject<IDialogTopicGetter>,
         IMajorRecordGetterEnumerable,
+        IMapsToGetter<IDialogTopicGetter>,
         INamedGetter,
         INamedRequiredGetter
     {

@@ -706,7 +706,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ISkillRecordGetter :
         IOblivionMajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<ISkillRecordGetter>
+        ILoquiObject<ISkillRecordGetter>,
+        IMapsToGetter<ISkillRecordGetter>
     {
         static new ILoquiRegistration Registration => SkillRecord_Registration.Instance;
         ActorValue? Skill { get; }

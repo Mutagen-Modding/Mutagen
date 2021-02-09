@@ -566,6 +566,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainerGetter,
         ILockListGetter,
         ILoquiObject<IFormListGetter>,
+        IMapsToGetter<IFormListGetter>,
         IObjectIdGetter
     {
         static new ILoquiRegistration Registration => FormList_Registration.Instance;

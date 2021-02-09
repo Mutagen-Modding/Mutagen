@@ -474,7 +474,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IGameSettingIntGetter :
         IGameSettingGetter,
         IBinaryItem,
-        ILoquiObject<IGameSettingIntGetter>
+        ILoquiObject<IGameSettingIntGetter>,
+        IMapsToGetter<IGameSettingIntGetter>
     {
         static new ILoquiRegistration Registration => GameSettingInt_Registration.Instance;
         Int32? Data { get; }

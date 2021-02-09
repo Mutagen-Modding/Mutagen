@@ -467,7 +467,8 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IGameSettingBoolGetter :
         IGameSettingGetter,
         IBinaryItem,
-        ILoquiObject<IGameSettingBoolGetter>
+        ILoquiObject<IGameSettingBoolGetter>,
+        IMapsToGetter<IGameSettingBoolGetter>
     {
         static new ILoquiRegistration Registration => GameSettingBool_Registration.Instance;
         Boolean? Data { get; }

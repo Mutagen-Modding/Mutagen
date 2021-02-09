@@ -510,7 +510,8 @@ namespace Mutagen.Bethesda.Skyrim
         IAPlacedTrapGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IPlacedConeGetter>
+        ILoquiObject<IPlacedConeGetter>,
+        IMapsToGetter<IPlacedConeGetter>
     {
         static new ILoquiRegistration Registration => PlacedCone_Registration.Instance;
         FormLink<IProjectileGetter> Projectile { get; }

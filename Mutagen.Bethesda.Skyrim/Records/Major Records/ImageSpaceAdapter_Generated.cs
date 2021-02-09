@@ -7126,7 +7126,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IImageSpaceAdapterGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<IImageSpaceAdapterGetter>
+        ILoquiObject<IImageSpaceAdapterGetter>,
+        IMapsToGetter<IImageSpaceAdapterGetter>
     {
         static new ILoquiRegistration Registration => ImageSpaceAdapter_Registration.Instance;
         ImageSpaceAdapter.Flag Flags { get; }

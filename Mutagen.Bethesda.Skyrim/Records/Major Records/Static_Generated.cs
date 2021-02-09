@@ -795,6 +795,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IStaticGetter>,
+        IMapsToGetter<IStaticGetter>,
         IModeledGetter,
         IObjectBoundedGetter,
         IObjectBoundedOptionalGetter,

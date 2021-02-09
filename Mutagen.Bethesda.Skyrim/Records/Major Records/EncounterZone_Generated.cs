@@ -713,7 +713,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IEncounterZoneGetter>
+        ILoquiObject<IEncounterZoneGetter>,
+        IMapsToGetter<IEncounterZoneGetter>
     {
         static new ILoquiRegistration Registration => EncounterZone_Registration.Instance;
         FormLink<IOwnerGetter> Owner { get; }

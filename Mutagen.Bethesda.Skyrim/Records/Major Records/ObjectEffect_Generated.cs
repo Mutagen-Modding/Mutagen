@@ -1011,6 +1011,7 @@ namespace Mutagen.Bethesda.Skyrim
         IEffectRecordGetter,
         IFormLinkContainerGetter,
         ILoquiObject<IObjectEffectGetter>,
+        IMapsToGetter<IObjectEffectGetter>,
         INamedGetter,
         INamedRequiredGetter,
         IObjectBoundedGetter,

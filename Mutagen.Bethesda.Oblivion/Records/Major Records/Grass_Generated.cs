@@ -521,6 +521,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         IBinaryItem,
         ILoquiObject<IGrassGetter>,
+        IMapsToGetter<IGrassGetter>,
         IModeledGetter
     {
         static new ILoquiRegistration Registration => Grass_Registration.Instance;

@@ -1117,6 +1117,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainerGetter,
         IHasIconsGetter,
         ILoquiObject<IPerkGetter>,
+        IMapsToGetter<IPerkGetter>,
         INamedGetter,
         INamedRequiredGetter,
         ITranslatedNamedGetter,

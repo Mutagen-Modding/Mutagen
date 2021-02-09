@@ -675,7 +675,8 @@ namespace Mutagen.Bethesda.Oblivion
         IANpcSpawnGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<ILeveledCreatureGetter>
+        ILoquiObject<ILeveledCreatureGetter>,
+        IMapsToGetter<ILeveledCreatureGetter>
     {
         static new ILoquiRegistration Registration => LeveledCreature_Registration.Instance;
         Byte? ChanceNone { get; }

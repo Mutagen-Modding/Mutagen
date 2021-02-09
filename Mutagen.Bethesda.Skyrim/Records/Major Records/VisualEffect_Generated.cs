@@ -576,7 +576,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IVisualEffectGetter>
+        ILoquiObject<IVisualEffectGetter>,
+        IMapsToGetter<IVisualEffectGetter>
     {
         static new ILoquiRegistration Registration => VisualEffect_Registration.Instance;
         FormLink<IArtObjectGetter> EffectArt { get; }

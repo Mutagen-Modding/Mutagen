@@ -1002,6 +1002,7 @@ namespace Mutagen.Bethesda.Skyrim
         IHasIconsGetter,
         IItemGetter,
         ILoquiObject<IAlchemicalApparatusGetter>,
+        IMapsToGetter<IAlchemicalApparatusGetter>,
         IModeledGetter,
         INamedGetter,
         INamedRequiredGetter,

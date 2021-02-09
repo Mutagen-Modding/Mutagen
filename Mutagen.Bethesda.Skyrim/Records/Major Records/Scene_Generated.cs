@@ -1197,7 +1197,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<ISceneGetter>
+        ILoquiObject<ISceneGetter>,
+        IMapsToGetter<ISceneGetter>
     {
         static new ILoquiRegistration Registration => Scene_Registration.Instance;
         ISceneAdapterGetter? VirtualMachineAdapter { get; }

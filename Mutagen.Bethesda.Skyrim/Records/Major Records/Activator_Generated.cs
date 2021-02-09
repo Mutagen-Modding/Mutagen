@@ -1075,6 +1075,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainerGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IActivatorGetter>,
+        IMapsToGetter<IActivatorGetter>,
         IModeledGetter,
         INamedGetter,
         INamedRequiredGetter,

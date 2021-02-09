@@ -944,7 +944,8 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IFormLinkContainerGetter,
         IIdleRelationGetter,
-        ILoquiObject<IIdleAnimationGetter>
+        ILoquiObject<IIdleAnimationGetter>,
+        IMapsToGetter<IIdleAnimationGetter>
     {
         static new ILoquiRegistration Registration => IdleAnimation_Registration.Instance;
         IReadOnlyList<IConditionGetter> Conditions { get; }

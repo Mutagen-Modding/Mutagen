@@ -879,7 +879,8 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IRegionGetter>
+        ILoquiObject<IRegionGetter>,
+        IMapsToGetter<IRegionGetter>
     {
         static new ILoquiRegistration Registration => Region_Registration.Instance;
         String? Icon { get; }

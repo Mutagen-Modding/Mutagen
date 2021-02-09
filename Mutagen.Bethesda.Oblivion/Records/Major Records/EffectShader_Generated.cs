@@ -536,7 +536,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IEffectShaderGetter :
         IOblivionMajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<IEffectShaderGetter>
+        ILoquiObject<IEffectShaderGetter>,
+        IMapsToGetter<IEffectShaderGetter>
     {
         static new ILoquiRegistration Registration => EffectShader_Registration.Instance;
         String? FillTexture { get; }

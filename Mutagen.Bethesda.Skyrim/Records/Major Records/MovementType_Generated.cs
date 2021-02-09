@@ -933,6 +933,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IBinaryItem,
         ILoquiObject<IMovementTypeGetter>,
+        IMapsToGetter<IMovementTypeGetter>,
         INamedGetter,
         INamedRequiredGetter
     {

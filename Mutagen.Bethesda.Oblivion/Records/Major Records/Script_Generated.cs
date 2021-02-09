@@ -469,7 +469,8 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IScriptGetter>
+        ILoquiObject<IScriptGetter>,
+        IMapsToGetter<IScriptGetter>
     {
         static new ILoquiRegistration Registration => Script_Registration.Instance;
         IScriptFieldsGetter Fields { get; }

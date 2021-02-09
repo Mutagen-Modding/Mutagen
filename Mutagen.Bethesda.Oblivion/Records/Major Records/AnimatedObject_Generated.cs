@@ -510,6 +510,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IAnimatedObjectGetter>,
+        IMapsToGetter<IAnimatedObjectGetter>,
         IModeledGetter
     {
         static new ILoquiRegistration Registration => AnimatedObject_Registration.Instance;

@@ -940,6 +940,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IMaterialObjectGetter>,
+        IMapsToGetter<IMaterialObjectGetter>,
         IModeledGetter
     {
         static new ILoquiRegistration Registration => MaterialObject_Registration.Instance;

@@ -852,6 +852,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainerGetter,
         ILocationTargetableGetter,
         ILoquiObject<IDoorGetter>,
+        IMapsToGetter<IDoorGetter>,
         IModeledGetter,
         INamedGetter,
         INamedRequiredGetter,

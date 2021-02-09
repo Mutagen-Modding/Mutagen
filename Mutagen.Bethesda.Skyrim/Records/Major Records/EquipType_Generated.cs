@@ -594,7 +594,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IEquipTypeGetter>
+        ILoquiObject<IEquipTypeGetter>,
+        IMapsToGetter<IEquipTypeGetter>
     {
         static new ILoquiRegistration Registration => EquipType_Registration.Instance;
         IReadOnlyList<IFormLink<IEquipTypeGetter>>? SlotParents { get; }

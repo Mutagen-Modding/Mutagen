@@ -731,7 +731,8 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IAIPackageGetter>
+        ILoquiObject<IAIPackageGetter>,
+        IMapsToGetter<IAIPackageGetter>
     {
         static new ILoquiRegistration Registration => AIPackage_Registration.Instance;
         IAIPackageDataGetter? Data { get; }

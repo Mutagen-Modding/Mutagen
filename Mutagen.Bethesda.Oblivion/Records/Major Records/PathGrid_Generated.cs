@@ -819,7 +819,8 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IPathGridGetter>
+        ILoquiObject<IPathGridGetter>,
+        IMapsToGetter<IPathGridGetter>
     {
         static new ILoquiRegistration Registration => PathGrid_Registration.Instance;
         IReadOnlyList<IPathGridPointGetter>? PointToPointConnections { get; }

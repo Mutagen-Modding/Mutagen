@@ -472,7 +472,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IVoiceTypeGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<IVoiceTypeGetter>
+        ILoquiObject<IVoiceTypeGetter>,
+        IMapsToGetter<IVoiceTypeGetter>
     {
         static new ILoquiRegistration Registration => VoiceType_Registration.Instance;
         VoiceType.Flag Flags { get; }

@@ -1093,6 +1093,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<ISoundDescriptorGetter>,
+        IMapsToGetter<ISoundDescriptorGetter>,
         ISoundGetter
     {
         static new ILoquiRegistration Registration => SoundDescriptor_Registration.Instance;

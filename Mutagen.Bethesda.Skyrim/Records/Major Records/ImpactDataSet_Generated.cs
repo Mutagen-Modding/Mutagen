@@ -562,7 +562,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IImpactDataSetGetter>
+        ILoquiObject<IImpactDataSetGetter>,
+        IMapsToGetter<IImpactDataSetGetter>
     {
         static new ILoquiRegistration Registration => ImpactDataSet_Registration.Instance;
         IReadOnlyList<IImpactDataGetter> Impacts { get; }

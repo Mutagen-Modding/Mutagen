@@ -670,7 +670,8 @@ namespace Mutagen.Bethesda.Skyrim
         IAStoryManagerNodeGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IStoryManagerQuestNodeGetter>
+        ILoquiObject<IStoryManagerQuestNodeGetter>,
+        IMapsToGetter<IStoryManagerQuestNodeGetter>
     {
         static new ILoquiRegistration Registration => StoryManagerQuestNode_Registration.Instance;
         StoryManagerQuestNode.QuestFlag? Flags { get; }

@@ -681,7 +681,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IRelationshipGetter>
+        ILoquiObject<IRelationshipGetter>,
+        IMapsToGetter<IRelationshipGetter>
     {
         static new ILoquiRegistration Registration => Relationship_Registration.Instance;
         FormLink<INpcGetter> Parent { get; }

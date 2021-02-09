@@ -2742,6 +2742,7 @@ namespace Mutagen.Bethesda.Skyrim
         IKeywordedGetter<IKeywordGetter>,
         ILocationRecordGetter,
         ILoquiObject<ILocationGetter>,
+        IMapsToGetter<ILocationGetter>,
         INamedGetter,
         INamedRequiredGetter,
         ITranslatedNamedGetter,

@@ -560,7 +560,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IOutfitGetter>
+        ILoquiObject<IOutfitGetter>,
+        IMapsToGetter<IOutfitGetter>
     {
         static new ILoquiRegistration Registration => Outfit_Registration.Instance;
         IReadOnlyList<IFormLink<IOutfitTargetGetter>>? Items { get; }

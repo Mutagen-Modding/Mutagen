@@ -1181,6 +1181,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainerGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IFurnitureGetter>,
+        IMapsToGetter<IFurnitureGetter>,
         IModeledGetter,
         INamedGetter,
         INamedRequiredGetter,

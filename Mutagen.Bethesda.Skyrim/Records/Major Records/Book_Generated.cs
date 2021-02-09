@@ -1299,6 +1299,7 @@ namespace Mutagen.Bethesda.Skyrim
         IItemGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IBookGetter>,
+        IMapsToGetter<IBookGetter>,
         IModeledGetter,
         INamedGetter,
         INamedRequiredGetter,

@@ -928,6 +928,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<ICameraShotGetter>,
+        IMapsToGetter<ICameraShotGetter>,
         IModeledGetter
     {
         static new ILoquiRegistration Registration => CameraShot_Registration.Instance;

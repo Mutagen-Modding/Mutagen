@@ -792,6 +792,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<ILandscapeTextureGetter>,
+        IMapsToGetter<ILandscapeTextureGetter>,
         IRegionTargetGetter
     {
         static new ILoquiRegistration Registration => LandscapeTexture_Registration.Instance;

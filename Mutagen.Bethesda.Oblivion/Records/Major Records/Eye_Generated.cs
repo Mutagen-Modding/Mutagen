@@ -536,6 +536,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         IBinaryItem,
         ILoquiObject<IEyeGetter>,
+        IMapsToGetter<IEyeGetter>,
         INamedGetter,
         INamedRequiredGetter
     {

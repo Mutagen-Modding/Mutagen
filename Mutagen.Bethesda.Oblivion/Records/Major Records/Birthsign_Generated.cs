@@ -656,6 +656,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IBirthsignGetter>,
+        IMapsToGetter<IBirthsignGetter>,
         INamedGetter,
         INamedRequiredGetter
     {

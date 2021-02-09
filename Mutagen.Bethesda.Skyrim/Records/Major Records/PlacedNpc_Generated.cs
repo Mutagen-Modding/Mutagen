@@ -1664,6 +1664,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedReferenceGetter,
         ILocationTargetableGetter,
         ILoquiObject<IPlacedNpcGetter>,
+        IMapsToGetter<IPlacedNpcGetter>,
         IOwnerGetter,
         IPlacedGetter,
         IPlacedSimpleGetter

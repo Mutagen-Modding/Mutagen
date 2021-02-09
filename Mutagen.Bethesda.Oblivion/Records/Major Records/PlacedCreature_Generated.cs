@@ -725,6 +725,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IPlacedCreatureGetter>,
+        IMapsToGetter<IPlacedCreatureGetter>,
         IPlacedGetter
     {
         static new ILoquiRegistration Registration => PlacedCreature_Registration.Instance;

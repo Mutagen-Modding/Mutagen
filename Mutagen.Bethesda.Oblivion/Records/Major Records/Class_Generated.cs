@@ -583,6 +583,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         IBinaryItem,
         ILoquiObject<IClassGetter>,
+        IMapsToGetter<IClassGetter>,
         INamedGetter,
         INamedRequiredGetter
     {

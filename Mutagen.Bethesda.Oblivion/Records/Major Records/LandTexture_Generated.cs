@@ -656,7 +656,8 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<ILandTextureGetter>
+        ILoquiObject<ILandTextureGetter>,
+        IMapsToGetter<ILandTextureGetter>
     {
         static new ILoquiRegistration Registration => LandTexture_Registration.Instance;
         String? Icon { get; }

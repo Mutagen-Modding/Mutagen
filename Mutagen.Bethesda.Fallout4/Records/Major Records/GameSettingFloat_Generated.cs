@@ -467,7 +467,8 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IGameSettingFloatGetter :
         IGameSettingGetter,
         IBinaryItem,
-        ILoquiObject<IGameSettingFloatGetter>
+        ILoquiObject<IGameSettingFloatGetter>,
+        IMapsToGetter<IGameSettingFloatGetter>
     {
         static new ILoquiRegistration Registration => GameSettingFloat_Registration.Instance;
         Single? Data { get; }

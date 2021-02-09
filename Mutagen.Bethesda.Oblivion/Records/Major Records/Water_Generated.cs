@@ -687,7 +687,8 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IWaterGetter>
+        ILoquiObject<IWaterGetter>,
+        IMapsToGetter<IWaterGetter>
     {
         static new ILoquiRegistration Registration => Water_Registration.Instance;
         String? Texture { get; }

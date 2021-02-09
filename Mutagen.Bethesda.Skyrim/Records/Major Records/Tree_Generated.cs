@@ -992,6 +992,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainerGetter,
         IHarvestableGetter,
         ILoquiObject<ITreeGetter>,
+        IMapsToGetter<ITreeGetter>,
         IModeledGetter,
         INamedGetter,
         INamedRequiredGetter,

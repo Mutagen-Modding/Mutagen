@@ -474,7 +474,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IGlobalShortGetter :
         IGlobalGetter,
         IBinaryItem,
-        ILoquiObject<IGlobalShortGetter>
+        ILoquiObject<IGlobalShortGetter>,
+        IMapsToGetter<IGlobalShortGetter>
     {
         static new ILoquiRegistration Registration => GlobalShort_Registration.Instance;
         Int16? Data { get; }

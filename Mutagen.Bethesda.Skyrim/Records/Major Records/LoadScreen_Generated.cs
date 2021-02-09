@@ -872,7 +872,8 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IFormLinkContainerGetter,
         IHasIconsGetter,
-        ILoquiObject<ILoadScreenGetter>
+        ILoquiObject<ILoadScreenGetter>,
+        IMapsToGetter<ILoadScreenGetter>
     {
         static new ILoquiRegistration Registration => LoadScreen_Registration.Instance;
         IIconsGetter? Icons { get; }

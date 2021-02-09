@@ -991,6 +991,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainerGetter,
         ILoquiObject<IDialogTopicGetter>,
         IMajorRecordGetterEnumerable,
+        IMapsToGetter<IDialogTopicGetter>,
         INamedGetter,
         INamedRequiredGetter,
         ITranslatedNamedGetter,

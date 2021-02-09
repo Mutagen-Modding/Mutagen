@@ -800,6 +800,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IMessageGetter>,
+        IMapsToGetter<IMessageGetter>,
         INamedGetter,
         INamedRequiredGetter,
         ITranslatedNamedGetter,

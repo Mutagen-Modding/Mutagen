@@ -440,6 +440,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IAPlacedGetter>,
+        IMapsToGetter<IAPlacedGetter>,
         IPlacedGetter
     {
         static new ILoquiRegistration Registration => APlaced_Registration.Instance;
