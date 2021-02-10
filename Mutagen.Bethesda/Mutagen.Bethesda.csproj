@@ -25,9 +25,9 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="EnvironmentState.cs" />
     <Compile Include="Extensions\GameCategoryExt.cs" />
     <Compile Include="ModInstantiator.cs" />
-    <Compile Include="Records\ProtocolDefinition_All.cs" />
     <Compile Include="WarmupAll_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -44,6 +44,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Mutagen.Bethesda.Core.Windows\Mutagen.Bethesda.Core.Windows.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Fallout4\Mutagen.Bethesda.Fallout4.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Skyrim\Mutagen.Bethesda.Skyrim.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />
