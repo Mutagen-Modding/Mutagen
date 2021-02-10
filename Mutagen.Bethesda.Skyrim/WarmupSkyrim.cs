@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -16,6 +16,9 @@ namespace Mutagen.Bethesda.Skyrim
                 OverrideMixIns.AddAsOverrideMasks[typeof(IWorldspace)] = ModContextExt.WorldspaceCopyMask;
                 OverrideMixIns.AddAsOverrideMasks[typeof(IWorldspaceGetter)] = ModContextExt.WorldspaceCopyMask;
                 OverrideMixIns.AddAsOverrideMasks[typeof(Worldspace)] = ModContextExt.WorldspaceCopyMask;
+                OverrideMixIns.AddAsOverrideMasks[typeof(IDialogResponse)] = ModContextExt.DialogResponsesCopyMask;
+                OverrideMixIns.AddAsOverrideMasks[typeof(IDialogResponseGetter)] = ModContextExt.DialogResponsesCopyMask;
+                OverrideMixIns.AddAsOverrideMasks[typeof(DialogResponse)] = ModContextExt.DialogResponsesCopyMask;
             }
         }
     }

@@ -2009,9 +2009,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     parent: curContext,
                     getOrAddAsOverride: (m, r) =>
                     {
-                        var copy = (DialogResponses)((IDialogResponsesGetter)r).DeepCopy();
-                        getOrAddAsOverride(m, linkCache.Resolve<IDialogTopicGetter>(obj.FormKey)).Responses.Add(copy);
-                        return copy;
+                        var parent = getOrAddAsOverride(m, linkCache.Resolve<IDialogTopicGetter>(obj.FormKey));
+                        var ret = parent.Responses.FirstOrDefault(x => x.FormKey == r.FormKey);
+                        if (ret != null) return ret;
+                        ret = (DialogResponses)((IDialogResponsesGetter)r).DeepCopy();
+                        parent.Responses.Add(ret);
+                        return ret;
                     },
                     duplicateInto: (m, r, e) =>
                     {
@@ -2085,9 +2088,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 parent: curContext,
                                 getOrAddAsOverride: (m, r) =>
                                 {
-                                    var copy = (DialogResponses)((IDialogResponsesGetter)r).DeepCopy();
-                                    getOrAddAsOverride(m, linkCache.Resolve<IDialogTopicGetter>(obj.FormKey)).Responses.Add(copy);
-                                    return copy;
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<IDialogTopicGetter>(obj.FormKey));
+                                    var ret = parent.Responses.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (DialogResponses)((IDialogResponsesGetter)r).DeepCopy();
+                                    parent.Responses.Add(ret);
+                                    return ret;
                                 },
                                 duplicateInto: (m, r, e) =>
                                 {
