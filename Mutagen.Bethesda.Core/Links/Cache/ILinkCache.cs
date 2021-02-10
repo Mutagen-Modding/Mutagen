@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace Mutagen.Bethesda
 {
@@ -615,6 +616,15 @@ namespace Mutagen.Bethesda
         /// </exception>
         /// <returns>True if a matching record was found</returns>
         bool TryResolveIdentifier(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out FormKey formKey);
+
+        IEnumerable<IMajorRecordIdentifier> AllIdentifiers(Type type, CancellationToken? cancel = null);
+
+        IEnumerable<IMajorRecordIdentifier> AllIdentifiers<TMajor>(CancellationToken? cancel = null)
+            where TMajor : class, IMajorRecordCommonGetter;
+
+        IEnumerable<IMajorRecordIdentifier> AllIdentifiers(IEnumerable<Type> types, CancellationToken? cancel = null);
+
+        IEnumerable<IMajorRecordIdentifier> AllIdentifiers(params Type[] types);
 
         /// <summary>
         /// Iterates through the contained mods in the order they were listed, with the least prioritized mod first.

@@ -5,7 +5,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace Mutagen.Bethesda
 {
@@ -435,6 +437,33 @@ namespace Mutagen.Bethesda
             return false;
         }
 
+        /// <inheritdoc />
+        public IEnumerable<IMajorRecordIdentifier> AllIdentifiers(Type type, CancellationToken? cancel = null)
+        {
+            return _formKeyCache.AllIdentifiers(type, cancel);
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<IMajorRecordIdentifier> AllIdentifiers<TMajor>(CancellationToken? cancel = null)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            return _formKeyCache.AllIdentifiers(typeof(TMajor), cancel);
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<IMajorRecordIdentifier> AllIdentifiers(params Type[] types)
+        {
+            return AllIdentifiers((IEnumerable<Type>)types, CancellationToken.None);
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<IMajorRecordIdentifier> AllIdentifiers(IEnumerable<Type> types, CancellationToken? cancel = null)
+        {
+            return types.SelectMany(type => AllIdentifiers(type, cancel))
+                .Distinct(x => x.FormKey);
+        }
+
+        /// <inheritdoc />
         public void Dispose()
         {
         }
@@ -559,6 +588,11 @@ namespace Mutagen.Bethesda
                 return false;
             }
             return true;
+        }
+
+        public IEnumerable<LinkCacheItem> AllIdentifiers(Type type, CancellationToken? cancel)
+        {
+            return GetCache(type, _parent.Category, _parent._sourceMod).Items;
         }
     }
 

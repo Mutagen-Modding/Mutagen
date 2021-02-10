@@ -2,7 +2,9 @@ using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace Mutagen.Bethesda
 {
@@ -719,6 +721,42 @@ namespace Mutagen.Bethesda
             return false;
         }
 
+
+        /// <inheritdoc />
+        public IEnumerable<IMajorRecordIdentifier> AllIdentifiers(Type type, CancellationToken? cancel = null)
+        {
+            return AllIdentifiersNoUniqueness(type, cancel)
+                .Distinct(x => x.FormKey);
+        }
+
+
+        /// <inheritdoc />
+        internal IEnumerable<IMajorRecordIdentifier> AllIdentifiersNoUniqueness(Type type, CancellationToken? cancel)
+        {
+            return _sourceMod.EnumerateMajorRecords(type);
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<IMajorRecordIdentifier> AllIdentifiers<TMajor>(CancellationToken? cancel = null)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            return AllIdentifiers(typeof(TMajor), cancel);
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<IMajorRecordIdentifier> AllIdentifiers(params Type[] types)
+        {
+            return AllIdentifiers((IEnumerable<Type>)types, CancellationToken.None);
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<IMajorRecordIdentifier> AllIdentifiers(IEnumerable<Type> types, CancellationToken? cancel = null)
+        {
+            return types.SelectMany(type => AllIdentifiersNoUniqueness(type, cancel))
+                .Distinct(x => x.FormKey);
+        }
+
+        /// <inheritdoc />
         public void Dispose()
         {
         }
