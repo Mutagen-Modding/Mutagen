@@ -36,13 +36,8 @@ namespace Mutagen.Bethesda
     /// <summary>
     /// An interface that Major Record objects implement to hook into the common getter systems
     /// </summary>
-    public interface IMajorRecordCommonGetter : IFormVersionGetter, IFormLinkContainerGetter, ILoquiObject
+    public interface IMajorRecordCommonGetter : IFormVersionGetter, IFormLinkContainerGetter, ILoquiObject, IMajorRecordIdentifier
     {
-        /// <summary>
-        /// The usually unique string identifier assigned to the Major Record
-        /// </summary>
-        string? EditorID { get; }
-
         /// <summary>
         /// Marker of whether the content is compressed
         /// </summary>
@@ -57,11 +52,6 @@ namespace Mutagen.Bethesda
         /// Raw integer flag data
         /// </summary>
         int MajorRecordFlagsRaw { get; }
-
-        /// <summary>
-        /// The unique identifier assigned to the Major Record
-        /// </summary>
-        FormKey FormKey { get; }
 
         /// <summary>
         /// Form Version of the record

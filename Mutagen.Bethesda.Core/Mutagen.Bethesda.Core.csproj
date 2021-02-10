@@ -102,6 +102,7 @@
     <Compile Include="Interfaces\IMajorRecordCommon.cs" />
     <Compile Include="Interfaces\IMajorRecordContextEnumerable.cs" />
     <Compile Include="Interfaces\IMajorRecordEnumerable.cs" />
+    <Compile Include="Interfaces\IMajorRecordIdentifier.cs" />
     <Compile Include="Interfaces\IMod.cs" />
     <Compile Include="Interfaces\IContextGetterMod.cs" />
     <Compile Include="Interfaces\IModHeaderCommon.cs" />
