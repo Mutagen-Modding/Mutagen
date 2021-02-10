@@ -87,12 +87,17 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="18" />
                             </Grid.ColumnDefinitions>
-                            <local:FormKeyBox Grid.Column="0" FormKey="{Binding FormKey, RelativeSource={RelativeSource TemplatedParent}}" />
-                            <TextBox Grid.Column="1"
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <local:FormKeyBox Grid.Row="0" Grid.Column="0"
+                                FormKey="{Binding FormKey, RelativeSource={RelativeSource TemplatedParent}}" />
+                            <TextBox Grid.Row="0" Grid.Column="1"
                                 Margin="5,0,0,0"
                                 mahapps:TextBoxHelper.Watermark="EditorID"
                                 Text="{Binding EditorID, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}" />
-                            <icon:PackIconMaterial Grid.Column="2"
+                            <icon:PackIconMaterial Grid.Row="0" Grid.Column="2"
                                 x:Name="PART_ErrorStateCircle"
                                 Width="7"
                                 Height="7"
@@ -121,7 +126,7 @@
                                     </Style>
                                 </icon:PackIconMaterial.Style>
                             </icon:PackIconMaterial>
-                            <Viewbox Grid.Column="2"
+                            <Viewbox Grid.Row="0" Grid.Column="2"
                                 Width="11"
                                 Height="11"
                                 Margin="5,0,0,0"
@@ -140,6 +145,33 @@
                                     </mahapps:ProgressRing.Effect>
                                 </mahapps:ProgressRing>
                             </Viewbox>
+                            <ListBox Grid.Row="1" Grid.Column="0"
+                                Background="{StaticResource MahApps.Brushes.Control.Background}"
+                                ItemContainerStyle="{StaticResource Noggog.Styles.ListBoxItem.Plain}"
+                                ItemsSource="{Binding ApplicableFormKeys, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
+                                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="10" />
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="{Binding}" 
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                            <ListBox Grid.Row="1" Grid.Column="1"
+                                Margin="5,0,0,0"
+                                Background="{StaticResource MahApps.Brushes.Control.Background}"
+                                ItemContainerStyle="{StaticResource Noggog.Styles.ListBoxItem.Plain}"
+                                ItemsSource="{Binding ApplicableEditorIDs, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
+                                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                ScrollViewer.VerticalScrollBarVisibility="Auto" />
                         </Grid>
                     </Border>
                 </ControlTemplate>

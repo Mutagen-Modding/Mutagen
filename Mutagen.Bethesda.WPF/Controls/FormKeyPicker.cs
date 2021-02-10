@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Windows.Media;
+using DynamicData;
+using DynamicData.Binding;
 
 namespace Mutagen.Bethesda.WPF
 {
@@ -122,6 +124,40 @@ namespace Mutagen.Bethesda.WPF
              new FrameworkPropertyMetadata(new SolidColorBrush(Color.FromRgb(0x66, 0x66, 0x66))));
         #endregion
 
+        public bool AllowsPicker
+        {
+            get => (bool)GetValue(AllowsPickerProperty);
+            set => SetValue(AllowsPickerProperty, value);
+        }
+        public static readonly DependencyProperty AllowsPickerProperty = DependencyProperty.Register(nameof(AllowsPicker), typeof(bool), typeof(FormKeyPicker),
+             new FrameworkPropertyMetadata(default(bool), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+        public bool PickerEnabled
+        {
+            get => (bool)GetValue(PickerEnabledProperty);
+            set => SetValue(PickerEnabledProperty, value);
+        }
+        public static readonly DependencyProperty PickerEnabledProperty = DependencyProperty.Register(nameof(PickerEnabled), typeof(bool), typeof(FormKeyPicker),
+             new FrameworkPropertyMetadata(default(bool), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+        public IEnumerable ApplicableEditorIDs
+        {
+            get => (IEnumerable)GetValue(ApplicableEditorIDsProperty);
+            protected set => SetValue(ApplicableEditorIDsPropertyKey, value);
+        }
+        public static readonly DependencyPropertyKey ApplicableEditorIDsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ApplicableEditorIDs), typeof(IEnumerable), typeof(FormKeyPicker),
+             new FrameworkPropertyMetadata(default(IEnumerable)));
+        public static readonly DependencyProperty ApplicableEditorIDsProperty = ApplicableEditorIDsPropertyKey.DependencyProperty;
+
+        public IEnumerable ApplicableFormKeys
+        {
+            get => (IEnumerable)GetValue(ApplicableFormKeysProperty);
+            set => SetValue(ApplicableFormKeysPropertyKey, value);
+        }
+        public static readonly DependencyPropertyKey ApplicableFormKeysPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ApplicableFormKeys), typeof(IEnumerable), typeof(FormKeyPicker),
+             new FrameworkPropertyMetadata(default(IEnumerable)));
+        public static readonly DependencyProperty ApplicableFormKeysProperty = ApplicableFormKeysPropertyKey.DependencyProperty;
+
         static FormKeyPicker()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(FormKeyPicker), new FrameworkPropertyMetadata(typeof(FormKeyPicker)));
@@ -131,6 +167,7 @@ namespace Mutagen.Bethesda.WPF
         {
             this.WhenAnyValue(x => x.FormKey)
                 .DistinctUntilChanged()
+                .Skip(1)
                 .Where(x => !_updating)
                 .CombineLatest(
                     this.WhenAnyValue(
@@ -157,11 +194,7 @@ namespace Mutagen.Bethesda.WPF
                         {
                             return GetResponse<(FormKey, string?)?>.Succeed(default((FormKey, string?)?), "FormKey is null.  No lookup required");
                         }
-                        var scopedTypes = x.Types as IEnumerable<Type>;
-                        if (scopedTypes == null || !scopedTypes.Any())
-                        {
-                            scopedTypes = typeof(IMajorRecordCommonGetter).AsEnumerable();
-                        }
+                        var scopedTypes = ScopedTypesInternal(x.Types);
                         if (x.LinkCache.TryResolveIdentifier(x.FormKey, scopedTypes, out var edid))
                         {
                             return GetResponse<(FormKey, string?)?>.Succeed((x.FormKey, edid), "Located record");
@@ -227,6 +260,7 @@ namespace Mutagen.Bethesda.WPF
                 .DisposeWith(_unloadDisposable);
 
             this.WhenAnyValue(x => x.EditorID)
+                .Skip(1)
                 .DistinctUntilChanged()
                 .Where(x => !_updating)
                 .CombineLatest(
@@ -254,11 +288,7 @@ namespace Mutagen.Bethesda.WPF
                         {
                             return GetResponse<(FormKey, string?)?>.Succeed(default((FormKey, string?)?), "EditorID is empty.  No lookup required");
                         }
-                        var scopedTypes = x.Types as IEnumerable<Type>;
-                        if (scopedTypes == null || !scopedTypes.Any())
-                        {
-                            scopedTypes = typeof(IMajorRecordCommonGetter).AsEnumerable();
-                        }
+                        var scopedTypes = ScopedTypesInternal(x.Types);
                         if (x.Item2.TryResolveIdentifier(x.EditorID, scopedTypes, out var formKey))
                         {
                             return GetResponse<(FormKey, string?)?>.Succeed((formKey, x.EditorID), "Located record");
@@ -322,6 +352,85 @@ namespace Mutagen.Bethesda.WPF
                 }
             })
             .DisposeWith(_unloadDisposable);
+
+            ApplicableFormKeys = Observable.CombineLatest(
+                    this.WhenAnyValue(x => x.LinkCache),
+                    this.WhenAnyValue(x => x.ScopedTypes),
+                    (LinkCache, ScopedTypes) => (LinkCache, ScopedTypes))
+                .Throttle(TimeSpan.FromMilliseconds(300), RxApp.MainThreadScheduler)
+                .ObserveOn(RxApp.TaskpoolScheduler)
+                .Select(x =>
+                {
+                    return Observable.Create<FormKey>(async (obs, cancel) =>
+                    {
+                        try
+                        {
+                            var scopedTypes = ScopedTypesInternal(x.ScopedTypes);
+                            if (!scopedTypes.Any() || x.LinkCache == null)
+                            {
+                                return;
+                            }
+                            foreach (var item in x.LinkCache.AllIdentifiers(scopedTypes, cancel)
+                                .Select(x => x.FormKey))
+                            {
+                                if (cancel.IsCancellationRequested) return;
+                                obs.OnNext(item);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            obs.OnError(ex);
+                        }
+                        obs.OnCompleted();
+                    }).ToObservableChangeSet();
+                })
+                .Switch()
+                .ToObservableCollection(this._unloadDisposable);
+
+            ApplicableEditorIDs = Observable.CombineLatest(
+                    this.WhenAnyValue(x => x.LinkCache),
+                    this.WhenAnyValue(x => x.ScopedTypes),
+                    (LinkCache, ScopedTypes) => (LinkCache, ScopedTypes))
+                .Throttle(TimeSpan.FromMilliseconds(300), RxApp.MainThreadScheduler)
+                .ObserveOn(RxApp.TaskpoolScheduler)
+                .Select(x =>
+                {
+                    return Observable.Create<string>(async (obs, cancel) =>
+                    {
+                        try
+                        {
+                            var scopedTypes = ScopedTypesInternal(x.ScopedTypes);
+                            if (!scopedTypes.Any() || x.LinkCache == null)
+                            {
+                                return;
+                            }
+                            foreach (var item in x.LinkCache.AllIdentifiers(scopedTypes, cancel)
+                                .Select(x => x.EditorID))
+                            {
+                                if (cancel.IsCancellationRequested) return;
+                                if (item.IsNullOrWhitespace()) continue;
+                                obs.OnNext(item);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            obs.OnError(ex);
+                        }
+                        obs.OnCompleted();
+                    }).ToObservableChangeSet();
+                })
+                .Switch()
+                .ToObservableCollection(this._unloadDisposable);
+        }
+
+        private IEnumerable<Type> ScopedTypesInternal(IEnumerable types)
+        {
+            var scopedTypes = types as IEnumerable<Type>;
+            if (scopedTypes == null || !scopedTypes.Any())
+            {
+                scopedTypes = typeof(IMajorRecordCommonGetter).AsEnumerable();
+            }
+            return scopedTypes;
         }
     }
 }
