@@ -7,10 +7,19 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
+    public class GameEnvironment
+    {
+        public static readonly GameEnvironment Typical = new GameEnvironment();
+
+        private GameEnvironment()
+        {
+        }
+    }
+
     /// <summary>
     /// A class housing commonly used utilities when interacting with a game environment
     /// </summary>
-    public class EnvironmentState<TModSetter, TModGetter> : IDisposable
+    public class GameEnvironmentState<TModSetter, TModGetter> : IDisposable
         where TModSetter : class, IContextMod<TModSetter, TModGetter>, TModGetter
         where TModGetter : class, IContextGetterMod<TModSetter, TModGetter>
     {
@@ -26,9 +35,9 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// Convenience Link Cache to use created from the provided Load Order object
         /// </summary>
-        ILinkCache<TModSetter, TModGetter> LinkCache { get; }
+        public ILinkCache<TModSetter, TModGetter> LinkCache { get; }
 
-        public EnvironmentState(
+        public GameEnvironmentState(
             string gameFolderPath,
             LoadOrder<IModListing<TModGetter>> loadOrder,
             ILinkCache<TModSetter, TModGetter> linkCache,
@@ -40,24 +49,15 @@ namespace Mutagen.Bethesda
             _dispose = dispose;
         }
 
-        public static EnvironmentState<TModSetter, TModGetter> ConstructTypical(GameRelease release)
+        public void Dispose()
         {
-            // Confirm target game release matches
-            var regis = release.ToCategory().ToModRegistration();
-            if (!typeof(TModSetter).IsAssignableFrom(regis.SetterType))
-            {
-                throw new ArgumentException($"Target mod type {typeof(TModSetter)} was not of the expected type {regis.SetterType}");
-            }
-            if (!typeof(TModGetter).IsAssignableFrom(regis.GetterType))
-            {
-                throw new ArgumentException($"Target mod type {typeof(TModGetter)} was not of the expected type {regis.GetterType}");
-            }
+            if (!_dispose) return;
+            LoadOrder.Dispose();
+            LinkCache.Dispose();
+        }
 
-            if (!GameLocations.TryGetGameFolder(release, out var gameFolderPath))
-            {
-                throw new ArgumentException($"Could not find game folder automatically.");
-            }
-
+        public static GameEnvironmentState<TModSetter, TModGetter> Construct(GameRelease release, string gameFolderPath)
+        {
             var dataPath = Path.Combine(gameFolderPath, "Data");
 
             var loadOrder = Mutagen.Bethesda.LoadOrder.Import<TModGetter>(
@@ -65,18 +65,11 @@ namespace Mutagen.Bethesda
                 Mutagen.Bethesda.LoadOrder.GetListings(release, dataPath),
                 release);
 
-            return new EnvironmentState<TModSetter, TModGetter>(
+            return new GameEnvironmentState<TModSetter, TModGetter>(
                 gameFolderPath: gameFolderPath,
                 loadOrder: loadOrder,
                 linkCache: loadOrder.ToImmutableLinkCache<TModSetter, TModGetter>(),
                 dispose: true);
-        }
-
-        public void Dispose()
-        {
-            if (!_dispose) return;
-            LoadOrder.Dispose();
-            LinkCache.Dispose();
         }
     }
 }

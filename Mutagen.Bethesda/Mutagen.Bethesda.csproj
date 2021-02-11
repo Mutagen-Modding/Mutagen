@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net5.0;netstandard2.1</TargetFrameworks>
@@ -25,10 +25,11 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="EnvironmentState.cs" />
     <Compile Include="Extensions\GameCategoryExt.cs" />
     <Compile Include="ModInstantiator.cs" />
     <Compile Include="WarmupAll_Generated.cs" />
+    <Compile Include="Records\ProtocolDefinition_All.cs" />
+    <Compile Include="Utility\GameEnvironmentMixIn_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DotNetZip" Version="1.15.0" />
