@@ -6,4 +6,6 @@
     xmlns:noggog="clr-namespace:Noggog.WPF;assembly=Noggog.WPF">
 
     <local:ModTypeStringConverter x:Key="ModTypeStringConverter" />
+    <local:RecordTypeNameConverter x:Key="RecordTypeNameConverter" />
+    <local:RecordTypeGameConverter x:Key="RecordTypeGameConverter" />
 </ResourceDictionary>

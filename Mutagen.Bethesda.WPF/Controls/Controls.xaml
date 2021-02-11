@@ -76,6 +76,8 @@
                                 <ResourceDictionary Source="pack://application:,,,/Noggog.WPF;component/Everything.xaml" />
                             </ResourceDictionary.MergedDictionaries>
                             <SolidColorBrush x:Key="PassiveBrush" Color="#666666" />
+                            <local:RecordTypeNameConverter x:Key="RecordTypeNameConverter" />
+                            <local:RecordTypeGameConverter x:Key="RecordTypeGameConverter" />
                             <Style x:Key="PickerButton" TargetType="Button">
                                 <Setter Property="Background" Value="Transparent" />
                                 <Setter Property="BorderThickness" Value="0" />
@@ -121,6 +123,7 @@
                                 <ColumnDefinition Width="18" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
@@ -179,42 +182,127 @@
                                     </mahapps:ProgressRing.Effect>
                                 </mahapps:ProgressRing>
                             </Viewbox>
-                            <ListBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
-                                Margin="0,3,0,0"
-                                HorizontalContentAlignment="Stretch"
-                                Background="{StaticResource MahApps.Brushes.Control.Background}"
-                                ItemsSource="{Binding ApplicableEditorIDs, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
-                                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                Visibility="{Binding InSearchMode, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay, Converter={StaticResource VisibilityConverter}}">
 
-                                <ListBox.ItemContainerStyle>
-                                    <Style BasedOn="{StaticResource Noggog.Styles.ListBoxItem.Plain}" TargetType="ListBoxItem">
-                                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                    </Style>
-                                </ListBox.ItemContainerStyle>
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <Button Style="{StaticResource PickerButton}">
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="*" />
-                                                    <ColumnDefinition Width="Auto" />
-                                                </Grid.ColumnDefinitions>
-                                                <TextBlock Grid.Column="0"
-                                                    Margin="6,0,0,0"
-                                                    Text="{Binding EditorID}"
-                                                    TextTrimming="CharacterEllipsis" />
-                                                <TextBlock Grid.Column="1"
-                                                    Margin="6,0"
-                                                    Foreground="#AAAAAA"
-                                                    Text="{Binding FormKey}"
-                                                    Visibility="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource VisibilityHiddenConverter}}" />
-                                            </Grid>
-                                        </Button>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
+                            <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                                Margin="0,-1,0,0"
+                                Padding="1"
+                                Background="{DynamicResource TextBoxFocusBackgroundBrush}"
+                                CornerRadius="3"
+                                Visibility="{Binding InSearchMode, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay, Converter={StaticResource VisibilityConverter}}">
+                                <Grid>
+                                    <ListBox
+                                        HorizontalContentAlignment="Stretch"
+                                        Background="{DynamicResource TextBoxFocusBackgroundBrush}"
+                                        ItemsSource="{Binding ApplicableEditorIDs, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
+                                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                        ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                        Visibility="{Binding ViewingAllowedTypes, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource VisibilityConverter}, ConverterParameter=False}">
+                                        <ListBox.ItemContainerStyle>
+                                            <Style BasedOn="{StaticResource Noggog.Styles.ListBoxItem.Plain}" TargetType="ListBoxItem">
+                                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                            </Style>
+                                        </ListBox.ItemContainerStyle>
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <Button Style="{StaticResource PickerButton}">
+                                                    <Grid Margin="6,0,0,0">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Grid.Column="0"
+                                                            Text="{Binding EditorID}"
+                                                            TextTrimming="CharacterEllipsis" />
+                                                        <TextBlock Grid.Column="1"
+                                                            Margin="6,0"
+                                                            Foreground="#AAAAAA"
+                                                            Text="{Binding FormKey}"
+                                                            Visibility="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource VisibilityHiddenConverter}}" />
+                                                    </Grid>
+                                                </Button>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                    <ListBox
+                                        HorizontalContentAlignment="Stretch"
+                                        Background="{DynamicResource TextBoxFocusBackgroundBrush}"
+                                        ItemsSource="{Binding ScopedTypes, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
+                                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                        ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                        Visibility="{Binding ViewingAllowedTypes, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource VisibilityConverter}}">
+                                        <ListBox.ItemContainerStyle>
+                                            <Style BasedOn="{StaticResource Noggog.Styles.ListBoxItem.Plain}" TargetType="ListBoxItem">
+                                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                            </Style>
+                                        </ListBox.ItemContainerStyle>
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid Margin="6,0,0,0">
+                                                    <TextBlock Margin="0,4">
+                                                        <Run Text="{Binding Mode=OneWay, Converter={StaticResource RecordTypeNameConverter}}" />
+                                                        <Run Text=" (" />
+                                                        <Run Text="{Binding Mode=OneWay, Converter={StaticResource RecordTypeGameConverter}}" />
+                                                        <Run Text=")" />
+                                                    </TextBlock>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                </Grid>
+                            </Border>
+                            <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                Margin="0,3,0,0"
+                                Background="#111111"
+                                BorderBrush="#222222"
+                                BorderThickness="0,0,0,1"
+                                Visibility="{Binding InSearchMode, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay, Converter={StaticResource VisibilityConverter}}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Margin="6,2">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Text" Value="Search" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding ViewingAllowedTypes, RelativeSource={RelativeSource TemplatedParent}}" Value="True">
+                                                        <Setter Property="Text" Value="Type Scoping" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                    <Button Grid.Column="1" Command="{Binding ViewAllowedTypesCommand, RelativeSource={RelativeSource TemplatedParent}}">
+                                        <Button.Style>
+                                            <Style BasedOn="{StaticResource Noggog.Styles.Button}" TargetType="Button">
+                                                <Setter Property="Content">
+                                                    <Setter.Value>
+                                                        <icon:PackIconFontAwesome
+                                                            Height="12"
+                                                            Margin="0,0,4,0"
+                                                            Kind="QuestionSolid"
+                                                            ToolTip="See type scoping" />
+                                                    </Setter.Value>
+                                                </Setter>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding ViewingAllowedTypes, RelativeSource={RelativeSource TemplatedParent}}" Value="True">
+                                                        <Setter Property="Content">
+                                                            <Setter.Value>
+                                                                <icon:PackIconFontAwesome
+                                                                    Height="12"
+                                                                    Margin="0,0,4,0"
+                                                                    Kind="SearchSolid"
+                                                                    ToolTip="Search records" />
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
+                                </Grid>
+                            </Border>
                         </Grid>
                     </Border>
                 </ControlTemplate>

@@ -162,6 +162,22 @@ namespace Mutagen.Bethesda.WPF
         public static readonly DependencyProperty PickerClickCommandProperty = DependencyProperty.Register(nameof(PickerClickCommand), typeof(ICommand), typeof(FormKeyPicker),
              new FrameworkPropertyMetadata(default(ICommand), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
+        public bool ViewingAllowedTypes
+        {
+            get => (bool)GetValue(ViewingAllowedTypesProperty);
+            set => SetValue(ViewingAllowedTypesProperty, value);
+        }
+        public static readonly DependencyProperty ViewingAllowedTypesProperty = DependencyProperty.Register(nameof(ViewingAllowedTypes), typeof(bool), typeof(FormKeyPicker),
+             new FrameworkPropertyMetadata(default(bool)));
+
+        public ICommand ViewAllowedTypesCommand
+        {
+            get => (ICommand)GetValue(ViewAllowedTypesCommandProperty);
+            set => SetValue(ViewAllowedTypesCommandProperty, value);
+        }
+        public static readonly DependencyProperty ViewAllowedTypesCommandProperty = DependencyProperty.Register(nameof(ViewAllowedTypesCommand), typeof(ICommand), typeof(FormKeyPicker),
+             new FrameworkPropertyMetadata(default(ICommand)));
+
         static FormKeyPicker()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(FormKeyPicker), new FrameworkPropertyMetadata(typeof(FormKeyPicker)));
@@ -406,6 +422,11 @@ namespace Mutagen.Bethesda.WPF
                 .Subscribe(_ => InSearchMode = false)
                 .DisposeWith(_unloadDisposable);
 
+            this.WhenAnyValue(x => x.InSearchMode)
+                .Where(x => !x)
+                .Subscribe(_ => ViewingAllowedTypes = false)
+                .DisposeWith(_unloadDisposable);
+
             PickerClickCommand = ReactiveCommand.Create((object o) =>
             {
                 switch (o)
@@ -418,6 +439,8 @@ namespace Mutagen.Bethesda.WPF
                         break;
                 }
             });
+
+            ViewAllowedTypesCommand = ReactiveCommand.Create(() => ViewingAllowedTypes = !ViewingAllowedTypes);
         }
 
         private IEnumerable<Type> ScopedTypesInternal(IEnumerable types)
@@ -444,7 +467,8 @@ namespace Mutagen.Bethesda.WPF
                         this.InSearchMode = true;
                     })
                     .DisposeWith(_templateDisposable);
-                editorIdBox.Events().PreviewLostKeyboardFocus
+                this.Events().IsKeyboardFocusWithinChanged
+                    .Where(x => !((bool)x.NewValue))
                     .Delay(TimeSpan.FromMilliseconds(150), RxApp.MainThreadScheduler)
                     .Subscribe(_ =>
                     {
