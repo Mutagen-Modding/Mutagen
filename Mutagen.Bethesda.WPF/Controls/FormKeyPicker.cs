@@ -429,7 +429,7 @@ namespace Mutagen.Bethesda.WPF
                     .Select<string, Func<IMajorRecordIdentifier, bool>>(term => (ident) =>
                     {
                         var edid = ident.EditorID;
-                        return edid.IsNullOrWhitespace() ? true : edid.ContainsInsensitive(term);
+                        return edid.IsNullOrWhitespace() || term.IsNullOrWhitespace() ? true : edid.ContainsInsensitive(term);
                     }))
                 .ToObservableCollection(this._unloadDisposable);
 
@@ -478,6 +478,18 @@ namespace Mutagen.Bethesda.WPF
                 editorIdBox.WhenAnyValue(x => x.Text)
                     .Skip(1)
                     .FilterSwitch(editorIdBox.WhenAnyValue(x => x.IsKeyboardFocused))
+                    .Subscribe(_ =>
+                    {
+                        this.InSearchMode = true;
+                    })
+                    .DisposeWith(_templateDisposable);
+                editorIdBox.WhenAnyValue(x => x.IsKeyboardFocused)
+                    .DistinctUntilChanged()
+                    .Where(focused => focused)
+                    .WithLatestFrom(
+                        this.WhenAnyValue(x => x.Found),
+                        (_, found) => found)
+                    .Where(found => !found)
                     .Subscribe(_ =>
                     {
                         this.InSearchMode = true;
