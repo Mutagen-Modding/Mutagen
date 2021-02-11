@@ -11,9 +11,13 @@ using System.Reactive.Linq;
 using System.Windows.Media;
 using DynamicData;
 using DynamicData.Binding;
+using System.Windows.Input;
+using System.Reactive;
+using System.Windows.Controls;
 
 namespace Mutagen.Bethesda.WPF
 {
+    [TemplatePart(Name = "PART_EditorIDBox", Type = typeof(TextBox))]
     public class FormKeyPicker : NoggogControl
     {
         private bool _updating;
@@ -124,21 +128,22 @@ namespace Mutagen.Bethesda.WPF
              new FrameworkPropertyMetadata(new SolidColorBrush(Color.FromRgb(0x66, 0x66, 0x66))));
         #endregion
 
-        public bool AllowsPicker
+        public bool InSearchMode
         {
-            get => (bool)GetValue(AllowsPickerProperty);
-            set => SetValue(AllowsPickerProperty, value);
+            get => (bool)GetValue(InSearchModeProperty);
+            set => SetValue(InSearchModePropertyKey, value);
         }
-        public static readonly DependencyProperty AllowsPickerProperty = DependencyProperty.Register(nameof(AllowsPicker), typeof(bool), typeof(FormKeyPicker),
-             new FrameworkPropertyMetadata(default(bool), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+        public static readonly DependencyPropertyKey InSearchModePropertyKey = DependencyProperty.RegisterReadOnly(nameof(InSearchMode), typeof(bool), typeof(FormKeyPicker),
+             new FrameworkPropertyMetadata(default(bool)));
+        public static readonly DependencyProperty InSearchModeProperty = InSearchModePropertyKey.DependencyProperty;
 
-        public bool PickerEnabled
+        public bool AllowsSearchMode
         {
-            get => (bool)GetValue(PickerEnabledProperty);
-            set => SetValue(PickerEnabledProperty, value);
+            get => (bool)GetValue(AllowsSearchModeProperty);
+            set => SetValue(AllowsSearchModeProperty, value);
         }
-        public static readonly DependencyProperty PickerEnabledProperty = DependencyProperty.Register(nameof(PickerEnabled), typeof(bool), typeof(FormKeyPicker),
-             new FrameworkPropertyMetadata(default(bool), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+        public static readonly DependencyProperty AllowsSearchModeProperty = DependencyProperty.Register(nameof(AllowsSearchMode), typeof(bool), typeof(FormKeyPicker),
+             new FrameworkPropertyMetadata(true, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public IEnumerable ApplicableEditorIDs
         {
@@ -149,14 +154,13 @@ namespace Mutagen.Bethesda.WPF
              new FrameworkPropertyMetadata(default(IEnumerable)));
         public static readonly DependencyProperty ApplicableEditorIDsProperty = ApplicableEditorIDsPropertyKey.DependencyProperty;
 
-        public IEnumerable ApplicableFormKeys
+        public ICommand PickerClickCommand
         {
-            get => (IEnumerable)GetValue(ApplicableFormKeysProperty);
-            set => SetValue(ApplicableFormKeysPropertyKey, value);
+            get => (ICommand)GetValue(PickerClickCommandProperty);
+            set => SetValue(PickerClickCommandProperty, value);
         }
-        public static readonly DependencyPropertyKey ApplicableFormKeysPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ApplicableFormKeys), typeof(IEnumerable), typeof(FormKeyPicker),
-             new FrameworkPropertyMetadata(default(IEnumerable)));
-        public static readonly DependencyProperty ApplicableFormKeysProperty = ApplicableFormKeysPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty PickerClickCommandProperty = DependencyProperty.Register(nameof(PickerClickCommand), typeof(ICommand), typeof(FormKeyPicker),
+             new FrameworkPropertyMetadata(default(ICommand), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         static FormKeyPicker()
         {
@@ -353,40 +357,6 @@ namespace Mutagen.Bethesda.WPF
             })
             .DisposeWith(_unloadDisposable);
 
-            ApplicableFormKeys = Observable.CombineLatest(
-                    this.WhenAnyValue(x => x.LinkCache),
-                    this.WhenAnyValue(x => x.ScopedTypes),
-                    (LinkCache, ScopedTypes) => (LinkCache, ScopedTypes))
-                .Throttle(TimeSpan.FromMilliseconds(300), RxApp.MainThreadScheduler)
-                .ObserveOn(RxApp.TaskpoolScheduler)
-                .Select(x =>
-                {
-                    return Observable.Create<FormKey>(async (obs, cancel) =>
-                    {
-                        try
-                        {
-                            var scopedTypes = ScopedTypesInternal(x.ScopedTypes);
-                            if (!scopedTypes.Any() || x.LinkCache == null)
-                            {
-                                return;
-                            }
-                            foreach (var item in x.LinkCache.AllIdentifiers(scopedTypes, cancel)
-                                .Select(x => x.FormKey))
-                            {
-                                if (cancel.IsCancellationRequested) return;
-                                obs.OnNext(item);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            obs.OnError(ex);
-                        }
-                        obs.OnCompleted();
-                    }).ToObservableChangeSet();
-                })
-                .Switch()
-                .ToObservableCollection(this._unloadDisposable);
-
             ApplicableEditorIDs = Observable.CombineLatest(
                     this.WhenAnyValue(x => x.LinkCache),
                     this.WhenAnyValue(x => x.ScopedTypes),
@@ -395,7 +365,7 @@ namespace Mutagen.Bethesda.WPF
                 .ObserveOn(RxApp.TaskpoolScheduler)
                 .Select(x =>
                 {
-                    return Observable.Create<string>(async (obs, cancel) =>
+                    return Observable.Create<IMajorRecordIdentifier>(async (obs, cancel) =>
                     {
                         try
                         {
@@ -404,11 +374,11 @@ namespace Mutagen.Bethesda.WPF
                             {
                                 return;
                             }
-                            foreach (var item in x.LinkCache.AllIdentifiers(scopedTypes, cancel)
-                                .Select(x => x.EditorID))
+                            foreach (var item in x.LinkCache.AllIdentifiers(scopedTypes, cancel))
                             {
                                 if (cancel.IsCancellationRequested) return;
-                                if (item.IsNullOrWhitespace()) continue;
+                                var edid = item.EditorID;
+                                if (edid.IsNullOrWhitespace()) continue;
                                 obs.OnNext(item);
                             }
                         }
@@ -417,10 +387,37 @@ namespace Mutagen.Bethesda.WPF
                             obs.OnError(ex);
                         }
                         obs.OnCompleted();
-                    }).ToObservableChangeSet();
+                    });
                 })
+                .FilterSwitch(this.WhenAnyValue(x => x.InSearchMode), Observable.Empty<IMajorRecordIdentifier>())
+                .Select(x => x.ToObservableChangeSet())
                 .Switch()
+                .Filter(this.WhenAnyValue(x => x.EditorID)
+                    .Debounce(TimeSpan.FromMilliseconds(300), RxApp.MainThreadScheduler)
+                    .Select<string, Func<IMajorRecordIdentifier, bool>>(term => (ident) =>
+                    {
+                        var edid = ident.EditorID;
+                        return edid.IsNullOrWhitespace() ? true : edid.ContainsInsensitive(term);
+                    }))
                 .ToObservableCollection(this._unloadDisposable);
+
+            this.WhenAnyValue(x => x.AllowsSearchMode)
+                .Where(x => !x)
+                .Subscribe(_ => InSearchMode = false)
+                .DisposeWith(_unloadDisposable);
+
+            PickerClickCommand = ReactiveCommand.Create((object o) =>
+            {
+                switch (o)
+                {
+                    case IMajorRecordIdentifier identifier:
+                        FormKey = identifier.FormKey;
+                        InSearchMode = false;
+                        break;
+                    default:
+                        break;
+                }
+            });
         }
 
         private IEnumerable<Type> ScopedTypesInternal(IEnumerable types)
@@ -431,6 +428,30 @@ namespace Mutagen.Bethesda.WPF
                 scopedTypes = typeof(IMajorRecordCommonGetter).AsEnumerable();
             }
             return scopedTypes;
+        }
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            var editorIdBox = GetTemplateChild("PART_EditorIDBox") as TextBox;
+            if (editorIdBox != null)
+            {
+                editorIdBox.WhenAnyValue(x => x.Text)
+                    .Skip(1)
+                    .FilterSwitch(editorIdBox.WhenAnyValue(x => x.IsKeyboardFocused))
+                    .Subscribe(_ =>
+                    {
+                        this.InSearchMode = true;
+                    })
+                    .DisposeWith(_templateDisposable);
+                editorIdBox.Events().PreviewLostKeyboardFocus
+                    .Delay(TimeSpan.FromMilliseconds(150), RxApp.MainThreadScheduler)
+                    .Subscribe(_ =>
+                    {
+                        this.InSearchMode = false;
+                    })
+                    .DisposeWith(_templateDisposable);
+            }
         }
     }
 }

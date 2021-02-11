@@ -30,7 +30,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mutagen.Bethesda.WPF", "Mut
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mutagen.Bethesda.Fallout4", "Mutagen.Bethesda.Fallout4\Mutagen.Bethesda.Fallout4.csproj", "{50B3BCA9-8075-4251-94AC-FD8F07A9F250}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Core.Windows", "Mutagen.Bethesda.Core.Windows\Mutagen.Bethesda.Core.Windows.csproj", "{18FBED7C-AE30-42A8-A02F-259583AB58BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mutagen.Bethesda.Core.Windows", "Mutagen.Bethesda.Core.Windows\Mutagen.Bethesda.Core.Windows.csproj", "{18FBED7C-AE30-42A8-A02F-259583AB58BC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.WPF.TestDisplay", "Mutagen.Bethesda.WPF.TestDisplay\Mutagen.Bethesda.WPF.TestDisplay.csproj", "{AB5B2624-FAB0-44A5-86C1-680D04A55B59}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -86,6 +88,10 @@ Global
 		{18FBED7C-AE30-42A8-A02F-259583AB58BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{18FBED7C-AE30-42A8-A02F-259583AB58BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{18FBED7C-AE30-42A8-A02F-259583AB58BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB5B2624-FAB0-44A5-86C1-680D04A55B59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB5B2624-FAB0-44A5-86C1-680D04A55B59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB5B2624-FAB0-44A5-86C1-680D04A55B59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB5B2624-FAB0-44A5-86C1-680D04A55B59}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

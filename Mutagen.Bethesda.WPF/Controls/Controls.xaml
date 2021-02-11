@@ -55,6 +55,7 @@
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}">
                         <TextBox
+                            mahapps:TextBoxHelper.Watermark="{Binding Watermark, RelativeSource={RelativeSource TemplatedParent}}"
                             noggog:ControlsHelper.ErrorTooltip="{Binding Error.Reason, RelativeSource={RelativeSource TemplatedParent}}"
                             noggog:ControlsHelper.InError="{Binding Error.Failed, RelativeSource={RelativeSource TemplatedParent}}"
                             Style="{StaticResource Noggog.Styles.TextBox.ErrorState}"
@@ -75,6 +76,38 @@
                                 <ResourceDictionary Source="pack://application:,,,/Noggog.WPF;component/Everything.xaml" />
                             </ResourceDictionary.MergedDictionaries>
                             <SolidColorBrush x:Key="PassiveBrush" Color="#666666" />
+                            <Style x:Key="PickerButton" TargetType="Button">
+                                <Setter Property="Background" Value="Transparent" />
+                                <Setter Property="BorderThickness" Value="0" />
+                                <Setter Property="Command" Value="{Binding PickerClickCommand, RelativeSource={RelativeSource AncestorType=local:FormKeyPicker}}" />
+                                <Setter Property="CommandParameter" Value="{Binding}" />
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type Button}">
+                                            <Border Background="{TemplateBinding Background}">
+                                                <ContentPresenter VerticalAlignment="Center" />
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="True" />
+                                            <Condition Binding="{Binding IsPressed, RelativeSource={RelativeSource Self}}" Value="False" />
+                                        </MultiDataTrigger.Conditions>
+                                        <MultiDataTrigger.Setters>
+                                            <Setter Property="Foreground" Value="#79dbd5" />
+                                        </MultiDataTrigger.Setters>
+                                    </MultiDataTrigger>
+                                    <DataTrigger Binding="{Binding IsPressed, RelativeSource={RelativeSource Self}}" Value="True">
+                                        <Setter Property="Foreground" Value="#2e8c86" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="True">
+                                        <Setter Property="Background" Value="#0e1716" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
                         </ResourceDictionary>
                     </ControlTemplate.Resources>
                     <Border
@@ -91,12 +124,13 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
-                            <local:FormKeyBox Grid.Row="0" Grid.Column="0"
-                                FormKey="{Binding FormKey, RelativeSource={RelativeSource TemplatedParent}}" />
-                            <TextBox Grid.Row="0" Grid.Column="1"
-                                Margin="5,0,0,0"
+                            <TextBox Grid.Row="0" Grid.Column="0"
+                                x:Name="PART_EditorIDBox"
                                 mahapps:TextBoxHelper.Watermark="EditorID"
                                 Text="{Binding EditorID, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}" />
+                            <local:FormKeyBox Grid.Row="0" Grid.Column="1"
+                                Margin="5,0,0,0"
+                                FormKey="{Binding FormKey, RelativeSource={RelativeSource TemplatedParent}}" />
                             <icon:PackIconMaterial Grid.Row="0" Grid.Column="2"
                                 x:Name="PART_ErrorStateCircle"
                                 Width="7"
@@ -145,33 +179,42 @@
                                     </mahapps:ProgressRing.Effect>
                                 </mahapps:ProgressRing>
                             </Viewbox>
-                            <ListBox Grid.Row="1" Grid.Column="0"
+                            <ListBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                Margin="0,3,0,0"
+                                HorizontalContentAlignment="Stretch"
                                 Background="{StaticResource MahApps.Brushes.Control.Background}"
-                                ItemContainerStyle="{StaticResource Noggog.Styles.ListBoxItem.Plain}"
-                                ItemsSource="{Binding ApplicableFormKeys, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
+                                ItemsSource="{Binding ApplicableEditorIDs, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                Visibility="{Binding InSearchMode, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay, Converter={StaticResource VisibilityConverter}}">
+
+                                <ListBox.ItemContainerStyle>
+                                    <Style BasedOn="{StaticResource Noggog.Styles.ListBoxItem.Plain}" TargetType="ListBoxItem">
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                    </Style>
+                                </ListBox.ItemContainerStyle>
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="10" />
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="*" />
-                                            </Grid.ColumnDefinitions>
-                                            <TextBlock Text="{Binding}" 
-                                        </Grid>
+                                        <Button Style="{StaticResource PickerButton}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0"
+                                                    Margin="6,0,0,0"
+                                                    Text="{Binding EditorID}"
+                                                    TextTrimming="CharacterEllipsis" />
+                                                <TextBlock Grid.Column="1"
+                                                    Margin="6,0"
+                                                    Foreground="#AAAAAA"
+                                                    Text="{Binding FormKey}"
+                                                    Visibility="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource VisibilityHiddenConverter}}" />
+                                            </Grid>
+                                        </Button>
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
                             </ListBox>
-                            <ListBox Grid.Row="1" Grid.Column="1"
-                                Margin="5,0,0,0"
-                                Background="{StaticResource MahApps.Brushes.Control.Background}"
-                                ItemContainerStyle="{StaticResource Noggog.Styles.ListBoxItem.Plain}"
-                                ItemsSource="{Binding ApplicableEditorIDs, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
-                                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                ScrollViewer.VerticalScrollBarVisibility="Auto" />
                         </Grid>
                     </Border>
                 </ControlTemplate>
