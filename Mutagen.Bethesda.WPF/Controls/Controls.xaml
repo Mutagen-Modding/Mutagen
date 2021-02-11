@@ -184,6 +184,8 @@
                             </Viewbox>
 
                             <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                                MaxHeight="{Binding MaxSearchBoxHeight, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
+                                Height="{Binding SearchBoxHeight, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
                                 Margin="0,-1,0,0"
                                 Padding="1"
                                 Background="{DynamicResource TextBoxFocusBackgroundBrush}"

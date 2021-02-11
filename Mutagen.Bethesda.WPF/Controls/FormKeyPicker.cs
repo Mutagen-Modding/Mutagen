@@ -178,6 +178,22 @@ namespace Mutagen.Bethesda.WPF
         public static readonly DependencyProperty ViewAllowedTypesCommandProperty = DependencyProperty.Register(nameof(ViewAllowedTypesCommand), typeof(ICommand), typeof(FormKeyPicker),
              new FrameworkPropertyMetadata(default(ICommand)));
 
+        public double MaxSearchBoxHeight
+        {
+            get => (double)GetValue(MaxSearchBoxHeightProperty);
+            set => SetValue(MaxSearchBoxHeightProperty, value);
+        }
+        public static readonly DependencyProperty MaxSearchBoxHeightProperty = DependencyProperty.Register(nameof(MaxSearchBoxHeight), typeof(double), typeof(FormKeyPicker),
+             new FrameworkPropertyMetadata(double.PositiveInfinity));
+
+        public double SearchBoxHeight
+        {
+            get => (double)GetValue(SearchBoxHeightProperty);
+            set => SetValue(SearchBoxHeightProperty, value);
+        }
+        public static readonly DependencyProperty SearchBoxHeightProperty = DependencyProperty.Register(nameof(SearchBoxHeight), typeof(double), typeof(FormKeyPicker),
+             new FrameworkPropertyMetadata(double.NaN));
+
         static FormKeyPicker()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(FormKeyPicker), new FrameworkPropertyMetadata(typeof(FormKeyPicker)));
