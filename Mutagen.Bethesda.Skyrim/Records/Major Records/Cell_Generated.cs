@@ -3940,9 +3940,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     parent: curContext,
                     getOrAddAsOverride: (m, r) =>
                     {
-                        var copy = (ANavigationMesh)((IANavigationMeshGetter)r).DeepCopy();
-                        getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).NavigationMeshes.Add(copy);
-                        return copy;
+                        var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                        var ret = parent.NavigationMeshes.FirstOrDefault(x => x.FormKey == r.FormKey);
+                        if (ret != null) return ret;
+                        ret = (ANavigationMesh)((IANavigationMeshGetter)r).DeepCopy();
+                        parent.NavigationMeshes.Add(ret);
+                        return ret;
                     },
                     duplicateInto: (m, r, e) =>
                     {
@@ -3959,9 +3962,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     parent: curContext,
                     getOrAddAsOverride: (m, r) =>
                     {
-                        var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                        getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
-                        return copy;
+                        var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                        var ret = parent.Persistent.FirstOrDefault(x => x.FormKey == r.FormKey);
+                        if (ret != null) return ret;
+                        ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                        parent.Persistent.Add(ret);
+                        return ret;
                     },
                     duplicateInto: (m, r, e) =>
                     {
@@ -3978,9 +3984,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     parent: curContext,
                     getOrAddAsOverride: (m, r) =>
                     {
-                        var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                        getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
-                        return copy;
+                        var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                        var ret = parent.Temporary.FirstOrDefault(x => x.FormKey == r.FormKey);
+                        if (ret != null) return ret;
+                        ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                        parent.Temporary.Add(ret);
+                        return ret;
                     },
                     duplicateInto: (m, r, e) =>
                     {
@@ -4083,9 +4092,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 parent: curContext,
                                 getOrAddAsOverride: (m, r) =>
                                 {
-                                    var copy = (ANavigationMesh)((IANavigationMeshGetter)r).DeepCopy();
-                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).NavigationMeshes.Add(copy);
-                                    return copy;
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var ret = parent.NavigationMeshes.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (ANavigationMesh)((IANavigationMeshGetter)r).DeepCopy();
+                                    parent.NavigationMeshes.Add(ret);
+                                    return ret;
                                 },
                                 duplicateInto: (m, r, e) =>
                                 {
@@ -4108,9 +4120,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 parent: curContext,
                                 getOrAddAsOverride: (m, r) =>
                                 {
-                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
-                                    return copy;
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var ret = parent.Persistent.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    parent.Persistent.Add(ret);
+                                    return ret;
                                 },
                                 duplicateInto: (m, r, e) =>
                                 {
@@ -4130,9 +4145,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 parent: curContext,
                                 getOrAddAsOverride: (m, r) =>
                                 {
-                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
-                                    return copy;
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var ret = parent.Temporary.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    parent.Temporary.Add(ret);
+                                    return ret;
                                 },
                                 duplicateInto: (m, r, e) =>
                                 {
@@ -4157,9 +4175,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 parent: curContext,
                                 getOrAddAsOverride: (m, r) =>
                                 {
-                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
-                                    return copy;
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var ret = parent.Persistent.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    parent.Persistent.Add(ret);
+                                    return ret;
                                 },
                                 duplicateInto: (m, r, e) =>
                                 {
@@ -4179,9 +4200,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 parent: curContext,
                                 getOrAddAsOverride: (m, r) =>
                                 {
-                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
-                                    return copy;
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var ret = parent.Temporary.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    parent.Temporary.Add(ret);
+                                    return ret;
                                 },
                                 duplicateInto: (m, r, e) =>
                                 {
@@ -4206,9 +4230,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 parent: curContext,
                                 getOrAddAsOverride: (m, r) =>
                                 {
-                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
-                                    return copy;
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var ret = parent.Persistent.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    parent.Persistent.Add(ret);
+                                    return ret;
                                 },
                                 duplicateInto: (m, r, e) =>
                                 {
@@ -4228,9 +4255,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 parent: curContext,
                                 getOrAddAsOverride: (m, r) =>
                                 {
-                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
-                                    return copy;
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var ret = parent.Temporary.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    parent.Temporary.Add(ret);
+                                    return ret;
                                 },
                                 duplicateInto: (m, r, e) =>
                                 {
@@ -4255,9 +4285,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 parent: curContext,
                                 getOrAddAsOverride: (m, r) =>
                                 {
-                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
-                                    return copy;
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var ret = parent.Persistent.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    parent.Persistent.Add(ret);
+                                    return ret;
                                 },
                                 duplicateInto: (m, r, e) =>
                                 {
@@ -4277,9 +4310,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 parent: curContext,
                                 getOrAddAsOverride: (m, r) =>
                                 {
-                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
-                                    return copy;
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var ret = parent.Temporary.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    parent.Temporary.Add(ret);
+                                    return ret;
                                 },
                                 duplicateInto: (m, r, e) =>
                                 {
@@ -4304,9 +4340,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 parent: curContext,
                                 getOrAddAsOverride: (m, r) =>
                                 {
-                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
-                                    return copy;
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var ret = parent.Persistent.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    parent.Persistent.Add(ret);
+                                    return ret;
                                 },
                                 duplicateInto: (m, r, e) =>
                                 {
@@ -4326,9 +4365,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 parent: curContext,
                                 getOrAddAsOverride: (m, r) =>
                                 {
-                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
-                                    return copy;
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var ret = parent.Temporary.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    parent.Temporary.Add(ret);
+                                    return ret;
                                 },
                                 duplicateInto: (m, r, e) =>
                                 {
@@ -4352,9 +4394,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 parent: curContext,
                                 getOrAddAsOverride: (m, r) =>
                                 {
-                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
-                                    return copy;
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var ret = parent.Persistent.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    parent.Persistent.Add(ret);
+                                    return ret;
                                 },
                                 duplicateInto: (m, r, e) =>
                                 {
@@ -4374,9 +4419,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 parent: curContext,
                                 getOrAddAsOverride: (m, r) =>
                                 {
-                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
-                                    return copy;
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var ret = parent.Temporary.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    parent.Temporary.Add(ret);
+                                    return ret;
                                 },
                                 duplicateInto: (m, r, e) =>
                                 {
@@ -4401,9 +4449,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 parent: curContext,
                                 getOrAddAsOverride: (m, r) =>
                                 {
-                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
-                                    return copy;
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var ret = parent.Persistent.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    parent.Persistent.Add(ret);
+                                    return ret;
                                 },
                                 duplicateInto: (m, r, e) =>
                                 {
@@ -4423,9 +4474,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 parent: curContext,
                                 getOrAddAsOverride: (m, r) =>
                                 {
-                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
-                                    return copy;
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var ret = parent.Temporary.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    parent.Temporary.Add(ret);
+                                    return ret;
                                 },
                                 duplicateInto: (m, r, e) =>
                                 {
@@ -4450,9 +4504,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 parent: curContext,
                                 getOrAddAsOverride: (m, r) =>
                                 {
-                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
-                                    return copy;
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var ret = parent.Persistent.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    parent.Persistent.Add(ret);
+                                    return ret;
                                 },
                                 duplicateInto: (m, r, e) =>
                                 {
@@ -4472,9 +4529,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 parent: curContext,
                                 getOrAddAsOverride: (m, r) =>
                                 {
-                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
-                                    return copy;
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var ret = parent.Temporary.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    parent.Temporary.Add(ret);
+                                    return ret;
                                 },
                                 duplicateInto: (m, r, e) =>
                                 {
@@ -4499,9 +4559,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 parent: curContext,
                                 getOrAddAsOverride: (m, r) =>
                                 {
-                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
-                                    return copy;
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var ret = parent.Persistent.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    parent.Persistent.Add(ret);
+                                    return ret;
                                 },
                                 duplicateInto: (m, r, e) =>
                                 {
@@ -4521,9 +4584,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 parent: curContext,
                                 getOrAddAsOverride: (m, r) =>
                                 {
-                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
-                                    return copy;
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var ret = parent.Temporary.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    parent.Temporary.Add(ret);
+                                    return ret;
                                 },
                                 duplicateInto: (m, r, e) =>
                                 {
@@ -4548,9 +4614,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 parent: curContext,
                                 getOrAddAsOverride: (m, r) =>
                                 {
-                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
-                                    return copy;
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var ret = parent.Persistent.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    parent.Persistent.Add(ret);
+                                    return ret;
                                 },
                                 duplicateInto: (m, r, e) =>
                                 {
@@ -4570,9 +4639,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 parent: curContext,
                                 getOrAddAsOverride: (m, r) =>
                                 {
-                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
-                                    return copy;
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var ret = parent.Temporary.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    parent.Temporary.Add(ret);
+                                    return ret;
                                 },
                                 duplicateInto: (m, r, e) =>
                                 {
@@ -4597,9 +4669,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 parent: curContext,
                                 getOrAddAsOverride: (m, r) =>
                                 {
-                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(copy);
-                                    return copy;
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var ret = parent.Persistent.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    parent.Persistent.Add(ret);
+                                    return ret;
                                 },
                                 duplicateInto: (m, r, e) =>
                                 {
@@ -4619,9 +4694,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 parent: curContext,
                                 getOrAddAsOverride: (m, r) =>
                                 {
-                                    var copy = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(copy);
-                                    return copy;
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var ret = parent.Temporary.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    parent.Temporary.Add(ret);
+                                    return ret;
                                 },
                                 duplicateInto: (m, r, e) =>
                                 {

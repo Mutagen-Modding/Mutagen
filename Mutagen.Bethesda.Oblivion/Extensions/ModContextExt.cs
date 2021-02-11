@@ -9,6 +9,11 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public static class ModContextExt
     {
+        public static readonly DialogTopic.TranslationMask DialogResponsesCopyMask = new DialogTopic.TranslationMask(true)
+        {
+            Items = false
+        };
+
         public static readonly Cell.TranslationMask CellCopyMask = new Cell.TranslationMask(true)
         {
             Persistent = false,

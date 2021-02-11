@@ -1768,9 +1768,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     parent: curContext,
                     getOrAddAsOverride: (m, r) =>
                     {
-                        var copy = (DialogItem)((IDialogItemGetter)r).DeepCopy();
-                        getOrAddAsOverride(m, linkCache.Resolve<IDialogTopicGetter>(obj.FormKey)).Items.Add(copy);
-                        return copy;
+                        var parent = getOrAddAsOverride(m, linkCache.Resolve<IDialogTopicGetter>(obj.FormKey));
+                        var ret = parent.Items.FirstOrDefault(x => x.FormKey == r.FormKey);
+                        if (ret != null) return ret;
+                        ret = (DialogItem)((IDialogItemGetter)r).DeepCopy();
+                        parent.Items.Add(ret);
+                        return ret;
                     },
                     duplicateInto: (m, r, e) =>
                     {
@@ -1844,9 +1847,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 parent: curContext,
                                 getOrAddAsOverride: (m, r) =>
                                 {
-                                    var copy = (DialogItem)((IDialogItemGetter)r).DeepCopy();
-                                    getOrAddAsOverride(m, linkCache.Resolve<IDialogTopicGetter>(obj.FormKey)).Items.Add(copy);
-                                    return copy;
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<IDialogTopicGetter>(obj.FormKey));
+                                    var ret = parent.Items.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (DialogItem)((IDialogItemGetter)r).DeepCopy();
+                                    parent.Items.Add(ret);
+                                    return ret;
                                 },
                                 duplicateInto: (m, r, e) =>
                                 {
