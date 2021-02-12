@@ -95,7 +95,11 @@ namespace Mutagen.Bethesda.Binary
                     _ => throw new NotImplementedException(),
                 };
                 stream.Position += initialHeader.TotalLength;
-                var contentFrame = stream.ReadSubrecordFrame(subrecordType);
+                if (!stream.TryReadSubrecordFrame(subrecordType, out var contentFrame))
+                {
+                    if (count == 0) return Array.Empty<T>();
+                    throw new ArgumentException($"List with a non zero {initialHeader.RecordType} counter did not follow up with expected type: {subrecordType}");
+                }
                 return new BinaryOverlayListByStartIndex<T>(
                     contentFrame.Content,
                     package,
