@@ -8,4 +8,8 @@
     <local:ModTypeStringConverter x:Key="ModTypeStringConverter" />
     <local:RecordTypeNameConverter x:Key="RecordTypeNameConverter" />
     <local:RecordTypeGameConverter x:Key="RecordTypeGameConverter" />
+    <local:FormKeyEditorIdLookupConverter x:Key="FormKeyEditorIdLookupConverter" />
+    <local:FormKeyLookupConverter x:Key="FormKeyLookupConverter" />
+    <local:CanLookupVisibilityConverter x:Key="CanLookupVisibilityConverter" />
+    <local:CanLookupConverter x:Key="CanLookupConverter" />
 </ResourceDictionary>

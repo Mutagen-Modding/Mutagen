@@ -4,6 +4,7 @@ using Noggog.WPF;
 using ReactiveUI.Fody.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 
 namespace Mutagen.Bethesda.WPF.TestDisplay
@@ -16,6 +17,8 @@ namespace Mutagen.Bethesda.WPF.TestDisplay
         public ILinkCache LinkCache { get; }
 
         public IEnumerable<Type> ScopedTypes { get; }
+
+        public ObservableCollection<FormKey> FormKeys { get; } = new ObservableCollection<FormKey>();
 
         public MainVM()
         {

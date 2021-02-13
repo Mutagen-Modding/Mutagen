@@ -66,6 +66,62 @@
         </Setter>
     </Style>
 
+    <Style x:Key="FormKeyPickerButton" TargetType="Button">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Command" Value="{Binding PickerClickCommand, RelativeSource={RelativeSource AncestorType=local:AbstractFormKeyPicker}}" />
+        <Setter Property="CommandParameter" Value="{Binding}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border Background="{TemplateBinding Background}">
+                        <ContentPresenter VerticalAlignment="Center" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="True" />
+                    <Condition Binding="{Binding IsPressed, RelativeSource={RelativeSource Self}}" Value="False" />
+                </MultiDataTrigger.Conditions>
+                <MultiDataTrigger.Setters>
+                    <Setter Property="Foreground" Value="#79dbd5" />
+                </MultiDataTrigger.Setters>
+            </MultiDataTrigger>
+            <DataTrigger Binding="{Binding IsPressed, RelativeSource={RelativeSource Self}}" Value="True">
+                <Setter Property="Foreground" Value="#2e8c86" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="True">
+                <Setter Property="Background" Value="#0e1716" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="ErrorStateCircle" TargetType="{x:Type icon:PackIconMaterial}">
+        <Setter Property="Width" Value="7" />
+        <Setter Property="Height" Value="7" />
+        <Setter Property="Kind" Value="Circle" />
+        <Setter Property="ToolTip" Value="{Binding Error.Reason, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" />
+        <Setter Property="Visibility" Value="{Binding Processing, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay, Converter={StaticResource VisibilityConverter}, ConverterParameter=False}" />
+        <Setter Property="Foreground" Value="{Binding SuccessBrush, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Error.Failed, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" Value="True">
+                <Setter Property="Foreground" Value="{Binding ErrorBrush, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" />
+            </DataTrigger>
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding Error.Succeeded, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" Value="True" />
+                    <Condition Binding="{Binding Found, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" Value="False" />
+                </MultiDataTrigger.Conditions>
+                <MultiDataTrigger.Setters>
+                    <Setter Property="Foreground" Value="{Binding PassiveBrush, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" />
+                </MultiDataTrigger.Setters>
+            </MultiDataTrigger>
+        </Style.Triggers>
+    </Style>
+
     <Style TargetType="{x:Type local:FormKeyPicker}">
         <Setter Property="Template">
             <Setter.Value>
@@ -78,38 +134,6 @@
                             <SolidColorBrush x:Key="PassiveBrush" Color="#666666" />
                             <local:RecordTypeNameConverter x:Key="RecordTypeNameConverter" />
                             <local:RecordTypeGameConverter x:Key="RecordTypeGameConverter" />
-                            <Style x:Key="PickerButton" TargetType="Button">
-                                <Setter Property="Background" Value="Transparent" />
-                                <Setter Property="BorderThickness" Value="0" />
-                                <Setter Property="Command" Value="{Binding PickerClickCommand, RelativeSource={RelativeSource AncestorType=local:FormKeyPicker}}" />
-                                <Setter Property="CommandParameter" Value="{Binding}" />
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="{x:Type Button}">
-                                            <Border Background="{TemplateBinding Background}">
-                                                <ContentPresenter VerticalAlignment="Center" />
-                                            </Border>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Style.Triggers>
-                                    <MultiDataTrigger>
-                                        <MultiDataTrigger.Conditions>
-                                            <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="True" />
-                                            <Condition Binding="{Binding IsPressed, RelativeSource={RelativeSource Self}}" Value="False" />
-                                        </MultiDataTrigger.Conditions>
-                                        <MultiDataTrigger.Setters>
-                                            <Setter Property="Foreground" Value="#79dbd5" />
-                                        </MultiDataTrigger.Setters>
-                                    </MultiDataTrigger>
-                                    <DataTrigger Binding="{Binding IsPressed, RelativeSource={RelativeSource Self}}" Value="True">
-                                        <Setter Property="Foreground" Value="#2e8c86" />
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="True">
-                                        <Setter Property="Background" Value="#0e1716" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
                         </ResourceDictionary>
                     </ControlTemplate.Resources>
                     <Border
@@ -119,6 +143,7 @@
                         <Grid MinHeight="18">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="5" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="18" />
                             </Grid.ColumnDefinitions>
@@ -129,41 +154,17 @@
                             </Grid.RowDefinitions>
                             <TextBox Grid.Row="0" Grid.Column="0"
                                 x:Name="PART_EditorIDBox"
+                                Margin="-1"
                                 mahapps:TextBoxHelper.Watermark="EditorID"
                                 Text="{Binding EditorID, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}" />
-                            <local:FormKeyBox Grid.Row="0" Grid.Column="1"
-                                Margin="5,0,0,0"
+                            <local:FormKeyBox Grid.Row="0" Grid.Column="2"
                                 FormKey="{Binding FormKey, RelativeSource={RelativeSource TemplatedParent}}" />
-                            <icon:PackIconMaterial Grid.Row="0" Grid.Column="2"
+                            <icon:PackIconMaterial Grid.Row="0" Grid.Column="3"
                                 x:Name="PART_ErrorStateCircle"
-                                Width="7"
-                                Height="7"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
-                                Kind="Circle"
-                                ToolTip="{Binding Error.Reason, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
-                                Visibility="{Binding Processing, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay, Converter={StaticResource VisibilityConverter}, ConverterParameter=False}">
-                                <icon:PackIconMaterial.Style>
-                                    <Style TargetType="icon:PackIconMaterial">
-                                        <Setter Property="Foreground" Value="{Binding SuccessBrush, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" />
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Error.Failed, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" Value="True">
-                                                <Setter Property="Foreground" Value="{Binding ErrorBrush, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" />
-                                            </DataTrigger>
-                                            <MultiDataTrigger>
-                                                <MultiDataTrigger.Conditions>
-                                                    <Condition Binding="{Binding Error.Succeeded, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" Value="True" />
-                                                    <Condition Binding="{Binding Found, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" Value="False" />
-                                                </MultiDataTrigger.Conditions>
-                                                <MultiDataTrigger.Setters>
-                                                    <Setter Property="Foreground" Value="{Binding PassiveBrush, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" />
-                                                </MultiDataTrigger.Setters>
-                                            </MultiDataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </icon:PackIconMaterial.Style>
-                            </icon:PackIconMaterial>
-                            <Viewbox Grid.Row="0" Grid.Column="2"
+                                Style="{StaticResource ErrorStateCircle}" />
+                            <Viewbox Grid.Row="0" Grid.Column="3"
                                 Width="11"
                                 Height="11"
                                 Margin="5,0,0,0"
@@ -183,9 +184,9 @@
                                 </mahapps:ProgressRing>
                             </Viewbox>
 
-                            <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
-                                MaxHeight="{Binding MaxSearchBoxHeight, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
+                            <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"
                                 Height="{Binding SearchBoxHeight, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
+                                MaxHeight="{Binding MaxSearchBoxHeight, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
                                 Margin="0,-1,0,0"
                                 Padding="1"
                                 Background="{DynamicResource TextBoxFocusBackgroundBrush}"
@@ -206,7 +207,7 @@
                                         </ListBox.ItemContainerStyle>
                                         <ListBox.ItemTemplate>
                                             <DataTemplate>
-                                                <Button Style="{StaticResource PickerButton}">
+                                                <Button Style="{StaticResource FormKeyPickerButton}">
                                                     <Grid Margin="6,0,0,0">
                                                         <Grid.ColumnDefinitions>
                                                             <ColumnDefinition Width="*" />
@@ -219,7 +220,7 @@
                                                             Margin="6,0"
                                                             Foreground="#AAAAAA"
                                                             Text="{Binding FormKey}"
-                                                            Visibility="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource VisibilityHiddenConverter}}" />
+                                                            Visibility="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource VisibilityConverter}}" />
                                                     </Grid>
                                                 </Button>
                                             </DataTemplate>
@@ -252,7 +253,325 @@
                                     </ListBox>
                                 </Grid>
                             </Border>
-                            <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                            <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
+                                Margin="0,3,0,0"
+                                Background="#111111"
+                                BorderBrush="#222222"
+                                BorderThickness="0,0,0,1"
+                                Visibility="{Binding InSearchMode, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay, Converter={StaticResource VisibilityConverter}}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Margin="6,2">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Text" Value="Search" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding ViewingAllowedTypes, RelativeSource={RelativeSource TemplatedParent}}" Value="True">
+                                                        <Setter Property="Text" Value="Type Scoping" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                    <Button Grid.Column="1" Command="{Binding ViewAllowedTypesCommand, RelativeSource={RelativeSource TemplatedParent}}">
+                                        <Button.Style>
+                                            <Style BasedOn="{StaticResource Noggog.Styles.Button}" TargetType="Button">
+                                                <Setter Property="Content">
+                                                    <Setter.Value>
+                                                        <icon:PackIconFontAwesome
+                                                            Height="12"
+                                                            Margin="0,0,4,0"
+                                                            Kind="QuestionSolid"
+                                                            ToolTip="See type scoping" />
+                                                    </Setter.Value>
+                                                </Setter>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding ViewingAllowedTypes, RelativeSource={RelativeSource TemplatedParent}}" Value="True">
+                                                        <Setter Property="Content">
+                                                            <Setter.Value>
+                                                                <icon:PackIconFontAwesome
+                                                                    Height="12"
+                                                                    Margin="0,0,4,0"
+                                                                    Kind="SearchSolid"
+                                                                    ToolTip="Search records" />
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type local:FormKeyMultiPicker}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:FormKeyMultiPicker}">
+                    <ControlTemplate.Resources>
+                        <ResourceDictionary>
+                            <ResourceDictionary.MergedDictionaries>
+                                <ResourceDictionary Source="pack://application:,,,/Noggog.WPF;component/Everything.xaml" />
+                            </ResourceDictionary.MergedDictionaries>
+                            <SolidColorBrush x:Key="PassiveBrush" Color="#666666" />
+                            <local:RecordTypeNameConverter x:Key="RecordTypeNameConverter" />
+                            <local:RecordTypeGameConverter x:Key="RecordTypeGameConverter" />
+                            <local:FormKeyLookupConverter x:Key="FormKeyLookupConverter" />
+                            <local:CanLookupConverter x:Key="CanLookupConverter" />
+                        </ResourceDictionary>
+                    </ControlTemplate.Resources>
+                    <Border
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
+                        <Grid MinHeight="18">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="5" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="18" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <TextBox Grid.Row="0" Grid.Column="0"
+                                x:Name="PART_EditorIDBox"
+                                Margin="-1"
+                                mahapps:TextBoxHelper.Watermark="EditorID"
+                                Text="{Binding EditorID, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}" />
+                            <local:FormKeyBox Grid.Row="0" Grid.Column="2"
+                                FormKey="{Binding FormKey, RelativeSource={RelativeSource TemplatedParent}}" />
+                            <icon:PackIconMaterial Grid.Row="0" Grid.Column="3"
+                                x:Name="PART_ErrorStateCircle"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Style="{StaticResource ErrorStateCircle}" />
+                            <Viewbox Grid.Row="0" Grid.Column="3"
+                                Width="11"
+                                Height="11"
+                                Margin="5,0,0,0"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                ToolTip="Looking up record"
+                                Visibility="{Binding Processing, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay, Converter={StaticResource VisibilityConverter}}">
+                                <mahapps:ProgressRing Grid.Column="2"
+                                    x:Name="PART_ProgressRing"
+                                    Foreground="{TemplateBinding ProcessingSpinnerForeground}">
+                                    <mahapps:ProgressRing.Effect>
+                                        <DropShadowEffect
+                                            BlurRadius="10"
+                                            ShadowDepth="0"
+                                            Color="{TemplateBinding ProcessingSpinnerGlow}" />
+                                    </mahapps:ProgressRing.Effect>
+                                </mahapps:ProgressRing>
+                            </Viewbox>
+
+                            <ListBox Grid.Row="2"
+                                x:Name="PART_AddedFormKeyListBox"
+                                HorizontalContentAlignment="Stretch"
+                                AllowDrop="True"
+                                ItemsSource="{Binding FormKeys, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
+                                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                <ListBox.ItemContainerStyle>
+                                    <Style BasedOn="{StaticResource Noggog.Styles.ListBoxItem.Plain}" TargetType="ListBoxItem">
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                    </Style>
+                                </ListBox.ItemContainerStyle>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.Style>
+                                                <Style TargetType="Grid">
+                                                    <Setter Property="Background" Value="Transparent" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="True">
+                                                            <Setter Property="Background" Value="#0e1716" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Grid.Style>
+                                            <Border Grid.Column="0"
+                                                Margin="4,0"
+                                                VerticalAlignment="Center"
+                                                Background="Transparent">
+                                                <icon:PackIconMicrons Height="8" Kind="Menu">
+                                                    <icon:PackIconMicrons.Style>
+                                                        <Style TargetType="icon:PackIconMicrons">
+                                                            <Setter Property="Foreground" Value="#555555" />
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=Border}}" Value="True">
+                                                                    <Setter Property="Foreground" Value="White" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </icon:PackIconMicrons.Style>
+                                                </icon:PackIconMicrons>
+                                            </Border>
+                                            <TextBlock Grid.Column="1"
+                                                VerticalAlignment="Center"
+                                                TextTrimming="CharacterEllipsis">
+                                                <TextBlock.Text>
+                                                    <MultiBinding Converter="{StaticResource FormKeyLookupConverter}">
+                                                        <Binding Path="." />
+                                                        <Binding
+                                                            Mode="OneWay"
+                                                            Path="LinkCache"
+                                                            RelativeSource="{RelativeSource AncestorType=local:FormKeyMultiPicker}" />
+                                                        <Binding
+                                                            Mode="OneWay"
+                                                            Path="ScopedTypes"
+                                                            RelativeSource="{RelativeSource AncestorType=local:FormKeyMultiPicker}" />
+                                                    </MultiBinding>
+                                                </TextBlock.Text>
+                                            </TextBlock>
+                                            <TextBlock Grid.Column="2"
+                                                Margin="6,0"
+                                                VerticalAlignment="Center"
+                                                Foreground="#AAAAAA"
+                                                Text="{Binding}">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                        <Style.Triggers>
+                                                            <MultiDataTrigger>
+                                                                <MultiDataTrigger.Conditions>
+                                                                    <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=Grid}}" Value="True" />
+                                                                    <Condition Value="True">
+                                                                        <Condition.Binding>
+                                                                            <MultiBinding Converter="{StaticResource CanLookupConverter}">
+                                                                                <Binding Path="." />
+                                                                                <Binding
+                                                                                    Mode="OneWay"
+                                                                                    Path="LinkCache"
+                                                                                    RelativeSource="{RelativeSource AncestorType=local:FormKeyMultiPicker}" />
+                                                                                <Binding
+                                                                                    Mode="OneWay"
+                                                                                    Path="ScopedTypes"
+                                                                                    RelativeSource="{RelativeSource AncestorType=local:FormKeyMultiPicker}" />
+                                                                            </MultiBinding>
+                                                                        </Condition.Binding>
+                                                                    </Condition>
+                                                                </MultiDataTrigger.Conditions>
+                                                                <MultiDataTrigger.Setters>
+                                                                    <Setter Property="Visibility" Value="Visible" />
+                                                                </MultiDataTrigger.Setters>
+                                                            </MultiDataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                                <ListBox.Style>
+                                    <Style BasedOn="{StaticResource Noggog.Styles.ListBox}" TargetType="ListBox">
+                                        <Setter Property="Grid.Column" Value="2" />
+                                        <Setter Property="Background" Value="{DynamicResource TextBoxFocusBackgroundBrush}" />
+                                        <Setter Property="Margin" Value="0" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding InSearchMode, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" Value="False">
+                                                <Setter Property="Grid.Column" Value="0" />
+                                                <Setter Property="Grid.ColumnSpan" Value="3" />
+                                                <Setter Property="Margin" Value="0,3,0,0" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ListBox.Style>
+                            </ListBox>
+                            <Border Grid.Row="1" Grid.Column="2"
+                                Margin="0,3,0,0"
+                                Background="#111111"
+                                BorderBrush="#222222"
+                                BorderThickness="0,0,0,1"
+                                Visibility="{Binding InSearchMode, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay, Converter={StaticResource VisibilityConverter}}">
+                                <TextBlock Margin="6,2" Text="Added Records" />
+                            </Border>
+
+                            <Border Grid.Row="2" Grid.Column="0"
+                                Margin="0,-1,0,0"
+                                Padding="1"
+                                Background="{DynamicResource TextBoxFocusBackgroundBrush}"
+                                CornerRadius="3"
+                                Visibility="{Binding InSearchMode, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay, Converter={StaticResource VisibilityConverter}}">
+                                <Grid>
+                                    <ListBox
+                                        HorizontalContentAlignment="Stretch"
+                                        Background="{DynamicResource TextBoxFocusBackgroundBrush}"
+                                        ItemsSource="{Binding ApplicableEditorIDs, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
+                                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                        ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                        Visibility="{Binding ViewingAllowedTypes, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource VisibilityConverter}, ConverterParameter=False}">
+                                        <ListBox.ItemContainerStyle>
+                                            <Style BasedOn="{StaticResource Noggog.Styles.ListBoxItem.Plain}" TargetType="ListBoxItem">
+                                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                            </Style>
+                                        </ListBox.ItemContainerStyle>
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <Button Style="{StaticResource FormKeyPickerButton}">
+                                                    <Grid Margin="6,0,0,0">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Grid.Column="0"
+                                                            Text="{Binding EditorID}"
+                                                            TextTrimming="CharacterEllipsis" />
+                                                        <TextBlock Grid.Column="1"
+                                                            Margin="6,0"
+                                                            Foreground="#AAAAAA"
+                                                            Text="{Binding FormKey}"
+                                                            Visibility="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource VisibilityConverter}}" />
+                                                    </Grid>
+                                                </Button>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                    <ListBox
+                                        HorizontalContentAlignment="Stretch"
+                                        Background="{DynamicResource TextBoxFocusBackgroundBrush}"
+                                        ItemsSource="{Binding ScopedTypes, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
+                                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                        ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                        Visibility="{Binding ViewingAllowedTypes, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource VisibilityConverter}}">
+                                        <ListBox.ItemContainerStyle>
+                                            <Style BasedOn="{StaticResource Noggog.Styles.ListBoxItem.Plain}" TargetType="ListBoxItem">
+                                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                            </Style>
+                                        </ListBox.ItemContainerStyle>
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid Margin="6,0,0,0">
+                                                    <TextBlock Margin="0,4">
+                                                        <Run Text="{Binding Mode=OneWay, Converter={StaticResource RecordTypeNameConverter}}" />
+                                                        <Run Text=" (" />
+                                                        <Run Text="{Binding Mode=OneWay, Converter={StaticResource RecordTypeGameConverter}}" />
+                                                        <Run Text=")" />
+                                                    </TextBlock>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                </Grid>
+                            </Border>
+                            <Border Grid.Row="1" Grid.Column="0"
                                 Margin="0,3,0,0"
                                 Background="#111111"
                                 BorderBrush="#222222"
