@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public static class ModContextExt
     {
-        public static readonly DialogResponses.TranslationMask DialogResponsesCopyMask = new DialogResponses.TranslationMask(true)
+        public static readonly DialogTopic.TranslationMask DialogTopicCopyMask = new DialogTopic.TranslationMask(true)
         {
             Responses = false
         };
