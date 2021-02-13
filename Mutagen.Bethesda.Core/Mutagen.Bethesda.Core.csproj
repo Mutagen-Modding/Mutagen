@@ -165,6 +165,7 @@
     <Compile Include="Translations\XML\TranslatedStringXmlTranslation.cs" />
     <Compile Include="Structs\ModContext.cs" />
     <Compile Include="Utility\GameEnvironment.cs" />
+    <Compile Include="Utility\MajorRecordTypePrinter.cs" />
     <Compile Include="Utility\ModInstantiator.cs" />
     <Compile Include="Utility\RecordInfoCache.cs" />
     <Compile Include="Persistance\TextFileFormKeyAllocator.cs" />

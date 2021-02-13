@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda
         /// Returns string representation of link
         /// </summary>
         /// <returns>Returns FormKey string</returns>
-        public override string ToString() => $"<{typeof(TMajorGetter).Name}>{this.FormKey}";
+        public override string ToString() => $"<{MajorRecordTypePrinter<TMajorGetter>.TypeString}>{this.FormKey}";
 
         /// <summary>
         /// Attempts to locate link target in given Link Cache.
@@ -416,14 +416,4 @@ namespace Mutagen.Bethesda
             return new FormLink<TMajor, TMajorGetter>(link.FormKey);
         }
     }
-
-    //,
-    //    IEquatable<FormLink<TMajor>>,
-    //    IEquatable<FormLinkNullable<TMajor>>,
-    //    IEquatable<IFormLink<TMajor>>,
-    //    IEquatable<IFormLinkNullable<TMajor>>,
-    //    IEquatable<FormLink<TMajorGetter>>,
-    //    IEquatable<FormLinkNullable<TMajorGetter>>,
-    //    IEquatable<IFormLink<TMajorGetter>>,
-    //    IEquatable<IFormLinkNullable<TMajorGetter>>
 }
