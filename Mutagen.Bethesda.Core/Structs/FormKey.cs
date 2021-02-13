@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// True if FormKey is considered Null
         /// </summary>
-        public bool IsNull => this.Equals(Null);
+        public bool IsNull => this.ID == 0 || this.ModKey.IsNull;
 
         /// <summary>
         /// Constructor taking a ModKey and ID as separate parameters

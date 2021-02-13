@@ -148,6 +148,32 @@ namespace Mutagen.Bethesda.UnitTests
         }
         #endregion
 
+        #region Null
+        [Fact]
+        public void Null_TypicalNotNull()
+        {
+            Utility.Skyrim.IsNull.Should().BeFalse();
+        }
+
+        [Fact]
+        public void Null_NullIsNull()
+        {
+            FormKey.Null.IsNull.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Null_ExistingModKeyIsNull()
+        {
+            new FormKey(Utility.Skyrim, 0).IsNull.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Null_ExistingIdIsNull()
+        {
+            new FormKey(ModKey.Null, 123456).IsNull.Should().BeTrue();
+        }
+        #endregion
+
         #region Comparers
         #region Alphabetical
         [Fact]
