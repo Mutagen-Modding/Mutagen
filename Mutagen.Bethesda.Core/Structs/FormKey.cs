@@ -161,9 +161,13 @@ namespace Mutagen.Bethesda
         /// <returns>String representation of FormKey</returns>
         public override string ToString()
         {
+            if (ID == 0 && this.ModKey.IsNull)
+            {
+                return "Null";
+            }
             return $"{(ID == 0 ? "Null" : IDString())}:{this.ModKey}";
         }
-
+         
         /// <summary>
         /// Converts to a hex string containing only the ID section: FFFFFF
         /// </summary>
