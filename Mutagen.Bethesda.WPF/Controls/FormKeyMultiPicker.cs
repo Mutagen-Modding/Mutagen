@@ -21,7 +21,7 @@ namespace Mutagen.Bethesda.WPF
             set => SetValue(FormKeysProperty, value);
         }
         public static readonly DependencyProperty FormKeysProperty = DependencyProperty.Register(nameof(FormKeys), typeof(IEnumerable), typeof(FormKeyMultiPicker),
-             new FrameworkPropertyMetadata(default(IEnumerable), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+             new FrameworkPropertyMetadata(default(IEnumerable)));
 
         public FormKeyMultiPicker()
         {
