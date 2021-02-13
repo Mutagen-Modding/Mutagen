@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Nullable>enable</Nullable>
     <LangVersion>preview</LangVersion>
-    <Version>0.25.1.1-dev</Version>
+    <Version>0.25.2.1-dev</Version>
   </PropertyGroup>
 
   <!-- To be redefined by GitInfo after restore. -->
