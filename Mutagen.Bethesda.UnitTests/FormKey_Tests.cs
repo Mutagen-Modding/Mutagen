@@ -102,6 +102,7 @@ namespace Mutagen.Bethesda.UnitTests
             var formKey = FormKeyBinaryTranslation.Instance.Parse(b.AsSpan(), TypicalMasters());
             Assert.Equal(TargetModKey(), formKey.ModKey);
             Assert.Equal((uint)0x123456, formKey.ID);
+            Assert.False(formKey.IsNull);
         }
 
         [Fact]
@@ -130,6 +131,20 @@ namespace Mutagen.Bethesda.UnitTests
             var formKey = FormKeyBinaryTranslation.Instance.Parse(b.AsSpan(), TypicalMasters());
             Assert.Equal(TargetModKey(), formKey.ModKey);
             Assert.Equal((uint)0x123456, formKey.ID);
+            Assert.False(formKey.IsNull);
+        }
+
+        [Fact]
+        public void BinaryTranslation_Zeros()
+        {
+            byte[] b = new byte[]
+            {
+                0,0,0,0
+            };
+            var formKey = FormKeyBinaryTranslation.Instance.Parse(b.AsSpan(), TypicalMasters());
+            Assert.Equal(ModKey.Null, formKey.ModKey);
+            Assert.Equal((uint)0, formKey.ID);
+            Assert.True(formKey.IsNull);
         }
         #endregion
 

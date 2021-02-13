@@ -77,6 +77,12 @@ namespace Mutagen.Bethesda
                     idWithModID);
             }
 
+            var justId = idWithModID & 0xFFFFFF;
+            if (modID == 0 && justId == 0)
+            {
+                return FormKey.Null;
+            }
+
             var master = masterReferences.Masters[modID];
             return new FormKey(
                 master.Master,
