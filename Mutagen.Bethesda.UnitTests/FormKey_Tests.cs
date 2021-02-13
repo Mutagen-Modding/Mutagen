@@ -1,3 +1,4 @@
+using FluentAssertions;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
@@ -51,6 +52,38 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.Equal(
                 FormKey.Null,
                 id);
+            Assert.Equal(
+                ModKey.Null,
+                id.ModKey);
+            Assert.True(id.IsNull);
+        }
+
+        [Fact]
+        public void Import_Null_ID()
+        {
+            Assert.True(
+                FormKey.TryFactory($"{FormKey.NullStr}:{Utility.Skyrim}", out FormKey id));
+            Assert.Equal(
+                Utility.Skyrim.MakeFormKey(0),
+                id);
+            Assert.Equal(
+                Utility.Skyrim,
+                id.ModKey);
+            Assert.True(id.IsNull);
+        }
+
+        [Fact]
+        public void Import_Null_Strs()
+        {
+            Assert.True(
+                FormKey.TryFactory($"{FormKey.NullStr}:{FormKey.NullStr}", out FormKey id));
+            Assert.Equal(
+                FormKey.Null,
+                id);
+            Assert.Equal(
+                ModKey.Null,
+                id.ModKey);
+            Assert.True(id.IsNull);
         }
 
         [Fact]
@@ -70,7 +103,7 @@ namespace Mutagen.Bethesda.UnitTests
         #region BinaryTranslation
         public ModKey TargetModKey() => new ModKey("Master2", ModType.Master);
 
-        public MasterReferenceReader TypicalMasters() => 
+        public MasterReferenceReader TypicalMasters() =>
             new MasterReferenceReader(
                 Utility.PluginModKey,
                 new List<IMasterReferenceGetter>()
