@@ -142,11 +142,12 @@
                                 VerticalAlignment="Center"
                                 ErrorBrush="{TemplateBinding ErrorBrush}"
                                 PassiveBrush="{TemplateBinding PassiveBrush}"
-                                Processing="{Binding Processing, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
+                                Processing="{TemplateBinding Processing}"
                                 ProcessingSpinnerForeground="{TemplateBinding ProcessingSpinnerForeground}"
                                 ProcessingSpinnerGlow="{TemplateBinding ProcessingSpinnerGlow}"
-                                Status="{Binding Error, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
-                                SuccessBrush="{TemplateBinding SuccessBrush}" />
+                                Status="{TemplateBinding Status}"
+                                SuccessBrush="{TemplateBinding SuccessBrush}"
+                                ToolTip="{TemplateBinding StatusString}" />
 
                             <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"
                                 Height="{Binding SearchBoxHeight, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
@@ -322,11 +323,12 @@
                                 VerticalAlignment="Center"
                                 ErrorBrush="{TemplateBinding ErrorBrush}"
                                 PassiveBrush="{TemplateBinding PassiveBrush}"
-                                Processing="{Binding Processing, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
+                                Processing="{TemplateBinding Processing}"
                                 ProcessingSpinnerForeground="{TemplateBinding ProcessingSpinnerForeground}"
                                 ProcessingSpinnerGlow="{TemplateBinding ProcessingSpinnerGlow}"
-                                Status="{Binding Error, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
-                                SuccessBrush="{TemplateBinding SuccessBrush}" />
+                                Status="{TemplateBinding Status}"
+                                SuccessBrush="{TemplateBinding SuccessBrush}"
+                                ToolTip="{TemplateBinding StatusString}" />
 
                             <ListBox Grid.Row="2"
                                 x:Name="PART_AddedFormKeyListBox"

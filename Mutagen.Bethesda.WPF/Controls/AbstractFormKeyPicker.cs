@@ -70,13 +70,23 @@ namespace Mutagen.Bethesda.WPF
         public static readonly DependencyProperty EditorIDProperty = DependencyProperty.Register(nameof(EditorID), typeof(string), typeof(AbstractFormKeyPicker),
              new FrameworkPropertyMetadata(default(string), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
-        public ErrorResponse Error
+        public StatusIndicatorState Status
         {
-            get => (ErrorResponse)GetValue(ErrorProperty);
-            set => SetValue(ErrorProperty, value);
+            get => (StatusIndicatorState)GetValue(StatusProperty);
+            set => SetValue(StatusPropertyKey, value);
         }
-        public static readonly DependencyProperty ErrorProperty = DependencyProperty.Register(nameof(Error), typeof(ErrorResponse), typeof(AbstractFormKeyPicker),
-             new FrameworkPropertyMetadata(ErrorResponse.Succeed("FormKey is null.  No lookup required")));
+        public static readonly DependencyPropertyKey StatusPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Status), typeof(StatusIndicatorState), typeof(AbstractFormKeyPicker),
+             new FrameworkPropertyMetadata(default(StatusIndicatorState)));
+        public static readonly DependencyProperty StatusProperty = StatusPropertyKey.DependencyProperty;
+
+        public string StatusString
+        {
+            get => (string)GetValue(StatusStringProperty);
+            set => SetValue(StatusStringPropertyKey, value);
+        }
+        public static readonly DependencyPropertyKey StatusStringPropertyKey = DependencyProperty.RegisterReadOnly(nameof(StatusString), typeof(string), typeof(AbstractFormKeyPicker),
+             new FrameworkPropertyMetadata(default(string)));
+        public static readonly DependencyProperty StatusStringProperty = StatusStringPropertyKey.DependencyProperty;
 
         public ICommand PickerClickCommand
         {
@@ -170,6 +180,8 @@ namespace Mutagen.Bethesda.WPF
              new FrameworkPropertyMetadata(default(ICommand)));
         #endregion
 
+        record State(StatusIndicatorState Status, string Text, FormKey FormKey, string Edid);
+
         public AbstractFormKeyPicker()
         {
             this.WhenAnyValue(x => x.FormKey)
@@ -195,27 +207,28 @@ namespace Mutagen.Bethesda.WPF
                     {
                         if (x.LinkCache == null)
                         {
-                            return GetResponse<(FormKey, string?)?>.Succeed(default((FormKey, string?)?), "No LinkCache is provided for lookup");
+                            return new State(StatusIndicatorState.Passive, "No LinkCache is provided for lookup", FormKey.Null, string.Empty);
                         }
                         if (x.FormKey.IsNull)
                         {
-                            return GetResponse<(FormKey, string?)?>.Succeed(default((FormKey, string?)?), "FormKey is null.  No lookup required");
+                            return new State(StatusIndicatorState.Passive, "FormKey is null.  No lookup required", FormKey.Null, string.Empty);
                         }
                         var scopedTypes = ScopedTypesInternal(x.Types);
                         if (x.LinkCache.TryResolveIdentifier(x.FormKey, scopedTypes, out var edid))
                         {
-                            return GetResponse<(FormKey, string?)?>.Succeed((x.FormKey, edid), "Located record");
+                            return new State(StatusIndicatorState.Success, "Located record", x.FormKey, edid ?? string.Empty);
                         }
                         else
                         {
-                            return GetResponse<(FormKey, string?)?>.Fail(default((FormKey, string?)?), "Could not resolve record");
+                            return new State(StatusIndicatorState.Failure, "Could not resolve record", FormKey.Null, string.Empty);
                         }
                     }
                     catch (Exception ex)
                     {
-                        return GetResponse<(FormKey, string?)?>.Fail(ex);
+                        return new State(StatusIndicatorState.Failure, ex.ToString(), FormKey.Null, string.Empty);
                     }
                 })
+                .StartWith(new State(StatusIndicatorState.Passive, "FormKey is null.  No lookup required", FormKey.Null, string.Empty))
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Subscribe(rec =>
                 {
@@ -223,45 +236,44 @@ namespace Mutagen.Bethesda.WPF
                     {
                         Processing = false;
                     }
-                    if (rec.Failed
-                        || rec.Value == null)
+
+                    if (StatusString != rec.Text)
                     {
-                        if (Found)
+                        StatusString = rec.Text;
+                    }
+
+                    if (Status != rec.Status)
+                    {
+                        Status = rec.Status;
+                    }
+
+                    if (rec.Status == StatusIndicatorState.Success)
+                    {
+                        if (EditorID != rec.Edid)
                         {
-                            Found = false;
+                            _updating = true;
+                            EditorID = rec.Edid;
+                            _updating = false;
                         }
-                        if (rec.Failed)
+
+                        if (!Found)
                         {
-                            Error = rec;
+                            Found = true;
                         }
-                        else if (!Error.Succeeded)
-                        {
-                            Error = rec;
-                        }
+                    }
+                    else
+                    {
                         if (EditorID != string.Empty)
                         {
                             _updating = true;
                             EditorID = string.Empty;
                             _updating = false;
                         }
-                    }
-                    else
-                    {
-                        if (!Found)
+
+                        if (Found)
                         {
-                            Found = true;
+                            Found = false;
                         }
-                        if (Error.Failed)
-                        {
-                            Error = rec;
-                        }
-                        var targetEdid = rec.Value.Value.Item2 ?? string.Empty;
-                        if (EditorID != targetEdid)
-                        {
-                            _updating = true;
-                            EditorID = targetEdid;
-                        }
-                        _updating = false;
                     }
                 })
                 .DisposeWith(_unloadDisposable);
@@ -289,76 +301,75 @@ namespace Mutagen.Bethesda.WPF
                     {
                         if (x.LinkCache == null)
                         {
-                            return GetResponse<(FormKey, string?)?>.Succeed(default((FormKey, string?)?), "No LinkCache is provided for lookup");
+                            return new State(StatusIndicatorState.Passive, "No LinkCache is provided for lookup", FormKey.Null, string.Empty);
                         }
                         if (string.IsNullOrWhiteSpace(x.EditorID))
                         {
-                            return GetResponse<(FormKey, string?)?>.Succeed(default((FormKey, string?)?), "EditorID is empty.  No lookup required");
+                            return new State(StatusIndicatorState.Passive, "EditorID is empty.  No lookup required", FormKey.Null, string.Empty);
                         }
                         var scopedTypes = ScopedTypesInternal(x.Types);
-                        if (x.Item2.TryResolveIdentifier(x.EditorID, scopedTypes, out var formKey))
+                        if (x.LinkCache.TryResolveIdentifier(x.EditorID, scopedTypes, out var formKey))
                         {
-                            return GetResponse<(FormKey, string?)?>.Succeed((formKey, x.EditorID), "Located record");
+                            return new State(StatusIndicatorState.Success, "Located record", formKey, x.EditorID ?? string.Empty);
                         }
                         else
                         {
-                            return GetResponse<(FormKey, string?)?>.Fail(default((FormKey, string?)?), "Could not resolve record");
+                            return new State(StatusIndicatorState.Failure, "Could not resolve record", FormKey.Null, string.Empty);
                         }
                     }
                     catch (Exception ex)
                     {
-                        return GetResponse<(FormKey, string?)?>.Fail(ex);
+                        return new State(StatusIndicatorState.Failure, ex.ToString(), FormKey.Null, string.Empty);
                     }
                 })
-            .ObserveOn(RxApp.MainThreadScheduler)
-            .Subscribe(rec =>
-            {
-                if (Processing)
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Subscribe(rec =>
                 {
-                    Processing = false;
-                }
-                if (rec.Failed
-                    || rec.Value == null)
-                {
-                    if (Found)
+                    if (Processing)
                     {
-                        Found = false;
+                        Processing = false;
                     }
-                    if (rec.Failed)
+
+                    if (StatusString != rec.Text)
                     {
-                        Error = rec;
+                        StatusString = rec.Text;
                     }
-                    else if (!Error.Succeeded)
+
+                    if (Status != rec.Status)
                     {
-                        Error = rec;
+                        Status = rec.Status;
                     }
-                    if (!FormKey.IsNull)
+
+                    if (rec.Status == StatusIndicatorState.Success)
                     {
-                        _updating = true;
-                        FormKey = FormKey.Null;
-                        _updating = false;
+                        if (FormKey != rec.FormKey)
+                        {
+                            _updating = true;
+                            FormKey = rec.FormKey;
+                            _updating = false;
+                        }
+
+                        if (!Found)
+                        {
+                            Found = true;
+                        }
                     }
-                }
-                else
-                {
-                    if (!Found)
+                    else
                     {
-                        Found = true;
+                        if (!FormKey.IsNull)
+                        {
+                            _updating = true;
+                            FormKey = FormKey.Null;
+                            _updating = false;
+                        }
+
+                        if (Found)
+                        {
+                            Found = false;
+                        }
                     }
-                    if (Error.Failed)
-                    {
-                        Error = rec;
-                    }
-                    var targetEdid = rec.Value.Value.Item2 ?? string.Empty;
-                    if (FormKey != rec.Value.Value.Item1)
-                    {
-                        _updating = true;
-                        FormKey = rec.Value.Value.Item1;
-                    }
-                    _updating = false;
-                }
-            })
-            .DisposeWith(_unloadDisposable);
+                })
+                .DisposeWith(_unloadDisposable);
 
             ApplicableEditorIDs = Observable.CombineLatest(
                     this.WhenAnyValue(x => x.LinkCache),
