@@ -35,7 +35,7 @@ namespace Mutagen.Bethesda.WPF
                 return Binding.DoNothing;
             }
             if (parameter is string failMessage) return failMessage;
-            return "Not Found";
+            return formKey.ToString();
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
