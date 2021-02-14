@@ -140,8 +140,13 @@
                                 Margin="0,0,5,0"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Center"
+                                ErrorBrush="{TemplateBinding ErrorBrush}"
+                                PassiveBrush="{TemplateBinding PassiveBrush}"
                                 Processing="{Binding Processing, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
-                                Status="{Binding Error, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" />
+                                ProcessingSpinnerForeground="{TemplateBinding ProcessingSpinnerForeground}"
+                                ProcessingSpinnerGlow="{TemplateBinding ProcessingSpinnerGlow}"
+                                Status="{Binding Error, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
+                                SuccessBrush="{TemplateBinding SuccessBrush}" />
 
                             <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"
                                 Height="{Binding SearchBoxHeight, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
@@ -315,18 +320,26 @@
                                 Margin="0,0,5,0"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Center"
+                                ErrorBrush="{TemplateBinding ErrorBrush}"
+                                PassiveBrush="{TemplateBinding PassiveBrush}"
                                 Processing="{Binding Processing, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
-                                Status="{Binding Error, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" />
+                                ProcessingSpinnerForeground="{TemplateBinding ProcessingSpinnerForeground}"
+                                ProcessingSpinnerGlow="{TemplateBinding ProcessingSpinnerGlow}"
+                                Status="{Binding Error, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
+                                SuccessBrush="{TemplateBinding SuccessBrush}" />
 
                             <ListBox Grid.Row="2"
                                 x:Name="PART_AddedFormKeyListBox"
                                 HorizontalContentAlignment="Stretch"
                                 AllowDrop="True"
+                                AlternationCount="{Binding ItemsSource.Count, RelativeSource={RelativeSource Self}}"
                                 ItemsSource="{Binding FormKeys, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                SelectionMode="Extended">
                                 <ListBox.ItemContainerStyle>
                                     <Style BasedOn="{StaticResource Noggog.Styles.ListBoxItem.Plain}" TargetType="ListBoxItem">
+                                        <Setter Property="IsSelected" Value="{Binding IsSelected}" />
                                         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                                     </Style>
                                 </ListBox.ItemContainerStyle>
@@ -355,22 +368,64 @@
                                                 <icon:PackIconMicrons Height="8" Kind="Menu">
                                                     <icon:PackIconMicrons.Style>
                                                         <Style TargetType="icon:PackIconMicrons">
-                                                            <Setter Property="Foreground" Value="#555555" />
+                                                            <Setter Property="Foreground" Value="{StaticResource MahApps.Brushes.Gray8}" />
                                                             <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=Border}}" Value="True">
-                                                                    <Setter Property="Foreground" Value="White" />
+                                                                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" Value="True">
+                                                                    <Setter Property="Foreground" Value="{Binding SelectedForegroundBrush, RelativeSource={RelativeSource AncestorType=local:FormKeyMultiPicker}}" />
                                                                 </DataTrigger>
+                                                                <MultiDataTrigger>
+                                                                    <MultiDataTrigger.Conditions>
+                                                                        <Condition Binding="{Binding IsMouseOver, ElementName=NumberGrid}" Value="True" />
+                                                                        <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" Value="False" />
+                                                                    </MultiDataTrigger.Conditions>
+                                                                    <MultiDataTrigger.Setters>
+                                                                        <Setter Property="Foreground" Value="{StaticResource MahApps.Brushes.Gray4}" />
+                                                                    </MultiDataTrigger.Setters>
+                                                                </MultiDataTrigger>
                                                             </Style.Triggers>
                                                         </Style>
                                                     </icon:PackIconMicrons.Style>
                                                 </icon:PackIconMicrons>
                                             </Border>
+                                            <!--<Grid Grid.Column="0"
+                                                x:Name="NumberGrid"
+                                                Margin="4,0"
+                                                HorizontalAlignment="Right"
+                                                Background="Transparent">
+                                                <TextBlock
+                                                    Margin="0,0,4,0"
+                                                    VerticalAlignment="Center"
+                                                    Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplatedParent.(ItemsControl.AlternationIndex)}"
+                                                    ToolTip="Index of item on the list">
+                                                    <TextBlock.Style>
+                                                        <Style TargetType="TextBlock">
+                                                            <Setter Property="Foreground" Value="{StaticResource MahApps.Brushes.Gray8}" />
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" Value="True">
+                                                                    <Setter Property="Foreground" Value="{DynamicResource PaleYellowBrush}" />
+                                                                </DataTrigger>
+                                            -->
+                                            <!--<MultiDataTrigger>
+                                                                    <MultiDataTrigger.Conditions>
+                                                                        <Condition Binding="{Binding IsMouseOver, ElementName=NumberGrid}" Value="True" />
+                                                                        <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" Value="False" />
+                                                                    </MultiDataTrigger.Conditions>
+                                                                    <MultiDataTrigger.Setters>
+                                                                        <Setter Property="Foreground" Value="{StaticResource MahApps.Brushes.Gray4}" />
+                                                                    </MultiDataTrigger.Setters>
+                                                                </MultiDataTrigger-->
+                                            <!--
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBlock.Style>
+                                                </TextBlock>
+                                            </Grid>-->
                                             <TextBlock Grid.Column="1"
                                                 VerticalAlignment="Center"
                                                 TextTrimming="CharacterEllipsis">
                                                 <TextBlock.Text>
                                                     <MultiBinding Converter="{StaticResource FormKeyLookupConverter}">
-                                                        <Binding Path="." />
+                                                        <Binding Path="FormKey" />
                                                         <Binding
                                                             Mode="OneWay"
                                                             Path="LinkCache"
@@ -386,7 +441,7 @@
                                                 Margin="6,0"
                                                 VerticalAlignment="Center"
                                                 Foreground="#AAAAAA"
-                                                Text="{Binding}">
+                                                Text="{Binding FormKey}">
                                                 <TextBlock.Style>
                                                     <Style TargetType="TextBlock">
                                                         <Setter Property="Visibility" Value="Collapsed" />
@@ -397,7 +452,7 @@
                                                                     <Condition Value="True">
                                                                         <Condition.Binding>
                                                                             <MultiBinding Converter="{StaticResource CanLookupConverter}">
-                                                                                <Binding Path="." />
+                                                                                <Binding Path="FormKey" />
                                                                                 <Binding
                                                                                     Mode="OneWay"
                                                                                     Path="LinkCache"
