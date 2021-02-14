@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.WPF.TestDisplay
 
         public MainVM()
         {
-            var env = GameEnvironment.Typical.Skyrim(SkyrimRelease.SkyrimSE)
+            var env = GameEnvironment.Typical.Skyrim(SkyrimRelease.SkyrimSE, LinkCachePreferences.OnlyIdentifiers())
                 .DisposeWith(this);
             LinkCache = env.LinkCache;
             ScopedTypes = typeof(IArmorGetter).AsEnumerable();

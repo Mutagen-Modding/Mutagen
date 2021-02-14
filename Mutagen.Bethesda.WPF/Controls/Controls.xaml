@@ -99,29 +99,6 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="ErrorStateCircle" TargetType="{x:Type icon:PackIconMaterial}">
-        <Setter Property="Width" Value="7" />
-        <Setter Property="Height" Value="7" />
-        <Setter Property="Kind" Value="Circle" />
-        <Setter Property="ToolTip" Value="{Binding Error.Reason, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" />
-        <Setter Property="Visibility" Value="{Binding Processing, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay, Converter={StaticResource VisibilityConverter}, ConverterParameter=False}" />
-        <Setter Property="Foreground" Value="{Binding SuccessBrush, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" />
-        <Style.Triggers>
-            <DataTrigger Binding="{Binding Error.Failed, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" Value="True">
-                <Setter Property="Foreground" Value="{Binding ErrorBrush, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" />
-            </DataTrigger>
-            <MultiDataTrigger>
-                <MultiDataTrigger.Conditions>
-                    <Condition Binding="{Binding Error.Succeeded, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" Value="True" />
-                    <Condition Binding="{Binding Found, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" Value="False" />
-                </MultiDataTrigger.Conditions>
-                <MultiDataTrigger.Setters>
-                    <Setter Property="Foreground" Value="{Binding PassiveBrush, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" />
-                </MultiDataTrigger.Setters>
-            </MultiDataTrigger>
-        </Style.Triggers>
-    </Style>
-
     <Style TargetType="{x:Type local:FormKeyPicker}">
         <Setter Property="Template">
             <Setter.Value>
@@ -145,7 +122,6 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="5" />
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="18" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
@@ -159,30 +135,13 @@
                                 Text="{Binding EditorID, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}" />
                             <local:FormKeyBox Grid.Row="0" Grid.Column="2"
                                 FormKey="{Binding FormKey, RelativeSource={RelativeSource TemplatedParent}}" />
-                            <icon:PackIconMaterial Grid.Row="0" Grid.Column="3"
+                            <noggog:StatusIndicator Grid.Row="0" Grid.Column="2"
                                 x:Name="PART_ErrorStateCircle"
-                                HorizontalAlignment="Center"
+                                Margin="0,0,5,0"
+                                HorizontalAlignment="Right"
                                 VerticalAlignment="Center"
-                                Style="{StaticResource ErrorStateCircle}" />
-                            <Viewbox Grid.Row="0" Grid.Column="3"
-                                Width="11"
-                                Height="11"
-                                Margin="5,0,0,0"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                ToolTip="Looking up record"
-                                Visibility="{Binding Processing, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay, Converter={StaticResource VisibilityConverter}}">
-                                <mahapps:ProgressRing Grid.Column="2"
-                                    x:Name="PART_ProgressRing"
-                                    Foreground="{TemplateBinding ProcessingSpinnerForeground}">
-                                    <mahapps:ProgressRing.Effect>
-                                        <DropShadowEffect
-                                            BlurRadius="10"
-                                            ShadowDepth="0"
-                                            Color="{TemplateBinding ProcessingSpinnerGlow}" />
-                                    </mahapps:ProgressRing.Effect>
-                                </mahapps:ProgressRing>
-                            </Viewbox>
+                                Processing="{Binding Processing, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
+                                Status="{Binding Error, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" />
 
                             <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"
                                 Height="{Binding SearchBoxHeight, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
@@ -338,7 +297,6 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="5" />
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="18" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
@@ -352,30 +310,13 @@
                                 Text="{Binding EditorID, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}" />
                             <local:FormKeyBox Grid.Row="0" Grid.Column="2"
                                 FormKey="{Binding FormKey, RelativeSource={RelativeSource TemplatedParent}}" />
-                            <icon:PackIconMaterial Grid.Row="0" Grid.Column="3"
+                            <noggog:StatusIndicator Grid.Row="0" Grid.Column="2"
                                 x:Name="PART_ErrorStateCircle"
-                                HorizontalAlignment="Center"
+                                Margin="0,0,5,0"
+                                HorizontalAlignment="Right"
                                 VerticalAlignment="Center"
-                                Style="{StaticResource ErrorStateCircle}" />
-                            <Viewbox Grid.Row="0" Grid.Column="3"
-                                Width="11"
-                                Height="11"
-                                Margin="5,0,0,0"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                ToolTip="Looking up record"
-                                Visibility="{Binding Processing, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay, Converter={StaticResource VisibilityConverter}}">
-                                <mahapps:ProgressRing Grid.Column="2"
-                                    x:Name="PART_ProgressRing"
-                                    Foreground="{TemplateBinding ProcessingSpinnerForeground}">
-                                    <mahapps:ProgressRing.Effect>
-                                        <DropShadowEffect
-                                            BlurRadius="10"
-                                            ShadowDepth="0"
-                                            Color="{TemplateBinding ProcessingSpinnerGlow}" />
-                                    </mahapps:ProgressRing.Effect>
-                                </mahapps:ProgressRing>
-                            </Viewbox>
+                                Processing="{Binding Processing, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
+                                Status="{Binding Error, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" />
 
                             <ListBox Grid.Row="2"
                                 x:Name="PART_AddedFormKeyListBox"
