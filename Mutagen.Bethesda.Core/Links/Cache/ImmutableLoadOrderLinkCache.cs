@@ -531,7 +531,10 @@ namespace Mutagen.Bethesda
 
             void AddRecords(IModGetter mod, Type type)
             {
-                foreach (var record in mod.EnumerateMajorRecords(type))
+                foreach (var record in mod.EnumerateMajorRecords(type)
+                    // ToDo
+                    // Capture and expose errors optionally via TryResolve /w out param
+                    .Catch((Exception ex) => { }))
                 {
                     var key = _keyGetter(record);
                     if (key.Failed) continue;
@@ -652,7 +655,10 @@ namespace Mutagen.Bethesda
 
                         void AddRecords(IModGetter mod, Type type)
                         {
-                            foreach (var item in mod.EnumerateMajorRecords(type))
+                            foreach (var item in mod.EnumerateMajorRecords(type)
+                                // ToDo
+                                // Capture and expose errors optionally via TryResolve /w out param
+                                .Catch((Exception ex) => { }))
                             {
                                 var iterKey = _keyGetter(item);
                                 if (iterKey.Failed) continue;

@@ -52,7 +52,10 @@ namespace Mutagen.Bethesda
             }
             // ToDo
             // Upgrade to call EnumerateGroups(), which will perform much better
-            foreach (var item in this._sourceMod.EnumerateMajorRecords())
+            foreach (var item in this._sourceMod.EnumerateMajorRecords()
+                // ToDo
+                // Capture and expose errors optionally via TryResolve /w out param
+                .Catch((Exception ex) => { }))
             {
                 if (item.FormKey == formKey)
                 {
@@ -75,7 +78,10 @@ namespace Mutagen.Bethesda
             }
             // ToDo
             // Upgrade to call EnumerateGroups(), which will perform much better
-            foreach (var item in this._sourceMod.EnumerateMajorRecords())
+            foreach (var item in this._sourceMod.EnumerateMajorRecords()
+                // ToDo
+                // Capture and expose errors optionally via TryResolve /w out param
+                .Catch((Exception ex) => { }))
             {
                 if (editorId.Equals(item.EditorID))
                 {
@@ -98,7 +104,10 @@ namespace Mutagen.Bethesda
             }
             // ToDo
             // Upgrade to EnumerateGroups<TMajor>()
-            foreach (var major in this._sourceMod.EnumerateMajorRecords<TMajor>())
+            foreach (var major in this._sourceMod.EnumerateMajorRecords<TMajor>()
+                // ToDo
+                // Capture and expose errors optionally via TryResolve /w out param
+                .Catch((Exception ex) => { }))
             {
                 if (major.FormKey == formKey)
                 {
@@ -122,7 +131,10 @@ namespace Mutagen.Bethesda
             }
             // ToDo
             // Upgrade to EnumerateGroups<TMajor>()
-            foreach (var major in this._sourceMod.EnumerateMajorRecords<TMajor>())
+            foreach (var major in this._sourceMod.EnumerateMajorRecords<TMajor>()
+                // ToDo
+                // Capture and expose errors optionally via TryResolve /w out param
+                .Catch((Exception ex) => { }))
             {
                 if (editorId.Equals(major.EditorID))
                 {
@@ -145,7 +157,10 @@ namespace Mutagen.Bethesda
             }
             // ToDo
             // Upgrade to EnumerateGroups<TMajor>()
-            foreach (var major in this._sourceMod.EnumerateMajorRecords(type))
+            foreach (var major in this._sourceMod.EnumerateMajorRecords(type)
+                // ToDo
+                // Capture and expose errors optionally via TryResolve /w out param
+                .Catch((Exception ex) => { }))
             {
                 if (major.FormKey == formKey)
                 {
@@ -168,7 +183,10 @@ namespace Mutagen.Bethesda
             }
             // ToDo
             // Upgrade to EnumerateGroups<TMajor>()
-            foreach (var major in this._sourceMod.EnumerateMajorRecords(type))
+            foreach (var major in this._sourceMod.EnumerateMajorRecords(type)
+                // ToDo
+                // Capture and expose errors optionally via TryResolve /w out param
+                .Catch((Exception ex) => { }))
             {
                 if (editorId.Equals(major.EditorID))
                 {
@@ -236,7 +254,10 @@ namespace Mutagen.Bethesda
             }
             // ToDo
             // Upgrade to call EnumerateGroups(), which will perform much better
-            foreach (var item in this._sourceMod.EnumerateMajorRecordContexts<IMajorRecordCommon, IMajorRecordCommonGetter>(this))
+            foreach (var item in this._sourceMod.EnumerateMajorRecordContexts<IMajorRecordCommon, IMajorRecordCommonGetter>(this)
+                // ToDo
+                // Capture and expose errors optionally via TryResolve /w out param
+                .Catch((Exception ex) => { }))
             {
                 if (item.Record.FormKey == formKey)
                 {
@@ -259,7 +280,10 @@ namespace Mutagen.Bethesda
             }
             // ToDo
             // Upgrade to call EnumerateGroups(), which will perform much better
-            foreach (var item in this._sourceMod.EnumerateMajorRecordContexts<IMajorRecordCommon, IMajorRecordCommonGetter>(this))
+            foreach (var item in this._sourceMod.EnumerateMajorRecordContexts<IMajorRecordCommon, IMajorRecordCommonGetter>(this)
+                // ToDo
+                // Capture and expose errors optionally via TryResolve /w out param
+                .Catch((Exception ex) => { }))
             {
                 if (editorId.Equals(item.Record.EditorID))
                 {
@@ -283,7 +307,10 @@ namespace Mutagen.Bethesda
             }
             // ToDo
             // Upgrade to EnumerateGroups<TMajor>()
-            foreach (var major in this._sourceMod.EnumerateMajorRecordContexts<TMajor, TMajorGetter>(this))
+            foreach (var major in this._sourceMod.EnumerateMajorRecordContexts<TMajor, TMajorGetter>(this)
+                // ToDo
+                // Capture and expose errors optionally via TryResolve /w out param
+                .Catch((Exception ex) => { }))
             {
                 if (major.Record.FormKey == formKey)
                 {
@@ -308,7 +335,10 @@ namespace Mutagen.Bethesda
             }
             // ToDo
             // Upgrade to EnumerateGroups<TMajor>()
-            foreach (var major in this._sourceMod.EnumerateMajorRecordContexts<TMajor, TMajorGetter>(this))
+            foreach (var major in this._sourceMod.EnumerateMajorRecordContexts<TMajor, TMajorGetter>(this)
+                // ToDo
+                // Capture and expose errors optionally via TryResolve /w out param
+                .Catch((Exception ex) => { }))
             {
                 if (editorId.Equals(major.Record.EditorID))
                 {
@@ -331,7 +361,10 @@ namespace Mutagen.Bethesda
             }
             // ToDo
             // Upgrade to EnumerateGroups<TMajor>()
-            foreach (var major in this._sourceMod.EnumerateMajorRecordContexts(this, type))
+            foreach (var major in this._sourceMod.EnumerateMajorRecordContexts(this, type)
+                // ToDo
+                // Capture and expose errors optionally via TryResolve /w out param
+                .Catch((Exception ex) => { }))
             {
                 if (major.Record.FormKey == formKey)
                 {
@@ -354,7 +387,10 @@ namespace Mutagen.Bethesda
             }
             // ToDo
             // Upgrade to EnumerateGroups<TMajor>()
-            foreach (var major in this._sourceMod.EnumerateMajorRecordContexts(this, type))
+            foreach (var major in this._sourceMod.EnumerateMajorRecordContexts(this, type)
+                // ToDo
+                // Capture and expose errors optionally via TryResolve /w out param
+                .Catch((Exception ex) => { }))
             {
                 if (editorId.Equals(major.Record.EditorID))
                 {

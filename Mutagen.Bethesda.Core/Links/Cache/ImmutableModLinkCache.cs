@@ -494,7 +494,10 @@ namespace Mutagen.Bethesda
         protected IReadOnlyCache<LinkCacheItem, K> ConstructUntypedCache()
         {
             var majorRecords = new Cache<LinkCacheItem, K>(x => _keyGetter(x).Value);
-            foreach (var majorRec in _parent._sourceMod.EnumerateMajorRecords())
+            foreach (var majorRec in _parent._sourceMod.EnumerateMajorRecords()
+                // ToDo
+                // Capture and expose errors optionally via TryResolve /w out param
+                .Catch((Exception ex) => { }))
             {
                 var item = LinkCacheItem.Factory(majorRec, _parent._simple);
                 var key = _keyGetter(item);
@@ -509,7 +512,10 @@ namespace Mutagen.Bethesda
             IModGetter sourceMod)
         {
             var cache = new Cache<LinkCacheItem, K>(x => _keyGetter(x).Value);
-            foreach (var majorRec in sourceMod.EnumerateMajorRecords(type))
+            foreach (var majorRec in sourceMod.EnumerateMajorRecords(type)
+                // ToDo
+                // Capture and expose errors optionally via TryResolve /w out param
+                .Catch((Exception ex) => { }))
             {
                 var item = LinkCacheItem.Factory(majorRec, _parent._simple);
                 var key = _keyGetter(item);
