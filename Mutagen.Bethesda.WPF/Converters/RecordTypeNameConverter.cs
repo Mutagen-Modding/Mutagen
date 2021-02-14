@@ -14,8 +14,11 @@ namespace Mutagen.Bethesda.WPF
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is not Type type) return Binding.DoNothing;
-            var regis = LoquiRegistration.GetRegister(type);
-            return regis.ClassType.Name;
+            if (LoquiRegistration.TryGetRegister(type, out var register))
+            {
+                return register.ClassType.Name;
+            }
+            return type.Name;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
