@@ -56,7 +56,10 @@ namespace Mutagen.Bethesda
             LinkCache.Dispose();
         }
 
-        public static GameEnvironmentState<TModSetter, TModGetter> Construct(GameRelease release, string gameFolderPath)
+        public static GameEnvironmentState<TModSetter, TModGetter> Construct(
+            GameRelease release,
+            string gameFolderPath,
+            LinkCachePreferences? linkCachePrefs = null)
         {
             var dataPath = Path.Combine(gameFolderPath, "Data");
 
@@ -68,7 +71,7 @@ namespace Mutagen.Bethesda
             return new GameEnvironmentState<TModSetter, TModGetter>(
                 gameFolderPath: gameFolderPath,
                 loadOrder: loadOrder,
-                linkCache: loadOrder.ToImmutableLinkCache<TModSetter, TModGetter>(),
+                linkCache: loadOrder.ToImmutableLinkCache<TModSetter, TModGetter>(linkCachePrefs),
                 dispose: true);
         }
     }

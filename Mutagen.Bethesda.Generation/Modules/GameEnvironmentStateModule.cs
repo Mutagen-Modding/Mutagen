@@ -57,10 +57,11 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 args.Add(modObj.GetObjectData().HasMultipleReleases ? $"{modObj.GetObjectData().GameCategory}Release gameRelease" : string.Empty);
                             }
+                            args.Add($"{nameof(LinkCachePreferences)}? linkCachePrefs = null");
                         }
                         using (new BraceWrapper(fg))
                         {
-                            fg.AppendLine($"return env.Construct<I{modObj.Name}, I{modObj.Name}Getter>({(modObj.GetObjectData().HasMultipleReleases ? "gameRelease.ToGameRelease()" : $"GameRelease.{modObj.ProtoGen.Protocol.Namespace}")});");
+                            fg.AppendLine($"return env.Construct<I{modObj.Name}, I{modObj.Name}Getter>({(modObj.GetObjectData().HasMultipleReleases ? "gameRelease.ToGameRelease()" : $"GameRelease.{modObj.ProtoGen.Protocol.Namespace}")}, linkCachePrefs);");
                         }
                         fg.AppendLine();
                     }

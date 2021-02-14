@@ -8,7 +8,10 @@ namespace Mutagen.Bethesda
 {
     public static class GameEnvironmentMixIn
     {
-        public static GameEnvironmentState<TModSetter, TModGetter> Construct<TModSetter, TModGetter>(this GameEnvironment env, GameRelease release)
+        public static GameEnvironmentState<TModSetter, TModGetter> Construct<TModSetter, TModGetter>(
+            this GameEnvironment env, 
+            GameRelease release,
+            LinkCachePreferences? linkCachePrefs = null)
             where TModSetter : class, IContextMod<TModSetter, TModGetter>, TModGetter
             where TModGetter : class, IContextGetterMod<TModSetter, TModGetter>
         {
@@ -17,7 +20,7 @@ namespace Mutagen.Bethesda
                 throw new ArgumentException($"Could not find game folder automatically.");
             }
 
-            return GameEnvironmentState<TModSetter, TModGetter>.Construct(release, gameFolderPath);
+            return GameEnvironmentState<TModSetter, TModGetter>.Construct(release, gameFolderPath, linkCachePrefs);
         }
     }
 }
