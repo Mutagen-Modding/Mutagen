@@ -393,15 +393,19 @@ namespace Mutagen.Bethesda.WPF
                     });
                 })
                 .FilterSwitch(this.WhenAnyValue(x => x.InSearchMode), Observable.Empty<IMajorRecordIdentifier>())
+                .ObserveOn(RxApp.TaskpoolScheduler)
                 .Select(x => x.ToObservableChangeSet())
                 .Switch()
+                .ObserveOnGui()
                 .Filter(this.WhenAnyValue(x => x.EditorID)
-                    .Debounce(TimeSpan.FromMilliseconds(300), RxApp.MainThreadScheduler)
+                    .Throttle(TimeSpan.FromMilliseconds(300), RxApp.MainThreadScheduler)
+                    .ObserveOn(RxApp.TaskpoolScheduler)
                     .Select<string, Func<IMajorRecordIdentifier, bool>>(term => (ident) =>
                     {
                         var edid = ident.EditorID;
                         return edid.IsNullOrWhitespace() || term.IsNullOrWhitespace() ? true : edid.ContainsInsensitive(term);
                     }))
+                .ObserveOnGui()
                 .ToObservableCollection(this._unloadDisposable);
 
             this.WhenAnyValue(x => x.AllowsSearchMode)
@@ -411,6 +415,7 @@ namespace Mutagen.Bethesda.WPF
 
             this.WhenAnyValue(x => x.InSearchMode)
                 .Where(x => !x)
+                .ObserveOnGui()
                 .Subscribe(_ => ViewingAllowedTypes = false)
                 .DisposeWith(_unloadDisposable);
 
