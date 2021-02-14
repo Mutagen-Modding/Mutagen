@@ -128,7 +128,7 @@ namespace Mutagen.Bethesda.WPF
             set => SetValue(ErrorBrushProperty, value);
         }
         public static readonly DependencyProperty ErrorBrushProperty = DependencyProperty.Register(nameof(ErrorBrush), typeof(Brush), typeof(AbstractFormKeyPicker),
-             new FrameworkPropertyMetadata(Application.Current.Resources[Noggog.WPF.Brushes.Constants.Error]));
+             new FrameworkPropertyMetadata(Application.Current.Resources[Noggog.WPF.Brushes.Constants.ErrorForeground]));
 
         public Brush SuccessBrush
         {
@@ -136,7 +136,7 @@ namespace Mutagen.Bethesda.WPF
             set => SetValue(SuccessBrushProperty, value);
         }
         public static readonly DependencyProperty SuccessBrushProperty = DependencyProperty.Register(nameof(SuccessBrush), typeof(Brush), typeof(AbstractFormKeyPicker),
-             new FrameworkPropertyMetadata(Application.Current.Resources[Noggog.WPF.Brushes.Constants.Success]));
+             new FrameworkPropertyMetadata(Application.Current.Resources[Noggog.WPF.Brushes.Constants.SuccessForeground]));
 
         public Brush PassiveBrush
         {
@@ -144,7 +144,7 @@ namespace Mutagen.Bethesda.WPF
             set => SetValue(PassiveBrushProperty, value);
         }
         public static readonly DependencyProperty PassiveBrushProperty = DependencyProperty.Register(nameof(PassiveBrush), typeof(Brush), typeof(AbstractFormKeyPicker),
-             new FrameworkPropertyMetadata(Application.Current.Resources[Noggog.WPF.Brushes.Constants.Passive]));
+             new FrameworkPropertyMetadata(Application.Current.Resources[Noggog.WPF.Brushes.Constants.PassiveForeground]));
 
         public bool AllowsSearchMode
         {

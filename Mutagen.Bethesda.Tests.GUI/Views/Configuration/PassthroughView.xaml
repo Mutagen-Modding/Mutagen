@@ -1,4 +1,4 @@
-﻿<local:PassthroughViewBase
+<local:PassthroughViewBase
     x:Class="Mutagen.Bethesda.Tests.GUI.Views.PassthroughView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -80,10 +80,10 @@
             <Rectangle Grid.Column="2"
                 Width="25"
                 Margin="-5,0,0,0"
-                Fill="{StaticResource ErrorBrush}" />
+                Fill="{StaticResource Noggog.Brushes.Error.Foreground}" />
             <Border Grid.Column="1"
                 x:Name="DeleteBorder"
-                Background="{StaticResource ErrorBrush}"
+                Background="{StaticResource Noggog.Brushes.Error.Foreground}"
                 CornerRadius="4">
                 <Button
                     x:Name="DeleteButton"

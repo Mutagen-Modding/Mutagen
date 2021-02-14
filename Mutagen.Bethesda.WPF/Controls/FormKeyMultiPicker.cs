@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.WPF
             set => SetValue(SelectedForegroundBrushProperty, value);
         }
         public static readonly DependencyProperty SelectedForegroundBrushProperty = DependencyProperty.Register(nameof(SelectedForegroundBrush), typeof(Brush), typeof(FormKeyMultiPicker),
-             new FrameworkPropertyMetadata(Application.Current.Resources[Noggog.WPF.Brushes.Constants.Processing]));
+             new FrameworkPropertyMetadata(Application.Current.Resources[Noggog.WPF.Brushes.Constants.SelectedForeground]));
 
         public ICommand AddFormKeyCommand
         {
@@ -55,6 +55,22 @@ namespace Mutagen.Bethesda.WPF
         }
         public static readonly DependencyProperty AddFormKeyCommandProperty = DependencyProperty.Register(nameof(AddFormKeyCommand), typeof(ICommand), typeof(FormKeyMultiPicker),
              new FrameworkPropertyMetadata(default(ICommand), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+        public Brush ItemHoverBrush
+        {
+            get => (Brush)GetValue(ItemHoverBrushProperty);
+            set => SetValue(ItemHoverBrushProperty, value);
+        }
+        public static readonly DependencyProperty ItemHoverBrushProperty = DependencyProperty.Register(nameof(ItemHoverBrush), typeof(Brush), typeof(FormKeyMultiPicker),
+             new FrameworkPropertyMetadata(default(Brush), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+        public Brush SelectedBackgroundBrush
+        {
+            get => (Brush)GetValue(SelectedBackgroundBrushProperty);
+            set => SetValue(SelectedBackgroundBrushProperty, value);
+        }
+        public static readonly DependencyProperty SelectedBackgroundBrushProperty = DependencyProperty.Register(nameof(SelectedBackgroundBrush), typeof(Brush), typeof(FormKeyMultiPicker),
+             new FrameworkPropertyMetadata(Application.Current.Resources[Noggog.WPF.Brushes.Constants.SelectedBackground]));
 
         public FormKeyMultiPicker()
         {

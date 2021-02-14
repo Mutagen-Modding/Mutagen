@@ -108,7 +108,6 @@
                             <ResourceDictionary.MergedDictionaries>
                                 <ResourceDictionary Source="pack://application:,,,/Noggog.WPF;component/Everything.xaml" />
                             </ResourceDictionary.MergedDictionaries>
-                            <SolidColorBrush x:Key="PassiveBrush" Color="#666666" />
                             <local:RecordTypeNameConverter x:Key="RecordTypeNameConverter" />
                             <local:RecordTypeGameConverter x:Key="RecordTypeGameConverter" />
                         </ResourceDictionary>
@@ -154,13 +153,13 @@
                                 MaxHeight="{Binding MaxSearchBoxHeight, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
                                 Margin="0,-1,0,0"
                                 Padding="1"
-                                Background="{DynamicResource TextBoxFocusBackgroundBrush}"
+                                Background="{DynamicResource Noggog.Brushes.Focused.Background}"
                                 CornerRadius="3"
                                 Visibility="{Binding InSearchMode, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay, Converter={StaticResource VisibilityConverter}}">
                                 <Grid>
                                     <ListBox
                                         HorizontalContentAlignment="Stretch"
-                                        Background="{DynamicResource TextBoxFocusBackgroundBrush}"
+                                        Background="{DynamicResource Noggog.Brushes.Focused.Background}"
                                         ItemsSource="{Binding ApplicableEditorIDs, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
                                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                         ScrollViewer.VerticalScrollBarVisibility="Auto"
@@ -193,7 +192,7 @@
                                     </ListBox>
                                     <ListBox
                                         HorizontalContentAlignment="Stretch"
-                                        Background="{DynamicResource TextBoxFocusBackgroundBrush}"
+                                        Background="{DynamicResource Noggog.Brushes.Focused.Background}"
                                         ItemsSource="{Binding ScopedTypes, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
                                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                         ScrollViewer.VerticalScrollBarVisibility="Auto"
@@ -287,7 +286,6 @@
                             <ResourceDictionary.MergedDictionaries>
                                 <ResourceDictionary Source="pack://application:,,,/Noggog.WPF;component/Everything.xaml" />
                             </ResourceDictionary.MergedDictionaries>
-                            <SolidColorBrush x:Key="PassiveBrush" Color="#666666" />
                             <local:RecordTypeNameConverter x:Key="RecordTypeNameConverter" />
                             <local:RecordTypeGameConverter x:Key="RecordTypeGameConverter" />
                             <local:FormKeyLookupConverter x:Key="FormKeyLookupConverter" />
@@ -364,7 +362,7 @@
                                                     <Setter Property="Background" Value="Transparent" />
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="True">
-                                                            <Setter Property="Background" Value="#0e1716" />
+                                                            <Setter Property="Background" Value="{StaticResource Noggog.Brushes.Selected.Background}" />
                                                         </DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
@@ -487,7 +485,7 @@
                                 <ListBox.Style>
                                     <Style BasedOn="{StaticResource Noggog.Styles.ListBox}" TargetType="ListBox">
                                         <Setter Property="Grid.Column" Value="2" />
-                                        <Setter Property="Background" Value="{DynamicResource TextBoxFocusBackgroundBrush}" />
+                                        <Setter Property="Background" Value="{DynamicResource Noggog.Brushes.Focused.Background}" />
                                         <Setter Property="Margin" Value="0" />
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding InSearchMode, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" Value="False">
@@ -511,13 +509,13 @@
                             <Border Grid.Row="2" Grid.Column="0"
                                 Margin="0,-1,0,0"
                                 Padding="1"
-                                Background="{DynamicResource TextBoxFocusBackgroundBrush}"
+                                Background="{DynamicResource Noggog.Brushes.Focused.Background}"
                                 CornerRadius="3"
                                 Visibility="{Binding InSearchMode, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay, Converter={StaticResource VisibilityConverter}}">
                                 <Grid>
                                     <ListBox
                                         HorizontalContentAlignment="Stretch"
-                                        Background="{DynamicResource TextBoxFocusBackgroundBrush}"
+                                        Background="{DynamicResource Noggog.Brushes.Focused.Background}"
                                         ItemsSource="{Binding ApplicableEditorIDs, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
                                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                         ScrollViewer.VerticalScrollBarVisibility="Auto"
@@ -550,7 +548,7 @@
                                     </ListBox>
                                     <ListBox
                                         HorizontalContentAlignment="Stretch"
-                                        Background="{DynamicResource TextBoxFocusBackgroundBrush}"
+                                        Background="{DynamicResource Noggog.Brushes.Focused.Background}"
                                         ItemsSource="{Binding ScopedTypes, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
                                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                         ScrollViewer.VerticalScrollBarVisibility="Auto"
