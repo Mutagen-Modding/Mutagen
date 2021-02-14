@@ -18,7 +18,7 @@ namespace Mutagen.Bethesda.WPF.TestDisplay
 
         public IEnumerable<Type> ScopedTypes { get; }
 
-        public ObservableCollection<FormKey> FormKeys { get; } = new ObservableCollection<FormKey>();
+        public ObservableCollection<FormKeyItemViewModel> FormKeys { get; } = new ObservableCollection<FormKeyItemViewModel>();
 
         public MainVM()
         {
