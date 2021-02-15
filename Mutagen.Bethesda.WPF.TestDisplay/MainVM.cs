@@ -16,6 +16,8 @@ namespace Mutagen.Bethesda.WPF.TestDisplay
 
         public ILinkCache LinkCache { get; }
 
+        public object LoadOrder { get; }
+
         public IEnumerable<Type> ScopedTypes { get; }
 
         public ObservableCollection<FormKeyItemViewModel> FormKeys { get; } = new ObservableCollection<FormKeyItemViewModel>();
@@ -25,6 +27,7 @@ namespace Mutagen.Bethesda.WPF.TestDisplay
             var env = GameEnvironment.Typical.Skyrim(SkyrimRelease.SkyrimSE, LinkCachePreferences.OnlyIdentifiers())
                 .DisposeWith(this);
             LinkCache = env.LinkCache;
+            LoadOrder = env.LoadOrder;
             ScopedTypes = typeof(IArmorGetter).AsEnumerable();
         }
     }

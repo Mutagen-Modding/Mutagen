@@ -51,6 +51,10 @@ namespace Mutagen.Bethesda.WPF.TestDisplay
                 this.WhenAnyValue(x => x.ViewModel!.FormKeys)
                     .BindToStrict(this, x => x.FormKeyMultiPicker.FormKeys)
                     .DisposeWith(disposable);
+
+                this.WhenAnyValue(x => x.ViewModel!.LoadOrder)
+                    .BindToStrict(this, x => x.ModKeyPicker.LoadOrder)
+                    .DisposeWith(disposable);
             });
         }
     }

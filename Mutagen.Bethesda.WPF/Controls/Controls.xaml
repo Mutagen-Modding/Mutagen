@@ -99,6 +99,61 @@
         </Style.Triggers>
     </Style>
 
+    <Style TargetType="local:ModKeyPicker">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:ModKeyPicker">
+                    <ControlTemplate.Resources>
+                        <ResourceDictionary>
+                            <ResourceDictionary.MergedDictionaries>
+                                <ResourceDictionary Source="pack://application:,,,/Noggog.WPF;component/Everything.xaml" />
+                            </ResourceDictionary.MergedDictionaries>
+                        </ResourceDictionary>
+                    </ControlTemplate.Resources>
+                    <Border
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
+                        <Grid MinHeight="18">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <local:ModKeyBox Grid.Row="0"
+                                x:Name="PART_ModKeyBox"
+                                FileName="{Binding FileName, RelativeSource={RelativeSource TemplatedParent}}"
+                                ModKey="{Binding ModKey, RelativeSource={RelativeSource TemplatedParent}}" />
+                            <ListBox Grid.Row="1"
+                                Margin="0,3,0,0"
+                                HorizontalContentAlignment="Stretch"
+                                Background="{DynamicResource Noggog.Brushes.Focused.Background}"
+                                ItemsSource="{Binding ApplicableMods, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
+                                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                Visibility="{Binding InSearchMode, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay, Converter={StaticResource VisibilityConverter}}">
+                                <ListBox.ItemContainerStyle>
+                                    <Style BasedOn="{StaticResource Noggog.Styles.ListBoxItem.Plain}" TargetType="ListBoxItem">
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                    </Style>
+                                </ListBox.ItemContainerStyle>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Button Command="{Binding PickerClickCommand, RelativeSource={RelativeSource AncestorType=local:ModKeyPicker}, Mode=OneWay}" Style="{StaticResource FormKeyPickerButton}">
+                                            <TextBlock
+                                                Margin="6,0,0,0"
+                                                Text="{Binding}"
+                                                TextTrimming="CharacterEllipsis" />
+                                        </Button>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style TargetType="{x:Type local:FormKeyPicker}">
         <Setter Property="Template">
             <Setter.Value>

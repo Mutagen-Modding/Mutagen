@@ -24,5 +24,9 @@
         <TabItem Header="Form Key Multi Picker">
             <mutagenWpf:FormKeyMultiPicker x:Name="FormKeyMultiPicker" Margin="5" />
         </TabItem>
+        <TabItem Header="Mod Key Picker">
+            <mutagenWpf:ModKeyPicker x:Name="ModKeyPicker" Margin="5" />
+        </TabItem>
     </TabControl>
+
 </local:MainViewBase>
