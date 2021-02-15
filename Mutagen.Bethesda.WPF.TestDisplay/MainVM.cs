@@ -22,6 +22,8 @@ namespace Mutagen.Bethesda.WPF.TestDisplay
 
         public ObservableCollection<FormKeyItemViewModel> FormKeys { get; } = new ObservableCollection<FormKeyItemViewModel>();
 
+        public ObservableCollection<ModKeyItemViewModel> ModKeys { get; } = new ObservableCollection<ModKeyItemViewModel>();
+
         public MainVM()
         {
             var env = GameEnvironment.Typical.Skyrim(SkyrimRelease.SkyrimSE, LinkCachePreferences.OnlyIdentifiers())

@@ -148,10 +148,6 @@ namespace Mutagen.Bethesda.WPF
                 modKeyBox.WhenAnyValue(x => x.IsKeyboardFocusWithin)
                     .DistinctUntilChanged()
                     .Where(focused => focused)
-                    .WithLatestFrom(
-                        this.WhenAnyValue(x => x.ModKey),
-                        (_, modKey) => modKey)
-                    .Where(modKey => modKey.IsNull)
                     .Subscribe(_ =>
                     {
                         this.InSearchMode = true;
