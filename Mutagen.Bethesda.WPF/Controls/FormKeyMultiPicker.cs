@@ -4,6 +4,7 @@ using ReactiveUI.Fody.Helpers;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -32,13 +33,21 @@ namespace Mutagen.Bethesda.WPF
     [TemplatePart(Name = "PART_AddedFormKeyListBox", Type = typeof(ListBox))]
     public class FormKeyMultiPicker : AbstractFormKeyPicker
     {
-        public IEnumerable FormKeys
+        public ICollection<FormKeyItemViewModel> FormKeys
         {
-            get => (IEnumerable)GetValue(FormKeysProperty);
+            get => (ICollection<FormKeyItemViewModel>)GetValue(FormKeysProperty);
             set => SetValue(FormKeysProperty, value);
         }
-        public static readonly DependencyProperty FormKeysProperty = DependencyProperty.Register(nameof(FormKeys), typeof(IEnumerable), typeof(FormKeyMultiPicker),
-             new FrameworkPropertyMetadata(default(IEnumerable)));
+        public static readonly DependencyProperty FormKeysProperty = DependencyProperty.Register(nameof(FormKeys), typeof(ICollection<FormKeyItemViewModel>), typeof(FormKeyMultiPicker),
+             new FrameworkPropertyMetadata(default(ICollection<FormKeyItemViewModel>)));
+
+        public FormKeyItemViewModel SelectedFormKey
+        {
+            get => (FormKeyItemViewModel)GetValue(SelectedFormKeyProperty);
+            set => SetValue(SelectedFormKeyProperty, value);
+        }
+        public static readonly DependencyProperty SelectedFormKeyProperty = DependencyProperty.Register(nameof(SelectedFormKey), typeof(FormKeyItemViewModel), typeof(FormKeyMultiPicker),
+             new FrameworkPropertyMetadata(default(FormKeyItemViewModel), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public Brush SelectedForegroundBrush
         {
@@ -72,6 +81,14 @@ namespace Mutagen.Bethesda.WPF
         public static readonly DependencyProperty SelectedBackgroundBrushProperty = DependencyProperty.Register(nameof(SelectedBackgroundBrush), typeof(Brush), typeof(FormKeyMultiPicker),
              new FrameworkPropertyMetadata(Application.Current.Resources[Noggog.WPF.Brushes.Constants.SelectedBackground]));
 
+        public ICommand DeleteSelectedItemsCommand
+        {
+            get => (ICommand)GetValue(DeleteSelectedItemsCommandProperty);
+            set => SetValue(DeleteSelectedItemsCommandProperty, value);
+        }
+        public static readonly DependencyProperty DeleteSelectedItemsCommandProperty = DependencyProperty.Register(nameof(DeleteSelectedItemsCommand), typeof(ICommand), typeof(FormKeyMultiPicker),
+             new FrameworkPropertyMetadata(default(ICommand), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
         public FormKeyMultiPicker()
         {
             PickerClickCommand = ReactiveCommand.Create((object o) =>
@@ -79,8 +96,7 @@ namespace Mutagen.Bethesda.WPF
                 switch (o)
                 {
                     case IMajorRecordIdentifier identifier:
-                        if (FormKeys is not ICollection<FormKeyItemViewModel> formKeys) return;
-                        formKeys.Add(new FormKeyItemViewModel(identifier.FormKey));
+                        FormKeys.Add(new FormKeyItemViewModel(identifier.FormKey));
                         break;
                     default:
                         break;
@@ -91,8 +107,18 @@ namespace Mutagen.Bethesda.WPF
                     .Select(x => !x.IsNull),
                 execute: () =>
                 {
-                    if (FormKeys is not ICollection<FormKeyItemViewModel> formKeys) return;
-                    formKeys.Add(new FormKeyItemViewModel(FormKey));
+                    FormKeys.Add(new FormKeyItemViewModel(FormKey));
+                });
+            DeleteSelectedItemsCommand = ReactiveCommand.Create(
+                canExecute: this.WhenAnyValue(x => x.SelectedFormKey)
+                    .Select(x => x != null),
+                execute: () =>
+                {
+                    var toDelete = FormKeys.Where(f => f.IsSelected).ToArray();
+                    foreach (var item in toDelete)
+                    {
+                        FormKeys.Remove(item);
+                    }
                 });
         }
 

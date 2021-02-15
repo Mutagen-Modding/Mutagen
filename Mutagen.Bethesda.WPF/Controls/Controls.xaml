@@ -342,6 +342,7 @@
                                 ItemsSource="{Binding FormKeys, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                SelectedValue="{Binding SelectedFormKey, RelativeSource={RelativeSource TemplatedParent}}"
                                 SelectionMode="Extended">
                                 <ListBox.ItemContainerStyle>
                                     <Style BasedOn="{StaticResource Noggog.Styles.ListBoxItem.Plain}" TargetType="ListBoxItem">
@@ -486,24 +487,47 @@
                                     <Style BasedOn="{StaticResource Noggog.Styles.ListBox}" TargetType="ListBox">
                                         <Setter Property="Grid.Column" Value="2" />
                                         <Setter Property="Background" Value="{DynamicResource Noggog.Brushes.Focused.Background}" />
-                                        <Setter Property="Margin" Value="0" />
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding InSearchMode, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" Value="False">
                                                 <Setter Property="Grid.Column" Value="0" />
                                                 <Setter Property="Grid.ColumnSpan" Value="3" />
-                                                <Setter Property="Margin" Value="0,3,0,0" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
                                 </ListBox.Style>
                             </ListBox>
-                            <Border Grid.Row="1" Grid.Column="2"
+                            <Border Grid.Row="1"
                                 Margin="0,3,0,0"
                                 Background="#111111"
                                 BorderBrush="#222222"
-                                BorderThickness="0,0,0,1"
-                                Visibility="{Binding InSearchMode, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay, Converter={StaticResource VisibilityConverter}}">
-                                <TextBlock Margin="6,2" Text="Added Records" />
+                                BorderThickness="0,0,0,1">
+                                <Border.Style>
+                                    <Style TargetType="Border">
+                                        <Setter Property="Grid.Column" Value="2" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding InSearchMode, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" Value="False">
+                                                <Setter Property="Grid.Column" Value="0" />
+                                                <Setter Property="Grid.ColumnSpan" Value="3" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0"
+                                        Margin="6,2"
+                                        Text="Added Records" />
+                                    <Button
+                                        Margin="0,0,5,0"
+                                        HorizontalAlignment="Right"
+                                        Command="{TemplateBinding DeleteSelectedItemsCommand}"
+                                        ToolTip="Delete selected items">
+                                        <icon:PackIconFontAwesome Kind="BackspaceSolid" />
+                                    </Button>
+                                </Grid>
                             </Border>
 
                             <Border Grid.Row="2" Grid.Column="0"
