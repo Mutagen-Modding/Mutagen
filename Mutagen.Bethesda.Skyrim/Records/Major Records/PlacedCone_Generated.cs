@@ -491,7 +491,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPlacedCone :
-        IAPlacedTrap,
+        IAPlacedTrapInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<IPlacedConeInternal>,
         IPlacedConeGetter
@@ -510,7 +510,8 @@ namespace Mutagen.Bethesda.Skyrim
         IAPlacedTrapGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IPlacedConeGetter>
+        ILoquiObject<IPlacedConeGetter>,
+        IMapsToGetter<IPlacedConeGetter>
     {
         static new ILoquiRegistration Registration => PlacedCone_Registration.Instance;
         FormLink<IProjectileGetter> Projectile { get; }

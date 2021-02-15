@@ -799,7 +799,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IPathGrid :
         IFormLinkContainer,
         ILoquiObjectSetter<IPathGridInternal>,
-        IOblivionMajorRecord,
+        IOblivionMajorRecordInternal,
         IPathGridGetter
     {
         new ExtendedList<PathGridPoint>? PointToPointConnections { get; set; }
@@ -819,7 +819,8 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IPathGridGetter>
+        ILoquiObject<IPathGridGetter>,
+        IMapsToGetter<IPathGridGetter>
     {
         static new ILoquiRegistration Registration => PathGrid_Registration.Instance;
         IReadOnlyList<IPathGridPointGetter>? PointToPointConnections { get; }

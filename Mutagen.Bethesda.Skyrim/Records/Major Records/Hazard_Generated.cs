@@ -974,7 +974,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBounded,
         IObjectBoundedOptional,
         IPlacedTrapTarget,
-        ISkyrimMajorRecord,
+        ISkyrimMajorRecordInternal,
         ITranslatedNamed,
         ITranslatedNamedRequired
     {
@@ -1007,6 +1007,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IHazardGetter>,
+        IMapsToGetter<IHazardGetter>,
         IModeledGetter,
         INamedGetter,
         INamedRequiredGetter,

@@ -610,7 +610,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IKey :
-        IAItem,
+        IAItemInternal,
         IFormLinkContainer,
         IKeyGetter,
         ILoquiObjectSetter<IKeyInternal>,
@@ -637,6 +637,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IKeyGetter>,
+        IMapsToGetter<IKeyGetter>,
         IModeledGetter,
         INamedGetter,
         INamedRequiredGetter

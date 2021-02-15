@@ -26,7 +26,7 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// A static readonly singleton string representing a null FormKey
         /// </summary>
-        public const string NullStr = "NULL";
+        public const string NullStr = "Null";
         
         /// <summary>
         /// A static readonly singleton Null FormKey
@@ -42,11 +42,11 @@ namespace Mutagen.Bethesda
         /// ModKey the Record originates from
         /// </summary>
         public readonly ModKey ModKey;
-        
+
         /// <summary>
         /// True if FormKey is considered Null
         /// </summary>
-        public bool IsNull => this.Equals(Null);
+        public bool IsNull => this.ID == 0 || this.ModKey.IsNull;
 
         /// <summary>
         /// Constructor taking a ModKey and ID as separate parameters
@@ -77,6 +77,12 @@ namespace Mutagen.Bethesda
                     idWithModID);
             }
 
+            var justId = idWithModID & 0xFFFFFF;
+            if (modID == 0 && justId == 0)
+            {
+                return FormKey.Null;
+            }
+
             var master = masterReferences.Masters[modID];
             return new FormKey(
                 master.Master,
@@ -92,6 +98,9 @@ namespace Mutagen.Bethesda
         /// <returns>True if conversion successful</returns>
         public static bool TryFactory(ReadOnlySpan<char> str, [MaybeNullWhen(false)]out FormKey formKey)
         {
+            // Trim whitespace
+            str = str.Trim();
+
             // If equal to Null
             if (NullStr.AsSpan().Equals(str, StringComparison.OrdinalIgnoreCase))
             {
@@ -99,38 +108,54 @@ namespace Mutagen.Bethesda
                 return true;
             }
 
-            // Trim whitespace
-            str = str.Trim();
-
-            // If less than ID + delimeter + minimum file suffix + 1, invalid
-            const int shortCircuitSize = 6 + 1 + 4 + 1;
+            // If less than Null:Null, is invalid
+            const int shortCircuitSize = 9;
             if (str.Length < shortCircuitSize)
             {
                 formKey = default!;
                 return false;
             }
 
-            // If delimeter not in place, invalid
-            if (str[6] != ':')
+            uint id;
+            int delim;
+            if (str[4] == ':' && str.Slice(0, 4).Equals(FormKey.NullStr, StringComparison.OrdinalIgnoreCase))
             {
-                formKey = default!;
-                return false;
+                delim = 4;
+                id = 0;
             }
-
-            // Convert ID section
-            if (!uint.TryParse(str.Slice(0, 6), NumberStyles.HexNumber, null, out var id))
+            else
             {
-                formKey = default!;
-                return false;
+                // If delimeter not in place, invalid
+                if (str[6] != ':')
+                {
+                    formKey = default!;
+                    return false;
+                }
+
+                delim = 6;
+
+                // Convert ID section
+                if (!uint.TryParse(str.Slice(0, delim), NumberStyles.HexNumber, null, out id))
+                {
+                    formKey = default!;
+                    return false;
+                }
             }
 
             // Slice past delimiter
-            str = str.Slice(7);
+            str = str.Slice(delim + 1);
 
             if (!ModKey.TryFromNameAndExtension(str, out var modKey))
             {
-                formKey = default!;
-                return false;
+                if (str.Equals(FormKey.NullStr, StringComparison.OrdinalIgnoreCase))
+                {
+                    modKey = ModKey.Null;
+                }
+                else
+                {
+                    formKey = default!;
+                    return false;
+                }
             }
             
             formKey = new FormKey(
@@ -161,9 +186,13 @@ namespace Mutagen.Bethesda
         /// <returns>String representation of FormKey</returns>
         public override string ToString()
         {
+            if (ID == 0 && this.ModKey.IsNull)
+            {
+                return "Null";
+            }
             return $"{(ID == 0 ? "Null" : IDString())}:{this.ModKey}";
         }
-
+         
         /// <summary>
         /// Converts to a hex string containing only the ID section: FFFFFF
         /// </summary>

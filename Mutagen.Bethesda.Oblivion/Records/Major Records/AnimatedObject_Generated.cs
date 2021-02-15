@@ -492,7 +492,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkContainer,
         ILoquiObjectSetter<IAnimatedObjectInternal>,
         IModeled,
-        IOblivionMajorRecord
+        IOblivionMajorRecordInternal
     {
         new Model? Model { get; set; }
         new FormLinkNullable<IIdleAnimationGetter> IdleAnimation { get; set; }
@@ -510,6 +510,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IAnimatedObjectGetter>,
+        IMapsToGetter<IAnimatedObjectGetter>,
         IModeledGetter
     {
         static new ILoquiRegistration Registration => AnimatedObject_Registration.Instance;

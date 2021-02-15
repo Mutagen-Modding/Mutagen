@@ -375,7 +375,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IGlobal :
         IGlobalGetter,
         ILoquiObjectSetter<IGlobalInternal>,
-        IOblivionMajorRecord
+        IOblivionMajorRecordInternal
     {
     }
 

@@ -955,7 +955,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBounded,
         IObjectBoundedOptional,
         IRegionTarget,
-        ISkyrimMajorRecord,
+        ISkyrimMajorRecordInternal,
         ITranslatedNamed,
         ITranslatedNamedRequired,
         ITreeGetter
@@ -992,6 +992,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainerGetter,
         IHarvestableGetter,
         ILoquiObject<ITreeGetter>,
+        IMapsToGetter<ITreeGetter>,
         IModeledGetter,
         INamedGetter,
         INamedRequiredGetter,

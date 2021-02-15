@@ -485,7 +485,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ISound :
         ILoquiObjectSetter<ISoundInternal>,
-        IOblivionMajorRecord,
+        IOblivionMajorRecordInternal,
         ISoundGetter
     {
         new String? File { get; set; }
@@ -502,7 +502,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ISoundGetter :
         IOblivionMajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<ISoundGetter>
+        ILoquiObject<ISoundGetter>,
+        IMapsToGetter<ISoundGetter>
     {
         static new ILoquiRegistration Registration => Sound_Registration.Instance;
         String? File { get; }

@@ -727,7 +727,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ISigilStone :
-        IAItem,
+        IAItemInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<ISigilStoneInternal>,
         IModeled,
@@ -755,6 +755,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<ISigilStoneGetter>,
+        IMapsToGetter<ISigilStoneGetter>,
         IModeledGetter,
         INamedGetter,
         INamedRequiredGetter

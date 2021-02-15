@@ -887,7 +887,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IShaderParticleGeometry :
         ILoquiObjectSetter<IShaderParticleGeometryInternal>,
         IShaderParticleGeometryGetter,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new Single GravityVelocity { get; set; }
         new Single RotationVelocity { get; set; }
@@ -915,7 +915,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IShaderParticleGeometryGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<IShaderParticleGeometryGetter>
+        ILoquiObject<IShaderParticleGeometryGetter>,
+        IMapsToGetter<IShaderParticleGeometryGetter>
     {
         static new ILoquiRegistration Registration => ShaderParticleGeometry_Registration.Instance;
         Single GravityVelocity { get; }

@@ -904,7 +904,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMovementTypeGetter,
         INamed,
         INamedRequired,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new String? Name { get; set; }
         new Single LeftWalk { get; set; }
@@ -933,6 +933,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IBinaryItem,
         ILoquiObject<IMovementTypeGetter>,
+        IMapsToGetter<IMovementTypeGetter>,
         INamedGetter,
         INamedRequiredGetter
     {

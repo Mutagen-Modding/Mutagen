@@ -4,8 +4,9 @@ using System.Text;
 
 namespace Mutagen.Bethesda
 {
-    public interface IMajorRecordContextEnumerable<TMod>
-        where TMod : IMod
+    public interface IMajorRecordContextEnumerable<TMod, TModGetter>
+        where TModGetter : IModGetter
+        where TMod : TModGetter, IMod
     {
         /// <summary>  
         /// Enumerates all contained Major Record Getters of the specified generic type  
@@ -14,7 +15,7 @@ namespace Mutagen.Bethesda
         /// <param name="throwIfUnknown">Whether to throw an exception if type is unknown</param> 
         /// <exception cref="ArgumentException">If a non applicable type is provided, and throw parameter is on</exception>
         /// <returns>Enumerable of all applicable major records</returns>  
-        IEnumerable<IModContext<TMod, TSetter, TGetter>> EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown = true)
+        IEnumerable<IModContext<TMod, TModGetter, TSetter, TGetter>> EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown = true)
             where TSetter : class, IMajorRecordCommon, TGetter
             where TGetter : class, IMajorRecordCommonGetter;
 
@@ -26,6 +27,6 @@ namespace Mutagen.Bethesda
         /// <param name="throwIfUnknown">Whether to throw an exception if type is unknown</param> 
         /// <exception cref="ArgumentException">If a non applicable type is provided, and throw parameter is on</exception>
         /// <returns>Enumerable of all applicable major records</returns>  
-        IEnumerable<IModContext<TMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(ILinkCache linkCache, Type t, bool throwIfUnknown = true);
+        IEnumerable<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(ILinkCache linkCache, Type t, bool throwIfUnknown = true);
     }
 }

@@ -755,7 +755,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IFactionInternal>,
         INamed,
         INamedRequired,
-        IOblivionMajorRecord,
+        IOblivionMajorRecordInternal,
         IOwner
     {
         new String? Name { get; set; }
@@ -777,6 +777,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IFactionGetter>,
+        IMapsToGetter<IFactionGetter>,
         INamedGetter,
         INamedRequiredGetter,
         IOwnerGetter

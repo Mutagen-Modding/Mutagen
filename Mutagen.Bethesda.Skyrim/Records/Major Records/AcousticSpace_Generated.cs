@@ -576,7 +576,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IAcousticSpaceInternal>,
         IObjectBounded,
         IObjectBoundedOptional,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new ObjectBounds ObjectBounds { get; set; }
         new FormLinkNullable<ISoundDescriptorGetter> AmbientSound { get; set; }
@@ -596,6 +596,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IAcousticSpaceGetter>,
+        IMapsToGetter<IAcousticSpaceGetter>,
         IObjectBoundedGetter,
         IObjectBoundedOptionalGetter
     {

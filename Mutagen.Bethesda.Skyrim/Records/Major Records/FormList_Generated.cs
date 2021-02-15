@@ -547,7 +547,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILockList,
         ILoquiObjectSetter<IFormListInternal>,
         IObjectId,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new ExtendedList<IFormLink<ISkyrimMajorRecordGetter>> Items { get; }
     }
@@ -566,6 +566,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainerGetter,
         ILockListGetter,
         ILoquiObject<IFormListGetter>,
+        IMapsToGetter<IFormListGetter>,
         IObjectIdGetter
     {
         static new ILoquiRegistration Registration => FormList_Registration.Instance;

@@ -523,7 +523,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IRoad :
         ILoquiObjectSetter<IRoadInternal>,
-        IOblivionMajorRecord,
+        IOblivionMajorRecordInternal,
         IRoadGetter
     {
         new ExtendedList<RoadPoint>? Points { get; set; }
@@ -539,7 +539,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IRoadGetter :
         IOblivionMajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<IRoadGetter>
+        ILoquiObject<IRoadGetter>,
+        IMapsToGetter<IRoadGetter>
     {
         static new ILoquiRegistration Registration => Road_Registration.Instance;
         IReadOnlyList<IRoadPointGetter>? Points { get; }

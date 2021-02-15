@@ -1219,7 +1219,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBounded,
         IObjectBoundedOptional,
         IObjectId,
-        ISkyrimMajorRecord,
+        ISkyrimMajorRecordInternal,
         ITranslatedNamed,
         ITranslatedNamedRequired,
         IWeightValue
@@ -1267,6 +1267,7 @@ namespace Mutagen.Bethesda.Skyrim
         IHasIconsGetter,
         IItemGetter,
         ILoquiObject<ILightGetter>,
+        IMapsToGetter<ILightGetter>,
         IModeledGetter,
         INamedGetter,
         INamedRequiredGetter,

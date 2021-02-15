@@ -597,7 +597,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILoquiObjectSetter<IBodyPartDataInternal>,
         IModeled,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new Model? Model { get; set; }
         new ExtendedList<BodyPart> Parts { get; }
@@ -615,6 +615,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IBodyPartDataGetter>,
+        IMapsToGetter<IBodyPartDataGetter>,
         IModeledGetter
     {
         static new ILoquiRegistration Registration => BodyPartData_Registration.Instance;

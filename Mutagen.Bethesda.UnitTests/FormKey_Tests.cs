@@ -1,3 +1,4 @@
+using FluentAssertions;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
@@ -51,6 +52,38 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.Equal(
                 FormKey.Null,
                 id);
+            Assert.Equal(
+                ModKey.Null,
+                id.ModKey);
+            Assert.True(id.IsNull);
+        }
+
+        [Fact]
+        public void Import_Null_ID()
+        {
+            Assert.True(
+                FormKey.TryFactory($"{FormKey.NullStr}:{Utility.Skyrim}", out FormKey id));
+            Assert.Equal(
+                Utility.Skyrim.MakeFormKey(0),
+                id);
+            Assert.Equal(
+                Utility.Skyrim,
+                id.ModKey);
+            Assert.True(id.IsNull);
+        }
+
+        [Fact]
+        public void Import_Null_Strs()
+        {
+            Assert.True(
+                FormKey.TryFactory($"{FormKey.NullStr}:{FormKey.NullStr}", out FormKey id));
+            Assert.Equal(
+                FormKey.Null,
+                id);
+            Assert.Equal(
+                ModKey.Null,
+                id.ModKey);
+            Assert.True(id.IsNull);
         }
 
         [Fact]
@@ -70,7 +103,7 @@ namespace Mutagen.Bethesda.UnitTests
         #region BinaryTranslation
         public ModKey TargetModKey() => new ModKey("Master2", ModType.Master);
 
-        public MasterReferenceReader TypicalMasters() => 
+        public MasterReferenceReader TypicalMasters() =>
             new MasterReferenceReader(
                 Utility.PluginModKey,
                 new List<IMasterReferenceGetter>()
@@ -102,6 +135,7 @@ namespace Mutagen.Bethesda.UnitTests
             var formKey = FormKeyBinaryTranslation.Instance.Parse(b.AsSpan(), TypicalMasters());
             Assert.Equal(TargetModKey(), formKey.ModKey);
             Assert.Equal((uint)0x123456, formKey.ID);
+            Assert.False(formKey.IsNull);
         }
 
         [Fact]
@@ -130,6 +164,46 @@ namespace Mutagen.Bethesda.UnitTests
             var formKey = FormKeyBinaryTranslation.Instance.Parse(b.AsSpan(), TypicalMasters());
             Assert.Equal(TargetModKey(), formKey.ModKey);
             Assert.Equal((uint)0x123456, formKey.ID);
+            Assert.False(formKey.IsNull);
+        }
+
+        [Fact]
+        public void BinaryTranslation_Zeros()
+        {
+            byte[] b = new byte[]
+            {
+                0,0,0,0
+            };
+            var formKey = FormKeyBinaryTranslation.Instance.Parse(b.AsSpan(), TypicalMasters());
+            Assert.Equal(ModKey.Null, formKey.ModKey);
+            Assert.Equal((uint)0, formKey.ID);
+            Assert.True(formKey.IsNull);
+        }
+        #endregion
+
+        #region Null
+        [Fact]
+        public void Null_TypicalNotNull()
+        {
+            Utility.Skyrim.IsNull.Should().BeFalse();
+        }
+
+        [Fact]
+        public void Null_NullIsNull()
+        {
+            FormKey.Null.IsNull.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Null_ExistingModKeyIsNull()
+        {
+            new FormKey(Utility.Skyrim, 0).IsNull.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Null_ExistingIdIsNull()
+        {
+            new FormKey(ModKey.Null, 123456).IsNull.Should().BeTrue();
         }
         #endregion
 

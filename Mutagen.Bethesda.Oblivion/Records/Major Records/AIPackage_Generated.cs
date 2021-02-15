@@ -711,7 +711,7 @@ namespace Mutagen.Bethesda.Oblivion
         IAIPackageGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IAIPackageInternal>,
-        IOblivionMajorRecord
+        IOblivionMajorRecordInternal
     {
         new AIPackageData? Data { get; set; }
         new AIPackageLocation? Location { get; set; }
@@ -731,7 +731,8 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IAIPackageGetter>
+        ILoquiObject<IAIPackageGetter>,
+        IMapsToGetter<IAIPackageGetter>
     {
         static new ILoquiRegistration Registration => AIPackage_Registration.Instance;
         IAIPackageDataGetter? Data { get; }

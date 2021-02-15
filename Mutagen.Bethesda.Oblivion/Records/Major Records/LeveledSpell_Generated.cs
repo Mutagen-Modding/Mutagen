@@ -590,7 +590,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ILeveledSpell :
-        IASpell,
+        IASpellInternal,
         IFormLinkContainer,
         ILeveledSpellGetter,
         ILoquiObjectSetter<ILeveledSpellInternal>
@@ -611,7 +611,8 @@ namespace Mutagen.Bethesda.Oblivion
         IASpellGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<ILeveledSpellGetter>
+        ILoquiObject<ILeveledSpellGetter>,
+        IMapsToGetter<ILeveledSpellGetter>
     {
         static new ILoquiRegistration Registration => LeveledSpell_Registration.Instance;
         Byte? ChanceNone { get; }

@@ -276,7 +276,14 @@ namespace Mutagen.Bethesda
                             throw new DataMisalignedException("Unexpected type encountered when parsing MajorRecord locations: " + majorMeta.RecordType);
                         }
                         var formKey = FormKey.Factory(package.MetaData.MasterReferences!, majorMeta.FormID.Raw);
-                        locationDict.Add(formKey, checked((int)(stream.Position - offset)));
+                        try
+                        {
+                            locationDict.Add(formKey, checked((int)(stream.Position - offset)));
+                        }
+                        catch (ArgumentException)
+                        {
+                            throw new RecordCollisionException(formKey, typeof(T));
+                        }
                         stream.Position += checked((int)majorMeta.TotalLength);
                         lastParsed = ObjectType.Record;
                     }

@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Generation
             if (obj.GetObjectType() != ObjectType.Mod) yield break;
             yield return (LoquiInterfaceType.IGetter, nameof(IModGetter));
             yield return (LoquiInterfaceType.ISetter, nameof(IMod));
-            yield return (LoquiInterfaceType.IGetter, $"IContextGetterMod<{obj.Interface(getter: false)}>");
-            yield return (LoquiInterfaceType.ISetter, $"IContextMod<{obj.Interface(getter: false)}>");
+            yield return (LoquiInterfaceType.IGetter, $"IContextGetterMod<{obj.Interface(getter: false)}, {obj.Interface(getter: true)}>");
+            yield return (LoquiInterfaceType.ISetter, $"IContextMod<{obj.Interface(getter: false)}, {obj.Interface(getter: true)}>");
         }
 
         public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
@@ -661,7 +661,7 @@ namespace Mutagen.Bethesda.Generation
             if (!elems.Any()) return;
             var objData = obj.GetObjectData();
             objData.GameReleaseOptions = elems.Select(el => Enum.Parse<GameRelease>(el.Value)).ToHashSet();
-            obj.Interfaces.Add(LoquiInterfaceDefinitionType.IGetter, $"IMajorRecordContextEnumerable<{obj.Interface(getter: false, internalInterface: true)}>");
+            obj.Interfaces.Add(LoquiInterfaceDefinitionType.IGetter, $"IMajorRecordContextEnumerable<{obj.Interface(getter: false, internalInterface: true)}, {obj.Interface(getter: true, internalInterface: true)}>");
         }
 
         public override async Task GenerateInInterface(ObjectGeneration obj, FileGeneration fg, bool internalInterface, bool getter)

@@ -456,7 +456,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IVoiceType :
         ILoquiObjectSetter<IVoiceTypeInternal>,
-        ISkyrimMajorRecord,
+        ISkyrimMajorRecordInternal,
         IVoiceTypeGetter
     {
         new VoiceType.Flag Flags { get; set; }
@@ -472,7 +472,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IVoiceTypeGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<IVoiceTypeGetter>
+        ILoquiObject<IVoiceTypeGetter>,
+        IMapsToGetter<IVoiceTypeGetter>
     {
         static new ILoquiRegistration Registration => VoiceType_Registration.Instance;
         VoiceType.Flag Flags { get; }

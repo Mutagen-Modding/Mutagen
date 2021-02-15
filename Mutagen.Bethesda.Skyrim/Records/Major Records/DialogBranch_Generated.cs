@@ -557,7 +557,7 @@ namespace Mutagen.Bethesda.Skyrim
         IDialogBranchGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IDialogBranchInternal>,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new FormLink<IQuestGetter> Quest { get; set; }
         new Int32? TNAM { get; set; }
@@ -576,7 +576,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IDialogBranchGetter>
+        ILoquiObject<IDialogBranchGetter>,
+        IMapsToGetter<IDialogBranchGetter>
     {
         static new ILoquiRegistration Registration => DialogBranch_Registration.Instance;
         FormLink<IQuestGetter> Quest { get; }

@@ -768,7 +768,7 @@ namespace Mutagen.Bethesda.Skyrim
         IDialogViewGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IDialogViewInternal>,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new FormLink<IQuestGetter> Quest { get; set; }
         new ExtendedList<IFormLink<IDialogBranchGetter>> Branches { get; }
@@ -788,7 +788,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IDialogViewGetter>
+        ILoquiObject<IDialogViewGetter>,
+        IMapsToGetter<IDialogViewGetter>
     {
         static new ILoquiRegistration Registration => DialogView_Registration.Instance;
         FormLink<IQuestGetter> Quest { get; }

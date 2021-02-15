@@ -544,7 +544,7 @@ namespace Mutagen.Bethesda.Skyrim
         IEyesGetter,
         ILoquiObjectSetter<IEyesInternal>,
         INamedRequired,
-        ISkyrimMajorRecord,
+        ISkyrimMajorRecordInternal,
         ITranslatedNamedRequired
     {
         new TranslatedString Name { get; set; }
@@ -567,6 +567,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IBinaryItem,
         ILoquiObject<IEyesGetter>,
+        IMapsToGetter<IEyesGetter>,
         INamedRequiredGetter,
         ITranslatedNamedRequiredGetter
     {

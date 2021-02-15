@@ -1,26 +1,24 @@
 <Project>
   <PropertyGroup>
     <Nullable>enable</Nullable>
-    <WarningsAsErrors>nullable</WarningsAsErrors>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <GitInfoReportImportance Condition="$(Configuration) == 'Release'">high</GitInfoReportImportance>
     <LangVersion>preview</LangVersion>
+    <Version>0.26.0</Version>
   </PropertyGroup>
 
   <!-- To be redefined by GitInfo after restore. -->
   <Target Name="GitVersion" />
 
-  <Target Name="SetVersion"
+  <!--<Target Name="SetVersion"
 		  BeforeTargets="GetAssemblyVersion;GetPackageVersion"
 		  DependsOnTargets="GitVersion"
 		  Returns="$(PackageVersion)">
     <PropertyGroup>
       <DevLabel Condition="$(GitCommits) != '0'">.1-dev</DevLabel>
       <AssemblyDevLabel Condition="$(GitCommits) != '0'">.1</AssemblyDevLabel>
-      <AssemblyVersion>$(GitBaseVersionMajor).$(GitBaseVersionMinor).$(GitBaseVersionPatch)$(AssemblyDevLabel)</AssemblyVersion>
       <FileVersion>$(GitBaseVersionMajor).$(GitBaseVersionMinor).$(GitBaseVersionPatch)$(AssemblyDevLabel)</FileVersion>
       <PackageVersion>$(GitBaseVersionMajor).$(GitBaseVersionMinor).$(GitBaseVersionPatch)$(DevLabel)</PackageVersion>
+      <Version>$(GitBaseVersionMajor).$(GitBaseVersionMinor).$(GitBaseVersionPatch)$(AssemblyDevLabel)</Version>
       <InformationalVersion>$(PackageVersion)</InformationalVersion>
     </PropertyGroup>
-  </Target>
+  </Target>-->
 </Project>

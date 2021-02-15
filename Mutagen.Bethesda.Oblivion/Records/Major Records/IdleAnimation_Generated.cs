@@ -726,7 +726,7 @@ namespace Mutagen.Bethesda.Oblivion
         IIdleAnimationGetter,
         ILoquiObjectSetter<IIdleAnimationInternal>,
         IModeled,
-        IOblivionMajorRecord
+        IOblivionMajorRecordInternal
     {
         new Model? Model { get; set; }
         new ExtendedList<Condition> Conditions { get; }
@@ -746,6 +746,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IIdleAnimationGetter>,
+        IMapsToGetter<IIdleAnimationGetter>,
         IModeledGetter
     {
         static new ILoquiRegistration Registration => IdleAnimation_Registration.Instance;

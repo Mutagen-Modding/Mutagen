@@ -621,7 +621,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ISoundCategoryInternal>,
         INamed,
         INamedRequired,
-        ISkyrimMajorRecord,
+        ISkyrimMajorRecordInternal,
         ISoundCategoryGetter,
         ITranslatedNamed,
         ITranslatedNamedRequired
@@ -645,6 +645,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<ISoundCategoryGetter>,
+        IMapsToGetter<ISoundCategoryGetter>,
         INamedGetter,
         INamedRequiredGetter,
         ITranslatedNamedGetter,

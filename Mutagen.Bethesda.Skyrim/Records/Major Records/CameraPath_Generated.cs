@@ -838,7 +838,7 @@ namespace Mutagen.Bethesda.Skyrim
         ICameraPathGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<ICameraPathInternal>,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new ExtendedList<Condition> Conditions { get; }
         new ExtendedList<IFormLink<ICameraPathGetter>> RelatedPaths { get; }
@@ -858,7 +858,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<ICameraPathGetter>
+        ILoquiObject<ICameraPathGetter>,
+        IMapsToGetter<ICameraPathGetter>
     {
         static new ILoquiRegistration Registration => CameraPath_Registration.Instance;
         IReadOnlyList<IConditionGetter> Conditions { get; }

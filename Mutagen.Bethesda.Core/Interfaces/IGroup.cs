@@ -1,3 +1,4 @@
+using Loqui;
 using Mutagen.Bethesda.Binary;
 using Noggog;
 using System;
@@ -49,7 +50,7 @@ namespace Mutagen.Bethesda
         bool ContainsKey(FormKey key);
     }
 
-    public interface IGroupCommon<TMajor> : IGroupCommonGetter<TMajor>
+    public interface IGroupCommon<TMajor> : IGroupCommonGetter<TMajor>, IClearable
         where TMajor : IMajorRecordCommonGetter, IBinaryItem
     {
         /// <summary>
@@ -86,11 +87,6 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="keys">The keys.</param>
         void Remove(IEnumerable<FormKey> keys);
-
-        /// <summary>
-        /// Clears all items
-        /// </summary>
-        void Clear();
 
         TMajor AddNew(FormKey formKey);
 
@@ -170,12 +166,31 @@ namespace Mutagen.Bethesda
         /// <param name="record">Record object, if located</param>
         /// <returns>True if record retreived from group</returns>
         public static bool TryGetValue<TMajor>(
-            this IGroupCommonGetter<TMajor> group, 
-            FormKey formKey, 
+            this IGroupCommonGetter<TMajor> group,
+            FormKey formKey,
             [MaybeNullWhen(false)] out TMajor record)
             where TMajor : IMajorRecordCommonGetter, IBinaryItem
         {
             return group.RecordCache.TryGetValue(formKey, out record);
+        }
+
+        /// <summary>
+        /// Tries to retrieve a record from the group.
+        /// </summary>
+        /// <typeparam name="TMajor">Record type of the group</typeparam>
+        /// <param name="group">Group to retrieve from</param>
+        /// <param name="formKey">FormKey to query for</param>
+        /// <returns>Record object, if located</returns>
+        public static TMajor? TryGetValue<TMajor>(
+            this IGroupCommonGetter<TMajor> group,
+            FormKey formKey)
+            where TMajor : IMajorRecordCommonGetter, IBinaryItem
+        {
+            if (group.RecordCache.TryGetValue(formKey, out var record))
+            {
+                return record;
+            }
+            return default;
         }
     }
 }

@@ -438,7 +438,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IGlobalInt :
-        IGlobal,
+        IGlobalInternal,
         IGlobalIntGetter,
         ILoquiObjectSetter<IGlobalIntInternal>
     {
@@ -455,7 +455,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IGlobalIntGetter :
         IGlobalGetter,
         IBinaryItem,
-        ILoquiObject<IGlobalIntGetter>
+        ILoquiObject<IGlobalIntGetter>,
+        IMapsToGetter<IGlobalIntGetter>
     {
         static new ILoquiRegistration Registration => GlobalInt_Registration.Instance;
         Int32? Data { get; }

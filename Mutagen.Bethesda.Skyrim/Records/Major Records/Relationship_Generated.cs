@@ -655,7 +655,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILoquiObjectSetter<IRelationshipInternal>,
         IRelationshipGetter,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new FormLink<INpcGetter> Parent { get; set; }
         new FormLink<INpcGetter> Child { get; set; }
@@ -681,7 +681,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IRelationshipGetter>
+        ILoquiObject<IRelationshipGetter>,
+        IMapsToGetter<IRelationshipGetter>
     {
         static new ILoquiRegistration Registration => Relationship_Registration.Instance;
         FormLink<INpcGetter> Parent { get; }

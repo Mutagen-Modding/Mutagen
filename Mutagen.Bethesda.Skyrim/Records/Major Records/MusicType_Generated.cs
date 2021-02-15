@@ -654,7 +654,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILoquiObjectSetter<IMusicTypeInternal>,
         IMusicTypeGetter,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new MusicType.Flag Flags { get; set; }
         new MusicTypeData? Data { get; set; }
@@ -673,7 +673,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IMusicTypeGetter>
+        ILoquiObject<IMusicTypeGetter>,
+        IMapsToGetter<IMusicTypeGetter>
     {
         static new ILoquiRegistration Registration => MusicType_Registration.Instance;
         MusicType.Flag Flags { get; }

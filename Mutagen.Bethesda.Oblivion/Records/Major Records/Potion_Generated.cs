@@ -760,7 +760,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IPotion :
-        IAItem,
+        IAItemInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<IPotionInternal>,
         IModeled,
@@ -789,6 +789,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IPotionGetter>,
+        IMapsToGetter<IPotionGetter>,
         IModeledGetter,
         INamedGetter,
         INamedRequiredGetter

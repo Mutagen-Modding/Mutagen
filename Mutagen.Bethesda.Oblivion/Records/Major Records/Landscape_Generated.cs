@@ -798,7 +798,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkContainer,
         ILandscapeGetter,
         ILoquiObjectSetter<ILandscapeInternal>,
-        IOblivionMajorRecord,
+        IOblivionMajorRecordInternal,
         IPlaced
     {
         new MemorySlice<Byte>? DATA { get; set; }
@@ -821,6 +821,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<ILandscapeGetter>,
+        IMapsToGetter<ILandscapeGetter>,
         IPlacedGetter
     {
         static new ILoquiRegistration Registration => Landscape_Registration.Instance;

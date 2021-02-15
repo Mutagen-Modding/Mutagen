@@ -1267,7 +1267,7 @@ namespace Mutagen.Bethesda.Skyrim
         INamedRequired,
         IObjectBounded,
         IObjectBoundedOptional,
-        ISkyrimMajorRecord,
+        ISkyrimMajorRecordInternal,
         ITranslatedNamed,
         ITranslatedNamedRequired,
         IWeightValue
@@ -1308,6 +1308,7 @@ namespace Mutagen.Bethesda.Skyrim
         IItemGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IIngredientGetter>,
+        IMapsToGetter<IIngredientGetter>,
         IModeledGetter,
         INamedGetter,
         INamedRequiredGetter,

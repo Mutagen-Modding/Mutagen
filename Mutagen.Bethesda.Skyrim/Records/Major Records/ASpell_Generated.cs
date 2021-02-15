@@ -396,7 +396,7 @@ namespace Mutagen.Bethesda.Skyrim
         IASpellGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IASpellInternal>,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
     }
 

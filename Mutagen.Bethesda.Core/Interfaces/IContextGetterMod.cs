@@ -4,13 +4,15 @@ using System.Text;
 
 namespace Mutagen.Bethesda
 {
-    public interface IContextGetterMod<TMod> : IModGetter, IMajorRecordContextEnumerable<TMod>
-        where TMod : IMod
+    public interface IContextGetterMod<TMod, TModGetter> : IModGetter, IMajorRecordContextEnumerable<TMod, TModGetter>
+        where TModGetter : IModGetter
+        where TMod : TModGetter, IMod
     {
     }
 
-    public interface IContextMod<TMod> : IMod, IContextGetterMod<TMod>
-        where TMod : IContextMod<TMod>
+    public interface IContextMod<TMod, TModGetter> : IMod, IContextGetterMod<TMod, TModGetter>
+        where TModGetter : IModGetter
+        where TMod : TModGetter, IContextMod<TMod, TModGetter>
     {
     }
 }

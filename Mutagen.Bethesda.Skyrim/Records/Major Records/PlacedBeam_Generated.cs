@@ -491,7 +491,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPlacedBeam :
-        IAPlacedTrap,
+        IAPlacedTrapInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<IPlacedBeamInternal>,
         IPlacedBeamGetter
@@ -510,7 +510,8 @@ namespace Mutagen.Bethesda.Skyrim
         IAPlacedTrapGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IPlacedBeamGetter>
+        ILoquiObject<IPlacedBeamGetter>,
+        IMapsToGetter<IPlacedBeamGetter>
     {
         static new ILoquiRegistration Registration => PlacedBeam_Registration.Instance;
         FormLink<IProjectileGetter> Projectile { get; }

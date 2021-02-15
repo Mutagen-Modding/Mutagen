@@ -533,7 +533,7 @@ namespace Mutagen.Bethesda.Skyrim
         IANavigationMeshGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IANavigationMeshInternal>,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new MemorySlice<Byte>? ONAM { get; set; }
         new MemorySlice<Byte>? PNAM { get; set; }

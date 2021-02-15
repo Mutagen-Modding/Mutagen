@@ -491,7 +491,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPlacedHazard :
-        IAPlacedTrap,
+        IAPlacedTrapInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<IPlacedHazardInternal>,
         IPlacedHazardGetter
@@ -510,7 +510,8 @@ namespace Mutagen.Bethesda.Skyrim
         IAPlacedTrapGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IPlacedHazardGetter>
+        ILoquiObject<IPlacedHazardGetter>,
+        IMapsToGetter<IPlacedHazardGetter>
     {
         static new ILoquiRegistration Registration => PlacedHazard_Registration.Instance;
         FormLink<IHazardGetter> Hazard { get; }

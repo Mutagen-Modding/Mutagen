@@ -535,7 +535,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IStoryManagerEventNode :
-        IAStoryManagerNode,
+        IAStoryManagerNodeInternal,
         ILoquiObjectSetter<IStoryManagerEventNodeInternal>,
         IStoryManagerEventNodeGetter
     {
@@ -554,7 +554,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IStoryManagerEventNodeGetter :
         IAStoryManagerNodeGetter,
         IBinaryItem,
-        ILoquiObject<IStoryManagerEventNodeGetter>
+        ILoquiObject<IStoryManagerEventNodeGetter>,
+        IMapsToGetter<IStoryManagerEventNodeGetter>
     {
         static new ILoquiRegistration Registration => StoryManagerEventNode_Registration.Instance;
         AStoryManagerNode.Flag? Flags { get; }

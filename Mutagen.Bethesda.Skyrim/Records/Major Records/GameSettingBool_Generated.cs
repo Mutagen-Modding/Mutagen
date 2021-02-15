@@ -457,8 +457,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IGameSettingBool :
-        IGameSetting,
         IGameSettingBoolGetter,
+        IGameSettingInternal,
         ILoquiObjectSetter<IGameSettingBoolInternal>
     {
         new Boolean? Data { get; set; }
@@ -474,7 +474,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IGameSettingBoolGetter :
         IGameSettingGetter,
         IBinaryItem,
-        ILoquiObject<IGameSettingBoolGetter>
+        ILoquiObject<IGameSettingBoolGetter>,
+        IMapsToGetter<IGameSettingBoolGetter>
     {
         static new ILoquiRegistration Registration => GameSettingBool_Registration.Instance;
         Boolean? Data { get; }

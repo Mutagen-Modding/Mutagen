@@ -473,7 +473,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IArmor :
-        IAClothing,
+        IAClothingInternal,
         IArmorGetter,
         ILoquiObjectSetter<IArmorInternal>,
         INamed,
@@ -493,6 +493,7 @@ namespace Mutagen.Bethesda.Oblivion
         IAClothingGetter,
         IBinaryItem,
         ILoquiObject<IArmorGetter>,
+        IMapsToGetter<IArmorGetter>,
         INamedGetter,
         INamedRequiredGetter
     {

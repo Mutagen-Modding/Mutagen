@@ -1685,7 +1685,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBounded,
         IObjectBoundedOptional,
         IObjectId,
-        ISkyrimMajorRecord,
+        ISkyrimMajorRecordInternal,
         ITranslatedNamed,
         ITranslatedNamedRequired,
         IWeaponGetter
@@ -1743,6 +1743,7 @@ namespace Mutagen.Bethesda.Skyrim
         IItemGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IWeaponGetter>,
+        IMapsToGetter<IWeaponGetter>,
         IModeledGetter,
         INamedGetter,
         INamedRequiredGetter,

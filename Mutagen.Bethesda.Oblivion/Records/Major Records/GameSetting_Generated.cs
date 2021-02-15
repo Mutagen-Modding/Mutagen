@@ -375,7 +375,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IGameSetting :
         IGameSettingGetter,
         ILoquiObjectSetter<IGameSettingInternal>,
-        IOblivionMajorRecord
+        IOblivionMajorRecordInternal
     {
     }
 

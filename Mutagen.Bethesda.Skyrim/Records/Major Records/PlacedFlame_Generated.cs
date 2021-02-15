@@ -491,7 +491,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPlacedFlame :
-        IAPlacedTrap,
+        IAPlacedTrapInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<IPlacedFlameInternal>,
         IPlacedFlameGetter
@@ -510,7 +510,8 @@ namespace Mutagen.Bethesda.Skyrim
         IAPlacedTrapGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IPlacedFlameGetter>
+        ILoquiObject<IPlacedFlameGetter>,
+        IMapsToGetter<IPlacedFlameGetter>
     {
         static new ILoquiRegistration Registration => PlacedFlame_Registration.Instance;
         FormLink<IProjectileGetter> Projectile { get; }

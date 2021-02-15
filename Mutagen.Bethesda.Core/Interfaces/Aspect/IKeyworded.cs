@@ -95,13 +95,8 @@ namespace Mutagen.Bethesda
 
         /// <summary>
         /// Checks if a Keyworded record contains a specific Keyword, by EditorID.
-        /// Also looks up that keyword in the given cache. <br />
-        /// <br />
-        /// Note that this function only succeeds if the record contains the keyword,
-        /// and the cache found it as well. <br />
-        /// <br />
-        /// It is possible that the record contains the keyword, but it could not be found
-        /// by the cache.
+        /// Also looks up that keyword in the given cache.
+        /// </summary>
         /// <param name="keyworded">Keyworded record to check</param>
         /// <param name="editorID">EditorID of the Keyword to look for</param>
         /// <param name="cache">LinkCache to resolve against</param>

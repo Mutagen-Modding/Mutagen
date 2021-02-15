@@ -519,7 +519,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IEffectShader :
         IEffectShaderGetter,
         ILoquiObjectSetter<IEffectShaderInternal>,
-        IOblivionMajorRecord
+        IOblivionMajorRecordInternal
     {
         new String? FillTexture { get; set; }
         new String? ParticleShaderTexture { get; set; }
@@ -536,7 +536,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IEffectShaderGetter :
         IOblivionMajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<IEffectShaderGetter>
+        ILoquiObject<IEffectShaderGetter>,
+        IMapsToGetter<IEffectShaderGetter>
     {
         static new ILoquiRegistration Registration => EffectShader_Registration.Instance;
         String? FillTexture { get; }

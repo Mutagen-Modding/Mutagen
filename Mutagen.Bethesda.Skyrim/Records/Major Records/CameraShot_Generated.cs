@@ -898,7 +898,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILoquiObjectSetter<ICameraShotInternal>,
         IModeled,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new Model? Model { get; set; }
         new CameraShot.ActionType Action { get; set; }
@@ -928,6 +928,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<ICameraShotGetter>,
+        IMapsToGetter<ICameraShotGetter>,
         IModeledGetter
     {
         static new ILoquiRegistration Registration => CameraShot_Registration.Instance;

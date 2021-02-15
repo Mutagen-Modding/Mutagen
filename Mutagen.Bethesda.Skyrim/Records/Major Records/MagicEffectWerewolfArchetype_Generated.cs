@@ -350,7 +350,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IMagicEffectWerewolfArchetype :
         ILoquiObjectSetter<IMagicEffectWerewolfArchetypeInternal>,
-        IMagicEffectArchetype,
+        IMagicEffectArchetypeInternal,
         IMagicEffectWerewolfArchetypeGetter
     {
     }

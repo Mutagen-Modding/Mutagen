@@ -843,7 +843,7 @@ namespace Mutagen.Bethesda.Skyrim
         IHasIcons,
         ILoadScreenGetter,
         ILoquiObjectSetter<ILoadScreenInternal>,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new Icons? Icons { get; set; }
         new TranslatedString Description { get; set; }
@@ -872,7 +872,8 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IFormLinkContainerGetter,
         IHasIconsGetter,
-        ILoquiObject<ILoadScreenGetter>
+        ILoquiObject<ILoadScreenGetter>,
+        IMapsToGetter<ILoadScreenGetter>
     {
         static new ILoquiRegistration Registration => LoadScreen_Registration.Instance;
         IIconsGetter? Icons { get; }

@@ -491,7 +491,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPlacedMissile :
-        IAPlacedTrap,
+        IAPlacedTrapInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<IPlacedMissileInternal>,
         IPlacedMissileGetter
@@ -510,7 +510,8 @@ namespace Mutagen.Bethesda.Skyrim
         IAPlacedTrapGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IPlacedMissileGetter>
+        ILoquiObject<IPlacedMissileGetter>,
+        IMapsToGetter<IPlacedMissileGetter>
     {
         static new ILoquiRegistration Registration => PlacedMissile_Registration.Instance;
         FormLink<IProjectileGetter> Projectile { get; }

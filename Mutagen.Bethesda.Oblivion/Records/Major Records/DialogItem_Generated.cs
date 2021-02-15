@@ -1139,7 +1139,7 @@ namespace Mutagen.Bethesda.Oblivion
         IDialogItemGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IDialogItemInternal>,
-        IOblivionMajorRecord
+        IOblivionMajorRecordInternal
     {
         new DialogItemData? Data { get; set; }
         new FormLinkNullable<IQuestGetter> Quest { get; set; }
@@ -1164,7 +1164,8 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IDialogItemGetter>
+        ILoquiObject<IDialogItemGetter>,
+        IMapsToGetter<IDialogItemGetter>
     {
         static new ILoquiRegistration Registration => DialogItem_Registration.Instance;
         IDialogItemDataGetter? Data { get; }

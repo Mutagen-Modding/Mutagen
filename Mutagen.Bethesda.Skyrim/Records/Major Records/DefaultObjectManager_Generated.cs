@@ -546,7 +546,7 @@ namespace Mutagen.Bethesda.Skyrim
         IDefaultObjectManagerGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IDefaultObjectManagerInternal>,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new ExtendedList<DefaultObject>? Objects { get; set; }
     }
@@ -562,7 +562,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IDefaultObjectManagerGetter>
+        ILoquiObject<IDefaultObjectManagerGetter>,
+        IMapsToGetter<IDefaultObjectManagerGetter>
     {
         static new ILoquiRegistration Registration => DefaultObjectManager_Registration.Instance;
         IReadOnlyList<IDefaultObjectGetter>? Objects { get; }

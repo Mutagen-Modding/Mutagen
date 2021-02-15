@@ -1103,7 +1103,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ICombatStyle :
         ICombatStyleGetter,
         ILoquiObjectSetter<ICombatStyleInternal>,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new Single OffensiveMult { get; set; }
         new Single DefensiveMult { get; set; }
@@ -1138,7 +1138,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ICombatStyleGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<ICombatStyleGetter>
+        ILoquiObject<ICombatStyleGetter>,
+        IMapsToGetter<ICombatStyleGetter>
     {
         static new ILoquiRegistration Registration => CombatStyle_Registration.Instance;
         Single OffensiveMult { get; }

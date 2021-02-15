@@ -67,14 +67,17 @@ namespace Mutagen.Bethesda
         }
     }
 
-    public interface IModListing<out TMod> : IModKeyed, IDisposable
+    public interface IModListing<out TMod> : IModListing, IDisposable
         where TMod : class, IModGetter
     {
         /// <summary>
         /// Mod object
         /// </summary>
         TMod? Mod { get; }
+    }
 
+    public interface IModListing : IModKeyed, IDisposable
+    {
         /// <summary>
         /// Whether the listing is enabled in the load order
         /// </summary>

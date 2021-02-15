@@ -699,7 +699,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IPlacedCreature :
         IFormLinkContainer,
         ILoquiObjectSetter<IPlacedCreatureInternal>,
-        IOblivionMajorRecord,
+        IOblivionMajorRecordInternal,
         IPlaced,
         IPlacedCreatureGetter
     {
@@ -725,6 +725,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IPlacedCreatureGetter>,
+        IMapsToGetter<IPlacedCreatureGetter>,
         IPlacedGetter
     {
         static new ILoquiRegistration Registration => PlacedCreature_Registration.Instance;

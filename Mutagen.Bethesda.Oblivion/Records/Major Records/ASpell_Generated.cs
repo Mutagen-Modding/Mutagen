@@ -377,7 +377,7 @@ namespace Mutagen.Bethesda.Oblivion
         IASpellGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IASpellInternal>,
-        IOblivionMajorRecord
+        IOblivionMajorRecordInternal
     {
     }
 

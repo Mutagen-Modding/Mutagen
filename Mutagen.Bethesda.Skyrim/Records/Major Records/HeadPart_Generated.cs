@@ -937,7 +937,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModeled,
         INamed,
         INamedRequired,
-        ISkyrimMajorRecord,
+        ISkyrimMajorRecordInternal,
         ITranslatedNamed,
         ITranslatedNamedRequired
     {
@@ -968,6 +968,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IHeadPartGetter>,
+        IMapsToGetter<IHeadPartGetter>,
         IModeledGetter,
         INamedGetter,
         INamedRequiredGetter,

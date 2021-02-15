@@ -502,7 +502,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IStoryManagerBranchNode :
-        IAStoryManagerNode,
+        IAStoryManagerNodeInternal,
         ILoquiObjectSetter<IStoryManagerBranchNodeInternal>,
         IStoryManagerBranchNodeGetter
     {
@@ -520,7 +520,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IStoryManagerBranchNodeGetter :
         IAStoryManagerNodeGetter,
         IBinaryItem,
-        ILoquiObject<IStoryManagerBranchNodeGetter>
+        ILoquiObject<IStoryManagerBranchNodeGetter>,
+        IMapsToGetter<IStoryManagerBranchNodeGetter>
     {
         static new ILoquiRegistration Registration => StoryManagerBranchNode_Registration.Instance;
         AStoryManagerNode.Flag? Flags { get; }

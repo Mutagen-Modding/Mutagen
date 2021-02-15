@@ -786,7 +786,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMajorRecordEnumerable,
         INamed,
         INamedRequired,
-        IOblivionMajorRecord
+        IOblivionMajorRecordInternal
     {
         new ExtendedList<IFormLink<IQuestGetter>> Quests { get; }
         new String? Name { get; set; }
@@ -808,6 +808,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkContainerGetter,
         ILoquiObject<IDialogTopicGetter>,
         IMajorRecordGetterEnumerable,
+        IMapsToGetter<IDialogTopicGetter>,
         INamedGetter,
         INamedRequiredGetter
     {
@@ -1745,7 +1746,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public IEnumerable<IModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        public IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             IDialogTopicGetter obj,
             ILinkCache linkCache,
             ModKey modKey,
@@ -1753,7 +1754,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Func<IOblivionMod, IDialogTopicGetter, IDialogTopic> getOrAddAsOverride,
             Func<IOblivionMod, IDialogTopicGetter, string?, IDialogTopic> duplicateInto)
         {
-            var curContext = new ModContext<IOblivionMod, IDialogTopic, IDialogTopicGetter>(
+            var curContext = new ModContext<IOblivionMod, IOblivionModGetter, IDialogTopic, IDialogTopicGetter>(
                 modKey,
                 record: obj,
                 getOrAddAsOverride: getOrAddAsOverride,
@@ -1761,7 +1762,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 parent: parent);
             foreach (var subItem in obj.Items)
             {
-                yield return new ModContext<IOblivionMod, IDialogItemInternal, IDialogItemGetter>(
+                yield return new ModContext<IOblivionMod, IOblivionModGetter, IDialogItemInternal, IDialogItemGetter>(
                     modKey: modKey,
                     record: subItem,
                     parent: curContext,
@@ -1783,7 +1784,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public IEnumerable<IModContext<IOblivionMod, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
+        public IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> EnumerateMajorRecordContexts(
             IDialogTopicGetter obj,
             ILinkCache linkCache,
             Type type,
@@ -1793,7 +1794,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Func<IOblivionMod, IDialogTopicGetter, IDialogTopic> getOrAddAsOverride,
             Func<IOblivionMod, IDialogTopicGetter, string?, IDialogTopic> duplicateInto)
         {
-            var curContext = new ModContext<IOblivionMod, IDialogTopic, IDialogTopicGetter>(
+            var curContext = new ModContext<IOblivionMod, IOblivionModGetter, IDialogTopic, IDialogTopicGetter>(
                 modKey,
                 record: obj,
                 getOrAddAsOverride: getOrAddAsOverride,
@@ -1840,7 +1841,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<IOblivionMod, IDialogItemInternal, IDialogItemGetter>(
+                            yield return new ModContext<IOblivionMod, IOblivionModGetter, IDialogItemInternal, IDialogItemGetter>(
                                 modKey: modKey,
                                 record: subItem,
                                 parent: curContext,

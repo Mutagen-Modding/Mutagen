@@ -1741,7 +1741,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface INpc :
-        IANpc,
+        IANpcInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<INpcInternal>,
         IModeled,
@@ -1787,6 +1787,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<INpcGetter>,
+        IMapsToGetter<INpcGetter>,
         IModeledGetter,
         INamedGetter,
         INamedRequiredGetter,

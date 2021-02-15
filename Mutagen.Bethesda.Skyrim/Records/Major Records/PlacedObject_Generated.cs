@@ -3058,7 +3058,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IPlacedObject :
-        IAPlaced,
+        IAPlacedInternal,
         IFormLinkContainer,
         IKeywordLinkedReference,
         ILinkedReference,
@@ -3144,6 +3144,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedReferenceGetter,
         ILocationTargetableGetter,
         ILoquiObject<IPlacedObjectGetter>,
+        IMapsToGetter<IPlacedObjectGetter>,
         IPlacedGetter,
         IPlacedSimpleGetter,
         IPlacedThingGetter

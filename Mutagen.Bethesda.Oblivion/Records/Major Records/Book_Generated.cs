@@ -707,7 +707,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IBook :
-        IAItem,
+        IAItemInternal,
         IBookGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IBookInternal>,
@@ -737,6 +737,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IBookGetter>,
+        IMapsToGetter<IBookGetter>,
         IModeledGetter,
         INamedGetter,
         INamedRequiredGetter

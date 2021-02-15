@@ -854,7 +854,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IRegion :
         IFormLinkContainer,
         ILoquiObjectSetter<IRegionInternal>,
-        IOblivionMajorRecord,
+        IOblivionMajorRecordInternal,
         IRegionGetter
     {
         new String? Icon { get; set; }
@@ -879,7 +879,8 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IRegionGetter>
+        ILoquiObject<IRegionGetter>,
+        IMapsToGetter<IRegionGetter>
     {
         static new ILoquiRegistration Registration => Region_Registration.Instance;
         String? Icon { get; }

@@ -1,19 +1,19 @@
-﻿<ResourceDictionary
+<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:Mutagen.Bethesda.Tests.GUI"
     xmlns:tests="clr-namespace:Mutagen.Bethesda.Tests;assembly=Mutagen.Bethesda.Tests">
     <SolidColorBrush x:Key="RunningBrush" Color="{StaticResource MahApps.Colors.Accent4}" />
     <SolidColorBrush x:Key="NotStartedBrush" Color="{StaticResource MahApps.Colors.Gray10}" />
-    <SolidColorBrush x:Key="SuccessfulBrush" Color="{StaticResource GreenBackground}" />
+    <SolidColorBrush x:Key="SuccessfulBrush" Color="{StaticResource Noggog.Colors.Success.Background}" />
     <Style x:Key="StateBorderStyle" TargetType="Border">
         <Setter Property="Background" Value="{StaticResource NotStartedBrush}" />
         <Style.Triggers>
             <DataTrigger Binding="{Binding State}" Value="{x:Static tests:TestState.Error}">
-                <Setter Property="Background" Value="{StaticResource ErrorBackgroundBrush}" />
+                <Setter Property="Background" Value="{StaticResource Noggog.Brushes.Error.Background}" />
             </DataTrigger>
             <DataTrigger Binding="{Binding State}" Value="{x:Static tests:TestState.Complete}">
-                <Setter Property="Background" Value="{StaticResource GreenBackgroundBrush}" />
+                <Setter Property="Background" Value="{StaticResource Noggog.Brushes.Success.Background}" />
             </DataTrigger>
             <DataTrigger Binding="{Binding State}" Value="{x:Static tests:TestState.Running}">
                 <Setter Property="Background" Value="{StaticResource RunningBrush}" />

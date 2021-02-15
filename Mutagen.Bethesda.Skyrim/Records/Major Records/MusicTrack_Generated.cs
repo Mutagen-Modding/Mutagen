@@ -985,7 +985,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILoquiObjectSetter<IMusicTrackInternal>,
         IMusicTrackGetter,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new MusicTrack.TypeEnum Type { get; set; }
         new Single? Duration { get; set; }
@@ -1009,7 +1009,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IMusicTrackGetter>
+        ILoquiObject<IMusicTrackGetter>,
+        IMapsToGetter<IMusicTrackGetter>
     {
         static new ILoquiRegistration Registration => MusicTrack_Registration.Instance;
         MusicTrack.TypeEnum Type { get; }

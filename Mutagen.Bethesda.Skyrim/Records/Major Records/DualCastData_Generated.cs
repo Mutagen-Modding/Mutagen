@@ -704,7 +704,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IDualCastDataInternal>,
         IObjectBounded,
         IObjectBoundedOptional,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new ObjectBounds ObjectBounds { get; set; }
         new FormLink<IProjectileGetter> Projectile { get; set; }
@@ -728,6 +728,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IDualCastDataGetter>,
+        IMapsToGetter<IDualCastDataGetter>,
         IObjectBoundedGetter,
         IObjectBoundedOptionalGetter
     {

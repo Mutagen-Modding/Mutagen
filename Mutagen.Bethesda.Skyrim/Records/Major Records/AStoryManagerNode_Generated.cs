@@ -589,7 +589,7 @@ namespace Mutagen.Bethesda.Skyrim
         IAStoryManagerNodeGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IAStoryManagerNodeInternal>,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new FormLinkNullable<IAStoryManagerNodeGetter> Parent { get; set; }
         new FormLinkNullable<IAStoryManagerNodeGetter> PreviousSibling { get; set; }

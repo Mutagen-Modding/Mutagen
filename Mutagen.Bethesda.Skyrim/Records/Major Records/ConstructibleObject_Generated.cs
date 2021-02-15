@@ -758,7 +758,7 @@ namespace Mutagen.Bethesda.Skyrim
         IConstructibleObjectGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IConstructibleObjectInternal>,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new ExtendedList<ContainerEntry>? Items { get; set; }
         new ExtendedList<Condition> Conditions { get; }
@@ -778,7 +778,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IConstructibleObjectGetter>
+        ILoquiObject<IConstructibleObjectGetter>,
+        IMapsToGetter<IConstructibleObjectGetter>
     {
         static new ILoquiRegistration Registration => ConstructibleObject_Registration.Instance;
         IReadOnlyList<IContainerEntryGetter>? Items { get; }

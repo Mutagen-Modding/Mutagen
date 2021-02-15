@@ -833,7 +833,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IReverbParameters :
         ILoquiObjectSetter<IReverbParametersInternal>,
         IReverbParametersGetter,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new UInt16 DecayMilliseconds { get; set; }
         new UInt16 HfReferenceHertz { get; set; }
@@ -860,7 +860,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IReverbParametersGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<IReverbParametersGetter>
+        ILoquiObject<IReverbParametersGetter>,
+        IMapsToGetter<IReverbParametersGetter>
     {
         static new ILoquiRegistration Registration => ReverbParameters_Registration.Instance;
         UInt16 DecayMilliseconds { get; }

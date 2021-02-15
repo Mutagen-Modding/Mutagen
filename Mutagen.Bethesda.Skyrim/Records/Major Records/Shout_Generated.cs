@@ -673,7 +673,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IShout :
-        IASpell,
+        IASpellInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<IShoutInternal>,
         INamed,
@@ -705,6 +705,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IShoutGetter>,
+        IMapsToGetter<IShoutGetter>,
         INamedGetter,
         INamedRequiredGetter,
         IObjectIdGetter,

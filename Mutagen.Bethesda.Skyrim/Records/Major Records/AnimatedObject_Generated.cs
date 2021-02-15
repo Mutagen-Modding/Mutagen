@@ -513,7 +513,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILoquiObjectSetter<IAnimatedObjectInternal>,
         IModeled,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new Model? Model { get; set; }
         new String? UnloadEvent { get; set; }
@@ -531,6 +531,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IAnimatedObjectGetter>,
+        IMapsToGetter<IAnimatedObjectGetter>,
         IModeledGetter
     {
         static new ILoquiRegistration Registration => AnimatedObject_Registration.Instance;

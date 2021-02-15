@@ -449,8 +449,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IOblivionMajorRecord :
         IFormLinkContainer,
         ILoquiObjectSetter<IOblivionMajorRecordInternal>,
-        IMajorRecord,
         IMajorRecordEnumerable,
+        IMajorRecordInternal,
         IOblivionMajorRecordGetter
     {
         new OblivionMajorRecord.OblivionMajorRecordFlag OblivionMajorRecordFlags { get; set; }

@@ -412,7 +412,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IHair :
         IHairGetter,
         ILoquiObjectSetter<IHairInternal>,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
     }
 
@@ -426,7 +426,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IHairGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<IHairGetter>
+        ILoquiObject<IHairGetter>,
+        IMapsToGetter<IHairGetter>
     {
         static new ILoquiRegistration Registration => Hair_Registration.Instance;
 

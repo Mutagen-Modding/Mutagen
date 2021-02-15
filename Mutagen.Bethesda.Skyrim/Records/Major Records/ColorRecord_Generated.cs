@@ -552,7 +552,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IColorRecordInternal>,
         INamed,
         INamedRequired,
-        ISkyrimMajorRecord,
+        ISkyrimMajorRecordInternal,
         ITranslatedNamed,
         ITranslatedNamedRequired
     {
@@ -572,6 +572,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IBinaryItem,
         ILoquiObject<IColorRecordGetter>,
+        IMapsToGetter<IColorRecordGetter>,
         INamedGetter,
         INamedRequiredGetter,
         ITranslatedNamedGetter,

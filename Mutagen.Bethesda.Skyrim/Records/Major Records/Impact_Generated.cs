@@ -964,7 +964,7 @@ namespace Mutagen.Bethesda.Skyrim
         IImpactGetter,
         ILoquiObjectSetter<IImpactInternal>,
         IModeled,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new Model? Model { get; set; }
         new Single Duration { get; set; }
@@ -996,6 +996,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IImpactGetter>,
+        IMapsToGetter<IImpactGetter>,
         IModeledGetter
     {
         static new ILoquiRegistration Registration => Impact_Registration.Instance;

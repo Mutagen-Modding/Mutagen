@@ -610,7 +610,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IMiscellaneous :
-        IAItem,
+        IAItemInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<IMiscellaneousInternal>,
         IMiscellaneousGetter,
@@ -637,6 +637,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IMiscellaneousGetter>,
+        IMapsToGetter<IMiscellaneousGetter>,
         IModeledGetter,
         INamedGetter,
         INamedRequiredGetter

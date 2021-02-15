@@ -2697,7 +2697,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ILocationInternal>,
         INamed,
         INamedRequired,
-        ISkyrimMajorRecord,
+        ISkyrimMajorRecordInternal,
         ITranslatedNamed,
         ITranslatedNamedRequired
     {
@@ -2742,6 +2742,7 @@ namespace Mutagen.Bethesda.Skyrim
         IKeywordedGetter<IKeywordGetter>,
         ILocationRecordGetter,
         ILoquiObject<ILocationGetter>,
+        IMapsToGetter<ILocationGetter>,
         INamedGetter,
         INamedRequiredGetter,
         ITranslatedNamedGetter,

@@ -915,7 +915,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IQuestInternal>,
         INamed,
         INamedRequired,
-        IOblivionMajorRecord,
+        IOblivionMajorRecordInternal,
         IQuestGetter
     {
         new FormLinkNullable<IScriptGetter> Script { get; set; }
@@ -939,6 +939,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IQuestGetter>,
+        IMapsToGetter<IQuestGetter>,
         INamedGetter,
         INamedRequiredGetter
     {

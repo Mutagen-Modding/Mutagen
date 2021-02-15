@@ -1284,7 +1284,7 @@ namespace Mutagen.Bethesda.Skyrim
         IDialogResponsesGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IDialogResponsesInternal>,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new DialogResponsesAdapter? VirtualMachineAdapter { get; set; }
         new MemorySlice<Byte>? DATA { get; set; }
@@ -1319,7 +1319,8 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IDialogGetter,
         IFormLinkContainerGetter,
-        ILoquiObject<IDialogResponsesGetter>
+        ILoquiObject<IDialogResponsesGetter>,
+        IMapsToGetter<IDialogResponsesGetter>
     {
         static new ILoquiRegistration Registration => DialogResponses_Registration.Instance;
         IDialogResponsesAdapterGetter? VirtualMachineAdapter { get; }

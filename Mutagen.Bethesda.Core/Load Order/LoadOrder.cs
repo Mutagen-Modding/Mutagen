@@ -466,11 +466,18 @@ namespace Mutagen.Bethesda
         }
     }
 
+    public interface ILoadOrderGetter
+    {
+        IEnumerable<ModKey> ListedOrder { get; }
+
+        IEnumerable<ModKey> PriorityOrder { get; }
+    }
+
     /// <summary>
     /// A container for objects with in a specific load order, that are associated with ModKeys.
     /// LoadOrder does not need to be disposed for proper use, but rather can optionally be disposed of which will dispose any contained items that implement IDisposable
     /// </summary>
-    public class LoadOrder<TItem> : IReadOnlyList<KeyValuePair<ModKey, TItem>>, IReadOnlyDictionary<ModKey, TItem>, IDisposable
+    public class LoadOrder<TItem> : ILoadOrderGetter, IReadOnlyList<KeyValuePair<ModKey, TItem>>, IReadOnlyDictionary<ModKey, TItem>, IDisposable
         where TItem : IModKeyed
     {
         private readonly List<ItemContainer> _byLoadOrder = new List<ItemContainer>();
@@ -490,6 +497,10 @@ namespace Mutagen.Bethesda
         public IEnumerable<TItem> ListedOrder => _byLoadOrder.Select(i => i.Item);
 
         public IEnumerable<TItem> PriorityOrder => ((IEnumerable<ItemContainer>)_byLoadOrder).Reverse().Select(i => i.Item);
+
+        IEnumerable<ModKey> ILoadOrderGetter.ListedOrder => _byLoadOrder.Select(x => x.Item.ModKey);
+
+        IEnumerable<ModKey> ILoadOrderGetter.PriorityOrder => _byLoadOrder.Select(x => x.Item.ModKey).Reverse();
 
         KeyValuePair<ModKey, TItem> IReadOnlyList<KeyValuePair<ModKey, TItem>>.this[int index]
         {

@@ -590,7 +590,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ILeveledItem :
-        IAItem,
+        IAItemInternal,
         IFormLinkContainer,
         ILeveledItemGetter,
         ILoquiObjectSetter<ILeveledItemInternal>
@@ -611,7 +611,8 @@ namespace Mutagen.Bethesda.Oblivion
         IAItemGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<ILeveledItemGetter>
+        ILoquiObject<ILeveledItemGetter>,
+        IMapsToGetter<ILeveledItemGetter>
     {
         static new ILoquiRegistration Registration => LeveledItem_Registration.Instance;
         Byte? ChanceNone { get; }

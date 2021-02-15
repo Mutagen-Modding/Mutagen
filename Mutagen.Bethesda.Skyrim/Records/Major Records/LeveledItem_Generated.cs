@@ -696,7 +696,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBounded,
         IObjectBoundedOptional,
         IOutfitTarget,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new ObjectBounds ObjectBounds { get; set; }
         new Byte ChanceNone { get; set; }
@@ -719,6 +719,7 @@ namespace Mutagen.Bethesda.Skyrim
         IHarvestTargetGetter,
         IItemGetter,
         ILoquiObject<ILeveledItemGetter>,
+        IMapsToGetter<ILeveledItemGetter>,
         IObjectBoundedGetter,
         IObjectBoundedOptionalGetter,
         IOutfitTargetGetter

@@ -478,7 +478,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ICellNavigationMesh :
-        IANavigationMesh,
+        IANavigationMeshInternal,
         ICellNavigationMeshGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<ICellNavigationMeshInternal>
@@ -497,7 +497,8 @@ namespace Mutagen.Bethesda.Skyrim
         IANavigationMeshGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<ICellNavigationMeshGetter>
+        ILoquiObject<ICellNavigationMeshGetter>,
+        IMapsToGetter<ICellNavigationMeshGetter>
     {
         static new ILoquiRegistration Registration => CellNavigationMesh_Registration.Instance;
         ICellNavigationMeshDataGetter? Data { get; }

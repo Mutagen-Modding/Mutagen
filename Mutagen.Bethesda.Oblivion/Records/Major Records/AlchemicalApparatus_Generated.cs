@@ -610,7 +610,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IAlchemicalApparatus :
-        IAItem,
+        IAItemInternal,
         IAlchemicalApparatusGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IAlchemicalApparatusInternal>,
@@ -637,6 +637,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IAlchemicalApparatusGetter>,
+        IMapsToGetter<IAlchemicalApparatusGetter>,
         IModeledGetter,
         INamedGetter,
         INamedRequiredGetter

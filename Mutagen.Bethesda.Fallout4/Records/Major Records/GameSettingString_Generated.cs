@@ -450,7 +450,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IGameSettingString :
-        IGameSetting,
+        IGameSettingInternal,
         IGameSettingStringGetter,
         ILoquiObjectSetter<IGameSettingStringInternal>
     {
@@ -467,7 +467,8 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IGameSettingStringGetter :
         IGameSettingGetter,
         IBinaryItem,
-        ILoquiObject<IGameSettingStringGetter>
+        ILoquiObject<IGameSettingStringGetter>,
+        IMapsToGetter<IGameSettingStringGetter>
     {
         static new ILoquiRegistration Registration => GameSettingString_Registration.Instance;
         ITranslatedStringGetter? Data { get; }

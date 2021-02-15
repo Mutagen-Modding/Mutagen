@@ -1070,7 +1070,7 @@ namespace Mutagen.Bethesda.Skyrim
         IArmorAddonGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IArmorAddonInternal>,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new BodyTemplate? BodyTemplate { get; set; }
         new FormLinkNullable<IRaceGetter> Race { get; set; }
@@ -1107,7 +1107,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IArmorAddonGetter>
+        ILoquiObject<IArmorAddonGetter>,
+        IMapsToGetter<IArmorAddonGetter>
     {
         static new ILoquiRegistration Registration => ArmorAddon_Registration.Instance;
         IBodyTemplateGetter? BodyTemplate { get; }

@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda
             ModType type)
         {
             if (name != null
-                && -1 != name.IndexOfAny(InvalidChars))
+                && HasInvalidCharacters(name))
             {
                 throw new ArgumentException($"ModKey name contained path characters: {name}");
             }
@@ -78,6 +78,11 @@ namespace Mutagen.Bethesda
             {
                 this._hash = 0;
             }
+        }
+
+        public static bool HasInvalidCharacters(ReadOnlySpan<char> str)
+        {
+            return -1 != str.IndexOfAny(InvalidChars);
         }
 
         /// <summary>
@@ -159,19 +164,7 @@ namespace Mutagen.Bethesda
                 errorReason = $"Extension could not be converted to a ModType: {str.Slice(index + 1).ToString()}";
                 return false;
             }
-            var modString = str.Slice(0, index).ToString();
-            var invalidIndex = modString.IndexOfAny(InvalidChars);
-            if (invalidIndex != -1)
-            {
-                modKey = default;
-                errorReason = $"Mod name contained an invalid character: {InvalidChars[invalidIndex]}";
-                return false;
-            }
-            modKey = new ModKey(
-                name: modString,
-                type: type);
-            errorReason = string.Empty;
-            return true;
+            return TryFromName(str.Slice(0, index), type, out modKey, out errorReason);
         }
 
         /// <summary>
@@ -184,6 +177,27 @@ namespace Mutagen.Bethesda
         public static bool TryFromNameAndExtension(ReadOnlySpan<char> str, [MaybeNullWhen(false)] out ModKey modKey)
         {
             return TryFromNameAndExtension(str, out modKey, out _);
+        }
+
+        public static bool TryFromName(ReadOnlySpan<char> str, ModType type, [MaybeNullWhen(false)] out ModKey modKey, out string errorReason)
+        {
+            var invalidIndex = str.IndexOfAny(InvalidChars);
+            if (invalidIndex != -1)
+            {
+                modKey = default;
+                errorReason = $"Mod name contained an invalid character: {InvalidChars[invalidIndex]}";
+                return false;
+            }
+            modKey = new ModKey(
+                name: str.ToString(),
+                type: type);
+            errorReason = string.Empty;
+            return true;
+        }
+
+        public static bool TryFromName(ReadOnlySpan<char> str, ModType type, [MaybeNullWhen(false)] out ModKey modKey)
+        {
+            return TryFromName(str, type, out modKey, out _);
         }
 
         public static bool TryConvertExtensionToType(ReadOnlySpan<char> str, [MaybeNullWhen(false)] out ModType modType)

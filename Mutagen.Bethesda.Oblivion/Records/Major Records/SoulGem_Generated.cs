@@ -676,7 +676,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ISoulGem :
-        IAItem,
+        IAItemInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<ISoulGemInternal>,
         IModeled,
@@ -705,6 +705,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<ISoulGemGetter>,
+        IMapsToGetter<ISoulGemGetter>,
         IModeledGetter,
         INamedGetter,
         INamedRequiredGetter

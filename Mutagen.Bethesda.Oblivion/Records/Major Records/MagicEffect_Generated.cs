@@ -733,7 +733,7 @@ namespace Mutagen.Bethesda.Oblivion
         IModeled,
         INamed,
         INamedRequired,
-        IOblivionMajorRecord
+        IOblivionMajorRecordInternal
     {
         new String? Name { get; set; }
         new String? Description { get; set; }
@@ -755,6 +755,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IMagicEffectGetter>,
+        IMapsToGetter<IMagicEffectGetter>,
         IModeledGetter,
         INamedGetter,
         INamedRequiredGetter

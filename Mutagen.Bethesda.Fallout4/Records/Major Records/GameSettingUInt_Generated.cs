@@ -450,7 +450,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IGameSettingUInt :
-        IGameSetting,
+        IGameSettingInternal,
         IGameSettingUIntGetter,
         ILoquiObjectSetter<IGameSettingUIntInternal>
     {
@@ -467,7 +467,8 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IGameSettingUIntGetter :
         IGameSettingGetter,
         IBinaryItem,
-        ILoquiObject<IGameSettingUIntGetter>
+        ILoquiObject<IGameSettingUIntGetter>,
+        IMapsToGetter<IGameSettingUIntGetter>
     {
         static new ILoquiRegistration Registration => GameSettingUInt_Registration.Instance;
         UInt32? Data { get; }

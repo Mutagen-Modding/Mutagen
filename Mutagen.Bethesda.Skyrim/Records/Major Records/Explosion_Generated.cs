@@ -1179,7 +1179,7 @@ namespace Mutagen.Bethesda.Skyrim
         INamedRequired,
         IObjectBounded,
         IObjectBoundedOptional,
-        ISkyrimMajorRecord,
+        ISkyrimMajorRecordInternal,
         ITranslatedNamed,
         ITranslatedNamedRequired
     {
@@ -1217,6 +1217,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IExplosionGetter>,
+        IMapsToGetter<IExplosionGetter>,
         IModeledGetter,
         INamedGetter,
         INamedRequiredGetter,

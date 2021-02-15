@@ -745,7 +745,7 @@ namespace Mutagen.Bethesda.Skyrim
         INpcSpawn,
         IObjectBounded,
         IObjectBoundedOptional,
-        ISkyrimMajorRecord
+        ISkyrimMajorRecordInternal
     {
         new ObjectBounds ObjectBounds { get; set; }
         new Byte ChanceNone { get; set; }
@@ -767,6 +767,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<ILeveledNpcGetter>,
+        IMapsToGetter<ILeveledNpcGetter>,
         IModeledGetter,
         INpcSpawnGetter,
         IObjectBoundedGetter,
