@@ -123,6 +123,8 @@
                                 FileName="{Binding FileName, RelativeSource={RelativeSource TemplatedParent}}"
                                 ModKey="{Binding ModKey, RelativeSource={RelativeSource TemplatedParent}}" />
                             <ListBox Grid.Row="1"
+                                Height="{Binding SearchBoxHeight, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
+                                MaxHeight="{Binding MaxSearchBoxHeight, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
                                 Margin="0,3,0,0"
                                 HorizontalContentAlignment="Stretch"
                                 Background="{DynamicResource Noggog.Brushes.Focused.Background}"

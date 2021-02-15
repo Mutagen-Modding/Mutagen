@@ -58,12 +58,12 @@ namespace Mutagen.Bethesda.WPF
         public static readonly DependencyProperty AllowsSearchModeProperty = DependencyProperty.Register(nameof(AllowsSearchMode), typeof(bool), typeof(AModKeyPicker),
              new FrameworkPropertyMetadata(true, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
-        public object LoadOrder
+        public object SearchableMods
         {
-            get => (object)GetValue(LoadOrderProperty);
-            set => SetValue(LoadOrderProperty, value);
+            get => (object)GetValue(SearchableModsProperty);
+            set => SetValue(SearchableModsProperty, value);
         }
-        public static readonly DependencyProperty LoadOrderProperty = DependencyProperty.Register(nameof(LoadOrder), typeof(object), typeof(AModKeyPicker),
+        public static readonly DependencyProperty SearchableModsProperty = DependencyProperty.Register(nameof(SearchableMods), typeof(object), typeof(AModKeyPicker),
              new FrameworkPropertyMetadata(default(object)));
 
         public IEnumerable<ModKey> ApplicableMods
@@ -91,7 +91,7 @@ namespace Mutagen.Bethesda.WPF
         protected override void OnLoaded()
         {
             base.OnLoaded();
-            ApplicableMods = this.WhenAnyValue(x => x.LoadOrder)
+            ApplicableMods = this.WhenAnyValue(x => x.SearchableMods)
                 .Throttle(TimeSpan.FromMilliseconds(300), RxApp.MainThreadScheduler)
                 .Select(lo =>
                 {
@@ -99,6 +99,8 @@ namespace Mutagen.Bethesda.WPF
                     {
                         case IObservable<IChangeSet<LoadOrderListing>> liveLo:
                             return liveLo.Transform(x => x.ModKey);
+                        case IObservable<IChangeSet<ModKey>> liveLoKeys:
+                            return liveLoKeys;
                         case IEnumerable<IModListing> modListings:
                             return modListings.Select(l => l.ModKey).AsObservableChangeSet();
                         case IEnumerable<LoadOrderListing> listings:
