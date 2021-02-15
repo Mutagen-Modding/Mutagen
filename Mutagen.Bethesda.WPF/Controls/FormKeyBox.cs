@@ -50,8 +50,9 @@ namespace Mutagen.Bethesda.WPF
             DefaultStyleKeyProperty.OverrideMetadata(typeof(FormKeyBox), new FrameworkPropertyMetadata(typeof(FormKeyBox)));
         }
 
-        public FormKeyBox()
+        protected override void OnLoaded()
         {
+            base.OnLoaded();
             this.WhenAnyValue(x => x.FormKey)
                 .DistinctUntilChanged()
                 .Subscribe(x =>

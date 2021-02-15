@@ -189,6 +189,12 @@ namespace Mutagen.Bethesda.WPF
 
         public AFormKeyPicker()
         {
+            ViewAllowedTypesCommand = ReactiveCommand.Create(() => ViewingAllowedTypes = !ViewingAllowedTypes);
+        }
+
+        protected override void OnLoaded()
+        {
+            base.OnLoaded();
             this.WhenAnyValue(x => x.FormKey)
                 .DistinctUntilChanged()
                 .Skip(1)
@@ -434,8 +440,6 @@ namespace Mutagen.Bethesda.WPF
                 .ObserveOnGui()
                 .Subscribe(_ => ViewingAllowedTypes = false)
                 .DisposeWith(_unloadDisposable);
-
-            ViewAllowedTypesCommand = ReactiveCommand.Create(() => ViewingAllowedTypes = !ViewingAllowedTypes);
         }
 
         protected IEnumerable<Type> ScopedTypesInternal(IEnumerable types)
@@ -451,6 +455,7 @@ namespace Mutagen.Bethesda.WPF
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
+            InSearchMode = false;
             var editorIdBox = GetTemplateChild("PART_EditorIDBox") as TextBox;
             if (editorIdBox != null)
             {
@@ -474,8 +479,9 @@ namespace Mutagen.Bethesda.WPF
                         this.InSearchMode = true;
                     })
                     .DisposeWith(_templateDisposable);
-                this.Events().IsKeyboardFocusWithinChanged
-                    .Where(x => !((bool)x.NewValue))
+                this.WhenAnyValue(x => x.IsKeyboardFocusWithin)
+                    .Merge(this.WhenAnyValue(x => x.IsVisible))
+                    .Where(x => !x)
                     .Delay(TimeSpan.FromMilliseconds(150), RxApp.MainThreadScheduler)
                     .Subscribe(_ =>
                     {

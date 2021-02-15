@@ -4,23 +4,25 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Mutagen.Bethesda.WPF.TestDisplay"
+    xmlns:mahapps="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:mutagenWpf="clr-namespace:Mutagen.Bethesda.WPF;assembly=Mutagen.Bethesda.WPF"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <StackPanel>
-        <TextBlock Text="FormKeyPicker" />
-        <mutagenWpf:FormKeyPicker
-            x:Name="FormKeyPicker"
-            Height="200"
-            Margin="5"
-            VerticalAlignment="Center" />
-        <TextBlock Text="FormKeyMultiPicker" />
-        <mutagenWpf:FormKeyMultiPicker
-            x:Name="FormKeyMultiPicker"
-            Height="200"
-            Margin="5"
-            VerticalAlignment="Center" />
-    </StackPanel>
+    <TabControl>
+        <TabControl.Style>
+            <Style BasedOn="{StaticResource MahApps.Styles.TabControl}" TargetType="TabControl">
+                <Setter Property="mahapps:HeaderedControlHelper.HeaderFontSize" Value="16" />
+                <Setter Property="mahapps:HeaderedControlHelper.HeaderForeground" Value="AliceBlue" />
+                <Setter Property="Background" Value="Transparent" />
+            </Style>
+        </TabControl.Style>
+        <TabItem Header="Form Key Picker">
+            <mutagenWpf:FormKeyPicker x:Name="FormKeyPicker" Margin="5" />
+        </TabItem>
+        <TabItem Header="Form Key Multi Picker">
+            <mutagenWpf:FormKeyMultiPicker x:Name="FormKeyMultiPicker" Margin="5" />
+        </TabItem>
+    </TabControl>
 </local:MainViewBase>
