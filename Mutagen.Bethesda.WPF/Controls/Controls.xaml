@@ -69,7 +69,7 @@
     <Style x:Key="FormKeyPickerButton" TargetType="Button">
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="Command" Value="{Binding PickerClickCommand, RelativeSource={RelativeSource AncestorType=local:AbstractFormKeyPicker}}" />
+        <Setter Property="Command" Value="{Binding PickerClickCommand, RelativeSource={RelativeSource AncestorType=local:AFormKeyPicker}}" />
         <Setter Property="CommandParameter" Value="{Binding}" />
         <Setter Property="Template">
             <Setter.Value>
@@ -362,12 +362,15 @@
                                                 <Style TargetType="Grid">
                                                     <Setter Property="Background" Value="Transparent" />
                                                     <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="True">
+                                                        <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" Value="True">
                                                             <Setter Property="Background" Value="{StaticResource Noggog.Brushes.Selected.Background}" />
                                                         </DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
                                             </Grid.Style>
+                                            <Rectangle Grid.Column="0" Grid.ColumnSpan="3"
+                                                Fill="#07FFFFFF"
+                                                Visibility="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=Grid}, Converter={StaticResource VisibilityConverter}}" />
                                             <Border Grid.Column="0"
                                                 Margin="4,0"
                                                 VerticalAlignment="Center"

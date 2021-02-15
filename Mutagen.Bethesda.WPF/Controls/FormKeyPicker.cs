@@ -4,7 +4,7 @@ using System.Windows.Controls;
 
 namespace Mutagen.Bethesda.WPF
 {
-    public class FormKeyPicker : AbstractFormKeyPicker
+    public class FormKeyPicker : AFormKeyPicker
     {
         public double MaxSearchBoxHeight
         {

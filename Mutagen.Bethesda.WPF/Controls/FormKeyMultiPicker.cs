@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.WPF
     }
 
     [TemplatePart(Name = "PART_AddedFormKeyListBox", Type = typeof(ListBox))]
-    public class FormKeyMultiPicker : AbstractFormKeyPicker
+    public class FormKeyMultiPicker : AFormKeyPicker
     {
         public ICollection<FormKeyItemViewModel> FormKeys
         {
@@ -88,6 +88,11 @@ namespace Mutagen.Bethesda.WPF
         }
         public static readonly DependencyProperty DeleteSelectedItemsCommandProperty = DependencyProperty.Register(nameof(DeleteSelectedItemsCommand), typeof(ICommand), typeof(FormKeyMultiPicker),
              new FrameworkPropertyMetadata(default(ICommand), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+        static FormKeyMultiPicker()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(FormKeyMultiPicker), new FrameworkPropertyMetadata(typeof(FormKeyMultiPicker)));
+        }
 
         public FormKeyMultiPicker()
         {

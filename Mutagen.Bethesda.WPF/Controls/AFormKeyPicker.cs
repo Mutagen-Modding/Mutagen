@@ -18,7 +18,7 @@ using System.Windows.Controls;
 namespace Mutagen.Bethesda.WPF
 {
     [TemplatePart(Name = "PART_EditorIDBox", Type = typeof(TextBox))]
-    public class AbstractFormKeyPicker : NoggogControl
+    public class AFormKeyPicker : NoggogControl
     {
         private bool _updating;
 
@@ -27,7 +27,7 @@ namespace Mutagen.Bethesda.WPF
             get => (ILinkCache)GetValue(LinkCacheProperty);
             set => SetValue(LinkCacheProperty, value);
         }
-        public static readonly DependencyProperty LinkCacheProperty = DependencyProperty.Register(nameof(LinkCache), typeof(ILinkCache), typeof(AbstractFormKeyPicker),
+        public static readonly DependencyProperty LinkCacheProperty = DependencyProperty.Register(nameof(LinkCache), typeof(ILinkCache), typeof(AFormKeyPicker),
              new FrameworkPropertyMetadata(default(ILinkCache)));
 
         public IEnumerable ScopedTypes
@@ -35,7 +35,7 @@ namespace Mutagen.Bethesda.WPF
             get => (IEnumerable)GetValue(ScopedTypesProperty);
             set => SetValue(ScopedTypesProperty, value);
         }
-        public static readonly DependencyProperty ScopedTypesProperty = DependencyProperty.Register(nameof(ScopedTypes), typeof(IEnumerable), typeof(AbstractFormKeyPicker),
+        public static readonly DependencyProperty ScopedTypesProperty = DependencyProperty.Register(nameof(ScopedTypes), typeof(IEnumerable), typeof(AFormKeyPicker),
              new FrameworkPropertyMetadata(default(IEnumerable), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public bool Found
@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.WPF
             get => (bool)GetValue(FoundProperty);
             set => SetValue(FoundProperty, value);
         }
-        public static readonly DependencyProperty FoundProperty = DependencyProperty.Register(nameof(Found), typeof(bool), typeof(AbstractFormKeyPicker),
+        public static readonly DependencyProperty FoundProperty = DependencyProperty.Register(nameof(Found), typeof(bool), typeof(AFormKeyPicker),
              new FrameworkPropertyMetadata(default(bool), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public bool Processing
@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.WPF
             get => (bool)GetValue(ProcessingProperty);
             set => SetValue(ProcessingProperty, value);
         }
-        public static readonly DependencyProperty ProcessingProperty = DependencyProperty.Register(nameof(Processing), typeof(bool), typeof(AbstractFormKeyPicker),
+        public static readonly DependencyProperty ProcessingProperty = DependencyProperty.Register(nameof(Processing), typeof(bool), typeof(AFormKeyPicker),
              new FrameworkPropertyMetadata(default(bool)));
 
         public FormKey FormKey
@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda.WPF
             get => (FormKey)GetValue(FormKeyProperty);
             set => SetValue(FormKeyProperty, value);
         }
-        public static readonly DependencyProperty FormKeyProperty = DependencyProperty.Register(nameof(FormKey), typeof(FormKey), typeof(AbstractFormKeyPicker),
+        public static readonly DependencyProperty FormKeyProperty = DependencyProperty.Register(nameof(FormKey), typeof(FormKey), typeof(AFormKeyPicker),
              new FrameworkPropertyMetadata(default(FormKey), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public string EditorID
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.WPF
             get => (string)GetValue(EditorIDProperty);
             set => SetValue(EditorIDProperty, value);
         }
-        public static readonly DependencyProperty EditorIDProperty = DependencyProperty.Register(nameof(EditorID), typeof(string), typeof(AbstractFormKeyPicker),
+        public static readonly DependencyProperty EditorIDProperty = DependencyProperty.Register(nameof(EditorID), typeof(string), typeof(AFormKeyPicker),
              new FrameworkPropertyMetadata(default(string), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public StatusIndicatorState Status
@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda.WPF
             get => (StatusIndicatorState)GetValue(StatusProperty);
             set => SetValue(StatusPropertyKey, value);
         }
-        public static readonly DependencyPropertyKey StatusPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Status), typeof(StatusIndicatorState), typeof(AbstractFormKeyPicker),
+        public static readonly DependencyPropertyKey StatusPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Status), typeof(StatusIndicatorState), typeof(AFormKeyPicker),
              new FrameworkPropertyMetadata(default(StatusIndicatorState)));
         public static readonly DependencyProperty StatusProperty = StatusPropertyKey.DependencyProperty;
 
@@ -84,7 +84,7 @@ namespace Mutagen.Bethesda.WPF
             get => (string)GetValue(StatusStringProperty);
             set => SetValue(StatusStringPropertyKey, value);
         }
-        public static readonly DependencyPropertyKey StatusStringPropertyKey = DependencyProperty.RegisterReadOnly(nameof(StatusString), typeof(string), typeof(AbstractFormKeyPicker),
+        public static readonly DependencyPropertyKey StatusStringPropertyKey = DependencyProperty.RegisterReadOnly(nameof(StatusString), typeof(string), typeof(AFormKeyPicker),
              new FrameworkPropertyMetadata(default(string)));
         public static readonly DependencyProperty StatusStringProperty = StatusStringPropertyKey.DependencyProperty;
 
@@ -93,7 +93,7 @@ namespace Mutagen.Bethesda.WPF
             get => (ICommand)GetValue(PickerClickCommandProperty);
             set => SetValue(PickerClickCommandProperty, value);
         }
-        public static readonly DependencyProperty PickerClickCommandProperty = DependencyProperty.Register(nameof(PickerClickCommand), typeof(ICommand), typeof(AbstractFormKeyPicker),
+        public static readonly DependencyProperty PickerClickCommandProperty = DependencyProperty.Register(nameof(PickerClickCommand), typeof(ICommand), typeof(AFormKeyPicker),
              new FrameworkPropertyMetadata(default(ICommand), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public bool InSearchMode
@@ -101,7 +101,7 @@ namespace Mutagen.Bethesda.WPF
             get => (bool)GetValue(InSearchModeProperty);
             set => SetValue(InSearchModePropertyKey, value);
         }
-        public static readonly DependencyPropertyKey InSearchModePropertyKey = DependencyProperty.RegisterReadOnly(nameof(InSearchMode), typeof(bool), typeof(AbstractFormKeyPicker),
+        public static readonly DependencyPropertyKey InSearchModePropertyKey = DependencyProperty.RegisterReadOnly(nameof(InSearchMode), typeof(bool), typeof(AFormKeyPicker),
              new FrameworkPropertyMetadata(default(bool)));
         public static readonly DependencyProperty InSearchModeProperty = InSearchModePropertyKey.DependencyProperty;
 
@@ -111,7 +111,7 @@ namespace Mutagen.Bethesda.WPF
             get => (Brush)GetValue(ProcessingSpinnerForegroundProperty);
             set => SetValue(ProcessingSpinnerForegroundProperty, value);
         }
-        public static readonly DependencyProperty ProcessingSpinnerForegroundProperty = DependencyProperty.Register(nameof(ProcessingSpinnerForeground), typeof(Brush), typeof(AbstractFormKeyPicker),
+        public static readonly DependencyProperty ProcessingSpinnerForegroundProperty = DependencyProperty.Register(nameof(ProcessingSpinnerForeground), typeof(Brush), typeof(AFormKeyPicker),
              new FrameworkPropertyMetadata(new SolidColorBrush(Color.FromArgb(255, 0, 255, 255))));
 
         public Color ProcessingSpinnerGlow
@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.WPF
             get => (Color)GetValue(ProcessingSpinnerGlowProperty);
             set => SetValue(ProcessingSpinnerGlowProperty, value);
         }
-        public static readonly DependencyProperty ProcessingSpinnerGlowProperty = DependencyProperty.Register(nameof(ProcessingSpinnerGlow), typeof(Color), typeof(AbstractFormKeyPicker),
+        public static readonly DependencyProperty ProcessingSpinnerGlowProperty = DependencyProperty.Register(nameof(ProcessingSpinnerGlow), typeof(Color), typeof(AFormKeyPicker),
              new FrameworkPropertyMetadata(Color.FromArgb(255, 0, 255, 255)));
 
         public Brush ErrorBrush
@@ -127,7 +127,7 @@ namespace Mutagen.Bethesda.WPF
             get => (Brush)GetValue(ErrorBrushProperty);
             set => SetValue(ErrorBrushProperty, value);
         }
-        public static readonly DependencyProperty ErrorBrushProperty = DependencyProperty.Register(nameof(ErrorBrush), typeof(Brush), typeof(AbstractFormKeyPicker),
+        public static readonly DependencyProperty ErrorBrushProperty = DependencyProperty.Register(nameof(ErrorBrush), typeof(Brush), typeof(AFormKeyPicker),
              new FrameworkPropertyMetadata(Application.Current.Resources[Noggog.WPF.Brushes.Constants.ErrorForeground]));
 
         public Brush SuccessBrush
@@ -135,7 +135,7 @@ namespace Mutagen.Bethesda.WPF
             get => (Brush)GetValue(SuccessBrushProperty);
             set => SetValue(SuccessBrushProperty, value);
         }
-        public static readonly DependencyProperty SuccessBrushProperty = DependencyProperty.Register(nameof(SuccessBrush), typeof(Brush), typeof(AbstractFormKeyPicker),
+        public static readonly DependencyProperty SuccessBrushProperty = DependencyProperty.Register(nameof(SuccessBrush), typeof(Brush), typeof(AFormKeyPicker),
              new FrameworkPropertyMetadata(Application.Current.Resources[Noggog.WPF.Brushes.Constants.SuccessForeground]));
 
         public Brush PassiveBrush
@@ -143,7 +143,7 @@ namespace Mutagen.Bethesda.WPF
             get => (Brush)GetValue(PassiveBrushProperty);
             set => SetValue(PassiveBrushProperty, value);
         }
-        public static readonly DependencyProperty PassiveBrushProperty = DependencyProperty.Register(nameof(PassiveBrush), typeof(Brush), typeof(AbstractFormKeyPicker),
+        public static readonly DependencyProperty PassiveBrushProperty = DependencyProperty.Register(nameof(PassiveBrush), typeof(Brush), typeof(AFormKeyPicker),
              new FrameworkPropertyMetadata(Application.Current.Resources[Noggog.WPF.Brushes.Constants.PassiveForeground]));
 
         public bool AllowsSearchMode
@@ -151,7 +151,7 @@ namespace Mutagen.Bethesda.WPF
             get => (bool)GetValue(AllowsSearchModeProperty);
             set => SetValue(AllowsSearchModeProperty, value);
         }
-        public static readonly DependencyProperty AllowsSearchModeProperty = DependencyProperty.Register(nameof(AllowsSearchMode), typeof(bool), typeof(AbstractFormKeyPicker),
+        public static readonly DependencyProperty AllowsSearchModeProperty = DependencyProperty.Register(nameof(AllowsSearchMode), typeof(bool), typeof(AFormKeyPicker),
              new FrameworkPropertyMetadata(true, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public IEnumerable ApplicableEditorIDs
@@ -159,7 +159,7 @@ namespace Mutagen.Bethesda.WPF
             get => (IEnumerable)GetValue(ApplicableEditorIDsProperty);
             protected set => SetValue(ApplicableEditorIDsPropertyKey, value);
         }
-        public static readonly DependencyPropertyKey ApplicableEditorIDsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ApplicableEditorIDs), typeof(IEnumerable), typeof(AbstractFormKeyPicker),
+        public static readonly DependencyPropertyKey ApplicableEditorIDsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ApplicableEditorIDs), typeof(IEnumerable), typeof(AFormKeyPicker),
              new FrameworkPropertyMetadata(default(IEnumerable)));
         public static readonly DependencyProperty ApplicableEditorIDsProperty = ApplicableEditorIDsPropertyKey.DependencyProperty;
 
@@ -168,7 +168,7 @@ namespace Mutagen.Bethesda.WPF
             get => (bool)GetValue(ViewingAllowedTypesProperty);
             set => SetValue(ViewingAllowedTypesProperty, value);
         }
-        public static readonly DependencyProperty ViewingAllowedTypesProperty = DependencyProperty.Register(nameof(ViewingAllowedTypes), typeof(bool), typeof(AbstractFormKeyPicker),
+        public static readonly DependencyProperty ViewingAllowedTypesProperty = DependencyProperty.Register(nameof(ViewingAllowedTypes), typeof(bool), typeof(AFormKeyPicker),
              new FrameworkPropertyMetadata(default(bool)));
 
         public ICommand ViewAllowedTypesCommand
@@ -176,13 +176,18 @@ namespace Mutagen.Bethesda.WPF
             get => (ICommand)GetValue(ViewAllowedTypesCommandProperty);
             set => SetValue(ViewAllowedTypesCommandProperty, value);
         }
-        public static readonly DependencyProperty ViewAllowedTypesCommandProperty = DependencyProperty.Register(nameof(ViewAllowedTypesCommand), typeof(ICommand), typeof(AbstractFormKeyPicker),
+        public static readonly DependencyProperty ViewAllowedTypesCommandProperty = DependencyProperty.Register(nameof(ViewAllowedTypesCommand), typeof(ICommand), typeof(AFormKeyPicker),
              new FrameworkPropertyMetadata(default(ICommand)));
         #endregion
 
         record State(StatusIndicatorState Status, string Text, FormKey FormKey, string Edid);
 
-        public AbstractFormKeyPicker()
+        static AFormKeyPicker()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(AFormKeyPicker), new FrameworkPropertyMetadata(typeof(AFormKeyPicker)));
+        }
+
+        public AFormKeyPicker()
         {
             this.WhenAnyValue(x => x.FormKey)
                 .DistinctUntilChanged()
