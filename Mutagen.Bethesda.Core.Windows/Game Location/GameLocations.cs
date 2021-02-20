@@ -3,6 +3,7 @@ using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,6 +31,35 @@ namespace Mutagen.Bethesda
             }
             path = default;
             return false;
+        }
+
+        public static string GetGameFolder(GameRelease release)
+        {
+            if (TryGetGameFolder(release, out var path))
+            {
+                return path;
+            }
+            throw new Exception($"Game folder for {release} cannot be found automatically");
+        }
+
+        public static bool TryGetDataFolder(GameRelease release, [MaybeNullWhen(false)] out string path)
+        {
+            if (TryGetGameFolder(release, out path))
+            {
+                path = Path.Combine(path, "Data");
+                return true;
+            }
+            path = default;
+            return false;
+        }
+
+        public static string GetDataFolder(GameRelease release)
+        {
+            if (TryGetDataFolder(release, out var path))
+            {
+                return path;
+            }
+            throw new Exception($"Data folder for {release} cannot be found automatically");
         }
 
         internal static IReadOnlyDictionary<GameRelease, GameMetaData> Games = new Dictionary<GameRelease, GameMetaData>
