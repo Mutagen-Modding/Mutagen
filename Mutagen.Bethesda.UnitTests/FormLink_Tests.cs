@@ -51,5 +51,46 @@ namespace Mutagen.Bethesda.UnitTests
             link1.Should().Be(link2);
             link2.Should().Be(link1);
         }
+
+        [Fact]
+        public void FormLinkSet()
+        {
+            FormLink<INpcGetter> link1 = new FormLink<INpcGetter>(Utility.Form1);
+            FormLink<INpcGetter> link2 = new FormLink<INpcGetter>(Utility.Form1);
+            HashSet<FormLink<INpcGetter>> set = new HashSet<FormLink<INpcGetter>>()
+            {
+                link1,
+                link2
+            };
+            set.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public void FormLinkSet_DifferingGetterSetter()
+        {
+            FormLink<INpcGetter> getter = new FormLink<INpcGetter>(Utility.Form1);
+            FormLink<INpc> setter = new FormLink<INpc>(Utility.Form1);
+            FormLink<Npc> direct = new FormLink<Npc>(Utility.Form1);
+            HashSet<IFormLink<INpcGetter>> set = new HashSet<IFormLink<INpcGetter>>()
+            {
+                getter,
+                setter,
+                direct,
+            };
+            set.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public void FormLinkSet_DifferingTypes()
+        {
+            FormLink<IConstructibleGetter> link1 = new FormLink<IConstructibleGetter>(Utility.Form1);
+            FormLink<IWeaponGetter> link2 = new FormLink<IWeaponGetter>(Utility.Form1);
+            HashSet<IFormLink<IConstructibleGetter>> set = new HashSet<IFormLink<IConstructibleGetter>>()
+            {
+                link1,
+                link2,
+            };
+            set.Should().HaveCount(1);
+        }
     }
 }

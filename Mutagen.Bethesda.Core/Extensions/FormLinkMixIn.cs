@@ -29,5 +29,23 @@ namespace Mutagen.Bethesda
         {
             return new FormLink<TGetter>(rec.FormKey);
         }
+
+        public static bool Contains<TGetter>(this IReadOnlyCollection<IFormLink<TGetter>> coll, TGetter record)
+            where TGetter : class, IMajorRecordCommonGetter
+        {
+            return coll.Contains(new FormLink<TGetter>(record.FormKey));
+        }
+
+        public static bool Contains<TGetter>(this IReadOnlyCollection<FormLink<TGetter>> coll, TGetter record)
+            where TGetter : class, IMajorRecordCommonGetter
+        {
+            return coll.Contains(new FormLink<TGetter>(record.FormKey));
+        }
+
+        public static bool Contains<TGetter>(this IReadOnlyCollection<FormLinkNullable<TGetter>> coll, TGetter record)
+            where TGetter : class, IMajorRecordCommonGetter
+        {
+            return coll.Contains(new FormLinkNullable<TGetter>(record.FormKey));
+        }
     }
 }
