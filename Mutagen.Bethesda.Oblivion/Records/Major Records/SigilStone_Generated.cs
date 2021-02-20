@@ -1050,7 +1050,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void RemapLinks(ISigilStone obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Script = obj.Script.Relink(mapping);
+            obj.Script.Relink(mapping);
             obj.Effects.RemapLinks(mapping);
         }
         

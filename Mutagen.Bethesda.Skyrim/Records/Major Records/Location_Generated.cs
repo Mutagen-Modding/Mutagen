@@ -3108,11 +3108,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             obj.ActorCellEnablePoint?.RemapLinks(mapping);
             obj.LocationCellEnablePoint?.RemapLinks(mapping);
             obj.Keywords?.RemapLinks(mapping);
-            obj.ParentLocation = obj.ParentLocation.Relink(mapping);
-            obj.Music = obj.Music.Relink(mapping);
-            obj.UnreportedCrimeFaction = obj.UnreportedCrimeFaction.Relink(mapping);
-            obj.WorldLocationMarkerRef = obj.WorldLocationMarkerRef.Relink(mapping);
-            obj.HorseMarkerRef = obj.HorseMarkerRef.Relink(mapping);
+            obj.ParentLocation.Relink(mapping);
+            obj.Music.Relink(mapping);
+            obj.UnreportedCrimeFaction.Relink(mapping);
+            obj.WorldLocationMarkerRef.Relink(mapping);
+            obj.HorseMarkerRef.Relink(mapping);
         }
         
         #endregion

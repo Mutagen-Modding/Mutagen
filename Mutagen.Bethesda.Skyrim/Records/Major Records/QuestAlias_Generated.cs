@@ -2157,24 +2157,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public void RemapLinks(IQuestAlias obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.SpecificLocation = obj.SpecificLocation.Relink(mapping);
-            obj.ForcedReference = obj.ForcedReference.Relink(mapping);
-            obj.UniqueActor = obj.UniqueActor.Relink(mapping);
+            obj.SpecificLocation.Relink(mapping);
+            obj.ForcedReference.Relink(mapping);
+            obj.UniqueActor.Relink(mapping);
             obj.Location?.RemapLinks(mapping);
             obj.External?.RemapLinks(mapping);
             obj.CreateReferenceToObject?.RemapLinks(mapping);
             obj.Conditions.RemapLinks(mapping);
             obj.Keywords?.RemapLinks(mapping);
             obj.Items?.RemapLinks(mapping);
-            obj.SpectatorOverridePackageList = obj.SpectatorOverridePackageList.Relink(mapping);
-            obj.ObserveDeadBodyOverridePackageList = obj.ObserveDeadBodyOverridePackageList.Relink(mapping);
-            obj.GuardWarnOverridePackageList = obj.GuardWarnOverridePackageList.Relink(mapping);
-            obj.CombatOverridePackageList = obj.CombatOverridePackageList.Relink(mapping);
-            obj.DisplayName = obj.DisplayName.Relink(mapping);
+            obj.SpectatorOverridePackageList.Relink(mapping);
+            obj.ObserveDeadBodyOverridePackageList.Relink(mapping);
+            obj.GuardWarnOverridePackageList.Relink(mapping);
+            obj.CombatOverridePackageList.Relink(mapping);
+            obj.DisplayName.Relink(mapping);
             obj.Spells.RemapLinks(mapping);
             obj.Factions.RemapLinks(mapping);
             obj.PackageData.RemapLinks(mapping);
-            obj.VoiceTypes = obj.VoiceTypes.Relink(mapping);
+            obj.VoiceTypes.Relink(mapping);
         }
         
         #endregion

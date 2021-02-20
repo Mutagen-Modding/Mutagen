@@ -1175,7 +1175,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             base.RemapLinks(obj, mapping);
             obj.Conditions.RemapLinks(mapping);
-            obj.LoadingScreenNif = obj.LoadingScreenNif.Relink(mapping);
+            obj.LoadingScreenNif.Relink(mapping);
         }
         
         #endregion

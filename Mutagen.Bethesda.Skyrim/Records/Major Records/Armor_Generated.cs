@@ -1874,18 +1874,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             base.RemapLinks(obj, mapping);
             obj.VirtualMachineAdapter?.RemapLinks(mapping);
-            obj.ObjectEffect = obj.ObjectEffect.Relink(mapping);
+            obj.ObjectEffect.Relink(mapping);
             obj.WorldModel?.RemapLinks(mapping);
             obj.Destructible?.RemapLinks(mapping);
-            obj.PickUpSound = obj.PickUpSound.Relink(mapping);
-            obj.PutDownSound = obj.PutDownSound.Relink(mapping);
-            obj.EquipmentType = obj.EquipmentType.Relink(mapping);
-            obj.BashImpactDataSet = obj.BashImpactDataSet.Relink(mapping);
-            obj.AlternateBlockMaterial = obj.AlternateBlockMaterial.Relink(mapping);
-            obj.Race = obj.Race.Relink(mapping);
+            obj.PickUpSound.Relink(mapping);
+            obj.PutDownSound.Relink(mapping);
+            obj.EquipmentType.Relink(mapping);
+            obj.BashImpactDataSet.Relink(mapping);
+            obj.AlternateBlockMaterial.Relink(mapping);
+            obj.Race.Relink(mapping);
             obj.Keywords?.RemapLinks(mapping);
             obj.Armature.RemapLinks(mapping);
-            obj.TemplateArmor = obj.TemplateArmor.Relink(mapping);
+            obj.TemplateArmor.Relink(mapping);
         }
         
         #endregion

@@ -1315,8 +1315,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.RemapLinks(obj, mapping);
             obj.VirtualMachineAdapter?.RemapLinks(mapping);
             obj.Model?.RemapLinks(mapping);
-            obj.Ingredient = obj.Ingredient.Relink(mapping);
-            obj.HarvestSound = obj.HarvestSound.Relink(mapping);
+            obj.Ingredient.Relink(mapping);
+            obj.HarvestSound.Relink(mapping);
         }
         
         #endregion

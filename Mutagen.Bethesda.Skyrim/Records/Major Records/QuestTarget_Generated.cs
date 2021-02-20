@@ -893,7 +893,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public void RemapLinks(IQuestTarget obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Target = obj.Target.Relink(mapping);
+            obj.Target.Relink(mapping);
             obj.Conditions.RemapLinks(mapping);
         }
         

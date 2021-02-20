@@ -2140,16 +2140,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             base.RemapLinks(obj, mapping);
             obj.Factions.RemapLinks(mapping);
-            obj.DeathItem = obj.DeathItem.Relink(mapping);
-            obj.Race = obj.Race.Relink(mapping);
+            obj.DeathItem.Relink(mapping);
+            obj.Race.Relink(mapping);
             obj.Spells.RemapLinks(mapping);
-            obj.Script = obj.Script.Relink(mapping);
+            obj.Script.Relink(mapping);
             obj.Items.RemapLinks(mapping);
             obj.AIPackages.RemapLinks(mapping);
-            obj.Class = obj.Class.Relink(mapping);
-            obj.Hair = obj.Hair.Relink(mapping);
+            obj.Class.Relink(mapping);
+            obj.Hair.Relink(mapping);
             obj.Eyes?.RemapLinks(mapping);
-            obj.CombatStyle = obj.CombatStyle.Relink(mapping);
+            obj.CombatStyle.Relink(mapping);
         }
         
         #endregion

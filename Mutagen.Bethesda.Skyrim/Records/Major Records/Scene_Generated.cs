@@ -1504,7 +1504,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             obj.VirtualMachineAdapter?.RemapLinks(mapping);
             obj.Phases.RemapLinks(mapping);
             obj.Actions.RemapLinks(mapping);
-            obj.Quest = obj.Quest.Relink(mapping);
+            obj.Quest.Relink(mapping);
             obj.Conditions.RemapLinks(mapping);
         }
         

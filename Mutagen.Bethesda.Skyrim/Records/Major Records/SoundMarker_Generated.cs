@@ -900,7 +900,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(ISoundMarker obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.SoundDescriptor = obj.SoundDescriptor.Relink(mapping);
+            obj.SoundDescriptor.Relink(mapping);
         }
         
         #endregion

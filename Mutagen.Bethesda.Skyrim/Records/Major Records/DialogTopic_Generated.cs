@@ -1513,8 +1513,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IDialogTopic obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Branch = obj.Branch.Relink(mapping);
-            obj.Quest = obj.Quest.Relink(mapping);
+            obj.Branch.Relink(mapping);
+            obj.Quest.Relink(mapping);
             obj.Responses.RemapLinks(mapping);
         }
         

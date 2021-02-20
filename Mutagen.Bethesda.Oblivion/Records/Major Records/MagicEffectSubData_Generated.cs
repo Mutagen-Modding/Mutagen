@@ -905,11 +905,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Mutagen
         public void RemapLinks(IMagicEffectSubData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.EnchantEffect = obj.EnchantEffect.Relink(mapping);
-            obj.CastingSound = obj.CastingSound.Relink(mapping);
-            obj.BoltSound = obj.BoltSound.Relink(mapping);
-            obj.HitSound = obj.HitSound.Relink(mapping);
-            obj.AreaSound = obj.AreaSound.Relink(mapping);
+            obj.EnchantEffect.Relink(mapping);
+            obj.CastingSound.Relink(mapping);
+            obj.BoltSound.Relink(mapping);
+            obj.HitSound.Relink(mapping);
+            obj.AreaSound.Relink(mapping);
         }
         
         #endregion

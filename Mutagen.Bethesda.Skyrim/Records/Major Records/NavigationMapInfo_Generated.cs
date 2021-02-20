@@ -1352,12 +1352,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public void RemapLinks(INavigationMapInfo obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.NavigationMesh = obj.NavigationMesh.Relink(mapping);
+            obj.NavigationMesh.Relink(mapping);
             obj.MergedTo.RemapLinks(mapping);
             obj.PreferredMerges.RemapLinks(mapping);
             obj.LinkedDoors.RemapLinks(mapping);
-            obj.ParentWorldspace = obj.ParentWorldspace.Relink(mapping);
-            obj.ParentCell = obj.ParentCell.Relink(mapping);
+            obj.ParentWorldspace.Relink(mapping);
+            obj.ParentCell.Relink(mapping);
         }
         
         #endregion

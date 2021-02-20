@@ -811,7 +811,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IPlacedBeam obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Projectile = obj.Projectile.Relink(mapping);
+            obj.Projectile.Relink(mapping);
         }
         
         #endregion

@@ -802,10 +802,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public void RemapLinks(IWeatherImageSpaces obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Sunrise = obj.Sunrise.Relink(mapping);
-            obj.Day = obj.Day.Relink(mapping);
-            obj.Sunset = obj.Sunset.Relink(mapping);
-            obj.Night = obj.Night.Relink(mapping);
+            obj.Sunrise.Relink(mapping);
+            obj.Day.Relink(mapping);
+            obj.Sunset.Relink(mapping);
+            obj.Night.Relink(mapping);
         }
         
         #endregion

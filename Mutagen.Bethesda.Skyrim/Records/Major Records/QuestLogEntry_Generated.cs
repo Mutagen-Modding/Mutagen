@@ -1038,7 +1038,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IQuestLogEntry obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             obj.Conditions.RemapLinks(mapping);
-            obj.NextQuest = obj.NextQuest.Relink(mapping);
+            obj.NextQuest.Relink(mapping);
         }
         
         #endregion

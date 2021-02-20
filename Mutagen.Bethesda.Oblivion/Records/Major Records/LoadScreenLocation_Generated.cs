@@ -767,8 +767,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Mutagen
         public void RemapLinks(ILoadScreenLocation obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Direct = obj.Direct.Relink(mapping);
-            obj.Indirect = obj.Indirect.Relink(mapping);
+            obj.Direct.Relink(mapping);
+            obj.Indirect.Relink(mapping);
         }
         
         #endregion

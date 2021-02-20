@@ -1001,7 +1001,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IShout obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.MenuDisplayObject = obj.MenuDisplayObject.Relink(mapping);
+            obj.MenuDisplayObject.Relink(mapping);
             obj.WordsOfPower.RemapLinks(mapping);
         }
         

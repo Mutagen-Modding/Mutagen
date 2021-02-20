@@ -1400,10 +1400,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             obj.Model?.RemapLinks(mapping);
             obj.Destructible?.RemapLinks(mapping);
             obj.Keywords?.RemapLinks(mapping);
-            obj.LoopingSound = obj.LoopingSound.Relink(mapping);
-            obj.ActivationSound = obj.ActivationSound.Relink(mapping);
-            obj.WaterType = obj.WaterType.Relink(mapping);
-            obj.InteractionKeyword = obj.InteractionKeyword.Relink(mapping);
+            obj.LoopingSound.Relink(mapping);
+            obj.ActivationSound.Relink(mapping);
+            obj.WaterType.Relink(mapping);
+            obj.InteractionKeyword.Relink(mapping);
         }
         
         #endregion

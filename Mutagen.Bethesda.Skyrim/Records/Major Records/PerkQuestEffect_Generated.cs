@@ -752,7 +752,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IPerkQuestEffect obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Quest = obj.Quest.Relink(mapping);
+            obj.Quest.Relink(mapping);
         }
         
         #endregion

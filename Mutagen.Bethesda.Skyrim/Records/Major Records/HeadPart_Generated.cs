@@ -1276,9 +1276,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.RemapLinks(obj, mapping);
             obj.Model?.RemapLinks(mapping);
             obj.ExtraParts.RemapLinks(mapping);
-            obj.TextureSet = obj.TextureSet.Relink(mapping);
-            obj.Color = obj.Color.Relink(mapping);
-            obj.ValidRaces = obj.ValidRaces.Relink(mapping);
+            obj.TextureSet.Relink(mapping);
+            obj.Color.Relink(mapping);
+            obj.ValidRaces.Relink(mapping);
         }
         
         #endregion

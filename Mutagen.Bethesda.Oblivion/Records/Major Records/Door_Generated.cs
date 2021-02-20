@@ -1098,10 +1098,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void RemapLinks(IDoor obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Script = obj.Script.Relink(mapping);
-            obj.OpenSound = obj.OpenSound.Relink(mapping);
-            obj.CloseSound = obj.CloseSound.Relink(mapping);
-            obj.LoopSound = obj.LoopSound.Relink(mapping);
+            obj.Script.Relink(mapping);
+            obj.OpenSound.Relink(mapping);
+            obj.CloseSound.Relink(mapping);
+            obj.LoopSound.Relink(mapping);
             obj.RandomTeleportDestinations.RemapLinks(mapping);
         }
         

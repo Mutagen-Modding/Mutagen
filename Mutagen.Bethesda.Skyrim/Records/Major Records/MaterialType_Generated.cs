@@ -948,8 +948,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IMaterialType obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Parent = obj.Parent.Relink(mapping);
-            obj.HavokImpactDataSet = obj.HavokImpactDataSet.Relink(mapping);
+            obj.Parent.Relink(mapping);
+            obj.HavokImpactDataSet.Relink(mapping);
         }
         
         #endregion

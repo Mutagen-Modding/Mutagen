@@ -744,7 +744,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public void RemapLinks(INpcSound obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Sound = obj.Sound.Relink(mapping);
+            obj.Sound.Relink(mapping);
         }
         
         #endregion

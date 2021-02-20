@@ -2103,10 +2103,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             base.RemapLinks(obj, mapping);
             obj.Regions?.RemapLinks(mapping);
-            obj.Climate = obj.Climate.Relink(mapping);
-            obj.Water = obj.Water.Relink(mapping);
-            obj.Owner = obj.Owner.Relink(mapping);
-            obj.GlobalVariable = obj.GlobalVariable.Relink(mapping);
+            obj.Climate.Relink(mapping);
+            obj.Water.Relink(mapping);
+            obj.Owner.Relink(mapping);
+            obj.GlobalVariable.Relink(mapping);
             obj.PathGrid?.RemapLinks(mapping);
             obj.Landscape?.RemapLinks(mapping);
             obj.Persistent.RemapLinks(mapping);

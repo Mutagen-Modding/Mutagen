@@ -978,7 +978,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void RemapLinks(IWater obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Sound = obj.Sound.Relink(mapping);
+            obj.Sound.Relink(mapping);
             obj.RelatedWaters?.RemapLinks(mapping);
         }
         

@@ -1011,7 +1011,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             base.RemapLinks(obj, mapping);
             obj.Model?.RemapLinks(mapping);
-            obj.Sound = obj.Sound.Relink(mapping);
+            obj.Sound.Relink(mapping);
         }
         
         #endregion

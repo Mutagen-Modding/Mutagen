@@ -1854,12 +1854,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public void RemapLinks(IBodyPart obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.ExplodableDebris = obj.ExplodableDebris.Relink(mapping);
-            obj.ExplodableExplosion = obj.ExplodableExplosion.Relink(mapping);
-            obj.SeverableDebris = obj.SeverableDebris.Relink(mapping);
-            obj.SeverableExplosion = obj.SeverableExplosion.Relink(mapping);
-            obj.SeverableImpactData = obj.SeverableImpactData.Relink(mapping);
-            obj.ExplodableImpactData = obj.ExplodableImpactData.Relink(mapping);
+            obj.ExplodableDebris.Relink(mapping);
+            obj.ExplodableExplosion.Relink(mapping);
+            obj.SeverableDebris.Relink(mapping);
+            obj.SeverableExplosion.Relink(mapping);
+            obj.SeverableImpactData.Relink(mapping);
+            obj.ExplodableImpactData.Relink(mapping);
         }
         
         #endregion

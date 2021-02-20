@@ -859,8 +859,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IVisualEffect obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.EffectArt = obj.EffectArt.Relink(mapping);
-            obj.Shader = obj.Shader.Relink(mapping);
+            obj.EffectArt.Relink(mapping);
+            obj.Shader.Relink(mapping);
         }
         
         #endregion

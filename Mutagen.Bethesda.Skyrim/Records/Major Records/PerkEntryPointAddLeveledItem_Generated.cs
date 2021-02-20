@@ -685,7 +685,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IPerkEntryPointAddLeveledItem obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Item = obj.Item.Relink(mapping);
+            obj.Item.Relink(mapping);
         }
         
         #endregion

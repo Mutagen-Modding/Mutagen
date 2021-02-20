@@ -655,7 +655,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(INpcInheritSound obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.InheritsSoundsFrom = obj.InheritsSoundsFrom.Relink(mapping);
+            obj.InheritsSoundsFrom.Relink(mapping);
         }
         
         #endregion

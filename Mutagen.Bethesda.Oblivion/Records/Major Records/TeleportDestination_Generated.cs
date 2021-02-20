@@ -767,7 +767,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Mutagen
         public void RemapLinks(ITeleportDestination obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Destination = obj.Destination.Relink(mapping);
+            obj.Destination.Relink(mapping);
         }
         
         #endregion

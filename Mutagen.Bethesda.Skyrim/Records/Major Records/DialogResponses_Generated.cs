@@ -1640,16 +1640,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             base.RemapLinks(obj, mapping);
             obj.VirtualMachineAdapter?.RemapLinks(mapping);
-            obj.Topic = obj.Topic.Relink(mapping);
-            obj.PreviousDialog = obj.PreviousDialog.Relink(mapping);
+            obj.Topic.Relink(mapping);
+            obj.PreviousDialog.Relink(mapping);
             obj.LinkTo.RemapLinks(mapping);
-            obj.ResponseData = obj.ResponseData.Relink(mapping);
+            obj.ResponseData.Relink(mapping);
             obj.Responses.RemapLinks(mapping);
             obj.Conditions.RemapLinks(mapping);
             obj.UnknownData.RemapLinks(mapping);
-            obj.Speaker = obj.Speaker.Relink(mapping);
-            obj.WalkAwayTopic = obj.WalkAwayTopic.Relink(mapping);
-            obj.AudioOutputOverride = obj.AudioOutputOverride.Relink(mapping);
+            obj.Speaker.Relink(mapping);
+            obj.WalkAwayTopic.Relink(mapping);
+            obj.AudioOutputOverride.Relink(mapping);
         }
         
         #endregion

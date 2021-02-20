@@ -775,7 +775,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public void RemapLinks(IRankPlacement obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Faction = obj.Faction.Relink(mapping);
+            obj.Faction.Relink(mapping);
         }
         
         #endregion

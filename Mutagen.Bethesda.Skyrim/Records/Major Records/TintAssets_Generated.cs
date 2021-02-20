@@ -945,7 +945,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public void RemapLinks(ITintAssets obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.PresetDefault = obj.PresetDefault.Relink(mapping);
+            obj.PresetDefault.Relink(mapping);
             obj.Presets.RemapLinks(mapping);
         }
         

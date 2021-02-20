@@ -1019,9 +1019,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void RemapLinks(IPlacedCreature obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Base = obj.Base.Relink(mapping);
-            obj.Owner = obj.Owner.Relink(mapping);
-            obj.GlobalVariable = obj.GlobalVariable.Relink(mapping);
+            obj.Base.Relink(mapping);
+            obj.Owner.Relink(mapping);
+            obj.GlobalVariable.Relink(mapping);
             obj.EnableParent?.RemapLinks(mapping);
         }
         

@@ -799,7 +799,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IRegionSounds obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Music = obj.Music.Relink(mapping);
+            obj.Music.Relink(mapping);
             obj.Sounds?.RemapLinks(mapping);
         }
         

@@ -1049,7 +1049,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public void RemapLinks(IPackageEvent obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Idle = obj.Idle.Relink(mapping);
+            obj.Idle.Relink(mapping);
             obj.Topics.RemapLinks(mapping);
         }
         

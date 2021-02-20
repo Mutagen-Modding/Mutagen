@@ -1616,7 +1616,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             obj.VirtualMachineAdapter?.RemapLinks(mapping);
             obj.Model?.RemapLinks(mapping);
             obj.Destructible?.RemapLinks(mapping);
-            obj.Sound = obj.Sound.Relink(mapping);
+            obj.Sound.Relink(mapping);
         }
         
         #endregion

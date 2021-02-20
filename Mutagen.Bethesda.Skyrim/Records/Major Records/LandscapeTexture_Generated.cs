@@ -1087,8 +1087,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(ILandscapeTexture obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.TextureSet = obj.TextureSet.Relink(mapping);
-            obj.MaterialType = obj.MaterialType.Relink(mapping);
+            obj.TextureSet.Relink(mapping);
+            obj.MaterialType.Relink(mapping);
             obj.Grasses.RemapLinks(mapping);
         }
         

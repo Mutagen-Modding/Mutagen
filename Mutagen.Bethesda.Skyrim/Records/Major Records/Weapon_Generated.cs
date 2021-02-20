@@ -2130,26 +2130,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.RemapLinks(obj, mapping);
             obj.VirtualMachineAdapter?.RemapLinks(mapping);
             obj.Model?.RemapLinks(mapping);
-            obj.ObjectEffect = obj.ObjectEffect.Relink(mapping);
+            obj.ObjectEffect.Relink(mapping);
             obj.Destructible?.RemapLinks(mapping);
-            obj.EquipmentType = obj.EquipmentType.Relink(mapping);
-            obj.BlockBashImpact = obj.BlockBashImpact.Relink(mapping);
-            obj.AlternateBlockMaterial = obj.AlternateBlockMaterial.Relink(mapping);
-            obj.PickUpSound = obj.PickUpSound.Relink(mapping);
-            obj.PutDownSound = obj.PutDownSound.Relink(mapping);
+            obj.EquipmentType.Relink(mapping);
+            obj.BlockBashImpact.Relink(mapping);
+            obj.AlternateBlockMaterial.Relink(mapping);
+            obj.PickUpSound.Relink(mapping);
+            obj.PutDownSound.Relink(mapping);
             obj.Keywords?.RemapLinks(mapping);
             obj.ScopeModel?.RemapLinks(mapping);
-            obj.ImpactDataSet = obj.ImpactDataSet.Relink(mapping);
-            obj.FirstPersonModel = obj.FirstPersonModel.Relink(mapping);
-            obj.AttackSound = obj.AttackSound.Relink(mapping);
-            obj.AttackSound2D = obj.AttackSound2D.Relink(mapping);
-            obj.AttackLoopSound = obj.AttackLoopSound.Relink(mapping);
-            obj.AttackFailSound = obj.AttackFailSound.Relink(mapping);
-            obj.IdleSound = obj.IdleSound.Relink(mapping);
-            obj.EquipSound = obj.EquipSound.Relink(mapping);
-            obj.UnequipSound = obj.UnequipSound.Relink(mapping);
+            obj.ImpactDataSet.Relink(mapping);
+            obj.FirstPersonModel.Relink(mapping);
+            obj.AttackSound.Relink(mapping);
+            obj.AttackSound2D.Relink(mapping);
+            obj.AttackLoopSound.Relink(mapping);
+            obj.AttackFailSound.Relink(mapping);
+            obj.IdleSound.Relink(mapping);
+            obj.EquipSound.Relink(mapping);
+            obj.UnequipSound.Relink(mapping);
             obj.Critical?.RemapLinks(mapping);
-            obj.Template = obj.Template.Relink(mapping);
+            obj.Template.Relink(mapping);
         }
         
         #endregion

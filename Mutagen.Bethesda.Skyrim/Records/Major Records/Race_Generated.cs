@@ -4501,36 +4501,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             base.RemapLinks(obj, mapping);
             obj.ActorEffect?.RemapLinks(mapping);
-            obj.Skin = obj.Skin.Relink(mapping);
+            obj.Skin.Relink(mapping);
             obj.Keywords?.RemapLinks(mapping);
             obj.SkeletalModel?.RemapLinks(mapping);
             obj.Voices.RemapLinks(mapping);
             obj.DecapitateArmors?.RemapLinks(mapping);
             obj.DefaultHairColors?.RemapLinks(mapping);
-            obj.AttackRace = obj.AttackRace.Relink(mapping);
+            obj.AttackRace.Relink(mapping);
             obj.Attacks.RemapLinks(mapping);
             obj.BodyData.RemapLinks(mapping);
             obj.Hairs?.RemapLinks(mapping);
             obj.Eyes?.RemapLinks(mapping);
-            obj.BodyPartData = obj.BodyPartData.Relink(mapping);
+            obj.BodyPartData.Relink(mapping);
             obj.BehaviorGraph.RemapLinks(mapping);
-            obj.MaterialType = obj.MaterialType.Relink(mapping);
-            obj.ImpactDataSet = obj.ImpactDataSet.Relink(mapping);
-            obj.DecapitationFX = obj.DecapitationFX.Relink(mapping);
-            obj.OpenLootSound = obj.OpenLootSound.Relink(mapping);
-            obj.CloseLootSound = obj.CloseLootSound.Relink(mapping);
+            obj.MaterialType.Relink(mapping);
+            obj.ImpactDataSet.Relink(mapping);
+            obj.DecapitationFX.Relink(mapping);
+            obj.OpenLootSound.Relink(mapping);
+            obj.CloseLootSound.Relink(mapping);
             obj.MovementTypes.RemapLinks(mapping);
             obj.EquipmentSlots.RemapLinks(mapping);
-            obj.UnarmedEquipSlot = obj.UnarmedEquipSlot.Relink(mapping);
-            obj.BaseMovementDefaultWalk = obj.BaseMovementDefaultWalk.Relink(mapping);
-            obj.BaseMovementDefaultRun = obj.BaseMovementDefaultRun.Relink(mapping);
-            obj.BaseMovementDefaultSwim = obj.BaseMovementDefaultSwim.Relink(mapping);
-            obj.BaseMovementDefaultFly = obj.BaseMovementDefaultFly.Relink(mapping);
-            obj.BaseMovementDefaultSneak = obj.BaseMovementDefaultSneak.Relink(mapping);
-            obj.BaseMovementDefaultSprint = obj.BaseMovementDefaultSprint.Relink(mapping);
+            obj.UnarmedEquipSlot.Relink(mapping);
+            obj.BaseMovementDefaultWalk.Relink(mapping);
+            obj.BaseMovementDefaultRun.Relink(mapping);
+            obj.BaseMovementDefaultSwim.Relink(mapping);
+            obj.BaseMovementDefaultFly.Relink(mapping);
+            obj.BaseMovementDefaultSneak.Relink(mapping);
+            obj.BaseMovementDefaultSprint.Relink(mapping);
             obj.HeadData?.RemapLinks(mapping);
-            obj.MorphRace = obj.MorphRace.Relink(mapping);
-            obj.ArmorRace = obj.ArmorRace.Relink(mapping);
+            obj.MorphRace.Relink(mapping);
+            obj.ArmorRace.Relink(mapping);
         }
         
         #endregion

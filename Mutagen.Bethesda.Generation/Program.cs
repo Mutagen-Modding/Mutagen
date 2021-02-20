@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "a.Binary.ListBinaryTranslation<IEDIDLink<IMagicEffectGetter>>.Instan";
+            string testString = "bj.SleepingOutfit = obj.SleepingOutfit.Relink(mappi";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

@@ -1404,7 +1404,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(ISceneAction obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             obj.Packages.RemapLinks(mapping);
-            obj.Topic = obj.Topic.Relink(mapping);
+            obj.Topic.Relink(mapping);
         }
         
         #endregion

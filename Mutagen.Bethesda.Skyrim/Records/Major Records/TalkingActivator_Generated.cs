@@ -1290,8 +1290,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             obj.Model?.RemapLinks(mapping);
             obj.Destructible?.RemapLinks(mapping);
             obj.Keywords?.RemapLinks(mapping);
-            obj.LoopingSound = obj.LoopingSound.Relink(mapping);
-            obj.VoiceType = obj.VoiceType.Relink(mapping);
+            obj.LoopingSound.Relink(mapping);
+            obj.VoiceType.Relink(mapping);
         }
         
         #endregion

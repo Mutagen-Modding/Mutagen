@@ -4709,8 +4709,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IEffectShader obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.AddonModels = obj.AddonModels.Relink(mapping);
-            obj.AmbientSound = obj.AmbientSound.Relink(mapping);
+            obj.AddonModels.Relink(mapping);
+            obj.AmbientSound.Relink(mapping);
         }
         
         #endregion

@@ -1242,7 +1242,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             base.RemapLinks(obj, mapping);
             obj.Model?.RemapLinks(mapping);
-            obj.ImageSpaceModifier = obj.ImageSpaceModifier.Relink(mapping);
+            obj.ImageSpaceModifier.Relink(mapping);
         }
         
         #endregion

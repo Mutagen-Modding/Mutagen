@@ -843,7 +843,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Mutagen
         public void RemapLinks(IScriptEffectData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Script = obj.Script.Relink(mapping);
+            obj.Script.Relink(mapping);
         }
         
         #endregion

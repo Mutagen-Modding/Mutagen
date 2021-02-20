@@ -1506,8 +1506,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             obj.Model?.RemapLinks(mapping);
             obj.Destructible?.RemapLinks(mapping);
             obj.Keywords?.RemapLinks(mapping);
-            obj.InteractionKeyword = obj.InteractionKeyword.Relink(mapping);
-            obj.AssociatedSpell = obj.AssociatedSpell.Relink(mapping);
+            obj.InteractionKeyword.Relink(mapping);
+            obj.AssociatedSpell.Relink(mapping);
             obj.Markers?.RemapLinks(mapping);
         }
         

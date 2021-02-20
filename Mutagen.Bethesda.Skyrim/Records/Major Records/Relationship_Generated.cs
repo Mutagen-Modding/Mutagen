@@ -977,9 +977,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IRelationship obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Parent = obj.Parent.Relink(mapping);
-            obj.Child = obj.Child.Relink(mapping);
-            obj.AssociationType = obj.AssociationType.Relink(mapping);
+            obj.Parent.Relink(mapping);
+            obj.Child.Relink(mapping);
+            obj.AssociationType.Relink(mapping);
         }
         
         #endregion

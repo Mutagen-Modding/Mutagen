@@ -1001,8 +1001,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void RemapLinks(IWeapon obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Script = obj.Script.Relink(mapping);
-            obj.Enchantment = obj.Enchantment.Relink(mapping);
+            obj.Script.Relink(mapping);
+            obj.Enchantment.Relink(mapping);
         }
         
         #endregion

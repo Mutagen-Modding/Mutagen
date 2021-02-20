@@ -780,8 +780,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public void RemapLinks(ILocationAliasReference obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Keyword = obj.Keyword.Relink(mapping);
-            obj.RefType = obj.RefType.Relink(mapping);
+            obj.Keyword.Relink(mapping);
+            obj.RefType.Relink(mapping);
         }
         
         #endregion

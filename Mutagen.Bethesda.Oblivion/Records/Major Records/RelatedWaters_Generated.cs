@@ -767,9 +767,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Mutagen
         public void RemapLinks(IRelatedWaters obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.RelatedWaterDaytime = obj.RelatedWaterDaytime.Relink(mapping);
-            obj.RelatedWaterNighttime = obj.RelatedWaterNighttime.Relink(mapping);
-            obj.RelatedWaterUnderwater = obj.RelatedWaterUnderwater.Relink(mapping);
+            obj.RelatedWaterDaytime.Relink(mapping);
+            obj.RelatedWaterNighttime.Relink(mapping);
+            obj.RelatedWaterUnderwater.Relink(mapping);
         }
         
         #endregion

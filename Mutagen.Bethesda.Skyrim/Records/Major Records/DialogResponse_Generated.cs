@@ -1173,9 +1173,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public void RemapLinks(IDialogResponse obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Sound = obj.Sound.Relink(mapping);
-            obj.SpeakerIdleAnimation = obj.SpeakerIdleAnimation.Relink(mapping);
-            obj.ListenerIdleAnimation = obj.ListenerIdleAnimation.Relink(mapping);
+            obj.Sound.Relink(mapping);
+            obj.SpeakerIdleAnimation.Relink(mapping);
+            obj.ListenerIdleAnimation.Relink(mapping);
         }
         
         #endregion

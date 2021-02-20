@@ -1954,15 +1954,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.RemapLinks(obj, mapping);
             obj.Model?.RemapLinks(mapping);
             obj.Destructible?.RemapLinks(mapping);
-            obj.Light = obj.Light.Relink(mapping);
-            obj.MuzzleFlash = obj.MuzzleFlash.Relink(mapping);
-            obj.Explosion = obj.Explosion.Relink(mapping);
-            obj.Sound = obj.Sound.Relink(mapping);
-            obj.CountdownSound = obj.CountdownSound.Relink(mapping);
-            obj.DisaleSound = obj.DisaleSound.Relink(mapping);
-            obj.DefaultWeaponSource = obj.DefaultWeaponSource.Relink(mapping);
-            obj.DecalData = obj.DecalData.Relink(mapping);
-            obj.CollisionLayer = obj.CollisionLayer.Relink(mapping);
+            obj.Light.Relink(mapping);
+            obj.MuzzleFlash.Relink(mapping);
+            obj.Explosion.Relink(mapping);
+            obj.Sound.Relink(mapping);
+            obj.CountdownSound.Relink(mapping);
+            obj.DisaleSound.Relink(mapping);
+            obj.DefaultWeaponSource.Relink(mapping);
+            obj.DecalData.Relink(mapping);
+            obj.CollisionLayer.Relink(mapping);
         }
         
         #endregion

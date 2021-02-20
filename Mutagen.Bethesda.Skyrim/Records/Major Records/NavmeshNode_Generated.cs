@@ -730,7 +730,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public void RemapLinks(INavmeshNode obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.NavMesh = obj.NavMesh.Relink(mapping);
+            obj.NavMesh.Relink(mapping);
         }
         
         #endregion

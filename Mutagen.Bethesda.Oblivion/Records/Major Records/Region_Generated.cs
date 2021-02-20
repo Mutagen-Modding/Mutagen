@@ -1176,7 +1176,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void RemapLinks(IRegion obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Worldspace = obj.Worldspace.Relink(mapping);
+            obj.Worldspace.Relink(mapping);
             obj.Objects?.RemapLinks(mapping);
             obj.Weather?.RemapLinks(mapping);
             obj.Grasses?.RemapLinks(mapping);

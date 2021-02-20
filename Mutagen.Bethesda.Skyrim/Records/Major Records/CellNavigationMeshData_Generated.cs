@@ -731,8 +731,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(ICellNavigationMeshData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.UnusedWorldspaceParent = obj.UnusedWorldspaceParent.Relink(mapping);
-            obj.Parent = obj.Parent.Relink(mapping);
+            obj.UnusedWorldspaceParent.Relink(mapping);
+            obj.Parent.Relink(mapping);
         }
         
         #endregion

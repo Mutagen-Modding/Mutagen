@@ -811,7 +811,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IPlacedHazard obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Hazard = obj.Hazard.Relink(mapping);
+            obj.Hazard.Relink(mapping);
         }
         
         #endregion

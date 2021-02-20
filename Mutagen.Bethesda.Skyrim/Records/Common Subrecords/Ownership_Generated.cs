@@ -744,7 +744,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public void RemapLinks(IOwnership obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Owner = obj.Owner.Relink(mapping);
+            obj.Owner.Relink(mapping);
         }
         
         #endregion

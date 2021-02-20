@@ -662,7 +662,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IPackageTargetSpecificReference obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Reference = obj.Reference.Relink(mapping);
+            obj.Reference.Relink(mapping);
         }
         
         #endregion

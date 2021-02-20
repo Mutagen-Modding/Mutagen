@@ -1118,10 +1118,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void RemapLinks(IPlacedNpc obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Base = obj.Base.Relink(mapping);
+            obj.Base.Relink(mapping);
             obj.EnableParent?.RemapLinks(mapping);
-            obj.MerchantContainer = obj.MerchantContainer.Relink(mapping);
-            obj.Horse = obj.Horse.Relink(mapping);
+            obj.MerchantContainer.Relink(mapping);
+            obj.Horse.Relink(mapping);
         }
         
         #endregion

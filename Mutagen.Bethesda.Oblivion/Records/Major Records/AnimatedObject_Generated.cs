@@ -786,7 +786,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void RemapLinks(IAnimatedObject obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.IdleAnimation = obj.IdleAnimation.Relink(mapping);
+            obj.IdleAnimation.Relink(mapping);
         }
         
         #endregion

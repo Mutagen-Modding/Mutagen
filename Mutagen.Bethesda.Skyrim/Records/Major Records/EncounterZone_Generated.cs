@@ -1005,8 +1005,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IEncounterZone obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Owner = obj.Owner.Relink(mapping);
-            obj.Location = obj.Location.Relink(mapping);
+            obj.Owner.Relink(mapping);
+            obj.Location.Relink(mapping);
         }
         
         #endregion

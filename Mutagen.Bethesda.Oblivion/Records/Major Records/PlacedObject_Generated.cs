@@ -1667,15 +1667,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void RemapLinks(IPlacedObject obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Base = obj.Base.Relink(mapping);
+            obj.Base.Relink(mapping);
             obj.TeleportDestination?.RemapLinks(mapping);
             obj.Lock?.RemapLinks(mapping);
-            obj.Owner = obj.Owner.Relink(mapping);
-            obj.GlobalVariable = obj.GlobalVariable.Relink(mapping);
+            obj.Owner.Relink(mapping);
+            obj.GlobalVariable.Relink(mapping);
             obj.EnableParent?.RemapLinks(mapping);
-            obj.Target = obj.Target.Relink(mapping);
-            obj.XRTM = obj.XRTM.Relink(mapping);
-            obj.ContainedSoul = obj.ContainedSoul.Relink(mapping);
+            obj.Target.Relink(mapping);
+            obj.XRTM.Relink(mapping);
+            obj.ContainedSoul.Relink(mapping);
         }
         
         #endregion

@@ -872,8 +872,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void RemapLinks(IActivator obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Script = obj.Script.Relink(mapping);
-            obj.Sound = obj.Sound.Relink(mapping);
+            obj.Script.Relink(mapping);
+            obj.Sound.Relink(mapping);
         }
         
         #endregion

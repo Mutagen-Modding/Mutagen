@@ -1331,11 +1331,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             base.RemapLinks(obj, mapping);
             obj.Model?.RemapLinks(mapping);
-            obj.ImageSpaceModifier = obj.ImageSpaceModifier.Relink(mapping);
-            obj.Spell = obj.Spell.Relink(mapping);
-            obj.Light = obj.Light.Relink(mapping);
-            obj.ImpactDataSet = obj.ImpactDataSet.Relink(mapping);
-            obj.Sound = obj.Sound.Relink(mapping);
+            obj.ImageSpaceModifier.Relink(mapping);
+            obj.Spell.Relink(mapping);
+            obj.Light.Relink(mapping);
+            obj.ImpactDataSet.Relink(mapping);
+            obj.Sound.Relink(mapping);
         }
         
         #endregion

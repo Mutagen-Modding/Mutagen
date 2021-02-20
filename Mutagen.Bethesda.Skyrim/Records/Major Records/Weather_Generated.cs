@@ -3555,14 +3555,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IWeather obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Precipitation = obj.Precipitation.Relink(mapping);
-            obj.VisualEffect = obj.VisualEffect.Relink(mapping);
+            obj.Precipitation.Relink(mapping);
+            obj.VisualEffect.Relink(mapping);
             obj.Sounds.RemapLinks(mapping);
             obj.SkyStatics.RemapLinks(mapping);
             obj.ImageSpaces?.RemapLinks(mapping);
             obj.VolumetricLighting?.RemapLinks(mapping);
             obj.Aurora?.RemapLinks(mapping);
-            obj.SunGlareLensFlare = obj.SunGlareLensFlare.Relink(mapping);
+            obj.SunGlareLensFlare.Relink(mapping);
         }
         
         #endregion

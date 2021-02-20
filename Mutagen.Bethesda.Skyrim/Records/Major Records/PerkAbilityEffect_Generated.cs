@@ -674,7 +674,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IPerkAbilityEffect obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Ability = obj.Ability.Relink(mapping);
+            obj.Ability.Relink(mapping);
         }
         
         #endregion

@@ -1316,11 +1316,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             base.RemapLinks(obj, mapping);
             obj.Model?.RemapLinks(mapping);
-            obj.TextureSet = obj.TextureSet.Relink(mapping);
-            obj.SecondaryTextureSet = obj.SecondaryTextureSet.Relink(mapping);
-            obj.Sound1 = obj.Sound1.Relink(mapping);
-            obj.Sound2 = obj.Sound2.Relink(mapping);
-            obj.Hazard = obj.Hazard.Relink(mapping);
+            obj.TextureSet.Relink(mapping);
+            obj.SecondaryTextureSet.Relink(mapping);
+            obj.Sound1.Relink(mapping);
+            obj.Sound2.Relink(mapping);
+            obj.Hazard.Relink(mapping);
         }
         
         #endregion

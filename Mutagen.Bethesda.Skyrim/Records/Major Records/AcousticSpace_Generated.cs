@@ -880,9 +880,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IAcousticSpace obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.AmbientSound = obj.AmbientSound.Relink(mapping);
-            obj.UseSoundFromRegion = obj.UseSoundFromRegion.Relink(mapping);
-            obj.EnvironmentType = obj.EnvironmentType.Relink(mapping);
+            obj.AmbientSound.Relink(mapping);
+            obj.UseSoundFromRegion.Relink(mapping);
+            obj.EnvironmentType.Relink(mapping);
         }
         
         #endregion

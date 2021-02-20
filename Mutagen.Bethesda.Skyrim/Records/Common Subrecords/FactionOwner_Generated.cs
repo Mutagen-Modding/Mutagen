@@ -695,7 +695,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IFactionOwner obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Faction = obj.Faction.Relink(mapping);
+            obj.Faction.Relink(mapping);
         }
         
         #endregion

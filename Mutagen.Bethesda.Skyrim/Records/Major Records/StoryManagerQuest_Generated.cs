@@ -788,7 +788,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public void RemapLinks(IStoryManagerQuest obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Quest = obj.Quest.Relink(mapping);
+            obj.Quest.Relink(mapping);
         }
         
         #endregion

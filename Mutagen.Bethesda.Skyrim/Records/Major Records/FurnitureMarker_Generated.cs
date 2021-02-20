@@ -831,7 +831,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public void RemapLinks(IFurnitureMarker obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.MarkerKeyword = obj.MarkerKeyword.Relink(mapping);
+            obj.MarkerKeyword.Relink(mapping);
         }
         
         #endregion

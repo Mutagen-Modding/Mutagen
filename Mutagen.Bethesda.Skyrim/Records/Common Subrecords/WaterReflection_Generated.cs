@@ -772,7 +772,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public void RemapLinks(IWaterReflection obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Water = obj.Water.Relink(mapping);
+            obj.Water.Relink(mapping);
         }
         
         #endregion

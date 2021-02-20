@@ -1326,8 +1326,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IObjectEffect obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.BaseEnchantment = obj.BaseEnchantment.Relink(mapping);
-            obj.WornRestrictions = obj.WornRestrictions.Relink(mapping);
+            obj.BaseEnchantment.Relink(mapping);
+            obj.WornRestrictions.Relink(mapping);
             obj.Effects.RemapLinks(mapping);
         }
         

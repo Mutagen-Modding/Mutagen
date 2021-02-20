@@ -1066,8 +1066,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.RemapLinks(obj, mapping);
             obj.Items?.RemapLinks(mapping);
             obj.Conditions.RemapLinks(mapping);
-            obj.CreatedObject = obj.CreatedObject.Relink(mapping);
-            obj.WorkbenchKeyword = obj.WorkbenchKeyword.Relink(mapping);
+            obj.CreatedObject.Relink(mapping);
+            obj.WorkbenchKeyword.Relink(mapping);
         }
         
         #endregion

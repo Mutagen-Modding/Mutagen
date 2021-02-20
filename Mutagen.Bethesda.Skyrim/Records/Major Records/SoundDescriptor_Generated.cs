@@ -1406,9 +1406,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(ISoundDescriptor obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Category = obj.Category.Relink(mapping);
-            obj.AlternateSoundFor = obj.AlternateSoundFor.Relink(mapping);
-            obj.OutputModel = obj.OutputModel.Relink(mapping);
+            obj.Category.Relink(mapping);
+            obj.AlternateSoundFor.Relink(mapping);
+            obj.OutputModel.Relink(mapping);
             obj.Conditions.RemapLinks(mapping);
         }
         

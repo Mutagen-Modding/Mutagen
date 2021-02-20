@@ -730,7 +730,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Mutagen
         public void RemapLinks(IWeatherType obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Weather = obj.Weather.Relink(mapping);
+            obj.Weather.Relink(mapping);
         }
         
         #endregion

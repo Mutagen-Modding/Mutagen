@@ -1673,11 +1673,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             obj.Keywords?.RemapLinks(mapping);
             obj.Model?.RemapLinks(mapping);
             obj.Destructible?.RemapLinks(mapping);
-            obj.PickUpSound = obj.PickUpSound.Relink(mapping);
-            obj.PutDownSound = obj.PutDownSound.Relink(mapping);
-            obj.EquipmentType = obj.EquipmentType.Relink(mapping);
-            obj.Addiction = obj.Addiction.Relink(mapping);
-            obj.ConsumeSound = obj.ConsumeSound.Relink(mapping);
+            obj.PickUpSound.Relink(mapping);
+            obj.PutDownSound.Relink(mapping);
+            obj.EquipmentType.Relink(mapping);
+            obj.Addiction.Relink(mapping);
+            obj.ConsumeSound.Relink(mapping);
             obj.Effects.RemapLinks(mapping);
         }
         

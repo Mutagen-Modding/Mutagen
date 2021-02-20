@@ -1623,14 +1623,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             base.RemapLinks(obj, mapping);
             obj.Relations.RemapLinks(mapping);
-            obj.ExteriorJailMarker = obj.ExteriorJailMarker.Relink(mapping);
-            obj.FollowerWaitMarker = obj.FollowerWaitMarker.Relink(mapping);
-            obj.StolenGoodsContainer = obj.StolenGoodsContainer.Relink(mapping);
-            obj.PlayerInventoryContainer = obj.PlayerInventoryContainer.Relink(mapping);
-            obj.SharedCrimeFactionList = obj.SharedCrimeFactionList.Relink(mapping);
-            obj.JailOutfit = obj.JailOutfit.Relink(mapping);
-            obj.VendorBuySellList = obj.VendorBuySellList.Relink(mapping);
-            obj.MerchantContainer = obj.MerchantContainer.Relink(mapping);
+            obj.ExteriorJailMarker.Relink(mapping);
+            obj.FollowerWaitMarker.Relink(mapping);
+            obj.StolenGoodsContainer.Relink(mapping);
+            obj.PlayerInventoryContainer.Relink(mapping);
+            obj.SharedCrimeFactionList.Relink(mapping);
+            obj.JailOutfit.Relink(mapping);
+            obj.VendorBuySellList.Relink(mapping);
+            obj.MerchantContainer.Relink(mapping);
             obj.VendorLocation?.RemapLinks(mapping);
             obj.Conditions?.RemapLinks(mapping);
         }

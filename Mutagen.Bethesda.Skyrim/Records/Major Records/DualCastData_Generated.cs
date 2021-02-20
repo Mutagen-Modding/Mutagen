@@ -1024,11 +1024,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IDualCastData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Projectile = obj.Projectile.Relink(mapping);
-            obj.Explosion = obj.Explosion.Relink(mapping);
-            obj.EffectShader = obj.EffectShader.Relink(mapping);
-            obj.HitEffectArt = obj.HitEffectArt.Relink(mapping);
-            obj.ImpactDataSet = obj.ImpactDataSet.Relink(mapping);
+            obj.Projectile.Relink(mapping);
+            obj.Explosion.Relink(mapping);
+            obj.EffectShader.Relink(mapping);
+            obj.HitEffectArt.Relink(mapping);
+            obj.ImpactDataSet.Relink(mapping);
         }
         
         #endregion

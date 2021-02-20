@@ -2414,15 +2414,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             base.RemapLinks(obj, mapping);
             obj.LargeReferences.RemapLinks(mapping);
-            obj.InteriorLighting = obj.InteriorLighting.Relink(mapping);
-            obj.EncounterZone = obj.EncounterZone.Relink(mapping);
-            obj.Location = obj.Location.Relink(mapping);
+            obj.InteriorLighting.Relink(mapping);
+            obj.EncounterZone.Relink(mapping);
+            obj.Location.Relink(mapping);
             obj.Parent?.RemapLinks(mapping);
-            obj.Climate = obj.Climate.Relink(mapping);
-            obj.Water = obj.Water.Relink(mapping);
-            obj.LodWater = obj.LodWater.Relink(mapping);
+            obj.Climate.Relink(mapping);
+            obj.Water.Relink(mapping);
+            obj.LodWater.Relink(mapping);
             obj.CloudModel?.RemapLinks(mapping);
-            obj.Music = obj.Music.Relink(mapping);
+            obj.Music.Relink(mapping);
             obj.TopCell?.RemapLinks(mapping);
             obj.SubCells.RemapLinks(mapping);
         }

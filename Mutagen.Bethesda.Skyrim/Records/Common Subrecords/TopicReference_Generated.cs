@@ -655,7 +655,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(ITopicReference obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Reference = obj.Reference.Relink(mapping);
+            obj.Reference.Relink(mapping);
         }
         
         #endregion

@@ -2673,17 +2673,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(ICell obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.LightingTemplate = obj.LightingTemplate.Relink(mapping);
+            obj.LightingTemplate.Relink(mapping);
             obj.Regions?.RemapLinks(mapping);
-            obj.Location = obj.Location.Relink(mapping);
-            obj.Water = obj.Water.Relink(mapping);
+            obj.Location.Relink(mapping);
+            obj.Water.Relink(mapping);
             obj.Ownership?.RemapLinks(mapping);
-            obj.LockList = obj.LockList.Relink(mapping);
-            obj.SkyAndWeatherFromRegion = obj.SkyAndWeatherFromRegion.Relink(mapping);
-            obj.AcousticSpace = obj.AcousticSpace.Relink(mapping);
-            obj.EncounterZone = obj.EncounterZone.Relink(mapping);
-            obj.Music = obj.Music.Relink(mapping);
-            obj.ImageSpace = obj.ImageSpace.Relink(mapping);
+            obj.LockList.Relink(mapping);
+            obj.SkyAndWeatherFromRegion.Relink(mapping);
+            obj.AcousticSpace.Relink(mapping);
+            obj.EncounterZone.Relink(mapping);
+            obj.Music.Relink(mapping);
+            obj.ImageSpace.Relink(mapping);
             obj.Landscape?.RemapLinks(mapping);
             obj.NavigationMeshes.RemapLinks(mapping);
             obj.Persistent.RemapLinks(mapping);

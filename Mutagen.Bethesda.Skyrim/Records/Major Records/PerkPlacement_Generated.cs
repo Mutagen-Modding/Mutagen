@@ -775,7 +775,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public void RemapLinks(IPerkPlacement obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Perk = obj.Perk.Relink(mapping);
+            obj.Perk.Relink(mapping);
         }
         
         #endregion

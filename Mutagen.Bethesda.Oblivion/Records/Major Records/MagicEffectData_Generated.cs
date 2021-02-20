@@ -1068,8 +1068,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Mutagen
         public void RemapLinks(IMagicEffectData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Light = obj.Light.Relink(mapping);
-            obj.EffectShader = obj.EffectShader.Relink(mapping);
+            obj.Light.Relink(mapping);
+            obj.EffectShader.Relink(mapping);
             if (obj.Versioning.HasFlag(MagicEffectData.VersioningBreaks.Break0)) return;
             obj.SubData?.RemapLinks(mapping);
         }

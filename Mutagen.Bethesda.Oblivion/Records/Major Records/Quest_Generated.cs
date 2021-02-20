@@ -1231,7 +1231,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void RemapLinks(IQuest obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Script = obj.Script.Relink(mapping);
+            obj.Script.Relink(mapping);
             obj.Stages.RemapLinks(mapping);
             obj.Targets.RemapLinks(mapping);
         }

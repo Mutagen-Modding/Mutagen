@@ -990,7 +990,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public void RemapLinks(ICriticalData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Effect = obj.Effect.Relink(mapping);
+            obj.Effect.Relink(mapping);
         }
         
         #endregion

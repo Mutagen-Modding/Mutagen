@@ -804,7 +804,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public void RemapLinks(ITeleportDestination obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Door = obj.Door.Relink(mapping);
+            obj.Door.Relink(mapping);
         }
         
         #endregion

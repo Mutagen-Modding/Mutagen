@@ -1556,14 +1556,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.RemapLinks(obj, mapping);
             obj.VirtualMachineAdapter?.RemapLinks(mapping);
             obj.Model?.RemapLinks(mapping);
-            obj.ObjectEffect = obj.ObjectEffect.Relink(mapping);
-            obj.ImageSpaceModifier = obj.ImageSpaceModifier.Relink(mapping);
-            obj.Light = obj.Light.Relink(mapping);
-            obj.Sound1 = obj.Sound1.Relink(mapping);
-            obj.Sound2 = obj.Sound2.Relink(mapping);
-            obj.ImpactDataSet = obj.ImpactDataSet.Relink(mapping);
-            obj.PlacedObject = obj.PlacedObject.Relink(mapping);
-            obj.SpawnProjectile = obj.SpawnProjectile.Relink(mapping);
+            obj.ObjectEffect.Relink(mapping);
+            obj.ImageSpaceModifier.Relink(mapping);
+            obj.Light.Relink(mapping);
+            obj.Sound1.Relink(mapping);
+            obj.Sound2.Relink(mapping);
+            obj.ImpactDataSet.Relink(mapping);
+            obj.PlacedObject.Relink(mapping);
+            obj.SpawnProjectile.Relink(mapping);
         }
         
         #endregion

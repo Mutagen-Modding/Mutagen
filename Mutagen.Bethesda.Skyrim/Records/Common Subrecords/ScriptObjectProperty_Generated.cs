@@ -739,7 +739,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IScriptObjectProperty obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Object = obj.Object.Relink(mapping);
+            obj.Object.Relink(mapping);
         }
         
         #endregion

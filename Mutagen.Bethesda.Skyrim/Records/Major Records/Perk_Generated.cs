@@ -1436,7 +1436,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.RemapLinks(obj, mapping);
             obj.VirtualMachineAdapter?.RemapLinks(mapping);
             obj.Conditions.RemapLinks(mapping);
-            obj.NextPerk = obj.NextPerk.Relink(mapping);
+            obj.NextPerk.Relink(mapping);
             obj.Effects.RemapLinks(mapping);
         }
         

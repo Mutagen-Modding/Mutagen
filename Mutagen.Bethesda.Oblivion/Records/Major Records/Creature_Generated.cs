@@ -2209,11 +2209,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Items.RemapLinks(mapping);
             obj.Spells.RemapLinks(mapping);
             obj.Factions.RemapLinks(mapping);
-            obj.DeathItem = obj.DeathItem.Relink(mapping);
-            obj.Script = obj.Script.Relink(mapping);
+            obj.DeathItem.Relink(mapping);
+            obj.Script.Relink(mapping);
             obj.AIPackages.RemapLinks(mapping);
-            obj.CombatStyle = obj.CombatStyle.Relink(mapping);
-            obj.InheritsSoundFrom = obj.InheritsSoundFrom.Relink(mapping);
+            obj.CombatStyle.Relink(mapping);
+            obj.InheritsSoundFrom.Relink(mapping);
             obj.Sounds.RemapLinks(mapping);
         }
         

@@ -1099,7 +1099,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             base.RemapLinks(obj, mapping);
             obj.Model?.RemapLinks(mapping);
-            obj.Material = obj.Material.Relink(mapping);
+            obj.Material.Relink(mapping);
         }
         
         #endregion

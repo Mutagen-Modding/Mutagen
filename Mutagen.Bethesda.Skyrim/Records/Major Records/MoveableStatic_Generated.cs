@@ -1043,7 +1043,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.RemapLinks(obj, mapping);
             obj.Model?.RemapLinks(mapping);
             obj.Destructible?.RemapLinks(mapping);
-            obj.LoopingSound = obj.LoopingSound.Relink(mapping);
+            obj.LoopingSound.Relink(mapping);
         }
         
         #endregion

@@ -730,7 +730,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public void RemapLinks(IRegionGrass obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Grass = obj.Grass.Relink(mapping);
+            obj.Grass.Relink(mapping);
         }
         
         #endregion

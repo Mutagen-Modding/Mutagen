@@ -710,7 +710,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IConditionGlobal obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.ComparisonValue = obj.ComparisonValue.Relink(mapping);
+            obj.ComparisonValue.Relink(mapping);
             obj.Data.RemapLinks(mapping);
         }
         

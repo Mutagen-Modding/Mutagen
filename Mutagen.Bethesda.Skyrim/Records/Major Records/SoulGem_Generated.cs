@@ -1436,10 +1436,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.RemapLinks(obj, mapping);
             obj.Model?.RemapLinks(mapping);
             obj.Destructible?.RemapLinks(mapping);
-            obj.PickUpSound = obj.PickUpSound.Relink(mapping);
-            obj.PutDownSound = obj.PutDownSound.Relink(mapping);
+            obj.PickUpSound.Relink(mapping);
+            obj.PutDownSound.Relink(mapping);
             obj.Keywords?.RemapLinks(mapping);
-            obj.LinkedTo = obj.LinkedTo.Relink(mapping);
+            obj.LinkedTo.Relink(mapping);
         }
         
         #endregion

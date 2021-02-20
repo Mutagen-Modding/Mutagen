@@ -1460,8 +1460,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void RemapLinks(IDialogItem obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Quest = obj.Quest.Relink(mapping);
-            obj.PreviousTopic = obj.PreviousTopic.Relink(mapping);
+            obj.Quest.Relink(mapping);
+            obj.PreviousTopic.Relink(mapping);
             obj.Topics.RemapLinks(mapping);
             obj.Choices.RemapLinks(mapping);
             obj.LinkFrom.RemapLinks(mapping);

@@ -2157,9 +2157,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             obj.VirtualMachineAdapter?.RemapLinks(mapping);
             obj.Conditions.RemapLinks(mapping);
             obj.IdleAnimations?.RemapLinks(mapping);
-            obj.CombatStyle = obj.CombatStyle.Relink(mapping);
-            obj.OwnerQuest = obj.OwnerQuest.Relink(mapping);
-            obj.PackageTemplate = obj.PackageTemplate.Relink(mapping);
+            obj.CombatStyle.Relink(mapping);
+            obj.OwnerQuest.Relink(mapping);
+            obj.PackageTemplate.Relink(mapping);
             obj.ProcedureTree.RemapLinks(mapping);
             obj.OnBegin?.RemapLinks(mapping);
             obj.OnEnd?.RemapLinks(mapping);

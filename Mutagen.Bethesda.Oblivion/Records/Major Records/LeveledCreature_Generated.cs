@@ -966,8 +966,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             base.RemapLinks(obj, mapping);
             obj.Entries.RemapLinks(mapping);
-            obj.Script = obj.Script.Relink(mapping);
-            obj.Template = obj.Template.Relink(mapping);
+            obj.Script.Relink(mapping);
+            obj.Template.Relink(mapping);
         }
         
         #endregion

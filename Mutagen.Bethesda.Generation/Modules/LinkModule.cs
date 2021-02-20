@@ -324,7 +324,7 @@ namespace Mutagen.Bethesda.Generation
                         if (field is FormLinkType formLink
                             && formLink.FormIDType == FormLinkType.FormIDTypeEnum.Normal)
                         {
-                            fg.AppendLine($"obj.{field.Name} = obj.{field.Name}.Relink(mapping);");
+                            fg.AppendLine($"obj.{field.Name}.Relink(mapping);");
                         }
                         else if (field is LoquiType loqui)
                         {

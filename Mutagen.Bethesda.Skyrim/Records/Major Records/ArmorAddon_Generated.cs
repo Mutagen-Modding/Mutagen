@@ -1468,14 +1468,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IArmorAddon obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Race = obj.Race.Relink(mapping);
+            obj.Race.Relink(mapping);
             obj.WorldModel?.RemapLinks(mapping);
             obj.FirstPersonModel?.RemapLinks(mapping);
             obj.SkinTexture?.RemapLinks(mapping);
             obj.TextureSwapList?.RemapLinks(mapping);
             obj.AdditionalRaces.RemapLinks(mapping);
-            obj.FootstepSound = obj.FootstepSound.Relink(mapping);
-            obj.ArtObject = obj.ArtObject.Relink(mapping);
+            obj.FootstepSound.Relink(mapping);
+            obj.ArtObject.Relink(mapping);
         }
         
         #endregion

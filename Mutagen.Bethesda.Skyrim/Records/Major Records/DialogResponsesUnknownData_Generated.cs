@@ -786,7 +786,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public void RemapLinks(IDialogResponsesUnknownData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.QNAM = obj.QNAM.Relink(mapping);
+            obj.QNAM.Relink(mapping);
         }
         
         #endregion

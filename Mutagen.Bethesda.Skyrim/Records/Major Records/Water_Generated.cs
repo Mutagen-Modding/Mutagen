@@ -3289,10 +3289,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IWater obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Material = obj.Material.Relink(mapping);
-            obj.OpenSound = obj.OpenSound.Relink(mapping);
-            obj.Spell = obj.Spell.Relink(mapping);
-            obj.ImageSpace = obj.ImageSpace.Relink(mapping);
+            obj.Material.Relink(mapping);
+            obj.OpenSound.Relink(mapping);
+            obj.Spell.Relink(mapping);
+            obj.ImageSpace.Relink(mapping);
         }
         
         #endregion

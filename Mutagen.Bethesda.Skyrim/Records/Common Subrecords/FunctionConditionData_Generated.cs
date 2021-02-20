@@ -1015,8 +1015,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IFunctionConditionData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.ParameterOneRecord = obj.ParameterOneRecord.Relink(mapping);
-            obj.ParameterTwoRecord = obj.ParameterTwoRecord.Relink(mapping);
+            obj.ParameterOneRecord.Relink(mapping);
+            obj.ParameterTwoRecord.Relink(mapping);
         }
         
         #endregion

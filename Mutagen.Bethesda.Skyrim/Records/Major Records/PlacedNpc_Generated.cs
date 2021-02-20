@@ -2031,20 +2031,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             base.RemapLinks(obj, mapping);
             obj.VirtualMachineAdapter?.RemapLinks(mapping);
-            obj.Base = obj.Base.Relink(mapping);
-            obj.EncounterZone = obj.EncounterZone.Relink(mapping);
+            obj.Base.Relink(mapping);
+            obj.EncounterZone.Relink(mapping);
             obj.Patrol?.RemapLinks(mapping);
-            obj.MerchantContainer = obj.MerchantContainer.Relink(mapping);
+            obj.MerchantContainer.Relink(mapping);
             obj.LinkedReferences.RemapLinks(mapping);
             obj.ActivateParents?.RemapLinks(mapping);
-            obj.PersistentLocation = obj.PersistentLocation.Relink(mapping);
-            obj.LocationReference = obj.LocationReference.Relink(mapping);
+            obj.PersistentLocation.Relink(mapping);
+            obj.LocationReference.Relink(mapping);
             obj.LocationRefTypes?.RemapLinks(mapping);
-            obj.Horse = obj.Horse.Relink(mapping);
+            obj.Horse.Relink(mapping);
             obj.EnableParent?.RemapLinks(mapping);
             obj.Ownership?.RemapLinks(mapping);
-            obj.Emittance = obj.Emittance.Relink(mapping);
-            obj.MultiboundReference = obj.MultiboundReference.Relink(mapping);
+            obj.Emittance.Relink(mapping);
+            obj.MultiboundReference.Relink(mapping);
         }
         
         #endregion

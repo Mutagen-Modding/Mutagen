@@ -942,8 +942,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public void RemapLinks(IDestructionStageData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Explosion = obj.Explosion.Relink(mapping);
-            obj.Debris = obj.Debris.Relink(mapping);
+            obj.Explosion.Relink(mapping);
+            obj.Debris.Relink(mapping);
         }
         
         #endregion

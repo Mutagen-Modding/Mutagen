@@ -1566,9 +1566,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             base.RemapLinks(obj, mapping);
             obj.Keywords?.RemapLinks(mapping);
-            obj.MenuDisplayObject = obj.MenuDisplayObject.Relink(mapping);
-            obj.EquipmentType = obj.EquipmentType.Relink(mapping);
-            obj.HalfCostPerk = obj.HalfCostPerk.Relink(mapping);
+            obj.MenuDisplayObject.Relink(mapping);
+            obj.EquipmentType.Relink(mapping);
+            obj.HalfCostPerk.Relink(mapping);
             obj.Effects.RemapLinks(mapping);
         }
         

@@ -1430,7 +1430,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             obj.RacePresets.RemapLinks(mapping);
             obj.AvailableHairColors.RemapLinks(mapping);
             obj.FaceDetails.RemapLinks(mapping);
-            obj.DefaultFaceTexture = obj.DefaultFaceTexture.Relink(mapping);
+            obj.DefaultFaceTexture.Relink(mapping);
             obj.TintMasks.RemapLinks(mapping);
             obj.Model?.RemapLinks(mapping);
         }
