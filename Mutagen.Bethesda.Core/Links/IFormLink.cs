@@ -29,17 +29,16 @@ namespace Mutagen.Bethesda
     }
 
     /// <summary>
-    /// An interface for a FormLink, with a Major Record type constraint 
-    /// FormKey is allowed to be null to communicate absence of a record.
+    /// An interface for a FormLink, with a Major Record type constraint
     /// </summary>
-    /// <typeparam name="TMajor">The type of Major Record the Link is allowed to connect with</typeparam>
-    public interface IFormLinkNullableGetter<out TMajor> : ILink<TMajor>, IFormLinkGetter
-       where TMajor : IMajorRecordCommonGetter
+    /// <typeparam name="TMajorGetter">The type of Major Record the Link is allowed to connect with</typeparam>
+    public interface IFormLinkGetter<out TMajorGetter> : ILink<TMajorGetter>, IFormLinkGetter
+       where TMajorGetter : IMajorRecordCommonGetter
     {
     }
 
-    public interface IFormLinkNullable<out TMajor> : IFormLinkNullableGetter<TMajor>, IClearable
-       where TMajor : IMajorRecordCommonGetter
+    public interface IFormLink<out TMajorGetter> : IFormLinkGetter<TMajorGetter>, IClearable
+       where TMajorGetter : IMajorRecordCommonGetter
     {
         /// <summary>
         /// FormKey to link against
@@ -55,15 +54,16 @@ namespace Mutagen.Bethesda
     }
 
     /// <summary>
-    /// An interface for a FormLink, with a Major Record type constraint
+    /// An interface for a FormLink, with a Major Record type constraint 
+    /// FormKey is allowed to be null to communicate absence of a record.
     /// </summary>
     /// <typeparam name="TMajorGetter">The type of Major Record the Link is allowed to connect with</typeparam>
-    public interface IFormLinkGetter<out TMajorGetter> : ILink<TMajorGetter>, IFormLinkGetter, IFormLinkNullableGetter<TMajorGetter>
+    public interface IFormLinkNullableGetter<out TMajorGetter> : ILink<TMajorGetter>, IFormLinkGetter, IFormLinkGetter<TMajorGetter>
        where TMajorGetter : IMajorRecordCommonGetter
     {
     }
 
-    public interface IFormLink<out TMajorGetter> : IFormLinkGetter<TMajorGetter>, IFormLinkNullable<TMajorGetter>
+    public interface IFormLinkNullable<out TMajorGetter> : IFormLink<TMajorGetter>, IFormLinkNullableGetter<TMajorGetter>
        where TMajorGetter : IMajorRecordCommonGetter
     {
     }
@@ -385,14 +385,14 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public static void SetTo<TMajorLhs, TMajorRhs>(this IFormLinkNullable<TMajorLhs> link, TMajorRhs? record)
+        public static void SetTo<TMajorLhs, TMajorRhs>(this IFormLink<TMajorLhs> link, TMajorRhs? record)
             where TMajorLhs : IMajorRecordCommonGetter
             where TMajorRhs : TMajorLhs
         {
             link.SetTo(record?.FormKey);
         }
 
-        public static void SetTo<TMajor, TMajorRhs>(this IFormLinkNullable<TMajor> link, IFormLinkNullableGetter<TMajorRhs> rhs)
+        public static void SetTo<TMajor, TMajorRhs>(this IFormLink<TMajor> link, IFormLinkGetter<TMajorRhs> rhs)
             where TMajor : TMajorRhs
             where TMajorRhs : IMajorRecordCommonGetter
         {

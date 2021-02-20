@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda
     /// </summary>
     /// <typeparam name="TMajorGetter">The type of Major Record the Link is allowed to connect with</typeparam>
     public class FormLinkNullable<TMajorGetter> :
-        IFormLink<TMajorGetter>,
+        IFormLinkNullable<TMajorGetter>,
         IEquatable<FormLink<TMajorGetter>>,
         IEquatable<FormLinkNullable<TMajorGetter>>,
         IEquatable<IFormLinkGetter<TMajorGetter>>,

@@ -17,17 +17,6 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public static void Relink<TMajorGetter>(this IFormLinkNullable<TMajorGetter> link, IReadOnlyDictionary<FormKey, FormKey> mapping)
-            where TMajorGetter : class, IMajorRecordCommonGetter
-        {
-            if (link.FormKeyNullable.HasValue
-                && !link.IsNull
-                && mapping.TryGetValue(link.FormKey, out var replacement))
-            {
-                link.SetTo(replacement);
-            }
-        }
-
         private static IFormLinkGetter<TMajorGetter> RelinkToNew<TMajorGetter>(this IFormLinkGetter<TMajorGetter> link, IReadOnlyDictionary<FormKey, FormKey> mapping)
             where TMajorGetter : class, IMajorRecordCommonGetter
         {

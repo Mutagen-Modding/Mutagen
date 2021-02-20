@@ -37,7 +37,7 @@ namespace Mutagen.Bethesda
 
         FormKey? IFormLinkGetter.FormKeyNullable => this.FormKey;
 
-        FormKey? IFormLinkNullable<TMajorGetter>.FormKeyNullable
+        FormKey? IFormLink<TMajorGetter>.FormKeyNullable
         {
             get => this.FormKey;
             set => this.FormKey = value ?? FormKey.Null;
