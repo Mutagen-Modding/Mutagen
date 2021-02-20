@@ -88,15 +88,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Spells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IASpellGetter>> _Spells = new ExtendedList<IFormLink<IASpellGetter>>();
-        public ExtendedList<IFormLink<IASpellGetter>> Spells
+        private ExtendedList<IFormLinkGetter<IASpellGetter>> _Spells = new ExtendedList<IFormLinkGetter<IASpellGetter>>();
+        public ExtendedList<IFormLinkGetter<IASpellGetter>> Spells
         {
             get => this._Spells;
             protected set => this._Spells = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IASpellGetter>> ICreatureGetter.Spells => _Spells;
+        IReadOnlyList<IFormLinkGetter<IASpellGetter>> ICreatureGetter.Spells => _Spells;
         #endregion
 
         #endregion
@@ -169,15 +169,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region AIPackages
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IAIPackageGetter>> _AIPackages = new ExtendedList<IFormLink<IAIPackageGetter>>();
-        public ExtendedList<IFormLink<IAIPackageGetter>> AIPackages
+        private ExtendedList<IFormLinkGetter<IAIPackageGetter>> _AIPackages = new ExtendedList<IFormLinkGetter<IAIPackageGetter>>();
+        public ExtendedList<IFormLinkGetter<IAIPackageGetter>> AIPackages
         {
             get => this._AIPackages;
             protected set => this._AIPackages = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IAIPackageGetter>> ICreatureGetter.AIPackages => _AIPackages;
+        IReadOnlyList<IFormLinkGetter<IAIPackageGetter>> ICreatureGetter.AIPackages => _AIPackages;
         #endregion
 
         #endregion
@@ -1821,7 +1821,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Name { get; set; }
         new Model? Model { get; set; }
         new ExtendedList<ItemEntry> Items { get; }
-        new ExtendedList<IFormLink<IASpellGetter>> Spells { get; }
+        new ExtendedList<IFormLinkGetter<IASpellGetter>> Spells { get; }
         new ExtendedList<String>? Models { get; set; }
         new MemorySlice<Byte>? NIFT { get; set; }
         new CreatureConfiguration? Configuration { get; set; }
@@ -1829,7 +1829,7 @@ namespace Mutagen.Bethesda.Oblivion
         new FormLinkNullable<IAItemGetter> DeathItem { get; set; }
         new FormLinkNullable<IScriptGetter> Script { get; set; }
         new CreatureAIData? AIData { get; set; }
-        new ExtendedList<IFormLink<IAIPackageGetter>> AIPackages { get; }
+        new ExtendedList<IFormLinkGetter<IAIPackageGetter>> AIPackages { get; }
         new ExtendedList<String>? Animations { get; set; }
         new CreatureData? Data { get; set; }
         new Byte? AttackReach { get; set; }
@@ -1864,7 +1864,7 @@ namespace Mutagen.Bethesda.Oblivion
         String? Name { get; }
         IModelGetter? Model { get; }
         IReadOnlyList<IItemEntryGetter> Items { get; }
-        IReadOnlyList<IFormLink<IASpellGetter>> Spells { get; }
+        IReadOnlyList<IFormLinkGetter<IASpellGetter>> Spells { get; }
         IReadOnlyList<String>? Models { get; }
         ReadOnlyMemorySlice<Byte>? NIFT { get; }
         ICreatureConfigurationGetter? Configuration { get; }
@@ -1872,7 +1872,7 @@ namespace Mutagen.Bethesda.Oblivion
         FormLinkNullable<IAItemGetter> DeathItem { get; }
         FormLinkNullable<IScriptGetter> Script { get; }
         ICreatureAIDataGetter? AIData { get; }
-        IReadOnlyList<IFormLink<IAIPackageGetter>> AIPackages { get; }
+        IReadOnlyList<IFormLinkGetter<IAIPackageGetter>> AIPackages { get; }
         IReadOnlyList<String>? Animations { get; }
         ICreatureDataGetter? Data { get; }
         Byte? AttackReach { get; }
@@ -3060,7 +3060,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Spells.SetTo(
                         rhs.Spells
-                        .Select(r => (IFormLink<IASpellGetter>)new FormLink<IASpellGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<IASpellGetter>)new FormLink<IASpellGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3200,7 +3200,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.AIPackages.SetTo(
                         rhs.AIPackages
-                        .Select(r => (IFormLink<IAIPackageGetter>)new FormLink<IAIPackageGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<IAIPackageGetter>)new FormLink<IAIPackageGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3560,10 +3560,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IASpellGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IASpellGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Spells,
-                transl: (MutagenWriter subWriter, IFormLink<IASpellGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IASpellGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -3612,10 +3612,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IAIPackageGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IAIPackageGetter>>.Instance.Write(
                 writer: writer,
                 items: item.AIPackages,
-                transl: (MutagenWriter subWriter, IFormLink<IAIPackageGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IAIPackageGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -3820,7 +3820,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.SPLO:
                 {
                     item.Spells.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IASpellGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IASpellGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SPLO),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -3888,7 +3888,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.PKID:
                 {
                     item.AIPackages.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IAIPackageGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IAIPackageGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.PKID),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -4049,7 +4049,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         public IModelGetter? Model { get; private set; }
         public IReadOnlyList<IItemEntryGetter> Items { get; private set; } = ListExt.Empty<ItemEntryBinaryOverlay>();
-        public IReadOnlyList<IFormLink<IASpellGetter>> Spells { get; private set; } = ListExt.Empty<IFormLink<IASpellGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IASpellGetter>> Spells { get; private set; } = ListExt.Empty<IFormLinkGetter<IASpellGetter>>();
         public IReadOnlyList<String>? Models { get; private set; }
         #region NIFT
         private int? _NIFTLocation;
@@ -4072,7 +4072,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private RangeInt32? _AIDataLocation;
         public ICreatureAIDataGetter? AIData => _AIDataLocation.HasValue ? CreatureAIDataBinaryOverlay.CreatureAIDataFactory(new OverlayStream(_data.Slice(_AIDataLocation!.Value.Min), _package), _package) : default;
         #endregion
-        public IReadOnlyList<IFormLink<IAIPackageGetter>> AIPackages { get; private set; } = ListExt.Empty<IFormLink<IAIPackageGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IAIPackageGetter>> AIPackages { get; private set; } = ListExt.Empty<IFormLinkGetter<IAIPackageGetter>>();
         public IReadOnlyList<String>? Animations { get; private set; }
         #region Data
         private RangeInt32? _DataLocation;
@@ -4206,7 +4206,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.SPLO:
                 {
-                    this.Spells = BinaryOverlayList.FactoryByArray<IFormLink<IASpellGetter>>(
+                    this.Spells = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IASpellGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IASpellGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -4270,7 +4270,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.PKID:
                 {
-                    this.AIPackages = BinaryOverlayList.FactoryByArray<IFormLink<IAIPackageGetter>>(
+                    this.AIPackages = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IAIPackageGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IAIPackageGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),

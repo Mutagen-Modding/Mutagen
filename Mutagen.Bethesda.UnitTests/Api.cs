@@ -45,11 +45,11 @@ namespace Mutagen.Bethesda.UnitTests
             SkyrimMod sourceMod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimSE);
             Armor armor = sourceMod.Armors.AddNew();
 
-            void Tester(IReadOnlyList<IFormLink<IKeywordGetter>> tester)
+            void Tester(IReadOnlyList<IFormLinkGetter<IKeywordGetter>> tester)
             {
             }
 
-            armor.Keywords = new ExtendedList<IFormLink<IKeywordGetter>>();
+            armor.Keywords = new ExtendedList<IFormLinkGetter<IKeywordGetter>>();
             Tester(armor.Keywords);
         }
 
@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.UnitTests
             FormKey key = sourceMod.GetNextFormKey();
             Keyword keyword = sourceMod.Keywords.AddNew();
             Armor armor = sourceMod.Armors.AddNew();
-            armor.Keywords = new ExtendedList<IFormLink<IKeywordGetter>>();
+            armor.Keywords = new ExtendedList<IFormLinkGetter<IKeywordGetter>>();
             var test = armor.Keywords;
             test.Add(key);
             test.Add(keyword);
@@ -158,7 +158,7 @@ namespace Mutagen.Bethesda.UnitTests
 
             var link = new FormLink<ISkyrimMajorRecordGetter>(light.FormKey);
             var nullableLink = new FormLinkNullable<ISkyrimMajorRecordGetter>(light.FormKey);
-            IFormLink<ISkyrimMajorRecordGetter> iLink = link;
+            IFormLinkGetter<ISkyrimMajorRecordGetter> iLink = link;
 
             // Normal resolution
             link.TryResolve(cache, out var _);

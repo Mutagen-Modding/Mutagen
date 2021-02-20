@@ -13,13 +13,13 @@ namespace Mutagen.Bethesda
     /// This class stores the target EDID as RecordType, as that is a convenient 4 character struct
     /// </summary>
     /// <typeparam name="TMajor">The type of Major Record the Link is allowed to connect with</typeparam>
-    public struct EDIDLink<TMajor> : IEDIDLink<TMajor>, IEquatable<IEDIDLink<TMajor>>
+    public struct EDIDLink<TMajor> : IEDIDLinkGetter<TMajor>, IEquatable<IEDIDLink<TMajor>>
        where TMajor : class, IMajorRecordCommonGetter
     {
         /// <summary>
         /// A readonly singleton representing an unlinked EDIDLink
         /// </summary>
-        public static readonly IEDIDLink<TMajor> Empty = new EDIDLink<TMajor>();
+        public static readonly IEDIDLinkGetter<TMajor> Empty = new EDIDLink<TMajor>();
         
         /// <summary>
         /// A readonly singleton representing a "null" record type

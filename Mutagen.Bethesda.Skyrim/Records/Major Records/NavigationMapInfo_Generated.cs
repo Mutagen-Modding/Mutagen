@@ -54,29 +54,29 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MergedTo
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IANavigationMeshGetter>> _MergedTo = new ExtendedList<IFormLink<IANavigationMeshGetter>>();
-        public ExtendedList<IFormLink<IANavigationMeshGetter>> MergedTo
+        private ExtendedList<IFormLinkGetter<IANavigationMeshGetter>> _MergedTo = new ExtendedList<IFormLinkGetter<IANavigationMeshGetter>>();
+        public ExtendedList<IFormLinkGetter<IANavigationMeshGetter>> MergedTo
         {
             get => this._MergedTo;
             protected set => this._MergedTo = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IANavigationMeshGetter>> INavigationMapInfoGetter.MergedTo => _MergedTo;
+        IReadOnlyList<IFormLinkGetter<IANavigationMeshGetter>> INavigationMapInfoGetter.MergedTo => _MergedTo;
         #endregion
 
         #endregion
         #region PreferredMerges
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IANavigationMeshGetter>> _PreferredMerges = new ExtendedList<IFormLink<IANavigationMeshGetter>>();
-        public ExtendedList<IFormLink<IANavigationMeshGetter>> PreferredMerges
+        private ExtendedList<IFormLinkGetter<IANavigationMeshGetter>> _PreferredMerges = new ExtendedList<IFormLinkGetter<IANavigationMeshGetter>>();
+        public ExtendedList<IFormLinkGetter<IANavigationMeshGetter>> PreferredMerges
         {
             get => this._PreferredMerges;
             protected set => this._PreferredMerges = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IANavigationMeshGetter>> INavigationMapInfoGetter.PreferredMerges => _PreferredMerges;
+        IReadOnlyList<IFormLinkGetter<IANavigationMeshGetter>> INavigationMapInfoGetter.PreferredMerges => _PreferredMerges;
         #endregion
 
         #endregion
@@ -1033,8 +1033,8 @@ namespace Mutagen.Bethesda.Skyrim
         new Int32 Unknown { get; set; }
         new P3Float Point { get; set; }
         new UInt32 PreferredMergesFlag { get; set; }
-        new ExtendedList<IFormLink<IANavigationMeshGetter>> MergedTo { get; }
-        new ExtendedList<IFormLink<IANavigationMeshGetter>> PreferredMerges { get; }
+        new ExtendedList<IFormLinkGetter<IANavigationMeshGetter>> MergedTo { get; }
+        new ExtendedList<IFormLinkGetter<IANavigationMeshGetter>> PreferredMerges { get; }
         new ExtendedList<LinkedDoor> LinkedDoors { get; }
         new IslandData? Island { get; set; }
         new Int32 Unknown2 { get; set; }
@@ -1060,8 +1060,8 @@ namespace Mutagen.Bethesda.Skyrim
         Int32 Unknown { get; }
         P3Float Point { get; }
         UInt32 PreferredMergesFlag { get; }
-        IReadOnlyList<IFormLink<IANavigationMeshGetter>> MergedTo { get; }
-        IReadOnlyList<IFormLink<IANavigationMeshGetter>> PreferredMerges { get; }
+        IReadOnlyList<IFormLinkGetter<IANavigationMeshGetter>> MergedTo { get; }
+        IReadOnlyList<IFormLinkGetter<IANavigationMeshGetter>> PreferredMerges { get; }
         IReadOnlyList<ILinkedDoorGetter> LinkedDoors { get; }
         IIslandDataGetter? Island { get; }
         Int32 Unknown2 { get; }
@@ -1680,7 +1680,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.MergedTo.SetTo(
                         rhs.MergedTo
-                        .Select(r => (IFormLink<IANavigationMeshGetter>)new FormLink<IANavigationMeshGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<IANavigationMeshGetter>)new FormLink<IANavigationMeshGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1699,7 +1699,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.PreferredMerges.SetTo(
                         rhs.PreferredMerges
-                        .Select(r => (IFormLink<IANavigationMeshGetter>)new FormLink<IANavigationMeshGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<IANavigationMeshGetter>)new FormLink<IANavigationMeshGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1907,21 +1907,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Point);
             writer.Write(item.PreferredMergesFlag);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IANavigationMeshGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IANavigationMeshGetter>>.Instance.Write(
                 writer: writer,
                 items: item.MergedTo,
                 countLengthLength: 4,
-                transl: (MutagenWriter subWriter, IFormLink<IANavigationMeshGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IANavigationMeshGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem);
                 });
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IANavigationMeshGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IANavigationMeshGetter>>.Instance.Write(
                 writer: writer,
                 items: item.PreferredMerges,
                 countLengthLength: 4,
-                transl: (MutagenWriter subWriter, IFormLink<IANavigationMeshGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IANavigationMeshGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -1995,12 +1995,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Point = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.PreferredMergesFlag = frame.ReadUInt32();
             item.MergedTo.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IANavigationMeshGetter>>.Instance.Parse(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IANavigationMeshGetter>>.Instance.Parse(
                     amount: frame.ReadInt32(),
                     frame: frame,
                     transl: FormLinkBinaryTranslation.Instance.Parse));
             item.PreferredMerges.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IANavigationMeshGetter>>.Instance.Parse(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IANavigationMeshGetter>>.Instance.Parse(
                     amount: frame.ReadInt32(),
                     frame: frame,
                     transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -2099,11 +2099,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public P3Float Point => P3FloatBinaryTranslation.Read(_data.Slice(0x8, 0xC));
         public UInt32 PreferredMergesFlag => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x14, 0x4));
         #region MergedTo
-        public IReadOnlyList<IFormLink<IANavigationMeshGetter>> MergedTo => BinaryOverlayList.FactoryByCountLength<IFormLink<IANavigationMeshGetter>>(_data.Slice(0x18), _package, 4, countLength: 4, (s, p) => new FormLink<IANavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+        public IReadOnlyList<IFormLinkGetter<IANavigationMeshGetter>> MergedTo => BinaryOverlayList.FactoryByCountLength<IFormLinkGetter<IANavigationMeshGetter>>(_data.Slice(0x18), _package, 4, countLength: 4, (s, p) => new FormLink<IANavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
         protected int MergedToEndingPos;
         #endregion
         #region PreferredMerges
-        public IReadOnlyList<IFormLink<IANavigationMeshGetter>> PreferredMerges => BinaryOverlayList.FactoryByCountLength<IFormLink<IANavigationMeshGetter>>(_data.Slice(MergedToEndingPos), _package, 4, countLength: 4, (s, p) => new FormLink<IANavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+        public IReadOnlyList<IFormLinkGetter<IANavigationMeshGetter>> PreferredMerges => BinaryOverlayList.FactoryByCountLength<IFormLinkGetter<IANavigationMeshGetter>>(_data.Slice(MergedToEndingPos), _package, 4, countLength: 4, (s, p) => new FormLink<IANavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
         protected int PreferredMergesEndingPos;
         #endregion
         #region LinkedDoors

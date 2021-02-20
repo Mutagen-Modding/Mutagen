@@ -59,15 +59,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Grasses
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IGrassGetter>> _Grasses = new ExtendedList<IFormLink<IGrassGetter>>();
-        public ExtendedList<IFormLink<IGrassGetter>> Grasses
+        private ExtendedList<IFormLinkGetter<IGrassGetter>> _Grasses = new ExtendedList<IFormLinkGetter<IGrassGetter>>();
+        public ExtendedList<IFormLinkGetter<IGrassGetter>> Grasses
         {
             get => this._Grasses;
             protected set => this._Grasses = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IGrassGetter>> ILandscapeTextureGetter.Grasses => _Grasses;
+        IReadOnlyList<IFormLinkGetter<IGrassGetter>> ILandscapeTextureGetter.Grasses => _Grasses;
         #endregion
 
         #endregion
@@ -775,7 +775,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Byte HavokFriction { get; set; }
         new Byte HavokRestitution { get; set; }
         new Byte TextureSpecularExponent { get; set; }
-        new ExtendedList<IFormLink<IGrassGetter>> Grasses { get; }
+        new ExtendedList<IFormLinkGetter<IGrassGetter>> Grasses { get; }
         new LandscapeTexture.Flag? Flags { get; set; }
         new LandscapeTexture.HNAMDataType HNAMDataTypeState { get; set; }
     }
@@ -801,7 +801,7 @@ namespace Mutagen.Bethesda.Skyrim
         Byte HavokFriction { get; }
         Byte HavokRestitution { get; }
         Byte TextureSpecularExponent { get; }
-        IReadOnlyList<IFormLink<IGrassGetter>> Grasses { get; }
+        IReadOnlyList<IFormLinkGetter<IGrassGetter>> Grasses { get; }
         LandscapeTexture.Flag? Flags { get; }
         LandscapeTexture.HNAMDataType HNAMDataTypeState { get; }
 
@@ -1497,7 +1497,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Grasses.SetTo(
                         rhs.Grasses
-                        .Select(r => (IFormLink<IGrassGetter>)new FormLink<IGrassGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<IGrassGetter>)new FormLink<IGrassGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1700,10 +1700,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.TextureSpecularExponent,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM));
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IGrassGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IGrassGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Grasses,
-                transl: (MutagenWriter subWriter, IFormLink<IGrassGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IGrassGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -1842,7 +1842,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.GNAM:
                 {
                     item.Grasses.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IGrassGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IGrassGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.GNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -1936,7 +1936,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _TextureSpecularExponentLocation;
         public Byte TextureSpecularExponent => _TextureSpecularExponentLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _TextureSpecularExponentLocation.Value, _package.MetaData.Constants)[0] : default(Byte);
         #endregion
-        public IReadOnlyList<IFormLink<IGrassGetter>> Grasses { get; private set; } = ListExt.Empty<IFormLink<IGrassGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IGrassGetter>> Grasses { get; private set; } = ListExt.Empty<IFormLinkGetter<IGrassGetter>>();
         #region Flags
         private int? _FlagsLocation;
         public LandscapeTexture.Flag? Flags => _FlagsLocation.HasValue ? (LandscapeTexture.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(LandscapeTexture.Flag?);
@@ -2029,7 +2029,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.GNAM:
                 {
-                    this.Grasses = BinaryOverlayList.FactoryByArray<IFormLink<IGrassGetter>>(
+                    this.Grasses = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IGrassGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IGrassGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),

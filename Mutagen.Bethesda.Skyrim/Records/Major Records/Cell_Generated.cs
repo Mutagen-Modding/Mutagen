@@ -148,15 +148,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Regions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IRegionGetter>>? _Regions;
-        public ExtendedList<IFormLink<IRegionGetter>>? Regions
+        private ExtendedList<IFormLinkGetter<IRegionGetter>>? _Regions;
+        public ExtendedList<IFormLinkGetter<IRegionGetter>>? Regions
         {
             get => this._Regions;
             set => this._Regions = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IRegionGetter>>? ICellGetter.Regions => _Regions;
+        IReadOnlyList<IFormLinkGetter<IRegionGetter>>? ICellGetter.Regions => _Regions;
         #endregion
 
         #endregion
@@ -2037,7 +2037,7 @@ namespace Mutagen.Bethesda.Skyrim
         new MemorySlice<Byte>? LNAM { get; set; }
         new Single? WaterHeight { get; set; }
         new String? WaterNoiseTexture { get; set; }
-        new ExtendedList<IFormLink<IRegionGetter>>? Regions { get; set; }
+        new ExtendedList<IFormLinkGetter<IRegionGetter>>? Regions { get; set; }
         new FormLinkNullable<ILocationGetter> Location { get; set; }
         new MemorySlice<Byte>? XWCN { get; set; }
         new MemorySlice<Byte>? XWCS { get; set; }
@@ -2098,7 +2098,7 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? LNAM { get; }
         Single? WaterHeight { get; }
         String? WaterNoiseTexture { get; }
-        IReadOnlyList<IFormLink<IRegionGetter>>? Regions { get; }
+        IReadOnlyList<IFormLinkGetter<IRegionGetter>>? Regions { get; }
         FormLinkNullable<ILocationGetter> Location { get; }
         ReadOnlyMemorySlice<Byte>? XWCN { get; }
         ReadOnlyMemorySlice<Byte>? XWCS { get; }
@@ -4908,8 +4908,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Regions = 
                             rhs.Regions
-                            .Select(r => (IFormLink<IRegionGetter>)new FormLink<IRegionGetter>(r.FormKey))
-                            .ToExtendedList<IFormLink<IRegionGetter>>();
+                            .Select(r => (IFormLinkGetter<IRegionGetter>)new FormLink<IRegionGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IRegionGetter>>();
                     }
                     else
                     {
@@ -5381,11 +5381,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.WaterNoiseTexture,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XNAM),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IRegionGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IRegionGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Regions,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.XCLR),
-                transl: (MutagenWriter subWriter, IFormLink<IRegionGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IRegionGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -5613,10 +5613,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Regions = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IRegionGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IRegionGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<IRegionGetter>>();
+                        .CastExtendedList<IFormLinkGetter<IRegionGetter>>();
                     return (int)Cell_FieldIndex.Regions;
                 }
                 case RecordTypeInts.XLCN:
@@ -5840,7 +5840,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _WaterNoiseTextureLocation;
         public String? WaterNoiseTexture => _WaterNoiseTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _WaterNoiseTextureLocation.Value, _package.MetaData.Constants)) : default(string?);
         #endregion
-        public IReadOnlyList<IFormLink<IRegionGetter>>? Regions { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<IRegionGetter>>? Regions { get; private set; }
         #region Location
         private int? _LocationLocation;
         public FormLinkNullable<ILocationGetter> Location => _LocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
@@ -6022,7 +6022,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Regions = BinaryOverlayList.FactoryByStartIndex<IFormLink<IRegionGetter>>(
+                    this.Regions = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IRegionGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,

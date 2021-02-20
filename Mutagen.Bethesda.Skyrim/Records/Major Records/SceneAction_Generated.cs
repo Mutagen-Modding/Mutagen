@@ -101,15 +101,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Packages
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IPackageGetter>> _Packages = new ExtendedList<IFormLink<IPackageGetter>>();
-        public ExtendedList<IFormLink<IPackageGetter>> Packages
+        private ExtendedList<IFormLinkGetter<IPackageGetter>> _Packages = new ExtendedList<IFormLinkGetter<IPackageGetter>>();
+        public ExtendedList<IFormLinkGetter<IPackageGetter>> Packages
         {
             get => this._Packages;
             protected set => this._Packages = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IPackageGetter>> ISceneActionGetter.Packages => _Packages;
+        IReadOnlyList<IFormLinkGetter<IPackageGetter>> ISceneActionGetter.Packages => _Packages;
         #endregion
 
         #endregion
@@ -1067,7 +1067,7 @@ namespace Mutagen.Bethesda.Skyrim
         new UInt32? StartPhase { get; set; }
         new UInt32? EndPhase { get; set; }
         new Single? TimerSeconds { get; set; }
-        new ExtendedList<IFormLink<IPackageGetter>> Packages { get; }
+        new ExtendedList<IFormLinkGetter<IPackageGetter>> Packages { get; }
         new FormLinkNullable<IDialogTopicGetter> Topic { get; set; }
         new Int32? HeadtrackActorID { get; set; }
         new Single? LoopingMax { get; set; }
@@ -1101,7 +1101,7 @@ namespace Mutagen.Bethesda.Skyrim
         UInt32? StartPhase { get; }
         UInt32? EndPhase { get; }
         Single? TimerSeconds { get; }
-        IReadOnlyList<IFormLink<IPackageGetter>> Packages { get; }
+        IReadOnlyList<IFormLinkGetter<IPackageGetter>> Packages { get; }
         FormLinkNullable<IDialogTopicGetter> Topic { get; }
         Int32? HeadtrackActorID { get; }
         Single? LoopingMax { get; }
@@ -1798,7 +1798,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Packages.SetTo(
                         rhs.Packages
-                        .Select(r => (IFormLink<IPackageGetter>)new FormLink<IPackageGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<IPackageGetter>)new FormLink<IPackageGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1996,10 +1996,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.TimerSeconds,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM));
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IPackageGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IPackageGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Packages,
-                transl: (MutagenWriter subWriter, IFormLink<IPackageGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IPackageGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2160,7 +2160,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.PNAM:
                 {
                     item.Packages.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IPackageGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IPackageGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -2324,7 +2324,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _TimerSecondsLocation;
         public Single? TimerSeconds => _TimerSecondsLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _TimerSecondsLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
-        public IReadOnlyList<IFormLink<IPackageGetter>> Packages { get; private set; } = ListExt.Empty<IFormLink<IPackageGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IPackageGetter>> Packages { get; private set; } = ListExt.Empty<IFormLinkGetter<IPackageGetter>>();
         #region Topic
         private int? _TopicLocation;
         public FormLinkNullable<IDialogTopicGetter> Topic => _TopicLocation.HasValue ? new FormLinkNullable<IDialogTopicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TopicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogTopicGetter>.Null;
@@ -2468,7 +2468,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.PNAM:
                 {
-                    this.Packages = BinaryOverlayList.FactoryByArray<IFormLink<IPackageGetter>>(
+                    this.Packages = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IPackageGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IPackageGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),

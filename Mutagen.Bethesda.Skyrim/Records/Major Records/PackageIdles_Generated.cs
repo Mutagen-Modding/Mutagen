@@ -47,15 +47,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Animations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IIdleAnimationGetter>> _Animations = new ExtendedList<IFormLink<IIdleAnimationGetter>>();
-        public ExtendedList<IFormLink<IIdleAnimationGetter>> Animations
+        private ExtendedList<IFormLinkGetter<IIdleAnimationGetter>> _Animations = new ExtendedList<IFormLinkGetter<IIdleAnimationGetter>>();
+        public ExtendedList<IFormLinkGetter<IIdleAnimationGetter>> Animations
         {
             get => this._Animations;
             protected set => this._Animations = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IIdleAnimationGetter>> IPackageIdlesGetter.Animations => _Animations;
+        IReadOnlyList<IFormLinkGetter<IIdleAnimationGetter>> IPackageIdlesGetter.Animations => _Animations;
         #endregion
 
         #endregion
@@ -566,7 +566,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new PackageIdles.Types Type { get; set; }
         new Single TimerSetting { get; set; }
-        new ExtendedList<IFormLink<IIdleAnimationGetter>> Animations { get; }
+        new ExtendedList<IFormLinkGetter<IIdleAnimationGetter>> Animations { get; }
     }
 
     public partial interface IPackageIdlesGetter :
@@ -584,7 +584,7 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => PackageIdles_Registration.Instance;
         PackageIdles.Types Type { get; }
         Single TimerSetting { get; }
-        IReadOnlyList<IFormLink<IIdleAnimationGetter>> Animations { get; }
+        IReadOnlyList<IFormLinkGetter<IIdleAnimationGetter>> Animations { get; }
 
     }
 
@@ -1048,7 +1048,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Animations.SetTo(
                         rhs.Animations
-                        .Select(r => (IFormLink<IIdleAnimationGetter>)new FormLink<IIdleAnimationGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<IIdleAnimationGetter>)new FormLink<IIdleAnimationGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)

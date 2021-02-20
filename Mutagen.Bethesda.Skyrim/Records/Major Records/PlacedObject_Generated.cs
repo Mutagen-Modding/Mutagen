@@ -130,15 +130,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LinkedRooms
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IPlacedObjectGetter>> _LinkedRooms = new ExtendedList<IFormLink<IPlacedObjectGetter>>();
-        public ExtendedList<IFormLink<IPlacedObjectGetter>> LinkedRooms
+        private ExtendedList<IFormLinkGetter<IPlacedObjectGetter>> _LinkedRooms = new ExtendedList<IFormLinkGetter<IPlacedObjectGetter>>();
+        public ExtendedList<IFormLinkGetter<IPlacedObjectGetter>> LinkedRooms
         {
             get => this._LinkedRooms;
             protected set => this._LinkedRooms = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IPlacedObjectGetter>> IPlacedObjectGetter.LinkedRooms => _LinkedRooms;
+        IReadOnlyList<IFormLinkGetter<IPlacedObjectGetter>> IPlacedObjectGetter.LinkedRooms => _LinkedRooms;
         #endregion
 
         #endregion
@@ -188,15 +188,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LitWater
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IPlacedObjectGetter>> _LitWater = new ExtendedList<IFormLink<IPlacedObjectGetter>>();
-        public ExtendedList<IFormLink<IPlacedObjectGetter>> LitWater
+        private ExtendedList<IFormLinkGetter<IPlacedObjectGetter>> _LitWater = new ExtendedList<IFormLinkGetter<IPlacedObjectGetter>>();
+        public ExtendedList<IFormLinkGetter<IPlacedObjectGetter>> LitWater
         {
             get => this._LitWater;
             protected set => this._LitWater = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IPlacedObjectGetter>> IPlacedObjectGetter.LitWater => _LitWater;
+        IReadOnlyList<IFormLinkGetter<IPlacedObjectGetter>> IPlacedObjectGetter.LitWater => _LitWater;
         #endregion
 
         #endregion
@@ -365,15 +365,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LocationRefTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<ILocationReferenceTypeGetter>>? _LocationRefTypes;
-        public ExtendedList<IFormLink<ILocationReferenceTypeGetter>>? LocationRefTypes
+        private ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? _LocationRefTypes;
+        public ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes
         {
             get => this._LocationRefTypes;
             set => this._LocationRefTypes = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<ILocationReferenceTypeGetter>>? IPlacedObjectGetter.LocationRefTypes => _LocationRefTypes;
+        IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? IPlacedObjectGetter.LocationRefTypes => _LocationRefTypes;
         #endregion
 
         #endregion
@@ -3080,13 +3080,13 @@ namespace Mutagen.Bethesda.Skyrim
         new Int16 Unknown { get; set; }
         new FormLinkNullable<ILightGetter> LightingTemplate { get; set; }
         new FormLinkNullable<IImageSpaceAdapterGetter> ImageSpace { get; set; }
-        new ExtendedList<IFormLink<IPlacedObjectGetter>> LinkedRooms { get; }
+        new ExtendedList<IFormLinkGetter<IPlacedObjectGetter>> LinkedRooms { get; }
         new Boolean MultiBoundPrimitive { get; set; }
         new MemorySlice<Byte>? RagdollData { get; set; }
         new MemorySlice<Byte>? RagdollBipedData { get; set; }
         new Single? Radius { get; set; }
         new ExtendedList<WaterReflection> Reflections { get; }
-        new ExtendedList<IFormLink<IPlacedObjectGetter>> LitWater { get; }
+        new ExtendedList<IFormLinkGetter<IPlacedObjectGetter>> LitWater { get; }
         new FormLinkNullable<IEmittanceGetter> Emittance { get; set; }
         new LightData? LightData { get; set; }
         new Alpha? Alpha { get; set; }
@@ -3110,7 +3110,7 @@ namespace Mutagen.Bethesda.Skyrim
         new LockData? Lock { get; set; }
         new FormLinkNullable<IEncounterZoneGetter> EncounterZone { get; set; }
         new NavigationDoorLink? NavigationDoorLink { get; set; }
-        new ExtendedList<IFormLink<ILocationReferenceTypeGetter>>? LocationRefTypes { get; set; }
+        new ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; set; }
         new Boolean IgnoredBySandbox { get; set; }
         new Ownership? Ownership { get; set; }
         new Int32? ItemCount { get; set; }
@@ -3161,13 +3161,13 @@ namespace Mutagen.Bethesda.Skyrim
         Int16 Unknown { get; }
         FormLinkNullable<ILightGetter> LightingTemplate { get; }
         FormLinkNullable<IImageSpaceAdapterGetter> ImageSpace { get; }
-        IReadOnlyList<IFormLink<IPlacedObjectGetter>> LinkedRooms { get; }
+        IReadOnlyList<IFormLinkGetter<IPlacedObjectGetter>> LinkedRooms { get; }
         Boolean MultiBoundPrimitive { get; }
         ReadOnlyMemorySlice<Byte>? RagdollData { get; }
         ReadOnlyMemorySlice<Byte>? RagdollBipedData { get; }
         Single? Radius { get; }
         IReadOnlyList<IWaterReflectionGetter> Reflections { get; }
-        IReadOnlyList<IFormLink<IPlacedObjectGetter>> LitWater { get; }
+        IReadOnlyList<IFormLinkGetter<IPlacedObjectGetter>> LitWater { get; }
         FormLinkNullable<IEmittanceGetter> Emittance { get; }
         ILightDataGetter? LightData { get; }
         IAlphaGetter? Alpha { get; }
@@ -3191,7 +3191,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILockDataGetter? Lock { get; }
         FormLinkNullable<IEncounterZoneGetter> EncounterZone { get; }
         INavigationDoorLinkGetter? NavigationDoorLink { get; }
-        IReadOnlyList<IFormLink<ILocationReferenceTypeGetter>>? LocationRefTypes { get; }
+        IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; }
         Boolean IgnoredBySandbox { get; }
         IOwnershipGetter? Ownership { get; }
         Int32? ItemCount { get; }
@@ -5001,7 +5001,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.LinkedRooms.SetTo(
                         rhs.LinkedRooms
-                        .Select(r => (IFormLink<IPlacedObjectGetter>)new FormLink<IPlacedObjectGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<IPlacedObjectGetter>)new FormLink<IPlacedObjectGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5074,7 +5074,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.LitWater.SetTo(
                         rhs.LitWater
-                        .Select(r => (IFormLink<IPlacedObjectGetter>)new FormLink<IPlacedObjectGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<IPlacedObjectGetter>)new FormLink<IPlacedObjectGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5369,8 +5369,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.LocationRefTypes = 
                             rhs.LocationRefTypes
-                            .Select(r => (IFormLink<ILocationReferenceTypeGetter>)new FormLink<ILocationReferenceTypeGetter>(r.FormKey))
-                            .ToExtendedList<IFormLink<ILocationReferenceTypeGetter>>();
+                            .Select(r => (IFormLinkGetter<ILocationReferenceTypeGetter>)new FormLink<ILocationReferenceTypeGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>();
                     }
                     else
                     {
@@ -5885,10 +5885,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IPlacedObjectGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IPlacedObjectGetter>>.Instance.Write(
                 writer: writer,
                 items: item.LitWater,
-                transl: (MutagenWriter subWriter, IFormLink<IPlacedObjectGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IPlacedObjectGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -6009,11 +6009,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ILocationReferenceTypeGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ILocationReferenceTypeGetter>>.Instance.Write(
                 writer: writer,
                 items: item.LocationRefTypes,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.XLRT),
-                transl: (MutagenWriter subWriter, IFormLink<ILocationReferenceTypeGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ILocationReferenceTypeGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -6304,7 +6304,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.XLTW:
                 {
                     item.LitWater.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IPlacedObjectGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IPlacedObjectGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.XLTW),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -6465,10 +6465,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.LocationRefTypes = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ILocationReferenceTypeGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ILocationReferenceTypeGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<ILocationReferenceTypeGetter>>();
+                        .CastExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>();
                     return (int)PlacedObject_FieldIndex.LocationRefTypes;
                 }
                 case RecordTypeInts.XIS2:
@@ -6680,7 +6680,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Single? Radius => _RadiusLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _RadiusLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         public IReadOnlyList<IWaterReflectionGetter> Reflections { get; private set; } = ListExt.Empty<WaterReflectionBinaryOverlay>();
-        public IReadOnlyList<IFormLink<IPlacedObjectGetter>> LitWater { get; private set; } = ListExt.Empty<IFormLink<IPlacedObjectGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IPlacedObjectGetter>> LitWater { get; private set; } = ListExt.Empty<IFormLinkGetter<IPlacedObjectGetter>>();
         #region Emittance
         private int? _EmittanceLocation;
         public FormLinkNullable<IEmittanceGetter> Emittance => _EmittanceLocation.HasValue ? new FormLinkNullable<IEmittanceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EmittanceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEmittanceGetter>.Null;
@@ -6770,7 +6770,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private RangeInt32? _NavigationDoorLinkLocation;
         public INavigationDoorLinkGetter? NavigationDoorLink => _NavigationDoorLinkLocation.HasValue ? NavigationDoorLinkBinaryOverlay.NavigationDoorLinkFactory(new OverlayStream(_data.Slice(_NavigationDoorLinkLocation!.Value.Min), _package), _package) : default;
         #endregion
-        public IReadOnlyList<IFormLink<ILocationReferenceTypeGetter>>? LocationRefTypes { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; private set; }
         #region IgnoredBySandbox
         private int? _IgnoredBySandboxLocation;
         public Boolean IgnoredBySandbox => _IgnoredBySandboxLocation.HasValue ? true : default;
@@ -6987,7 +6987,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.XLTW:
                 {
-                    this.LitWater = BinaryOverlayList.FactoryByArray<IFormLink<IPlacedObjectGetter>>(
+                    this.LitWater = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IPlacedObjectGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IPlacedObjectGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -7121,7 +7121,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.LocationRefTypes = BinaryOverlayList.FactoryByStartIndex<IFormLink<ILocationReferenceTypeGetter>>(
+                    this.LocationRefTypes = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ILocationReferenceTypeGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,

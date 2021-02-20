@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda
     public interface IKeyworded<TKeyword> : IKeywordedGetter<TKeyword>
         where TKeyword : IKeywordCommonGetter
     {
-        new ExtendedList<IFormLink<TKeyword>>? Keywords { get; set; }
+        new ExtendedList<IFormLinkGetter<TKeyword>>? Keywords { get; set; }
     }
 
     /// <summary>
@@ -21,7 +21,7 @@ namespace Mutagen.Bethesda
     /// </summary>
     public interface IKeywordedGetter
     {
-        IReadOnlyList<IFormLink<IKeywordCommonGetter>>? Keywords { get; }
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? Keywords { get; }
     }
 
     /// <summary>
@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda
     public interface IKeywordedGetter<TKeyword> : IKeywordedGetter
         where TKeyword : IKeywordCommonGetter
     {
-        new IReadOnlyList<IFormLink<TKeyword>>? Keywords { get; }
+        new IReadOnlyList<IFormLinkGetter<TKeyword>>? Keywords { get; }
     }
     
     public static class IKeywordedExt

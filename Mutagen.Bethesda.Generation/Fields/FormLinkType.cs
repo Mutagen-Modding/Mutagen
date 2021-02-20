@@ -42,13 +42,22 @@ namespace Mutagen.Bethesda.Generation
             _ => throw new NotImplementedException(),
         };
 
-        public override string TypeName(bool getter, bool needsCovariance = false) => $"{((needsCovariance || (getter && this.LoquiType.RefType == Loqui.Generation.LoquiType.LoquiRefType.Generic)) ? "I" : null)}{DirectTypeName(getter)}";
+        public override string TypeName(bool getter, bool needsCovariance = false)
+        {
+            var doInterface = needsCovariance || (getter && this.LoquiType.RefType == Loqui.Generation.LoquiType.LoquiRefType.Generic);
+            return $"{(doInterface ? "I" : null)}{DirectNonGenericTypeName()}{(doInterface && (needsCovariance || getter) ? "Getter" : null)}<{LoquiType.TypeNameInternal(getter: true, internalInterface: true)}>";
+        }
 
         public override Type Type(bool getter) => typeof(FormID);
 
         public string DirectTypeName(bool getter, bool internalInterface = false)
         {
-            return $"{ClassTypeStringPrefix}Link{(this.Nullable ? "Nullable" : string.Empty)}<{LoquiType.TypeNameInternal(getter: true, internalInterface: true)}>";
+            return $"{DirectNonGenericTypeName()}<{LoquiType.TypeNameInternal(getter: true, internalInterface: true)}>";
+        }
+
+        public string DirectNonGenericTypeName()
+        {
+            return $"{ClassTypeStringPrefix}Link{(this.Nullable ? "Nullable" : string.Empty)}";
         }
 
         public override async Task Load(XElement node, bool requireName = true)

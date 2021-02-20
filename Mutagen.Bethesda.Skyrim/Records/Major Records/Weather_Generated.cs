@@ -319,15 +319,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region SkyStatics
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IStaticGetter>> _SkyStatics = new ExtendedList<IFormLink<IStaticGetter>>();
-        public ExtendedList<IFormLink<IStaticGetter>> SkyStatics
+        private ExtendedList<IFormLinkGetter<IStaticGetter>> _SkyStatics = new ExtendedList<IFormLinkGetter<IStaticGetter>>();
+        public ExtendedList<IFormLinkGetter<IStaticGetter>> SkyStatics
         {
             get => this._SkyStatics;
             protected set => this._SkyStatics = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IStaticGetter>> IWeatherGetter.SkyStatics => _SkyStatics;
+        IReadOnlyList<IFormLinkGetter<IStaticGetter>> IWeatherGetter.SkyStatics => _SkyStatics;
         #endregion
 
         #endregion
@@ -3071,7 +3071,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single WindDirection { get; set; }
         new Single WindDirectionRange { get; set; }
         new ExtendedList<WeatherSound> Sounds { get; }
-        new ExtendedList<IFormLink<IStaticGetter>> SkyStatics { get; }
+        new ExtendedList<IFormLinkGetter<IStaticGetter>> SkyStatics { get; }
         new WeatherImageSpaces? ImageSpaces { get; set; }
         new WeatherVolumetricLighting? VolumetricLighting { get; set; }
         new WeatherAmbientColorSet? DirectionalAmbientLightingColors { get; set; }
@@ -3151,7 +3151,7 @@ namespace Mutagen.Bethesda.Skyrim
         Single WindDirection { get; }
         Single WindDirectionRange { get; }
         IReadOnlyList<IWeatherSoundGetter> Sounds { get; }
-        IReadOnlyList<IFormLink<IStaticGetter>> SkyStatics { get; }
+        IReadOnlyList<IFormLinkGetter<IStaticGetter>> SkyStatics { get; }
         IWeatherImageSpacesGetter? ImageSpaces { get; }
         IWeatherVolumetricLightingGetter? VolumetricLighting { get; }
         IWeatherAmbientColorSetGetter? DirectionalAmbientLightingColors { get; }
@@ -5058,7 +5058,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.SkyStatics.SetTo(
                         rhs.SkyStatics
-                        .Select(r => (IFormLink<IStaticGetter>)new FormLink<IStaticGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<IStaticGetter>)new FormLink<IStaticGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5718,10 +5718,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IStaticGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IStaticGetter>>.Instance.Write(
                 writer: writer,
                 items: item.SkyStatics,
-                transl: (MutagenWriter subWriter, IFormLink<IStaticGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IStaticGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -6059,7 +6059,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.TNAM:
                 {
                     item.SkyStatics.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IStaticGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IStaticGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -6494,7 +6494,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset);
         #endregion
         public IReadOnlyList<IWeatherSoundGetter> Sounds { get; private set; } = ListExt.Empty<WeatherSoundBinaryOverlay>();
-        public IReadOnlyList<IFormLink<IStaticGetter>> SkyStatics { get; private set; } = ListExt.Empty<IFormLink<IStaticGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IStaticGetter>> SkyStatics { get; private set; } = ListExt.Empty<IFormLinkGetter<IStaticGetter>>();
         #region ImageSpaces
         private RangeInt32? _ImageSpacesLocation;
         public IWeatherImageSpacesGetter? ImageSpaces => _ImageSpacesLocation.HasValue ? WeatherImageSpacesBinaryOverlay.WeatherImageSpacesFactory(new OverlayStream(_data.Slice(_ImageSpacesLocation!.Value.Min), _package), _package) : default;
@@ -6707,7 +6707,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    this.SkyStatics = BinaryOverlayList.FactoryByArray<IFormLink<IStaticGetter>>(
+                    this.SkyStatics = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IStaticGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IStaticGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),

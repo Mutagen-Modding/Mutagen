@@ -68,13 +68,13 @@ namespace Mutagen.Bethesda
             return $"({Type}) => {FormKey}";
         }
 
-        public static FormLinkInformation Factory<TMajorGetter>(IFormLink<TMajorGetter> link)
+        public static FormLinkInformation Factory<TMajorGetter>(IFormLinkGetter<TMajorGetter> link)
             where TMajorGetter : IMajorRecordCommonGetter
         {
             return new FormLinkInformation(link.FormKey, typeof(TMajorGetter));
         }
 
-        public static FormLinkInformation Factory<TMajorGetter>(IFormLinkNullable<TMajorGetter> link)
+        public static FormLinkInformation Factory<TMajorGetter>(IFormLinkNullableGetter<TMajorGetter> link)
             where TMajorGetter : IMajorRecordCommonGetter
         {
             return new FormLinkInformation(link.FormKey, typeof(TMajorGetter));

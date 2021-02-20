@@ -58,15 +58,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region RelatedPaths
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<ICameraPathGetter>> _RelatedPaths = new ExtendedList<IFormLink<ICameraPathGetter>>();
-        public ExtendedList<IFormLink<ICameraPathGetter>> RelatedPaths
+        private ExtendedList<IFormLinkGetter<ICameraPathGetter>> _RelatedPaths = new ExtendedList<IFormLinkGetter<ICameraPathGetter>>();
+        public ExtendedList<IFormLinkGetter<ICameraPathGetter>> RelatedPaths
         {
             get => this._RelatedPaths;
             protected set => this._RelatedPaths = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<ICameraPathGetter>> ICameraPathGetter.RelatedPaths => _RelatedPaths;
+        IReadOnlyList<IFormLinkGetter<ICameraPathGetter>> ICameraPathGetter.RelatedPaths => _RelatedPaths;
         #endregion
 
         #endregion
@@ -78,15 +78,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Shots
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<ICameraShotGetter>> _Shots = new ExtendedList<IFormLink<ICameraShotGetter>>();
-        public ExtendedList<IFormLink<ICameraShotGetter>> Shots
+        private ExtendedList<IFormLinkGetter<ICameraShotGetter>> _Shots = new ExtendedList<IFormLinkGetter<ICameraShotGetter>>();
+        public ExtendedList<IFormLinkGetter<ICameraShotGetter>> Shots
         {
             get => this._Shots;
             protected set => this._Shots = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<ICameraShotGetter>> ICameraPathGetter.Shots => _Shots;
+        IReadOnlyList<IFormLinkGetter<ICameraShotGetter>> ICameraPathGetter.Shots => _Shots;
         #endregion
 
         #endregion
@@ -841,10 +841,10 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordInternal
     {
         new ExtendedList<Condition> Conditions { get; }
-        new ExtendedList<IFormLink<ICameraPathGetter>> RelatedPaths { get; }
+        new ExtendedList<IFormLinkGetter<ICameraPathGetter>> RelatedPaths { get; }
         new CameraPath.ZoomType Zoom { get; set; }
         new Boolean ZoomMustHaveCameraShots { get; set; }
-        new ExtendedList<IFormLink<ICameraShotGetter>> Shots { get; }
+        new ExtendedList<IFormLinkGetter<ICameraShotGetter>> Shots { get; }
     }
 
     public partial interface ICameraPathInternal :
@@ -863,10 +863,10 @@ namespace Mutagen.Bethesda.Skyrim
     {
         static new ILoquiRegistration Registration => CameraPath_Registration.Instance;
         IReadOnlyList<IConditionGetter> Conditions { get; }
-        IReadOnlyList<IFormLink<ICameraPathGetter>> RelatedPaths { get; }
+        IReadOnlyList<IFormLinkGetter<ICameraPathGetter>> RelatedPaths { get; }
         CameraPath.ZoomType Zoom { get; }
         Boolean ZoomMustHaveCameraShots { get; }
-        IReadOnlyList<IFormLink<ICameraShotGetter>> Shots { get; }
+        IReadOnlyList<IFormLinkGetter<ICameraShotGetter>> Shots { get; }
 
     }
 
@@ -1571,7 +1571,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.RelatedPaths.SetTo(
                         rhs.RelatedPaths
-                        .Select(r => (IFormLink<ICameraPathGetter>)new FormLink<ICameraPathGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<ICameraPathGetter>)new FormLink<ICameraPathGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1598,7 +1598,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Shots.SetTo(
                         rhs.Shots
-                        .Select(r => (IFormLink<ICameraShotGetter>)new FormLink<ICameraShotGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<ICameraShotGetter>)new FormLink<ICameraShotGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1805,11 +1805,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             CameraPathBinaryWriteTranslation.WriteBinaryConditions(
                 writer: writer,
                 item: item);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ICameraPathGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ICameraPathGetter>>.Instance.Write(
                 writer: writer,
                 items: item.RelatedPaths,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.ANAM),
-                transl: (MutagenWriter subWriter, IFormLink<ICameraPathGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ICameraPathGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -1818,10 +1818,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             CameraPathBinaryWriteTranslation.WriteBinaryZoom(
                 writer: writer,
                 item: item);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ICameraShotGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ICameraShotGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Shots,
-                transl: (MutagenWriter subWriter, IFormLink<ICameraShotGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ICameraShotGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -1930,7 +1930,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RelatedPaths.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ICameraPathGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ICameraPathGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)CameraPath_FieldIndex.RelatedPaths;
@@ -1945,7 +1945,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.SNAM:
                 {
                     item.Shots.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ICameraShotGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ICameraShotGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -2022,7 +2022,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             int? lastParsed);
         #endregion
-        public IReadOnlyList<IFormLink<ICameraPathGetter>> RelatedPaths { get; private set; } = ListExt.Empty<IFormLink<ICameraPathGetter>>();
+        public IReadOnlyList<IFormLinkGetter<ICameraPathGetter>> RelatedPaths { get; private set; } = ListExt.Empty<IFormLinkGetter<ICameraPathGetter>>();
         #region Zoom
         partial void ZoomCustomParse(
             OverlayStream stream,
@@ -2030,7 +2030,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset);
         public CameraPath.ZoomType Zoom => GetZoomCustom();
         #endregion
-        public IReadOnlyList<IFormLink<ICameraShotGetter>> Shots { get; private set; } = ListExt.Empty<IFormLink<ICameraShotGetter>>();
+        public IReadOnlyList<IFormLinkGetter<ICameraShotGetter>> Shots { get; private set; } = ListExt.Empty<IFormLinkGetter<ICameraShotGetter>>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2111,7 +2111,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.RelatedPaths = BinaryOverlayList.FactoryByStartIndex<IFormLink<ICameraPathGetter>>(
+                    this.RelatedPaths = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ICameraPathGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
@@ -2129,7 +2129,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    this.Shots = BinaryOverlayList.FactoryByArray<IFormLink<ICameraShotGetter>>(
+                    this.Shots = BinaryOverlayList.FactoryByArray<IFormLinkGetter<ICameraShotGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<ICameraShotGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),

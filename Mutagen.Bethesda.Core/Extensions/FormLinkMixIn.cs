@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda
             return new FormLink<TGetter>(rec.FormKey);
         }
 
-        public static bool Contains<TGetter>(this IReadOnlyCollection<IFormLink<TGetter>> coll, TGetter record)
+        public static bool Contains<TGetter>(this IReadOnlyCollection<IFormLinkGetter<TGetter>> coll, TGetter record)
             where TGetter : class, IMajorRecordCommonGetter
         {
             return coll.Contains(new FormLink<TGetter>(record.FormKey));

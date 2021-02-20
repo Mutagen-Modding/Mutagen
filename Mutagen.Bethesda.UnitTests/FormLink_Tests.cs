@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.UnitTests
             FormLink<INpcGetter> getter = new FormLink<INpcGetter>(Utility.Form1);
             FormLink<INpc> setter = new FormLink<INpc>(Utility.Form1);
             FormLink<Npc> direct = new FormLink<Npc>(Utility.Form1);
-            HashSet<IFormLink<INpcGetter>> set = new HashSet<IFormLink<INpcGetter>>()
+            HashSet<IFormLinkGetter<INpcGetter>> set = new HashSet<IFormLinkGetter<INpcGetter>>()
             {
                 getter,
                 setter,
@@ -85,7 +85,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             FormLink<IConstructibleGetter> link1 = new FormLink<IConstructibleGetter>(Utility.Form1);
             FormLink<IWeaponGetter> link2 = new FormLink<IWeaponGetter>(Utility.Form1);
-            HashSet<IFormLink<IConstructibleGetter>> set = new HashSet<IFormLink<IConstructibleGetter>>()
+            HashSet<IFormLinkGetter<IConstructibleGetter>> set = new HashSet<IFormLinkGetter<IConstructibleGetter>>()
             {
                 link1,
                 link2,

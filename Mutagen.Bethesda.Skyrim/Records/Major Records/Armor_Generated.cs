@@ -162,20 +162,20 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IKeywordGetter>>? _Keywords;
-        public ExtendedList<IFormLink<IKeywordGetter>>? Keywords
+        private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Keywords;
+        public ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IKeywordGetter>>? IArmorGetter.Keywords => _Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IArmorGetter.Keywords => _Keywords;
         #endregion
 
         #region Aspects
-        IReadOnlyList<IFormLink<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
-        IReadOnlyList<IFormLink<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
         #endregion
         #region Description
@@ -185,15 +185,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Armature
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IArmorAddonGetter>> _Armature = new ExtendedList<IFormLink<IArmorAddonGetter>>();
-        public ExtendedList<IFormLink<IArmorAddonGetter>> Armature
+        private ExtendedList<IFormLinkGetter<IArmorAddonGetter>> _Armature = new ExtendedList<IFormLinkGetter<IArmorAddonGetter>>();
+        public ExtendedList<IFormLinkGetter<IArmorAddonGetter>> Armature
         {
             get => this._Armature;
             protected set => this._Armature = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IArmorAddonGetter>> IArmorGetter.Armature => _Armature;
+        IReadOnlyList<IFormLinkGetter<IArmorAddonGetter>> IArmorGetter.Armature => _Armature;
         #endregion
 
         #endregion
@@ -1465,9 +1465,9 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<IImpactDataSetGetter> BashImpactDataSet { get; set; }
         new FormLinkNullable<IMaterialTypeGetter> AlternateBlockMaterial { get; set; }
         new FormLinkNullable<IRaceGetter> Race { get; set; }
-        new ExtendedList<IFormLink<IKeywordGetter>>? Keywords { get; set; }
+        new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
         new TranslatedString? Description { get; set; }
-        new ExtendedList<IFormLink<IArmorAddonGetter>> Armature { get; }
+        new ExtendedList<IFormLinkGetter<IArmorAddonGetter>> Armature { get; }
         new UInt32 Value { get; set; }
         new Single Weight { get; set; }
         new Single ArmorRating { get; set; }
@@ -1522,9 +1522,9 @@ namespace Mutagen.Bethesda.Skyrim
         FormLinkNullable<IImpactDataSetGetter> BashImpactDataSet { get; }
         FormLinkNullable<IMaterialTypeGetter> AlternateBlockMaterial { get; }
         FormLinkNullable<IRaceGetter> Race { get; }
-        IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; }
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
         ITranslatedStringGetter? Description { get; }
-        IReadOnlyList<IFormLink<IArmorAddonGetter>> Armature { get; }
+        IReadOnlyList<IFormLinkGetter<IArmorAddonGetter>> Armature { get; }
         UInt32 Value { get; }
         Single Weight { get; }
         Single ArmorRating { get; }
@@ -2651,8 +2651,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLink<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
-                            .ToExtendedList<IFormLink<IKeywordGetter>>();
+                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
                     {
@@ -2680,7 +2680,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Armature.SetTo(
                         rhs.Armature
-                        .Select(r => (IFormLink<IArmorAddonGetter>)new FormLink<IArmorAddonGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<IArmorAddonGetter>)new FormLink<IArmorAddonGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2971,13 +2971,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Race,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM));
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.WriteWithCounter(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Keywords,
                 counterType: RecordTypes.KSIZ,
                 counterLength: 4,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
-                transl: (MutagenWriter subWriter, IFormLink<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2989,10 +2989,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DESC),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.DL);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IArmorAddonGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IArmorAddonGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Armature,
-                transl: (MutagenWriter subWriter, IFormLink<IArmorAddonGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IArmorAddonGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -3229,13 +3229,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.KSIZ:
                 {
                     item.Keywords = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
                             frame: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<IKeywordGetter>>();
+                        .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     return (int)Armor_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.DESC:
@@ -3250,7 +3250,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.MODL:
                 {
                     item.Armature.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IArmorAddonGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IArmorAddonGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.MODL),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -3411,14 +3411,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public FormLinkNullable<IRaceGetter> Race => _RaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _RaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
         #endregion
         #region Keywords
-        public IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; private set; }
-        IReadOnlyList<IFormLink<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
         #region Description
         private int? _DescriptionLocation;
         public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
-        public IReadOnlyList<IFormLink<IArmorAddonGetter>> Armature { get; private set; } = ListExt.Empty<IFormLink<IArmorAddonGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IArmorAddonGetter>> Armature { get; private set; } = ListExt.Empty<IFormLinkGetter<IArmorAddonGetter>>();
         private int? _DATALocation;
         public Armor.DATADataType DATADataTypeState { get; private set; }
         #region Value
@@ -3600,7 +3600,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
                 {
-                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLink<IKeywordGetter>>(
+                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLinkGetter<IKeywordGetter>>(
                         stream: stream,
                         package: _package,
                         itemLength: 0x4,
@@ -3617,7 +3617,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.MODL:
                 {
-                    this.Armature = BinaryOverlayList.FactoryByArray<IFormLink<IArmorAddonGetter>>(
+                    this.Armature = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IArmorAddonGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IArmorAddonGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),

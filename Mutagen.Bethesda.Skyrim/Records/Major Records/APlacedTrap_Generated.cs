@@ -149,15 +149,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LocationRefTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<ILocationReferenceTypeGetter>>? _LocationRefTypes;
-        public ExtendedList<IFormLink<ILocationReferenceTypeGetter>>? LocationRefTypes
+        private ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? _LocationRefTypes;
+        public ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes
         {
             get => this._LocationRefTypes;
             set => this._LocationRefTypes = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<ILocationReferenceTypeGetter>>? IAPlacedTrapGetter.LocationRefTypes => _LocationRefTypes;
+        IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? IAPlacedTrapGetter.LocationRefTypes => _LocationRefTypes;
         #endregion
 
         #endregion
@@ -1389,7 +1389,7 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<IEmittanceGetter> Emittance { get; set; }
         new FormLinkNullable<IPlacedObjectGetter> MultiBoundReference { get; set; }
         new MemorySlice<Byte>? IgnoredBySandbox { get; set; }
-        new ExtendedList<IFormLink<ILocationReferenceTypeGetter>>? LocationRefTypes { get; set; }
+        new ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; set; }
         new FormLinkNullable<ILocationRecordGetter> LocationReference { get; set; }
         new ExtendedList<Single>? DistantLodData { get; set; }
         new Single? Scale { get; set; }
@@ -1433,7 +1433,7 @@ namespace Mutagen.Bethesda.Skyrim
         FormLinkNullable<IEmittanceGetter> Emittance { get; }
         FormLinkNullable<IPlacedObjectGetter> MultiBoundReference { get; }
         ReadOnlyMemorySlice<Byte>? IgnoredBySandbox { get; }
-        IReadOnlyList<IFormLink<ILocationReferenceTypeGetter>>? LocationRefTypes { get; }
+        IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; }
         FormLinkNullable<ILocationRecordGetter> LocationReference { get; }
         IReadOnlyList<Single>? DistantLodData { get; }
         Single? Scale { get; }
@@ -2634,8 +2634,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.LocationRefTypes = 
                             rhs.LocationRefTypes
-                            .Select(r => (IFormLink<ILocationReferenceTypeGetter>)new FormLink<ILocationReferenceTypeGetter>(r.FormKey))
-                            .ToExtendedList<IFormLink<ILocationReferenceTypeGetter>>();
+                            .Select(r => (IFormLinkGetter<ILocationReferenceTypeGetter>)new FormLink<ILocationReferenceTypeGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>();
                     }
                     else
                     {
@@ -2989,11 +2989,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.IgnoredBySandbox,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XIS2));
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ILocationReferenceTypeGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ILocationReferenceTypeGetter>>.Instance.Write(
                 writer: writer,
                 items: item.LocationRefTypes,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.XLRT),
-                transl: (MutagenWriter subWriter, IFormLink<ILocationReferenceTypeGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ILocationReferenceTypeGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -3204,10 +3204,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.LocationRefTypes = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ILocationReferenceTypeGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ILocationReferenceTypeGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<ILocationReferenceTypeGetter>>();
+                        .CastExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>();
                     return (int)APlacedTrap_FieldIndex.LocationRefTypes;
                 }
                 case RecordTypeInts.XLRL:
@@ -3340,7 +3340,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _IgnoredBySandboxLocation;
         public ReadOnlyMemorySlice<Byte>? IgnoredBySandbox => _IgnoredBySandboxLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _IgnoredBySandboxLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        public IReadOnlyList<IFormLink<ILocationReferenceTypeGetter>>? LocationRefTypes { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; private set; }
         #region LocationReference
         private int? _LocationReferenceLocation;
         public FormLinkNullable<ILocationRecordGetter> LocationReference => _LocationReferenceLocation.HasValue ? new FormLinkNullable<ILocationRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LocationReferenceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationRecordGetter>.Null;
@@ -3479,7 +3479,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.LocationRefTypes = BinaryOverlayList.FactoryByStartIndex<IFormLink<ILocationReferenceTypeGetter>>(
+                    this.LocationRefTypes = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ILocationReferenceTypeGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,

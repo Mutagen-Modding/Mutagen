@@ -88,15 +88,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LinkTo
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IDialogGetter>> _LinkTo = new ExtendedList<IFormLink<IDialogGetter>>();
-        public ExtendedList<IFormLink<IDialogGetter>> LinkTo
+        private ExtendedList<IFormLinkGetter<IDialogGetter>> _LinkTo = new ExtendedList<IFormLinkGetter<IDialogGetter>>();
+        public ExtendedList<IFormLinkGetter<IDialogGetter>> LinkTo
         {
             get => this._LinkTo;
             protected set => this._LinkTo = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IDialogGetter>> IDialogResponsesGetter.LinkTo => _LinkTo;
+        IReadOnlyList<IFormLinkGetter<IDialogGetter>> IDialogResponsesGetter.LinkTo => _LinkTo;
         #endregion
 
         #endregion
@@ -1292,7 +1292,7 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<IDialogTopicGetter> Topic { get; set; }
         new FormLinkNullable<IDialogResponsesGetter> PreviousDialog { get; set; }
         new FavorLevel? FavorLevel { get; set; }
-        new ExtendedList<IFormLink<IDialogGetter>> LinkTo { get; }
+        new ExtendedList<IFormLinkGetter<IDialogGetter>> LinkTo { get; }
         new FormLinkNullable<IDialogResponsesGetter> ResponseData { get; set; }
         new ExtendedList<DialogResponse> Responses { get; }
         new ExtendedList<Condition> Conditions { get; }
@@ -1329,7 +1329,7 @@ namespace Mutagen.Bethesda.Skyrim
         FormLinkNullable<IDialogTopicGetter> Topic { get; }
         FormLinkNullable<IDialogResponsesGetter> PreviousDialog { get; }
         FavorLevel? FavorLevel { get; }
-        IReadOnlyList<IFormLink<IDialogGetter>> LinkTo { get; }
+        IReadOnlyList<IFormLinkGetter<IDialogGetter>> LinkTo { get; }
         FormLinkNullable<IDialogResponsesGetter> ResponseData { get; }
         IReadOnlyList<IDialogResponseGetter> Responses { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
@@ -2275,7 +2275,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.LinkTo.SetTo(
                         rhs.LinkTo
-                        .Select(r => (IFormLink<IDialogGetter>)new FormLink<IDialogGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<IDialogGetter>)new FormLink<IDialogGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2580,10 +2580,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.FavorLevel,
                 length: 1,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM));
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IDialogGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IDialogGetter>>.Instance.Write(
                 writer: writer,
                 items: item.LinkTo,
-                transl: (MutagenWriter subWriter, IFormLink<IDialogGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IDialogGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2769,7 +2769,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.TCLT:
                 {
                     item.LinkTo.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IDialogGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IDialogGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.TCLT),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -2929,7 +2929,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _FavorLevelLocation;
         public FavorLevel? FavorLevel => _FavorLevelLocation.HasValue ? (FavorLevel)HeaderTranslation.ExtractSubrecordMemory(_data, _FavorLevelLocation!.Value, _package.MetaData.Constants)[0] : default(FavorLevel?);
         #endregion
-        public IReadOnlyList<IFormLink<IDialogGetter>> LinkTo { get; private set; } = ListExt.Empty<IFormLink<IDialogGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IDialogGetter>> LinkTo { get; private set; } = ListExt.Empty<IFormLinkGetter<IDialogGetter>>();
         #region ResponseData
         private int? _ResponseDataLocation;
         public FormLinkNullable<IDialogResponsesGetter> ResponseData => _ResponseDataLocation.HasValue ? new FormLinkNullable<IDialogResponsesGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ResponseDataLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogResponsesGetter>.Null;
@@ -3058,7 +3058,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.TCLT:
                 {
-                    this.LinkTo = BinaryOverlayList.FactoryByArray<IFormLink<IDialogGetter>>(
+                    this.LinkTo = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IDialogGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IDialogGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),

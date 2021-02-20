@@ -80,15 +80,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Regions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IRegionGetter>>? _Regions;
-        public ExtendedList<IFormLink<IRegionGetter>>? Regions
+        private ExtendedList<IFormLinkGetter<IRegionGetter>>? _Regions;
+        public ExtendedList<IFormLinkGetter<IRegionGetter>>? Regions
         {
             get => this._Regions;
             set => this._Regions = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IRegionGetter>>? ICellGetter.Regions => _Regions;
+        IReadOnlyList<IFormLinkGetter<IRegionGetter>>? ICellGetter.Regions => _Regions;
         #endregion
 
         #endregion
@@ -1519,7 +1519,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Cell.Flag? Flags { get; set; }
         new P2Int? Grid { get; set; }
         new CellLighting? Lighting { get; set; }
-        new ExtendedList<IFormLink<IRegionGetter>>? Regions { get; set; }
+        new ExtendedList<IFormLinkGetter<IRegionGetter>>? Regions { get; set; }
         new MusicType? MusicType { get; set; }
         new Single? WaterHeight { get; set; }
         new FormLinkNullable<IClimateGetter> Climate { get; set; }
@@ -1560,7 +1560,7 @@ namespace Mutagen.Bethesda.Oblivion
         Cell.Flag? Flags { get; }
         P2Int? Grid { get; }
         ICellLightingGetter? Lighting { get; }
-        IReadOnlyList<IFormLink<IRegionGetter>>? Regions { get; }
+        IReadOnlyList<IFormLinkGetter<IRegionGetter>>? Regions { get; }
         MusicType? MusicType { get; }
         Single? WaterHeight { get; }
         FormLinkNullable<IClimateGetter> Climate { get; }
@@ -3818,8 +3818,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Regions = 
                             rhs.Regions
-                            .Select(r => (IFormLink<IRegionGetter>)new FormLink<IRegionGetter>(r.FormKey))
-                            .ToExtendedList<IFormLink<IRegionGetter>>();
+                            .Select(r => (IFormLinkGetter<IRegionGetter>)new FormLink<IRegionGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IRegionGetter>>();
                     }
                     else
                     {
@@ -4226,11 +4226,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IRegionGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IRegionGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Regions,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.XCLR),
-                transl: (MutagenWriter subWriter, IFormLink<IRegionGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IRegionGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -4399,10 +4399,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Regions = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IRegionGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IRegionGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<IRegionGetter>>();
+                        .CastExtendedList<IFormLinkGetter<IRegionGetter>>();
                     return (int)Cell_FieldIndex.Regions;
                 }
                 case RecordTypeInts.XCMT:
@@ -4547,7 +4547,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private RangeInt32? _LightingLocation;
         public ICellLightingGetter? Lighting => _LightingLocation.HasValue ? CellLightingBinaryOverlay.CellLightingFactory(new OverlayStream(_data.Slice(_LightingLocation!.Value.Min), _package), _package) : default;
         #endregion
-        public IReadOnlyList<IFormLink<IRegionGetter>>? Regions { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<IRegionGetter>>? Regions { get; private set; }
         #region MusicType
         private int? _MusicTypeLocation;
         public MusicType? MusicType => _MusicTypeLocation.HasValue ? (MusicType)HeaderTranslation.ExtractSubrecordMemory(_data, _MusicTypeLocation!.Value, _package.MetaData.Constants)[0] : default(MusicType?);
@@ -4675,7 +4675,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Regions = BinaryOverlayList.FactoryByStartIndex<IFormLink<IRegionGetter>>(
+                    this.Regions = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IRegionGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,

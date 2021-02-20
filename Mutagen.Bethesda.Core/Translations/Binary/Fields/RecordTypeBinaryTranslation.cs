@@ -34,7 +34,7 @@ namespace Mutagen.Bethesda.Binary
 
         public bool Parse<T>(
             MutagenFrame frame,
-            out IEDIDLink<T> item,
+            out IEDIDLinkGetter<T> item,
             RecordTypeConverter? recordTypeConverter = null)
             where T : class, IMajorRecordCommonGetter
         {
@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Binary
             writer.Write(item.TypeInt);
         }
 
-        public void Write<T>(MutagenWriter writer, IEDIDLink<T> item)
+        public void Write<T>(MutagenWriter writer, IEDIDLinkGetter<T> item)
             where T : class, IMajorRecordCommonGetter
         {
             this.Write(
@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Binary
 
         public void Write<M, T>(
             MutagenWriter writer,
-            IEDIDLink<T> item,
+            IEDIDLinkGetter<T> item,
             RecordType header)
             where T : class, IMajorRecordCommonGetter
         {
@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Binary
 
         public void Write<T>(
             MutagenWriter writer,
-            IEDIDLink<T> item,
+            IEDIDLinkGetter<T> item,
             RecordType header)
             where T : class, IMajorRecordCommonGetter
         {

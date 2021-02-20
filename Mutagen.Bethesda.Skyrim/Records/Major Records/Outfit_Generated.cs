@@ -44,15 +44,15 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IOutfitTargetGetter>>? _Items;
-        public ExtendedList<IFormLink<IOutfitTargetGetter>>? Items
+        private ExtendedList<IFormLinkGetter<IOutfitTargetGetter>>? _Items;
+        public ExtendedList<IFormLinkGetter<IOutfitTargetGetter>>? Items
         {
             get => this._Items;
             set => this._Items = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IOutfitTargetGetter>>? IOutfitGetter.Items => _Items;
+        IReadOnlyList<IFormLinkGetter<IOutfitTargetGetter>>? IOutfitGetter.Items => _Items;
         #endregion
 
         #endregion
@@ -546,7 +546,7 @@ namespace Mutagen.Bethesda.Skyrim
         IOutfitGetter,
         ISkyrimMajorRecordInternal
     {
-        new ExtendedList<IFormLink<IOutfitTargetGetter>>? Items { get; set; }
+        new ExtendedList<IFormLinkGetter<IOutfitTargetGetter>>? Items { get; set; }
     }
 
     public partial interface IOutfitInternal :
@@ -564,7 +564,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IOutfitGetter>
     {
         static new ILoquiRegistration Registration => Outfit_Registration.Instance;
-        IReadOnlyList<IFormLink<IOutfitTargetGetter>>? Items { get; }
+        IReadOnlyList<IFormLinkGetter<IOutfitTargetGetter>>? Items { get; }
 
     }
 
@@ -1170,8 +1170,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Items = 
                             rhs.Items
-                            .Select(r => (IFormLink<IOutfitTargetGetter>)new FormLink<IOutfitTargetGetter>(r.FormKey))
-                            .ToExtendedList<IFormLink<IOutfitTargetGetter>>();
+                            .Select(r => (IFormLinkGetter<IOutfitTargetGetter>)new FormLink<IOutfitTargetGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IOutfitTargetGetter>>();
                     }
                     else
                     {
@@ -1345,11 +1345,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IOutfitTargetGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IOutfitTargetGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Items,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.INAM),
-                transl: (MutagenWriter subWriter, IFormLink<IOutfitTargetGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IOutfitTargetGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -1450,10 +1450,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Items = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IOutfitTargetGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IOutfitTargetGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<IOutfitTargetGetter>>();
+                        .CastExtendedList<IFormLinkGetter<IOutfitTargetGetter>>();
                     return (int)Outfit_FieldIndex.Items;
                 }
                 default:
@@ -1511,7 +1511,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IReadOnlyList<IFormLink<IOutfitTargetGetter>>? Items { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<IOutfitTargetGetter>>? Items { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1582,7 +1582,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Items = BinaryOverlayList.FactoryByStartIndex<IFormLink<IOutfitTargetGetter>>(
+                    this.Items = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IOutfitTargetGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,

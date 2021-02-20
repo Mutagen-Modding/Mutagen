@@ -91,20 +91,20 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IKeywordGetter>>? _Keywords;
-        public ExtendedList<IFormLink<IKeywordGetter>>? Keywords
+        private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Keywords;
+        public ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IKeywordGetter>>? IMagicEffectGetter.Keywords => _Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IMagicEffectGetter.Keywords => _Keywords;
         #endregion
 
         #region Aspects
-        IReadOnlyList<IFormLink<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
-        IReadOnlyList<IFormLink<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
         #endregion
         #region Flags
@@ -225,15 +225,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region CounterEffects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IMagicEffectGetter>> _CounterEffects = new ExtendedList<IFormLink<IMagicEffectGetter>>();
-        public ExtendedList<IFormLink<IMagicEffectGetter>> CounterEffects
+        private ExtendedList<IFormLinkGetter<IMagicEffectGetter>> _CounterEffects = new ExtendedList<IFormLinkGetter<IMagicEffectGetter>>();
+        public ExtendedList<IFormLinkGetter<IMagicEffectGetter>> CounterEffects
         {
             get => this._CounterEffects;
             protected set => this._CounterEffects = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IMagicEffectGetter>> IMagicEffectGetter.CounterEffects => _CounterEffects;
+        IReadOnlyList<IFormLinkGetter<IMagicEffectGetter>> IMagicEffectGetter.CounterEffects => _CounterEffects;
         #endregion
 
         #endregion
@@ -2272,7 +2272,7 @@ namespace Mutagen.Bethesda.Skyrim
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new TranslatedString? Name { get; set; }
         new FormLinkNullable<IStaticGetter> MenuDisplayObject { get; set; }
-        new ExtendedList<IFormLink<IKeywordGetter>>? Keywords { get; set; }
+        new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
         new MagicEffect.Flag Flags { get; set; }
         new Single BaseCost { get; set; }
         new ActorValue MagicSkill { get; set; }
@@ -2310,7 +2310,7 @@ namespace Mutagen.Bethesda.Skyrim
         new SoundLevel CastingSoundLevel { get; set; }
         new Single ScriptEffectAIScore { get; set; }
         new Single ScriptEffectAIDelayTime { get; set; }
-        new ExtendedList<IFormLink<IMagicEffectGetter>> CounterEffects { get; }
+        new ExtendedList<IFormLinkGetter<IMagicEffectGetter>> CounterEffects { get; }
         new ExtendedList<MagicEffectSound>? Sounds { get; set; }
         new TranslatedString? Description { get; set; }
         new ExtendedList<Condition> Conditions { get; }
@@ -2340,7 +2340,7 @@ namespace Mutagen.Bethesda.Skyrim
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
         ITranslatedStringGetter? Name { get; }
         FormLinkNullable<IStaticGetter> MenuDisplayObject { get; }
-        IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; }
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
         MagicEffect.Flag Flags { get; }
         Single BaseCost { get; }
         ActorValue MagicSkill { get; }
@@ -2378,7 +2378,7 @@ namespace Mutagen.Bethesda.Skyrim
         SoundLevel CastingSoundLevel { get; }
         Single ScriptEffectAIScore { get; }
         Single ScriptEffectAIDelayTime { get; }
-        IReadOnlyList<IFormLink<IMagicEffectGetter>> CounterEffects { get; }
+        IReadOnlyList<IFormLinkGetter<IMagicEffectGetter>> CounterEffects { get; }
         IReadOnlyList<IMagicEffectSoundGetter>? Sounds { get; }
         ITranslatedStringGetter? Description { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
@@ -3557,8 +3557,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLink<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
-                            .ToExtendedList<IFormLink<IKeywordGetter>>();
+                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
                     {
@@ -3748,7 +3748,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.CounterEffects.SetTo(
                         rhs.CounterEffects
-                        .Select(r => (IFormLink<IMagicEffectGetter>)new FormLink<IMagicEffectGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<IMagicEffectGetter>)new FormLink<IMagicEffectGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4046,13 +4046,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.MenuDisplayObject,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.MDOB));
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.WriteWithCounter(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Keywords,
                 counterType: RecordTypes.KSIZ,
                 counterLength: 4,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
-                transl: (MutagenWriter subWriter, IFormLink<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -4174,10 +4174,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     item: item.ScriptEffectAIDelayTime);
             }
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IMagicEffectGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IMagicEffectGetter>>.Instance.Write(
                 writer: writer,
                 items: item.CounterEffects,
-                transl: (MutagenWriter subWriter, IFormLink<IMagicEffectGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IMagicEffectGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -4322,13 +4322,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.KSIZ:
                 {
                     item.Keywords = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
                             frame: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<IKeywordGetter>>();
+                        .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     return (int)MagicEffect_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.DATA:
@@ -4412,7 +4412,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.ESCE:
                 {
                     item.CounterEffects.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IMagicEffectGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IMagicEffectGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.ESCE),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -4532,8 +4532,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public FormLinkNullable<IStaticGetter> MenuDisplayObject => _MenuDisplayObjectLocation.HasValue ? new FormLinkNullable<IStaticGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MenuDisplayObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticGetter>.Null;
         #endregion
         #region Keywords
-        public IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; private set; }
-        IReadOnlyList<IFormLink<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
         private int? _DATALocation;
         public MagicEffect.DATADataType DATADataTypeState { get; private set; }
@@ -4726,7 +4726,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private bool _ScriptEffectAIDelayTime_IsSet => _DATALocation.HasValue;
         public Single ScriptEffectAIDelayTime => _ScriptEffectAIDelayTime_IsSet ? _data.Slice(_ScriptEffectAIDelayTimeLocation, 4).Float() : default;
         #endregion
-        public IReadOnlyList<IFormLink<IMagicEffectGetter>> CounterEffects { get; private set; } = ListExt.Empty<IFormLink<IMagicEffectGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IMagicEffectGetter>> CounterEffects { get; private set; } = ListExt.Empty<IFormLinkGetter<IMagicEffectGetter>>();
         public IReadOnlyList<IMagicEffectSoundGetter>? Sounds { get; private set; }
         #region Description
         private int? _DescriptionLocation;
@@ -4824,7 +4824,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
                 {
-                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLink<IKeywordGetter>>(
+                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLinkGetter<IKeywordGetter>>(
                         stream: stream,
                         package: _package,
                         itemLength: 0x4,
@@ -4841,7 +4841,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.ESCE:
                 {
-                    this.CounterEffects = BinaryOverlayList.FactoryByArray<IFormLink<IMagicEffectGetter>>(
+                    this.CounterEffects = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IMagicEffectGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IMagicEffectGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),

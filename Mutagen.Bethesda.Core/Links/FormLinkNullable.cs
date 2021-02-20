@@ -16,8 +16,8 @@ namespace Mutagen.Bethesda
         IFormLink<TMajorGetter>,
         IEquatable<FormLink<TMajorGetter>>,
         IEquatable<FormLinkNullable<TMajorGetter>>,
-        IEquatable<IFormLink<TMajorGetter>>,
-        IEquatable<IFormLinkNullable<TMajorGetter>>
+        IEquatable<IFormLinkGetter<TMajorGetter>>,
+        IEquatable<IFormLinkNullableGetter<TMajorGetter>>
         where TMajorGetter : class, IMajorRecordCommonGetter
     {
         /// <summary>
@@ -134,14 +134,14 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="other">Other link to compare to</param>
         /// <returns>True if FormKey members are equal</returns>
-        public bool Equals(IFormLink<TMajorGetter>? other) => EqualityComparer<FormKey?>.Default.Equals(this.FormKeyNullable, other?.FormKey);
+        public bool Equals(IFormLinkGetter<TMajorGetter>? other) => EqualityComparer<FormKey?>.Default.Equals(this.FormKeyNullable, other?.FormKey);
 
         /// <summary>
         /// Compares equality of two links, where rhs is a nullable link.
         /// </summary>
         /// <param name="other">Other link to compare to</param>
         /// <returns>True if FormKey members are equal</returns>
-        public bool Equals(IFormLinkNullable<TMajorGetter>? other) => EqualityComparer<FormKey?>.Default.Equals(this.FormKeyNullable, other?.FormKeyNullable);
+        public bool Equals(IFormLinkNullableGetter<TMajorGetter>? other) => EqualityComparer<FormKey?>.Default.Equals(this.FormKeyNullable, other?.FormKeyNullable);
 
         /// <summary>
         /// Returns hash code

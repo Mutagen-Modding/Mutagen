@@ -47,15 +47,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Branches
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IDialogBranchGetter>> _Branches = new ExtendedList<IFormLink<IDialogBranchGetter>>();
-        public ExtendedList<IFormLink<IDialogBranchGetter>> Branches
+        private ExtendedList<IFormLinkGetter<IDialogBranchGetter>> _Branches = new ExtendedList<IFormLinkGetter<IDialogBranchGetter>>();
+        public ExtendedList<IFormLinkGetter<IDialogBranchGetter>> Branches
         {
             get => this._Branches;
             protected set => this._Branches = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IDialogBranchGetter>> IDialogViewGetter.Branches => _Branches;
+        IReadOnlyList<IFormLinkGetter<IDialogBranchGetter>> IDialogViewGetter.Branches => _Branches;
         #endregion
 
         #endregion
@@ -771,7 +771,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordInternal
     {
         new FormLink<IQuestGetter> Quest { get; set; }
-        new ExtendedList<IFormLink<IDialogBranchGetter>> Branches { get; }
+        new ExtendedList<IFormLinkGetter<IDialogBranchGetter>> Branches { get; }
         new SliceList<byte> TNAMs { get; }
         new MemorySlice<Byte>? ENAM { get; set; }
         new MemorySlice<Byte>? DNAM { get; set; }
@@ -793,7 +793,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         static new ILoquiRegistration Registration => DialogView_Registration.Instance;
         FormLink<IQuestGetter> Quest { get; }
-        IReadOnlyList<IFormLink<IDialogBranchGetter>> Branches { get; }
+        IReadOnlyList<IFormLinkGetter<IDialogBranchGetter>> Branches { get; }
         IReadOnlyList<ReadOnlyMemorySlice<Byte>> TNAMs { get; }
         ReadOnlyMemorySlice<Byte>? ENAM { get; }
         ReadOnlyMemorySlice<Byte>? DNAM { get; }
@@ -1463,7 +1463,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Branches.SetTo(
                         rhs.Branches
-                        .Select(r => (IFormLink<IDialogBranchGetter>)new FormLink<IDialogBranchGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<IDialogBranchGetter>)new FormLink<IDialogBranchGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1677,10 +1677,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Quest,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.QNAM));
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IDialogBranchGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IDialogBranchGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Branches,
-                transl: (MutagenWriter subWriter, IFormLink<IDialogBranchGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IDialogBranchGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -1802,7 +1802,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.BNAM:
                 {
                     item.Branches.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IDialogBranchGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IDialogBranchGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.BNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -1888,7 +1888,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _QuestLocation;
         public FormLink<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLink<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLink<IQuestGetter>.Null;
         #endregion
-        public IReadOnlyList<IFormLink<IDialogBranchGetter>> Branches { get; private set; } = ListExt.Empty<IFormLink<IDialogBranchGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IDialogBranchGetter>> Branches { get; private set; } = ListExt.Empty<IFormLinkGetter<IDialogBranchGetter>>();
         public IReadOnlyList<ReadOnlyMemorySlice<Byte>> TNAMs { get; private set; } = ListExt.Empty<ReadOnlyMemorySlice<Byte>>();
         #region ENAM
         private int? _ENAMLocation;
@@ -1971,7 +1971,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.BNAM:
                 {
-                    this.Branches = BinaryOverlayList.FactoryByArray<IFormLink<IDialogBranchGetter>>(
+                    this.Branches = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IDialogBranchGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IDialogBranchGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),

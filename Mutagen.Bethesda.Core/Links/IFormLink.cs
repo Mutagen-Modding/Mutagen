@@ -6,19 +6,10 @@ using System.Linq;
 namespace Mutagen.Bethesda
 {
     /// <summary>
-    /// An interface for a FormLink, with a Major Record type constraint
-    /// </summary>
-    /// <typeparam name="TMajorGetter">The type of Major Record the Link is allowed to connect with</typeparam>
-    public interface IFormLink<out TMajorGetter> : ILink<TMajorGetter>, IFormLink, IFormLinkNullable<TMajorGetter>
-       where TMajorGetter : IMajorRecordCommonGetter
-    {
-    }
-
-    /// <summary>
     /// An interface for a FormLink.
     /// FormKey is allowed to be null to communicate absence of a record.
     /// </summary>
-    public interface IFormLink : ILink
+    public interface IFormLinkGetter : ILink
     {
         /// <summary>
         /// FormKey to link against
@@ -41,8 +32,27 @@ namespace Mutagen.Bethesda
     /// FormKey is allowed to be null to communicate absence of a record.
     /// </summary>
     /// <typeparam name="TMajor">The type of Major Record the Link is allowed to connect with</typeparam>
-    public interface IFormLinkNullable<out TMajor> : ILink<TMajor>, IFormLink
+    public interface IFormLinkNullableGetter<out TMajor> : ILink<TMajor>, IFormLinkGetter
        where TMajor : IMajorRecordCommonGetter
+    {
+    }
+
+    public interface IFormLinkNullable<TMajor> : IFormLinkNullableGetter<TMajor>
+       where TMajor : IMajorRecordCommonGetter
+    {
+    }
+
+    /// <summary>
+    /// An interface for a FormLink, with a Major Record type constraint
+    /// </summary>
+    /// <typeparam name="TMajorGetter">The type of Major Record the Link is allowed to connect with</typeparam>
+    public interface IFormLinkGetter<out TMajorGetter> : ILink<TMajorGetter>, IFormLinkGetter, IFormLinkNullableGetter<TMajorGetter>
+       where TMajorGetter : IMajorRecordCommonGetter
+    {
+    }
+
+    public interface IFormLink<TMajorGetter> : IFormLinkGetter<TMajorGetter>, IFormLinkNullable<TMajorGetter>
+       where TMajorGetter : IMajorRecordCommonGetter
     {
     }
 
@@ -60,7 +70,7 @@ namespace Mutagen.Bethesda
         /// <param name="majorRecord">Major Record if located</param>
         /// <returns>True if successful in linking to record</returns>
         /// <typeparam name="TMajor">Major Record type to resolve to</typeparam>
-        public static bool TryResolve<TMajor>(this IFormLink<TMajor> link, ILinkCache cache, [MaybeNullWhen(false)] out TMajor majorRecord)
+        public static bool TryResolve<TMajor>(this IFormLinkGetter<TMajor> link, ILinkCache cache, [MaybeNullWhen(false)] out TMajor majorRecord)
             where TMajor : class, IMajorRecordCommonGetter
         {
             if (!link.FormKeyNullable.TryGet(out var formKey))
@@ -80,7 +90,7 @@ namespace Mutagen.Bethesda
         /// <exception cref="NullReferenceException">If link was not succesful</exception> 
         /// <typeparam name="TMajor">Major Record type of the FormLink</typeparam> 
         /// <typeparam name="TScopedMajor">Major Record type to resolve to</typeparam> 
-        public static TScopedMajor? Resolve<TMajor, TScopedMajor>(this IFormLink<TMajor> link, ILinkCache cache)
+        public static TScopedMajor? Resolve<TMajor, TScopedMajor>(this IFormLinkGetter<TMajor> link, ILinkCache cache)
             where TMajor : class, IMajorRecordCommonGetter
             where TScopedMajor : class, TMajor
         {
@@ -100,7 +110,7 @@ namespace Mutagen.Bethesda
         /// <returns>True if link was resolved and a record was retrieved</returns>
         /// <typeparam name="TSource">Major Record type that the FormLink specifies explicitly</typeparam>
         /// <typeparam name="TScopedMajor">Inheriting Major Record type to scope to</typeparam>
-        public static bool TryResolve<TSource, TScopedMajor>(this IFormLink<TSource> link, ILinkCache cache, [MaybeNullWhen(false)] out TScopedMajor majorRecord)
+        public static bool TryResolve<TSource, TScopedMajor>(this IFormLinkGetter<TSource> link, ILinkCache cache, [MaybeNullWhen(false)] out TScopedMajor majorRecord)
             where TSource : class, IMajorRecordCommonGetter
             where TScopedMajor : class, TSource
         {
@@ -120,7 +130,7 @@ namespace Mutagen.Bethesda
         /// <returns>Located Major Record</returns>
         /// <exception cref="NullReferenceException">If link was not succesful</exception>
         /// <typeparam name="TMajor">Major Record type to resolve to</typeparam>
-        public static TMajor? Resolve<TMajor>(this IFormLink<TMajor> link, ILinkCache cache)
+        public static TMajor? Resolve<TMajor>(this IFormLinkGetter<TMajor> link, ILinkCache cache)
             where TMajor : class, IMajorRecordCommonGetter
         {
             if (link.FormKeyNullable == null)
@@ -144,7 +154,7 @@ namespace Mutagen.Bethesda
         /// <param name="cache">Link Cache to resolve against</param>
         /// <returns>Enumerable of the linked records</returns>
         /// <typeparam name="TMajor">Major Record type to resolve to</typeparam>
-        public static IEnumerable<TMajor> ResolveAll<TMajor>(this IFormLink<TMajor> link, ILinkCache cache)
+        public static IEnumerable<TMajor> ResolveAll<TMajor>(this IFormLinkGetter<TMajor> link, ILinkCache cache)
             where TMajor : class, IMajorRecordCommonGetter
         {
             if (!link.FormKeyNullable.TryGet(out var formKey))
@@ -163,7 +173,7 @@ namespace Mutagen.Bethesda
         /// <returns>Enumerable of the linked records</returns>
         /// <typeparam name="TSource">Major Record type that the FormLink specifies explicitly</typeparam>
         /// <typeparam name="TScopedMajor">Inheriting Major Record type to scope to</typeparam>
-        public static IEnumerable<TScopedMajor> ResolveAll<TSource, TScopedMajor>(this IFormLink<TSource> link, ILinkCache cache)
+        public static IEnumerable<TScopedMajor> ResolveAll<TSource, TScopedMajor>(this IFormLinkGetter<TSource> link, ILinkCache cache)
             where TSource : class, IMajorRecordCommonGetter
             where TScopedMajor : class, TSource
         {
@@ -188,7 +198,7 @@ namespace Mutagen.Bethesda
         /// <typeparam name="TMajor">Major Record setter type to resolve to</typeparam>
         /// <typeparam name="TMajorGetter">Major Record getter type to resolve to</typeparam>
         public static bool TryResolveContext<TMod, TModGetter, TMajor, TMajorGetter>(
-            this IFormLink<TMajorGetter> link,
+            this IFormLinkGetter<TMajorGetter> link,
             ILinkCache<TMod, TModGetter> cache,
             [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, TMajor, TMajorGetter> majorRecord)
             where TModGetter : class, IModGetter
@@ -216,7 +226,7 @@ namespace Mutagen.Bethesda
         /// <typeparam name="TMajor">Major Record setter type to resolve to</typeparam>
         /// <typeparam name="TMajorGetter">Major Record getter type to resolve to</typeparam>
         public static IModContext<TMod, TModGetter, TMajor, TMajorGetter>? ResolveContext<TMod, TModGetter, TMajor, TMajorGetter>(
-            this IFormLink<TMajorGetter> link,
+            this IFormLinkGetter<TMajorGetter> link,
             ILinkCache<TMod, TModGetter> cache)
             where TModGetter : class, IModGetter
             where TMod : class, TModGetter, IContextMod<TMod, TModGetter>
@@ -243,7 +253,7 @@ namespace Mutagen.Bethesda
         /// <typeparam name="TScopedSetter">Inheriting Major Record setter type to scope to</typeparam>
         /// <typeparam name="TScopedGetter">Inheriting Major Record getter type to scope to</typeparam>
         public static bool TryResolveContext<TMod, TModGetter, TMajorGetter, TScopedSetter, TScopedGetter>(
-            this IFormLink<TMajorGetter> link,
+            this IFormLinkGetter<TMajorGetter> link,
             ILinkCache<TMod, TModGetter> cache,
             [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, TScopedSetter, TScopedGetter> majorRecord)
             where TModGetter : class, IModGetter
@@ -273,7 +283,7 @@ namespace Mutagen.Bethesda
         /// <typeparam name="TScopedSetter">Inheriting Major Record setter type to scope to</typeparam>
         /// <typeparam name="TScopedGetter">Inheriting Major Record getter type to scope to</typeparam>
         public static IModContext<TMod, TModGetter, TScopedSetter, TScopedGetter>? ResolveContext<TMod, TModGetter, TMajorGetter, TScopedSetter, TScopedGetter>(
-            this IFormLink<TMajorGetter> link,
+            this IFormLinkGetter<TMajorGetter> link,
             ILinkCache<TMod, TModGetter> cache)
             where TModGetter : class, IModGetter
             where TMod : class, TModGetter, IContextMod<TMod, TModGetter>
@@ -302,7 +312,7 @@ namespace Mutagen.Bethesda
         /// <typeparam name="TMajor">Major Record setter type to resolve to</typeparam>
         /// <typeparam name="TMajorGetter">Major Record getter type to resolve to</typeparam>
         public static IEnumerable<IModContext<TMod, TModGetter, TMajor, TMajorGetter>> ResolveAllContexts<TMod, TModGetter, TMajor, TMajorGetter>(
-            this IFormLink<TMajorGetter> link,
+            this IFormLinkGetter<TMajorGetter> link,
             ILinkCache<TMod, TModGetter> cache)
             where TModGetter : class, IModGetter
             where TMod : class, TModGetter, IContextMod<TMod, TModGetter>
@@ -329,7 +339,7 @@ namespace Mutagen.Bethesda
         /// <typeparam name="TScopedSetter">Inheriting Major Record setter type to scope to</typeparam>
         /// <typeparam name="TScopedGetter">Inheriting Major Record getter type to scope to</typeparam>
         public static IEnumerable<IModContext<TMod, TModGetter, TScopedSetter, TScopedGetter>> ResolveAllContexts<TMod, TModGetter, TMajorGetter, TScopedSetter, TScopedGetter>(
-            this IFormLink<TMajorGetter> link, 
+            this IFormLinkGetter<TMajorGetter> link, 
             ILinkCache<TMod, TModGetter> cache)
             where TModGetter : class, IModGetter
             where TMod : class, TModGetter, IContextMod<TMod, TModGetter>
@@ -345,14 +355,14 @@ namespace Mutagen.Bethesda
         }
         #endregion
 
-        internal static bool EqualsWithInheritanceConsideration<TMajorGetter>(IFormLink<TMajorGetter> link, object? obj)
+        internal static bool EqualsWithInheritanceConsideration<TMajorGetter>(IFormLinkGetter<TMajorGetter> link, object? obj)
             where TMajorGetter : class, IMajorRecordCommonGetter
         {
-            if (obj is IFormLink<TMajorGetter> rhs)
+            if (obj is IFormLinkGetter<TMajorGetter> rhs)
             {
                 return link.FormKey == rhs.FormKey;
             }
-            else if (obj is IFormLink rhsLink
+            else if (obj is IFormLinkGetter rhsLink
                 && rhsLink.TargetType.IsAssignableFrom(typeof(TMajorGetter)))
             {
                 return link.FormKey == rhsLink.FormKey;

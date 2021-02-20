@@ -91,15 +91,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region RandomTeleportDestinations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IPlaceGetter>> _RandomTeleportDestinations = new ExtendedList<IFormLink<IPlaceGetter>>();
-        public ExtendedList<IFormLink<IPlaceGetter>> RandomTeleportDestinations
+        private ExtendedList<IFormLinkGetter<IPlaceGetter>> _RandomTeleportDestinations = new ExtendedList<IFormLinkGetter<IPlaceGetter>>();
+        public ExtendedList<IFormLinkGetter<IPlaceGetter>> RandomTeleportDestinations
         {
             get => this._RandomTeleportDestinations;
             protected set => this._RandomTeleportDestinations = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IPlaceGetter>> IDoorGetter.RandomTeleportDestinations => _RandomTeleportDestinations;
+        IReadOnlyList<IFormLinkGetter<IPlaceGetter>> IDoorGetter.RandomTeleportDestinations => _RandomTeleportDestinations;
         #endregion
 
         #endregion
@@ -787,7 +787,7 @@ namespace Mutagen.Bethesda.Oblivion
         new FormLinkNullable<ISoundGetter> CloseSound { get; set; }
         new FormLinkNullable<ISoundGetter> LoopSound { get; set; }
         new Door.DoorFlag? Flags { get; set; }
-        new ExtendedList<IFormLink<IPlaceGetter>> RandomTeleportDestinations { get; }
+        new ExtendedList<IFormLinkGetter<IPlaceGetter>> RandomTeleportDestinations { get; }
     }
 
     public partial interface IDoorInternal :
@@ -815,7 +815,7 @@ namespace Mutagen.Bethesda.Oblivion
         FormLinkNullable<ISoundGetter> CloseSound { get; }
         FormLinkNullable<ISoundGetter> LoopSound { get; }
         Door.DoorFlag? Flags { get; }
-        IReadOnlyList<IFormLink<IPlaceGetter>> RandomTeleportDestinations { get; }
+        IReadOnlyList<IFormLinkGetter<IPlaceGetter>> RandomTeleportDestinations { get; }
 
     }
 
@@ -1561,7 +1561,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.RandomTeleportDestinations.SetTo(
                         rhs.RandomTeleportDestinations
-                        .Select(r => (IFormLink<IPlaceGetter>)new FormLink<IPlaceGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<IPlaceGetter>)new FormLink<IPlaceGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1763,10 +1763,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item.Flags,
                 length: 1,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FNAM));
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IPlaceGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IPlaceGetter>>.Instance.Write(
                 writer: writer,
                 items: item.RandomTeleportDestinations,
-                transl: (MutagenWriter subWriter, IFormLink<IPlaceGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IPlaceGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -1920,7 +1920,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.TNAM:
                 {
                     item.RandomTeleportDestinations.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IPlaceGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IPlaceGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -2010,7 +2010,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _FlagsLocation;
         public Door.DoorFlag? Flags => _FlagsLocation.HasValue ? (Door.DoorFlag)HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(Door.DoorFlag?);
         #endregion
-        public IReadOnlyList<IFormLink<IPlaceGetter>> RandomTeleportDestinations { get; private set; } = ListExt.Empty<IFormLink<IPlaceGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IPlaceGetter>> RandomTeleportDestinations { get; private set; } = ListExt.Empty<IFormLinkGetter<IPlaceGetter>>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2117,7 +2117,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    this.RandomTeleportDestinations = BinaryOverlayList.FactoryByArray<IFormLink<IPlaceGetter>>(
+                    this.RandomTeleportDestinations = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IPlaceGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IPlaceGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),

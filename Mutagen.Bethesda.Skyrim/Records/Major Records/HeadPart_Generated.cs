@@ -100,15 +100,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ExtraParts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IHeadPartGetter>> _ExtraParts = new ExtendedList<IFormLink<IHeadPartGetter>>();
-        public ExtendedList<IFormLink<IHeadPartGetter>> ExtraParts
+        private ExtendedList<IFormLinkGetter<IHeadPartGetter>> _ExtraParts = new ExtendedList<IFormLinkGetter<IHeadPartGetter>>();
+        public ExtendedList<IFormLinkGetter<IHeadPartGetter>> ExtraParts
         {
             get => this._ExtraParts;
             protected set => this._ExtraParts = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IHeadPartGetter>> IHeadPartGetter.ExtraParts => _ExtraParts;
+        IReadOnlyList<IFormLinkGetter<IHeadPartGetter>> IHeadPartGetter.ExtraParts => _ExtraParts;
         #endregion
 
         #endregion
@@ -945,7 +945,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Model? Model { get; set; }
         new HeadPart.Flag Flags { get; set; }
         new HeadPart.TypeEnum? Type { get; set; }
-        new ExtendedList<IFormLink<IHeadPartGetter>> ExtraParts { get; }
+        new ExtendedList<IFormLinkGetter<IHeadPartGetter>> ExtraParts { get; }
         new ExtendedList<Part> Parts { get; }
         new FormLinkNullable<ITextureSetGetter> TextureSet { get; set; }
         new FormLinkNullable<IColorRecordGetter> Color { get; set; }
@@ -980,7 +980,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModelGetter? Model { get; }
         HeadPart.Flag Flags { get; }
         HeadPart.TypeEnum? Type { get; }
-        IReadOnlyList<IFormLink<IHeadPartGetter>> ExtraParts { get; }
+        IReadOnlyList<IFormLinkGetter<IHeadPartGetter>> ExtraParts { get; }
         IReadOnlyList<IPartGetter> Parts { get; }
         FormLinkNullable<ITextureSetGetter> TextureSet { get; }
         FormLinkNullable<IColorRecordGetter> Color { get; }
@@ -1754,7 +1754,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.ExtraParts.SetTo(
                         rhs.ExtraParts
-                        .Select(r => (IFormLink<IHeadPartGetter>)new FormLink<IHeadPartGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<IHeadPartGetter>)new FormLink<IHeadPartGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1982,10 +1982,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.Type,
                 length: 4,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM));
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IHeadPartGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IHeadPartGetter>>.Instance.Write(
                 writer: writer,
                 items: item.ExtraParts,
-                transl: (MutagenWriter subWriter, IFormLink<IHeadPartGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IHeadPartGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2137,7 +2137,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.HNAM:
                 {
                     item.ExtraParts.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IHeadPartGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IHeadPartGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.HNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -2255,7 +2255,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _TypeLocation;
         public HeadPart.TypeEnum? Type => _TypeLocation.HasValue ? (HeadPart.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TypeLocation!.Value, _package.MetaData.Constants)) : default(HeadPart.TypeEnum?);
         #endregion
-        public IReadOnlyList<IFormLink<IHeadPartGetter>> ExtraParts { get; private set; } = ListExt.Empty<IFormLink<IHeadPartGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IHeadPartGetter>> ExtraParts { get; private set; } = ListExt.Empty<IFormLinkGetter<IHeadPartGetter>>();
         public IReadOnlyList<IPartGetter> Parts { get; private set; } = ListExt.Empty<PartBinaryOverlay>();
         #region TextureSet
         private int? _TextureSetLocation;
@@ -2360,7 +2360,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.HNAM:
                 {
-                    this.ExtraParts = BinaryOverlayList.FactoryByArray<IFormLink<IHeadPartGetter>>(
+                    this.ExtraParts = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IHeadPartGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IHeadPartGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),

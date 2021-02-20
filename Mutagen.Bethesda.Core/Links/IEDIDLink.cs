@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda
     /// <summary>
     /// An interface for a EDID Link
     /// </summary>
-    public interface IEDIDLink : ILink
+    public interface IEDIDLinkGetter : ILink
     {
         /// <summary>
         /// Record type representing the target EditorID to link against
@@ -17,11 +17,24 @@ namespace Mutagen.Bethesda
         RecordType EDID { get; }
     }
 
+    public interface IEDIDLink : IEDIDLinkGetter
+    {
+        /// <summary>
+        /// Record type representing the target EditorID to link against
+        /// </summary>
+        new RecordType EDID { get; set; }
+    }
+
     /// <summary>
     /// An interface for a EDID Link, with a Major Record type constraint
     /// </summary>
     /// <typeparam name="TMajor">The type of Major Record the Link is allowed to connect with</typeparam>
-    public interface IEDIDLink<out TMajor> : ILink<TMajor>, IEDIDLink
+    public interface IEDIDLinkGetter<out TMajor> : ILink<TMajor>, IEDIDLinkGetter
+       where TMajor : IMajorRecordCommonGetter
+    {
+    }
+
+    public interface IEDIDLink<TMajor> : IEDIDLinkGetter<TMajor>, IEDIDLink
        where TMajor : IMajorRecordCommonGetter
     {
     }

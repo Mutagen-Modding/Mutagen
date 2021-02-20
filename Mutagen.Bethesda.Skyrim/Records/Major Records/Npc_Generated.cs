@@ -104,15 +104,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ActorEffect
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IASpellGetter>>? _ActorEffect;
-        public ExtendedList<IFormLink<IASpellGetter>>? ActorEffect
+        private ExtendedList<IFormLinkGetter<IASpellGetter>>? _ActorEffect;
+        public ExtendedList<IFormLinkGetter<IASpellGetter>>? ActorEffect
         {
             get => this._ActorEffect;
             set => this._ActorEffect = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IASpellGetter>>? INpcGetter.ActorEffect => _ActorEffect;
+        IReadOnlyList<IFormLinkGetter<IASpellGetter>>? INpcGetter.ActorEffect => _ActorEffect;
         #endregion
 
         #endregion
@@ -197,34 +197,34 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Packages
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IPackageGetter>> _Packages = new ExtendedList<IFormLink<IPackageGetter>>();
-        public ExtendedList<IFormLink<IPackageGetter>> Packages
+        private ExtendedList<IFormLinkGetter<IPackageGetter>> _Packages = new ExtendedList<IFormLinkGetter<IPackageGetter>>();
+        public ExtendedList<IFormLinkGetter<IPackageGetter>> Packages
         {
             get => this._Packages;
             protected set => this._Packages = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IPackageGetter>> INpcGetter.Packages => _Packages;
+        IReadOnlyList<IFormLinkGetter<IPackageGetter>> INpcGetter.Packages => _Packages;
         #endregion
 
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IKeywordGetter>>? _Keywords;
-        public ExtendedList<IFormLink<IKeywordGetter>>? Keywords
+        private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Keywords;
+        public ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IKeywordGetter>>? INpcGetter.Keywords => _Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? INpcGetter.Keywords => _Keywords;
         #endregion
 
         #region Aspects
-        IReadOnlyList<IFormLink<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
-        IReadOnlyList<IFormLink<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
         #endregion
         #region Class
@@ -281,15 +281,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region HeadParts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IHeadPartGetter>> _HeadParts = new ExtendedList<IFormLink<IHeadPartGetter>>();
-        public ExtendedList<IFormLink<IHeadPartGetter>> HeadParts
+        private ExtendedList<IFormLinkGetter<IHeadPartGetter>> _HeadParts = new ExtendedList<IFormLinkGetter<IHeadPartGetter>>();
+        public ExtendedList<IFormLinkGetter<IHeadPartGetter>> HeadParts
         {
             get => this._HeadParts;
             protected set => this._HeadParts = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IHeadPartGetter>> INpcGetter.HeadParts => _HeadParts;
+        IReadOnlyList<IFormLinkGetter<IHeadPartGetter>> INpcGetter.HeadParts => _HeadParts;
         #endregion
 
         #endregion
@@ -2785,7 +2785,7 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<IVoiceTypeGetter> Voice { get; set; }
         new FormLinkNullable<INpcSpawnGetter> Template { get; set; }
         new FormLink<IRaceGetter> Race { get; set; }
-        new ExtendedList<IFormLink<IASpellGetter>>? ActorEffect { get; set; }
+        new ExtendedList<IFormLinkGetter<IASpellGetter>>? ActorEffect { get; set; }
         new Destructible? Destructible { get; set; }
         new FormLinkNullable<IArmorGetter> WornArmor { get; set; }
         new FormLinkNullable<IArmorGetter> FarAwayModel { get; set; }
@@ -2798,13 +2798,13 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<PerkPlacement>? Perks { get; set; }
         new ExtendedList<ContainerEntry>? Items { get; set; }
         new AIData AIData { get; set; }
-        new ExtendedList<IFormLink<IPackageGetter>> Packages { get; }
-        new ExtendedList<IFormLink<IKeywordGetter>>? Keywords { get; set; }
+        new ExtendedList<IFormLinkGetter<IPackageGetter>> Packages { get; }
+        new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
         new FormLink<IClassGetter> Class { get; set; }
         new TranslatedString? Name { get; set; }
         new TranslatedString? ShortName { get; set; }
         new PlayerSkills? PlayerSkills { get; set; }
-        new ExtendedList<IFormLink<IHeadPartGetter>> HeadParts { get; }
+        new ExtendedList<IFormLinkGetter<IHeadPartGetter>> HeadParts { get; }
         new FormLinkNullable<IColorRecordGetter> HairColor { get; set; }
         new FormLinkNullable<ICombatStyleGetter> CombatStyle { get; set; }
         new FormLinkNullable<IFormListGetter> GiftFilter { get; set; }
@@ -2862,7 +2862,7 @@ namespace Mutagen.Bethesda.Skyrim
         FormLinkNullable<IVoiceTypeGetter> Voice { get; }
         FormLinkNullable<INpcSpawnGetter> Template { get; }
         FormLink<IRaceGetter> Race { get; }
-        IReadOnlyList<IFormLink<IASpellGetter>>? ActorEffect { get; }
+        IReadOnlyList<IFormLinkGetter<IASpellGetter>>? ActorEffect { get; }
         IDestructibleGetter? Destructible { get; }
         FormLinkNullable<IArmorGetter> WornArmor { get; }
         FormLinkNullable<IArmorGetter> FarAwayModel { get; }
@@ -2875,13 +2875,13 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IPerkPlacementGetter>? Perks { get; }
         IReadOnlyList<IContainerEntryGetter>? Items { get; }
         IAIDataGetter AIData { get; }
-        IReadOnlyList<IFormLink<IPackageGetter>> Packages { get; }
-        IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; }
+        IReadOnlyList<IFormLinkGetter<IPackageGetter>> Packages { get; }
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
         FormLink<IClassGetter> Class { get; }
         ITranslatedStringGetter? Name { get; }
         ITranslatedStringGetter? ShortName { get; }
         IPlayerSkillsGetter? PlayerSkills { get; }
-        IReadOnlyList<IFormLink<IHeadPartGetter>> HeadParts { get; }
+        IReadOnlyList<IFormLinkGetter<IHeadPartGetter>> HeadParts { get; }
         FormLinkNullable<IColorRecordGetter> HairColor { get; }
         FormLinkNullable<ICombatStyleGetter> CombatStyle { get; }
         FormLinkNullable<IFormListGetter> GiftFilter { get; }
@@ -4376,8 +4376,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.ActorEffect = 
                             rhs.ActorEffect
-                            .Select(r => (IFormLink<IASpellGetter>)new FormLink<IASpellGetter>(r.FormKey))
-                            .ToExtendedList<IFormLink<IASpellGetter>>();
+                            .Select(r => (IFormLinkGetter<IASpellGetter>)new FormLink<IASpellGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IASpellGetter>>();
                     }
                     else
                     {
@@ -4565,7 +4565,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Packages.SetTo(
                         rhs.Packages
-                        .Select(r => (IFormLink<IPackageGetter>)new FormLink<IPackageGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<IPackageGetter>)new FormLink<IPackageGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4586,8 +4586,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLink<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
-                            .ToExtendedList<IFormLink<IKeywordGetter>>();
+                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
                     {
@@ -4649,7 +4649,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.HeadParts.SetTo(
                         rhs.HeadParts
-                        .Select(r => (IFormLink<IHeadPartGetter>)new FormLink<IHeadPartGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<IHeadPartGetter>)new FormLink<IHeadPartGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5029,14 +5029,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Race,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM));
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IASpellGetter>>.Instance.WriteWithCounter(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IASpellGetter>>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.ActorEffect,
                 counterType: RecordTypes.SPCT,
                 counterLength: 4,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.SPLO),
                 subRecordPerItem: true,
-                transl: (MutagenWriter subWriter, IFormLink<IASpellGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IASpellGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -5119,23 +5119,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: AIDataItem,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IPackageGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IPackageGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Packages,
-                transl: (MutagenWriter subWriter, IFormLink<IPackageGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IPackageGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
                         header: recordTypeConverter.ConvertToCustom(RecordTypes.PKID));
                 });
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.WriteWithCounter(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Keywords,
                 counterType: RecordTypes.KSIZ,
                 counterLength: 4,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
-                transl: (MutagenWriter subWriter, IFormLink<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -5167,10 +5167,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IHeadPartGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IHeadPartGetter>>.Instance.Write(
                 writer: writer,
                 items: item.HeadParts,
-                transl: (MutagenWriter subWriter, IFormLink<IHeadPartGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IHeadPartGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -5415,13 +5415,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.SPCT:
                 {
                     item.ActorEffect = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IASpellGetter>>.Instance.ParsePerItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IASpellGetter>>.Instance.ParsePerItem(
                             frame: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SPCT),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SPLO),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<IASpellGetter>>();
+                        .CastExtendedList<IFormLinkGetter<IASpellGetter>>();
                     return (int)Npc_FieldIndex.ActorEffect;
                 }
                 case RecordTypeInts.DEST:
@@ -5536,7 +5536,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.PKID:
                 {
                     item.Packages.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IPackageGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IPackageGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.PKID),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -5546,13 +5546,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.KSIZ:
                 {
                     item.Keywords = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
                             frame: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<IKeywordGetter>>();
+                        .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     return (int)Npc_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.CNAM:
@@ -5596,7 +5596,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.PNAM:
                 {
                     item.HeadParts.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IHeadPartGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IHeadPartGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -5826,7 +5826,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _RaceLocation;
         public FormLink<IRaceGetter> Race => _RaceLocation.HasValue ? new FormLink<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _RaceLocation.Value, _package.MetaData.Constants)))) : FormLink<IRaceGetter>.Null;
         #endregion
-        public IReadOnlyList<IFormLink<IASpellGetter>>? ActorEffect { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<IASpellGetter>>? ActorEffect { get; private set; }
         public IDestructibleGetter? Destructible { get; private set; }
         #region WornArmor
         private int? _WornArmorLocation;
@@ -5864,10 +5864,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private IAIDataGetter? _AIData => _AIDataLocation.HasValue ? AIDataBinaryOverlay.AIDataFactory(new OverlayStream(_data.Slice(_AIDataLocation!.Value.Min), _package), _package) : default;
         public IAIDataGetter AIData => _AIData ?? new AIData();
         #endregion
-        public IReadOnlyList<IFormLink<IPackageGetter>> Packages { get; private set; } = ListExt.Empty<IFormLink<IPackageGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IPackageGetter>> Packages { get; private set; } = ListExt.Empty<IFormLinkGetter<IPackageGetter>>();
         #region Keywords
-        public IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; private set; }
-        IReadOnlyList<IFormLink<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
         #region Class
         private int? _ClassLocation;
@@ -5898,7 +5898,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private RangeInt32? _PlayerSkillsLocation;
         public IPlayerSkillsGetter? PlayerSkills => _PlayerSkillsLocation.HasValue ? PlayerSkillsBinaryOverlay.PlayerSkillsFactory(new OverlayStream(_data.Slice(_PlayerSkillsLocation!.Value.Min), _package), _package) : default;
         #endregion
-        public IReadOnlyList<IFormLink<IHeadPartGetter>> HeadParts { get; private set; } = ListExt.Empty<IFormLink<IHeadPartGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IHeadPartGetter>> HeadParts { get; private set; } = ListExt.Empty<IFormLinkGetter<IHeadPartGetter>>();
         #region HairColor
         private int? _HairColorLocation;
         public FormLinkNullable<IColorRecordGetter> HairColor => _HairColorLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HairColorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IColorRecordGetter>.Null;
@@ -6079,7 +6079,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.SPLO:
                 case RecordTypeInts.SPCT:
                 {
-                    this.ActorEffect = BinaryOverlayList.FactoryByCountPerItem<IFormLink<IASpellGetter>>(
+                    this.ActorEffect = BinaryOverlayList.FactoryByCountPerItem<IFormLinkGetter<IASpellGetter>>(
                         stream: stream,
                         package: _package,
                         itemLength: 0x4,
@@ -6179,7 +6179,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.PKID:
                 {
-                    this.Packages = BinaryOverlayList.FactoryByArray<IFormLink<IPackageGetter>>(
+                    this.Packages = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IPackageGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IPackageGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -6194,7 +6194,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
                 {
-                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLink<IKeywordGetter>>(
+                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLinkGetter<IKeywordGetter>>(
                         stream: stream,
                         package: _package,
                         itemLength: 0x4,
@@ -6233,7 +6233,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.PNAM:
                 {
-                    this.HeadParts = BinaryOverlayList.FactoryByArray<IFormLink<IHeadPartGetter>>(
+                    this.HeadParts = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IHeadPartGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IHeadPartGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),

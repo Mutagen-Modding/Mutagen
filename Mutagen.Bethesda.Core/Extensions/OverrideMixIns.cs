@@ -433,7 +433,7 @@ namespace Mutagen.Bethesda
         /// <param name="cache">Cache to query link against</param>
         /// <param name="rec">Retrieved record if successful</param>
         /// <returns>True if a record was retrieved</returns>
-        public static bool TryGetOrAddAsOverride<TMajor, TMajorGetter>(this IGroupCommon<TMajor> group, IFormLink<TMajorGetter> link, ILinkCache cache, [MaybeNullWhen(false)] out TMajor rec)
+        public static bool TryGetOrAddAsOverride<TMajor, TMajorGetter>(this IGroupCommon<TMajor> group, IFormLinkGetter<TMajorGetter> link, ILinkCache cache, [MaybeNullWhen(false)] out TMajor rec)
             where TMajor : class, IMajorRecordInternal, TMajorGetter
             where TMajorGetter : class, IMajorRecordGetter, IBinaryItem
         {

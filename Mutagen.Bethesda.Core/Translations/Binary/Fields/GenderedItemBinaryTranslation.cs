@@ -428,10 +428,10 @@ namespace Mutagen.Bethesda.Binary
 
         public static void Write<TMajor>(
             MutagenWriter writer,
-            IGenderedItemGetter<IFormLinkNullable<TMajor>>? item,
+            IGenderedItemGetter<IFormLinkNullableGetter<TMajor>>? item,
             RecordType maleMarker,
             RecordType femaleMarker,
-            UtilityTranslation.BinaryMasterWriteDelegate<IFormLinkNullable<TMajor>> transl,
+            UtilityTranslation.BinaryMasterWriteDelegate<IFormLinkNullableGetter<TMajor>> transl,
             bool markerWrap = true,
             RecordTypeConverter? recordTypeConverter = null)
             where TMajor : class, IMajorRecordCommonGetter

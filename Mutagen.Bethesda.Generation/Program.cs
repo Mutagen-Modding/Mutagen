@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "IContextGetterMod<ISkyrimMod>";
+            string testString = "a.Binary.ListBinaryTranslation<IEDIDLink<IMagicEffectGetter>>.Instan";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>
