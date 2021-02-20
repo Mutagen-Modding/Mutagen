@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda
         /// Sets the link to the target FormKey
         /// </summary>
         /// <param name="formKey">Target FormKey to link to</param>
-        public void Set(FormKey? formKey)
+        public void SetTo(FormKey? formKey)
         {
             this.FormKeyNullable = formKey;
         }
@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda
         /// Sets the link to the target Record
         /// </summary>
         /// <param name="record">Target record to link to</param>
-        public void Set(TMajorGetter? record)
+        public void SetTo(TMajorGetter? record)
         {
             this.FormKeyNullable = record?.FormKey;
         }

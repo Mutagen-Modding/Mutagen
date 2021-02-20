@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Noggog;
 
 namespace Mutagen.Bethesda
 {
@@ -37,9 +38,11 @@ namespace Mutagen.Bethesda
     {
     }
 
-    public interface IFormLinkNullable<TMajor> : IFormLinkNullableGetter<TMajor>
+    public interface IFormLinkNullable<TMajor> : IFormLinkNullableGetter<TMajor>, IClearable
        where TMajor : IMajorRecordCommonGetter
     {
+        void SetTo(FormKey? formKey);
+        void SetTo(TMajor? record);
     }
 
     /// <summary>
