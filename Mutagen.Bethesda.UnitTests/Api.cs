@@ -74,8 +74,8 @@ namespace Mutagen.Bethesda.UnitTests
         public static void FormLinkSetToNull()
         {
             var cameraShot = new CameraShot(Utility.Form1, SkyrimRelease.SkyrimSE);
-            cameraShot.ImageSpaceModifier = default;
-            cameraShot.ImageSpaceModifier = FormKey.Null;
+            cameraShot.ImageSpaceModifier.Clear();
+            cameraShot.ImageSpaceModifier.Set(FormKey.Null);
         }
 
         [Fact]

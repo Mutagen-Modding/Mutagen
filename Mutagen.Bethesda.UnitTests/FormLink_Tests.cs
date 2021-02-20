@@ -92,5 +92,15 @@ namespace Mutagen.Bethesda.UnitTests
             };
             set.Should().HaveCount(1);
         }
+        
+        [Fact]
+        public void SetToOnObjects()
+        {
+            var n = new Npc(Utility.Form1, SkyrimRelease.SkyrimSE);
+            var r = new Race(Utility.Form2, SkyrimRelease.SkyrimSE);
+            n.Race.IsNull.Should().BeTrue();
+            n.Race.Set(r);
+            n.Race.FormKey.Should().Be(Utility.Form2);
+        }
     }
 }

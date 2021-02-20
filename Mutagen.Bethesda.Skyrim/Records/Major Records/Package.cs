@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -534,7 +534,7 @@ namespace Mutagen.Bethesda.Skyrim
             ReadOnlyMemorySlice<Byte> _xnam;
             public ReadOnlyMemorySlice<Byte> GetXnamMarkerCustom() => _xnam;
 
-            FormLink<IPackageGetter> _packageTemplate;
+            FormLink<IPackageGetter> _packageTemplate = null!;
             public FormLink<IPackageGetter> GetPackageTemplateCustom() => _packageTemplate;
 
             private void PackageTemplateCustomParse(

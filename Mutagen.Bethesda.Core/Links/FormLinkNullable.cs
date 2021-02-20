@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda
     /// FormKey allowed to be null to communicate the absence of the field.
     /// </summary>
     /// <typeparam name="TMajorGetter">The type of Major Record the Link is allowed to connect with</typeparam>
-    public struct FormLinkNullable<TMajorGetter> :
+    public class FormLinkNullable<TMajorGetter> :
         IFormLink<TMajorGetter>,
         IEquatable<FormLink<TMajorGetter>>,
         IEquatable<FormLinkNullable<TMajorGetter>>,
@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// FormKey of the target record.
         /// </summary>
-        public FormKey? FormKeyNullable { get; }
+        public FormKey? FormKeyNullable { get; set; }
 
         /// <summary>
         /// Non null FormKey of the target record.  If null, it will instead return FormKey.Null.
@@ -42,12 +42,47 @@ namespace Mutagen.Bethesda
         /// </summary>
         public bool IsNull => this.FormKeyNullable?.IsNull ?? true;
 
+        public FormLinkNullable()
+        {
+        }
+
         /// <summary>
         /// Default constructor that creates a link to the target FormKey
         /// </summary>
         public FormLinkNullable(FormKey? formKey)
         {
             this.FormKeyNullable = formKey;
+        }
+
+        /// <summary>
+        /// Default constructor that creates a link to the target record
+        /// </summary>
+        public FormLinkNullable(TMajorGetter? record)
+        {
+            this.FormKeyNullable = record?.FormKey;
+        }
+
+        /// <summary>
+        /// Sets the link to the target FormKey
+        /// </summary>
+        /// <param name="formKey">Target FormKey to link to</param>
+        public void Set(FormKey? formKey)
+        {
+            this.FormKeyNullable = formKey;
+        }
+
+        /// <summary>
+        /// Sets the link to the target Record
+        /// </summary>
+        /// <param name="record">Target record to link to</param>
+        public void Set(TMajorGetter? record)
+        {
+            this.FormKeyNullable = record?.FormKey;
+        }
+
+        public void Clear()
+        {
+            this.FormKeyNullable = null;
         }
 
         public static bool operator ==(FormLinkNullable<TMajorGetter> lhs, FormLink<TMajorGetter> rhs)
@@ -85,14 +120,14 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="other">Other link to compare to</param>
         /// <returns>True if FormKey members are equal</returns>
-        public bool Equals(FormLink<TMajorGetter> other) => EqualityComparer<FormKey?>.Default.Equals(this.FormKeyNullable, other.FormKey);
+        public bool Equals(FormLink<TMajorGetter>? other) => EqualityComparer<FormKey?>.Default.Equals(this.FormKeyNullable, other?.FormKey);
 
         /// <summary>
         /// Compares equality of two links, where rhs is a nullable link.
         /// </summary>
         /// <param name="other">Other link to compare to</param>
         /// <returns>True if FormKey members are equal</returns>
-        public bool Equals(FormLinkNullable<TMajorGetter> other) => EqualityComparer<FormKey?>.Default.Equals(this.FormKeyNullable, other.FormKeyNullable);
+        public bool Equals(FormLinkNullable<TMajorGetter>? other) => EqualityComparer<FormKey?>.Default.Equals(this.FormKeyNullable, other?.FormKeyNullable);
 
         /// <summary>
         /// Compares equality of two links, where rhs is a non nullable link.
