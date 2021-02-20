@@ -77,8 +77,7 @@ namespace Mutagen.Bethesda
         /// <returns>True if object is ILinkGetter and FormKeys match</returns>
         public override bool Equals(object? obj)
         {
-            if (obj is not IFormLink<TMajorGetter> rhs) return false;
-            return this.Equals(rhs);
+            return IFormLinkExt.EqualsWithInheritanceConsideration(this, obj);
         }
 
         /// <summary>
