@@ -55,6 +55,7 @@
     <Compile Include="Extensions\ModContextExt.cs" />
     <Compile Include="Interfaces\IAmbientColorsCommon.cs" />
     <Compile Include="Interfaces\IBoundableEquipment.cs" />
+    <Compile Include="Interfaces\IConstructible.cs" />
     <Compile Include="Interfaces\IHarvestable.cs" />
     <Compile Include="Interfaces\IHasIcons.cs" />
     <Compile Include="Interfaces\IModeled.cs" />
