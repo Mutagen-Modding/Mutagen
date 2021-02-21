@@ -93,26 +93,6 @@ namespace Mutagen.Bethesda
             return cache.TryResolve<TMajor>(formKey, out majorRecord);
         }
 
-        /// <summary> 
-        /// Locates link winning target record in given Link Cache. 
-        /// </summary> 
-        /// <param name="link">Link to resolve</param> 
-        /// <param name="cache">Link Cache to resolve against</param> 
-        /// <returns>Located Major Record</returns> 
-        /// <exception cref="NullReferenceException">If link was not succesful</exception> 
-        /// <typeparam name="TMajor">Major Record type of the FormLink</typeparam> 
-        /// <typeparam name="TScopedMajor">Major Record type to resolve to</typeparam> 
-        public static TScopedMajor? Resolve<TMajor, TScopedMajor>(this IFormLinkGetter<TMajor> link, ILinkCache cache)
-            where TMajor : class, IMajorRecordCommonGetter
-            where TScopedMajor : class, TMajor
-        {
-            if (link.TryResolve<TMajor, TScopedMajor>(cache, out var majorRecord))
-            {
-                return majorRecord;
-            }
-            return null;
-        }
-
         /// <summary>
         /// Attempts to locate link winning target record in given Link Cache.
         /// </summary>
@@ -173,6 +153,102 @@ namespace Mutagen.Bethesda
                 return majorRecord;
             }
             return null;
+        }
+
+        /// <summary> 
+        /// Locates link winning target record in given Link Cache. 
+        /// </summary> 
+        /// <param name="link">Link to resolve</param> 
+        /// <param name="cache">Link Cache to resolve against</param> 
+        /// <returns>Located Major Record, or null if not located</returns> 
+        /// <typeparam name="TMajor">Major Record type of the FormLink</typeparam> 
+        /// <typeparam name="TScopedMajor">Major Record type to resolve to</typeparam> 
+        public static TScopedMajor? Resolve<TMajor, TScopedMajor>(this IFormLinkGetter<TMajor> link, ILinkCache cache)
+            where TMajor : class, IMajorRecordCommonGetter
+            where TScopedMajor : class, TMajor
+        {
+            if (link.TryResolve<TMajor, TScopedMajor>(cache, out var majorRecord))
+            {
+                return majorRecord;
+            }
+            return null;
+        }
+
+        /// <summary> 
+        /// Locates link winning target record in given Link Cache. 
+        /// </summary> 
+        /// <param name="link">Link to resolve</param> 
+        /// <param name="cache">Link Cache to resolve against</param> 
+        /// <returns>Located Major Record, or null if not located</returns> 
+        /// <typeparam name="TMajor">Major Record type of the FormLink</typeparam> 
+        public static TMajor? Resolve<TMajor>(this IFormLinkGetter link, ILinkCache cache)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            if (link.TryResolve<TMajor>(cache, out var majorRecord))
+            {
+                return majorRecord;
+            }
+            return null;
+        }
+
+        /// <summary> 
+        /// Locates link winning target record in given Link Cache. 
+        /// </summary> 
+        /// <param name="link">Link to resolve</param> 
+        /// <param name="cache">Link Cache to resolve against</param> 
+        /// <returns>Located Major Record</returns> 
+        /// <exception cref="RecordException">If link was not succesful</exception> 
+        /// <typeparam name="TMajor">Major Record type of the FormLink</typeparam> 
+        /// <typeparam name="TScopedMajor">Major Record type to resolve to</typeparam> 
+        public static TScopedMajor ResolveOrThrow<TMajor, TScopedMajor>(this IFormLinkGetter<TMajor> link, ILinkCache cache)
+            where TMajor : class, IMajorRecordCommonGetter
+            where TScopedMajor : class, TMajor
+        {
+            if (link.TryResolve<TMajor, TScopedMajor>(cache, out var majorRecord))
+            {
+                return majorRecord;
+            }
+            throw new RecordException(link.FormKeyNullable, link.FormKeyNullable?.ModKey, edid: null, "Could not resolve record");
+        }
+
+        /// <summary>
+        /// Locates link winning target record in given Link Cache.
+        /// </summary>
+        /// <param name="link">Link to resolve</param>
+        /// <param name="cache">Link Cache to resolve against</param>
+        /// <returns>Located Major Record</returns>
+        /// <exception cref="RecordException">If link was not succesful</exception> 
+        /// <typeparam name="TMajor">Major Record type to resolve to</typeparam>
+        public static TMajor ResolveOrThrow<TMajor>(this IFormLinkGetter<TMajor> link, ILinkCache cache)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            if (link.FormKeyNullable == null)
+            {
+                throw new RecordException(null, null, null, "Could not resolve record");
+            }
+            if (link.TryResolve<TMajor>(cache, out var majorRecord))
+            {
+                return majorRecord;
+            }
+            throw new RecordException(link.FormKeyNullable, link.FormKeyNullable?.ModKey, edid: null, "Could not resolve record");
+        }
+
+        /// <summary> 
+        /// Locates link winning target record in given Link Cache. 
+        /// </summary> 
+        /// <param name="link">Link to resolve</param> 
+        /// <param name="cache">Link Cache to resolve against</param> 
+        /// <returns>Located Major Record</returns> 
+        /// <exception cref="RecordException">If link was not succesful</exception> 
+        /// <typeparam name="TMajor">Major Record type of the FormLink</typeparam> 
+        public static TMajor ResolveOrThrow<TMajor>(this IFormLinkGetter link, ILinkCache cache)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            if (link.TryResolve<TMajor>(cache, out var majorRecord))
+            {
+                return majorRecord;
+            }
+            throw new RecordException(link.FormKeyNullable, link.FormKeyNullable?.ModKey, edid: null, "Could not resolve record");
         }
         #endregion
 

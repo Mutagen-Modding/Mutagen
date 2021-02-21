@@ -162,14 +162,14 @@ namespace Mutagen.Bethesda.UnitTests
 
             // Normal resolution
             link.TryResolve(cache, out var _);
-            link.TryResolve(cache, out ISkyrimMajorRecordGetter _);
+            link.TryResolve<ISkyrimMajorRecordGetter>(cache, out var _);
             link.Resolve(cache);
             link.TryResolve<ILightGetter>(cache, out var _);
             link.TryResolve(cache, out ILightGetter _);
             link.Resolve<ILightGetter>(cache);
 
             nullableLink.TryResolve(cache, out var _);
-            nullableLink.TryResolve(cache, out ISkyrimMajorRecordGetter _);
+            nullableLink.TryResolve<ISkyrimMajorRecordGetter>(cache, out var _);
             nullableLink.Resolve(cache);
             nullableLink.TryResolve<ILightGetter>(cache, out var _);
             nullableLink.TryResolve(cache, out ILightGetter _);
@@ -182,19 +182,19 @@ namespace Mutagen.Bethesda.UnitTests
             iLink.Resolve<ISkyrimMajorRecordGetter, ILightGetter>(cache);
 
             // Context resolution
-            link.TryResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord>(cache, out var _);
-            link.TryResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord>(cache, out IModContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord, ISkyrimMajorRecordGetter> _);
-            link.ResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord>(cache);
-            link.TryResolveContext<ISkyrimMod, ISkyrimModGetter, ILight, ILightGetter>(cache, out var _);
+            link.TryResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(cache, out var _);
+            link.TryResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(cache, out IModContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord, ISkyrimMajorRecordGetter> _);
+            link.ResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(cache);
+            link.TryResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecordGetter, ILight, ILightGetter>(cache, out var _);
             link.TryResolveContext(cache, out IModContext<ISkyrimMod, ISkyrimModGetter, ILight, ILightGetter> _);
-            link.ResolveContext<ISkyrimMod, ISkyrimModGetter, ILight, ILightGetter>(cache);
+            link.ResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecordGetter, ILight, ILightGetter>(cache);
 
-            nullableLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord>(cache, out var _);
-            nullableLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord>(cache, out IModContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord, ISkyrimMajorRecordGetter> _);
-            nullableLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord>(cache);
-            nullableLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, ILight, ILightGetter>(cache, out var _);
+            nullableLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(cache, out var _);
+            nullableLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(cache, out IModContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord, ISkyrimMajorRecordGetter> _);
+            nullableLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(cache);
+            nullableLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecordGetter, ILight, ILightGetter>(cache, out var _);
             nullableLink.TryResolveContext(cache, out IModContext<ISkyrimMod, ISkyrimModGetter, ILight, ILightGetter> _);
-            nullableLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, ILight, ILightGetter>(cache);
+            nullableLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecordGetter, ILight, ILightGetter>(cache);
 
             iLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(cache, out var _);
             iLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(cache);
