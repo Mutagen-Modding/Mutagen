@@ -6,29 +6,59 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GameFinder;
+using GameFinder.StoreHandlers.GOG;
+using GameFinder.StoreHandlers.Steam;
 
 namespace Mutagen.Bethesda
 {
     public static class GameLocations
     {
-        private static readonly Lazy<GetResponse<SteamHandler>> _steamHandler = new Lazy<GetResponse<SteamHandler>>(() => SteamHandler.TryFactory());
-        private static readonly Lazy<GetResponse<GOGHandler>> _gogHandler = new Lazy<GetResponse<GOGHandler>>(() => GOGHandler.TryFactory());
+        //private static readonly Lazy<GetResponse<SteamHandler>> _steamHandler = new Lazy<GetResponse<SteamHandler>>(() => SteamHandler.TryFactory());
+        //private static readonly Lazy<GetResponse<GOGHandler>> _gogHandler = new Lazy<GetResponse<GOGHandler>>(() => GOGHandler.TryFactory());
 
+        private static readonly Lazy<GetResponse<SteamHandler>> _steamHandler = new(TryFactory<SteamHandler, SteamGame>);
+        private static readonly Lazy<GetResponse<GOGHandler>> _gogHandler = new(TryFactory<GOGHandler, GOGGame>);
+
+        private static GetResponse<TStoreHandler> TryFactory<TStoreHandler, TStoreGame>() 
+            where TStoreHandler : AStoreHandler<TStoreGame>, new()
+            where TStoreGame : AStoreGame
+        {
+            try
+            {
+                var storeHandler = new TStoreHandler();
+                var res = storeHandler.FindAllGames();
+                return !res
+                    ? ErrorResponse.Fail("Unable to find all Games!").BubbleFailure<TStoreHandler>()
+                    : GetResponse<TStoreHandler>.Succeed(storeHandler);
+            }
+            catch (Exception e)
+            {
+                return ErrorResponse.Fail(e).BubbleFailure<TStoreHandler>();
+            }
+        }
+        
         public static bool TryGetGameFolder(GameRelease release, [MaybeNullWhen(false)] out string path)
         {
-            var steamGames = _steamHandler.Value;
-            if (steamGames.Succeeded && steamGames.Value.Games.TryGetValue(release, out var game))
-            {
-                path = game.Path;
-                return true;
-            }
-            var gogGames = _gogHandler.Value;
-            if (gogGames.Succeeded && gogGames.Value.Games.TryGetValue(release, out game))
-            {
-                path = game.Path;
-                return true;
-            }
             path = default;
+
+            var steamHandler = _steamHandler.Value;
+            if (steamHandler.Succeeded)
+            {
+                var game = steamHandler.Value.Games.FirstOrDefault(x => x.ID.Equals(Games[release].SteamId));
+                if (game == null) return false;
+                path = game.Path;
+                return true;
+            }
+            
+            var gogHandler = _gogHandler.Value;
+            if (gogHandler.Succeeded)
+            {
+                var game = gogHandler.Value.Games.FirstOrDefault(x => x.GameID.Equals(Games[release].GogId));
+                if (game == null) return false;
+                path = game.Path;
+                return true;
+            }
             return false;
         }
 
@@ -96,17 +126,5 @@ namespace Mutagen.Bethesda
             }
         };
 
-    }
-
-    class StoreGame
-    {
-        public string Name { get; internal set; } = string.Empty;
-        public string Path { get; internal set; } = string.Empty;
-        public int ID { get; internal set; }
-    }
-
-    abstract class AStoreHandler
-    {
-        public abstract IDictionary<GameRelease, StoreGame> Games { get; }
     }
 }
