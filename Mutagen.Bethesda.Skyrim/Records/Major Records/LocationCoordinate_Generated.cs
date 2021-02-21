@@ -989,7 +989,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)LocationCoordinate_FieldIndex.Location) ?? true))
             {
-                item.Location.SetTo(rhs.Location);
+                item.Location.SetTo(rhs.Location.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LocationCoordinate_FieldIndex.Coordinates) ?? true))
             {

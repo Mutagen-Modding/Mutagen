@@ -2338,15 +2338,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.EquipType) ?? true))
             {
-                item.EquipType.SetTo(rhs.EquipType);
+                item.EquipType.SetTo(rhs.EquipType.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.PickUpSound) ?? true))
             {
-                item.PickUpSound.SetTo(rhs.PickUpSound);
+                item.PickUpSound.SetTo(rhs.PickUpSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.PutDownSound) ?? true))
             {
-                item.PutDownSound.SetTo(rhs.PutDownSound);
+                item.PutDownSound.SetTo(rhs.PutDownSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.Value) ?? true))
             {

@@ -1229,7 +1229,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (rhs.Versioning.HasFlag(CriticalData.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)CriticalData_FieldIndex.Effect) ?? true))
             {
-                item.Effect.SetTo(rhs.Effect);
+                item.Effect.SetTo(rhs.Effect.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)CriticalData_FieldIndex.Unused4) ?? true))
             {

@@ -1888,11 +1888,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.Category) ?? true))
             {
-                item.Category.SetTo(rhs.Category);
+                item.Category.SetTo(rhs.Category.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.AlternateSoundFor) ?? true))
             {
-                item.AlternateSoundFor.SetTo(rhs.AlternateSoundFor);
+                item.AlternateSoundFor.SetTo(rhs.AlternateSoundFor.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.SoundFiles) ?? true))
             {
@@ -1913,7 +1913,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.OutputModel) ?? true))
             {
-                item.OutputModel.SetTo(rhs.OutputModel);
+                item.OutputModel.SetTo(rhs.OutputModel.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.String) ?? true))
             {

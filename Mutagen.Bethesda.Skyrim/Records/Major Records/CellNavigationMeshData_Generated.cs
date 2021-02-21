@@ -968,11 +968,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)CellNavigationMeshData_FieldIndex.UnusedWorldspaceParent) ?? true))
             {
-                item.UnusedWorldspaceParent.SetTo(rhs.UnusedWorldspaceParent);
+                item.UnusedWorldspaceParent.SetTo(rhs.UnusedWorldspaceParent.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)CellNavigationMeshData_FieldIndex.Parent) ?? true))
             {
-                item.Parent.SetTo(rhs.Parent);
+                item.Parent.SetTo(rhs.Parent.FormKey);
             }
         }
         

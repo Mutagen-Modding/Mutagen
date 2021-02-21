@@ -970,7 +970,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponsesUnknownData_FieldIndex.QNAM) ?? true))
             {
-                item.QNAM.SetTo(rhs.QNAM);
+                item.QNAM.SetTo(rhs.QNAM.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponsesUnknownData_FieldIndex.NEXT) ?? true))
             {

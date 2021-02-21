@@ -899,7 +899,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)ItemEntry_FieldIndex.Item) ?? true))
             {
-                item.Item.SetTo(rhs.Item);
+                item.Item.SetTo(rhs.Item.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ItemEntry_FieldIndex.Count) ?? true))
             {

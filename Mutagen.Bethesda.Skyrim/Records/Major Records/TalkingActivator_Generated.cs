@@ -1887,7 +1887,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)TalkingActivator_FieldIndex.LoopingSound) ?? true))
             {
-                item.LoopingSound.SetTo(rhs.LoopingSound);
+                item.LoopingSound.SetTo(rhs.LoopingSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)TalkingActivator_FieldIndex.FNAM) ?? true))
             {
@@ -1895,7 +1895,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)TalkingActivator_FieldIndex.VoiceType) ?? true))
             {
-                item.VoiceType.SetTo(rhs.VoiceType);
+                item.VoiceType.SetTo(rhs.VoiceType.FormKeyNullable);
             }
         }
         

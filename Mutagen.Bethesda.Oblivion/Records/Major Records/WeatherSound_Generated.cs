@@ -893,7 +893,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)WeatherSound_FieldIndex.Sound) ?? true))
             {
-                item.Sound.SetTo(rhs.Sound);
+                item.Sound.SetTo(rhs.Sound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)WeatherSound_FieldIndex.Type) ?? true))
             {

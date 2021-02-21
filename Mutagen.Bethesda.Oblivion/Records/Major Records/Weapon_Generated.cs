@@ -1475,11 +1475,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.Script) ?? true))
             {
-                item.Script.SetTo(rhs.Script);
+                item.Script.SetTo(rhs.Script.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.Enchantment) ?? true))
             {
-                item.Enchantment.SetTo(rhs.Enchantment);
+                item.Enchantment.SetTo(rhs.Enchantment.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.EnchantmentPoints) ?? true))
             {

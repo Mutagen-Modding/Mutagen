@@ -2160,11 +2160,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.MenuDisplayObject) ?? true))
             {
-                item.MenuDisplayObject.SetTo(rhs.MenuDisplayObject);
+                item.MenuDisplayObject.SetTo(rhs.MenuDisplayObject.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.EquipmentType) ?? true))
             {
-                item.EquipmentType.SetTo(rhs.EquipmentType);
+                item.EquipmentType.SetTo(rhs.EquipmentType.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.Description) ?? true))
             {
@@ -2204,7 +2204,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.HalfCostPerk) ?? true))
             {
-                item.HalfCostPerk.SetTo(rhs.HalfCostPerk);
+                item.HalfCostPerk.SetTo(rhs.HalfCostPerk.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.Effects) ?? true))
             {

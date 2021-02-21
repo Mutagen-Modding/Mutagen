@@ -1307,7 +1307,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterOneRecord) ?? true))
             {
-                item.ParameterOneRecord.SetTo(rhs.ParameterOneRecord);
+                item.ParameterOneRecord.SetTo(rhs.ParameterOneRecord.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterOneNumber) ?? true))
             {
@@ -1319,7 +1319,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterTwoRecord) ?? true))
             {
-                item.ParameterTwoRecord.SetTo(rhs.ParameterTwoRecord);
+                item.ParameterTwoRecord.SetTo(rhs.ParameterTwoRecord.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterTwoNumber) ?? true))
             {

@@ -2352,15 +2352,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Ingestible_FieldIndex.PickUpSound) ?? true))
             {
-                item.PickUpSound.SetTo(rhs.PickUpSound);
+                item.PickUpSound.SetTo(rhs.PickUpSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Ingestible_FieldIndex.PutDownSound) ?? true))
             {
-                item.PutDownSound.SetTo(rhs.PutDownSound);
+                item.PutDownSound.SetTo(rhs.PutDownSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Ingestible_FieldIndex.EquipmentType) ?? true))
             {
-                item.EquipmentType.SetTo(rhs.EquipmentType);
+                item.EquipmentType.SetTo(rhs.EquipmentType.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Ingestible_FieldIndex.Weight) ?? true))
             {
@@ -2376,7 +2376,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Ingestible_FieldIndex.Addiction) ?? true))
             {
-                item.Addiction.SetTo(rhs.Addiction);
+                item.Addiction.SetTo(rhs.Addiction.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Ingestible_FieldIndex.AddictionChance) ?? true))
             {
@@ -2384,7 +2384,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Ingestible_FieldIndex.ConsumeSound) ?? true))
             {
-                item.ConsumeSound.SetTo(rhs.ConsumeSound);
+                item.ConsumeSound.SetTo(rhs.ConsumeSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Ingestible_FieldIndex.Effects) ?? true))
             {

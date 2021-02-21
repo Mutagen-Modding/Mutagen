@@ -2270,11 +2270,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Topic) ?? true))
             {
-                item.Topic.SetTo(rhs.Topic);
+                item.Topic.SetTo(rhs.Topic.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.PreviousDialog) ?? true))
             {
-                item.PreviousDialog.SetTo(rhs.PreviousDialog);
+                item.PreviousDialog.SetTo(rhs.PreviousDialog.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.FavorLevel) ?? true))
             {
@@ -2301,7 +2301,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.ResponseData) ?? true))
             {
-                item.ResponseData.SetTo(rhs.ResponseData);
+                item.ResponseData.SetTo(rhs.ResponseData.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Responses) ?? true))
             {
@@ -2381,15 +2381,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Speaker) ?? true))
             {
-                item.Speaker.SetTo(rhs.Speaker);
+                item.Speaker.SetTo(rhs.Speaker.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.WalkAwayTopic) ?? true))
             {
-                item.WalkAwayTopic.SetTo(rhs.WalkAwayTopic);
+                item.WalkAwayTopic.SetTo(rhs.WalkAwayTopic.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.AudioOutputOverride) ?? true))
             {
-                item.AudioOutputOverride.SetTo(rhs.AudioOutputOverride);
+                item.AudioOutputOverride.SetTo(rhs.AudioOutputOverride.FormKeyNullable);
             }
         }
         

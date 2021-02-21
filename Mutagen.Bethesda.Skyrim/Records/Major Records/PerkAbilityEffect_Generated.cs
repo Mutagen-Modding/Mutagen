@@ -885,7 +885,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PerkAbilityEffect_FieldIndex.Ability) ?? true))
             {
-                item.Ability.SetTo(rhs.Ability);
+                item.Ability.SetTo(rhs.Ability.FormKey);
             }
         }
         

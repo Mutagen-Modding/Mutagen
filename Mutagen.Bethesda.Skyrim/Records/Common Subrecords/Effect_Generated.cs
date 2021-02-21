@@ -1080,7 +1080,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)Effect_FieldIndex.BaseEffect) ?? true))
             {
-                item.BaseEffect.SetTo(rhs.BaseEffect);
+                item.BaseEffect.SetTo(rhs.BaseEffect.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Effect_FieldIndex.Data) ?? true))
             {

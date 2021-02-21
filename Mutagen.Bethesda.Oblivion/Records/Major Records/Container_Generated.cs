@@ -1514,7 +1514,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.Script) ?? true))
             {
-                item.Script.SetTo(rhs.Script);
+                item.Script.SetTo(rhs.Script.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.Items) ?? true))
             {
@@ -1568,11 +1568,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.OpenSound) ?? true))
             {
-                item.OpenSound.SetTo(rhs.OpenSound);
+                item.OpenSound.SetTo(rhs.OpenSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.CloseSound) ?? true))
             {
-                item.CloseSound.SetTo(rhs.CloseSound);
+                item.CloseSound.SetTo(rhs.CloseSound.FormKeyNullable);
             }
         }
         

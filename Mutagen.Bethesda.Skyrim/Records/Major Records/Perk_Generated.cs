@@ -2006,7 +2006,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.NextPerk) ?? true))
             {
-                item.NextPerk.SetTo(rhs.NextPerk);
+                item.NextPerk.SetTo(rhs.NextPerk.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.Effects) ?? true))
             {

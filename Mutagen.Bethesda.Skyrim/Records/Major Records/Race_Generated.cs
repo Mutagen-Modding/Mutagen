@@ -5810,7 +5810,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.Skin) ?? true))
             {
-                item.Skin.SetTo(rhs.Skin);
+                item.Skin.SetTo(rhs.Skin.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.BodyTemplate) ?? true))
             {
@@ -6195,7 +6195,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.AttackRace) ?? true))
             {
-                item.AttackRace.SetTo(rhs.AttackRace);
+                item.AttackRace.SetTo(rhs.AttackRace.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.Attacks) ?? true))
             {
@@ -6284,7 +6284,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.BodyPartData) ?? true))
             {
-                item.BodyPartData.SetTo(rhs.BodyPartData);
+                item.BodyPartData.SetTo(rhs.BodyPartData.FormKeyNullable);
             }
             item.BehaviorGraph = new GenderedItem<Model?>(
                 male: rhs.BehaviorGraph.Male?.DeepCopy(
@@ -6295,23 +6295,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     default(TranslationCrystal)));
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.MaterialType) ?? true))
             {
-                item.MaterialType.SetTo(rhs.MaterialType);
+                item.MaterialType.SetTo(rhs.MaterialType.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.ImpactDataSet) ?? true))
             {
-                item.ImpactDataSet.SetTo(rhs.ImpactDataSet);
+                item.ImpactDataSet.SetTo(rhs.ImpactDataSet.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.DecapitationFX) ?? true))
             {
-                item.DecapitationFX.SetTo(rhs.DecapitationFX);
+                item.DecapitationFX.SetTo(rhs.DecapitationFX.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.OpenLootSound) ?? true))
             {
-                item.OpenLootSound.SetTo(rhs.OpenLootSound);
+                item.OpenLootSound.SetTo(rhs.OpenLootSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.CloseLootSound) ?? true))
             {
-                item.CloseLootSound.SetTo(rhs.CloseLootSound);
+                item.CloseLootSound.SetTo(rhs.CloseLootSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.BipedObjectNames) ?? true))
             {
@@ -6366,7 +6366,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.UnarmedEquipSlot) ?? true))
             {
-                item.UnarmedEquipSlot.SetTo(rhs.UnarmedEquipSlot);
+                item.UnarmedEquipSlot.SetTo(rhs.UnarmedEquipSlot.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.FaceFxPhonemes) ?? true))
             {
@@ -6392,27 +6392,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultWalk) ?? true))
             {
-                item.BaseMovementDefaultWalk.SetTo(rhs.BaseMovementDefaultWalk);
+                item.BaseMovementDefaultWalk.SetTo(rhs.BaseMovementDefaultWalk.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultRun) ?? true))
             {
-                item.BaseMovementDefaultRun.SetTo(rhs.BaseMovementDefaultRun);
+                item.BaseMovementDefaultRun.SetTo(rhs.BaseMovementDefaultRun.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultSwim) ?? true))
             {
-                item.BaseMovementDefaultSwim.SetTo(rhs.BaseMovementDefaultSwim);
+                item.BaseMovementDefaultSwim.SetTo(rhs.BaseMovementDefaultSwim.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultFly) ?? true))
             {
-                item.BaseMovementDefaultFly.SetTo(rhs.BaseMovementDefaultFly);
+                item.BaseMovementDefaultFly.SetTo(rhs.BaseMovementDefaultFly.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultSneak) ?? true))
             {
-                item.BaseMovementDefaultSneak.SetTo(rhs.BaseMovementDefaultSneak);
+                item.BaseMovementDefaultSneak.SetTo(rhs.BaseMovementDefaultSneak.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultSprint) ?? true))
             {
-                item.BaseMovementDefaultSprint.SetTo(rhs.BaseMovementDefaultSprint);
+                item.BaseMovementDefaultSprint.SetTo(rhs.BaseMovementDefaultSprint.FormKeyNullable);
             }
             if (!rhs.HeadData.TryGet(out var rhsHeadDataitem))
             {
@@ -6430,11 +6430,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.MorphRace) ?? true))
             {
-                item.MorphRace.SetTo(rhs.MorphRace);
+                item.MorphRace.SetTo(rhs.MorphRace.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.ArmorRace) ?? true))
             {
-                item.ArmorRace.SetTo(rhs.ArmorRace);
+                item.ArmorRace.SetTo(rhs.ArmorRace.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.DATADataTypeState) ?? true))
             {

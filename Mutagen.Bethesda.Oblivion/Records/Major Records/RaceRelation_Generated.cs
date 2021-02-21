@@ -893,7 +893,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)RaceRelation_FieldIndex.Race) ?? true))
             {
-                item.Race.SetTo(rhs.Race);
+                item.Race.SetTo(rhs.Race.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)RaceRelation_FieldIndex.Modifier) ?? true))
             {

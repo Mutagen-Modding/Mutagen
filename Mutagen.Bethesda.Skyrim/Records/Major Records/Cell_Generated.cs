@@ -4896,7 +4896,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.LightingTemplate) ?? true))
             {
-                item.LightingTemplate.SetTo(rhs.LightingTemplate);
+                item.LightingTemplate.SetTo(rhs.LightingTemplate.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.LNAM) ?? true))
             {
@@ -4946,7 +4946,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Location) ?? true))
             {
-                item.Location.SetTo(rhs.Location);
+                item.Location.SetTo(rhs.Location.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.XWCN) ?? true))
             {
@@ -4998,7 +4998,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Water) ?? true))
             {
-                item.Water.SetTo(rhs.Water);
+                item.Water.SetTo(rhs.Water.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Ownership) ?? true))
             {
@@ -5028,7 +5028,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.LockList) ?? true))
             {
-                item.LockList.SetTo(rhs.LockList);
+                item.LockList.SetTo(rhs.LockList.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.WaterEnvironmentMap) ?? true))
             {
@@ -5036,23 +5036,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.SkyAndWeatherFromRegion) ?? true))
             {
-                item.SkyAndWeatherFromRegion.SetTo(rhs.SkyAndWeatherFromRegion);
+                item.SkyAndWeatherFromRegion.SetTo(rhs.SkyAndWeatherFromRegion.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.AcousticSpace) ?? true))
             {
-                item.AcousticSpace.SetTo(rhs.AcousticSpace);
+                item.AcousticSpace.SetTo(rhs.AcousticSpace.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.EncounterZone) ?? true))
             {
-                item.EncounterZone.SetTo(rhs.EncounterZone);
+                item.EncounterZone.SetTo(rhs.EncounterZone.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Music) ?? true))
             {
-                item.Music.SetTo(rhs.Music);
+                item.Music.SetTo(rhs.Music.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.ImageSpace) ?? true))
             {
-                item.ImageSpace.SetTo(rhs.ImageSpace);
+                item.ImageSpace.SetTo(rhs.ImageSpace.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Landscape) ?? true))
             {

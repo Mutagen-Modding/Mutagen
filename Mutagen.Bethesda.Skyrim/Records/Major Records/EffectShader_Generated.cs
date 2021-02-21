@@ -6039,7 +6039,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.AddonModels) ?? true))
             {
-                item.AddonModels.SetTo(rhs.AddonModels);
+                item.AddonModels.SetTo(rhs.AddonModels.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesStartTime) ?? true))
             {
@@ -6103,7 +6103,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.AmbientSound) ?? true))
             {
-                item.AmbientSound.SetTo(rhs.AmbientSound);
+                item.AmbientSound.SetTo(rhs.AmbientSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey2) ?? true))
             {

@@ -1250,11 +1250,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.Script) ?? true))
             {
-                item.Script.SetTo(rhs.Script);
+                item.Script.SetTo(rhs.Script.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.Sound) ?? true))
             {
-                item.Sound.SetTo(rhs.Sound);
+                item.Sound.SetTo(rhs.Sound.FormKeyNullable);
             }
         }
         

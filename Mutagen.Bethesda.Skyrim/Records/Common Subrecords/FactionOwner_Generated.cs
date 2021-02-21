@@ -904,7 +904,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)FactionOwner_FieldIndex.Faction) ?? true))
             {
-                item.Faction.SetTo(rhs.Faction);
+                item.Faction.SetTo(rhs.Faction.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)FactionOwner_FieldIndex.RequiredRank) ?? true))
             {

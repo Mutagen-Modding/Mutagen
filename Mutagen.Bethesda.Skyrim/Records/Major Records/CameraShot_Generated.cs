@@ -1728,7 +1728,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.ImageSpaceModifier) ?? true))
             {
-                item.ImageSpaceModifier.SetTo(rhs.ImageSpaceModifier);
+                item.ImageSpaceModifier.SetTo(rhs.ImageSpaceModifier.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.DATADataTypeState) ?? true))
             {

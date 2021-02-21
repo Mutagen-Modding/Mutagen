@@ -892,11 +892,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)Portal_FieldIndex.Origin) ?? true))
             {
-                item.Origin.SetTo(rhs.Origin);
+                item.Origin.SetTo(rhs.Origin.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Portal_FieldIndex.Destination) ?? true))
             {
-                item.Destination.SetTo(rhs.Destination);
+                item.Destination.SetTo(rhs.Destination.FormKey);
             }
         }
         

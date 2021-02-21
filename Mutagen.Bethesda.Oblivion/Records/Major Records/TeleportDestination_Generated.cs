@@ -935,7 +935,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.Destination) ?? true))
             {
-                item.Destination.SetTo(rhs.Destination);
+                item.Destination.SetTo(rhs.Destination.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.Position) ?? true))
             {

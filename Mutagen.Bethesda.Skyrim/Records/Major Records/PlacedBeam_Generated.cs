@@ -1266,7 +1266,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PlacedBeam_FieldIndex.Projectile) ?? true))
             {
-                item.Projectile.SetTo(rhs.Projectile);
+                item.Projectile.SetTo(rhs.Projectile.FormKey);
             }
         }
         

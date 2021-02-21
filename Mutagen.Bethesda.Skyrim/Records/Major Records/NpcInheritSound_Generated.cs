@@ -861,7 +861,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)NpcInheritSound_FieldIndex.InheritsSoundsFrom) ?? true))
             {
-                item.InheritsSoundsFrom.SetTo(rhs.InheritsSoundsFrom);
+                item.InheritsSoundsFrom.SetTo(rhs.InheritsSoundsFrom.FormKeyNullable);
             }
         }
         

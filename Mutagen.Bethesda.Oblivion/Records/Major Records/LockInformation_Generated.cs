@@ -993,7 +993,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LockInformation_FieldIndex.Key) ?? true))
             {
-                item.Key.SetTo(rhs.Key);
+                item.Key.SetTo(rhs.Key.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LockInformation_FieldIndex.Flags) ?? true))
             {

@@ -964,11 +964,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LocationAliasReference_FieldIndex.Keyword) ?? true))
             {
-                item.Keyword.SetTo(rhs.Keyword);
+                item.Keyword.SetTo(rhs.Keyword.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)LocationAliasReference_FieldIndex.RefType) ?? true))
             {
-                item.RefType.SetTo(rhs.RefType);
+                item.RefType.SetTo(rhs.RefType.FormKeyNullable);
             }
         }
         

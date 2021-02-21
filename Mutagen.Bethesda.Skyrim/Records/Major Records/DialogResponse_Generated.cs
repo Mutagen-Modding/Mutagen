@@ -1450,7 +1450,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Sound) ?? true))
             {
-                item.Sound.SetTo(rhs.Sound);
+                item.Sound.SetTo(rhs.Sound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Flags) ?? true))
             {
@@ -1474,11 +1474,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.SpeakerIdleAnimation) ?? true))
             {
-                item.SpeakerIdleAnimation.SetTo(rhs.SpeakerIdleAnimation);
+                item.SpeakerIdleAnimation.SetTo(rhs.SpeakerIdleAnimation.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.ListenerIdleAnimation) ?? true))
             {
-                item.ListenerIdleAnimation.SetTo(rhs.ListenerIdleAnimation);
+                item.ListenerIdleAnimation.SetTo(rhs.ListenerIdleAnimation.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.TRDTDataTypeState) ?? true))
             {

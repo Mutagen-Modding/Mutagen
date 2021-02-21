@@ -1283,7 +1283,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SoundMarker_FieldIndex.SoundDescriptor) ?? true))
             {
-                item.SoundDescriptor.SetTo(rhs.SoundDescriptor);
+                item.SoundDescriptor.SetTo(rhs.SoundDescriptor.FormKeyNullable);
             }
         }
         

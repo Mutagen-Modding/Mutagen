@@ -2142,35 +2142,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.ObjectEffect) ?? true))
             {
-                item.ObjectEffect.SetTo(rhs.ObjectEffect);
+                item.ObjectEffect.SetTo(rhs.ObjectEffect.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.ImageSpaceModifier) ?? true))
             {
-                item.ImageSpaceModifier.SetTo(rhs.ImageSpaceModifier);
+                item.ImageSpaceModifier.SetTo(rhs.ImageSpaceModifier.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.Light) ?? true))
             {
-                item.Light.SetTo(rhs.Light);
+                item.Light.SetTo(rhs.Light.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.Sound1) ?? true))
             {
-                item.Sound1.SetTo(rhs.Sound1);
+                item.Sound1.SetTo(rhs.Sound1.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.Sound2) ?? true))
             {
-                item.Sound2.SetTo(rhs.Sound2);
+                item.Sound2.SetTo(rhs.Sound2.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.ImpactDataSet) ?? true))
             {
-                item.ImpactDataSet.SetTo(rhs.ImpactDataSet);
+                item.ImpactDataSet.SetTo(rhs.ImpactDataSet.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.PlacedObject) ?? true))
             {
-                item.PlacedObject.SetTo(rhs.PlacedObject);
+                item.PlacedObject.SetTo(rhs.PlacedObject.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.SpawnProjectile) ?? true))
             {
-                item.SpawnProjectile.SetTo(rhs.SpawnProjectile);
+                item.SpawnProjectile.SetTo(rhs.SpawnProjectile.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.Force) ?? true))
             {

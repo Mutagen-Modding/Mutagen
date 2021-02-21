@@ -1174,7 +1174,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)TintAssets_FieldIndex.PresetDefault) ?? true))
             {
-                item.PresetDefault.SetTo(rhs.PresetDefault);
+                item.PresetDefault.SetTo(rhs.PresetDefault.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)TintAssets_FieldIndex.Presets) ?? true))
             {

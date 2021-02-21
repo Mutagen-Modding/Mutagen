@@ -936,7 +936,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AlternateTexture_FieldIndex.NewTexture) ?? true))
             {
-                item.NewTexture.SetTo(rhs.NewTexture);
+                item.NewTexture.SetTo(rhs.NewTexture.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)AlternateTexture_FieldIndex.Index) ?? true))
             {

@@ -3207,15 +3207,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Parent) ?? true))
             {
-                item.Parent.SetTo(rhs.Parent);
+                item.Parent.SetTo(rhs.Parent.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Climate) ?? true))
             {
-                item.Climate.SetTo(rhs.Climate);
+                item.Climate.SetTo(rhs.Climate.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Water) ?? true))
             {
-                item.Water.SetTo(rhs.Water);
+                item.Water.SetTo(rhs.Water.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Icon) ?? true))
             {

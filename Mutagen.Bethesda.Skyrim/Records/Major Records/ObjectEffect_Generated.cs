@@ -1801,11 +1801,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.BaseEnchantment) ?? true))
             {
-                item.BaseEnchantment.SetTo(rhs.BaseEnchantment);
+                item.BaseEnchantment.SetTo(rhs.BaseEnchantment.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.WornRestrictions) ?? true))
             {
-                item.WornRestrictions.SetTo(rhs.WornRestrictions);
+                item.WornRestrictions.SetTo(rhs.WornRestrictions.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.Effects) ?? true))
             {

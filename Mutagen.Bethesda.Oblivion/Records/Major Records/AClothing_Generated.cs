@@ -1709,11 +1709,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AClothing_FieldIndex.Script) ?? true))
             {
-                item.Script.SetTo(rhs.Script);
+                item.Script.SetTo(rhs.Script.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)AClothing_FieldIndex.Enchantment) ?? true))
             {
-                item.Enchantment.SetTo(rhs.Enchantment);
+                item.Enchantment.SetTo(rhs.Enchantment.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)AClothing_FieldIndex.EnchantmentPoints) ?? true))
             {

@@ -934,7 +934,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)WeatherType_FieldIndex.Weather) ?? true))
             {
-                item.Weather.SetTo(rhs.Weather);
+                item.Weather.SetTo(rhs.Weather.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)WeatherType_FieldIndex.Chance) ?? true))
             {
@@ -942,7 +942,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)WeatherType_FieldIndex.Global) ?? true))
             {
-                item.Global.SetTo(rhs.Global);
+                item.Global.SetTo(rhs.Global.FormKey);
             }
         }
         

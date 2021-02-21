@@ -1530,7 +1530,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.Material) ?? true))
             {
-                item.Material.SetTo(rhs.Material);
+                item.Material.SetTo(rhs.Material.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.Flags) ?? true))
             {

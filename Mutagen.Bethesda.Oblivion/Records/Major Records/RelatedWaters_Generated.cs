@@ -943,15 +943,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)RelatedWaters_FieldIndex.RelatedWaterDaytime) ?? true))
             {
-                item.RelatedWaterDaytime.SetTo(rhs.RelatedWaterDaytime);
+                item.RelatedWaterDaytime.SetTo(rhs.RelatedWaterDaytime.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)RelatedWaters_FieldIndex.RelatedWaterNighttime) ?? true))
             {
-                item.RelatedWaterNighttime.SetTo(rhs.RelatedWaterNighttime);
+                item.RelatedWaterNighttime.SetTo(rhs.RelatedWaterNighttime.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)RelatedWaters_FieldIndex.RelatedWaterUnderwater) ?? true))
             {
-                item.RelatedWaterUnderwater.SetTo(rhs.RelatedWaterUnderwater);
+                item.RelatedWaterUnderwater.SetTo(rhs.RelatedWaterUnderwater.FormKey);
             }
         }
         

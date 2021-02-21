@@ -1866,23 +1866,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.TextureSet) ?? true))
             {
-                item.TextureSet.SetTo(rhs.TextureSet);
+                item.TextureSet.SetTo(rhs.TextureSet.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.SecondaryTextureSet) ?? true))
             {
-                item.SecondaryTextureSet.SetTo(rhs.SecondaryTextureSet);
+                item.SecondaryTextureSet.SetTo(rhs.SecondaryTextureSet.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.Sound1) ?? true))
             {
-                item.Sound1.SetTo(rhs.Sound1);
+                item.Sound1.SetTo(rhs.Sound1.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.Sound2) ?? true))
             {
-                item.Sound2.SetTo(rhs.Sound2);
+                item.Sound2.SetTo(rhs.Sound2.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.Hazard) ?? true))
             {
-                item.Hazard.SetTo(rhs.Hazard);
+                item.Hazard.SetTo(rhs.Hazard.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.DATADataTypeState) ?? true))
             {

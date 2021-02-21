@@ -944,7 +944,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)WaterReflection_FieldIndex.Water) ?? true))
             {
-                item.Water.SetTo(rhs.Water);
+                item.Water.SetTo(rhs.Water.FormKey);
             }
             if (rhs.Versioning.HasFlag(WaterReflection.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)WaterReflection_FieldIndex.Type) ?? true))

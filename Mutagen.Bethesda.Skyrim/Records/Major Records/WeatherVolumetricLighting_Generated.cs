@@ -989,19 +989,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)WeatherVolumetricLighting_FieldIndex.Sunrise) ?? true))
             {
-                item.Sunrise.SetTo(rhs.Sunrise);
+                item.Sunrise.SetTo(rhs.Sunrise.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)WeatherVolumetricLighting_FieldIndex.Day) ?? true))
             {
-                item.Day.SetTo(rhs.Day);
+                item.Day.SetTo(rhs.Day.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)WeatherVolumetricLighting_FieldIndex.Sunset) ?? true))
             {
-                item.Sunset.SetTo(rhs.Sunset);
+                item.Sunset.SetTo(rhs.Sunset.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)WeatherVolumetricLighting_FieldIndex.Night) ?? true))
             {
-                item.Night.SetTo(rhs.Night);
+                item.Night.SetTo(rhs.Night.FormKey);
             }
         }
         

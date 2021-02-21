@@ -891,7 +891,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)WorldspaceParent_FieldIndex.Worldspace) ?? true))
             {
-                item.Worldspace.SetTo(rhs.Worldspace);
+                item.Worldspace.SetTo(rhs.Worldspace.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)WorldspaceParent_FieldIndex.Flags) ?? true))
             {

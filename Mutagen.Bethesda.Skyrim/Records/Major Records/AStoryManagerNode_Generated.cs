@@ -1251,11 +1251,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)AStoryManagerNode_FieldIndex.Parent) ?? true))
             {
-                item.Parent.SetTo(rhs.Parent);
+                item.Parent.SetTo(rhs.Parent.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)AStoryManagerNode_FieldIndex.PreviousSibling) ?? true))
             {
-                item.PreviousSibling.SetTo(rhs.PreviousSibling);
+                item.PreviousSibling.SetTo(rhs.PreviousSibling.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)AStoryManagerNode_FieldIndex.Conditions) ?? true))
             {

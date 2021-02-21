@@ -2220,27 +2220,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.ExteriorJailMarker) ?? true))
             {
-                item.ExteriorJailMarker.SetTo(rhs.ExteriorJailMarker);
+                item.ExteriorJailMarker.SetTo(rhs.ExteriorJailMarker.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.FollowerWaitMarker) ?? true))
             {
-                item.FollowerWaitMarker.SetTo(rhs.FollowerWaitMarker);
+                item.FollowerWaitMarker.SetTo(rhs.FollowerWaitMarker.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.StolenGoodsContainer) ?? true))
             {
-                item.StolenGoodsContainer.SetTo(rhs.StolenGoodsContainer);
+                item.StolenGoodsContainer.SetTo(rhs.StolenGoodsContainer.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.PlayerInventoryContainer) ?? true))
             {
-                item.PlayerInventoryContainer.SetTo(rhs.PlayerInventoryContainer);
+                item.PlayerInventoryContainer.SetTo(rhs.PlayerInventoryContainer.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.SharedCrimeFactionList) ?? true))
             {
-                item.SharedCrimeFactionList.SetTo(rhs.SharedCrimeFactionList);
+                item.SharedCrimeFactionList.SetTo(rhs.SharedCrimeFactionList.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.JailOutfit) ?? true))
             {
-                item.JailOutfit.SetTo(rhs.JailOutfit);
+                item.JailOutfit.SetTo(rhs.JailOutfit.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.CrimeValues) ?? true))
             {
@@ -2294,11 +2294,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.VendorBuySellList) ?? true))
             {
-                item.VendorBuySellList.SetTo(rhs.VendorBuySellList);
+                item.VendorBuySellList.SetTo(rhs.VendorBuySellList.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.MerchantContainer) ?? true))
             {
-                item.MerchantContainer.SetTo(rhs.MerchantContainer);
+                item.MerchantContainer.SetTo(rhs.MerchantContainer.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.VendorValues) ?? true))
             {

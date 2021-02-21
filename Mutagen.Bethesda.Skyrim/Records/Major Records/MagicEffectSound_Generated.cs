@@ -892,7 +892,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffectSound_FieldIndex.Sound) ?? true))
             {
-                item.Sound.SetTo(rhs.Sound);
+                item.Sound.SetTo(rhs.Sound.FormKey);
             }
         }
         

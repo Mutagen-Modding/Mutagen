@@ -943,7 +943,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)RankPlacement_FieldIndex.Faction) ?? true))
             {
-                item.Faction.SetTo(rhs.Faction);
+                item.Faction.SetTo(rhs.Faction.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)RankPlacement_FieldIndex.Rank) ?? true))
             {

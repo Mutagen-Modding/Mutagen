@@ -1135,7 +1135,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AnimatedObject_FieldIndex.IdleAnimation) ?? true))
             {
-                item.IdleAnimation.SetTo(rhs.IdleAnimation);
+                item.IdleAnimation.SetTo(rhs.IdleAnimation.FormKeyNullable);
             }
         }
         

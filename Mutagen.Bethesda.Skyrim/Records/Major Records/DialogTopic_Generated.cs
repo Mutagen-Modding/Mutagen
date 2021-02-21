@@ -2202,11 +2202,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Branch) ?? true))
             {
-                item.Branch.SetTo(rhs.Branch);
+                item.Branch.SetTo(rhs.Branch.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Quest) ?? true))
             {
-                item.Quest.SetTo(rhs.Quest);
+                item.Quest.SetTo(rhs.Quest.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.TopicFlags) ?? true))
             {

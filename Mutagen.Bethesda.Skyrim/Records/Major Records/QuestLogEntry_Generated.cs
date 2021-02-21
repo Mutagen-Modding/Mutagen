@@ -1309,7 +1309,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.NextQuest) ?? true))
             {
-                item.NextQuest.SetTo(rhs.NextQuest);
+                item.NextQuest.SetTo(rhs.NextQuest.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.SCHR) ?? true))
             {

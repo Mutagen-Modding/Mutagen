@@ -2133,11 +2133,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.PickUpSound) ?? true))
             {
-                item.PickUpSound.SetTo(rhs.PickUpSound);
+                item.PickUpSound.SetTo(rhs.PickUpSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.PutDownSound) ?? true))
             {
-                item.PutDownSound.SetTo(rhs.PutDownSound);
+                item.PutDownSound.SetTo(rhs.PutDownSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Description) ?? true))
             {
@@ -2172,7 +2172,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Projectile) ?? true))
             {
-                item.Projectile.SetTo(rhs.Projectile);
+                item.Projectile.SetTo(rhs.Projectile.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Flags) ?? true))
             {

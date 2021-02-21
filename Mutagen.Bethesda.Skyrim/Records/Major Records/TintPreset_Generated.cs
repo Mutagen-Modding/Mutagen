@@ -959,7 +959,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)TintPreset_FieldIndex.Color) ?? true))
             {
-                item.Color.SetTo(rhs.Color);
+                item.Color.SetTo(rhs.Color.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)TintPreset_FieldIndex.DefaultValue) ?? true))
             {

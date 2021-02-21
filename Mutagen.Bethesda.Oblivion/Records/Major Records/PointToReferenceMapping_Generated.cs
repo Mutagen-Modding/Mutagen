@@ -994,7 +994,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)PointToReferenceMapping_FieldIndex.Reference) ?? true))
             {
-                item.Reference.SetTo(rhs.Reference);
+                item.Reference.SetTo(rhs.Reference.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PointToReferenceMapping_FieldIndex.Points) ?? true))
             {

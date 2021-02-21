@@ -1169,11 +1169,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DestructionStageData_FieldIndex.Explosion) ?? true))
             {
-                item.Explosion.SetTo(rhs.Explosion);
+                item.Explosion.SetTo(rhs.Explosion.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DestructionStageData_FieldIndex.Debris) ?? true))
             {
-                item.Debris.SetTo(rhs.Debris);
+                item.Debris.SetTo(rhs.Debris.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DestructionStageData_FieldIndex.DebrisCount) ?? true))
             {

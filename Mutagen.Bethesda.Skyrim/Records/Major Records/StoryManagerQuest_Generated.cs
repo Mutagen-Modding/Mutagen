@@ -965,7 +965,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)StoryManagerQuest_FieldIndex.Quest) ?? true))
             {
-                item.Quest.SetTo(rhs.Quest);
+                item.Quest.SetTo(rhs.Quest.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)StoryManagerQuest_FieldIndex.FNAM) ?? true))
             {

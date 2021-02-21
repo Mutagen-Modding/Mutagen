@@ -1334,11 +1334,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)Relationship_FieldIndex.Parent) ?? true))
             {
-                item.Parent.SetTo(rhs.Parent);
+                item.Parent.SetTo(rhs.Parent.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Relationship_FieldIndex.Child) ?? true))
             {
-                item.Child.SetTo(rhs.Child);
+                item.Child.SetTo(rhs.Child.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Relationship_FieldIndex.Rank) ?? true))
             {
@@ -1354,7 +1354,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Relationship_FieldIndex.AssociationType) ?? true))
             {
-                item.AssociationType.SetTo(rhs.AssociationType);
+                item.AssociationType.SetTo(rhs.AssociationType.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Relationship_FieldIndex.DATADataTypeState) ?? true))
             {

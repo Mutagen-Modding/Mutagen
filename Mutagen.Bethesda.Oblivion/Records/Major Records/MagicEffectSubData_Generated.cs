@@ -1114,23 +1114,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)MagicEffectSubData_FieldIndex.EnchantEffect) ?? true))
             {
-                item.EnchantEffect.SetTo(rhs.EnchantEffect);
+                item.EnchantEffect.SetTo(rhs.EnchantEffect.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffectSubData_FieldIndex.CastingSound) ?? true))
             {
-                item.CastingSound.SetTo(rhs.CastingSound);
+                item.CastingSound.SetTo(rhs.CastingSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffectSubData_FieldIndex.BoltSound) ?? true))
             {
-                item.BoltSound.SetTo(rhs.BoltSound);
+                item.BoltSound.SetTo(rhs.BoltSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffectSubData_FieldIndex.HitSound) ?? true))
             {
-                item.HitSound.SetTo(rhs.HitSound);
+                item.HitSound.SetTo(rhs.HitSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffectSubData_FieldIndex.AreaSound) ?? true))
             {
-                item.AreaSound.SetTo(rhs.AreaSound);
+                item.AreaSound.SetTo(rhs.AreaSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor) ?? true))
             {

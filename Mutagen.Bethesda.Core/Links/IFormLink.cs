@@ -392,9 +392,16 @@ namespace Mutagen.Bethesda
             link.SetTo(record?.FormKey);
         }
 
-        public static void SetTo<TMajor, TMajorRhs>(this IFormLink<TMajor> link, IFormLinkGetter<TMajorRhs> rhs)
-            where TMajor : TMajorRhs
-            where TMajorRhs : IMajorRecordCommonGetter
+        public static void SetTo<TMajor, TMajorGetter>(this IFormLink<TMajor> link, IFormLinkGetter<TMajorGetter> rhs)
+            where TMajor : IMajorRecordCommonGetter
+            where TMajorGetter : TMajor
+        {
+            link.SetTo(rhs.FormKeyNullable);
+        }
+
+        public static void SetToGetter<TMajor, TMajorGetter>(this IFormLink<TMajor> link, IFormLinkGetter<TMajorGetter> rhs)
+            where TMajor : IMapsToGetter<TMajorGetter>
+            where TMajorGetter : IMajorRecordCommonGetter
         {
             link.SetTo(rhs.FormKeyNullable);
         }

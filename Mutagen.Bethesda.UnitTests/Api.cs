@@ -218,6 +218,10 @@ namespace Mutagen.Bethesda.UnitTests
             IObjectEffectGetter objGetter = null!;
             IFormLink<IEffectRecordGetter> aLink = new FormLink<IEffectRecordGetter>();
             aLink.SetTo(objGetter);
+
+            IFormLink<ISkyrimMajorRecordGetter> majRecordLink = new FormLink<ISkyrimMajorRecordGetter>();
+            IFormLink<IKeywordGetter> keywordLink = new FormLink<IKeywordGetter>();
+            majRecordLink.SetTo(keywordLink);
         }
 
         [Fact]

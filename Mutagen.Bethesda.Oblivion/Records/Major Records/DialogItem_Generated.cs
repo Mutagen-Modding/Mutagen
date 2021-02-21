@@ -1973,11 +1973,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogItem_FieldIndex.Quest) ?? true))
             {
-                item.Quest.SetTo(rhs.Quest);
+                item.Quest.SetTo(rhs.Quest.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogItem_FieldIndex.PreviousTopic) ?? true))
             {
-                item.PreviousTopic.SetTo(rhs.PreviousTopic);
+                item.PreviousTopic.SetTo(rhs.PreviousTopic.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogItem_FieldIndex.Topics) ?? true))
             {

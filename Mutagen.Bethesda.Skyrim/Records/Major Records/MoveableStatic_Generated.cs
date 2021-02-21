@@ -1504,7 +1504,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MoveableStatic_FieldIndex.LoopingSound) ?? true))
             {
-                item.LoopingSound.SetTo(rhs.LoopingSound);
+                item.LoopingSound.SetTo(rhs.LoopingSound.FormKeyNullable);
             }
         }
         

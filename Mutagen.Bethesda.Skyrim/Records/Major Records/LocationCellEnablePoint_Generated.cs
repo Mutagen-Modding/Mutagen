@@ -934,11 +934,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)LocationCellEnablePoint_FieldIndex.Actor) ?? true))
             {
-                item.Actor.SetTo(rhs.Actor);
+                item.Actor.SetTo(rhs.Actor.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LocationCellEnablePoint_FieldIndex.Ref) ?? true))
             {
-                item.Ref.SetTo(rhs.Ref);
+                item.Ref.SetTo(rhs.Ref.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LocationCellEnablePoint_FieldIndex.Grid) ?? true))
             {

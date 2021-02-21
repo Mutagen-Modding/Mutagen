@@ -934,7 +934,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)EdgeLink_FieldIndex.Mesh) ?? true))
             {
-                item.Mesh.SetTo(rhs.Mesh);
+                item.Mesh.SetTo(rhs.Mesh.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)EdgeLink_FieldIndex.TriangleIndex) ?? true))
             {

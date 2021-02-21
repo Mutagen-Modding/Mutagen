@@ -1378,7 +1378,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Miscellaneous_FieldIndex.Script) ?? true))
             {
-                item.Script.SetTo(rhs.Script);
+                item.Script.SetTo(rhs.Script.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Miscellaneous_FieldIndex.Data) ?? true))
             {

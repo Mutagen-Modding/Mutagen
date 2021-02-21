@@ -1997,11 +1997,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MiscItem_FieldIndex.PickUpSound) ?? true))
             {
-                item.PickUpSound.SetTo(rhs.PickUpSound);
+                item.PickUpSound.SetTo(rhs.PickUpSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)MiscItem_FieldIndex.PutDownSound) ?? true))
             {
-                item.PutDownSound.SetTo(rhs.PutDownSound);
+                item.PutDownSound.SetTo(rhs.PutDownSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)MiscItem_FieldIndex.Keywords) ?? true))
             {

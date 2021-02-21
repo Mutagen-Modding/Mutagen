@@ -1191,11 +1191,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)VisualEffect_FieldIndex.EffectArt) ?? true))
             {
-                item.EffectArt.SetTo(rhs.EffectArt);
+                item.EffectArt.SetTo(rhs.EffectArt.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)VisualEffect_FieldIndex.Shader) ?? true))
             {
-                item.Shader.SetTo(rhs.Shader);
+                item.Shader.SetTo(rhs.Shader.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)VisualEffect_FieldIndex.Flags) ?? true))
             {

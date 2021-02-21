@@ -892,7 +892,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DefaultObject_FieldIndex.Object) ?? true))
             {
-                item.Object.SetTo(rhs.Object);
+                item.Object.SetTo(rhs.Object.FormKey);
             }
         }
         

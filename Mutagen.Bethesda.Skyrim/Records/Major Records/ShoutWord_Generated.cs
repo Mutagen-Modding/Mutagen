@@ -939,11 +939,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)ShoutWord_FieldIndex.Word) ?? true))
             {
-                item.Word.SetTo(rhs.Word);
+                item.Word.SetTo(rhs.Word.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ShoutWord_FieldIndex.Spell) ?? true))
             {
-                item.Spell.SetTo(rhs.Spell);
+                item.Spell.SetTo(rhs.Spell.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ShoutWord_FieldIndex.RecoveryTime) ?? true))
             {

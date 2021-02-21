@@ -4533,19 +4533,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.ParentLocation) ?? true))
             {
-                item.ParentLocation.SetTo(rhs.ParentLocation);
+                item.ParentLocation.SetTo(rhs.ParentLocation.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.Music) ?? true))
             {
-                item.Music.SetTo(rhs.Music);
+                item.Music.SetTo(rhs.Music.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.UnreportedCrimeFaction) ?? true))
             {
-                item.UnreportedCrimeFaction.SetTo(rhs.UnreportedCrimeFaction);
+                item.UnreportedCrimeFaction.SetTo(rhs.UnreportedCrimeFaction.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.WorldLocationMarkerRef) ?? true))
             {
-                item.WorldLocationMarkerRef.SetTo(rhs.WorldLocationMarkerRef);
+                item.WorldLocationMarkerRef.SetTo(rhs.WorldLocationMarkerRef.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.WorldLocationRadius) ?? true))
             {
@@ -4553,7 +4553,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.HorseMarkerRef) ?? true))
             {
-                item.HorseMarkerRef.SetTo(rhs.HorseMarkerRef);
+                item.HorseMarkerRef.SetTo(rhs.HorseMarkerRef.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.Color) ?? true))
             {

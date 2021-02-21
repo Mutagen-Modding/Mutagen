@@ -979,7 +979,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.Door) ?? true))
             {
-                item.Door.SetTo(rhs.Door);
+                item.Door.SetTo(rhs.Door.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.Position) ?? true))
             {

@@ -2164,7 +2164,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Scene_FieldIndex.Quest) ?? true))
             {
-                item.Quest.SetTo(rhs.Quest);
+                item.Quest.SetTo(rhs.Quest.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Scene_FieldIndex.LastActionIndex) ?? true))
             {

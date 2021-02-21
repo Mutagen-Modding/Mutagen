@@ -1099,7 +1099,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)Footstep_FieldIndex.ImpactDataSet) ?? true))
             {
-                item.ImpactDataSet.SetTo(rhs.ImpactDataSet);
+                item.ImpactDataSet.SetTo(rhs.ImpactDataSet.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Footstep_FieldIndex.Tag) ?? true))
             {

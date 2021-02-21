@@ -1430,7 +1430,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AddonNode_FieldIndex.Sound) ?? true))
             {
-                item.Sound.SetTo(rhs.Sound);
+                item.Sound.SetTo(rhs.Sound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)AddonNode_FieldIndex.MasterParticleSystemCap) ?? true))
             {

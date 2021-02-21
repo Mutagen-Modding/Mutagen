@@ -1418,23 +1418,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DualCastData_FieldIndex.Projectile) ?? true))
             {
-                item.Projectile.SetTo(rhs.Projectile);
+                item.Projectile.SetTo(rhs.Projectile.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DualCastData_FieldIndex.Explosion) ?? true))
             {
-                item.Explosion.SetTo(rhs.Explosion);
+                item.Explosion.SetTo(rhs.Explosion.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DualCastData_FieldIndex.EffectShader) ?? true))
             {
-                item.EffectShader.SetTo(rhs.EffectShader);
+                item.EffectShader.SetTo(rhs.EffectShader.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DualCastData_FieldIndex.HitEffectArt) ?? true))
             {
-                item.HitEffectArt.SetTo(rhs.HitEffectArt);
+                item.HitEffectArt.SetTo(rhs.HitEffectArt.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DualCastData_FieldIndex.ImpactDataSet) ?? true))
             {
-                item.ImpactDataSet.SetTo(rhs.ImpactDataSet);
+                item.ImpactDataSet.SetTo(rhs.ImpactDataSet.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DualCastData_FieldIndex.InheritScale) ?? true))
             {

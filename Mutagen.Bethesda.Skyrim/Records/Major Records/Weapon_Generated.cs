@@ -3007,7 +3007,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.ObjectEffect) ?? true))
             {
-                item.ObjectEffect.SetTo(rhs.ObjectEffect);
+                item.ObjectEffect.SetTo(rhs.ObjectEffect.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.EnchantmentAmount) ?? true))
             {
@@ -3041,23 +3041,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.EquipmentType) ?? true))
             {
-                item.EquipmentType.SetTo(rhs.EquipmentType);
+                item.EquipmentType.SetTo(rhs.EquipmentType.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.BlockBashImpact) ?? true))
             {
-                item.BlockBashImpact.SetTo(rhs.BlockBashImpact);
+                item.BlockBashImpact.SetTo(rhs.BlockBashImpact.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.AlternateBlockMaterial) ?? true))
             {
-                item.AlternateBlockMaterial.SetTo(rhs.AlternateBlockMaterial);
+                item.AlternateBlockMaterial.SetTo(rhs.AlternateBlockMaterial.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.PickUpSound) ?? true))
             {
-                item.PickUpSound.SetTo(rhs.PickUpSound);
+                item.PickUpSound.SetTo(rhs.PickUpSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.PutDownSound) ?? true))
             {
-                item.PutDownSound.SetTo(rhs.PutDownSound);
+                item.PutDownSound.SetTo(rhs.PutDownSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.Keywords) ?? true))
             {
@@ -3129,39 +3129,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.ImpactDataSet) ?? true))
             {
-                item.ImpactDataSet.SetTo(rhs.ImpactDataSet);
+                item.ImpactDataSet.SetTo(rhs.ImpactDataSet.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.FirstPersonModel) ?? true))
             {
-                item.FirstPersonModel.SetTo(rhs.FirstPersonModel);
+                item.FirstPersonModel.SetTo(rhs.FirstPersonModel.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.AttackSound) ?? true))
             {
-                item.AttackSound.SetTo(rhs.AttackSound);
+                item.AttackSound.SetTo(rhs.AttackSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.AttackSound2D) ?? true))
             {
-                item.AttackSound2D.SetTo(rhs.AttackSound2D);
+                item.AttackSound2D.SetTo(rhs.AttackSound2D.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.AttackLoopSound) ?? true))
             {
-                item.AttackLoopSound.SetTo(rhs.AttackLoopSound);
+                item.AttackLoopSound.SetTo(rhs.AttackLoopSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.AttackFailSound) ?? true))
             {
-                item.AttackFailSound.SetTo(rhs.AttackFailSound);
+                item.AttackFailSound.SetTo(rhs.AttackFailSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.IdleSound) ?? true))
             {
-                item.IdleSound.SetTo(rhs.IdleSound);
+                item.IdleSound.SetTo(rhs.IdleSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.EquipSound) ?? true))
             {
-                item.EquipSound.SetTo(rhs.EquipSound);
+                item.EquipSound.SetTo(rhs.EquipSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.UnequipSound) ?? true))
             {
-                item.UnequipSound.SetTo(rhs.UnequipSound);
+                item.UnequipSound.SetTo(rhs.UnequipSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.BasicStats) ?? true))
             {
@@ -3247,7 +3247,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.Template) ?? true))
             {
-                item.Template.SetTo(rhs.Template);
+                item.Template.SetTo(rhs.Template.FormKeyNullable);
             }
         }
         

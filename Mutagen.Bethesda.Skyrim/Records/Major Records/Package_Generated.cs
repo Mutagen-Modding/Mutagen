@@ -2963,15 +2963,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.CombatStyle) ?? true))
             {
-                item.CombatStyle.SetTo(rhs.CombatStyle);
+                item.CombatStyle.SetTo(rhs.CombatStyle.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.OwnerQuest) ?? true))
             {
-                item.OwnerQuest.SetTo(rhs.OwnerQuest);
+                item.OwnerQuest.SetTo(rhs.OwnerQuest.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.PackageTemplate) ?? true))
             {
-                item.PackageTemplate.SetTo(rhs.PackageTemplate);
+                item.PackageTemplate.SetTo(rhs.PackageTemplate.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.DataInputVersion) ?? true))
             {

@@ -2646,11 +2646,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.Light) ?? true))
             {
-                item.Light.SetTo(rhs.Light);
+                item.Light.SetTo(rhs.Light.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.MuzzleFlash) ?? true))
             {
-                item.MuzzleFlash.SetTo(rhs.MuzzleFlash);
+                item.MuzzleFlash.SetTo(rhs.MuzzleFlash.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.TracerChance) ?? true))
             {
@@ -2666,11 +2666,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.Explosion) ?? true))
             {
-                item.Explosion.SetTo(rhs.Explosion);
+                item.Explosion.SetTo(rhs.Explosion.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.Sound) ?? true))
             {
-                item.Sound.SetTo(rhs.Sound);
+                item.Sound.SetTo(rhs.Sound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.MuzzleFlashDuration) ?? true))
             {
@@ -2686,15 +2686,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.CountdownSound) ?? true))
             {
-                item.CountdownSound.SetTo(rhs.CountdownSound);
+                item.CountdownSound.SetTo(rhs.CountdownSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.DisaleSound) ?? true))
             {
-                item.DisaleSound.SetTo(rhs.DisaleSound);
+                item.DisaleSound.SetTo(rhs.DisaleSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.DefaultWeaponSource) ?? true))
             {
-                item.DefaultWeaponSource.SetTo(rhs.DefaultWeaponSource);
+                item.DefaultWeaponSource.SetTo(rhs.DefaultWeaponSource.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.ConeSpread) ?? true))
             {
@@ -2714,11 +2714,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.DecalData) ?? true))
             {
-                item.DecalData.SetTo(rhs.DecalData);
+                item.DecalData.SetTo(rhs.DecalData.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.CollisionLayer) ?? true))
             {
-                item.CollisionLayer.SetTo(rhs.CollisionLayer);
+                item.CollisionLayer.SetTo(rhs.CollisionLayer.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.MuzzleFlashModel) ?? true))
             {

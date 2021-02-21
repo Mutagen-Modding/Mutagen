@@ -3578,7 +3578,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.MenuDisplayObject) ?? true))
             {
-                item.MenuDisplayObject.SetTo(rhs.MenuDisplayObject);
+                item.MenuDisplayObject.SetTo(rhs.MenuDisplayObject.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Keywords) ?? true))
             {
@@ -3633,7 +3633,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastingLight) ?? true))
             {
-                item.CastingLight.SetTo(rhs.CastingLight);
+                item.CastingLight.SetTo(rhs.CastingLight.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.TaperWeight) ?? true))
             {
@@ -3641,11 +3641,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.HitShader) ?? true))
             {
-                item.HitShader.SetTo(rhs.HitShader);
+                item.HitShader.SetTo(rhs.HitShader.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.EnchantShader) ?? true))
             {
-                item.EnchantShader.SetTo(rhs.EnchantShader);
+                item.EnchantShader.SetTo(rhs.EnchantShader.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.MinimumSkillLevel) ?? true))
             {
@@ -3695,11 +3695,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Projectile) ?? true))
             {
-                item.Projectile.SetTo(rhs.Projectile);
+                item.Projectile.SetTo(rhs.Projectile.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Explosion) ?? true))
             {
-                item.Explosion.SetTo(rhs.Explosion);
+                item.Explosion.SetTo(rhs.Explosion.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastType) ?? true))
             {
@@ -3715,15 +3715,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastingArt) ?? true))
             {
-                item.CastingArt.SetTo(rhs.CastingArt);
+                item.CastingArt.SetTo(rhs.CastingArt.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.HitEffectArt) ?? true))
             {
-                item.HitEffectArt.SetTo(rhs.HitEffectArt);
+                item.HitEffectArt.SetTo(rhs.HitEffectArt.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ImpactData) ?? true))
             {
-                item.ImpactData.SetTo(rhs.ImpactData);
+                item.ImpactData.SetTo(rhs.ImpactData.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SkillUsageMultiplier) ?? true))
             {
@@ -3731,7 +3731,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.DualCastArt) ?? true))
             {
-                item.DualCastArt.SetTo(rhs.DualCastArt);
+                item.DualCastArt.SetTo(rhs.DualCastArt.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.DualCastScale) ?? true))
             {
@@ -3739,27 +3739,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.EnchantArt) ?? true))
             {
-                item.EnchantArt.SetTo(rhs.EnchantArt);
+                item.EnchantArt.SetTo(rhs.EnchantArt.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Unknown2) ?? true))
             {
-                item.Unknown2.SetTo(rhs.Unknown2);
+                item.Unknown2.SetTo(rhs.Unknown2.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Unknown3) ?? true))
             {
-                item.Unknown3.SetTo(rhs.Unknown3);
+                item.Unknown3.SetTo(rhs.Unknown3.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.EquipAbility) ?? true))
             {
-                item.EquipAbility.SetTo(rhs.EquipAbility);
+                item.EquipAbility.SetTo(rhs.EquipAbility.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ImageSpaceModifier) ?? true))
             {
-                item.ImageSpaceModifier.SetTo(rhs.ImageSpaceModifier);
+                item.ImageSpaceModifier.SetTo(rhs.ImageSpaceModifier.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.PerkToApply) ?? true))
             {
-                item.PerkToApply.SetTo(rhs.PerkToApply);
+                item.PerkToApply.SetTo(rhs.PerkToApply.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastingSoundLevel) ?? true))
             {

@@ -910,7 +910,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)Ownership_FieldIndex.Owner) ?? true))
             {
-                item.Owner.SetTo(rhs.Owner);
+                item.Owner.SetTo(rhs.Owner.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Ownership_FieldIndex.FactionRank) ?? true))
             {

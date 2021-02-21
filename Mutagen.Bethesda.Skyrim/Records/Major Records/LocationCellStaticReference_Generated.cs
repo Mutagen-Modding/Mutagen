@@ -980,15 +980,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)LocationCellStaticReference_FieldIndex.LocationRefType) ?? true))
             {
-                item.LocationRefType.SetTo(rhs.LocationRefType);
+                item.LocationRefType.SetTo(rhs.LocationRefType.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LocationCellStaticReference_FieldIndex.Marker) ?? true))
             {
-                item.Marker.SetTo(rhs.Marker);
+                item.Marker.SetTo(rhs.Marker.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LocationCellStaticReference_FieldIndex.Location) ?? true))
             {
-                item.Location.SetTo(rhs.Location);
+                item.Location.SetTo(rhs.Location.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LocationCellStaticReference_FieldIndex.Grid) ?? true))
             {

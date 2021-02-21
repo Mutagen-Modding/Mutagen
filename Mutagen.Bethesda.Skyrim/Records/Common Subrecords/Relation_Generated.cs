@@ -935,7 +935,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)Relation_FieldIndex.Target) ?? true))
             {
-                item.Target.SetTo(rhs.Target);
+                item.Target.SetTo(rhs.Target.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Relation_FieldIndex.Modifier) ?? true))
             {

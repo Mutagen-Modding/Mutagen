@@ -1646,7 +1646,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LoadScreen_FieldIndex.LoadingScreenNif) ?? true))
             {
-                item.LoadingScreenNif.SetTo(rhs.LoadingScreenNif);
+                item.LoadingScreenNif.SetTo(rhs.LoadingScreenNif.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LoadScreen_FieldIndex.InitialScale) ?? true))
             {

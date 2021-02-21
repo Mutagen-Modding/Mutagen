@@ -914,7 +914,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)HeadPartReference_FieldIndex.Head) ?? true))
             {
-                item.Head.SetTo(rhs.Head);
+                item.Head.SetTo(rhs.Head.FormKeyNullable);
             }
         }
         

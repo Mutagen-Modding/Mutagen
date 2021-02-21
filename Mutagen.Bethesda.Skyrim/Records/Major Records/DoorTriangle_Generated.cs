@@ -938,7 +938,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DoorTriangle_FieldIndex.Door) ?? true))
             {
-                item.Door.SetTo(rhs.Door);
+                item.Door.SetTo(rhs.Door.FormKey);
             }
         }
         

@@ -1832,11 +1832,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.Ingredient) ?? true))
             {
-                item.Ingredient.SetTo(rhs.Ingredient);
+                item.Ingredient.SetTo(rhs.Ingredient.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.HarvestSound) ?? true))
             {
-                item.HarvestSound.SetTo(rhs.HarvestSound);
+                item.HarvestSound.SetTo(rhs.HarvestSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.Production) ?? true))
             {

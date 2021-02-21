@@ -888,7 +888,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)WorldspaceReference_FieldIndex.Reference) ?? true))
             {
-                item.Reference.SetTo(rhs.Reference);
+                item.Reference.SetTo(rhs.Reference.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)WorldspaceReference_FieldIndex.Position) ?? true))
             {

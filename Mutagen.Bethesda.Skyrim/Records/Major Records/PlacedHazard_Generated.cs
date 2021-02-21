@@ -1266,7 +1266,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PlacedHazard_FieldIndex.Hazard) ?? true))
             {
-                item.Hazard.SetTo(rhs.Hazard);
+                item.Hazard.SetTo(rhs.Hazard.FormKey);
             }
         }
         

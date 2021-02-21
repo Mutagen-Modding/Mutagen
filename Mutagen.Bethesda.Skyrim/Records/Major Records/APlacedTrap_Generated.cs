@@ -2478,7 +2478,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.EncounterZone) ?? true))
             {
-                item.EncounterZone.SetTo(rhs.EncounterZone);
+                item.EncounterZone.SetTo(rhs.EncounterZone.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.Ownership) ?? true))
             {
@@ -2616,11 +2616,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.Emittance) ?? true))
             {
-                item.Emittance.SetTo(rhs.Emittance);
+                item.Emittance.SetTo(rhs.Emittance.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.MultiBoundReference) ?? true))
             {
-                item.MultiBoundReference.SetTo(rhs.MultiBoundReference);
+                item.MultiBoundReference.SetTo(rhs.MultiBoundReference.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.IgnoredBySandbox) ?? true))
             {
@@ -2662,7 +2662,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.LocationReference) ?? true))
             {
-                item.LocationReference.SetTo(rhs.LocationReference);
+                item.LocationReference.SetTo(rhs.LocationReference.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.DistantLodData) ?? true))
             {

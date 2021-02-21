@@ -1316,7 +1316,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)MaterialType_FieldIndex.Parent) ?? true))
             {
-                item.Parent.SetTo(rhs.Parent);
+                item.Parent.SetTo(rhs.Parent.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)MaterialType_FieldIndex.Name) ?? true))
             {
@@ -1336,7 +1336,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MaterialType_FieldIndex.HavokImpactDataSet) ?? true))
             {
-                item.HavokImpactDataSet.SetTo(rhs.HavokImpactDataSet);
+                item.HavokImpactDataSet.SetTo(rhs.HavokImpactDataSet.FormKeyNullable);
             }
         }
         

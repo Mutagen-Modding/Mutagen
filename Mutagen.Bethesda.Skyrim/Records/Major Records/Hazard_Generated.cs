@@ -1826,7 +1826,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.ImageSpaceModifier) ?? true))
             {
-                item.ImageSpaceModifier.SetTo(rhs.ImageSpaceModifier);
+                item.ImageSpaceModifier.SetTo(rhs.ImageSpaceModifier.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.Limit) ?? true))
             {
@@ -1854,19 +1854,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.Spell) ?? true))
             {
-                item.Spell.SetTo(rhs.Spell);
+                item.Spell.SetTo(rhs.Spell.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.Light) ?? true))
             {
-                item.Light.SetTo(rhs.Light);
+                item.Light.SetTo(rhs.Light.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.ImpactDataSet) ?? true))
             {
-                item.ImpactDataSet.SetTo(rhs.ImpactDataSet);
+                item.ImpactDataSet.SetTo(rhs.ImpactDataSet.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.Sound) ?? true))
             {
-                item.Sound.SetTo(rhs.Sound);
+                item.Sound.SetTo(rhs.Sound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.DATADataTypeState) ?? true))
             {

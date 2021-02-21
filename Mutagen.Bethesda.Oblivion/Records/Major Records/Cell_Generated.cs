@@ -3854,15 +3854,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Climate) ?? true))
             {
-                item.Climate.SetTo(rhs.Climate);
+                item.Climate.SetTo(rhs.Climate.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Water) ?? true))
             {
-                item.Water.SetTo(rhs.Water);
+                item.Water.SetTo(rhs.Water.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Owner) ?? true))
             {
-                item.Owner.SetTo(rhs.Owner);
+                item.Owner.SetTo(rhs.Owner.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.FactionRank) ?? true))
             {
@@ -3870,7 +3870,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.GlobalVariable) ?? true))
             {
-                item.GlobalVariable.SetTo(rhs.GlobalVariable);
+                item.GlobalVariable.SetTo(rhs.GlobalVariable.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.PathGrid) ?? true))
             {

@@ -1476,11 +1476,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.TextureSet) ?? true))
             {
-                item.TextureSet.SetTo(rhs.TextureSet);
+                item.TextureSet.SetTo(rhs.TextureSet.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.MaterialType) ?? true))
             {
-                item.MaterialType.SetTo(rhs.MaterialType);
+                item.MaterialType.SetTo(rhs.MaterialType.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.HavokFriction) ?? true))
             {

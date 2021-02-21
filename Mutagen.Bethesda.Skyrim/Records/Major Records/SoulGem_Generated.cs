@@ -2035,11 +2035,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SoulGem_FieldIndex.PickUpSound) ?? true))
             {
-                item.PickUpSound.SetTo(rhs.PickUpSound);
+                item.PickUpSound.SetTo(rhs.PickUpSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)SoulGem_FieldIndex.PutDownSound) ?? true))
             {
-                item.PutDownSound.SetTo(rhs.PutDownSound);
+                item.PutDownSound.SetTo(rhs.PutDownSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Keywords) ?? true))
             {
@@ -2086,7 +2086,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SoulGem_FieldIndex.LinkedTo) ?? true))
             {
-                item.LinkedTo.SetTo(rhs.LinkedTo);
+                item.LinkedTo.SetTo(rhs.LinkedTo.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)SoulGem_FieldIndex.DATADataTypeState) ?? true))
             {

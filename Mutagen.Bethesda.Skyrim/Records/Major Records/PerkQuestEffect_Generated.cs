@@ -977,7 +977,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PerkQuestEffect_FieldIndex.Quest) ?? true))
             {
-                item.Quest.SetTo(rhs.Quest);
+                item.Quest.SetTo(rhs.Quest.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PerkQuestEffect_FieldIndex.Stage) ?? true))
             {

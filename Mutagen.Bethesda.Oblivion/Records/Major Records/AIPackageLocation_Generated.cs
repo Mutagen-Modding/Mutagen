@@ -939,7 +939,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AIPackageLocation_FieldIndex.LocationReference) ?? true))
             {
-                item.LocationReference.SetTo(rhs.LocationReference);
+                item.LocationReference.SetTo(rhs.LocationReference.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)AIPackageLocation_FieldIndex.Radius) ?? true))
             {

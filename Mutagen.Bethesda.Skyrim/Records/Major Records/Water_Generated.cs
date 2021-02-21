@@ -4190,19 +4190,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Material) ?? true))
             {
-                item.Material.SetTo(rhs.Material);
+                item.Material.SetTo(rhs.Material.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.OpenSound) ?? true))
             {
-                item.OpenSound.SetTo(rhs.OpenSound);
+                item.OpenSound.SetTo(rhs.OpenSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Spell) ?? true))
             {
-                item.Spell.SetTo(rhs.Spell);
+                item.Spell.SetTo(rhs.Spell.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.ImageSpace) ?? true))
             {
-                item.ImageSpace.SetTo(rhs.ImageSpace);
+                item.ImageSpace.SetTo(rhs.ImageSpace.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.DamagePerSecond) ?? true))
             {

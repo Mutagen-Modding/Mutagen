@@ -3018,11 +3018,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.DeathItem) ?? true))
             {
-                item.DeathItem.SetTo(rhs.DeathItem);
+                item.DeathItem.SetTo(rhs.DeathItem.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Race) ?? true))
             {
-                item.Race.SetTo(rhs.Race);
+                item.Race.SetTo(rhs.Race.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Spells) ?? true))
             {
@@ -3045,7 +3045,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Script) ?? true))
             {
-                item.Script.SetTo(rhs.Script);
+                item.Script.SetTo(rhs.Script.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Items) ?? true))
             {
@@ -3144,7 +3144,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Class) ?? true))
             {
-                item.Class.SetTo(rhs.Class);
+                item.Class.SetTo(rhs.Class.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Stats) ?? true))
             {
@@ -3174,7 +3174,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Hair) ?? true))
             {
-                item.Hair.SetTo(rhs.Hair);
+                item.Hair.SetTo(rhs.Hair.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.HairLength) ?? true))
             {
@@ -3213,7 +3213,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.CombatStyle) ?? true))
             {
-                item.CombatStyle.SetTo(rhs.CombatStyle);
+                item.CombatStyle.SetTo(rhs.CombatStyle.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.FaceGenGeometrySymmetric) ?? true))
             {

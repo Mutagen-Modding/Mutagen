@@ -1202,7 +1202,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)DialogBranch_FieldIndex.Quest) ?? true))
             {
-                item.Quest.SetTo(rhs.Quest);
+                item.Quest.SetTo(rhs.Quest.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogBranch_FieldIndex.TNAM) ?? true))
             {
@@ -1214,7 +1214,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogBranch_FieldIndex.StartingTopic) ?? true))
             {
-                item.StartingTopic.SetTo(rhs.StartingTopic);
+                item.StartingTopic.SetTo(rhs.StartingTopic.FormKeyNullable);
             }
         }
         

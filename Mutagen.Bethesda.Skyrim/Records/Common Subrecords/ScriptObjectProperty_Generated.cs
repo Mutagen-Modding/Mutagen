@@ -959,7 +959,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)ScriptObjectProperty_FieldIndex.Object) ?? true))
             {
-                item.Object.SetTo(rhs.Object);
+                item.Object.SetTo(rhs.Object.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ScriptObjectProperty_FieldIndex.Alias) ?? true))
             {

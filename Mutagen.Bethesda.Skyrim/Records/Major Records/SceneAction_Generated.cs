@@ -1814,7 +1814,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SceneAction_FieldIndex.Topic) ?? true))
             {
-                item.Topic.SetTo(rhs.Topic);
+                item.Topic.SetTo(rhs.Topic.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)SceneAction_FieldIndex.HeadtrackActorID) ?? true))
             {

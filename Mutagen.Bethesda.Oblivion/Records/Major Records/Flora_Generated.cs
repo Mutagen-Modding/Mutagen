@@ -1315,11 +1315,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Script) ?? true))
             {
-                item.Script.SetTo(rhs.Script);
+                item.Script.SetTo(rhs.Script.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Ingredient) ?? true))
             {
-                item.Ingredient.SetTo(rhs.Ingredient);
+                item.Ingredient.SetTo(rhs.Ingredient.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.SeasonalIngredientProduction) ?? true))
             {

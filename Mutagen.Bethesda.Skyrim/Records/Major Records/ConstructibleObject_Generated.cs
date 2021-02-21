@@ -1519,11 +1519,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.CreatedObject) ?? true))
             {
-                item.CreatedObject.SetTo(rhs.CreatedObject);
+                item.CreatedObject.SetTo(rhs.CreatedObject.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.WorkbenchKeyword) ?? true))
             {
-                item.WorkbenchKeyword.SetTo(rhs.WorkbenchKeyword);
+                item.WorkbenchKeyword.SetTo(rhs.WorkbenchKeyword.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.CreatedObjectCount) ?? true))
             {

@@ -118,7 +118,7 @@ namespace Mutagen.Bethesda.Generation
                 if (this.Nullable
                     || deepCopy)
                 {
-                    fg.AppendLine($"{accessor}.SetTo({rhs});");
+                    fg.AppendLine($"{accessor}.SetTo({rhs}.{FormIDTypeString});");
                 }
                 else
                 {

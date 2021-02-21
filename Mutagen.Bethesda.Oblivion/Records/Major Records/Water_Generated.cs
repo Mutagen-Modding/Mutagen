@@ -1384,7 +1384,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Sound) ?? true))
             {
-                item.Sound.SetTo(rhs.Sound);
+                item.Sound.SetTo(rhs.Sound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Data) ?? true))
             {

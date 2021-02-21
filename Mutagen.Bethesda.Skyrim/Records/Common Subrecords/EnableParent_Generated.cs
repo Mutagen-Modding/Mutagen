@@ -994,7 +994,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)EnableParent_FieldIndex.Reference) ?? true))
             {
-                item.Reference.SetTo(rhs.Reference);
+                item.Reference.SetTo(rhs.Reference.FormKey);
             }
             if (rhs.Versioning.HasFlag(EnableParent.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)EnableParent_FieldIndex.Flags) ?? true))

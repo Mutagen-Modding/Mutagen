@@ -1247,15 +1247,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.AmbientSound) ?? true))
             {
-                item.AmbientSound.SetTo(rhs.AmbientSound);
+                item.AmbientSound.SetTo(rhs.AmbientSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.UseSoundFromRegion) ?? true))
             {
-                item.UseSoundFromRegion.SetTo(rhs.UseSoundFromRegion);
+                item.UseSoundFromRegion.SetTo(rhs.UseSoundFromRegion.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.EnvironmentType) ?? true))
             {
-                item.EnvironmentType.SetTo(rhs.EnvironmentType);
+                item.EnvironmentType.SetTo(rhs.EnvironmentType.FormKeyNullable);
             }
         }
         

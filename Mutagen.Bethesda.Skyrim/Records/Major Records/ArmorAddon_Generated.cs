@@ -2021,7 +2021,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Race) ?? true))
             {
-                item.Race.SetTo(rhs.Race);
+                item.Race.SetTo(rhs.Race.FormKeyNullable);
             }
             item.Priority = new GenderedItem<Byte>(
                 male: rhs.Priority.Male,
@@ -2114,11 +2114,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.FootstepSound) ?? true))
             {
-                item.FootstepSound.SetTo(rhs.FootstepSound);
+                item.FootstepSound.SetTo(rhs.FootstepSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.ArtObject) ?? true))
             {
-                item.ArtObject.SetTo(rhs.ArtObject);
+                item.ArtObject.SetTo(rhs.ArtObject.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.DNAMDataTypeState) ?? true))
             {

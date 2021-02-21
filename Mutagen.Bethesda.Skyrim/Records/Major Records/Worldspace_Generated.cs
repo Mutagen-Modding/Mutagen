@@ -4868,15 +4868,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.InteriorLighting) ?? true))
             {
-                item.InteriorLighting.SetTo(rhs.InteriorLighting);
+                item.InteriorLighting.SetTo(rhs.InteriorLighting.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.EncounterZone) ?? true))
             {
-                item.EncounterZone.SetTo(rhs.EncounterZone);
+                item.EncounterZone.SetTo(rhs.EncounterZone.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Location) ?? true))
             {
-                item.Location.SetTo(rhs.Location);
+                item.Location.SetTo(rhs.Location.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Parent) ?? true))
             {
@@ -4906,15 +4906,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Climate) ?? true))
             {
-                item.Climate.SetTo(rhs.Climate);
+                item.Climate.SetTo(rhs.Climate.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Water) ?? true))
             {
-                item.Water.SetTo(rhs.Water);
+                item.Water.SetTo(rhs.Water.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.LodWater) ?? true))
             {
-                item.LodWater.SetTo(rhs.LodWater);
+                item.LodWater.SetTo(rhs.LodWater.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.LodWaterHeight) ?? true))
             {
@@ -5060,7 +5060,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Music) ?? true))
             {
-                item.Music.SetTo(rhs.Music);
+                item.Music.SetTo(rhs.Music.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.CanopyShadow) ?? true))
             {

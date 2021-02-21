@@ -1665,7 +1665,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.NavigationMesh) ?? true))
             {
-                item.NavigationMesh.SetTo(rhs.NavigationMesh);
+                item.NavigationMesh.SetTo(rhs.NavigationMesh.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.Unknown) ?? true))
             {
@@ -1773,7 +1773,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.ParentWorldspace) ?? true))
             {
-                item.ParentWorldspace.SetTo(rhs.ParentWorldspace);
+                item.ParentWorldspace.SetTo(rhs.ParentWorldspace.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.ParentWorldspaceCoord) ?? true))
             {
@@ -1781,7 +1781,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.ParentCell) ?? true))
             {
-                item.ParentCell.SetTo(rhs.ParentCell);
+                item.ParentCell.SetTo(rhs.ParentCell.FormKey);
             }
         }
         

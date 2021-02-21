@@ -939,7 +939,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)ConditionGlobal_FieldIndex.ComparisonValue) ?? true))
             {
-                item.ComparisonValue.SetTo(rhs.ComparisonValue);
+                item.ComparisonValue.SetTo(rhs.ComparisonValue.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ConditionGlobal_FieldIndex.Data) ?? true))
             {

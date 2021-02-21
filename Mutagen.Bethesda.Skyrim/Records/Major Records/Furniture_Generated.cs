@@ -2173,7 +2173,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.InteractionKeyword) ?? true))
             {
-                item.InteractionKeyword.SetTo(rhs.InteractionKeyword);
+                item.InteractionKeyword.SetTo(rhs.InteractionKeyword.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.WorkbenchData) ?? true))
             {
@@ -2203,7 +2203,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.AssociatedSpell) ?? true))
             {
-                item.AssociatedSpell.SetTo(rhs.AssociatedSpell);
+                item.AssociatedSpell.SetTo(rhs.AssociatedSpell.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.Markers) ?? true))
             {

@@ -2036,15 +2036,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.LoopingSound) ?? true))
             {
-                item.LoopingSound.SetTo(rhs.LoopingSound);
+                item.LoopingSound.SetTo(rhs.LoopingSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.ActivationSound) ?? true))
             {
-                item.ActivationSound.SetTo(rhs.ActivationSound);
+                item.ActivationSound.SetTo(rhs.ActivationSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.WaterType) ?? true))
             {
-                item.WaterType.SetTo(rhs.WaterType);
+                item.WaterType.SetTo(rhs.WaterType.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.ActivateTextOverride) ?? true))
             {
@@ -2056,7 +2056,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.InteractionKeyword) ?? true))
             {
-                item.InteractionKeyword.SetTo(rhs.InteractionKeyword);
+                item.InteractionKeyword.SetTo(rhs.InteractionKeyword.FormKeyNullable);
             }
         }
         

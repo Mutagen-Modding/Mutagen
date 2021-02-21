@@ -897,11 +897,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)ImpactData_FieldIndex.Material) ?? true))
             {
-                item.Material.SetTo(rhs.Material);
+                item.Material.SetTo(rhs.Material.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ImpactData_FieldIndex.Impact) ?? true))
             {
-                item.Impact.SetTo(rhs.Impact);
+                item.Impact.SetTo(rhs.Impact.FormKey);
             }
         }
         

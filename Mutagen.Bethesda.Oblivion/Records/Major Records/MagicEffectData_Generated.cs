@@ -1342,7 +1342,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.Light) ?? true))
             {
-                item.Light.SetTo(rhs.Light);
+                item.Light.SetTo(rhs.Light.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.ProjectileSpeed) ?? true))
             {
@@ -1350,7 +1350,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.EffectShader) ?? true))
             {
-                item.EffectShader.SetTo(rhs.EffectShader);
+                item.EffectShader.SetTo(rhs.EffectShader.FormKey);
             }
             if (rhs.Versioning.HasFlag(MagicEffectData.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.SubData) ?? true))

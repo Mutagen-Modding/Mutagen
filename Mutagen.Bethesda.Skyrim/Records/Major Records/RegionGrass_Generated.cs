@@ -888,7 +888,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)RegionGrass_FieldIndex.Grass) ?? true))
             {
-                item.Grass.SetTo(rhs.Grass);
+                item.Grass.SetTo(rhs.Grass.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)RegionGrass_FieldIndex.Unknown) ?? true))
             {

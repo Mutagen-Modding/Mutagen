@@ -908,11 +908,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)NpcOwner_FieldIndex.Npc) ?? true))
             {
-                item.Npc.SetTo(rhs.Npc);
+                item.Npc.SetTo(rhs.Npc.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)NpcOwner_FieldIndex.Global) ?? true))
             {
-                item.Global.SetTo(rhs.Global);
+                item.Global.SetTo(rhs.Global.FormKey);
             }
         }
         

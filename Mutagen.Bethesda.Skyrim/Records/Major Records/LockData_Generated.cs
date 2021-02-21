@@ -1043,7 +1043,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LockData_FieldIndex.Key) ?? true))
             {
-                item.Key.SetTo(rhs.Key);
+                item.Key.SetTo(rhs.Key.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LockData_FieldIndex.Flags) ?? true))
             {

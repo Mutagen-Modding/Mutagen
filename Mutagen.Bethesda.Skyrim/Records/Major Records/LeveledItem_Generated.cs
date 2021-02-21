@@ -1402,7 +1402,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.Global) ?? true))
             {
-                item.Global.SetTo(rhs.Global);
+                item.Global.SetTo(rhs.Global.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.Entries) ?? true))
             {

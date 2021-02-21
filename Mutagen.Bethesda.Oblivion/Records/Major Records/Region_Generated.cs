@@ -1645,7 +1645,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.Worldspace) ?? true))
             {
-                item.Worldspace.SetTo(rhs.Worldspace);
+                item.Worldspace.SetTo(rhs.Worldspace.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.Areas) ?? true))
             {

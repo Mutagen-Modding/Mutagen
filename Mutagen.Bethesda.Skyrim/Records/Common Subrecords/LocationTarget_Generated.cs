@@ -855,7 +855,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)LocationTarget_FieldIndex.Link) ?? true))
             {
-                item.Link.SetTo(rhs.Link);
+                item.Link.SetTo(rhs.Link.FormKey);
             }
         }
         

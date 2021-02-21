@@ -935,7 +935,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)NavigationDoorLink_FieldIndex.NavMesh) ?? true))
             {
-                item.NavMesh.SetTo(rhs.NavMesh);
+                item.NavMesh.SetTo(rhs.NavMesh.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)NavigationDoorLink_FieldIndex.NavMeshTriangleIndex) ?? true))
             {

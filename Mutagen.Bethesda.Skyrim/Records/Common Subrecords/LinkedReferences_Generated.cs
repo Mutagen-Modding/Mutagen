@@ -950,12 +950,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LinkedReferences_FieldIndex.KeywordOrReference) ?? true))
             {
-                item.KeywordOrReference.SetTo(rhs.KeywordOrReference);
+                item.KeywordOrReference.SetTo(rhs.KeywordOrReference.FormKey);
             }
             if (rhs.Versioning.HasFlag(LinkedReferences.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)LinkedReferences_FieldIndex.Reference) ?? true))
             {
-                item.Reference.SetTo(rhs.Reference);
+                item.Reference.SetTo(rhs.Reference.FormKey);
             }
         }
         

@@ -1027,7 +1027,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledSpellEntryData_FieldIndex.Reference) ?? true))
             {
-                item.Reference.SetTo(rhs.Reference);
+                item.Reference.SetTo(rhs.Reference.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledSpellEntryData_FieldIndex.Count) ?? true))
             {

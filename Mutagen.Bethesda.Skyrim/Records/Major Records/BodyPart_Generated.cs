@@ -2310,11 +2310,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableDebris) ?? true))
             {
-                item.ExplodableDebris.SetTo(rhs.ExplodableDebris);
+                item.ExplodableDebris.SetTo(rhs.ExplodableDebris.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableExplosion) ?? true))
             {
-                item.ExplodableExplosion.SetTo(rhs.ExplodableExplosion);
+                item.ExplodableExplosion.SetTo(rhs.ExplodableExplosion.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.TrackingMaxAngle) ?? true))
             {
@@ -2330,11 +2330,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.SeverableDebris) ?? true))
             {
-                item.SeverableDebris.SetTo(rhs.SeverableDebris);
+                item.SeverableDebris.SetTo(rhs.SeverableDebris.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.SeverableExplosion) ?? true))
             {
-                item.SeverableExplosion.SetTo(rhs.SeverableExplosion);
+                item.SeverableExplosion.SetTo(rhs.SeverableExplosion.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.SeverableDebrisScale) ?? true))
             {
@@ -2350,11 +2350,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.SeverableImpactData) ?? true))
             {
-                item.SeverableImpactData.SetTo(rhs.SeverableImpactData);
+                item.SeverableImpactData.SetTo(rhs.SeverableImpactData.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableImpactData) ?? true))
             {
-                item.ExplodableImpactData.SetTo(rhs.ExplodableImpactData);
+                item.ExplodableImpactData.SetTo(rhs.ExplodableImpactData.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.SeverableDecalCount) ?? true))
             {

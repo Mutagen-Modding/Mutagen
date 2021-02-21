@@ -928,7 +928,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)RaceMovementType_FieldIndex.MovementType) ?? true))
             {
-                item.MovementType.SetTo(rhs.MovementType);
+                item.MovementType.SetTo(rhs.MovementType.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)RaceMovementType_FieldIndex.Overrides) ?? true))
             {

@@ -1426,7 +1426,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Enchantment) ?? true))
             {
-                item.Enchantment.SetTo(rhs.Enchantment);
+                item.Enchantment.SetTo(rhs.Enchantment.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.EnchantmentPoints) ?? true))
             {

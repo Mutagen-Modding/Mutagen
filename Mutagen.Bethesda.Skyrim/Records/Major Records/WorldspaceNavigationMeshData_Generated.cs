@@ -964,7 +964,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)WorldspaceNavigationMeshData_FieldIndex.Parent) ?? true))
             {
-                item.Parent.SetTo(rhs.Parent);
+                item.Parent.SetTo(rhs.Parent.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)WorldspaceNavigationMeshData_FieldIndex.Coordinates) ?? true))
             {

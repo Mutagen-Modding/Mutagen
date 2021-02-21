@@ -1798,15 +1798,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)HeadPart_FieldIndex.TextureSet) ?? true))
             {
-                item.TextureSet.SetTo(rhs.TextureSet);
+                item.TextureSet.SetTo(rhs.TextureSet.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)HeadPart_FieldIndex.Color) ?? true))
             {
-                item.Color.SetTo(rhs.Color);
+                item.Color.SetTo(rhs.Color.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)HeadPart_FieldIndex.ValidRaces) ?? true))
             {
-                item.ValidRaces.SetTo(rhs.ValidRaces);
+                item.ValidRaces.SetTo(rhs.ValidRaces.FormKeyNullable);
             }
         }
         

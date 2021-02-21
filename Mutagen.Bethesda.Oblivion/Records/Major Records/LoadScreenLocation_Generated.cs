@@ -939,11 +939,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)LoadScreenLocation_FieldIndex.Direct) ?? true))
             {
-                item.Direct.SetTo(rhs.Direct);
+                item.Direct.SetTo(rhs.Direct.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LoadScreenLocation_FieldIndex.Indirect) ?? true))
             {
-                item.Indirect.SetTo(rhs.Indirect);
+                item.Indirect.SetTo(rhs.Indirect.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LoadScreenLocation_FieldIndex.GridPoint) ?? true))
             {

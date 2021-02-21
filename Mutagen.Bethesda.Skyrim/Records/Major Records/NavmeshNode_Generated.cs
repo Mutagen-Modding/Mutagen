@@ -888,7 +888,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)NavmeshNode_FieldIndex.NavMesh) ?? true))
             {
-                item.NavMesh.SetTo(rhs.NavMesh);
+                item.NavMesh.SetTo(rhs.NavMesh.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)NavmeshNode_FieldIndex.NodeIndex) ?? true))
             {

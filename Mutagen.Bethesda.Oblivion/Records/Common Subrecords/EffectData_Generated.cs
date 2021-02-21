@@ -1059,7 +1059,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)EffectData_FieldIndex.MagicEffect) ?? true))
             {
-                item.MagicEffect.SetTo(rhs.MagicEffect);
+                item.MagicEffect.SetTo(rhs.MagicEffect.EDID);
             }
             if ((copyMask?.GetShouldTranslate((int)EffectData_FieldIndex.Magnitude) ?? true))
             {

@@ -1031,7 +1031,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)ScriptEffectData_FieldIndex.Script) ?? true))
             {
-                item.Script.SetTo(rhs.Script);
+                item.Script.SetTo(rhs.Script.FormKey);
             }
             if (rhs.Versioning.HasFlag(ScriptEffectData.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)ScriptEffectData_FieldIndex.MagicSchool) ?? true))
@@ -1040,7 +1040,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)ScriptEffectData_FieldIndex.VisualEffect) ?? true))
             {
-                item.VisualEffect.SetTo(rhs.VisualEffect);
+                item.VisualEffect.SetTo(rhs.VisualEffect.EDID);
             }
             if (rhs.Versioning.HasFlag(ScriptEffectData.VersioningBreaks.Break1)) return;
             if ((copyMask?.GetShouldTranslate((int)ScriptEffectData_FieldIndex.Flags) ?? true))

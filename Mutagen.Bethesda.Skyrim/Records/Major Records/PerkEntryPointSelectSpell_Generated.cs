@@ -942,7 +942,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PerkEntryPointSelectSpell_FieldIndex.Spell) ?? true))
             {
-                item.Spell.SetTo(rhs.Spell);
+                item.Spell.SetTo(rhs.Spell.FormKey);
             }
         }
         

@@ -1283,7 +1283,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AttackData_FieldIndex.Spell) ?? true))
             {
-                item.Spell.SetTo(rhs.Spell);
+                item.Spell.SetTo(rhs.Spell.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)AttackData_FieldIndex.Flags) ?? true))
             {
@@ -1303,7 +1303,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AttackData_FieldIndex.AttackType) ?? true))
             {
-                item.AttackType.SetTo(rhs.AttackType);
+                item.AttackType.SetTo(rhs.AttackType.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)AttackData_FieldIndex.Knockdown) ?? true))
             {

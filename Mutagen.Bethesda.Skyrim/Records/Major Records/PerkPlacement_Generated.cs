@@ -943,7 +943,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)PerkPlacement_FieldIndex.Perk) ?? true))
             {
-                item.Perk.SetTo(rhs.Perk);
+                item.Perk.SetTo(rhs.Perk.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PerkPlacement_FieldIndex.Rank) ?? true))
             {

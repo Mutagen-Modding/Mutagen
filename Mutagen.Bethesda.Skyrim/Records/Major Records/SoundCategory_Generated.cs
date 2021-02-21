@@ -1296,7 +1296,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SoundCategory_FieldIndex.Parent) ?? true))
             {
-                item.Parent.SetTo(rhs.Parent);
+                item.Parent.SetTo(rhs.Parent.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)SoundCategory_FieldIndex.StaticVolumeMultiplier) ?? true))
             {

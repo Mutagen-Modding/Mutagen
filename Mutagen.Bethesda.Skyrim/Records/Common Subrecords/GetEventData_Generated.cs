@@ -1131,7 +1131,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)GetEventData_FieldIndex.Parameter3) ?? true))
             {
-                item.Parameter3.SetTo(rhs.Parameter3);
+                item.Parameter3.SetTo(rhs.Parameter3.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)GetEventData_FieldIndex.RunOnType) ?? true))
             {
@@ -1139,7 +1139,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)GetEventData_FieldIndex.Reference) ?? true))
             {
-                item.Reference.SetTo(rhs.Reference);
+                item.Reference.SetTo(rhs.Reference.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)GetEventData_FieldIndex.Unknown3) ?? true))
             {

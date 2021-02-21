@@ -1335,7 +1335,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)ActorValuePerkNode_FieldIndex.Perk) ?? true))
             {
-                item.Perk.SetTo(rhs.Perk);
+                item.Perk.SetTo(rhs.Perk.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ActorValuePerkNode_FieldIndex.FNAM) ?? true))
             {
@@ -1366,7 +1366,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)ActorValuePerkNode_FieldIndex.AssociatedSkill) ?? true))
             {
-                item.AssociatedSkill.SetTo(rhs.AssociatedSkill);
+                item.AssociatedSkill.SetTo(rhs.AssociatedSkill.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)ActorValuePerkNode_FieldIndex.ConnectionLineToIndices) ?? true))
             {

@@ -1052,7 +1052,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)FurnitureMarker_FieldIndex.MarkerKeyword) ?? true))
             {
-                item.MarkerKeyword.SetTo(rhs.MarkerKeyword);
+                item.MarkerKeyword.SetTo(rhs.MarkerKeyword.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)FurnitureMarker_FieldIndex.EntryPoints) ?? true))
             {

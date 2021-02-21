@@ -4535,11 +4535,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.Precipitation) ?? true))
             {
-                item.Precipitation.SetTo(rhs.Precipitation);
+                item.Precipitation.SetTo(rhs.Precipitation.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.VisualEffect) ?? true))
             {
-                item.VisualEffect.SetTo(rhs.VisualEffect);
+                item.VisualEffect.SetTo(rhs.VisualEffect.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.ONAM) ?? true))
             {
@@ -5204,7 +5204,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.SunGlareLensFlare) ?? true))
             {
-                item.SunGlareLensFlare.SetTo(rhs.SunGlareLensFlare);
+                item.SunGlareLensFlare.SetTo(rhs.SunGlareLensFlare.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.NAM0DataTypeState) ?? true))
             {

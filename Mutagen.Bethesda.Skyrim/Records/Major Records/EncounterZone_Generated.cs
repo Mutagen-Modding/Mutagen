@@ -1358,11 +1358,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.Owner) ?? true))
             {
-                item.Owner.SetTo(rhs.Owner);
+                item.Owner.SetTo(rhs.Owner.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.Location) ?? true))
             {
-                item.Location.SetTo(rhs.Location);
+                item.Location.SetTo(rhs.Location.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.Rank) ?? true))
             {

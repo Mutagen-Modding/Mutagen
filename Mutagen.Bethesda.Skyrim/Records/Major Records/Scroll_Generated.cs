@@ -2485,11 +2485,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.MenuDisplayObject) ?? true))
             {
-                item.MenuDisplayObject.SetTo(rhs.MenuDisplayObject);
+                item.MenuDisplayObject.SetTo(rhs.MenuDisplayObject.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.EquipmentType) ?? true))
             {
-                item.EquipmentType.SetTo(rhs.EquipmentType);
+                item.EquipmentType.SetTo(rhs.EquipmentType.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.Description) ?? true))
             {
@@ -2549,11 +2549,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.PickUpSound) ?? true))
             {
-                item.PickUpSound.SetTo(rhs.PickUpSound);
+                item.PickUpSound.SetTo(rhs.PickUpSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.PutDownSound) ?? true))
             {
-                item.PutDownSound.SetTo(rhs.PutDownSound);
+                item.PutDownSound.SetTo(rhs.PutDownSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.Value) ?? true))
             {
@@ -2597,7 +2597,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.HalfCostPerk) ?? true))
             {
-                item.HalfCostPerk.SetTo(rhs.HalfCostPerk);
+                item.HalfCostPerk.SetTo(rhs.HalfCostPerk.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.Effects) ?? true))
             {
