@@ -222,6 +222,7 @@ namespace Mutagen.Bethesda.UnitTests
             IFormLink<ISkyrimMajorRecordGetter> majRecordLink = new FormLink<ISkyrimMajorRecordGetter>();
             IFormLink<IKeywordGetter> keywordLink = new FormLink<IKeywordGetter>();
             majRecordLink.SetTo(keywordLink);
+            majRecordLink.TryResolve<IKeywordGetter>(cache, out var keyw);
         }
 
         [Fact]

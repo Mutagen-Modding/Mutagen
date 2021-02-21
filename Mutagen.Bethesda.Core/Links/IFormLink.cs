@@ -135,6 +135,25 @@ namespace Mutagen.Bethesda
         }
 
         /// <summary>
+        /// Attempts to locate link winning target record in given Link Cache.
+        /// </summary>
+        /// <param name="link">FormLink to resolve</param>
+        /// <param name="cache">Link Cache to resolve against</param>
+        /// <param name="majorRecord">Located record if successful</param>
+        /// <returns>True if link was resolved and a record was retrieved</returns>
+        /// <typeparam name="TMajor">Major Record type to resolve to</typeparam>
+        public static bool TryResolve<TMajor>(this IFormLinkGetter link, ILinkCache cache, [MaybeNullWhen(false)] out TMajor majorRecord)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            if (!link.FormKeyNullable.TryGet(out var formKey))
+            {
+                majorRecord = default;
+                return false;
+            }
+            return cache.TryResolve(formKey, out majorRecord);
+        }
+
+        /// <summary>
         /// Locates link winning target record in given Link Cache.
         /// </summary>
         /// <param name="link">Link to resolve</param>
