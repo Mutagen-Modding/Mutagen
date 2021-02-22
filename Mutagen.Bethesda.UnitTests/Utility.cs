@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.UnitTests
 
         public static TempFolder GetTempFolder(string folderName, [CallerMemberName] string testName = null)
         {
-            return new TempFolder(Path.Combine(Utility.TempFolderPath, folderName, testName!));
+            return TempFolder.FactoryByAddedPath(Path.Combine(Utility.TempFolderPath, folderName, testName!));
         }
     }
 }

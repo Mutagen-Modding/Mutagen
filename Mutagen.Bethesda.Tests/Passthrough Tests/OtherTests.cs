@@ -24,7 +24,7 @@ namespace Mutagen.Bethesda.Tests
                     Npcs = true
                 });
 
-            using var tmp = new TempFolder("Mutagen_Oblivion_Binary_GroupMask_Import");
+            using var tmp = TempFolder.FactoryByAddedPath("Mutagen_Oblivion_Binary_GroupMask_Import");
             var oblivionOutputPath = Path.Combine(tmp.Dir.Path, TestingConstants.OBLIVION_ESM);
             mod.WriteToBinary(oblivionOutputPath);
             var fileLocs = RecordLocator.GetFileLocations(oblivionOutputPath, constants: GameConstants.Get(GameRelease.Oblivion));
@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Tests
                     Mutagen.Bethesda.Oblivion.Constants.Oblivion,
                     Path.Combine(settings.DataFolderLocations.Oblivion, target.Path)));
 
-            using var tmp = new TempFolder("Mutagen_Oblivion_Binary_GroupMask_Export");
+            using var tmp = TempFolder.FactoryByAddedPath("Mutagen_Oblivion_Binary_GroupMask_Export");
             var oblivionOutputPath = Path.Combine(tmp.Dir.Path, TestingConstants.OBLIVION_ESM);
             mod.WriteToBinary(
                 oblivionOutputPath,

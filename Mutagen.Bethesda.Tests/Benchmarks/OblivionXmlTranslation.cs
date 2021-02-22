@@ -35,7 +35,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
 
             // Setup folders and paths
             ModKey = new ModKey("Oblivion", ModType.Master);
-            TempFolder = new TempFolder(deleteAfter: true);
+            TempFolder = TempFolder.Factory(deleteAfter: true);
             DataPath = Path.Combine(Settings.DataFolderLocations.Oblivion, "Oblivion.esm");
             XmlFolder = new DirectoryPath(Path.Combine(TempFolder.Dir.Path, "Folder"));
             XmlFolder.Create();
@@ -92,7 +92,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
 
             // Setup folders and paths
             ModKey = new ModKey("Oblivion", ModType.Master);
-            TempFolder = new TempFolder(deleteAfter: true);
+            TempFolder = TempFolder.Factory(deleteAfter: true);
             DataPath = Path.Combine(Settings.DataFolderLocations.Oblivion, "Oblivion.esm");
             BinaryPath = Path.Combine(TempFolder.Dir.Path, "Oblivion.esm");
             OneTimeXmlFolder = new DirectoryPath(Path.Combine(TempFolder.Dir.Path, "OneTimeFolder"));
