@@ -344,5 +344,23 @@ namespace Mutagen.Bethesda
             return cache.ResolveAllContexts<TScopedSetter, TScopedGetter>(formKey);
         }
         #endregion
+
+        internal static bool EqualsWithInheritanceConsideration<TMajorGetter>(IFormLink<TMajorGetter> link, object? obj)
+            where TMajorGetter : class, IMajorRecordCommonGetter
+        {
+            if (obj is IFormLink<TMajorGetter> rhs)
+            {
+                return link.FormKey == rhs.FormKey;
+            }
+            else if (obj is IFormLink rhsLink
+                && rhsLink.TargetType.IsAssignableFrom(typeof(TMajorGetter)))
+            {
+                return link.FormKey == rhsLink.FormKey;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

@@ -26,7 +26,7 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// FormKey of the target record
         /// </summary>
-        public FormKey FormKey { get; private set; }
+        public FormKey FormKey { get; }
         
         Type ILink.TargetType => typeof(TMajorGetter);
 
@@ -43,15 +43,6 @@ namespace Mutagen.Bethesda
         public FormLink(FormKey formKey)
         {
             this.FormKey = formKey;
-        }
-
-        /// <summary>
-        /// Sets the link to the target FormKey
-        /// </summary>
-        /// <param name="formKey">Target FormKey to link to</param>
-        public void Set(FormKey formKey)
-        {
-            FormKey = formKey;
         }
 
         public static bool operator ==(FormLink<TMajorGetter> lhs, FormLink<TMajorGetter> rhs)
@@ -81,8 +72,7 @@ namespace Mutagen.Bethesda
         /// <returns>True if object is ILinkGetter and FormKeys match</returns>
         public override bool Equals(object? obj)
         {
-            if (obj is not IFormLink<TMajorGetter> rhs) return false;
-            return this.Equals(rhs);
+            return IFormLinkExt.EqualsWithInheritanceConsideration(this, obj);
         }
 
         /// <summary>

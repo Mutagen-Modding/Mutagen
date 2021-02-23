@@ -157,7 +157,7 @@ namespace Mutagen.Bethesda.Processing
             var constants = GameConstants.Get(release);
             var parsingBundle = new ParsingBundle(constants, MasterReferenceReader.FromPath(inputPath, release));
             var fileLocs = RecordLocator.GetFileLocations(inputPath.Path, release, interest);
-            temp ??= new TempFolder();
+            temp ??= TempFolder.Factory();
             using (temp)
             {
                 var alignedMajorRecordsFile = Path.Combine(temp.Dir.Path, "alignedRules");
