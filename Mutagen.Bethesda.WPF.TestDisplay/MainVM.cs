@@ -24,6 +24,8 @@ namespace Mutagen.Bethesda.WPF.TestDisplay
 
         public ObservableCollection<ModKeyItemViewModel> ModKeys { get; } = new ObservableCollection<ModKeyItemViewModel>();
 
+        public LateSetPickerVM LateSetPickerVM { get; }
+
         public MainVM()
         {
             var env = GameEnvironment.Typical.Skyrim(SkyrimRelease.SkyrimSE, LinkCachePreferences.OnlyIdentifiers())
@@ -31,6 +33,7 @@ namespace Mutagen.Bethesda.WPF.TestDisplay
             LinkCache = env.LinkCache;
             LoadOrder = env.LoadOrder;
             ScopedTypes = typeof(IArmorGetter).AsEnumerable();
+            LateSetPickerVM = new LateSetPickerVM(this);
         }
     }
 }

@@ -30,6 +30,9 @@
         <TabItem Header="Mod Key Multi Picker">
             <mutagenWpf:ModKeyMultiPicker x:Name="ModKeyMultiPicker" Margin="5" />
         </TabItem>
+        <TabItem Header="Late Set Picker">
+            <local:LateSetPicker x:Name="LateSetPicker" Margin="5" />
+        </TabItem>
     </TabControl>
 
 </local:MainViewBase>
