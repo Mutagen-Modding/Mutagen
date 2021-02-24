@@ -2,13 +2,12 @@
   <PropertyGroup>
     <Nullable>enable</Nullable>
     <LangVersion>preview</LangVersion>
-    <Version>0.26.1</Version>
   </PropertyGroup>
 
   <!-- To be redefined by GitInfo after restore. -->
   <Target Name="GitVersion" />
 
-  <!--<Target Name="SetVersion"
+  <Target Name="SetVersion"
 		  BeforeTargets="GetAssemblyVersion;GetPackageVersion"
 		  DependsOnTargets="GitVersion"
 		  Returns="$(PackageVersion)">
@@ -20,5 +19,5 @@
       <Version>$(GitBaseVersionMajor).$(GitBaseVersionMinor).$(GitBaseVersionPatch)$(AssemblyDevLabel)</Version>
       <InformationalVersion>$(PackageVersion)</InformationalVersion>
     </PropertyGroup>
-  </Target>-->
+  </Target>
 </Project>
