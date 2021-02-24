@@ -197,7 +197,6 @@ namespace Mutagen.Bethesda.WPF
             base.OnLoaded();
             this.WhenAnyValue(x => x.FormKey)
                 .DistinctUntilChanged()
-                .Skip(1)
                 .Where(x => !_updating)
                 .CombineLatest(
                     this.WhenAnyValue(
@@ -211,6 +210,7 @@ namespace Mutagen.Bethesda.WPF
                         Processing = true;
                     }
                 })
+                .Throttle(TimeSpan.FromMilliseconds(100), RxApp.MainThreadScheduler)
                 .ObserveOn(RxApp.TaskpoolScheduler)
                 .Select(x =>
                 {
@@ -305,6 +305,7 @@ namespace Mutagen.Bethesda.WPF
                         Processing = true;
                     }
                 })
+                .Throttle(TimeSpan.FromMilliseconds(100), RxApp.MainThreadScheduler)
                 .ObserveOn(RxApp.TaskpoolScheduler)
                 .Select(x =>
                 {

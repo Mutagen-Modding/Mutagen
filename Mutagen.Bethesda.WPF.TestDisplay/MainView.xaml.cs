@@ -1,19 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using ReactiveUI;
-using System.Windows.Shapes;
 using Noggog.WPF;
 using System.Reactive.Disposables;
-using System.Reactive.Linq;
 
 namespace Mutagen.Bethesda.WPF.TestDisplay
 {
@@ -62,6 +49,10 @@ namespace Mutagen.Bethesda.WPF.TestDisplay
 
                 this.WhenAnyValue(x => x.ViewModel!.LoadOrder)
                     .BindToStrict(this, x => x.ModKeyMultiPicker.SearchableMods)
+                    .DisposeWith(disposable);
+
+                this.WhenAnyValue(x => x.ViewModel!.LateSetPickerVM)
+                    .BindToStrict(this, x => x.LateSetPicker.DataContext)
                     .DisposeWith(disposable);
             });
         }
