@@ -197,7 +197,6 @@ namespace Mutagen.Bethesda.WPF
             base.OnLoaded();
             this.WhenAnyValue(x => x.FormKey)
                 .DistinctUntilChanged()
-                .Skip(1)
                 .Where(x => !_updating)
                 .CombineLatest(
                     this.WhenAnyValue(
