@@ -40,6 +40,7 @@
     <Compile Include="Enums\Level.cs" />
     <Compile Include="Enums\LockLevel.cs" />
     <Compile Include="Enums\Mood.cs" />
+    <Compile Include="Enums\QualityLevel.cs" />
     <Compile Include="Enums\Responsibility.cs" />
     <Compile Include="Enums\Size.cs" />
     <Compile Include="Enums\Skill.cs" />
@@ -131,9 +132,6 @@
     </Compile>
     <Compile Include="Records\Major Records\AddonNode.cs">
       <DependentUpon>AddonNode.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\AlchemicalApparatus.cs">
-      <DependentUpon>AlchemicalApparatus.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\AlphaLayer.cs">
       <DependentUpon>Landscape.xml</DependentUpon>
