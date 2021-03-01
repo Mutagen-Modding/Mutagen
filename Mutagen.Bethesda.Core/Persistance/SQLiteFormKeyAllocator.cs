@@ -24,11 +24,12 @@ namespace Mutagen.Bethesda.Core.Persistance
 
         private readonly DbSet<SQLiteFormKeyAllocatorPatcherRecord> Patchers;
 
-        public SQLiteFormKeyAllocator(IMod mod, string patcherName, string dbPath)
+        public SQLiteFormKeyAllocator(IMod mod, string dbPath) : this(mod, dbPath, mod.ModKey.FileName) { }
+
+        public SQLiteFormKeyAllocator(IMod mod, string dbPath, string patcherName)
         {
             Mod = mod;
 
-            Console.WriteLine($"Maintaining FormID allocation database in {dbPath}");
             ConnectionString = $"Data Source={dbPath}";
 
             this.Database.EnsureCreated();
@@ -94,7 +95,7 @@ namespace Mutagen.Bethesda.Core.Persistance
 
             lock (AllocatedEditorIDs)
                 if(!AllocatedEditorIDs.Add(editorID))
-                    throw new ConstraintException($"Attempted to allocate a duiplicate unique FormKey for {editorID}");
+                    throw new ConstraintException($"Attempted to allocate a duplicate unique FormKey for {editorID}");
 
             SQLiteFormKeyAllocatorFormIDRecord? rec;
 
@@ -133,12 +134,12 @@ namespace Mutagen.Bethesda.Core.Persistance
             }
         }
 
-        private object GetPatcherName(uint patcherID)
+        private string GetPatcherName(uint patcherID)
         {
             lock (this)
             {
                 // should be $"select PatcherName from Patchers where PatcherID = {patcherID}"
-                return Patchers.Where(r => r.PatcherID == patcherID).Select(r => r.PatcherName);
+                return Patchers.Where(r => r.PatcherID == patcherID).Select(r => r.PatcherName).Single();
             }
         }
 
