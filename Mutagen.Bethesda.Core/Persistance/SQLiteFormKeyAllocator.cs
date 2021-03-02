@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,34 +11,22 @@ namespace Mutagen.Bethesda.Core.Persistance
 
     record SQLiteFormKeyAllocatorPatcherRecord(uint PatcherID, string PatcherName);
 
-    class SQLiteFormKeyAllocator : DbContext, IFormKeyAllocator
+    internal class SQLiteFormKeyAllocatorDbContext : DbContext
     {
-        private readonly IMod Mod;
-
         private readonly string ConnectionString;
 
-        private readonly uint PatcherID;
+        internal readonly DbSet<SQLiteFormKeyAllocatorFormIDRecord> FormIDs;
 
-        private readonly HashSet<string> AllocatedEditorIDs = new();
+        internal readonly DbSet<SQLiteFormKeyAllocatorPatcherRecord> Patchers;
 
-        private readonly DbSet<SQLiteFormKeyAllocatorFormIDRecord> FormIDs;
-
-        private readonly DbSet<SQLiteFormKeyAllocatorPatcherRecord> Patchers;
-
-        public SQLiteFormKeyAllocator(IMod mod, string dbPath) : this(mod, dbPath, mod.ModKey.FileName) { }
-
-        public SQLiteFormKeyAllocator(IMod mod, string dbPath, string patcherName)
+        internal SQLiteFormKeyAllocatorDbContext(string dbPath)
         {
-            Mod = mod;
-
             ConnectionString = $"Data Source={dbPath}";
 
             this.Database.EnsureCreated();
 
             FormIDs = this.Set<SQLiteFormKeyAllocatorFormIDRecord>();
             Patchers = this.Set<SQLiteFormKeyAllocatorPatcherRecord>();
-
-            PatcherID = GetPatcherID(patcherName);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -64,28 +53,58 @@ namespace Mutagen.Bethesda.Core.Persistance
                 .HasForeignKey(r => r.PatcherID);
         }
 
+    }
+
+    public class SQLiteFormKeyAllocator : IFormKeyAllocator, IDisposable
+    {
+        private readonly IMod Mod;
+
+        private readonly uint PatcherID;
+
+        private readonly SQLiteFormKeyAllocatorDbContext Connection;
+
+        private bool disposedValue;
+
+        private HashSet<string> AllocatedEditorIDs = new();
+
+        private readonly bool manyPatchers = true;
+
+        public SQLiteFormKeyAllocator(IMod mod, string dbPath) : this(mod, dbPath, "")
+        {
+            manyPatchers = false;
+        }
+
+        public SQLiteFormKeyAllocator(IMod mod, string dbPath, string patcherName)
+        {
+            Mod = mod;
+            Connection = new SQLiteFormKeyAllocatorDbContext(dbPath);
+            PatcherID = GetOrAddPatcherID(patcherName);
+        }
+
+
         public FormKey GetNextFormKey()
         {
-            lock (Mod)
+            lock (Connection)
             {
-                var candidateFormID = Mod.NextFormID;
-                if (candidateFormID > 0xFFFFFF)
-                    throw new OverflowException();
-
-                // TODO maybe track ranges of allocated formIDs to make this go faster?
-                lock (this)
+                lock (Mod)
                 {
+                    var candidateFormID = Mod.NextFormID;
+                    if (candidateFormID > 0xFFFFFF)
+                        throw new OverflowException();
+
+                    // TODO maybe track ranges of allocated formIDs to make this go faster?
+
                     // should be $"select 1 from FormIDs where FormID = {candidateFormID}"
-                    while (FormIDs.Any(r => r.FormID == candidateFormID)) {
+                    while (Connection.FormIDs.Any(r => r.FormID == candidateFormID)) {
                         candidateFormID++;
                         if (candidateFormID > 0xFFFFFF)
                             throw new OverflowException();
                     }
+
+                    Mod.NextFormID = candidateFormID + 1;
+
+                    return new FormKey(Mod.ModKey, candidateFormID);
                 }
-
-                Mod.NextFormID = candidateFormID + 1;
-
-                return new FormKey(Mod.ModKey, candidateFormID);
             }
         }
 
@@ -93,75 +112,104 @@ namespace Mutagen.Bethesda.Core.Persistance
         {
             if (editorID == null) return GetNextFormKey();
 
-            lock (AllocatedEditorIDs)
-                if(!AllocatedEditorIDs.Add(editorID))
+            lock (Connection)
+            {
+                if (!AllocatedEditorIDs.Add(editorID))
                     throw new ConstraintException($"Attempted to allocate a duplicate unique FormKey for {editorID}");
 
-            SQLiteFormKeyAllocatorFormIDRecord? rec;
-
-            lock (this)
-            {
                 // should be $"select EditorID, FormID, PatcherID from FormIDs where EditorID = {editorID}"
-                rec = FormIDs.AsNoTracking().FirstOrDefault(r => r.EditorID == editorID);
+                var rec = Connection.FormIDs.AsNoTracking().FirstOrDefault(r => r.EditorID == editorID);
+
+                if (rec is not null)
+                {
+                    if (manyPatchers)
+                        if (rec.PatcherID != PatcherID)
+                            throw new ConstraintException($"Attempted to allocate a unique FormKey for {editorID} when it was previously allocated by {GetPatcherName(rec.PatcherID)}");
+                    return Mod.ModKey.MakeFormKey(rec.FormID);
+                }
+
+                var formKey = GetNextFormKey();
+
+                Connection.FormIDs.Add(new(editorID, formKey.ID, PatcherID));
+         
+                return formKey;
             }
-
-            if (rec is not null)
-            {
-                if (rec.PatcherID != PatcherID)
-                    throw new ConstraintException($"Attempted to allocate a unique FormKey for {editorID} when it was previously allocated by {GetPatcherName(rec.PatcherID)}");
-                return Mod.ModKey.MakeFormKey(rec.FormID);
-            }
-
-            var formKey = GetNextFormKey();
-
-            lock (this)
-            {
-                FormIDs.Add(new(editorID, formKey.ID, PatcherID));
-            }
-
-            return formKey;
         }
 
-        private uint GetPatcherID(string patcherName)
+        private uint GetOrAddPatcherID(string patcherName)
         {
-            lock (this)
+            lock (Connection)
             {
                 // TODO figure out how to get EF to generate this statement.
-                this.Database.ExecuteSqlInterpolated($"insert or ignore into Patchers(PatcherName) values ({patcherName})");
+                Connection.Database.ExecuteSqlInterpolated($"insert or ignore into Patchers(PatcherName) values ({patcherName})");
 
                 // should be $"select PatcherID from Patchers where PatcherName = {patcherName}"
-                return this.Patchers.Where(r => r.PatcherName == patcherName).Select(r => r.PatcherID).Single();
+                return Connection.Patchers.Where(r => r.PatcherName == patcherName).Select(r => r.PatcherID).Single();
+            }
+        }
+
+        private uint? GetPatcherID(string patcherName)
+        {
+            lock (Connection)
+            {
+                // should be $"select PatcherID from Patchers where PatcherName = {patcherName}"
+                return Connection.Patchers.Where(r => r.PatcherName == patcherName).Select(r => r.PatcherID).FirstOrDefault();
             }
         }
 
         private string GetPatcherName(uint patcherID)
         {
-            lock (this)
+            lock (Connection)
             {
                 // should be $"select PatcherName from Patchers where PatcherID = {patcherID}"
-                return Patchers.Where(r => r.PatcherID == patcherID).Select(r => r.PatcherName).Single();
+                return Connection.Patchers.Where(r => r.PatcherID == patcherID).Select(r => r.PatcherName).Single();
             }
         }
 
         public void ClearPatcher() => ClearPatcher(PatcherID);
 
-        public void ClearPatcher(string patcherName) => ClearPatcher(GetPatcherID(patcherName));
+        public void ClearPatcher(string patcherName)
+        {
+            uint? patcherID = GetPatcherID(patcherName);
+            if (patcherID is null) return;
+            ClearPatcher((uint)patcherID);
+        }
 
         private void ClearPatcher(uint patcherID)
         {
-            lock (this)
+            lock (Connection)
             {
                 // should be $"delete from FormIDs where PatcherID = {patcherID}", but probably isn't.
-                FormIDs.RemoveRange(FormIDs.Where(r => r.PatcherID == patcherID));
+                Connection.FormIDs.RemoveRange(Connection.FormIDs.Where(r => r.PatcherID == patcherID));
             }
         }
 
         public void Commit()
         {
-            lock (this)
+            lock (Connection)
             {
-                SaveChanges();
+                Connection.SaveChanges();
             }
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposedValue) return;
+            if (disposing)
+                Connection?.Dispose();
+            AllocatedEditorIDs = null!;
+            disposedValue = true;
+        }
+
+        ~SQLiteFormKeyAllocator()
+        {
+            Dispose(disposing: false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }
