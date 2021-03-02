@@ -81,7 +81,6 @@ namespace Mutagen.Bethesda.Core.Persistance
             PatcherID = GetOrAddPatcherID(patcherName);
         }
 
-
         public FormKey GetNextFormKey()
         {
             lock (Connection)
