@@ -1,4 +1,3 @@
-using Mutagen.Bethesda.Core.Persistance;
 using Mutagen.Bethesda.Oblivion;
 using Noggog.Utility;
 using System;
@@ -9,129 +8,109 @@ using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests
 {
-    public class SQLiteFormKeyAllocator_Tests : IFormKeyAllocator_Tests
+    public abstract class IFormKeyAllocator_Tests
     {
-        protected override IFormKeyAllocator CreateFormKeyAllocator(IMod mod)
-        {
-            var file = tempFile.Value;
-            return new SQLiteFormKeyAllocator(mod, file.File.Path);
-        }
+        public static readonly string Patcher1 = "Patcher1";
 
-        protected override IFormKeyAllocator CreateFormKeyAllocator(IMod mod, string patcherName)
-        {
-            var file = tempFile.Value;
-            return new SQLiteFormKeyAllocator(mod, file.File.Path, patcherName);
-        }
+        public static readonly string Patcher2 = "Patcher2";
 
-        protected override IFormKeyAllocator LoadFormKeyAllocator(IMod mod)
-        {
-            var file = tempFile.Value;
-            return new SQLiteFormKeyAllocator(mod, file.File.Path);
-        }
+        protected Lazy<TempFolder> tempFolder = new(() => TempFolder.FactoryByPath(path: Utility.TempFolderPath));
 
-        protected override IFormKeyAllocator LoadFormKeyAllocator(IMod mod, string patcherName)
-        {
-            var file = tempFile.Value;
-            return new SQLiteFormKeyAllocator(mod, file.File.Path, patcherName);
-        }
+        protected Lazy<TempFile> tempFile = new(() => new TempFile(extraDirectoryPaths: Utility.TempFolderPath));
 
-        protected override void DisposeFormKeyAllocator(IFormKeyAllocator allocator)
-        {
-            ((SQLiteFormKeyAllocator)allocator).Dispose();
-        }
+        protected abstract IFormKeyAllocator CreateFormKeyAllocator(IMod mod);
 
-        protected override void DisposeFormKeyAllocator(IFormKeyAllocator allocator, string patcherName)
-        {
-            ((SQLiteFormKeyAllocator)allocator).Dispose();
-        }
+        protected abstract IFormKeyAllocator CreateFormKeyAllocator(IMod mod, string patcherName);
 
-        protected override void SaveFormKeyAllocator(IFormKeyAllocator allocator)
-        {
-            ((SQLiteFormKeyAllocator)allocator).Commit();
-        }
+        protected abstract IFormKeyAllocator LoadFormKeyAllocator(IMod mod);
 
-        protected override void SaveFormKeyAllocator(IFormKeyAllocator allocator, string patcherName)
-        {
-            ((SQLiteFormKeyAllocator)allocator).Commit();
-        }
+        protected abstract IFormKeyAllocator LoadFormKeyAllocator(IMod mod, string patcherName);
+
+        protected abstract void DisposeFormKeyAllocator(IFormKeyAllocator allocator);
+
+        protected abstract void DisposeFormKeyAllocator(IFormKeyAllocator allocator, string patcherName);
+
+        protected abstract void SaveFormKeyAllocator(IFormKeyAllocator allocator);
+
+        protected abstract void SaveFormKeyAllocator(IFormKeyAllocator allocator, string patcherName);
 
         [Fact]
-        public void OutOfOrderAllocationReturnsSameIdentifiersOld()
+        public void OutOfOrderAllocationReturnsSameIdentifiers()
         {
-            using var file = new TempFile(extraDirectoryPaths: Utility.TempFolderPath);
             uint formID1, formID2;
             {
                 var mod = new OblivionMod(Utility.PluginModKey);
-                using var allocator = new SQLiteFormKeyAllocator(mod, file.File.Path, "Patcher1");
+                var allocator = LoadFormKeyAllocator(mod, Patcher1);
                 var formKey1 = allocator.GetNextFormKey(Utility.Edid1);
                 formID1 = formKey1.ID;
 
-                var formKey = allocator.GetNextFormKey();
+                allocator.GetNextFormKey();
 
                 var formKey2 = allocator.GetNextFormKey(Utility.Edid2);
                 formID2 = formKey2.ID;
 
-                allocator.Commit();
+                SaveFormKeyAllocator(allocator, Patcher1);
             }
 
             {
                 var mod = new OblivionMod(Utility.PluginModKey);
-                using var allocator = new SQLiteFormKeyAllocator(mod, file.File.Path, "Patcher1");
+                var allocator = LoadFormKeyAllocator(mod, "Patcher1");
 
                 var formKey2 = allocator.GetNextFormKey(Utility.Edid2);
                 Assert.Equal(formID2, formKey2.ID);
 
-                var formKey = allocator.GetNextFormKey();
+                allocator.GetNextFormKey();
 
                 var formKey1 = allocator.GetNextFormKey(Utility.Edid1);
                 Assert.Equal(formID1, formKey1.ID);
+
+                DisposeFormKeyAllocator(allocator, Patcher1);
             }
         }
 
         [Fact]
-        public void OutOfOrderAllocationReturnsSameIdentifiers2Old()
+        public void OutOfOrderAllocationReturnsSameIdentifiers2()
         {
-            using var file = new TempFile(extraDirectoryPaths: Utility.TempFolderPath);
             uint formID1, formID2;
             {
                 var mod = new OblivionMod(Utility.PluginModKey);
-                using var allocator = new SQLiteFormKeyAllocator(mod, file.File.Path);
+                var allocator = CreateFormKeyAllocator(mod);
                 var formKey1 = allocator.GetNextFormKey(Utility.Edid1);
                 formID1 = formKey1.ID;
 
-                var formKey = allocator.GetNextFormKey();
+                allocator.GetNextFormKey();
 
                 var formKey2 = allocator.GetNextFormKey(Utility.Edid2);
                 formID2 = formKey2.ID;
 
-                allocator.Commit();
+                SaveFormKeyAllocator(allocator);
             }
 
             {
                 var mod = new OblivionMod(Utility.PluginModKey);
-                using var allocator = new SQLiteFormKeyAllocator(mod, file.File.Path);
+                var allocator = LoadFormKeyAllocator(mod);
 
                 var formKey2 = allocator.GetNextFormKey(Utility.Edid2);
                 Assert.Equal(formID2, formKey2.ID);
 
-                var formKey = allocator.GetNextFormKey();
+                allocator.GetNextFormKey();
 
                 var formKey1 = allocator.GetNextFormKey(Utility.Edid1);
                 Assert.Equal(formID1, formKey1.ID);
+
+                DisposeFormKeyAllocator(allocator);
             }
         }
 
         [Fact]
-        public void ParallelAllocationOld()
+        public void ParallelAllocation()
         {
-            using var file = new TempFile(extraDirectoryPaths: Utility.TempFolderPath);
-
             var input = Enumerable.Range(1, 100).Select(i => (i, i.ToString())).ToList();
             var output1 = new ConcurrentDictionary<int, uint>();
+            var mod = new OblivionMod(Utility.PluginModKey);
 
             {
-                var mod = new OblivionMod(Utility.PluginModKey);
-                using var allocator = new SQLiteFormKeyAllocator(mod, file.File.Path, "Patcher1");
+                var allocator = CreateFormKeyAllocator(mod, Patcher1);
 
                 void apply((int i, string s) x)
                 {
@@ -147,12 +126,11 @@ namespace Mutagen.Bethesda.UnitTests
 
                 input.AsParallel().ForAll(apply);
 
-                allocator.Commit();
+                SaveFormKeyAllocator(allocator, Patcher1);
             }
 
             {
-                var mod = new OblivionMod(Utility.PluginModKey);
-                using var allocator = new SQLiteFormKeyAllocator(mod, file.File.Path, "Patcher1");
+                var allocator = LoadFormKeyAllocator(mod, Patcher1);
 
                 void check((int i, string s) x)
                 {
@@ -166,20 +144,20 @@ namespace Mutagen.Bethesda.UnitTests
                 }
 
                 input.AsParallel().ForAll(check);
+
+                DisposeFormKeyAllocator(allocator, Patcher1);
             }
         }
 
         [Fact]
-        public void ParallelAllocation2Old()
+        public void ParallelAllocation2()
         {
-            using var file = new TempFile(extraDirectoryPaths: Utility.TempFolderPath);
-
             var input = Enumerable.Range(1, 100).Select(i => (i, i.ToString())).ToList();
             var output1 = new ConcurrentDictionary<int, uint>();
 
+            var mod = new OblivionMod(Utility.PluginModKey);
             {
-                var mod = new OblivionMod(Utility.PluginModKey);
-                using var allocator = new SQLiteFormKeyAllocator(mod, file.File.Path);
+                var allocator = CreateFormKeyAllocator(mod);
 
                 void apply((int i, string s) x)
                 {
@@ -195,12 +173,11 @@ namespace Mutagen.Bethesda.UnitTests
 
                 input.AsParallel().ForAll(apply);
 
-                allocator.Commit();
+                SaveFormKeyAllocator(allocator);
             }
 
             {
-                var mod = new OblivionMod(Utility.PluginModKey);
-                using var allocator = new SQLiteFormKeyAllocator(mod, file.File.Path);
+                var allocator = LoadFormKeyAllocator(mod);
 
                 void check((int i, string s) x)
                 {
@@ -214,16 +191,17 @@ namespace Mutagen.Bethesda.UnitTests
                 }
 
                 input.AsParallel().ForAll(check);
+
+                DisposeFormKeyAllocator(allocator);
             }
         }
 
         [Fact]
-        public void DuplicateAllocationWithinOnePatcherThrowsOld()
+        public void DuplicateAllocationWithinOnePatcherThrows()
         {
-            using var file = new TempFile(extraDirectoryPaths: Utility.TempFolderPath);
             {
                 var mod = new OblivionMod(Utility.PluginModKey);
-                using var allocator = new SQLiteFormKeyAllocator(mod, file.File.Path);
+                var allocator = CreateFormKeyAllocator(mod);
 
                 var formKey1 = allocator.GetNextFormKey(Utility.Edid1);
 
@@ -232,34 +210,34 @@ namespace Mutagen.Bethesda.UnitTests
                 {
                     formKey2 = allocator.GetNextFormKey(Utility.Edid1);
                 });
-            }
 
+                DisposeFormKeyAllocator(allocator);
+            }
         }
 
         [Fact]
-        public void DuplicateAllocationBetweenTwoPatchersThrowsOld()
+        public void DuplicateAllocationBetweenTwoPatchersThrows()
         {
-            using var file = new TempFile(extraDirectoryPaths: Utility.TempFolderPath);
+            var mod = new OblivionMod(Utility.PluginModKey);
             {
-                var mod = new OblivionMod(Utility.PluginModKey);
-                using var allocator = new SQLiteFormKeyAllocator(mod, file.File.Path, "Patcher1");
+                var allocator = CreateFormKeyAllocator(mod, Patcher1);
 
                 var formKey1 = allocator.GetNextFormKey(Utility.Edid1);
 
-                allocator.Commit();
+                SaveFormKeyAllocator(allocator, Patcher1);
             }
 
             {
-                var mod = new OblivionMod(Utility.PluginModKey);
-                using var allocator = new SQLiteFormKeyAllocator(mod, file.File.Path, "Patcher2");
+                var allocator = LoadFormKeyAllocator(mod, Patcher2);
 
                 FormKey? formKey2;
                 var e = Assert.Throws<ConstraintException>(() =>
                 {
                     formKey2 = allocator.GetNextFormKey(Utility.Edid1);
                 });
-            }
 
+                DisposeFormKeyAllocator(allocator, Patcher1);
+            }
         }
     }
 }
