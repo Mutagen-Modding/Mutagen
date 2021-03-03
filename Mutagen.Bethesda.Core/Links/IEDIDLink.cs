@@ -47,5 +47,13 @@ namespace Mutagen.Bethesda
     /// </summary>
     public static class IEDIDLinkExt
     {
+        /// <summary> 
+        /// Creates a new FormLinkNullable with the same type 
+        /// </summary> 
+        public static IEDIDLink<TMajor> AsSetter<TMajor>(this IEDIDLinkGetter<TMajor> link)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            return new EDIDLink<TMajor>(link.EDID);
+        }
     }
 }
