@@ -16,6 +16,7 @@
     <IsPackable>true</IsPackable>
     <WarningsAsErrors>nullable</WarningsAsErrors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <LangVersion>preview</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>Mutagen.Bethesda.Oblivion.xml</DocumentationFile>
@@ -49,6 +50,7 @@
     <Compile Include="Enums\Weekday.cs" />
     <Compile Include="Extensions\ModContextExt.cs" />
     <Compile Include="Interfaces\IModeled.cs" />
+    <Compile Include="IsExternalInit.cs" />
     <Compile Include="Records\Common Subrecords\Condition.cs">
       <DependentUpon>Condition.xml</DependentUpon>
     </Compile>

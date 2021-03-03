@@ -308,8 +308,8 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.ParameterOneNumber = frame.ReadInt32();
                 item.ParameterTwoNumber = frame.ReadInt32();
-                item.ParameterOneRecord = FormKey.Factory(frame.MetaData.MasterReferences!, (uint)item.ParameterOneNumber);
-                item.ParameterTwoRecord = FormKey.Factory(frame.MetaData.MasterReferences!, (uint)item.ParameterTwoNumber);
+                item.ParameterOneRecord.FormKey = FormKey.Factory(frame.MetaData.MasterReferences!, (uint)item.ParameterOneNumber);
+                item.ParameterTwoRecord.FormKey = FormKey.Factory(frame.MetaData.MasterReferences!, (uint)item.ParameterTwoNumber);
                 item.Unknown3 = frame.ReadInt32();
                 item.Unknown4 = frame.ReadInt32();
                 item.Unknown5 = frame.ReadInt32();
@@ -401,11 +401,11 @@ namespace Mutagen.Bethesda.Skyrim
         {
             private ReadOnlyMemorySlice<byte> _data2;
 
-            public FormLink<ISkyrimMajorRecordGetter> ParameterOneRecord => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data2)));
+            public IFormLinkGetter<ISkyrimMajorRecordGetter> ParameterOneRecord => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data2)));
 
             public int ParameterOneNumber => BinaryPrimitives.ReadInt32LittleEndian(_data2);
 
-            public FormLink<ISkyrimMajorRecordGetter> ParameterTwoRecord => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data2.Slice(4))));
+            public IFormLinkGetter<ISkyrimMajorRecordGetter> ParameterTwoRecord => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data2.Slice(4))));
 
             public int ParameterTwoNumber => BinaryPrimitives.ReadInt32LittleEndian(_data2.Slice(4));
             

@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Int16 Unknown { get; set; } = default;
         #endregion
         #region Reference
-        public FormLink<T> Reference { get; set; } = new FormLink<T>();
+        public IFormLink<T> Reference { get; init; } = new FormLink<T>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<T> ILeveledEntryGetter<T>.Reference => this.Reference;
         #endregion
@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new Int16 Level { get; set; }
         new Int16 Unknown { get; set; }
-        new FormLink<T> Reference { get; set; }
+        new IFormLink<T> Reference { get; }
         new Int16? Count { get; set; }
         new Int16? Unknown2 { get; set; }
     }
@@ -475,7 +475,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LeveledEntry_FieldIndex.Unknown:
                     return typeof(Int16);
                 case LeveledEntry_FieldIndex.Reference:
-                    return typeof(FormLink<T>);
+                    return typeof(IFormLink<T>);
                 case LeveledEntry_FieldIndex.Count:
                     return typeof(Int16);
                 case LeveledEntry_FieldIndex.Unknown2:
@@ -501,7 +501,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
             item.Level = default;
             item.Unknown = default;
-            item.Reference = FormLink<T>.Null;
+            item.Reference.Clear();
             item.Count = default;
             item.Unknown2 = default;
         }
@@ -709,7 +709,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledEntry_FieldIndex.Reference) ?? true))
             {
-                item.Reference = new FormLink<T>(rhs.Reference.FormKey);
+                item.Reference.SetTo(rhs.Reference);
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledEntry_FieldIndex.Count) ?? true))
             {
@@ -872,9 +872,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.Level = frame.ReadInt16();
             item.Unknown = frame.ReadInt16();
-            item.Reference = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Reference.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             if (frame.Complete) return;
             item.Count = frame.ReadInt16();
             if (frame.Complete) return;

@@ -65,7 +65,9 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedStringGetter? IQuestLogEntryGetter.Entry => this.Entry;
         #endregion
         #region NextQuest
-        public FormLinkNullable<IQuestGetter> NextQuest { get; set; } = new FormLinkNullable<IQuestGetter>();
+        public IFormLinkNullable<IQuestGetter> NextQuest { get; init; } = new FormLinkNullable<IQuestGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IQuestGetter> IQuestLogEntryGetter.NextQuest => this.NextQuest;
         #endregion
         #region SCHR
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -721,7 +723,7 @@ namespace Mutagen.Bethesda.Skyrim
         new QuestLogEntry.Flag? Flags { get; set; }
         new ExtendedList<Condition> Conditions { get; }
         new TranslatedString? Entry { get; set; }
-        new FormLinkNullable<IQuestGetter> NextQuest { get; set; }
+        new IFormLinkNullable<IQuestGetter> NextQuest { get; }
         new MemorySlice<Byte>? SCHR { get; set; }
         new MemorySlice<Byte>? SCTX { get; set; }
         new MemorySlice<Byte>? QNAM { get; set; }
@@ -743,7 +745,7 @@ namespace Mutagen.Bethesda.Skyrim
         QuestLogEntry.Flag? Flags { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
         ITranslatedStringGetter? Entry { get; }
-        FormLinkNullable<IQuestGetter> NextQuest { get; }
+        IFormLinkNullableGetter<IQuestGetter> NextQuest { get; }
         ReadOnlyMemorySlice<Byte>? SCHR { get; }
         ReadOnlyMemorySlice<Byte>? SCTX { get; }
         ReadOnlyMemorySlice<Byte>? QNAM { get; }
@@ -1028,7 +1030,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Flags = default;
             item.Conditions.Clear();
             item.Entry = default;
-            item.NextQuest = FormLinkNullable<IQuestGetter>.Null;
+            item.NextQuest.Clear();
             item.SCHR = default;
             item.SCTX = default;
             item.QNAM = default;
@@ -1307,7 +1309,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.NextQuest) ?? true))
             {
-                item.NextQuest = new FormLinkNullable<IQuestGetter>(rhs.NextQuest.FormKeyNullable);
+                item.NextQuest.SetTo(rhs.NextQuest);
             }
             if ((copyMask?.GetShouldTranslate((int)QuestLogEntry_FieldIndex.SCHR) ?? true))
             {
@@ -1559,9 +1561,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)QuestLogEntry_FieldIndex.NextQuest) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NextQuest = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.NextQuest.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)QuestLogEntry_FieldIndex.NextQuest;
                 }
                 case RecordTypeInts.SCHR:
@@ -1676,7 +1679,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region NextQuest
         private int? _NextQuestLocation;
-        public FormLinkNullable<IQuestGetter> NextQuest => _NextQuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _NextQuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
+        public IFormLinkNullableGetter<IQuestGetter> NextQuest => _NextQuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _NextQuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
         #endregion
         #region SCHR
         private int? _SCHRLocation;

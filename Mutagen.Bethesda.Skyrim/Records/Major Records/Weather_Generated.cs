@@ -113,10 +113,14 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? IWeatherGetter.LNAM => this.LNAM;
         #endregion
         #region Precipitation
-        public FormLinkNullable<IShaderParticleGeometryGetter> Precipitation { get; set; } = new FormLinkNullable<IShaderParticleGeometryGetter>();
+        public IFormLinkNullable<IShaderParticleGeometryGetter> Precipitation { get; init; } = new FormLinkNullable<IShaderParticleGeometryGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IShaderParticleGeometryGetter> IWeatherGetter.Precipitation => this.Precipitation;
         #endregion
         #region VisualEffect
-        public FormLink<IVisualEffectGetter> VisualEffect { get; set; } = new FormLink<IVisualEffectGetter>();
+        public IFormLink<IVisualEffectGetter> VisualEffect { get; init; } = new FormLink<IVisualEffectGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IVisualEffectGetter> IWeatherGetter.VisualEffect => this.VisualEffect;
         #endregion
         #region ONAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -398,7 +402,9 @@ namespace Mutagen.Bethesda.Skyrim
         IModelGetter? IWeatherGetter.Aurora => this.Aurora;
         #endregion
         #region SunGlareLensFlare
-        public FormLinkNullable<ILensFlareGetter> SunGlareLensFlare { get; set; } = new FormLinkNullable<ILensFlareGetter>();
+        public IFormLinkNullable<ILensFlareGetter> SunGlareLensFlare { get; init; } = new FormLinkNullable<ILensFlareGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ILensFlareGetter> IWeatherGetter.SunGlareLensFlare => this.SunGlareLensFlare;
         #endregion
         #region NAM0DataTypeState
         public Weather.NAM0DataType NAM0DataTypeState { get; set; } = default;
@@ -3025,8 +3031,8 @@ namespace Mutagen.Bethesda.Skyrim
         new MemorySlice<Byte>? ANAM { get; set; }
         new MemorySlice<Byte>? BNAM { get; set; }
         new MemorySlice<Byte>? LNAM { get; set; }
-        new FormLinkNullable<IShaderParticleGeometryGetter> Precipitation { get; set; }
-        new FormLink<IVisualEffectGetter> VisualEffect { get; set; }
+        new IFormLinkNullable<IShaderParticleGeometryGetter> Precipitation { get; }
+        new IFormLink<IVisualEffectGetter> VisualEffect { get; }
         new MemorySlice<Byte>? ONAM { get; set; }
         new CloudLayer[] Clouds { get; }
         new WeatherColor SkyUpperColor { get; set; }
@@ -3078,7 +3084,7 @@ namespace Mutagen.Bethesda.Skyrim
         new MemorySlice<Byte>? NAM2 { get; set; }
         new MemorySlice<Byte>? NAM3 { get; set; }
         new Model? Aurora { get; set; }
-        new FormLinkNullable<ILensFlareGetter> SunGlareLensFlare { get; set; }
+        new IFormLinkNullable<ILensFlareGetter> SunGlareLensFlare { get; }
         new Weather.NAM0DataType NAM0DataTypeState { get; set; }
         new Weather.FNAMDataType FNAMDataTypeState { get; set; }
         new Weather.DATADataType DATADataTypeState { get; set; }
@@ -3105,8 +3111,8 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? ANAM { get; }
         ReadOnlyMemorySlice<Byte>? BNAM { get; }
         ReadOnlyMemorySlice<Byte>? LNAM { get; }
-        FormLinkNullable<IShaderParticleGeometryGetter> Precipitation { get; }
-        FormLink<IVisualEffectGetter> VisualEffect { get; }
+        IFormLinkNullableGetter<IShaderParticleGeometryGetter> Precipitation { get; }
+        IFormLinkGetter<IVisualEffectGetter> VisualEffect { get; }
         ReadOnlyMemorySlice<Byte>? ONAM { get; }
         ReadOnlyMemorySlice<ICloudLayerGetter> Clouds { get; }
         IWeatherColorGetter SkyUpperColor { get; }
@@ -3158,7 +3164,7 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? NAM2 { get; }
         ReadOnlyMemorySlice<Byte>? NAM3 { get; }
         IModelGetter? Aurora { get; }
-        FormLinkNullable<ILensFlareGetter> SunGlareLensFlare { get; }
+        IFormLinkNullableGetter<ILensFlareGetter> SunGlareLensFlare { get; }
         Weather.NAM0DataType NAM0DataTypeState { get; }
         Weather.FNAMDataType FNAMDataTypeState { get; }
         Weather.DATADataType DATADataTypeState { get; }
@@ -3481,8 +3487,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ANAM = default;
             item.BNAM = default;
             item.LNAM = default;
-            item.Precipitation = FormLinkNullable<IShaderParticleGeometryGetter>.Null;
-            item.VisualEffect = FormLink<IVisualEffectGetter>.Null;
+            item.Precipitation.Clear();
+            item.VisualEffect.Clear();
             item.ONAM = default;
             item.Clouds.Fill(() => new CloudLayer());
             item.SkyUpperColor.Clear();
@@ -3534,7 +3540,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.NAM2 = default;
             item.NAM3 = default;
             item.Aurora = null;
-            item.SunGlareLensFlare = FormLinkNullable<ILensFlareGetter>.Null;
+            item.SunGlareLensFlare.Clear();
             item.NAM0DataTypeState = default;
             item.FNAMDataTypeState = default;
             item.DATADataTypeState = default;
@@ -4529,11 +4535,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.Precipitation) ?? true))
             {
-                item.Precipitation = new FormLinkNullable<IShaderParticleGeometryGetter>(rhs.Precipitation.FormKeyNullable);
+                item.Precipitation.SetTo(rhs.Precipitation);
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.VisualEffect) ?? true))
             {
-                item.VisualEffect = new FormLink<IVisualEffectGetter>(rhs.VisualEffect.FormKey);
+                item.VisualEffect.SetTo(rhs.VisualEffect);
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.ONAM) ?? true))
             {
@@ -5198,7 +5204,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.SunGlareLensFlare) ?? true))
             {
-                item.SunGlareLensFlare = new FormLinkNullable<ILensFlareGetter>(rhs.SunGlareLensFlare.FormKeyNullable);
+                item.SunGlareLensFlare.SetTo(rhs.SunGlareLensFlare);
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.NAM0DataTypeState) ?? true))
             {
@@ -5894,17 +5900,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.MNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Precipitation = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Precipitation.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Weather_FieldIndex.Precipitation;
                 }
                 case RecordTypeInts.NNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.VisualEffect = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.VisualEffect.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Weather_FieldIndex.VisualEffect;
                 }
                 case RecordTypeInts.ONAM:
@@ -6109,9 +6117,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (frame.MetaData.FormVersion!.Value >= 44)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.SunGlareLensFlare = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            defaultVal: FormKey.Null);
+                        item.SunGlareLensFlare.SetTo(
+                            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                                frame: frame,
+                                defaultVal: FormKey.Null));
                     }
                     return (int)Weather_FieldIndex.SunGlareLensFlare;
                 }
@@ -6227,11 +6236,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Precipitation
         private int? _PrecipitationLocation;
-        public FormLinkNullable<IShaderParticleGeometryGetter> Precipitation => _PrecipitationLocation.HasValue ? new FormLinkNullable<IShaderParticleGeometryGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PrecipitationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IShaderParticleGeometryGetter>.Null;
+        public IFormLinkNullableGetter<IShaderParticleGeometryGetter> Precipitation => _PrecipitationLocation.HasValue ? new FormLinkNullable<IShaderParticleGeometryGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PrecipitationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IShaderParticleGeometryGetter>.Null;
         #endregion
         #region VisualEffect
         private int? _VisualEffectLocation;
-        public FormLink<IVisualEffectGetter> VisualEffect => _VisualEffectLocation.HasValue ? new FormLink<IVisualEffectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _VisualEffectLocation.Value, _package.MetaData.Constants)))) : FormLink<IVisualEffectGetter>.Null;
+        public IFormLinkGetter<IVisualEffectGetter> VisualEffect => _VisualEffectLocation.HasValue ? new FormLink<IVisualEffectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _VisualEffectLocation.Value, _package.MetaData.Constants)))) : FormLink<IVisualEffectGetter>.Null;
         #endregion
         #region ONAM
         private int? _ONAMLocation;
@@ -6521,7 +6530,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IModelGetter? Aurora { get; private set; }
         #region SunGlareLensFlare
         private int? _SunGlareLensFlareLocation;
-        public FormLinkNullable<ILensFlareGetter> SunGlareLensFlare => _SunGlareLensFlareLocation.HasValue ? new FormLinkNullable<ILensFlareGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SunGlareLensFlareLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILensFlareGetter>.Null;
+        public IFormLinkNullableGetter<ILensFlareGetter> SunGlareLensFlare => _SunGlareLensFlareLocation.HasValue ? new FormLinkNullable<ILensFlareGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SunGlareLensFlareLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILensFlareGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

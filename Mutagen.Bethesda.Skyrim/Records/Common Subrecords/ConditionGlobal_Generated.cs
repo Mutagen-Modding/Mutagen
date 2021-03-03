@@ -42,7 +42,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region ComparisonValue
-        public FormLink<IGlobalGetter> ComparisonValue { get; set; } = new FormLink<IGlobalGetter>();
+        public IFormLink<IGlobalGetter> ComparisonValue { get; init; } = new FormLink<IGlobalGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IGlobalGetter> IConditionGlobalGetter.ComparisonValue => this.ComparisonValue;
         #endregion
 
         #region To String
@@ -448,7 +450,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILoquiObjectSetter<IConditionGlobal>
     {
-        new FormLink<IGlobalGetter> ComparisonValue { get; set; }
+        new IFormLink<IGlobalGetter> ComparisonValue { get; }
         new ConditionData Data { get; set; }
     }
 
@@ -459,7 +461,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IConditionGlobalGetter>
     {
         static new ILoquiRegistration Registration => ConditionGlobal_Registration.Instance;
-        FormLink<IGlobalGetter> ComparisonValue { get; }
+        IFormLinkGetter<IGlobalGetter> ComparisonValue { get; }
         IConditionDataGetter Data { get; }
 
     }
@@ -696,7 +698,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IConditionGlobal item)
         {
             ClearPartial();
-            item.ComparisonValue = FormLink<IGlobalGetter>.Null;
+            item.ComparisonValue.Clear();
             item.Data.Clear();
             base.Clear(item);
         }
@@ -937,7 +939,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)ConditionGlobal_FieldIndex.ComparisonValue) ?? true))
             {
-                item.ComparisonValue = new FormLink<IGlobalGetter>(rhs.ComparisonValue.FormKey);
+                item.ComparisonValue.SetTo(rhs.ComparisonValue);
             }
             if ((copyMask?.GetShouldTranslate((int)ConditionGlobal_FieldIndex.Data) ?? true))
             {
@@ -1158,9 +1160,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ConditionBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.ComparisonValue = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.ComparisonValue.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             ConditionGlobalBinaryCreateTranslation.FillBinaryDataCustom(
                 frame: frame,
                 item: item);
@@ -1226,7 +1229,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<IGlobalGetter> ComparisonValue => new FormLink<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<IGlobalGetter> ComparisonValue => new FormLink<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         #region Data
         public IConditionDataGetter Data => GetDataCustom(location: 0x8);
         protected int DataEndingPos;

@@ -114,7 +114,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region Topic
-        public FormLinkNullable<IDialogTopicGetter> Topic { get; set; } = new FormLinkNullable<IDialogTopicGetter>();
+        public IFormLinkNullable<IDialogTopicGetter> Topic { get; init; } = new FormLinkNullable<IDialogTopicGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IDialogTopicGetter> ISceneActionGetter.Topic => this.Topic;
         #endregion
         #region HeadtrackActorID
         public Int32? HeadtrackActorID { get; set; }
@@ -1068,7 +1070,7 @@ namespace Mutagen.Bethesda.Skyrim
         new UInt32? EndPhase { get; set; }
         new Single? TimerSeconds { get; set; }
         new ExtendedList<IFormLinkGetter<IPackageGetter>> Packages { get; }
-        new FormLinkNullable<IDialogTopicGetter> Topic { get; set; }
+        new IFormLinkNullable<IDialogTopicGetter> Topic { get; }
         new Int32? HeadtrackActorID { get; set; }
         new Single? LoopingMax { get; set; }
         new Single? LoopingMin { get; set; }
@@ -1102,7 +1104,7 @@ namespace Mutagen.Bethesda.Skyrim
         UInt32? EndPhase { get; }
         Single? TimerSeconds { get; }
         IReadOnlyList<IFormLinkGetter<IPackageGetter>> Packages { get; }
-        FormLinkNullable<IDialogTopicGetter> Topic { get; }
+        IFormLinkNullableGetter<IDialogTopicGetter> Topic { get; }
         Int32? HeadtrackActorID { get; }
         Single? LoopingMax { get; }
         Single? LoopingMin { get; }
@@ -1391,7 +1393,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.EndPhase = default;
             item.TimerSeconds = default;
             item.Packages.Clear();
-            item.Topic = FormLinkNullable<IDialogTopicGetter>.Null;
+            item.Topic.Clear();
             item.HeadtrackActorID = default;
             item.LoopingMax = default;
             item.LoopingMin = default;
@@ -1812,7 +1814,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SceneAction_FieldIndex.Topic) ?? true))
             {
-                item.Topic = new FormLinkNullable<IDialogTopicGetter>(rhs.Topic.FormKeyNullable);
+                item.Topic.SetTo(rhs.Topic);
             }
             if ((copyMask?.GetShouldTranslate((int)SceneAction_FieldIndex.HeadtrackActorID) ?? true))
             {
@@ -2169,9 +2171,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Topic = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Topic.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)SceneAction_FieldIndex.Topic;
                 }
                 case RecordTypeInts.HTID:
@@ -2327,7 +2330,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IFormLinkGetter<IPackageGetter>> Packages { get; private set; } = ListExt.Empty<IFormLinkGetter<IPackageGetter>>();
         #region Topic
         private int? _TopicLocation;
-        public FormLinkNullable<IDialogTopicGetter> Topic => _TopicLocation.HasValue ? new FormLinkNullable<IDialogTopicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TopicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogTopicGetter>.Null;
+        public IFormLinkNullableGetter<IDialogTopicGetter> Topic => _TopicLocation.HasValue ? new FormLinkNullable<IDialogTopicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TopicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogTopicGetter>.Null;
         #endregion
         #region HeadtrackActorID
         private int? _HeadtrackActorIDLocation;

@@ -43,10 +43,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region TextureSet
-        public FormLinkNullable<ITextureSetGetter> TextureSet { get; set; } = new FormLinkNullable<ITextureSetGetter>();
+        public IFormLinkNullable<ITextureSetGetter> TextureSet { get; init; } = new FormLinkNullable<ITextureSetGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ITextureSetGetter> ILandscapeTextureGetter.TextureSet => this.TextureSet;
         #endregion
         #region MaterialType
-        public FormLink<IMaterialTypeGetter> MaterialType { get; set; } = new FormLink<IMaterialTypeGetter>();
+        public IFormLink<IMaterialTypeGetter> MaterialType { get; init; } = new FormLink<IMaterialTypeGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IMaterialTypeGetter> ILandscapeTextureGetter.MaterialType => this.MaterialType;
         #endregion
         #region HavokFriction
         public Byte HavokFriction { get; set; } = default;
@@ -770,8 +774,8 @@ namespace Mutagen.Bethesda.Skyrim
         IRegionTarget,
         ISkyrimMajorRecordInternal
     {
-        new FormLinkNullable<ITextureSetGetter> TextureSet { get; set; }
-        new FormLink<IMaterialTypeGetter> MaterialType { get; set; }
+        new IFormLinkNullable<ITextureSetGetter> TextureSet { get; }
+        new IFormLink<IMaterialTypeGetter> MaterialType { get; }
         new Byte HavokFriction { get; set; }
         new Byte HavokRestitution { get; set; }
         new Byte TextureSpecularExponent { get; set; }
@@ -796,8 +800,8 @@ namespace Mutagen.Bethesda.Skyrim
         IRegionTargetGetter
     {
         static new ILoquiRegistration Registration => LandscapeTexture_Registration.Instance;
-        FormLinkNullable<ITextureSetGetter> TextureSet { get; }
-        FormLink<IMaterialTypeGetter> MaterialType { get; }
+        IFormLinkNullableGetter<ITextureSetGetter> TextureSet { get; }
+        IFormLinkGetter<IMaterialTypeGetter> MaterialType { get; }
         Byte HavokFriction { get; }
         Byte HavokRestitution { get; }
         Byte TextureSpecularExponent { get; }
@@ -1062,8 +1066,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ILandscapeTextureInternal item)
         {
             ClearPartial();
-            item.TextureSet = FormLinkNullable<ITextureSetGetter>.Null;
-            item.MaterialType = FormLink<IMaterialTypeGetter>.Null;
+            item.TextureSet.Clear();
+            item.MaterialType.Clear();
             item.HavokFriction = default;
             item.HavokRestitution = default;
             item.TextureSpecularExponent = default;
@@ -1472,11 +1476,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.TextureSet) ?? true))
             {
-                item.TextureSet = new FormLinkNullable<ITextureSetGetter>(rhs.TextureSet.FormKeyNullable);
+                item.TextureSet.SetTo(rhs.TextureSet);
             }
             if ((copyMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.MaterialType) ?? true))
             {
-                item.MaterialType = new FormLink<IMaterialTypeGetter>(rhs.MaterialType.FormKey);
+                item.MaterialType.SetTo(rhs.MaterialType);
             }
             if ((copyMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.HavokFriction) ?? true))
             {
@@ -1812,17 +1816,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TextureSet = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.TextureSet.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)LandscapeTexture_FieldIndex.TextureSet;
                 }
                 case RecordTypeInts.MNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MaterialType = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.MaterialType.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)LandscapeTexture_FieldIndex.MaterialType;
                 }
                 case RecordTypeInts.HNAM:
@@ -1914,11 +1920,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region TextureSet
         private int? _TextureSetLocation;
-        public FormLinkNullable<ITextureSetGetter> TextureSet => _TextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
+        public IFormLinkNullableGetter<ITextureSetGetter> TextureSet => _TextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
         #endregion
         #region MaterialType
         private int? _MaterialTypeLocation;
-        public FormLink<IMaterialTypeGetter> MaterialType => _MaterialTypeLocation.HasValue ? new FormLink<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MaterialTypeLocation.Value, _package.MetaData.Constants)))) : FormLink<IMaterialTypeGetter>.Null;
+        public IFormLinkGetter<IMaterialTypeGetter> MaterialType => _MaterialTypeLocation.HasValue ? new FormLink<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MaterialTypeLocation.Value, _package.MetaData.Constants)))) : FormLink<IMaterialTypeGetter>.Null;
         #endregion
         private int? _HNAMLocation;
         public LandscapeTexture.HNAMDataType HNAMDataTypeState { get; private set; }

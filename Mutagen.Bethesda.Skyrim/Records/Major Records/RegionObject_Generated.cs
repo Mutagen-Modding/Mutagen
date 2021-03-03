@@ -40,7 +40,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Object
-        public FormLink<IRegionTargetGetter> Object { get; set; } = new FormLink<IRegionTargetGetter>();
+        public IFormLink<IRegionTargetGetter> Object { get; init; } = new FormLink<IRegionTargetGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IRegionTargetGetter> IRegionObjectGetter.Object => this.Object;
         #endregion
         #region ParentIndex
         public UInt16 ParentIndex { get; set; } = default;
@@ -921,7 +923,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IRegionObject>,
         IRegionObjectGetter
     {
-        new FormLink<IRegionTargetGetter> Object { get; set; }
+        new IFormLink<IRegionTargetGetter> Object { get; }
         new UInt16 ParentIndex { get; set; }
         new UInt16 Unknown { get; set; }
         new Single Density { get; set; }
@@ -953,7 +955,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => RegionObject_Registration.Instance;
-        FormLink<IRegionTargetGetter> Object { get; }
+        IFormLinkGetter<IRegionTargetGetter> Object { get; }
         UInt16 ParentIndex { get; }
         UInt16 Unknown { get; }
         Single Density { get; }
@@ -1241,7 +1243,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IRegionObject item)
         {
             ClearPartial();
-            item.Object = FormLink<IRegionTargetGetter>.Null;
+            item.Object.Clear();
             item.ParentIndex = default;
             item.Unknown = default;
             item.Density = default;
@@ -1524,7 +1526,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)RegionObject_FieldIndex.Object) ?? true))
             {
-                item.Object = new FormLink<IRegionTargetGetter>(rhs.Object.FormKey);
+                item.Object.SetTo(rhs.Object);
             }
             if ((copyMask?.GetShouldTranslate((int)RegionObject_FieldIndex.ParentIndex) ?? true))
             {
@@ -1757,9 +1759,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IRegionObject item,
             MutagenFrame frame)
         {
-            item.Object = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Object.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             item.ParentIndex = frame.ReadUInt16();
             item.Unknown = frame.ReadUInt16();
             item.Density = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
@@ -1842,7 +1845,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<IRegionTargetGetter> Object => new FormLink<IRegionTargetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IRegionTargetGetter> Object => new FormLink<IRegionTargetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public UInt16 ParentIndex => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x4, 0x2));
         public UInt16 Unknown => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x6, 0x2));
         public Single Density => _data.Slice(0x8, 0x4).Float();

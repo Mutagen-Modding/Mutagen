@@ -38,11 +38,20 @@ namespace Mutagen.Bethesda
     {
     }
 
-    public interface IFormLinkNullable<TMajor> : IFormLinkNullableGetter<TMajor>, IClearable
+    public interface IFormLinkNullable<out TMajor> : IFormLinkNullableGetter<TMajor>, IClearable
        where TMajor : IMajorRecordCommonGetter
     {
+        /// <summary>
+        /// FormKey to link against
+        /// </summary>
+        new FormKey? FormKeyNullable { get; set; }
+
+        /// <summary>
+        /// FormKey to link against
+        /// </summary>
+        new FormKey FormKey { get; set; }
+
         void SetTo(FormKey? formKey);
-        void SetTo(TMajor? record);
     }
 
     /// <summary>
@@ -54,7 +63,7 @@ namespace Mutagen.Bethesda
     {
     }
 
-    public interface IFormLink<TMajorGetter> : IFormLinkGetter<TMajorGetter>, IFormLinkNullable<TMajorGetter>
+    public interface IFormLink<out TMajorGetter> : IFormLinkGetter<TMajorGetter>, IFormLinkNullable<TMajorGetter>
        where TMajorGetter : IMajorRecordCommonGetter
     {
     }
@@ -374,6 +383,20 @@ namespace Mutagen.Bethesda
             {
                 return false;
             }
+        }
+
+        public static void SetTo<TMajorLhs, TMajorRhs>(this IFormLinkNullable<TMajorLhs> link, TMajorRhs? record)
+            where TMajorLhs : IMajorRecordCommonGetter
+            where TMajorRhs : TMajorLhs
+        {
+            link.SetTo(record?.FormKey);
+        }
+
+        public static void SetTo<TMajor, TMajorRhs>(this IFormLinkNullable<TMajor> link, IFormLinkNullableGetter<TMajorRhs> rhs)
+            where TMajor : TMajorRhs
+            where TMajorRhs : IMajorRecordCommonGetter
+        {
+            link.SetTo(rhs.FormKeyNullable);
         }
     }
 }

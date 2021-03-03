@@ -122,7 +122,9 @@ namespace Mutagen.Bethesda.Skyrim
         public MoveableStatic.Flag Flags { get; set; } = default;
         #endregion
         #region LoopingSound
-        public FormLinkNullable<ISoundDescriptorGetter> LoopingSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
+        public IFormLinkNullable<ISoundDescriptorGetter> LoopingSound { get; init; } = new FormLinkNullable<ISoundDescriptorGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundDescriptorGetter> IMoveableStaticGetter.LoopingSound => this.LoopingSound;
         #endregion
 
         #region To String
@@ -721,7 +723,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Model? Model { get; set; }
         new Destructible? Destructible { get; set; }
         new MoveableStatic.Flag Flags { get; set; }
-        new FormLinkNullable<ISoundDescriptorGetter> LoopingSound { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> LoopingSound { get; }
         #region Mutagen
         new MoveableStatic.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -757,7 +759,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModelGetter? Model { get; }
         IDestructibleGetter? Destructible { get; }
         MoveableStatic.Flag Flags { get; }
-        FormLinkNullable<ISoundDescriptorGetter> LoopingSound { get; }
+        IFormLinkNullableGetter<ISoundDescriptorGetter> LoopingSound { get; }
 
         #region Mutagen
         MoveableStatic.MajorFlag MajorFlags { get; }
@@ -1023,7 +1025,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Model = null;
             item.Destructible = null;
             item.Flags = default;
-            item.LoopingSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
+            item.LoopingSound.Clear();
             base.Clear(item);
         }
         
@@ -1502,7 +1504,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MoveableStatic_FieldIndex.LoopingSound) ?? true))
             {
-                item.LoopingSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.LoopingSound.FormKeyNullable);
+                item.LoopingSound.SetTo(rhs.LoopingSound);
             }
         }
         
@@ -1825,9 +1827,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LoopingSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.LoopingSound.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)MoveableStatic_FieldIndex.LoopingSound;
                 }
                 default:
@@ -1911,7 +1914,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region LoopingSound
         private int? _LoopingSoundLocation;
-        public FormLinkNullable<ISoundDescriptorGetter> LoopingSound => _LoopingSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LoopingSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> LoopingSound => _LoopingSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LoopingSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

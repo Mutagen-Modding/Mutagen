@@ -48,7 +48,9 @@ namespace Mutagen.Bethesda.Skyrim
         public UInt16 Unknown2 { get; set; } = default;
         #endregion
         #region ParameterOneRecord
-        public FormLink<ISkyrimMajorRecordGetter> ParameterOneRecord { get; set; } = new FormLink<ISkyrimMajorRecordGetter>();
+        public IFormLink<ISkyrimMajorRecordGetter> ParameterOneRecord { get; init; } = new FormLink<ISkyrimMajorRecordGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ISkyrimMajorRecordGetter> IFunctionConditionDataGetter.ParameterOneRecord => this.ParameterOneRecord;
         #endregion
         #region ParameterOneNumber
         public Int32 ParameterOneNumber { get; set; } = default;
@@ -59,7 +61,9 @@ namespace Mutagen.Bethesda.Skyrim
         String? IFunctionConditionDataGetter.ParameterOneString => this.ParameterOneString;
         #endregion
         #region ParameterTwoRecord
-        public FormLink<ISkyrimMajorRecordGetter> ParameterTwoRecord { get; set; } = new FormLink<ISkyrimMajorRecordGetter>();
+        public IFormLink<ISkyrimMajorRecordGetter> ParameterTwoRecord { get; init; } = new FormLink<ISkyrimMajorRecordGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ISkyrimMajorRecordGetter> IFunctionConditionDataGetter.ParameterTwoRecord => this.ParameterTwoRecord;
         #endregion
         #region ParameterTwoNumber
         public Int32 ParameterTwoNumber { get; set; } = default;
@@ -723,10 +727,10 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new UInt16 Function { get; set; }
         new UInt16 Unknown2 { get; set; }
-        new FormLink<ISkyrimMajorRecordGetter> ParameterOneRecord { get; set; }
+        new IFormLink<ISkyrimMajorRecordGetter> ParameterOneRecord { get; }
         new Int32 ParameterOneNumber { get; set; }
         new String? ParameterOneString { get; set; }
-        new FormLink<ISkyrimMajorRecordGetter> ParameterTwoRecord { get; set; }
+        new IFormLink<ISkyrimMajorRecordGetter> ParameterTwoRecord { get; }
         new Int32 ParameterTwoNumber { get; set; }
         new String? ParameterTwoString { get; set; }
         new Int32 Unknown3 { get; set; }
@@ -743,10 +747,10 @@ namespace Mutagen.Bethesda.Skyrim
         static new ILoquiRegistration Registration => FunctionConditionData_Registration.Instance;
         UInt16 Function { get; }
         UInt16 Unknown2 { get; }
-        FormLink<ISkyrimMajorRecordGetter> ParameterOneRecord { get; }
+        IFormLinkGetter<ISkyrimMajorRecordGetter> ParameterOneRecord { get; }
         Int32 ParameterOneNumber { get; }
         String? ParameterOneString { get; }
-        FormLink<ISkyrimMajorRecordGetter> ParameterTwoRecord { get; }
+        IFormLinkGetter<ISkyrimMajorRecordGetter> ParameterTwoRecord { get; }
         Int32 ParameterTwoNumber { get; }
         String? ParameterTwoString { get; }
         Int32 Unknown3 { get; }
@@ -994,10 +998,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.Function = default;
             item.Unknown2 = default;
-            item.ParameterOneRecord = FormLink<ISkyrimMajorRecordGetter>.Null;
+            item.ParameterOneRecord.Clear();
             item.ParameterOneNumber = default;
             item.ParameterOneString = default;
-            item.ParameterTwoRecord = FormLink<ISkyrimMajorRecordGetter>.Null;
+            item.ParameterTwoRecord.Clear();
             item.ParameterTwoNumber = default;
             item.ParameterTwoString = default;
             item.Unknown3 = default;
@@ -1303,7 +1307,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterOneRecord) ?? true))
             {
-                item.ParameterOneRecord = new FormLink<ISkyrimMajorRecordGetter>(rhs.ParameterOneRecord.FormKey);
+                item.ParameterOneRecord.SetTo(rhs.ParameterOneRecord);
             }
             if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterOneNumber) ?? true))
             {
@@ -1315,7 +1319,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterTwoRecord) ?? true))
             {
-                item.ParameterTwoRecord = new FormLink<ISkyrimMajorRecordGetter>(rhs.ParameterTwoRecord.FormKey);
+                item.ParameterTwoRecord.SetTo(rhs.ParameterTwoRecord);
             }
             if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterTwoNumber) ?? true))
             {

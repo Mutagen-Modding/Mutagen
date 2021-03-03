@@ -54,10 +54,14 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? ISoundDescriptorGetter.CNAM => this.CNAM;
         #endregion
         #region Category
-        public FormLinkNullable<ISoundCategoryGetter> Category { get; set; } = new FormLinkNullable<ISoundCategoryGetter>();
+        public IFormLinkNullable<ISoundCategoryGetter> Category { get; init; } = new FormLinkNullable<ISoundCategoryGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundCategoryGetter> ISoundDescriptorGetter.Category => this.Category;
         #endregion
         #region AlternateSoundFor
-        public FormLinkNullable<ISoundDescriptorGetter> AlternateSoundFor { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
+        public IFormLinkNullable<ISoundDescriptorGetter> AlternateSoundFor { get; init; } = new FormLinkNullable<ISoundDescriptorGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundDescriptorGetter> ISoundDescriptorGetter.AlternateSoundFor => this.AlternateSoundFor;
         #endregion
         #region SoundFiles
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -74,7 +78,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region OutputModel
-        public FormLinkNullable<ISoundOutputModelGetter> OutputModel { get; set; } = new FormLinkNullable<ISoundOutputModelGetter>();
+        public IFormLinkNullable<ISoundOutputModelGetter> OutputModel { get; init; } = new FormLinkNullable<ISoundOutputModelGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundOutputModelGetter> ISoundDescriptorGetter.OutputModel => this.OutputModel;
         #endregion
         #region String
         public String? String { get; set; }
@@ -1066,10 +1072,10 @@ namespace Mutagen.Bethesda.Skyrim
         ISoundDescriptorGetter
     {
         new MemorySlice<Byte>? CNAM { get; set; }
-        new FormLinkNullable<ISoundCategoryGetter> Category { get; set; }
-        new FormLinkNullable<ISoundDescriptorGetter> AlternateSoundFor { get; set; }
+        new IFormLinkNullable<ISoundCategoryGetter> Category { get; }
+        new IFormLinkNullable<ISoundDescriptorGetter> AlternateSoundFor { get; }
         new ExtendedList<String> SoundFiles { get; }
-        new FormLinkNullable<ISoundOutputModelGetter> OutputModel { get; set; }
+        new IFormLinkNullable<ISoundOutputModelGetter> OutputModel { get; }
         new String? String { get; set; }
         new ExtendedList<Condition> Conditions { get; }
         new SoundLoopAndRumble? LoopAndRumble { get; set; }
@@ -1098,10 +1104,10 @@ namespace Mutagen.Bethesda.Skyrim
     {
         static new ILoquiRegistration Registration => SoundDescriptor_Registration.Instance;
         ReadOnlyMemorySlice<Byte>? CNAM { get; }
-        FormLinkNullable<ISoundCategoryGetter> Category { get; }
-        FormLinkNullable<ISoundDescriptorGetter> AlternateSoundFor { get; }
+        IFormLinkNullableGetter<ISoundCategoryGetter> Category { get; }
+        IFormLinkNullableGetter<ISoundDescriptorGetter> AlternateSoundFor { get; }
         IReadOnlyList<String> SoundFiles { get; }
-        FormLinkNullable<ISoundOutputModelGetter> OutputModel { get; }
+        IFormLinkNullableGetter<ISoundOutputModelGetter> OutputModel { get; }
         String? String { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
         ISoundLoopAndRumbleGetter? LoopAndRumble { get; }
@@ -1376,10 +1382,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.CNAM = default;
-            item.Category = FormLinkNullable<ISoundCategoryGetter>.Null;
-            item.AlternateSoundFor = FormLinkNullable<ISoundDescriptorGetter>.Null;
+            item.Category.Clear();
+            item.AlternateSoundFor.Clear();
             item.SoundFiles.Clear();
-            item.OutputModel = FormLinkNullable<ISoundOutputModelGetter>.Null;
+            item.OutputModel.Clear();
             item.String = default;
             item.Conditions.Clear();
             item.LoopAndRumble = null;
@@ -1882,11 +1888,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.Category) ?? true))
             {
-                item.Category = new FormLinkNullable<ISoundCategoryGetter>(rhs.Category.FormKeyNullable);
+                item.Category.SetTo(rhs.Category);
             }
             if ((copyMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.AlternateSoundFor) ?? true))
             {
-                item.AlternateSoundFor = new FormLinkNullable<ISoundDescriptorGetter>(rhs.AlternateSoundFor.FormKeyNullable);
+                item.AlternateSoundFor.SetTo(rhs.AlternateSoundFor);
             }
             if ((copyMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.SoundFiles) ?? true))
             {
@@ -1907,7 +1913,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.OutputModel) ?? true))
             {
-                item.OutputModel = new FormLinkNullable<ISoundOutputModelGetter>(rhs.OutputModel.FormKeyNullable);
+                item.OutputModel.SetTo(rhs.OutputModel);
             }
             if ((copyMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.String) ?? true))
             {
@@ -2314,17 +2320,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.GNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Category = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Category.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)SoundDescriptor_FieldIndex.Category;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AlternateSoundFor = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.AlternateSoundFor.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)SoundDescriptor_FieldIndex.AlternateSoundFor;
                 }
                 case RecordTypeInts.ANAM:
@@ -2339,9 +2347,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.ONAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.OutputModel = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.OutputModel.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)SoundDescriptor_FieldIndex.OutputModel;
                 }
                 case RecordTypeInts.FNAM:
@@ -2443,16 +2452,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Category
         private int? _CategoryLocation;
-        public FormLinkNullable<ISoundCategoryGetter> Category => _CategoryLocation.HasValue ? new FormLinkNullable<ISoundCategoryGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CategoryLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundCategoryGetter>.Null;
+        public IFormLinkNullableGetter<ISoundCategoryGetter> Category => _CategoryLocation.HasValue ? new FormLinkNullable<ISoundCategoryGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CategoryLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundCategoryGetter>.Null;
         #endregion
         #region AlternateSoundFor
         private int? _AlternateSoundForLocation;
-        public FormLinkNullable<ISoundDescriptorGetter> AlternateSoundFor => _AlternateSoundForLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AlternateSoundForLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> AlternateSoundFor => _AlternateSoundForLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AlternateSoundForLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         public IReadOnlyList<String> SoundFiles { get; private set; } = ListExt.Empty<String>();
         #region OutputModel
         private int? _OutputModelLocation;
-        public FormLinkNullable<ISoundOutputModelGetter> OutputModel => _OutputModelLocation.HasValue ? new FormLinkNullable<ISoundOutputModelGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _OutputModelLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundOutputModelGetter>.Null;
+        public IFormLinkNullableGetter<ISoundOutputModelGetter> OutputModel => _OutputModelLocation.HasValue ? new FormLinkNullable<ISoundOutputModelGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _OutputModelLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundOutputModelGetter>.Null;
         #endregion
         #region String
         private int? _StringLocation;

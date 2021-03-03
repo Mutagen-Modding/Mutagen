@@ -58,13 +58,19 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #endregion
         #region Parent
-        public FormLinkNullable<IWorldspaceGetter> Parent { get; set; } = new FormLinkNullable<IWorldspaceGetter>();
+        public IFormLinkNullable<IWorldspaceGetter> Parent { get; init; } = new FormLinkNullable<IWorldspaceGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IWorldspaceGetter> IWorldspaceGetter.Parent => this.Parent;
         #endregion
         #region Climate
-        public FormLinkNullable<IClimateGetter> Climate { get; set; } = new FormLinkNullable<IClimateGetter>();
+        public IFormLinkNullable<IClimateGetter> Climate { get; init; } = new FormLinkNullable<IClimateGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IClimateGetter> IWorldspaceGetter.Climate => this.Climate;
         #endregion
         #region Water
-        public FormLinkNullable<IWaterGetter> Water { get; set; } = new FormLinkNullable<IWaterGetter>();
+        public IFormLinkNullable<IWaterGetter> Water { get; init; } = new FormLinkNullable<IWaterGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IWaterGetter> IWorldspaceGetter.Water => this.Water;
         #endregion
         #region Icon
         public String? Icon { get; set; }
@@ -1076,9 +1082,9 @@ namespace Mutagen.Bethesda.Oblivion
         IWorldspaceGetter
     {
         new String? Name { get; set; }
-        new FormLinkNullable<IWorldspaceGetter> Parent { get; set; }
-        new FormLinkNullable<IClimateGetter> Climate { get; set; }
-        new FormLinkNullable<IWaterGetter> Water { get; set; }
+        new IFormLinkNullable<IWorldspaceGetter> Parent { get; }
+        new IFormLinkNullable<IClimateGetter> Climate { get; }
+        new IFormLinkNullable<IWaterGetter> Water { get; }
         new String? Icon { get; set; }
         new MapData? MapData { get; set; }
         new Worldspace.Flag? Flags { get; set; }
@@ -1111,9 +1117,9 @@ namespace Mutagen.Bethesda.Oblivion
     {
         static new ILoquiRegistration Registration => Worldspace_Registration.Instance;
         String? Name { get; }
-        FormLinkNullable<IWorldspaceGetter> Parent { get; }
-        FormLinkNullable<IClimateGetter> Climate { get; }
-        FormLinkNullable<IWaterGetter> Water { get; }
+        IFormLinkNullableGetter<IWorldspaceGetter> Parent { get; }
+        IFormLinkNullableGetter<IClimateGetter> Climate { get; }
+        IFormLinkNullableGetter<IWaterGetter> Water { get; }
         String? Icon { get; }
         IMapDataGetter? MapData { get; }
         Worldspace.Flag? Flags { get; }
@@ -1602,9 +1608,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ClearPartial();
             item.Name = default;
-            item.Parent = FormLinkNullable<IWorldspaceGetter>.Null;
-            item.Climate = FormLinkNullable<IClimateGetter>.Null;
-            item.Water = FormLinkNullable<IWaterGetter>.Null;
+            item.Parent.Clear();
+            item.Climate.Clear();
+            item.Water.Clear();
             item.Icon = default;
             item.MapData = null;
             item.Flags = default;
@@ -3201,15 +3207,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Parent) ?? true))
             {
-                item.Parent = new FormLinkNullable<IWorldspaceGetter>(rhs.Parent.FormKeyNullable);
+                item.Parent.SetTo(rhs.Parent);
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Climate) ?? true))
             {
-                item.Climate = new FormLinkNullable<IClimateGetter>(rhs.Climate.FormKeyNullable);
+                item.Climate.SetTo(rhs.Climate);
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Water) ?? true))
             {
-                item.Water = new FormLinkNullable<IWaterGetter>(rhs.Water.FormKeyNullable);
+                item.Water.SetTo(rhs.Water);
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Icon) ?? true))
             {
@@ -3723,25 +3729,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.WNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Parent = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Parent.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Worldspace_FieldIndex.Parent;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Climate = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Climate.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Worldspace_FieldIndex.Climate;
                 }
                 case RecordTypeInts.NAM2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Water = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Water.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Worldspace_FieldIndex.Water;
                 }
                 case RecordTypeInts.ICON:
@@ -3875,15 +3884,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Parent
         private int? _ParentLocation;
-        public FormLinkNullable<IWorldspaceGetter> Parent => _ParentLocation.HasValue ? new FormLinkNullable<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ParentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWorldspaceGetter>.Null;
+        public IFormLinkNullableGetter<IWorldspaceGetter> Parent => _ParentLocation.HasValue ? new FormLinkNullable<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ParentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWorldspaceGetter>.Null;
         #endregion
         #region Climate
         private int? _ClimateLocation;
-        public FormLinkNullable<IClimateGetter> Climate => _ClimateLocation.HasValue ? new FormLinkNullable<IClimateGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ClimateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IClimateGetter>.Null;
+        public IFormLinkNullableGetter<IClimateGetter> Climate => _ClimateLocation.HasValue ? new FormLinkNullable<IClimateGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ClimateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IClimateGetter>.Null;
         #endregion
         #region Water
         private int? _WaterLocation;
-        public FormLinkNullable<IWaterGetter> Water => _WaterLocation.HasValue ? new FormLinkNullable<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WaterLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWaterGetter>.Null;
+        public IFormLinkNullableGetter<IWaterGetter> Water => _WaterLocation.HasValue ? new FormLinkNullable<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WaterLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWaterGetter>.Null;
         #endregion
         #region Icon
         private int? _IconLocation;

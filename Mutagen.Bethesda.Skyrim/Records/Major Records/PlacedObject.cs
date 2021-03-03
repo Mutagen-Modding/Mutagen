@@ -180,10 +180,10 @@ namespace Mutagen.Bethesda.Skyrim
                     switch (subHeader.RecordTypeInt)
                     {
                         case RecordTypeInts.LNAM:
-                            item.LightingTemplate = FormKeyBinaryTranslation.Instance.Parse(frame);
+                            item.LightingTemplate.SetTo(FormKeyBinaryTranslation.Instance.Parse(frame));
                             break;
                         case RecordTypeInts.INAM:
-                            item.ImageSpace = FormKeyBinaryTranslation.Instance.Parse(frame);
+                            item.ImageSpace.SetTo(FormKeyBinaryTranslation.Instance.Parse(frame));
                             break;
                         case RecordTypeInts.XLRM:
                             item.LinkedRooms.Add(new FormLink<PlacedObject>(FormKeyBinaryTranslation.Instance.Parse(frame)));
@@ -250,10 +250,10 @@ namespace Mutagen.Bethesda.Skyrim
             public IReadOnlyList<IFormLinkGetter<IPlacedObjectGetter>> LinkedRooms { get; private set; } = ListExt.Empty<IFormLinkGetter<IPlacedObjectGetter>>();
 
             int? _lightingTemplateLoc;
-            public FormLinkNullable<ILightGetter> LightingTemplate => _lightingTemplateLoc.HasValue ? new FormLinkNullable<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _lightingTemplateLoc.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILightGetter>.Null;
+            public IFormLinkNullableGetter<ILightGetter> LightingTemplate => _lightingTemplateLoc.HasValue ? new FormLinkNullable<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _lightingTemplateLoc.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILightGetter>.Null;
 
             int? _imageSpaceLoc;
-            public FormLinkNullable<IImageSpaceAdapterGetter> ImageSpace => _imageSpaceLoc.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _imageSpaceLoc.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
+            public IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpace => _imageSpaceLoc.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _imageSpaceLoc.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
 
             partial void BoundDataCustomParse(OverlayStream stream, int offset)
             {

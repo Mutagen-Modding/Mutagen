@@ -127,13 +127,19 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region TextureSet
-        public FormLinkNullable<ITextureSetGetter> TextureSet { get; set; } = new FormLinkNullable<ITextureSetGetter>();
+        public IFormLinkNullable<ITextureSetGetter> TextureSet { get; init; } = new FormLinkNullable<ITextureSetGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ITextureSetGetter> IHeadPartGetter.TextureSet => this.TextureSet;
         #endregion
         #region Color
-        public FormLinkNullable<IColorRecordGetter> Color { get; set; } = new FormLinkNullable<IColorRecordGetter>();
+        public IFormLinkNullable<IColorRecordGetter> Color { get; init; } = new FormLinkNullable<IColorRecordGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IColorRecordGetter> IHeadPartGetter.Color => this.Color;
         #endregion
         #region ValidRaces
-        public FormLinkNullable<IFormListGetter> ValidRaces { get; set; } = new FormLinkNullable<IFormListGetter>();
+        public IFormLinkNullable<IFormListGetter> ValidRaces { get; init; } = new FormLinkNullable<IFormListGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IFormListGetter> IHeadPartGetter.ValidRaces => this.ValidRaces;
         #endregion
 
         #region To String
@@ -947,9 +953,9 @@ namespace Mutagen.Bethesda.Skyrim
         new HeadPart.TypeEnum? Type { get; set; }
         new ExtendedList<IFormLinkGetter<IHeadPartGetter>> ExtraParts { get; }
         new ExtendedList<Part> Parts { get; }
-        new FormLinkNullable<ITextureSetGetter> TextureSet { get; set; }
-        new FormLinkNullable<IColorRecordGetter> Color { get; set; }
-        new FormLinkNullable<IFormListGetter> ValidRaces { get; set; }
+        new IFormLinkNullable<ITextureSetGetter> TextureSet { get; }
+        new IFormLinkNullable<IColorRecordGetter> Color { get; }
+        new IFormLinkNullable<IFormListGetter> ValidRaces { get; }
         #region Mutagen
         new HeadPart.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -982,9 +988,9 @@ namespace Mutagen.Bethesda.Skyrim
         HeadPart.TypeEnum? Type { get; }
         IReadOnlyList<IFormLinkGetter<IHeadPartGetter>> ExtraParts { get; }
         IReadOnlyList<IPartGetter> Parts { get; }
-        FormLinkNullable<ITextureSetGetter> TextureSet { get; }
-        FormLinkNullable<IColorRecordGetter> Color { get; }
-        FormLinkNullable<IFormListGetter> ValidRaces { get; }
+        IFormLinkNullableGetter<ITextureSetGetter> TextureSet { get; }
+        IFormLinkNullableGetter<IColorRecordGetter> Color { get; }
+        IFormLinkNullableGetter<IFormListGetter> ValidRaces { get; }
 
         #region Mutagen
         HeadPart.MajorFlag MajorFlags { get; }
@@ -1254,9 +1260,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Type = default;
             item.ExtraParts.Clear();
             item.Parts.Clear();
-            item.TextureSet = FormLinkNullable<ITextureSetGetter>.Null;
-            item.Color = FormLinkNullable<IColorRecordGetter>.Null;
-            item.ValidRaces = FormLinkNullable<IFormListGetter>.Null;
+            item.TextureSet.Clear();
+            item.Color.Clear();
+            item.ValidRaces.Clear();
             base.Clear(item);
         }
         
@@ -1792,15 +1798,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)HeadPart_FieldIndex.TextureSet) ?? true))
             {
-                item.TextureSet = new FormLinkNullable<ITextureSetGetter>(rhs.TextureSet.FormKeyNullable);
+                item.TextureSet.SetTo(rhs.TextureSet);
             }
             if ((copyMask?.GetShouldTranslate((int)HeadPart_FieldIndex.Color) ?? true))
             {
-                item.Color = new FormLinkNullable<IColorRecordGetter>(rhs.Color.FormKeyNullable);
+                item.Color.SetTo(rhs.Color);
             }
             if ((copyMask?.GetShouldTranslate((int)HeadPart_FieldIndex.ValidRaces) ?? true))
             {
-                item.ValidRaces = new FormLinkNullable<IFormListGetter>(rhs.ValidRaces.FormKeyNullable);
+                item.ValidRaces.SetTo(rhs.ValidRaces);
             }
         }
         
@@ -2157,25 +2163,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TextureSet = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.TextureSet.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)HeadPart_FieldIndex.TextureSet;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Color = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Color.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)HeadPart_FieldIndex.Color;
                 }
                 case RecordTypeInts.RNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ValidRaces = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.ValidRaces.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)HeadPart_FieldIndex.ValidRaces;
                 }
                 default:
@@ -2259,15 +2268,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IPartGetter> Parts { get; private set; } = ListExt.Empty<PartBinaryOverlay>();
         #region TextureSet
         private int? _TextureSetLocation;
-        public FormLinkNullable<ITextureSetGetter> TextureSet => _TextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
+        public IFormLinkNullableGetter<ITextureSetGetter> TextureSet => _TextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
         #endregion
         #region Color
         private int? _ColorLocation;
-        public FormLinkNullable<IColorRecordGetter> Color => _ColorLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ColorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IColorRecordGetter>.Null;
+        public IFormLinkNullableGetter<IColorRecordGetter> Color => _ColorLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ColorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IColorRecordGetter>.Null;
         #endregion
         #region ValidRaces
         private int? _ValidRacesLocation;
-        public FormLinkNullable<IFormListGetter> ValidRaces => _ValidRacesLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ValidRacesLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public IFormLinkNullableGetter<IFormListGetter> ValidRaces => _ValidRacesLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ValidRacesLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

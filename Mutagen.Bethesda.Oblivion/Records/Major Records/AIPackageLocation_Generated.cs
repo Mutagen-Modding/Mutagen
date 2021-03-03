@@ -43,7 +43,9 @@ namespace Mutagen.Bethesda.Oblivion
         public AIPackageLocation.LocationType Type { get; set; } = default;
         #endregion
         #region LocationReference
-        public FormLink<IPlacedGetter> LocationReference { get; set; } = new FormLink<IPlacedGetter>();
+        public IFormLink<IPlacedGetter> LocationReference { get; init; } = new FormLink<IPlacedGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IPlacedGetter> IAIPackageLocationGetter.LocationReference => this.LocationReference;
         #endregion
         #region Radius
         public Single Radius { get; set; } = default;
@@ -481,7 +483,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IAIPackageLocation>
     {
         new AIPackageLocation.LocationType Type { get; set; }
-        new FormLink<IPlacedGetter> LocationReference { get; set; }
+        new IFormLink<IPlacedGetter> LocationReference { get; }
         new Single Radius { get; set; }
     }
 
@@ -499,7 +501,7 @@ namespace Mutagen.Bethesda.Oblivion
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => AIPackageLocation_Registration.Instance;
         AIPackageLocation.LocationType Type { get; }
-        FormLink<IPlacedGetter> LocationReference { get; }
+        IFormLinkGetter<IPlacedGetter> LocationReference { get; }
         Single Radius { get; }
 
     }
@@ -760,7 +762,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ClearPartial();
             item.Type = default;
-            item.LocationReference = FormLink<IPlacedGetter>.Null;
+            item.LocationReference.Clear();
             item.Radius = default;
         }
         
@@ -937,7 +939,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AIPackageLocation_FieldIndex.LocationReference) ?? true))
             {
-                item.LocationReference = new FormLink<IPlacedGetter>(rhs.LocationReference.FormKey);
+                item.LocationReference.SetTo(rhs.LocationReference);
             }
             if ((copyMask?.GetShouldTranslate((int)AIPackageLocation_FieldIndex.Radius) ?? true))
             {
@@ -1089,9 +1091,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame)
         {
             item.Type = EnumBinaryTranslation<AIPackageLocation.LocationType>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.LocationReference = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.LocationReference.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             item.Radius = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
         }
 
@@ -1160,7 +1163,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public AIPackageLocation.LocationType Type => (AIPackageLocation.LocationType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
-        public FormLink<IPlacedGetter> LocationReference => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<IPlacedGetter> LocationReference => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         public Single Radius => _data.Slice(0x8, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,

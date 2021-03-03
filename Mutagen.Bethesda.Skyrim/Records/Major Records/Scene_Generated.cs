@@ -123,7 +123,9 @@ namespace Mutagen.Bethesda.Skyrim
         IScenePhaseUnusedDataGetter? ISceneGetter.Unused2 => this.Unused2;
         #endregion
         #region Quest
-        public FormLinkNullable<IQuestGetter> Quest { get; set; } = new FormLinkNullable<IQuestGetter>();
+        public IFormLinkNullable<IQuestGetter> Quest { get; init; } = new FormLinkNullable<IQuestGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IQuestGetter> ISceneGetter.Quest => this.Quest;
         #endregion
         #region LastActionIndex
         public UInt32? LastActionIndex { get; set; }
@@ -1180,7 +1182,7 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<SceneAction> Actions { get; }
         new ScenePhaseUnusedData? Unused { get; set; }
         new ScenePhaseUnusedData? Unused2 { get; set; }
-        new FormLinkNullable<IQuestGetter> Quest { get; set; }
+        new IFormLinkNullable<IQuestGetter> Quest { get; }
         new UInt32? LastActionIndex { get; set; }
         new MemorySlice<Byte>? VNAM { get; set; }
         new ExtendedList<Condition> Conditions { get; }
@@ -1208,7 +1210,7 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<ISceneActionGetter> Actions { get; }
         IScenePhaseUnusedDataGetter? Unused { get; }
         IScenePhaseUnusedDataGetter? Unused2 { get; }
-        FormLinkNullable<IQuestGetter> Quest { get; }
+        IFormLinkNullableGetter<IQuestGetter> Quest { get; }
         UInt32? LastActionIndex { get; }
         ReadOnlyMemorySlice<Byte>? VNAM { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
@@ -1480,7 +1482,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Actions.Clear();
             item.Unused = null;
             item.Unused2 = null;
-            item.Quest = FormLinkNullable<IQuestGetter>.Null;
+            item.Quest.Clear();
             item.LastActionIndex = default;
             item.VNAM = default;
             item.Conditions.Clear();
@@ -2162,7 +2164,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Scene_FieldIndex.Quest) ?? true))
             {
-                item.Quest = new FormLinkNullable<IQuestGetter>(rhs.Quest.FormKeyNullable);
+                item.Quest.SetTo(rhs.Quest);
             }
             if ((copyMask?.GetShouldTranslate((int)Scene_FieldIndex.LastActionIndex) ?? true))
             {
@@ -2602,9 +2604,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Quest = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Quest.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Scene_FieldIndex.Quest;
                 }
                 case RecordTypeInts.INAM:
@@ -2700,7 +2703,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IScenePhaseUnusedDataGetter? Unused2 { get; private set; }
         #region Quest
         private int? _QuestLocation;
-        public FormLinkNullable<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
+        public IFormLinkNullableGetter<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
         #endregion
         #region LastActionIndex
         private int? _LastActionIndexLocation;

@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.Skyrim
                     throw new ArgumentException();
                 }
                 var dataCount = checked((int)BinaryPrimitives.ReadUInt32LittleEndian(pkcuRecord.Content));
-                item.PackageTemplate = FormKeyBinaryTranslation.Instance.Parse(pkcuRecord.Content.Slice(4, 4), frame.MetaData.MasterReferences!);
+                item.PackageTemplate.FormKey = FormKeyBinaryTranslation.Instance.Parse(pkcuRecord.Content.Slice(4, 4), frame.MetaData.MasterReferences!);
                 item.DataInputVersion = BinaryPrimitives.ReadInt32LittleEndian(pkcuRecord.Content.Slice(8));
 
                 FillPackageData(frame.Reader, dataCount, item.Data);

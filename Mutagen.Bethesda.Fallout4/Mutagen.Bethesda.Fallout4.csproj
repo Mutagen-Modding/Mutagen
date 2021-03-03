@@ -16,6 +16,7 @@
     <IsPackable>true</IsPackable>
     <WarningsAsErrors>nullable</WarningsAsErrors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <LangVersion>preview</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>Mutagen.Bethesda.Fallout4.xml</DocumentationFile>
@@ -25,6 +26,7 @@
   <ItemGroup>
     <Compile Include="Constants.cs" />
     <Compile Include="Enums\GroupTypeEnum.cs" />
+    <Compile Include="IsExternalInit.cs" />
     <Compile Include="Records\Group.cs">
       <DependentUpon>Group.xml</DependentUpon>
     </Compile>

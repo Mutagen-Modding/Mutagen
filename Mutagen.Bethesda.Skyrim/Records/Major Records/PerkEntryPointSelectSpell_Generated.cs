@@ -42,7 +42,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Spell
-        public FormLink<ISpellGetter> Spell { get; set; } = new FormLink<ISpellGetter>();
+        public IFormLink<ISpellGetter> Spell { get; init; } = new FormLink<ISpellGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ISpellGetter> IPerkEntryPointSelectSpellGetter.Spell => this.Spell;
         #endregion
 
         #region To String
@@ -419,7 +421,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPerkEntryPointSelectSpell>,
         IPerkEntryPointSelectSpellGetter
     {
-        new FormLink<ISpellGetter> Spell { get; set; }
+        new IFormLink<ISpellGetter> Spell { get; }
     }
 
     public partial interface IPerkEntryPointSelectSpellGetter :
@@ -429,7 +431,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IPerkEntryPointSelectSpellGetter>
     {
         static new ILoquiRegistration Registration => PerkEntryPointSelectSpell_Registration.Instance;
-        FormLink<ISpellGetter> Spell { get; }
+        IFormLinkGetter<ISpellGetter> Spell { get; }
 
     }
 
@@ -667,7 +669,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IPerkEntryPointSelectSpell item)
         {
             ClearPartial();
-            item.Spell = FormLink<ISpellGetter>.Null;
+            item.Spell.Clear();
             base.Clear(item);
         }
         
@@ -940,7 +942,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PerkEntryPointSelectSpell_FieldIndex.Spell) ?? true))
             {
-                item.Spell = new FormLink<ISpellGetter>(rhs.Spell.FormKey);
+                item.Spell.SetTo(rhs.Spell);
             }
         }
         
@@ -1134,9 +1136,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             APerkEntryPointEffectBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.Spell = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Spell.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
         }
 
     }
@@ -1184,7 +1187,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<ISpellGetter> Spell => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x2, 0x4))));
+        public IFormLinkGetter<ISpellGetter> Spell => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x2, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

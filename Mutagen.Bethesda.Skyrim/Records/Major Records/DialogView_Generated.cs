@@ -43,7 +43,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Quest
-        public FormLink<IQuestGetter> Quest { get; set; } = new FormLink<IQuestGetter>();
+        public IFormLink<IQuestGetter> Quest { get; init; } = new FormLink<IQuestGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IQuestGetter> IDialogViewGetter.Quest => this.Quest;
         #endregion
         #region Branches
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -770,7 +772,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IDialogViewInternal>,
         ISkyrimMajorRecordInternal
     {
-        new FormLink<IQuestGetter> Quest { get; set; }
+        new IFormLink<IQuestGetter> Quest { get; }
         new ExtendedList<IFormLinkGetter<IDialogBranchGetter>> Branches { get; }
         new SliceList<byte> TNAMs { get; }
         new MemorySlice<Byte>? ENAM { get; set; }
@@ -792,7 +794,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IDialogViewGetter>
     {
         static new ILoquiRegistration Registration => DialogView_Registration.Instance;
-        FormLink<IQuestGetter> Quest { get; }
+        IFormLinkGetter<IQuestGetter> Quest { get; }
         IReadOnlyList<IFormLinkGetter<IDialogBranchGetter>> Branches { get; }
         IReadOnlyList<ReadOnlyMemorySlice<Byte>> TNAMs { get; }
         ReadOnlyMemorySlice<Byte>? ENAM { get; }
@@ -1052,7 +1054,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IDialogViewInternal item)
         {
             ClearPartial();
-            item.Quest = FormLink<IQuestGetter>.Null;
+            item.Quest.Clear();
             item.Branches.Clear();
             item.TNAMs.Clear();
             item.ENAM = default;
@@ -1454,7 +1456,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)DialogView_FieldIndex.Quest) ?? true))
             {
-                item.Quest = new FormLink<IQuestGetter>(rhs.Quest.FormKey);
+                item.Quest.SetTo(rhs.Quest);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogView_FieldIndex.Branches) ?? true))
             {
@@ -1794,9 +1796,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.QNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Quest = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Quest.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)DialogView_FieldIndex.Quest;
                 }
                 case RecordTypeInts.BNAM:
@@ -1886,7 +1889,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Quest
         private int? _QuestLocation;
-        public FormLink<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLink<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLink<IQuestGetter>.Null;
+        public IFormLinkGetter<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLink<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLink<IQuestGetter>.Null;
         #endregion
         public IReadOnlyList<IFormLinkGetter<IDialogBranchGetter>> Branches { get; private set; } = ListExt.Empty<IFormLinkGetter<IDialogBranchGetter>>();
         public IReadOnlyList<ReadOnlyMemorySlice<Byte>> TNAMs { get; private set; } = ListExt.Empty<ReadOnlyMemorySlice<Byte>>();

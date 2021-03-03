@@ -43,10 +43,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region EffectArt
-        public FormLink<IArtObjectGetter> EffectArt { get; set; } = new FormLink<IArtObjectGetter>();
+        public IFormLink<IArtObjectGetter> EffectArt { get; init; } = new FormLink<IArtObjectGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IArtObjectGetter> IVisualEffectGetter.EffectArt => this.EffectArt;
         #endregion
         #region Shader
-        public FormLink<IEffectShaderGetter> Shader { get; set; } = new FormLink<IEffectShaderGetter>();
+        public IFormLink<IEffectShaderGetter> Shader { get; init; } = new FormLink<IEffectShaderGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IEffectShaderGetter> IVisualEffectGetter.Shader => this.Shader;
         #endregion
         #region Flags
         public VisualEffect.Flag Flags { get; set; } = default;
@@ -559,8 +563,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordInternal,
         IVisualEffectGetter
     {
-        new FormLink<IArtObjectGetter> EffectArt { get; set; }
-        new FormLink<IEffectShaderGetter> Shader { get; set; }
+        new IFormLink<IArtObjectGetter> EffectArt { get; }
+        new IFormLink<IEffectShaderGetter> Shader { get; }
         new VisualEffect.Flag Flags { get; set; }
         new VisualEffect.DATADataType DATADataTypeState { get; set; }
     }
@@ -580,8 +584,8 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IVisualEffectGetter>
     {
         static new ILoquiRegistration Registration => VisualEffect_Registration.Instance;
-        FormLink<IArtObjectGetter> EffectArt { get; }
-        FormLink<IEffectShaderGetter> Shader { get; }
+        IFormLinkGetter<IArtObjectGetter> EffectArt { get; }
+        IFormLinkGetter<IEffectShaderGetter> Shader { get; }
         VisualEffect.Flag Flags { get; }
         VisualEffect.DATADataType DATADataTypeState { get; }
 
@@ -838,8 +842,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IVisualEffectInternal item)
         {
             ClearPartial();
-            item.EffectArt = FormLink<IArtObjectGetter>.Null;
-            item.Shader = FormLink<IEffectShaderGetter>.Null;
+            item.EffectArt.Clear();
+            item.Shader.Clear();
             item.Flags = default;
             item.DATADataTypeState = default;
             base.Clear(item);
@@ -1187,11 +1191,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)VisualEffect_FieldIndex.EffectArt) ?? true))
             {
-                item.EffectArt = new FormLink<IArtObjectGetter>(rhs.EffectArt.FormKey);
+                item.EffectArt.SetTo(rhs.EffectArt);
             }
             if ((copyMask?.GetShouldTranslate((int)VisualEffect_FieldIndex.Shader) ?? true))
             {
-                item.Shader = new FormLink<IEffectShaderGetter>(rhs.Shader.FormKey);
+                item.Shader.SetTo(rhs.Shader);
             }
             if ((copyMask?.GetShouldTranslate((int)VisualEffect_FieldIndex.Flags) ?? true))
             {
@@ -1475,12 +1479,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.EffectArt = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
-                    item.Shader = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
+                    item.EffectArt.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
+                    item.Shader.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     item.Flags = EnumBinaryTranslation<VisualEffect.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     return (int)VisualEffect_FieldIndex.Flags;
                 }
@@ -1544,12 +1550,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region EffectArt
         private int _EffectArtLocation => _DATALocation!.Value;
         private bool _EffectArt_IsSet => _DATALocation.HasValue;
-        public FormLink<IArtObjectGetter> EffectArt => _EffectArt_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_EffectArtLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
+        public IFormLinkGetter<IArtObjectGetter> EffectArt => _EffectArt_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_EffectArtLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
         #endregion
         #region Shader
         private int _ShaderLocation => _DATALocation!.Value + 0x4;
         private bool _Shader_IsSet => _DATALocation.HasValue;
-        public FormLink<IEffectShaderGetter> Shader => _Shader_IsSet ? new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ShaderLocation, 0x4)))) : FormLink<IEffectShaderGetter>.Null;
+        public IFormLinkGetter<IEffectShaderGetter> Shader => _Shader_IsSet ? new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ShaderLocation, 0x4)))) : FormLink<IEffectShaderGetter>.Null;
         #endregion
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value + 0x8;

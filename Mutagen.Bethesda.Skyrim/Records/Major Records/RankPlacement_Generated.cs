@@ -40,7 +40,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Faction
-        public FormLink<IFactionGetter> Faction { get; set; } = new FormLink<IFactionGetter>();
+        public IFormLink<IFactionGetter> Faction { get; init; } = new FormLink<IFactionGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IFactionGetter> IRankPlacementGetter.Faction => this.Faction;
         #endregion
         #region Rank
         public Byte Rank { get; set; } = default;
@@ -488,7 +490,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IRankPlacement>,
         IRankPlacementGetter
     {
-        new FormLink<IFactionGetter> Faction { get; set; }
+        new IFormLink<IFactionGetter> Faction { get; }
         new Byte Rank { get; set; }
         new MemorySlice<Byte> Fluff { get; set; }
     }
@@ -506,7 +508,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => RankPlacement_Registration.Instance;
-        FormLink<IFactionGetter> Faction { get; }
+        IFormLinkGetter<IFactionGetter> Faction { get; }
         Byte Rank { get; }
         ReadOnlyMemorySlice<Byte> Fluff { get; }
 
@@ -767,7 +769,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IRankPlacement item)
         {
             ClearPartial();
-            item.Faction = FormLink<IFactionGetter>.Null;
+            item.Faction.Clear();
             item.Rank = default;
             item.Fluff = new byte[3];
         }
@@ -941,7 +943,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)RankPlacement_FieldIndex.Faction) ?? true))
             {
-                item.Faction = new FormLink<IFactionGetter>(rhs.Faction.FormKey);
+                item.Faction.SetTo(rhs.Faction);
             }
             if ((copyMask?.GetShouldTranslate((int)RankPlacement_FieldIndex.Rank) ?? true))
             {
@@ -1093,9 +1095,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IRankPlacement item,
             MutagenFrame frame)
         {
-            item.Faction = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Faction.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             item.Rank = frame.ReadUInt8();
             item.Fluff = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
         }
@@ -1164,7 +1167,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<IFactionGetter> Faction => new FormLink<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IFactionGetter> Faction => new FormLink<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public Byte Rank => _data.Span[0x4];
         public ReadOnlyMemorySlice<Byte> Fluff => _data.Span.Slice(0x5, 0x3).ToArray();
         partial void CustomFactoryEnd(

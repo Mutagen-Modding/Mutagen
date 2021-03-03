@@ -40,7 +40,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Quest
-        public FormLinkNullable<IQuestGetter> Quest { get; set; } = new FormLinkNullable<IQuestGetter>();
+        public IFormLinkNullable<IQuestGetter> Quest { get; init; } = new FormLinkNullable<IQuestGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IQuestGetter> IStoryManagerQuestGetter.Quest => this.Quest;
         #endregion
         #region FNAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -489,7 +491,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IStoryManagerQuest>,
         IStoryManagerQuestGetter
     {
-        new FormLinkNullable<IQuestGetter> Quest { get; set; }
+        new IFormLinkNullable<IQuestGetter> Quest { get; }
         new MemorySlice<Byte>? FNAM { get; set; }
         new Single? HoursUntilReset { get; set; }
     }
@@ -507,7 +509,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => StoryManagerQuest_Registration.Instance;
-        FormLinkNullable<IQuestGetter> Quest { get; }
+        IFormLinkNullableGetter<IQuestGetter> Quest { get; }
         ReadOnlyMemorySlice<Byte>? FNAM { get; }
         Single? HoursUntilReset { get; }
 
@@ -780,7 +782,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IStoryManagerQuest item)
         {
             ClearPartial();
-            item.Quest = FormLinkNullable<IQuestGetter>.Null;
+            item.Quest.Clear();
             item.FNAM = default;
             item.HoursUntilReset = default;
         }
@@ -963,7 +965,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)StoryManagerQuest_FieldIndex.Quest) ?? true))
             {
-                item.Quest = new FormLinkNullable<IQuestGetter>(rhs.Quest.FormKeyNullable);
+                item.Quest.SetTo(rhs.Quest);
             }
             if ((copyMask?.GetShouldTranslate((int)StoryManagerQuest_FieldIndex.FNAM) ?? true))
             {
@@ -1141,9 +1143,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)StoryManagerQuest_FieldIndex.Quest) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Quest = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Quest.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)StoryManagerQuest_FieldIndex.Quest;
                 }
                 case RecordTypeInts.FNAM:
@@ -1231,7 +1234,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Quest
         private int? _QuestLocation;
-        public FormLinkNullable<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
+        public IFormLinkNullableGetter<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
         #endregion
         #region FNAM
         private int? _FNAMLocation;

@@ -54,7 +54,9 @@ namespace Mutagen.Bethesda.Oblivion
         ReadOnlyMemorySlice<Byte> ILockInformationGetter.Unused => this.Unused;
         #endregion
         #region Key
-        public FormLink<IKeyGetter> Key { get; set; } = new FormLink<IKeyGetter>();
+        public IFormLink<IKeyGetter> Key { get; init; } = new FormLink<IKeyGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IKeyGetter> ILockInformationGetter.Key => this.Key;
         #endregion
         #region Flags
         public LockInformation.Flag Flags { get; set; } = default;
@@ -521,7 +523,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new Byte LockLevel { get; set; }
         new MemorySlice<Byte> Unused { get; set; }
-        new FormLink<IKeyGetter> Key { get; set; }
+        new IFormLink<IKeyGetter> Key { get; }
         new LockInformation.Flag Flags { get; set; }
     }
 
@@ -540,7 +542,7 @@ namespace Mutagen.Bethesda.Oblivion
         static ILoquiRegistration Registration => LockInformation_Registration.Instance;
         Byte LockLevel { get; }
         ReadOnlyMemorySlice<Byte> Unused { get; }
-        FormLink<IKeyGetter> Key { get; }
+        IFormLinkGetter<IKeyGetter> Key { get; }
         LockInformation.Flag Flags { get; }
 
     }
@@ -803,7 +805,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
             item.LockLevel = default;
             item.Unused = new byte[3];
-            item.Key = FormLink<IKeyGetter>.Null;
+            item.Key.Clear();
             item.Flags = default;
         }
         
@@ -991,7 +993,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LockInformation_FieldIndex.Key) ?? true))
             {
-                item.Key = new FormLink<IKeyGetter>(rhs.Key.FormKey);
+                item.Key.SetTo(rhs.Key);
             }
             if ((copyMask?.GetShouldTranslate((int)LockInformation_FieldIndex.Flags) ?? true))
             {
@@ -1145,9 +1147,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.LockLevel = frame.ReadUInt8();
             item.Unused = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
-            item.Key = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Key.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             item.Flags = EnumBinaryTranslation<LockInformation.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
         }
 
@@ -1217,7 +1220,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public Byte LockLevel => _data.Span[0x0];
         public ReadOnlyMemorySlice<Byte> Unused => _data.Span.Slice(0x1, 0x3).ToArray();
-        public FormLink<IKeyGetter> Key => new FormLink<IKeyGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<IKeyGetter> Key => new FormLink<IKeyGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         public LockInformation.Flag Flags => (LockInformation.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -43,7 +43,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Hazard
-        public FormLink<IHazardGetter> Hazard { get; set; } = new FormLink<IHazardGetter>();
+        public IFormLink<IHazardGetter> Hazard { get; init; } = new FormLink<IHazardGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IHazardGetter> IPlacedHazardGetter.Hazard => this.Hazard;
         #endregion
 
         #region To String
@@ -496,7 +498,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPlacedHazardInternal>,
         IPlacedHazardGetter
     {
-        new FormLink<IHazardGetter> Hazard { get; set; }
+        new IFormLink<IHazardGetter> Hazard { get; }
     }
 
     public partial interface IPlacedHazardInternal :
@@ -514,7 +516,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IPlacedHazardGetter>
     {
         static new ILoquiRegistration Registration => PlacedHazard_Registration.Instance;
-        FormLink<IHazardGetter> Hazard { get; }
+        IFormLinkGetter<IHazardGetter> Hazard { get; }
 
     }
 
@@ -783,7 +785,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IPlacedHazardInternal item)
         {
             ClearPartial();
-            item.Hazard = FormLink<IHazardGetter>.Null;
+            item.Hazard.Clear();
             base.Clear(item);
         }
         
@@ -1264,7 +1266,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PlacedHazard_FieldIndex.Hazard) ?? true))
             {
-                item.Hazard = new FormLink<IHazardGetter>(rhs.Hazard.FormKey);
+                item.Hazard.SetTo(rhs.Hazard);
             }
         }
         

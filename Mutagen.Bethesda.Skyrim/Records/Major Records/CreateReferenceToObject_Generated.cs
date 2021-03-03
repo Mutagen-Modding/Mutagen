@@ -40,7 +40,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Object
-        public FormLink<ISkyrimMajorRecordGetter> Object { get; set; } = new FormLink<ISkyrimMajorRecordGetter>();
+        public IFormLink<ISkyrimMajorRecordGetter> Object { get; init; } = new FormLink<ISkyrimMajorRecordGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ISkyrimMajorRecordGetter> ICreateReferenceToObjectGetter.Object => this.Object;
         #endregion
         #region AliasIndex
         public Int16 AliasIndex { get; set; } = default;
@@ -546,7 +548,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILoquiObjectSetter<ICreateReferenceToObject>
     {
-        new FormLink<ISkyrimMajorRecordGetter> Object { get; set; }
+        new IFormLink<ISkyrimMajorRecordGetter> Object { get; }
         new Int16 AliasIndex { get; set; }
         new CreateReferenceToObject.CreateEnum Create { get; set; }
         new Level Level { get; set; }
@@ -566,7 +568,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => CreateReferenceToObject_Registration.Instance;
-        FormLink<ISkyrimMajorRecordGetter> Object { get; }
+        IFormLinkGetter<ISkyrimMajorRecordGetter> Object { get; }
         Int16 AliasIndex { get; }
         CreateReferenceToObject.CreateEnum Create { get; }
         Level Level { get; }
@@ -831,7 +833,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ICreateReferenceToObject item)
         {
             ClearPartial();
-            item.Object = FormLink<ISkyrimMajorRecordGetter>.Null;
+            item.Object.Clear();
             item.AliasIndex = default;
             item.Create = default;
             item.Level = default;
@@ -1019,7 +1021,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)CreateReferenceToObject_FieldIndex.Object) ?? true))
             {
-                item.Object = new FormLink<ISkyrimMajorRecordGetter>(rhs.Object.FormKey);
+                item.Object.SetTo(rhs.Object);
             }
             if ((copyMask?.GetShouldTranslate((int)CreateReferenceToObject_FieldIndex.AliasIndex) ?? true))
             {
@@ -1212,9 +1214,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)CreateReferenceToObject_FieldIndex.Object) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Object = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Object.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)CreateReferenceToObject_FieldIndex.Object;
                 }
                 case RecordTypeInts.ALCA:
@@ -1302,7 +1305,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Object
         private int? _ObjectLocation;
-        public FormLink<ISkyrimMajorRecordGetter> Object => _ObjectLocation.HasValue ? new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ObjectLocation.Value, _package.MetaData.Constants)))) : FormLink<ISkyrimMajorRecordGetter>.Null;
+        public IFormLinkGetter<ISkyrimMajorRecordGetter> Object => _ObjectLocation.HasValue ? new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ObjectLocation.Value, _package.MetaData.Constants)))) : FormLink<ISkyrimMajorRecordGetter>.Null;
         #endregion
         private int? _ALCALocation;
         public CreateReferenceToObject.ALCADataType ALCADataTypeState { get; private set; }

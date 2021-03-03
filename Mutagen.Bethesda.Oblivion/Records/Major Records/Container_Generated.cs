@@ -73,7 +73,9 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #endregion
         #region Script
-        public FormLinkNullable<IScriptGetter> Script { get; set; } = new FormLinkNullable<IScriptGetter>();
+        public IFormLinkNullable<IScriptGetter> Script { get; init; } = new FormLinkNullable<IScriptGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IScriptGetter> IContainerGetter.Script => this.Script;
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -101,10 +103,14 @@ namespace Mutagen.Bethesda.Oblivion
         IContainerDataGetter? IContainerGetter.Data => this.Data;
         #endregion
         #region OpenSound
-        public FormLinkNullable<ISoundGetter> OpenSound { get; set; } = new FormLinkNullable<ISoundGetter>();
+        public IFormLinkNullable<ISoundGetter> OpenSound { get; init; } = new FormLinkNullable<ISoundGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundGetter> IContainerGetter.OpenSound => this.OpenSound;
         #endregion
         #region CloseSound
-        public FormLinkNullable<ISoundGetter> CloseSound { get; set; } = new FormLinkNullable<ISoundGetter>();
+        public IFormLinkNullable<ISoundGetter> CloseSound { get; init; } = new FormLinkNullable<ISoundGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundGetter> IContainerGetter.CloseSound => this.CloseSound;
         #endregion
 
         #region To String
@@ -766,11 +772,11 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
-        new FormLinkNullable<IScriptGetter> Script { get; set; }
+        new IFormLinkNullable<IScriptGetter> Script { get; }
         new ExtendedList<ContainerItem> Items { get; }
         new ContainerData? Data { get; set; }
-        new FormLinkNullable<ISoundGetter> OpenSound { get; set; }
-        new FormLinkNullable<ISoundGetter> CloseSound { get; set; }
+        new IFormLinkNullable<ISoundGetter> OpenSound { get; }
+        new IFormLinkNullable<ISoundGetter> CloseSound { get; }
     }
 
     public partial interface IContainerInternal :
@@ -793,11 +799,11 @@ namespace Mutagen.Bethesda.Oblivion
         static new ILoquiRegistration Registration => Container_Registration.Instance;
         String? Name { get; }
         IModelGetter? Model { get; }
-        FormLinkNullable<IScriptGetter> Script { get; }
+        IFormLinkNullableGetter<IScriptGetter> Script { get; }
         IReadOnlyList<IContainerItemGetter> Items { get; }
         IContainerDataGetter? Data { get; }
-        FormLinkNullable<ISoundGetter> OpenSound { get; }
-        FormLinkNullable<ISoundGetter> CloseSound { get; }
+        IFormLinkNullableGetter<ISoundGetter> OpenSound { get; }
+        IFormLinkNullableGetter<ISoundGetter> CloseSound { get; }
 
     }
 
@@ -1056,11 +1062,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
             item.Name = default;
             item.Model = null;
-            item.Script = FormLinkNullable<IScriptGetter>.Null;
+            item.Script.Clear();
             item.Items.Clear();
             item.Data = null;
-            item.OpenSound = FormLinkNullable<ISoundGetter>.Null;
-            item.CloseSound = FormLinkNullable<ISoundGetter>.Null;
+            item.OpenSound.Clear();
+            item.CloseSound.Clear();
             base.Clear(item);
         }
         
@@ -1508,7 +1514,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.Script) ?? true))
             {
-                item.Script = new FormLinkNullable<IScriptGetter>(rhs.Script.FormKeyNullable);
+                item.Script.SetTo(rhs.Script);
             }
             if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.Items) ?? true))
             {
@@ -1562,11 +1568,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.OpenSound) ?? true))
             {
-                item.OpenSound = new FormLinkNullable<ISoundGetter>(rhs.OpenSound.FormKeyNullable);
+                item.OpenSound.SetTo(rhs.OpenSound);
             }
             if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.CloseSound) ?? true))
             {
-                item.CloseSound = new FormLinkNullable<ISoundGetter>(rhs.CloseSound.FormKeyNullable);
+                item.CloseSound.SetTo(rhs.CloseSound);
             }
         }
         
@@ -1876,9 +1882,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.SCRI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Script = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Script.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Container_FieldIndex.Script;
                 }
                 case RecordTypeInts.CNTO:
@@ -1899,17 +1906,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.OpenSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.OpenSound.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Container_FieldIndex.OpenSound;
                 }
                 case RecordTypeInts.QNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CloseSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.CloseSound.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Container_FieldIndex.CloseSound;
                 }
                 default:
@@ -1978,7 +1987,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IModelGetter? Model { get; private set; }
         #region Script
         private int? _ScriptLocation;
-        public FormLinkNullable<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
+        public IFormLinkNullableGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
         #endregion
         public IReadOnlyList<IContainerItemGetter> Items { get; private set; } = ListExt.Empty<ContainerItemBinaryOverlay>();
         #region Data
@@ -1987,11 +1996,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region OpenSound
         private int? _OpenSoundLocation;
-        public FormLinkNullable<ISoundGetter> OpenSound => _OpenSoundLocation.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _OpenSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
+        public IFormLinkNullableGetter<ISoundGetter> OpenSound => _OpenSoundLocation.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _OpenSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
         #endregion
         #region CloseSound
         private int? _CloseSoundLocation;
-        public FormLinkNullable<ISoundGetter> CloseSound => _CloseSoundLocation.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CloseSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
+        public IFormLinkNullableGetter<ISoundGetter> CloseSound => _CloseSoundLocation.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CloseSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

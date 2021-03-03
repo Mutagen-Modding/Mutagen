@@ -40,7 +40,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Perk
-        public FormLink<IPerkGetter> Perk { get; set; } = new FormLink<IPerkGetter>();
+        public IFormLink<IPerkGetter> Perk { get; init; } = new FormLink<IPerkGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IPerkGetter> IActorValuePerkNodeGetter.Perk => this.Perk;
         #endregion
         #region FNAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -74,7 +76,9 @@ namespace Mutagen.Bethesda.Skyrim
         Single? IActorValuePerkNodeGetter.VerticalPosition => this.VerticalPosition;
         #endregion
         #region AssociatedSkill
-        public FormLinkNullable<IActorValueInformationGetter> AssociatedSkill { get; set; } = new FormLinkNullable<IActorValueInformationGetter>();
+        public IFormLinkNullable<IActorValueInformationGetter> AssociatedSkill { get; init; } = new FormLinkNullable<IActorValueInformationGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IActorValueInformationGetter> IActorValuePerkNodeGetter.AssociatedSkill => this.AssociatedSkill;
         #endregion
         #region ConnectionLineToIndices
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -768,13 +772,13 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILoquiObjectSetter<IActorValuePerkNode>
     {
-        new FormLink<IPerkGetter> Perk { get; set; }
+        new IFormLink<IPerkGetter> Perk { get; }
         new MemorySlice<Byte>? FNAM { get; set; }
         new UInt32? PerkGridX { get; set; }
         new UInt32? PerkGridY { get; set; }
         new Single? HorizontalPosition { get; set; }
         new Single? VerticalPosition { get; set; }
-        new FormLinkNullable<IActorValueInformationGetter> AssociatedSkill { get; set; }
+        new IFormLinkNullable<IActorValueInformationGetter> AssociatedSkill { get; }
         new ExtendedList<UInt32> ConnectionLineToIndices { get; }
         new UInt32? Index { get; set; }
     }
@@ -792,13 +796,13 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => ActorValuePerkNode_Registration.Instance;
-        FormLink<IPerkGetter> Perk { get; }
+        IFormLinkGetter<IPerkGetter> Perk { get; }
         ReadOnlyMemorySlice<Byte>? FNAM { get; }
         UInt32? PerkGridX { get; }
         UInt32? PerkGridY { get; }
         Single? HorizontalPosition { get; }
         Single? VerticalPosition { get; }
-        FormLinkNullable<IActorValueInformationGetter> AssociatedSkill { get; }
+        IFormLinkNullableGetter<IActorValueInformationGetter> AssociatedSkill { get; }
         IReadOnlyList<UInt32> ConnectionLineToIndices { get; }
         UInt32? Index { get; }
 
@@ -1065,13 +1069,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IActorValuePerkNode item)
         {
             ClearPartial();
-            item.Perk = FormLink<IPerkGetter>.Null;
+            item.Perk.Clear();
             item.FNAM = default;
             item.PerkGridX = default;
             item.PerkGridY = default;
             item.HorizontalPosition = default;
             item.VerticalPosition = default;
-            item.AssociatedSkill = FormLinkNullable<IActorValueInformationGetter>.Null;
+            item.AssociatedSkill.Clear();
             item.ConnectionLineToIndices.Clear();
             item.Index = default;
         }
@@ -1331,7 +1335,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)ActorValuePerkNode_FieldIndex.Perk) ?? true))
             {
-                item.Perk = new FormLink<IPerkGetter>(rhs.Perk.FormKey);
+                item.Perk.SetTo(rhs.Perk);
             }
             if ((copyMask?.GetShouldTranslate((int)ActorValuePerkNode_FieldIndex.FNAM) ?? true))
             {
@@ -1362,7 +1366,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)ActorValuePerkNode_FieldIndex.AssociatedSkill) ?? true))
             {
-                item.AssociatedSkill = new FormLinkNullable<IActorValueInformationGetter>(rhs.AssociatedSkill.FormKeyNullable);
+                item.AssociatedSkill.SetTo(rhs.AssociatedSkill);
             }
             if ((copyMask?.GetShouldTranslate((int)ActorValuePerkNode_FieldIndex.ConnectionLineToIndices) ?? true))
             {
@@ -1571,9 +1575,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ActorValuePerkNode_FieldIndex.Perk) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Perk = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Perk.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)ActorValuePerkNode_FieldIndex.Perk;
                 }
                 case RecordTypeInts.FNAM:
@@ -1609,9 +1614,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AssociatedSkill = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.AssociatedSkill.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)ActorValuePerkNode_FieldIndex.AssociatedSkill;
                 }
                 case RecordTypeInts.CNAM:
@@ -1700,7 +1706,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Perk
         private int? _PerkLocation;
-        public FormLink<IPerkGetter> Perk => _PerkLocation.HasValue ? new FormLink<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PerkLocation.Value, _package.MetaData.Constants)))) : FormLink<IPerkGetter>.Null;
+        public IFormLinkGetter<IPerkGetter> Perk => _PerkLocation.HasValue ? new FormLink<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PerkLocation.Value, _package.MetaData.Constants)))) : FormLink<IPerkGetter>.Null;
         #endregion
         #region FNAM
         private int? _FNAMLocation;
@@ -1724,7 +1730,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region AssociatedSkill
         private int? _AssociatedSkillLocation;
-        public FormLinkNullable<IActorValueInformationGetter> AssociatedSkill => _AssociatedSkillLocation.HasValue ? new FormLinkNullable<IActorValueInformationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AssociatedSkillLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IActorValueInformationGetter>.Null;
+        public IFormLinkNullableGetter<IActorValueInformationGetter> AssociatedSkill => _AssociatedSkillLocation.HasValue ? new FormLinkNullable<IActorValueInformationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AssociatedSkillLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IActorValueInformationGetter>.Null;
         #endregion
         public IReadOnlyList<UInt32> ConnectionLineToIndices { get; private set; } = ListExt.Empty<UInt32>();
         #region Index

@@ -27,15 +27,15 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     return new NpcOwner()
                     {
-                        Npc = FormKeyBinaryTranslation.Instance.Parse(span, masters),
-                        Global = FormKeyBinaryTranslation.Instance.Parse(span.Slice(4), masters)
+                        Npc = new FormLink<INpcGetter>(FormKeyBinaryTranslation.Instance.Parse(span, masters)),
+                        Global = new FormLink<IGlobalGetter>(FormKeyBinaryTranslation.Instance.Parse(span.Slice(4), masters))
                     };
                 }
                 else if (cache.IsOfRecordType<Faction>(formKey))
                 {
                     return new FactionOwner()
                     {
-                        Faction = FormKeyBinaryTranslation.Instance.Parse(span, masters),
+                        Faction = new FormLink<IFactionGetter>(FormKeyBinaryTranslation.Instance.Parse(span, masters)),
                         RequiredRank = BinaryPrimitives.ReadInt32LittleEndian(span.Slice(4))
                     };
                 }

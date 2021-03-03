@@ -7,7 +7,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WeatherVolumetricLighting
     {
-        public FormLink<IVolumetricLightingGetter> this[TimeOfDay time]
+        public IFormLink<IVolumetricLightingGetter> this[TimeOfDay time]
         {
             get => time switch
             {
@@ -17,45 +17,26 @@ namespace Mutagen.Bethesda.Skyrim
                 TimeOfDay.Sunset => this.Sunset,
                 _ => throw new NotImplementedException(),
             };
-
-            set
-            {
-                switch (time)
-                {
-                    case TimeOfDay.Sunrise:
-                        this.Sunrise = value;
-                        break;
-                    case TimeOfDay.Day:
-                        this.Day = value;
-                        break;
-                    case TimeOfDay.Sunset:
-                        this.Sunset = value;
-                        break;
-                    case TimeOfDay.Night:
-                        this.Night = value;
-                        break;
-                    default:
-                        throw new NotImplementedException();
-                }
-            }
         }
+
+        IFormLinkGetter<IVolumetricLightingGetter> IWeatherVolumetricLightingGetter.this[TimeOfDay time] => this[time];
     }
 
     public partial interface IWeatherVolumetricLighting
     {
-        new FormLink<IVolumetricLightingGetter> this[TimeOfDay time] { get; set; }
+        new IFormLink<IVolumetricLightingGetter> this[TimeOfDay time] { get; }
     }
 
     public partial interface IWeatherVolumetricLightingGetter
     {
-        FormLink<IVolumetricLightingGetter> this[TimeOfDay time] { get; }
+        IFormLinkGetter<IVolumetricLightingGetter> this[TimeOfDay time] { get; }
     }
 
     namespace Internals
     {
         public partial class WeatherVolumetricLightingBinaryOverlay
         {
-            public FormLink<IVolumetricLightingGetter> this[TimeOfDay time] => time switch
+            public IFormLinkGetter<IVolumetricLightingGetter> this[TimeOfDay time] => time switch
             {
                 TimeOfDay.Sunrise => this.Sunrise,
                 TimeOfDay.Day => this.Day,

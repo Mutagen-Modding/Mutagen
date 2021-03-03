@@ -25,7 +25,6 @@ namespace Mutagen.Bethesda.Generation
         public FormIDTypeEnum FormIDType;
         public override bool IsEnumerable => false;
         public override bool CanBeNullable(bool getter) => false;
-        public bool NeedCovariance => this.LoquiType.RefType == Loqui.Generation.LoquiType.LoquiRefType.Generic;
 
         public string ClassTypeStringPrefix => this.FormIDType switch
         {
@@ -44,8 +43,7 @@ namespace Mutagen.Bethesda.Generation
 
         public override string TypeName(bool getter, bool needsCovariance = false)
         {
-            var doInterface = needsCovariance || (getter && this.LoquiType.RefType == Loqui.Generation.LoquiType.LoquiRefType.Generic);
-            return $"{(doInterface ? "I" : null)}{DirectNonGenericTypeName()}{(doInterface && (needsCovariance || getter) ? "Getter" : null)}<{LoquiType.TypeNameInternal(getter: true, internalInterface: true)}>";
+            return $"I{DirectNonGenericTypeName()}{(needsCovariance || getter ? "Getter" : null)}<{LoquiType.TypeNameInternal(getter: true, internalInterface: true)}>";
         }
 
         public override Type Type(bool getter) => typeof(FormID);
@@ -120,15 +118,11 @@ namespace Mutagen.Bethesda.Generation
                 if (this.Nullable
                     || deepCopy)
                 {
-                    fg.AppendLine($"{accessor} = new {DirectTypeName(getter: false)}({rhs}.{FormIDTypeString});");
+                    fg.AppendLine($"{accessor}.SetTo({rhs});");
                 }
                 else
                 {
-                    using (var args = new ArgsWrapper(fg,
-                        $"{accessor}.SetLink"))
-                    {
-                        args.Add($"value: {rhs}");
-                    }
+                    throw new NotImplementedException();
                 }
             }
         }
@@ -162,7 +156,7 @@ namespace Mutagen.Bethesda.Generation
         public override void GenerateClear(FileGeneration fg, Accessor identifier)
         {
             if (this.ReadOnly || !this.IntegrateField) return;
-            fg.AppendLine($"{identifier} = {DirectTypeName(getter: false)}.Null;");
+            fg.AppendLine($"{identifier}.Clear();");
         }
 
         public override void GenerateCopySetToConverter(FileGeneration fg)
@@ -172,12 +166,9 @@ namespace Mutagen.Bethesda.Generation
 
         public override void GenerateForClass(FileGeneration fg)
         {
-            fg.AppendLine($"public {this.TypeName(getter: false)} {this.Name} {{ get; set; }} = {GetNewForNonNullable()};");
-            if (NeedCovariance)
-            {
-                fg.AppendLine($"[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-                fg.AppendLine($"{this.TypeName(getter: true)} {this.ObjectGen.Interface(getter: true, this.InternalGetInterface)}.{this.Name} => this.{this.Name};");
-            }
+            fg.AppendLine($"public {this.TypeName(getter: false)} {this.Name} {{ get; init; }} = {GetNewForNonNullable()};");
+            fg.AppendLine($"[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+            fg.AppendLine($"{this.TypeName(getter: true)} {this.ObjectGen.Interface(getter: true, this.InternalGetInterface)}.{this.Name} => this.{this.Name};");
         }
 
         public override void GenerateForInterface(FileGeneration fg, bool getter, bool internalInterface)
@@ -185,12 +176,12 @@ namespace Mutagen.Bethesda.Generation
             if (getter)
             {
                 if (!ApplicableInterfaceField(getter, internalInterface)) return;
-                fg.AppendLine($"{TypeName(getter: true, needsCovariance: NeedCovariance)} {this.Name} {{ get; }}");
+                fg.AppendLine($"{TypeName(getter: true, needsCovariance: true)} {this.Name} {{ get; }}");
             }
             else
             {
                 if (!ApplicableInterfaceField(getter, internalInterface)) return;
-                fg.AppendLine($"new {TypeName(getter: false)} {this.Name} {{ get; set; }}");
+                fg.AppendLine($"new {TypeName(getter: false)} {this.Name} {{ get; }}");
             }
         }
 

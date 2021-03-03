@@ -76,10 +76,14 @@ namespace Mutagen.Bethesda.Skyrim
         IDialogResponseFlagsGetter? IDialogResponsesGetter.Flags => this.Flags;
         #endregion
         #region Topic
-        public FormLinkNullable<IDialogTopicGetter> Topic { get; set; } = new FormLinkNullable<IDialogTopicGetter>();
+        public IFormLinkNullable<IDialogTopicGetter> Topic { get; init; } = new FormLinkNullable<IDialogTopicGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IDialogTopicGetter> IDialogResponsesGetter.Topic => this.Topic;
         #endregion
         #region PreviousDialog
-        public FormLinkNullable<IDialogResponsesGetter> PreviousDialog { get; set; } = new FormLinkNullable<IDialogResponsesGetter>();
+        public IFormLinkNullable<IDialogResponsesGetter> PreviousDialog { get; init; } = new FormLinkNullable<IDialogResponsesGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IDialogResponsesGetter> IDialogResponsesGetter.PreviousDialog => this.PreviousDialog;
         #endregion
         #region FavorLevel
         public FavorLevel? FavorLevel { get; set; }
@@ -101,7 +105,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region ResponseData
-        public FormLinkNullable<IDialogResponsesGetter> ResponseData { get; set; } = new FormLinkNullable<IDialogResponsesGetter>();
+        public IFormLinkNullable<IDialogResponsesGetter> ResponseData { get; init; } = new FormLinkNullable<IDialogResponsesGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IDialogResponsesGetter> IDialogResponsesGetter.ResponseData => this.ResponseData;
         #endregion
         #region Responses
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -151,13 +157,19 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedStringGetter? IDialogResponsesGetter.Prompt => this.Prompt;
         #endregion
         #region Speaker
-        public FormLinkNullable<INpcGetter> Speaker { get; set; } = new FormLinkNullable<INpcGetter>();
+        public IFormLinkNullable<INpcGetter> Speaker { get; init; } = new FormLinkNullable<INpcGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<INpcGetter> IDialogResponsesGetter.Speaker => this.Speaker;
         #endregion
         #region WalkAwayTopic
-        public FormLinkNullable<IDialogTopicGetter> WalkAwayTopic { get; set; } = new FormLinkNullable<IDialogTopicGetter>();
+        public IFormLinkNullable<IDialogTopicGetter> WalkAwayTopic { get; init; } = new FormLinkNullable<IDialogTopicGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IDialogTopicGetter> IDialogResponsesGetter.WalkAwayTopic => this.WalkAwayTopic;
         #endregion
         #region AudioOutputOverride
-        public FormLinkNullable<ISoundOutputModelGetter> AudioOutputOverride { get; set; } = new FormLinkNullable<ISoundOutputModelGetter>();
+        public IFormLinkNullable<ISoundOutputModelGetter> AudioOutputOverride { get; init; } = new FormLinkNullable<ISoundOutputModelGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundOutputModelGetter> IDialogResponsesGetter.AudioOutputOverride => this.AudioOutputOverride;
         #endregion
 
         #region To String
@@ -1289,18 +1301,18 @@ namespace Mutagen.Bethesda.Skyrim
         new DialogResponsesAdapter? VirtualMachineAdapter { get; set; }
         new MemorySlice<Byte>? DATA { get; set; }
         new DialogResponseFlags? Flags { get; set; }
-        new FormLinkNullable<IDialogTopicGetter> Topic { get; set; }
-        new FormLinkNullable<IDialogResponsesGetter> PreviousDialog { get; set; }
+        new IFormLinkNullable<IDialogTopicGetter> Topic { get; }
+        new IFormLinkNullable<IDialogResponsesGetter> PreviousDialog { get; }
         new FavorLevel? FavorLevel { get; set; }
         new ExtendedList<IFormLinkGetter<IDialogGetter>> LinkTo { get; }
-        new FormLinkNullable<IDialogResponsesGetter> ResponseData { get; set; }
+        new IFormLinkNullable<IDialogResponsesGetter> ResponseData { get; }
         new ExtendedList<DialogResponse> Responses { get; }
         new ExtendedList<Condition> Conditions { get; }
         new ExtendedList<DialogResponsesUnknownData> UnknownData { get; }
         new TranslatedString? Prompt { get; set; }
-        new FormLinkNullable<INpcGetter> Speaker { get; set; }
-        new FormLinkNullable<IDialogTopicGetter> WalkAwayTopic { get; set; }
-        new FormLinkNullable<ISoundOutputModelGetter> AudioOutputOverride { get; set; }
+        new IFormLinkNullable<INpcGetter> Speaker { get; }
+        new IFormLinkNullable<IDialogTopicGetter> WalkAwayTopic { get; }
+        new IFormLinkNullable<ISoundOutputModelGetter> AudioOutputOverride { get; }
         #region Mutagen
         new DialogResponses.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1326,18 +1338,18 @@ namespace Mutagen.Bethesda.Skyrim
         IDialogResponsesAdapterGetter? VirtualMachineAdapter { get; }
         ReadOnlyMemorySlice<Byte>? DATA { get; }
         IDialogResponseFlagsGetter? Flags { get; }
-        FormLinkNullable<IDialogTopicGetter> Topic { get; }
-        FormLinkNullable<IDialogResponsesGetter> PreviousDialog { get; }
+        IFormLinkNullableGetter<IDialogTopicGetter> Topic { get; }
+        IFormLinkNullableGetter<IDialogResponsesGetter> PreviousDialog { get; }
         FavorLevel? FavorLevel { get; }
         IReadOnlyList<IFormLinkGetter<IDialogGetter>> LinkTo { get; }
-        FormLinkNullable<IDialogResponsesGetter> ResponseData { get; }
+        IFormLinkNullableGetter<IDialogResponsesGetter> ResponseData { get; }
         IReadOnlyList<IDialogResponseGetter> Responses { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
         IReadOnlyList<IDialogResponsesUnknownDataGetter> UnknownData { get; }
         ITranslatedStringGetter? Prompt { get; }
-        FormLinkNullable<INpcGetter> Speaker { get; }
-        FormLinkNullable<IDialogTopicGetter> WalkAwayTopic { get; }
-        FormLinkNullable<ISoundOutputModelGetter> AudioOutputOverride { get; }
+        IFormLinkNullableGetter<INpcGetter> Speaker { get; }
+        IFormLinkNullableGetter<IDialogTopicGetter> WalkAwayTopic { get; }
+        IFormLinkNullableGetter<ISoundOutputModelGetter> AudioOutputOverride { get; }
 
         #region Mutagen
         DialogResponses.MajorFlag MajorFlags { get; }
@@ -1610,18 +1622,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.VirtualMachineAdapter = null;
             item.DATA = default;
             item.Flags = null;
-            item.Topic = FormLinkNullable<IDialogTopicGetter>.Null;
-            item.PreviousDialog = FormLinkNullable<IDialogResponsesGetter>.Null;
+            item.Topic.Clear();
+            item.PreviousDialog.Clear();
             item.FavorLevel = default;
             item.LinkTo.Clear();
-            item.ResponseData = FormLinkNullable<IDialogResponsesGetter>.Null;
+            item.ResponseData.Clear();
             item.Responses.Clear();
             item.Conditions.Clear();
             item.UnknownData.Clear();
             item.Prompt = default;
-            item.Speaker = FormLinkNullable<INpcGetter>.Null;
-            item.WalkAwayTopic = FormLinkNullable<IDialogTopicGetter>.Null;
-            item.AudioOutputOverride = FormLinkNullable<ISoundOutputModelGetter>.Null;
+            item.Speaker.Clear();
+            item.WalkAwayTopic.Clear();
+            item.AudioOutputOverride.Clear();
             base.Clear(item);
         }
         
@@ -2258,11 +2270,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Topic) ?? true))
             {
-                item.Topic = new FormLinkNullable<IDialogTopicGetter>(rhs.Topic.FormKeyNullable);
+                item.Topic.SetTo(rhs.Topic);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.PreviousDialog) ?? true))
             {
-                item.PreviousDialog = new FormLinkNullable<IDialogResponsesGetter>(rhs.PreviousDialog.FormKeyNullable);
+                item.PreviousDialog.SetTo(rhs.PreviousDialog);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.FavorLevel) ?? true))
             {
@@ -2289,7 +2301,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.ResponseData) ?? true))
             {
-                item.ResponseData = new FormLinkNullable<IDialogResponsesGetter>(rhs.ResponseData.FormKeyNullable);
+                item.ResponseData.SetTo(rhs.ResponseData);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Responses) ?? true))
             {
@@ -2369,15 +2381,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Speaker) ?? true))
             {
-                item.Speaker = new FormLinkNullable<INpcGetter>(rhs.Speaker.FormKeyNullable);
+                item.Speaker.SetTo(rhs.Speaker);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.WalkAwayTopic) ?? true))
             {
-                item.WalkAwayTopic = new FormLinkNullable<IDialogTopicGetter>(rhs.WalkAwayTopic.FormKeyNullable);
+                item.WalkAwayTopic.SetTo(rhs.WalkAwayTopic);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.AudioOutputOverride) ?? true))
             {
-                item.AudioOutputOverride = new FormLinkNullable<ISoundOutputModelGetter>(rhs.AudioOutputOverride.FormKeyNullable);
+                item.AudioOutputOverride.SetTo(rhs.AudioOutputOverride);
             }
         }
         
@@ -2747,17 +2759,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.TPIC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Topic = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Topic.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)DialogResponses_FieldIndex.Topic;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PreviousDialog = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.PreviousDialog.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)DialogResponses_FieldIndex.PreviousDialog;
                 }
                 case RecordTypeInts.CNAM:
@@ -2778,9 +2792,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ResponseData = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.ResponseData.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)DialogResponses_FieldIndex.ResponseData;
                 }
                 case RecordTypeInts.TRDT:
@@ -2824,25 +2839,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Speaker = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Speaker.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)DialogResponses_FieldIndex.Speaker;
                 }
                 case RecordTypeInts.TWAT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.WalkAwayTopic = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.WalkAwayTopic.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)DialogResponses_FieldIndex.WalkAwayTopic;
                 }
                 case RecordTypeInts.ONAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AudioOutputOverride = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.AudioOutputOverride.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)DialogResponses_FieldIndex.AudioOutputOverride;
                 }
                 default:
@@ -2919,11 +2937,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Topic
         private int? _TopicLocation;
-        public FormLinkNullable<IDialogTopicGetter> Topic => _TopicLocation.HasValue ? new FormLinkNullable<IDialogTopicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TopicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogTopicGetter>.Null;
+        public IFormLinkNullableGetter<IDialogTopicGetter> Topic => _TopicLocation.HasValue ? new FormLinkNullable<IDialogTopicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TopicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogTopicGetter>.Null;
         #endregion
         #region PreviousDialog
         private int? _PreviousDialogLocation;
-        public FormLinkNullable<IDialogResponsesGetter> PreviousDialog => _PreviousDialogLocation.HasValue ? new FormLinkNullable<IDialogResponsesGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PreviousDialogLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogResponsesGetter>.Null;
+        public IFormLinkNullableGetter<IDialogResponsesGetter> PreviousDialog => _PreviousDialogLocation.HasValue ? new FormLinkNullable<IDialogResponsesGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PreviousDialogLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogResponsesGetter>.Null;
         #endregion
         #region FavorLevel
         private int? _FavorLevelLocation;
@@ -2932,7 +2950,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IFormLinkGetter<IDialogGetter>> LinkTo { get; private set; } = ListExt.Empty<IFormLinkGetter<IDialogGetter>>();
         #region ResponseData
         private int? _ResponseDataLocation;
-        public FormLinkNullable<IDialogResponsesGetter> ResponseData => _ResponseDataLocation.HasValue ? new FormLinkNullable<IDialogResponsesGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ResponseDataLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogResponsesGetter>.Null;
+        public IFormLinkNullableGetter<IDialogResponsesGetter> ResponseData => _ResponseDataLocation.HasValue ? new FormLinkNullable<IDialogResponsesGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ResponseDataLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogResponsesGetter>.Null;
         #endregion
         public IReadOnlyList<IDialogResponseGetter> Responses { get; private set; } = ListExt.Empty<DialogResponseBinaryOverlay>();
         #region Conditions
@@ -2950,15 +2968,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Speaker
         private int? _SpeakerLocation;
-        public FormLinkNullable<INpcGetter> Speaker => _SpeakerLocation.HasValue ? new FormLinkNullable<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SpeakerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<INpcGetter>.Null;
+        public IFormLinkNullableGetter<INpcGetter> Speaker => _SpeakerLocation.HasValue ? new FormLinkNullable<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SpeakerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<INpcGetter>.Null;
         #endregion
         #region WalkAwayTopic
         private int? _WalkAwayTopicLocation;
-        public FormLinkNullable<IDialogTopicGetter> WalkAwayTopic => _WalkAwayTopicLocation.HasValue ? new FormLinkNullable<IDialogTopicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WalkAwayTopicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogTopicGetter>.Null;
+        public IFormLinkNullableGetter<IDialogTopicGetter> WalkAwayTopic => _WalkAwayTopicLocation.HasValue ? new FormLinkNullable<IDialogTopicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WalkAwayTopicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogTopicGetter>.Null;
         #endregion
         #region AudioOutputOverride
         private int? _AudioOutputOverrideLocation;
-        public FormLinkNullable<ISoundOutputModelGetter> AudioOutputOverride => _AudioOutputOverrideLocation.HasValue ? new FormLinkNullable<ISoundOutputModelGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AudioOutputOverrideLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundOutputModelGetter>.Null;
+        public IFormLinkNullableGetter<ISoundOutputModelGetter> AudioOutputOverride => _AudioOutputOverrideLocation.HasValue ? new FormLinkNullable<ISoundOutputModelGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AudioOutputOverrideLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundOutputModelGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -82,7 +82,9 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? ISoundMarkerGetter.SNDD => this.SNDD;
         #endregion
         #region SoundDescriptor
-        public FormLinkNullable<ISoundDescriptorGetter> SoundDescriptor { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
+        public IFormLinkNullable<ISoundDescriptorGetter> SoundDescriptor { get; init; } = new FormLinkNullable<ISoundDescriptorGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundDescriptorGetter> ISoundMarkerGetter.SoundDescriptor => this.SoundDescriptor;
         #endregion
 
         #region To String
@@ -599,7 +601,7 @@ namespace Mutagen.Bethesda.Skyrim
         new ObjectBounds ObjectBounds { get; set; }
         new MemorySlice<Byte>? FNAM { get; set; }
         new MemorySlice<Byte>? SNDD { get; set; }
-        new FormLinkNullable<ISoundDescriptorGetter> SoundDescriptor { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> SoundDescriptor { get; }
     }
 
     public partial interface ISoundMarkerInternal :
@@ -624,7 +626,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundsGetter ObjectBounds { get; }
         ReadOnlyMemorySlice<Byte>? FNAM { get; }
         ReadOnlyMemorySlice<Byte>? SNDD { get; }
-        FormLinkNullable<ISoundDescriptorGetter> SoundDescriptor { get; }
+        IFormLinkNullableGetter<ISoundDescriptorGetter> SoundDescriptor { get; }
 
     }
 
@@ -882,7 +884,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ObjectBounds.Clear();
             item.FNAM = default;
             item.SNDD = default;
-            item.SoundDescriptor = FormLinkNullable<ISoundDescriptorGetter>.Null;
+            item.SoundDescriptor.Clear();
             base.Clear(item);
         }
         
@@ -1281,7 +1283,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SoundMarker_FieldIndex.SoundDescriptor) ?? true))
             {
-                item.SoundDescriptor = new FormLinkNullable<ISoundDescriptorGetter>(rhs.SoundDescriptor.FormKeyNullable);
+                item.SoundDescriptor.SetTo(rhs.SoundDescriptor);
             }
         }
         
@@ -1568,9 +1570,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.SDSC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SoundDescriptor = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.SoundDescriptor.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)SoundMarker_FieldIndex.SoundDescriptor;
                 }
                 default:
@@ -1643,7 +1646,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region SoundDescriptor
         private int? _SoundDescriptorLocation;
-        public FormLinkNullable<ISoundDescriptorGetter> SoundDescriptor => _SoundDescriptorLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SoundDescriptorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> SoundDescriptor => _SoundDescriptorLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SoundDescriptorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

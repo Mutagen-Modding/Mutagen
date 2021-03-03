@@ -42,7 +42,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Spell
-        public FormLinkNullable<ISpellGetter> Spell { get; set; } = new FormLinkNullable<ISpellGetter>();
+        public IFormLinkNullable<ISpellGetter> Spell { get; init; } = new FormLinkNullable<ISpellGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISpellGetter> IPerkEntryPointAddActivateChoiceGetter.Spell => this.Spell;
         #endregion
         #region ButtonLabel
         public TranslatedString? ButtonLabel { get; set; }
@@ -492,7 +494,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPerkEntryPointAddActivateChoice>,
         IPerkEntryPointAddActivateChoiceGetter
     {
-        new FormLinkNullable<ISpellGetter> Spell { get; set; }
+        new IFormLinkNullable<ISpellGetter> Spell { get; }
         new TranslatedString? ButtonLabel { get; set; }
         new PerkScriptFlag Flags { get; set; }
     }
@@ -504,7 +506,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IPerkEntryPointAddActivateChoiceGetter>
     {
         static new ILoquiRegistration Registration => PerkEntryPointAddActivateChoice_Registration.Instance;
-        FormLinkNullable<ISpellGetter> Spell { get; }
+        IFormLinkNullableGetter<ISpellGetter> Spell { get; }
         ITranslatedStringGetter? ButtonLabel { get; }
         IPerkScriptFlagGetter Flags { get; }
 
@@ -746,7 +748,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IPerkEntryPointAddActivateChoice item)
         {
             ClearPartial();
-            item.Spell = FormLinkNullable<ISpellGetter>.Null;
+            item.Spell.Clear();
             item.ButtonLabel = default;
             item.Flags.Clear();
             base.Clear(item);
@@ -1042,7 +1044,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PerkEntryPointAddActivateChoice_FieldIndex.Spell) ?? true))
             {
-                item.Spell = new FormLinkNullable<ISpellGetter>(rhs.Spell.FormKeyNullable);
+                item.Spell.SetTo(rhs.Spell);
             }
             if ((copyMask?.GetShouldTranslate((int)PerkEntryPointAddActivateChoice_FieldIndex.ButtonLabel) ?? true))
             {
@@ -1285,9 +1287,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 frame: frame);
             if (frame.Complete) return;
-            item.Spell = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Spell.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
         }
 
         public static ParseResult FillBinaryRecordTypes(
@@ -1372,7 +1375,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLinkNullable<ISpellGetter> Spell => new FormLinkNullable<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x2, 0x4))));
+        public IFormLinkNullableGetter<ISpellGetter> Spell => new FormLinkNullable<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x2, 0x4))));
         #region ButtonLabel
         private int? _ButtonLabelLocation;
         public ITranslatedStringGetter? ButtonLabel => _ButtonLabelLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _ButtonLabelLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);

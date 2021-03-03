@@ -40,10 +40,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Material
-        public FormLink<IMaterialTypeGetter> Material { get; set; } = new FormLink<IMaterialTypeGetter>();
+        public IFormLink<IMaterialTypeGetter> Material { get; init; } = new FormLink<IMaterialTypeGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IMaterialTypeGetter> IImpactDataGetter.Material => this.Material;
         #endregion
         #region Impact
-        public FormLink<IImpactGetter> Impact { get; set; } = new FormLink<IImpactGetter>();
+        public IFormLink<IImpactGetter> Impact { get; init; } = new FormLink<IImpactGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IImpactGetter> IImpactDataGetter.Impact => this.Impact;
         #endregion
 
         #region To String
@@ -449,8 +453,8 @@ namespace Mutagen.Bethesda.Skyrim
         IImpactDataGetter,
         ILoquiObjectSetter<IImpactData>
     {
-        new FormLink<IMaterialTypeGetter> Material { get; set; }
-        new FormLink<IImpactGetter> Impact { get; set; }
+        new IFormLink<IMaterialTypeGetter> Material { get; }
+        new IFormLink<IImpactGetter> Impact { get; }
     }
 
     public partial interface IImpactDataGetter :
@@ -466,8 +470,8 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => ImpactData_Registration.Instance;
-        FormLink<IMaterialTypeGetter> Material { get; }
-        FormLink<IImpactGetter> Impact { get; }
+        IFormLinkGetter<IMaterialTypeGetter> Material { get; }
+        IFormLinkGetter<IImpactGetter> Impact { get; }
 
     }
 
@@ -725,8 +729,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IImpactData item)
         {
             ClearPartial();
-            item.Material = FormLink<IMaterialTypeGetter>.Null;
-            item.Impact = FormLink<IImpactGetter>.Null;
+            item.Material.Clear();
+            item.Impact.Clear();
         }
         
         #region Mutagen
@@ -893,11 +897,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)ImpactData_FieldIndex.Material) ?? true))
             {
-                item.Material = new FormLink<IMaterialTypeGetter>(rhs.Material.FormKey);
+                item.Material.SetTo(rhs.Material);
             }
             if ((copyMask?.GetShouldTranslate((int)ImpactData_FieldIndex.Impact) ?? true))
             {
-                item.Impact = new FormLink<IImpactGetter>(rhs.Impact.FormKey);
+                item.Impact.SetTo(rhs.Impact);
             }
         }
         
@@ -1040,12 +1044,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IImpactData item,
             MutagenFrame frame)
         {
-            item.Material = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            item.Impact = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Material.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
+            item.Impact.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
         }
 
     }
@@ -1112,8 +1118,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<IMaterialTypeGetter> Material => new FormLink<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public FormLink<IImpactGetter> Impact => new FormLink<IImpactGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<IMaterialTypeGetter> Material => new FormLink<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IImpactGetter> Impact => new FormLink<IImpactGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

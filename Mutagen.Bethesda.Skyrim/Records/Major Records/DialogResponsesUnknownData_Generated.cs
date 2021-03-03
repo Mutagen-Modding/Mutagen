@@ -51,7 +51,9 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? IDialogResponsesUnknownDataGetter.SCHR => this.SCHR;
         #endregion
         #region QNAM
-        public FormLinkNullable<ISkyrimMajorRecordGetter> QNAM { get; set; } = new FormLinkNullable<ISkyrimMajorRecordGetter>();
+        public IFormLinkNullable<ISkyrimMajorRecordGetter> QNAM { get; init; } = new FormLinkNullable<ISkyrimMajorRecordGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISkyrimMajorRecordGetter> IDialogResponsesUnknownDataGetter.QNAM => this.QNAM;
         #endregion
         #region NEXT
         public Boolean NEXT { get; set; } = default;
@@ -488,7 +490,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IDialogResponsesUnknownData>
     {
         new MemorySlice<Byte>? SCHR { get; set; }
-        new FormLinkNullable<ISkyrimMajorRecordGetter> QNAM { get; set; }
+        new IFormLinkNullable<ISkyrimMajorRecordGetter> QNAM { get; }
         new Boolean NEXT { get; set; }
     }
 
@@ -506,7 +508,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => DialogResponsesUnknownData_Registration.Instance;
         ReadOnlyMemorySlice<Byte>? SCHR { get; }
-        FormLinkNullable<ISkyrimMajorRecordGetter> QNAM { get; }
+        IFormLinkNullableGetter<ISkyrimMajorRecordGetter> QNAM { get; }
         Boolean NEXT { get; }
 
     }
@@ -779,7 +781,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.SCHR = default;
-            item.QNAM = FormLinkNullable<ISkyrimMajorRecordGetter>.Null;
+            item.QNAM.Clear();
             item.NEXT = default;
         }
         
@@ -968,7 +970,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponsesUnknownData_FieldIndex.QNAM) ?? true))
             {
-                item.QNAM = new FormLinkNullable<ISkyrimMajorRecordGetter>(rhs.QNAM.FormKeyNullable);
+                item.QNAM.SetTo(rhs.QNAM);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponsesUnknownData_FieldIndex.NEXT) ?? true))
             {
@@ -1142,9 +1144,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponsesUnknownData_FieldIndex.QNAM) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.QNAM = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.QNAM.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)DialogResponsesUnknownData_FieldIndex.QNAM;
                 }
                 case RecordTypeInts.NEXT:
@@ -1228,7 +1231,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region QNAM
         private int? _QNAMLocation;
-        public FormLinkNullable<ISkyrimMajorRecordGetter> QNAM => _QNAMLocation.HasValue ? new FormLinkNullable<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QNAMLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISkyrimMajorRecordGetter>.Null;
+        public IFormLinkNullableGetter<ISkyrimMajorRecordGetter> QNAM => _QNAMLocation.HasValue ? new FormLinkNullable<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QNAMLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISkyrimMajorRecordGetter>.Null;
         #endregion
         #region NEXT
         private int? _NEXTLocation;

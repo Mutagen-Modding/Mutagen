@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "bj.SleepingOutfit = obj.SleepingOutfit.Relink(mappi";
+            string testString = "tem.Voices.Male.Clear()";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

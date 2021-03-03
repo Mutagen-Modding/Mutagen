@@ -79,10 +79,14 @@ namespace Mutagen.Bethesda.Skyrim
         public Single Priority { get; set; } = default;
         #endregion
         #region Branch
-        public FormLinkNullable<IDialogBranchGetter> Branch { get; set; } = new FormLinkNullable<IDialogBranchGetter>();
+        public IFormLinkNullable<IDialogBranchGetter> Branch { get; init; } = new FormLinkNullable<IDialogBranchGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IDialogBranchGetter> IDialogTopicGetter.Branch => this.Branch;
         #endregion
         #region Quest
-        public FormLinkNullable<IQuestGetter> Quest { get; set; } = new FormLinkNullable<IQuestGetter>();
+        public IFormLinkNullable<IQuestGetter> Quest { get; init; } = new FormLinkNullable<IQuestGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IQuestGetter> IDialogTopicGetter.Quest => this.Quest;
         #endregion
         #region TopicFlags
         public DialogTopic.TopicFlag TopicFlags { get; set; } = default;
@@ -965,8 +969,8 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new TranslatedString? Name { get; set; }
         new Single Priority { get; set; }
-        new FormLinkNullable<IDialogBranchGetter> Branch { get; set; }
-        new FormLinkNullable<IQuestGetter> Quest { get; set; }
+        new IFormLinkNullable<IDialogBranchGetter> Branch { get; }
+        new IFormLinkNullable<IQuestGetter> Quest { get; }
         new DialogTopic.TopicFlag TopicFlags { get; set; }
         new DialogTopic.CategoryEnum Category { get; set; }
         new DialogTopic.SubtypeEnum Subtype { get; set; }
@@ -1000,8 +1004,8 @@ namespace Mutagen.Bethesda.Skyrim
         static new ILoquiRegistration Registration => DialogTopic_Registration.Instance;
         ITranslatedStringGetter? Name { get; }
         Single Priority { get; }
-        FormLinkNullable<IDialogBranchGetter> Branch { get; }
-        FormLinkNullable<IQuestGetter> Quest { get; }
+        IFormLinkNullableGetter<IDialogBranchGetter> Branch { get; }
+        IFormLinkNullableGetter<IQuestGetter> Quest { get; }
         DialogTopic.TopicFlag TopicFlags { get; }
         DialogTopic.CategoryEnum Category { get; }
         DialogTopic.SubtypeEnum Subtype { get; }
@@ -1486,8 +1490,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.Name = default;
             item.Priority = default;
-            item.Branch = FormLinkNullable<IDialogBranchGetter>.Null;
-            item.Quest = FormLinkNullable<IQuestGetter>.Null;
+            item.Branch.Clear();
+            item.Quest.Clear();
             item.TopicFlags = default;
             item.Category = default;
             item.Subtype = default;
@@ -2198,11 +2202,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Branch) ?? true))
             {
-                item.Branch = new FormLinkNullable<IDialogBranchGetter>(rhs.Branch.FormKeyNullable);
+                item.Branch.SetTo(rhs.Branch);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Quest) ?? true))
             {
-                item.Quest = new FormLinkNullable<IQuestGetter>(rhs.Quest.FormKeyNullable);
+                item.Quest.SetTo(rhs.Quest);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.TopicFlags) ?? true))
             {
@@ -2598,17 +2602,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.BNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Branch = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Branch.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)DialogTopic_FieldIndex.Branch;
                 }
                 case RecordTypeInts.QNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Quest = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Quest.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)DialogTopic_FieldIndex.Quest;
                 }
                 case RecordTypeInts.DATA:
@@ -2727,11 +2733,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Branch
         private int? _BranchLocation;
-        public FormLinkNullable<IDialogBranchGetter> Branch => _BranchLocation.HasValue ? new FormLinkNullable<IDialogBranchGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BranchLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogBranchGetter>.Null;
+        public IFormLinkNullableGetter<IDialogBranchGetter> Branch => _BranchLocation.HasValue ? new FormLinkNullable<IDialogBranchGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BranchLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogBranchGetter>.Null;
         #endregion
         #region Quest
         private int? _QuestLocation;
-        public FormLinkNullable<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
+        public IFormLinkNullableGetter<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
         #endregion
         private int? _DATALocation;
         public DialogTopic.DATADataType DATADataTypeState { get; private set; }

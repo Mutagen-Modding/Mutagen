@@ -80,7 +80,9 @@ namespace Mutagen.Bethesda.Skyrim
         public static RangeFloat MaxAngle_Range = new RangeFloat(30f, 120f);
         #endregion
         #region Material
-        public FormLink<IMaterialObjectGetter> Material { get; set; } = new FormLink<IMaterialObjectGetter>();
+        public IFormLink<IMaterialObjectGetter> Material { get; init; } = new FormLink<IMaterialObjectGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IMaterialObjectGetter> IStaticGetter.Material => this.Material;
         #endregion
         #region Flags
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -772,7 +774,7 @@ namespace Mutagen.Bethesda.Skyrim
         new ObjectBounds ObjectBounds { get; set; }
         new Model? Model { get; set; }
         new Single MaxAngle { get; set; }
-        new FormLink<IMaterialObjectGetter> Material { get; set; }
+        new IFormLink<IMaterialObjectGetter> Material { get; }
         new Static.Flag Flags { get; set; }
         new MemorySlice<Byte> Unused { get; set; }
         new Lod? Lod { get; set; }
@@ -806,7 +808,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundsGetter ObjectBounds { get; }
         IModelGetter? Model { get; }
         Single MaxAngle { get; }
-        FormLink<IMaterialObjectGetter> Material { get; }
+        IFormLinkGetter<IMaterialObjectGetter> Material { get; }
         Static.Flag Flags { get; }
         ReadOnlyMemorySlice<Byte> Unused { get; }
         ILodGetter? Lod { get; }
@@ -1076,7 +1078,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ObjectBounds.Clear();
             item.Model = null;
             item.MaxAngle = Static._MaxAngle_Default;
-            item.Material = FormLink<IMaterialObjectGetter>.Null;
+            item.Material.Clear();
             item.Flags = default;
             item.Unused = new byte[3];
             item.Lod = null;
@@ -1528,7 +1530,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.Material) ?? true))
             {
-                item.Material = new FormLink<IMaterialObjectGetter>(rhs.Material.FormKey);
+                item.Material.SetTo(rhs.Material);
             }
             if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.Flags) ?? true))
             {
@@ -1886,9 +1888,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.MaxAngle = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.Material = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
+                    item.Material.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     if (dataFrame.Complete)
                     {
                         item.DNAMDataTypeState |= Static.DNAMDataType.Break0;
@@ -1981,7 +1984,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Material
         private int _MaterialLocation => _DNAMLocation!.Value + 0x4;
         private bool _Material_IsSet => _DNAMLocation.HasValue;
-        public FormLink<IMaterialObjectGetter> Material => _Material_IsSet ? new FormLink<IMaterialObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_MaterialLocation, 0x4)))) : FormLink<IMaterialObjectGetter>.Null;
+        public IFormLinkGetter<IMaterialObjectGetter> Material => _Material_IsSet ? new FormLink<IMaterialObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_MaterialLocation, 0x4)))) : FormLink<IMaterialObjectGetter>.Null;
         #endregion
         #region Flags
         private int _FlagsLocation => _DNAMLocation!.Value + 0x8;

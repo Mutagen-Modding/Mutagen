@@ -54,10 +54,14 @@ namespace Mutagen.Bethesda.Oblivion
         IDialogItemDataGetter? IDialogItemGetter.Data => this.Data;
         #endregion
         #region Quest
-        public FormLinkNullable<IQuestGetter> Quest { get; set; } = new FormLinkNullable<IQuestGetter>();
+        public IFormLinkNullable<IQuestGetter> Quest { get; init; } = new FormLinkNullable<IQuestGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IQuestGetter> IDialogItemGetter.Quest => this.Quest;
         #endregion
         #region PreviousTopic
-        public FormLinkNullable<IDialogItemGetter> PreviousTopic { get; set; } = new FormLinkNullable<IDialogItemGetter>();
+        public IFormLinkNullable<IDialogItemGetter> PreviousTopic { get; init; } = new FormLinkNullable<IDialogItemGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IDialogItemGetter> IDialogItemGetter.PreviousTopic => this.PreviousTopic;
         #endregion
         #region Topics
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1142,8 +1146,8 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordInternal
     {
         new DialogItemData? Data { get; set; }
-        new FormLinkNullable<IQuestGetter> Quest { get; set; }
-        new FormLinkNullable<IDialogItemGetter> PreviousTopic { get; set; }
+        new IFormLinkNullable<IQuestGetter> Quest { get; }
+        new IFormLinkNullable<IDialogItemGetter> PreviousTopic { get; }
         new ExtendedList<IFormLinkGetter<IDialogTopicGetter>> Topics { get; }
         new ExtendedList<DialogResponse> Responses { get; }
         new ExtendedList<Condition> Conditions { get; }
@@ -1169,8 +1173,8 @@ namespace Mutagen.Bethesda.Oblivion
     {
         static new ILoquiRegistration Registration => DialogItem_Registration.Instance;
         IDialogItemDataGetter? Data { get; }
-        FormLinkNullable<IQuestGetter> Quest { get; }
-        FormLinkNullable<IDialogItemGetter> PreviousTopic { get; }
+        IFormLinkNullableGetter<IQuestGetter> Quest { get; }
+        IFormLinkNullableGetter<IDialogItemGetter> PreviousTopic { get; }
         IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>> Topics { get; }
         IReadOnlyList<IDialogResponseGetter> Responses { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
@@ -1436,8 +1440,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ClearPartial();
             item.Data = null;
-            item.Quest = FormLinkNullable<IQuestGetter>.Null;
-            item.PreviousTopic = FormLinkNullable<IDialogItemGetter>.Null;
+            item.Quest.Clear();
+            item.PreviousTopic.Clear();
             item.Topics.Clear();
             item.Responses.Clear();
             item.Conditions.Clear();
@@ -1969,11 +1973,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogItem_FieldIndex.Quest) ?? true))
             {
-                item.Quest = new FormLinkNullable<IQuestGetter>(rhs.Quest.FormKeyNullable);
+                item.Quest.SetTo(rhs.Quest);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogItem_FieldIndex.PreviousTopic) ?? true))
             {
-                item.PreviousTopic = new FormLinkNullable<IDialogItemGetter>(rhs.PreviousTopic.FormKeyNullable);
+                item.PreviousTopic.SetTo(rhs.PreviousTopic);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogItem_FieldIndex.Topics) ?? true))
             {
@@ -2428,17 +2432,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.QSTI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Quest = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Quest.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)DialogItem_FieldIndex.Quest;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PreviousTopic = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.PreviousTopic.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)DialogItem_FieldIndex.PreviousTopic;
                 }
                 case RecordTypeInts.NAME:
@@ -2560,11 +2566,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Quest
         private int? _QuestLocation;
-        public FormLinkNullable<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
+        public IFormLinkNullableGetter<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
         #endregion
         #region PreviousTopic
         private int? _PreviousTopicLocation;
-        public FormLinkNullable<IDialogItemGetter> PreviousTopic => _PreviousTopicLocation.HasValue ? new FormLinkNullable<IDialogItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PreviousTopicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogItemGetter>.Null;
+        public IFormLinkNullableGetter<IDialogItemGetter> PreviousTopic => _PreviousTopicLocation.HasValue ? new FormLinkNullable<IDialogItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PreviousTopicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogItemGetter>.Null;
         #endregion
         public IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>> Topics { get; private set; } = ListExt.Empty<IFormLinkGetter<IDialogTopicGetter>>();
         public IReadOnlyList<IDialogResponseGetter> Responses { get; private set; } = ListExt.Empty<DialogResponseBinaryOverlay>();

@@ -43,7 +43,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region ImpactDataSet
-        public FormLink<IImpactDataSetGetter> ImpactDataSet { get; set; } = new FormLink<IImpactDataSetGetter>();
+        public IFormLink<IImpactDataSetGetter> ImpactDataSet { get; init; } = new FormLink<IImpactDataSetGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IImpactDataSetGetter> IFootstepGetter.ImpactDataSet => this.ImpactDataSet;
         #endregion
         #region Tag
         public String Tag { get; set; } = string.Empty;
@@ -493,7 +495,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IFootstepInternal>,
         ISkyrimMajorRecordInternal
     {
-        new FormLink<IImpactDataSetGetter> ImpactDataSet { get; set; }
+        new IFormLink<IImpactDataSetGetter> ImpactDataSet { get; }
         new String Tag { get; set; }
     }
 
@@ -512,7 +514,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IFootstepGetter>
     {
         static new ILoquiRegistration Registration => Footstep_Registration.Instance;
-        FormLink<IImpactDataSetGetter> ImpactDataSet { get; }
+        IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet { get; }
         String Tag { get; }
 
     }
@@ -766,7 +768,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IFootstepInternal item)
         {
             ClearPartial();
-            item.ImpactDataSet = FormLink<IImpactDataSetGetter>.Null;
+            item.ImpactDataSet.Clear();
             item.Tag = string.Empty;
             base.Clear(item);
         }
@@ -1097,7 +1099,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)Footstep_FieldIndex.ImpactDataSet) ?? true))
             {
-                item.ImpactDataSet = new FormLink<IImpactDataSetGetter>(rhs.ImpactDataSet.FormKey);
+                item.ImpactDataSet.SetTo(rhs.ImpactDataSet);
             }
             if ((copyMask?.GetShouldTranslate((int)Footstep_FieldIndex.Tag) ?? true))
             {
@@ -1363,9 +1365,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ImpactDataSet = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.ImpactDataSet.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Footstep_FieldIndex.ImpactDataSet;
                 }
                 case RecordTypeInts.ANAM:
@@ -1433,7 +1436,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region ImpactDataSet
         private int? _ImpactDataSetLocation;
-        public FormLink<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSetLocation.HasValue ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ImpactDataSetLocation.Value, _package.MetaData.Constants)))) : FormLink<IImpactDataSetGetter>.Null;
+        public IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSetLocation.HasValue ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ImpactDataSetLocation.Value, _package.MetaData.Constants)))) : FormLink<IImpactDataSetGetter>.Null;
         #endregion
         #region Tag
         private int? _TagLocation;

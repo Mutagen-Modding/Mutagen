@@ -78,7 +78,9 @@ namespace Mutagen.Bethesda.Oblivion
         String? IAmmunitionGetter.Icon => this.Icon;
         #endregion
         #region Enchantment
-        public FormLinkNullable<IEnchantmentGetter> Enchantment { get; set; } = new FormLinkNullable<IEnchantmentGetter>();
+        public IFormLinkNullable<IEnchantmentGetter> Enchantment { get; init; } = new FormLinkNullable<IEnchantmentGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IEnchantmentGetter> IAmmunitionGetter.Enchantment => this.Enchantment;
         #endregion
         #region EnchantmentPoints
         public UInt16? EnchantmentPoints { get; set; }
@@ -654,7 +656,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Name { get; set; }
         new Model? Model { get; set; }
         new String? Icon { get; set; }
-        new FormLinkNullable<IEnchantmentGetter> Enchantment { get; set; }
+        new IFormLinkNullable<IEnchantmentGetter> Enchantment { get; }
         new UInt16? EnchantmentPoints { get; set; }
         new AmmunitionData? Data { get; set; }
     }
@@ -680,7 +682,7 @@ namespace Mutagen.Bethesda.Oblivion
         String? Name { get; }
         IModelGetter? Model { get; }
         String? Icon { get; }
-        FormLinkNullable<IEnchantmentGetter> Enchantment { get; }
+        IFormLinkNullableGetter<IEnchantmentGetter> Enchantment { get; }
         UInt16? EnchantmentPoints { get; }
         IAmmunitionDataGetter? Data { get; }
 
@@ -941,7 +943,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Name = default;
             item.Model = null;
             item.Icon = default;
-            item.Enchantment = FormLinkNullable<IEnchantmentGetter>.Null;
+            item.Enchantment.Clear();
             item.EnchantmentPoints = default;
             item.Data = null;
             base.Clear(item);
@@ -1424,7 +1426,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Enchantment) ?? true))
             {
-                item.Enchantment = new FormLinkNullable<IEnchantmentGetter>(rhs.Enchantment.FormKeyNullable);
+                item.Enchantment.SetTo(rhs.Enchantment);
             }
             if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.EnchantmentPoints) ?? true))
             {
@@ -1803,9 +1805,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.ENAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Enchantment = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Enchantment.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Ammunition_FieldIndex.Enchantment;
                 }
                 case RecordTypeInts.ANAM:
@@ -1889,7 +1892,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Enchantment
         private int? _EnchantmentLocation;
-        public FormLinkNullable<IEnchantmentGetter> Enchantment => _EnchantmentLocation.HasValue ? new FormLinkNullable<IEnchantmentGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EnchantmentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEnchantmentGetter>.Null;
+        public IFormLinkNullableGetter<IEnchantmentGetter> Enchantment => _EnchantmentLocation.HasValue ? new FormLinkNullable<IEnchantmentGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EnchantmentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEnchantmentGetter>.Null;
         #endregion
         #region EnchantmentPoints
         private int? _EnchantmentPointsLocation;

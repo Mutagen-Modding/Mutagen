@@ -43,7 +43,9 @@ namespace Mutagen.Bethesda.Skyrim
         public EnableParent.VersioningBreaks Versioning { get; set; } = default;
         #endregion
         #region Reference
-        public FormLink<ILinkedReferenceGetter> Reference { get; set; } = new FormLink<ILinkedReferenceGetter>();
+        public IFormLink<ILinkedReferenceGetter> Reference { get; init; } = new FormLink<ILinkedReferenceGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ILinkedReferenceGetter> IEnableParentGetter.Reference => this.Reference;
         #endregion
         #region Flags
         public EnableParent.Flag Flags { get; set; } = default;
@@ -525,7 +527,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IEnableParent>
     {
         new EnableParent.VersioningBreaks Versioning { get; set; }
-        new FormLink<ILinkedReferenceGetter> Reference { get; set; }
+        new IFormLink<ILinkedReferenceGetter> Reference { get; }
         new EnableParent.Flag Flags { get; set; }
         new MemorySlice<Byte> Unknown { get; set; }
     }
@@ -544,7 +546,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => EnableParent_Registration.Instance;
         EnableParent.VersioningBreaks Versioning { get; }
-        FormLink<ILinkedReferenceGetter> Reference { get; }
+        IFormLinkGetter<ILinkedReferenceGetter> Reference { get; }
         EnableParent.Flag Flags { get; }
         ReadOnlyMemorySlice<Byte> Unknown { get; }
 
@@ -807,7 +809,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Versioning = default;
-            item.Reference = FormLink<ILinkedReferenceGetter>.Null;
+            item.Reference.Clear();
             item.Flags = default;
             item.Unknown = new byte[3];
         }
@@ -992,7 +994,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)EnableParent_FieldIndex.Reference) ?? true))
             {
-                item.Reference = new FormLink<ILinkedReferenceGetter>(rhs.Reference.FormKey);
+                item.Reference.SetTo(rhs.Reference);
             }
             if (rhs.Versioning.HasFlag(EnableParent.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)EnableParent_FieldIndex.Flags) ?? true))
@@ -1151,9 +1153,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IEnableParent item,
             MutagenFrame frame)
         {
-            item.Reference = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Reference.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             if (frame.Complete)
             {
                 item.Versioning |= EnableParent.VersioningBreaks.Break0;
@@ -1228,7 +1231,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public EnableParent.VersioningBreaks Versioning { get; private set; }
-        public FormLink<ILinkedReferenceGetter> Reference => new FormLink<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<ILinkedReferenceGetter> Reference => new FormLink<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public EnableParent.Flag Flags => (EnableParent.Flag)_data.Span.Slice(0x4, 0x1)[0];
         public ReadOnlyMemorySlice<Byte> Unknown => _data.Span.Slice(0x5, 0x3).ToArray();
         partial void CustomFactoryEnd(

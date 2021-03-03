@@ -43,7 +43,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Projectile
-        public FormLink<IProjectileGetter> Projectile { get; set; } = new FormLink<IProjectileGetter>();
+        public IFormLink<IProjectileGetter> Projectile { get; init; } = new FormLink<IProjectileGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IProjectileGetter> IPlacedBarrierGetter.Projectile => this.Projectile;
         #endregion
 
         #region To String
@@ -496,7 +498,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPlacedBarrierInternal>,
         IPlacedBarrierGetter
     {
-        new FormLink<IProjectileGetter> Projectile { get; set; }
+        new IFormLink<IProjectileGetter> Projectile { get; }
     }
 
     public partial interface IPlacedBarrierInternal :
@@ -514,7 +516,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IPlacedBarrierGetter>
     {
         static new ILoquiRegistration Registration => PlacedBarrier_Registration.Instance;
-        FormLink<IProjectileGetter> Projectile { get; }
+        IFormLinkGetter<IProjectileGetter> Projectile { get; }
 
     }
 
@@ -783,7 +785,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IPlacedBarrierInternal item)
         {
             ClearPartial();
-            item.Projectile = FormLink<IProjectileGetter>.Null;
+            item.Projectile.Clear();
             base.Clear(item);
         }
         
@@ -1264,7 +1266,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PlacedBarrier_FieldIndex.Projectile) ?? true))
             {
-                item.Projectile = new FormLink<IProjectileGetter>(rhs.Projectile.FormKey);
+                item.Projectile.SetTo(rhs.Projectile);
             }
         }
         

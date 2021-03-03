@@ -86,10 +86,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region Ingredient
-        public FormLinkNullable<IHarvestTargetGetter> Ingredient { get; set; } = new FormLinkNullable<IHarvestTargetGetter>();
+        public IFormLinkNullable<IHarvestTargetGetter> Ingredient { get; init; } = new FormLinkNullable<IHarvestTargetGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IHarvestTargetGetter> ITreeGetter.Ingredient => this.Ingredient;
         #endregion
         #region HarvestSound
-        public FormLinkNullable<ISoundDescriptorGetter> HarvestSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
+        public IFormLinkNullable<ISoundDescriptorGetter> HarvestSound { get; init; } = new FormLinkNullable<ISoundDescriptorGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundDescriptorGetter> ITreeGetter.HarvestSound => this.HarvestSound;
         #endregion
         #region Production
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -963,8 +967,8 @@ namespace Mutagen.Bethesda.Skyrim
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
         new Model? Model { get; set; }
-        new FormLinkNullable<IHarvestTargetGetter> Ingredient { get; set; }
-        new FormLinkNullable<ISoundDescriptorGetter> HarvestSound { get; set; }
+        new IFormLinkNullable<IHarvestTargetGetter> Ingredient { get; }
+        new IFormLinkNullable<ISoundDescriptorGetter> HarvestSound { get; }
         new SeasonalIngredientProduction? Production { get; set; }
         new TranslatedString? Name { get; set; }
         new Single TrunkFlexibility { get; set; }
@@ -1006,8 +1010,8 @@ namespace Mutagen.Bethesda.Skyrim
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
         IObjectBoundsGetter ObjectBounds { get; }
         IModelGetter? Model { get; }
-        FormLinkNullable<IHarvestTargetGetter> Ingredient { get; }
-        FormLinkNullable<ISoundDescriptorGetter> HarvestSound { get; }
+        IFormLinkNullableGetter<IHarvestTargetGetter> Ingredient { get; }
+        IFormLinkNullableGetter<ISoundDescriptorGetter> HarvestSound { get; }
         ISeasonalIngredientProductionGetter? Production { get; }
         ITranslatedStringGetter? Name { get; }
         Single TrunkFlexibility { get; }
@@ -1286,8 +1290,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.VirtualMachineAdapter = null;
             item.ObjectBounds.Clear();
             item.Model = null;
-            item.Ingredient = FormLinkNullable<IHarvestTargetGetter>.Null;
-            item.HarvestSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
+            item.Ingredient.Clear();
+            item.HarvestSound.Clear();
             item.Production = null;
             item.Name = default;
             item.TrunkFlexibility = default;
@@ -1828,11 +1832,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.Ingredient) ?? true))
             {
-                item.Ingredient = new FormLinkNullable<IHarvestTargetGetter>(rhs.Ingredient.FormKeyNullable);
+                item.Ingredient.SetTo(rhs.Ingredient);
             }
             if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.HarvestSound) ?? true))
             {
-                item.HarvestSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.HarvestSound.FormKeyNullable);
+                item.HarvestSound.SetTo(rhs.HarvestSound);
             }
             if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.Production) ?? true))
             {
@@ -2223,17 +2227,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.PFIG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Ingredient = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Ingredient.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Tree_FieldIndex.Ingredient;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HarvestSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.HarvestSound.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Tree_FieldIndex.HarvestSound;
                 }
                 case RecordTypeInts.PFPC:
@@ -2329,11 +2335,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IModelGetter? Model { get; private set; }
         #region Ingredient
         private int? _IngredientLocation;
-        public FormLinkNullable<IHarvestTargetGetter> Ingredient => _IngredientLocation.HasValue ? new FormLinkNullable<IHarvestTargetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _IngredientLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IHarvestTargetGetter>.Null;
+        public IFormLinkNullableGetter<IHarvestTargetGetter> Ingredient => _IngredientLocation.HasValue ? new FormLinkNullable<IHarvestTargetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _IngredientLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IHarvestTargetGetter>.Null;
         #endregion
         #region HarvestSound
         private int? _HarvestSoundLocation;
-        public FormLinkNullable<ISoundDescriptorGetter> HarvestSound => _HarvestSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HarvestSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> HarvestSound => _HarvestSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HarvestSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region Production
         private RangeInt32? _ProductionLocation;

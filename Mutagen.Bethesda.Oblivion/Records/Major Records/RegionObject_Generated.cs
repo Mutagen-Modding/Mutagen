@@ -40,7 +40,9 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Object
-        public FormLink<IOblivionMajorRecordGetter> Object { get; set; } = new FormLink<IOblivionMajorRecordGetter>();
+        public IFormLink<IOblivionMajorRecordGetter> Object { get; init; } = new FormLink<IOblivionMajorRecordGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IOblivionMajorRecordGetter> IRegionObjectGetter.Object => this.Object;
         #endregion
         #region ParentIndex
         public UInt16 ParentIndex { get; set; } = default;
@@ -921,7 +923,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IRegionObject>,
         IRegionObjectGetter
     {
-        new FormLink<IOblivionMajorRecordGetter> Object { get; set; }
+        new IFormLink<IOblivionMajorRecordGetter> Object { get; }
         new UInt16 ParentIndex { get; set; }
         new Int16 Unknown { get; set; }
         new Single Density { get; set; }
@@ -953,7 +955,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => RegionObject_Registration.Instance;
-        FormLink<IOblivionMajorRecordGetter> Object { get; }
+        IFormLinkGetter<IOblivionMajorRecordGetter> Object { get; }
         UInt16 ParentIndex { get; }
         Int16 Unknown { get; }
         Single Density { get; }
@@ -1241,7 +1243,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IRegionObject item)
         {
             ClearPartial();
-            item.Object = FormLink<IOblivionMajorRecordGetter>.Null;
+            item.Object.Clear();
             item.ParentIndex = default;
             item.Unknown = default;
             item.Density = default;
@@ -1524,7 +1526,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)RegionObject_FieldIndex.Object) ?? true))
             {
-                item.Object = new FormLink<IOblivionMajorRecordGetter>(rhs.Object.FormKey);
+                item.Object.SetTo(rhs.Object);
             }
             if ((copyMask?.GetShouldTranslate((int)RegionObject_FieldIndex.ParentIndex) ?? true))
             {
@@ -1757,9 +1759,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionObject item,
             MutagenFrame frame)
         {
-            item.Object = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Object.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             item.ParentIndex = frame.ReadUInt16();
             item.Unknown = frame.ReadInt16();
             item.Density = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
@@ -1842,7 +1845,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<IOblivionMajorRecordGetter> Object => new FormLink<IOblivionMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IOblivionMajorRecordGetter> Object => new FormLink<IOblivionMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public UInt16 ParentIndex => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x4, 0x2));
         public Int16 Unknown => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x6, 0x2));
         public Single Density => _data.Slice(0x8, 0x4).Float();

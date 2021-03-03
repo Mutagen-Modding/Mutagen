@@ -101,7 +101,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region ImageSpaceModifier
-        public FormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier { get; set; } = new FormLinkNullable<IImageSpaceAdapterGetter>();
+        public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier { get; init; } = new FormLinkNullable<IImageSpaceAdapterGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IImageSpaceAdapterGetter> ICameraShotGetter.ImageSpaceModifier => this.ImageSpaceModifier;
         #endregion
         #region DATADataTypeState
         public CameraShot.DATADataType DATADataTypeState { get; set; } = default;
@@ -912,7 +914,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single MinTime { get; set; }
         new Single TargetPercentBetweenActors { get; set; }
         new Single NearTargetDistance { get; set; }
-        new FormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier { get; set; }
+        new IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier { get; }
         new CameraShot.DATADataType DATADataTypeState { get; set; }
     }
 
@@ -944,7 +946,7 @@ namespace Mutagen.Bethesda.Skyrim
         Single MinTime { get; }
         Single TargetPercentBetweenActors { get; }
         Single NearTargetDistance { get; }
-        FormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier { get; }
+        IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpaceModifier { get; }
         CameraShot.DATADataType DATADataTypeState { get; }
 
     }
@@ -1222,7 +1224,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.MinTime = default;
             item.TargetPercentBetweenActors = default;
             item.NearTargetDistance = default;
-            item.ImageSpaceModifier = FormLinkNullable<IImageSpaceAdapterGetter>.Null;
+            item.ImageSpaceModifier.Clear();
             item.DATADataTypeState = default;
             base.Clear(item);
         }
@@ -1726,7 +1728,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.ImageSpaceModifier) ?? true))
             {
-                item.ImageSpaceModifier = new FormLinkNullable<IImageSpaceAdapterGetter>(rhs.ImageSpaceModifier.FormKeyNullable);
+                item.ImageSpaceModifier.SetTo(rhs.ImageSpaceModifier);
             }
             if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.DATADataTypeState) ?? true))
             {
@@ -2075,9 +2077,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.MNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ImageSpaceModifier = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.ImageSpaceModifier.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)CameraShot_FieldIndex.ImageSpaceModifier;
                 }
                 default:
@@ -2195,7 +2198,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region ImageSpaceModifier
         private int? _ImageSpaceModifierLocation;
-        public FormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier => _ImageSpaceModifierLocation.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ImageSpaceModifierLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
+        public IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpaceModifier => _ImageSpaceModifierLocation.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ImageSpaceModifierLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

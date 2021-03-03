@@ -40,7 +40,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Worldspace
-        public FormLink<IWorldspaceGetter> Worldspace { get; set; } = new FormLink<IWorldspaceGetter>();
+        public IFormLink<IWorldspaceGetter> Worldspace { get; init; } = new FormLink<IWorldspaceGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IWorldspaceGetter> IWorldspaceParentGetter.Worldspace => this.Worldspace;
         #endregion
         #region Flags
         public WorldspaceParent.Flag Flags { get; set; } = default;
@@ -449,7 +451,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IWorldspaceParent>,
         IWorldspaceParentGetter
     {
-        new FormLink<IWorldspaceGetter> Worldspace { get; set; }
+        new IFormLink<IWorldspaceGetter> Worldspace { get; }
         new WorldspaceParent.Flag Flags { get; set; }
     }
 
@@ -466,7 +468,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => WorldspaceParent_Registration.Instance;
-        FormLink<IWorldspaceGetter> Worldspace { get; }
+        IFormLinkGetter<IWorldspaceGetter> Worldspace { get; }
         WorldspaceParent.Flag Flags { get; }
 
     }
@@ -725,7 +727,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IWorldspaceParent item)
         {
             ClearPartial();
-            item.Worldspace = FormLink<IWorldspaceGetter>.Null;
+            item.Worldspace.Clear();
             item.Flags = default;
         }
         
@@ -889,7 +891,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)WorldspaceParent_FieldIndex.Worldspace) ?? true))
             {
-                item.Worldspace = new FormLink<IWorldspaceGetter>(rhs.Worldspace.FormKey);
+                item.Worldspace.SetTo(rhs.Worldspace);
             }
             if ((copyMask?.GetShouldTranslate((int)WorldspaceParent_FieldIndex.Flags) ?? true))
             {
@@ -1053,9 +1055,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)WorldspaceParent_FieldIndex.Worldspace) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Worldspace = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Worldspace.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)WorldspaceParent_FieldIndex.Worldspace;
                 }
                 case RecordTypeInts.PNAM:
@@ -1135,7 +1138,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Worldspace
         private int? _WorldspaceLocation;
-        public FormLink<IWorldspaceGetter> Worldspace => _WorldspaceLocation.HasValue ? new FormLink<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WorldspaceLocation.Value, _package.MetaData.Constants)))) : FormLink<IWorldspaceGetter>.Null;
+        public IFormLinkGetter<IWorldspaceGetter> Worldspace => _WorldspaceLocation.HasValue ? new FormLink<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WorldspaceLocation.Value, _package.MetaData.Constants)))) : FormLink<IWorldspaceGetter>.Null;
         #endregion
         #region Flags
         private int? _FlagsLocation;

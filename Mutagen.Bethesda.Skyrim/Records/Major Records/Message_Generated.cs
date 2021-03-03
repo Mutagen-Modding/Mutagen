@@ -91,7 +91,9 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte> IMessageGetter.INAM => this.INAM;
         #endregion
         #region Quest
-        public FormLinkNullable<IQuestGetter> Quest { get; set; } = new FormLinkNullable<IQuestGetter>();
+        public IFormLinkNullable<IQuestGetter> Quest { get; init; } = new FormLinkNullable<IQuestGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IQuestGetter> IMessageGetter.Quest => this.Quest;
         #endregion
         #region Flags
         public Message.Flag Flags { get; set; } = default;
@@ -782,7 +784,7 @@ namespace Mutagen.Bethesda.Skyrim
         new TranslatedString Description { get; set; }
         new TranslatedString? Name { get; set; }
         new MemorySlice<Byte> INAM { get; set; }
-        new FormLinkNullable<IQuestGetter> Quest { get; set; }
+        new IFormLinkNullable<IQuestGetter> Quest { get; }
         new Message.Flag Flags { get; set; }
         new UInt32? DisplayTime { get; set; }
         new ExtendedList<MessageButton> MenuButtons { get; }
@@ -810,7 +812,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedStringGetter Description { get; }
         ITranslatedStringGetter? Name { get; }
         ReadOnlyMemorySlice<Byte> INAM { get; }
-        FormLinkNullable<IQuestGetter> Quest { get; }
+        IFormLinkNullableGetter<IQuestGetter> Quest { get; }
         Message.Flag Flags { get; }
         UInt32? DisplayTime { get; }
         IReadOnlyList<IMessageButtonGetter> MenuButtons { get; }
@@ -1074,7 +1076,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Description.Clear();
             item.Name = default;
             item.INAM = new byte[0];
-            item.Quest = FormLinkNullable<IQuestGetter>.Null;
+            item.Quest.Clear();
             item.Flags = default;
             item.DisplayTime = default;
             item.MenuButtons.Clear();
@@ -1488,7 +1490,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Message_FieldIndex.Quest) ?? true))
             {
-                item.Quest = new FormLinkNullable<IQuestGetter>(rhs.Quest.FormKeyNullable);
+                item.Quest.SetTo(rhs.Quest);
             }
             if ((copyMask?.GetShouldTranslate((int)Message_FieldIndex.Flags) ?? true))
             {
@@ -1837,9 +1839,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.QNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Quest = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Quest.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Message_FieldIndex.Quest;
                 }
                 case RecordTypeInts.DNAM:
@@ -1942,7 +1945,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Quest
         private int? _QuestLocation;
-        public FormLinkNullable<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
+        public IFormLinkNullableGetter<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
         #endregion
         #region Flags
         private int? _FlagsLocation;

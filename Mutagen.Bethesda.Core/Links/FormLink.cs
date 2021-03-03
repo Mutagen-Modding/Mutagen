@@ -37,6 +37,12 @@ namespace Mutagen.Bethesda
 
         FormKey? IFormLinkGetter.FormKeyNullable => this.FormKey;
 
+        FormKey? IFormLinkNullable<TMajorGetter>.FormKeyNullable
+        {
+            get => this.FormKey;
+            set => this.FormKey = value ?? FormKey.Null;
+        }
+
         public FormLink()
         {
             this.FormKey = FormKey.Null;
@@ -74,6 +80,15 @@ namespace Mutagen.Bethesda
         public void SetTo(TMajorGetter? record)
         {
             FormKey = record?.FormKey ?? FormKey.Null;
+        }
+
+        /// <summary>
+        /// Sets the link to match another link
+        /// </summary>
+        /// <param name="link">Target link to set to</param>
+        public void SetTo(IFormLinkNullableGetter<TMajorGetter> link)
+        {
+            FormKey = link.FormKey;
         }
 
         public void Clear()

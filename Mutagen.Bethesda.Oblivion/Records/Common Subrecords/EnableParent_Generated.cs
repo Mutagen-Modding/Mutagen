@@ -40,7 +40,9 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Reference
-        public FormLink<IPlacedGetter> Reference { get; set; } = new FormLink<IPlacedGetter>();
+        public IFormLink<IPlacedGetter> Reference { get; init; } = new FormLink<IPlacedGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IPlacedGetter> IEnableParentGetter.Reference => this.Reference;
         #endregion
         #region Flags
         public EnableParent.Flag Flags { get; set; } = default;
@@ -449,7 +451,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkContainer,
         ILoquiObjectSetter<IEnableParent>
     {
-        new FormLink<IPlacedGetter> Reference { get; set; }
+        new IFormLink<IPlacedGetter> Reference { get; }
         new EnableParent.Flag Flags { get; set; }
     }
 
@@ -466,7 +468,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => EnableParent_Registration.Instance;
-        FormLink<IPlacedGetter> Reference { get; }
+        IFormLinkGetter<IPlacedGetter> Reference { get; }
         EnableParent.Flag Flags { get; }
 
     }
@@ -725,7 +727,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IEnableParent item)
         {
             ClearPartial();
-            item.Reference = FormLink<IPlacedGetter>.Null;
+            item.Reference.Clear();
             item.Flags = default;
         }
         
@@ -891,7 +893,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)EnableParent_FieldIndex.Reference) ?? true))
             {
-                item.Reference = new FormLink<IPlacedGetter>(rhs.Reference.FormKey);
+                item.Reference.SetTo(rhs.Reference);
             }
             if ((copyMask?.GetShouldTranslate((int)EnableParent_FieldIndex.Flags) ?? true))
             {
@@ -1039,9 +1041,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEnableParent item,
             MutagenFrame frame)
         {
-            item.Reference = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Reference.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             item.Flags = EnumBinaryTranslation<EnableParent.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
         }
 
@@ -1109,7 +1112,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<IPlacedGetter> Reference => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IPlacedGetter> Reference => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public EnableParent.Flag Flags => (EnableParent.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

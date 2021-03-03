@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Noggog;
 
 namespace Mutagen.Bethesda
 {
@@ -34,9 +35,11 @@ namespace Mutagen.Bethesda
     {
     }
 
-    public interface IEDIDLink<TMajor> : IEDIDLinkGetter<TMajor>, IEDIDLink
+    public interface IEDIDLink<TMajor> : IEDIDLinkGetter<TMajor>, IEDIDLink, IClearable
        where TMajor : IMajorRecordCommonGetter
     {
+        void SetTo(RecordType type);
+        void SetTo(IEDIDLinkGetter<TMajor> rhsLink);
     }
 
     /// <summary>

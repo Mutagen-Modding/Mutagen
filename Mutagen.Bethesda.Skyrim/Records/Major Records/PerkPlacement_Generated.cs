@@ -40,7 +40,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Perk
-        public FormLink<IPerkGetter> Perk { get; set; } = new FormLink<IPerkGetter>();
+        public IFormLink<IPerkGetter> Perk { get; init; } = new FormLink<IPerkGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IPerkGetter> IPerkPlacementGetter.Perk => this.Perk;
         #endregion
         #region Rank
         public Byte Rank { get; set; } = default;
@@ -488,7 +490,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPerkPlacement>,
         IPerkPlacementGetter
     {
-        new FormLink<IPerkGetter> Perk { get; set; }
+        new IFormLink<IPerkGetter> Perk { get; }
         new Byte Rank { get; set; }
         new MemorySlice<Byte> Fluff { get; set; }
     }
@@ -506,7 +508,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => PerkPlacement_Registration.Instance;
-        FormLink<IPerkGetter> Perk { get; }
+        IFormLinkGetter<IPerkGetter> Perk { get; }
         Byte Rank { get; }
         ReadOnlyMemorySlice<Byte> Fluff { get; }
 
@@ -767,7 +769,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IPerkPlacement item)
         {
             ClearPartial();
-            item.Perk = FormLink<IPerkGetter>.Null;
+            item.Perk.Clear();
             item.Rank = default;
             item.Fluff = new byte[3];
         }
@@ -941,7 +943,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)PerkPlacement_FieldIndex.Perk) ?? true))
             {
-                item.Perk = new FormLink<IPerkGetter>(rhs.Perk.FormKey);
+                item.Perk.SetTo(rhs.Perk);
             }
             if ((copyMask?.GetShouldTranslate((int)PerkPlacement_FieldIndex.Rank) ?? true))
             {
@@ -1093,9 +1095,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPerkPlacement item,
             MutagenFrame frame)
         {
-            item.Perk = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Perk.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             item.Rank = frame.ReadUInt8();
             item.Fluff = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
         }
@@ -1164,7 +1167,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<IPerkGetter> Perk => new FormLink<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IPerkGetter> Perk => new FormLink<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public Byte Rank => _data.Span[0x4];
         public ReadOnlyMemorySlice<Byte> Fluff => _data.Span.Slice(0x5, 0x3).ToArray();
         partial void CustomFactoryEnd(

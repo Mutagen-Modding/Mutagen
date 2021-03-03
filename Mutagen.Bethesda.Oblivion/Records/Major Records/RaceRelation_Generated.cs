@@ -40,7 +40,9 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Race
-        public FormLink<IRaceGetter> Race { get; set; } = new FormLink<IRaceGetter>();
+        public IFormLink<IRaceGetter> Race { get; init; } = new FormLink<IRaceGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IRaceGetter> IRaceRelationGetter.Race => this.Race;
         #endregion
         #region Modifier
         public Int32 Modifier { get; set; } = default;
@@ -449,7 +451,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IRaceRelation>,
         IRaceRelationGetter
     {
-        new FormLink<IRaceGetter> Race { get; set; }
+        new IFormLink<IRaceGetter> Race { get; }
         new Int32 Modifier { get; set; }
     }
 
@@ -466,7 +468,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => RaceRelation_Registration.Instance;
-        FormLink<IRaceGetter> Race { get; }
+        IFormLinkGetter<IRaceGetter> Race { get; }
         Int32 Modifier { get; }
 
     }
@@ -725,7 +727,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IRaceRelation item)
         {
             ClearPartial();
-            item.Race = FormLink<IRaceGetter>.Null;
+            item.Race.Clear();
             item.Modifier = default;
         }
         
@@ -891,7 +893,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)RaceRelation_FieldIndex.Race) ?? true))
             {
-                item.Race = new FormLink<IRaceGetter>(rhs.Race.FormKey);
+                item.Race.SetTo(rhs.Race);
             }
             if ((copyMask?.GetShouldTranslate((int)RaceRelation_FieldIndex.Modifier) ?? true))
             {
@@ -1036,9 +1038,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRaceRelation item,
             MutagenFrame frame)
         {
-            item.Race = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Race.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             item.Modifier = frame.ReadInt32();
         }
 
@@ -1106,7 +1109,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<IRaceGetter> Race => new FormLink<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IRaceGetter> Race => new FormLink<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public Int32 Modifier => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

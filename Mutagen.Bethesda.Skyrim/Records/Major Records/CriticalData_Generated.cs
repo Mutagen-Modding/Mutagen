@@ -69,7 +69,9 @@ namespace Mutagen.Bethesda.Skyrim
         public Int32 Unused3 { get; set; } = default;
         #endregion
         #region Effect
-        public FormLink<ISpellGetter> Effect { get; set; } = new FormLink<ISpellGetter>();
+        public IFormLink<ISpellGetter> Effect { get; init; } = new FormLink<ISpellGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ISpellGetter> ICriticalDataGetter.Effect => this.Effect;
         #endregion
         #region Unused4
         public Int32 Unused4 { get; set; } = default;
@@ -686,7 +688,7 @@ namespace Mutagen.Bethesda.Skyrim
         new CriticalData.Flag Flags { get; set; }
         new MemorySlice<Byte> Unused2 { get; set; }
         new Int32 Unused3 { get; set; }
-        new FormLink<ISpellGetter> Effect { get; set; }
+        new IFormLink<ISpellGetter> Effect { get; }
         new Int32 Unused4 { get; set; }
     }
 
@@ -710,7 +712,7 @@ namespace Mutagen.Bethesda.Skyrim
         CriticalData.Flag Flags { get; }
         ReadOnlyMemorySlice<Byte> Unused2 { get; }
         Int32 Unused3 { get; }
-        FormLink<ISpellGetter> Effect { get; }
+        IFormLinkGetter<ISpellGetter> Effect { get; }
         Int32 Unused4 { get; }
 
     }
@@ -983,7 +985,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Flags = default;
             item.Unused2 = new byte[3];
             item.Unused3 = default;
-            item.Effect = FormLink<ISpellGetter>.Null;
+            item.Effect.Clear();
             item.Unused4 = default;
         }
         
@@ -1227,7 +1229,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (rhs.Versioning.HasFlag(CriticalData.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)CriticalData_FieldIndex.Effect) ?? true))
             {
-                item.Effect = new FormLink<ISpellGetter>(rhs.Effect.FormKey);
+                item.Effect.SetTo(rhs.Effect);
             }
             if ((copyMask?.GetShouldTranslate((int)CriticalData_FieldIndex.Unused4) ?? true))
             {
@@ -1408,9 +1410,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.Versioning |= CriticalData.VersioningBreaks.Break0;
                 return;
             }
-            item.Effect = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Effect.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             if (frame.MetaData.FormVersion!.Value >= 44)
             {
                 item.Unused4 = frame.ReadInt32();
@@ -1491,7 +1494,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Int32 Unused3 => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0xC, 0x4));
         int Unused3VersioningOffset => _package.FormVersion!.FormVersion!.Value < 44 ? -4 : 0;
         #endregion
-        public FormLink<ISpellGetter> Effect => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(Unused3VersioningOffset + 0x10, 0x4))));
+        public IFormLinkGetter<ISpellGetter> Effect => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(Unused3VersioningOffset + 0x10, 0x4))));
         #region Unused4
         public Int32 Unused4 => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(Unused3VersioningOffset + 0x14, 0x4));
         int Unused4VersioningOffset => Unused3VersioningOffset + (_package.FormVersion!.FormVersion!.Value < 44 ? -4 : 0);

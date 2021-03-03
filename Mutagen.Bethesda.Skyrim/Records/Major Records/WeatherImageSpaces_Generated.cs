@@ -40,16 +40,24 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Sunrise
-        public FormLink<IImageSpaceAdapterGetter> Sunrise { get; set; } = new FormLink<IImageSpaceAdapterGetter>();
+        public IFormLink<IImageSpaceAdapterGetter> Sunrise { get; init; } = new FormLink<IImageSpaceAdapterGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IImageSpaceAdapterGetter> IWeatherImageSpacesGetter.Sunrise => this.Sunrise;
         #endregion
         #region Day
-        public FormLink<IImageSpaceAdapterGetter> Day { get; set; } = new FormLink<IImageSpaceAdapterGetter>();
+        public IFormLink<IImageSpaceAdapterGetter> Day { get; init; } = new FormLink<IImageSpaceAdapterGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IImageSpaceAdapterGetter> IWeatherImageSpacesGetter.Day => this.Day;
         #endregion
         #region Sunset
-        public FormLink<IImageSpaceAdapterGetter> Sunset { get; set; } = new FormLink<IImageSpaceAdapterGetter>();
+        public IFormLink<IImageSpaceAdapterGetter> Sunset { get; init; } = new FormLink<IImageSpaceAdapterGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IImageSpaceAdapterGetter> IWeatherImageSpacesGetter.Sunset => this.Sunset;
         #endregion
         #region Night
-        public FormLink<IImageSpaceAdapterGetter> Night { get; set; } = new FormLink<IImageSpaceAdapterGetter>();
+        public IFormLink<IImageSpaceAdapterGetter> Night { get; init; } = new FormLink<IImageSpaceAdapterGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IImageSpaceAdapterGetter> IWeatherImageSpacesGetter.Night => this.Night;
         #endregion
 
         #region To String
@@ -511,10 +519,10 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IWeatherImageSpaces>,
         IWeatherImageSpacesGetter
     {
-        new FormLink<IImageSpaceAdapterGetter> Sunrise { get; set; }
-        new FormLink<IImageSpaceAdapterGetter> Day { get; set; }
-        new FormLink<IImageSpaceAdapterGetter> Sunset { get; set; }
-        new FormLink<IImageSpaceAdapterGetter> Night { get; set; }
+        new IFormLink<IImageSpaceAdapterGetter> Sunrise { get; }
+        new IFormLink<IImageSpaceAdapterGetter> Day { get; }
+        new IFormLink<IImageSpaceAdapterGetter> Sunset { get; }
+        new IFormLink<IImageSpaceAdapterGetter> Night { get; }
     }
 
     public partial interface IWeatherImageSpacesGetter :
@@ -530,10 +538,10 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => WeatherImageSpaces_Registration.Instance;
-        FormLink<IImageSpaceAdapterGetter> Sunrise { get; }
-        FormLink<IImageSpaceAdapterGetter> Day { get; }
-        FormLink<IImageSpaceAdapterGetter> Sunset { get; }
-        FormLink<IImageSpaceAdapterGetter> Night { get; }
+        IFormLinkGetter<IImageSpaceAdapterGetter> Sunrise { get; }
+        IFormLinkGetter<IImageSpaceAdapterGetter> Day { get; }
+        IFormLinkGetter<IImageSpaceAdapterGetter> Sunset { get; }
+        IFormLinkGetter<IImageSpaceAdapterGetter> Night { get; }
 
     }
 
@@ -793,10 +801,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IWeatherImageSpaces item)
         {
             ClearPartial();
-            item.Sunrise = FormLink<IImageSpaceAdapterGetter>.Null;
-            item.Day = FormLink<IImageSpaceAdapterGetter>.Null;
-            item.Sunset = FormLink<IImageSpaceAdapterGetter>.Null;
-            item.Night = FormLink<IImageSpaceAdapterGetter>.Null;
+            item.Sunrise.Clear();
+            item.Day.Clear();
+            item.Sunset.Clear();
+            item.Night.Clear();
         }
         
         #region Mutagen
@@ -981,19 +989,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)WeatherImageSpaces_FieldIndex.Sunrise) ?? true))
             {
-                item.Sunrise = new FormLink<IImageSpaceAdapterGetter>(rhs.Sunrise.FormKey);
+                item.Sunrise.SetTo(rhs.Sunrise);
             }
             if ((copyMask?.GetShouldTranslate((int)WeatherImageSpaces_FieldIndex.Day) ?? true))
             {
-                item.Day = new FormLink<IImageSpaceAdapterGetter>(rhs.Day.FormKey);
+                item.Day.SetTo(rhs.Day);
             }
             if ((copyMask?.GetShouldTranslate((int)WeatherImageSpaces_FieldIndex.Sunset) ?? true))
             {
-                item.Sunset = new FormLink<IImageSpaceAdapterGetter>(rhs.Sunset.FormKey);
+                item.Sunset.SetTo(rhs.Sunset);
             }
             if ((copyMask?.GetShouldTranslate((int)WeatherImageSpaces_FieldIndex.Night) ?? true))
             {
-                item.Night = new FormLink<IImageSpaceAdapterGetter>(rhs.Night.FormKey);
+                item.Night.SetTo(rhs.Night);
             }
         }
         
@@ -1142,18 +1150,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWeatherImageSpaces item,
             MutagenFrame frame)
         {
-            item.Sunrise = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            item.Day = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            item.Sunset = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            item.Night = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Sunrise.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
+            item.Day.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
+            item.Sunset.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
+            item.Night.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
         }
 
     }
@@ -1220,10 +1232,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<IImageSpaceAdapterGetter> Sunrise => new FormLink<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public FormLink<IImageSpaceAdapterGetter> Day => new FormLink<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
-        public FormLink<IImageSpaceAdapterGetter> Sunset => new FormLink<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
-        public FormLink<IImageSpaceAdapterGetter> Night => new FormLink<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0xC, 0x4))));
+        public IFormLinkGetter<IImageSpaceAdapterGetter> Sunrise => new FormLink<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IImageSpaceAdapterGetter> Day => new FormLink<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<IImageSpaceAdapterGetter> Sunset => new FormLink<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
+        public IFormLinkGetter<IImageSpaceAdapterGetter> Night => new FormLink<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0xC, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

@@ -55,7 +55,9 @@ namespace Mutagen.Bethesda.Skyrim
         IEntryPointsGetter? IFurnitureMarkerGetter.DisabledEntryPoints => this.DisabledEntryPoints;
         #endregion
         #region MarkerKeyword
-        public FormLinkNullable<IKeywordGetter> MarkerKeyword { get; set; } = new FormLinkNullable<IKeywordGetter>();
+        public IFormLinkNullable<IKeywordGetter> MarkerKeyword { get; init; } = new FormLinkNullable<IKeywordGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IKeywordGetter> IFurnitureMarkerGetter.MarkerKeyword => this.MarkerKeyword;
         #endregion
         #region EntryPoints
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -543,7 +545,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new Boolean Enabled { get; set; }
         new EntryPoints? DisabledEntryPoints { get; set; }
-        new FormLinkNullable<IKeywordGetter> MarkerKeyword { get; set; }
+        new IFormLinkNullable<IKeywordGetter> MarkerKeyword { get; }
         new EntryPoints? EntryPoints { get; set; }
     }
 
@@ -562,7 +564,7 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => FurnitureMarker_Registration.Instance;
         Boolean Enabled { get; }
         IEntryPointsGetter? DisabledEntryPoints { get; }
-        FormLinkNullable<IKeywordGetter> MarkerKeyword { get; }
+        IFormLinkNullableGetter<IKeywordGetter> MarkerKeyword { get; }
         IEntryPointsGetter? EntryPoints { get; }
 
     }
@@ -824,7 +826,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.Enabled = default;
             item.DisabledEntryPoints = null;
-            item.MarkerKeyword = FormLinkNullable<IKeywordGetter>.Null;
+            item.MarkerKeyword.Clear();
             item.EntryPoints = null;
         }
         
@@ -1050,7 +1052,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)FurnitureMarker_FieldIndex.MarkerKeyword) ?? true))
             {
-                item.MarkerKeyword = new FormLinkNullable<IKeywordGetter>(rhs.MarkerKeyword.FormKeyNullable);
+                item.MarkerKeyword.SetTo(rhs.MarkerKeyword);
             }
             if ((copyMask?.GetShouldTranslate((int)FurnitureMarker_FieldIndex.EntryPoints) ?? true))
             {
@@ -1227,9 +1229,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (frame.Complete) return;
             item.DisabledEntryPoints = Mutagen.Bethesda.Skyrim.EntryPoints.CreateFromBinary(frame: frame);
             if (frame.Complete) return;
-            item.MarkerKeyword = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.MarkerKeyword.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             if (frame.Complete) return;
             item.EntryPoints = Mutagen.Bethesda.Skyrim.EntryPoints.CreateFromBinary(frame: frame);
         }
@@ -1300,7 +1303,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public Boolean Enabled => _data.Slice(0x0, 0x1)[0] == 1;
         public IEntryPointsGetter DisabledEntryPoints => EntryPointsBinaryOverlay.EntryPointsFactory(new OverlayStream(_data.Slice(0x1), _package), _package, default(RecordTypeConverter));
-        public FormLinkNullable<IKeywordGetter> MarkerKeyword => new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x5, 0x4))));
+        public IFormLinkNullableGetter<IKeywordGetter> MarkerKeyword => new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x5, 0x4))));
         public IEntryPointsGetter EntryPoints => EntryPointsBinaryOverlay.EntryPointsFactory(new OverlayStream(_data.Slice(0x9), _package), _package, default(RecordTypeConverter));
         partial void CustomFactoryEnd(
             OverlayStream stream,

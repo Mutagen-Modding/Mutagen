@@ -45,7 +45,9 @@ namespace Mutagen.Bethesda.Skyrim
         Int32? IHeadPartReferenceGetter.Number => this.Number;
         #endregion
         #region Head
-        public FormLinkNullable<IHeadPartGetter> Head { get; set; } = new FormLinkNullable<IHeadPartGetter>();
+        public IFormLinkNullable<IHeadPartGetter> Head { get; init; } = new FormLinkNullable<IHeadPartGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IHeadPartGetter> IHeadPartReferenceGetter.Head => this.Head;
         #endregion
 
         #region To String
@@ -451,7 +453,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IHeadPartReference>
     {
         new Int32? Number { get; set; }
-        new FormLinkNullable<IHeadPartGetter> Head { get; set; }
+        new IFormLinkNullable<IHeadPartGetter> Head { get; }
     }
 
     public partial interface IHeadPartReferenceGetter :
@@ -468,7 +470,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => HeadPartReference_Registration.Instance;
         Int32? Number { get; }
-        FormLinkNullable<IHeadPartGetter> Head { get; }
+        IFormLinkNullableGetter<IHeadPartGetter> Head { get; }
 
     }
 
@@ -738,7 +740,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Number = default;
-            item.Head = FormLinkNullable<IHeadPartGetter>.Null;
+            item.Head.Clear();
         }
         
         #region Mutagen
@@ -912,7 +914,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)HeadPartReference_FieldIndex.Head) ?? true))
             {
-                item.Head = new FormLinkNullable<IHeadPartGetter>(rhs.Head.FormKeyNullable);
+                item.Head.SetTo(rhs.Head);
             }
         }
         
@@ -1078,9 +1080,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadPartReference_FieldIndex.Head) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Head = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Head.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)HeadPartReference_FieldIndex.Head;
                 }
                 default:
@@ -1158,7 +1161,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Head
         private int? _HeadLocation;
-        public FormLinkNullable<IHeadPartGetter> Head => _HeadLocation.HasValue ? new FormLinkNullable<IHeadPartGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HeadLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IHeadPartGetter>.Null;
+        public IFormLinkNullableGetter<IHeadPartGetter> Head => _HeadLocation.HasValue ? new FormLinkNullable<IHeadPartGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HeadLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IHeadPartGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

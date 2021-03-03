@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Skyrim
             if (EnableParent != null && disableType != DisableType.JustInitiallyDisabled)
             {
                 EnableParent.Flags = EnableParent.Flag.SetEnableStateToOppositeOfParent;
-                EnableParent.Reference = new FormLink<ILinkedReferenceGetter>(Constants.Player);
+                EnableParent.Reference.FormKey = Constants.Player;
             }
 
             MajorRecordFlagsRaw = EnumExt.SetFlag(MajorRecordFlagsRaw, (int) SkyrimMajorRecordFlag.InitiallyDisabled, true);

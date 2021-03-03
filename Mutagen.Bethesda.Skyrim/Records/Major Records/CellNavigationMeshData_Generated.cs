@@ -42,10 +42,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region UnusedWorldspaceParent
-        public FormLink<IWorldspaceGetter> UnusedWorldspaceParent { get; set; } = new FormLink<IWorldspaceGetter>();
+        public IFormLink<IWorldspaceGetter> UnusedWorldspaceParent { get; init; } = new FormLink<IWorldspaceGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IWorldspaceGetter> ICellNavigationMeshDataGetter.UnusedWorldspaceParent => this.UnusedWorldspaceParent;
         #endregion
         #region Parent
-        public FormLink<ICellGetter> Parent { get; set; } = new FormLink<ICellGetter>();
+        public IFormLink<ICellGetter> Parent { get; init; } = new FormLink<ICellGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ICellGetter> ICellNavigationMeshDataGetter.Parent => this.Parent;
         #endregion
 
         #region To String
@@ -461,8 +465,8 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILoquiObjectSetter<ICellNavigationMeshData>
     {
-        new FormLink<IWorldspaceGetter> UnusedWorldspaceParent { get; set; }
-        new FormLink<ICellGetter> Parent { get; set; }
+        new IFormLink<IWorldspaceGetter> UnusedWorldspaceParent { get; }
+        new IFormLink<ICellGetter> Parent { get; }
     }
 
     public partial interface ICellNavigationMeshDataGetter :
@@ -472,8 +476,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<ICellNavigationMeshDataGetter>
     {
         static new ILoquiRegistration Registration => CellNavigationMeshData_Registration.Instance;
-        FormLink<IWorldspaceGetter> UnusedWorldspaceParent { get; }
-        FormLink<ICellGetter> Parent { get; }
+        IFormLinkGetter<IWorldspaceGetter> UnusedWorldspaceParent { get; }
+        IFormLinkGetter<ICellGetter> Parent { get; }
 
     }
 
@@ -717,8 +721,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ICellNavigationMeshData item)
         {
             ClearPartial();
-            item.UnusedWorldspaceParent = FormLink<IWorldspaceGetter>.Null;
-            item.Parent = FormLink<ICellGetter>.Null;
+            item.UnusedWorldspaceParent.Clear();
+            item.Parent.Clear();
             base.Clear(item);
         }
         
@@ -964,11 +968,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)CellNavigationMeshData_FieldIndex.UnusedWorldspaceParent) ?? true))
             {
-                item.UnusedWorldspaceParent = new FormLink<IWorldspaceGetter>(rhs.UnusedWorldspaceParent.FormKey);
+                item.UnusedWorldspaceParent.SetTo(rhs.UnusedWorldspaceParent);
             }
             if ((copyMask?.GetShouldTranslate((int)CellNavigationMeshData_FieldIndex.Parent) ?? true))
             {
-                item.Parent = new FormLink<ICellGetter>(rhs.Parent.FormKey);
+                item.Parent.SetTo(rhs.Parent);
             }
         }
         

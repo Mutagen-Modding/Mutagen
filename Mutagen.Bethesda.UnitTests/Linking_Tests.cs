@@ -2664,7 +2664,7 @@ namespace Mutagen.Bethesda.UnitTests
                 {
                     Data = new LeveledItemEntryData()
                     {
-                        Reference = armor.FormKey
+                        Reference = armor.AsLink()
                     }
                 }
             };

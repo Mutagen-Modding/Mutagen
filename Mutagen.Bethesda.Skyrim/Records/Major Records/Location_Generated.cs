@@ -319,16 +319,24 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region ParentLocation
-        public FormLinkNullable<ILocationGetter> ParentLocation { get; set; } = new FormLinkNullable<ILocationGetter>();
+        public IFormLinkNullable<ILocationGetter> ParentLocation { get; init; } = new FormLinkNullable<ILocationGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ILocationGetter> ILocationGetter.ParentLocation => this.ParentLocation;
         #endregion
         #region Music
-        public FormLinkNullable<IMusicTypeGetter> Music { get; set; } = new FormLinkNullable<IMusicTypeGetter>();
+        public IFormLinkNullable<IMusicTypeGetter> Music { get; init; } = new FormLinkNullable<IMusicTypeGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IMusicTypeGetter> ILocationGetter.Music => this.Music;
         #endregion
         #region UnreportedCrimeFaction
-        public FormLinkNullable<IFactionGetter> UnreportedCrimeFaction { get; set; } = new FormLinkNullable<IFactionGetter>();
+        public IFormLinkNullable<IFactionGetter> UnreportedCrimeFaction { get; init; } = new FormLinkNullable<IFactionGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IFactionGetter> ILocationGetter.UnreportedCrimeFaction => this.UnreportedCrimeFaction;
         #endregion
         #region WorldLocationMarkerRef
-        public FormLinkNullable<IPlacedSimpleGetter> WorldLocationMarkerRef { get; set; } = new FormLinkNullable<IPlacedSimpleGetter>();
+        public IFormLinkNullable<IPlacedSimpleGetter> WorldLocationMarkerRef { get; init; } = new FormLinkNullable<IPlacedSimpleGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IPlacedSimpleGetter> ILocationGetter.WorldLocationMarkerRef => this.WorldLocationMarkerRef;
         #endregion
         #region WorldLocationRadius
         public Single? WorldLocationRadius { get; set; }
@@ -336,7 +344,9 @@ namespace Mutagen.Bethesda.Skyrim
         Single? ILocationGetter.WorldLocationRadius => this.WorldLocationRadius;
         #endregion
         #region HorseMarkerRef
-        public FormLinkNullable<IPlacedObjectGetter> HorseMarkerRef { get; set; } = new FormLinkNullable<IPlacedObjectGetter>();
+        public IFormLinkNullable<IPlacedObjectGetter> HorseMarkerRef { get; init; } = new FormLinkNullable<IPlacedObjectGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IPlacedObjectGetter> ILocationGetter.HorseMarkerRef => this.HorseMarkerRef;
         #endregion
         #region Color
         public Color? Color { get; set; }
@@ -2719,12 +2729,12 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<LocationCellEnablePoint>? LocationCellEnablePoint { get; set; }
         new TranslatedString? Name { get; set; }
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
-        new FormLinkNullable<ILocationGetter> ParentLocation { get; set; }
-        new FormLinkNullable<IMusicTypeGetter> Music { get; set; }
-        new FormLinkNullable<IFactionGetter> UnreportedCrimeFaction { get; set; }
-        new FormLinkNullable<IPlacedSimpleGetter> WorldLocationMarkerRef { get; set; }
+        new IFormLinkNullable<ILocationGetter> ParentLocation { get; }
+        new IFormLinkNullable<IMusicTypeGetter> Music { get; }
+        new IFormLinkNullable<IFactionGetter> UnreportedCrimeFaction { get; }
+        new IFormLinkNullable<IPlacedSimpleGetter> WorldLocationMarkerRef { get; }
         new Single? WorldLocationRadius { get; set; }
-        new FormLinkNullable<IPlacedObjectGetter> HorseMarkerRef { get; set; }
+        new IFormLinkNullable<IPlacedObjectGetter> HorseMarkerRef { get; }
         new Color? Color { get; set; }
     }
 
@@ -2767,12 +2777,12 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<ILocationCellEnablePointGetter>? LocationCellEnablePoint { get; }
         ITranslatedStringGetter? Name { get; }
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
-        FormLinkNullable<ILocationGetter> ParentLocation { get; }
-        FormLinkNullable<IMusicTypeGetter> Music { get; }
-        FormLinkNullable<IFactionGetter> UnreportedCrimeFaction { get; }
-        FormLinkNullable<IPlacedSimpleGetter> WorldLocationMarkerRef { get; }
+        IFormLinkNullableGetter<ILocationGetter> ParentLocation { get; }
+        IFormLinkNullableGetter<IMusicTypeGetter> Music { get; }
+        IFormLinkNullableGetter<IFactionGetter> UnreportedCrimeFaction { get; }
+        IFormLinkNullableGetter<IPlacedSimpleGetter> WorldLocationMarkerRef { get; }
         Single? WorldLocationRadius { get; }
-        FormLinkNullable<IPlacedObjectGetter> HorseMarkerRef { get; }
+        IFormLinkNullableGetter<IPlacedObjectGetter> HorseMarkerRef { get; }
         Color? Color { get; }
 
     }
@@ -3067,12 +3077,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.LocationCellEnablePoint = null;
             item.Name = default;
             item.Keywords = null;
-            item.ParentLocation = FormLinkNullable<ILocationGetter>.Null;
-            item.Music = FormLinkNullable<IMusicTypeGetter>.Null;
-            item.UnreportedCrimeFaction = FormLinkNullable<IFactionGetter>.Null;
-            item.WorldLocationMarkerRef = FormLinkNullable<IPlacedSimpleGetter>.Null;
+            item.ParentLocation.Clear();
+            item.Music.Clear();
+            item.UnreportedCrimeFaction.Clear();
+            item.WorldLocationMarkerRef.Clear();
             item.WorldLocationRadius = default;
-            item.HorseMarkerRef = FormLinkNullable<IPlacedObjectGetter>.Null;
+            item.HorseMarkerRef.Clear();
             item.Color = default;
             base.Clear(item);
         }
@@ -4523,19 +4533,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.ParentLocation) ?? true))
             {
-                item.ParentLocation = new FormLinkNullable<ILocationGetter>(rhs.ParentLocation.FormKeyNullable);
+                item.ParentLocation.SetTo(rhs.ParentLocation);
             }
             if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.Music) ?? true))
             {
-                item.Music = new FormLinkNullable<IMusicTypeGetter>(rhs.Music.FormKeyNullable);
+                item.Music.SetTo(rhs.Music);
             }
             if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.UnreportedCrimeFaction) ?? true))
             {
-                item.UnreportedCrimeFaction = new FormLinkNullable<IFactionGetter>(rhs.UnreportedCrimeFaction.FormKeyNullable);
+                item.UnreportedCrimeFaction.SetTo(rhs.UnreportedCrimeFaction);
             }
             if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.WorldLocationMarkerRef) ?? true))
             {
-                item.WorldLocationMarkerRef = new FormLinkNullable<IPlacedSimpleGetter>(rhs.WorldLocationMarkerRef.FormKeyNullable);
+                item.WorldLocationMarkerRef.SetTo(rhs.WorldLocationMarkerRef);
             }
             if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.WorldLocationRadius) ?? true))
             {
@@ -4543,7 +4553,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.HorseMarkerRef) ?? true))
             {
-                item.HorseMarkerRef = new FormLinkNullable<IPlacedObjectGetter>(rhs.HorseMarkerRef.FormKeyNullable);
+                item.HorseMarkerRef.SetTo(rhs.HorseMarkerRef);
             }
             if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.Color) ?? true))
             {
@@ -5219,33 +5229,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ParentLocation = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.ParentLocation.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Location_FieldIndex.ParentLocation;
                 }
                 case RecordTypeInts.NAM1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Music = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Music.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Location_FieldIndex.Music;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.UnreportedCrimeFaction = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.UnreportedCrimeFaction.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Location_FieldIndex.UnreportedCrimeFaction;
                 }
                 case RecordTypeInts.MNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.WorldLocationMarkerRef = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.WorldLocationMarkerRef.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Location_FieldIndex.WorldLocationMarkerRef;
                 }
                 case RecordTypeInts.RNAM:
@@ -5257,9 +5271,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.NAM0:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HorseMarkerRef = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.HorseMarkerRef.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Location_FieldIndex.HorseMarkerRef;
                 }
                 case RecordTypeInts.CNAM:
@@ -5357,19 +5372,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region ParentLocation
         private int? _ParentLocationLocation;
-        public FormLinkNullable<ILocationGetter> ParentLocation => _ParentLocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ParentLocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
+        public IFormLinkNullableGetter<ILocationGetter> ParentLocation => _ParentLocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ParentLocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
         #endregion
         #region Music
         private int? _MusicLocation;
-        public FormLinkNullable<IMusicTypeGetter> Music => _MusicLocation.HasValue ? new FormLinkNullable<IMusicTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MusicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMusicTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMusicTypeGetter> Music => _MusicLocation.HasValue ? new FormLinkNullable<IMusicTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MusicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMusicTypeGetter>.Null;
         #endregion
         #region UnreportedCrimeFaction
         private int? _UnreportedCrimeFactionLocation;
-        public FormLinkNullable<IFactionGetter> UnreportedCrimeFaction => _UnreportedCrimeFactionLocation.HasValue ? new FormLinkNullable<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _UnreportedCrimeFactionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFactionGetter>.Null;
+        public IFormLinkNullableGetter<IFactionGetter> UnreportedCrimeFaction => _UnreportedCrimeFactionLocation.HasValue ? new FormLinkNullable<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _UnreportedCrimeFactionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFactionGetter>.Null;
         #endregion
         #region WorldLocationMarkerRef
         private int? _WorldLocationMarkerRefLocation;
-        public FormLinkNullable<IPlacedSimpleGetter> WorldLocationMarkerRef => _WorldLocationMarkerRefLocation.HasValue ? new FormLinkNullable<IPlacedSimpleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WorldLocationMarkerRefLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedSimpleGetter>.Null;
+        public IFormLinkNullableGetter<IPlacedSimpleGetter> WorldLocationMarkerRef => _WorldLocationMarkerRefLocation.HasValue ? new FormLinkNullable<IPlacedSimpleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WorldLocationMarkerRefLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedSimpleGetter>.Null;
         #endregion
         #region WorldLocationRadius
         private int? _WorldLocationRadiusLocation;
@@ -5377,7 +5392,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region HorseMarkerRef
         private int? _HorseMarkerRefLocation;
-        public FormLinkNullable<IPlacedObjectGetter> HorseMarkerRef => _HorseMarkerRefLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HorseMarkerRefLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
+        public IFormLinkNullableGetter<IPlacedObjectGetter> HorseMarkerRef => _HorseMarkerRefLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HorseMarkerRefLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
         #endregion
         #region Color
         private int? _ColorLocation;

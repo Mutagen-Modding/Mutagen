@@ -33,7 +33,11 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// Non null FormKey of the target record.  If null, it will instead return FormKey.Null.
         /// </summary>
-        public FormKey FormKey => FormKeyNullable ?? FormKey.Null;
+        public FormKey FormKey
+        {
+            get => FormKeyNullable ?? FormKey.Null;
+            set => FormKeyNullable = value;
+        }
         
         Type ILink.TargetType => typeof(TMajorGetter);
 
@@ -78,6 +82,15 @@ namespace Mutagen.Bethesda
         public void SetTo(TMajorGetter? record)
         {
             this.FormKeyNullable = record?.FormKey;
+        }
+
+        /// <summary>
+        /// Sets the link to match another link
+        /// </summary>
+        /// <param name="link">Target link to set to</param>
+        public void SetTo(IFormLinkNullableGetter<TMajorGetter> link)
+        {
+            this.FormKeyNullable = link.FormKeyNullable;
         }
 
         public void Clear()

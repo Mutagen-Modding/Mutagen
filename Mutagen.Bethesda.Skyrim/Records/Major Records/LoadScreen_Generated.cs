@@ -76,7 +76,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region LoadingScreenNif
-        public FormLink<IStaticGetter> LoadingScreenNif { get; set; } = new FormLink<IStaticGetter>();
+        public IFormLink<IStaticGetter> LoadingScreenNif { get; init; } = new FormLink<IStaticGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IStaticGetter> ILoadScreenGetter.LoadingScreenNif => this.LoadingScreenNif;
         #endregion
         #region InitialScale
         public Single? InitialScale { get; set; }
@@ -848,7 +850,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Icons? Icons { get; set; }
         new TranslatedString Description { get; set; }
         new ExtendedList<Condition> Conditions { get; }
-        new FormLink<IStaticGetter> LoadingScreenNif { get; set; }
+        new IFormLink<IStaticGetter> LoadingScreenNif { get; }
         new Single? InitialScale { get; set; }
         new P3Int16? InitialRotation { get; set; }
         new Int16MinMax? RotationOffsetConstraints { get; set; }
@@ -879,7 +881,7 @@ namespace Mutagen.Bethesda.Skyrim
         IIconsGetter? Icons { get; }
         ITranslatedStringGetter Description { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
-        FormLink<IStaticGetter> LoadingScreenNif { get; }
+        IFormLinkGetter<IStaticGetter> LoadingScreenNif { get; }
         Single? InitialScale { get; }
         P3Int16? InitialRotation { get; }
         IInt16MinMaxGetter? RotationOffsetConstraints { get; }
@@ -1151,7 +1153,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Icons = null;
             item.Description.Clear();
             item.Conditions.Clear();
-            item.LoadingScreenNif = FormLink<IStaticGetter>.Null;
+            item.LoadingScreenNif.Clear();
             item.InitialScale = default;
             item.InitialRotation = default;
             item.RotationOffsetConstraints = null;
@@ -1644,7 +1646,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LoadScreen_FieldIndex.LoadingScreenNif) ?? true))
             {
-                item.LoadingScreenNif = new FormLink<IStaticGetter>(rhs.LoadingScreenNif.FormKey);
+                item.LoadingScreenNif.SetTo(rhs.LoadingScreenNif);
             }
             if ((copyMask?.GetShouldTranslate((int)LoadScreen_FieldIndex.InitialScale) ?? true))
             {
@@ -2022,9 +2024,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.NNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LoadingScreenNif = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.LoadingScreenNif.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)LoadScreen_FieldIndex.LoadingScreenNif;
                 }
                 case RecordTypeInts.SNAM:
@@ -2134,7 +2137,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region LoadingScreenNif
         private int? _LoadingScreenNifLocation;
-        public FormLink<IStaticGetter> LoadingScreenNif => _LoadingScreenNifLocation.HasValue ? new FormLink<IStaticGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LoadingScreenNifLocation.Value, _package.MetaData.Constants)))) : FormLink<IStaticGetter>.Null;
+        public IFormLinkGetter<IStaticGetter> LoadingScreenNif => _LoadingScreenNifLocation.HasValue ? new FormLink<IStaticGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LoadingScreenNifLocation.Value, _package.MetaData.Constants)))) : FormLink<IStaticGetter>.Null;
         #endregion
         #region InitialScale
         private int? _InitialScaleLocation;

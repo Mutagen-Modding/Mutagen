@@ -108,7 +108,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region DefaultFaceTexture
-        public FormLinkNullable<ITextureSetGetter> DefaultFaceTexture { get; set; } = new FormLinkNullable<ITextureSetGetter>();
+        public IFormLinkNullable<ITextureSetGetter> DefaultFaceTexture { get; init; } = new FormLinkNullable<ITextureSetGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ITextureSetGetter> IHeadDataGetter.DefaultFaceTexture => this.DefaultFaceTexture;
         #endregion
         #region TintMasks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1099,7 +1101,7 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<IFormLinkGetter<INpcGetter>> RacePresets { get; }
         new ExtendedList<IFormLinkGetter<IColorRecordGetter>> AvailableHairColors { get; }
         new ExtendedList<IFormLinkGetter<ITextureSetGetter>> FaceDetails { get; }
-        new FormLinkNullable<ITextureSetGetter> DefaultFaceTexture { get; set; }
+        new IFormLinkNullable<ITextureSetGetter> DefaultFaceTexture { get; }
         new ExtendedList<TintAssets> TintMasks { get; }
         new Model? Model { get; set; }
     }
@@ -1123,7 +1125,7 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IFormLinkGetter<INpcGetter>> RacePresets { get; }
         IReadOnlyList<IFormLinkGetter<IColorRecordGetter>> AvailableHairColors { get; }
         IReadOnlyList<IFormLinkGetter<ITextureSetGetter>> FaceDetails { get; }
-        FormLinkNullable<ITextureSetGetter> DefaultFaceTexture { get; }
+        IFormLinkNullableGetter<ITextureSetGetter> DefaultFaceTexture { get; }
         IReadOnlyList<ITintAssetsGetter> TintMasks { get; }
         IModelGetter? Model { get; }
 
@@ -1418,7 +1420,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.RacePresets.Clear();
             item.AvailableHairColors.Clear();
             item.FaceDetails.Clear();
-            item.DefaultFaceTexture = FormLinkNullable<ITextureSetGetter>.Null;
+            item.DefaultFaceTexture.Clear();
             item.TintMasks.Clear();
             item.Model = null;
         }
@@ -1869,7 +1871,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)HeadData_FieldIndex.DefaultFaceTexture) ?? true))
             {
-                item.DefaultFaceTexture = new FormLinkNullable<ITextureSetGetter>(rhs.DefaultFaceTexture.FormKeyNullable);
+                item.DefaultFaceTexture.SetTo(rhs.DefaultFaceTexture);
             }
             if ((copyMask?.GetShouldTranslate((int)HeadData_FieldIndex.TintMasks) ?? true))
             {
@@ -2188,9 +2190,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.DefaultFaceTexture) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DefaultFaceTexture = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.DefaultFaceTexture.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)HeadData_FieldIndex.DefaultFaceTexture;
                 }
                 case RecordTypeInts.TINI:
@@ -2294,7 +2297,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IFormLinkGetter<ITextureSetGetter>> FaceDetails { get; private set; } = ListExt.Empty<IFormLinkGetter<ITextureSetGetter>>();
         #region DefaultFaceTexture
         private int? _DefaultFaceTextureLocation;
-        public FormLinkNullable<ITextureSetGetter> DefaultFaceTexture => _DefaultFaceTextureLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DefaultFaceTextureLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
+        public IFormLinkNullableGetter<ITextureSetGetter> DefaultFaceTexture => _DefaultFaceTextureLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DefaultFaceTextureLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
         #endregion
         public IReadOnlyList<ITintAssetsGetter> TintMasks { get; private set; } = ListExt.Empty<TintAssetsBinaryOverlay>();
         public IModelGetter? Model { get; private set; }

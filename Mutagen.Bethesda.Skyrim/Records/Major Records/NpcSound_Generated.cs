@@ -40,7 +40,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Sound
-        public FormLinkNullable<ISoundDescriptorGetter> Sound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
+        public IFormLinkNullable<ISoundDescriptorGetter> Sound { get; init; } = new FormLinkNullable<ISoundDescriptorGetter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundDescriptorGetter> INpcSoundGetter.Sound => this.Sound;
         #endregion
         #region SoundChance
         public Byte? SoundChance { get; set; }
@@ -450,7 +452,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<INpcSound>,
         INpcSoundGetter
     {
-        new FormLinkNullable<ISoundDescriptorGetter> Sound { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> Sound { get; }
         new Byte? SoundChance { get; set; }
     }
 
@@ -467,7 +469,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => NpcSound_Registration.Instance;
-        FormLinkNullable<ISoundDescriptorGetter> Sound { get; }
+        IFormLinkNullableGetter<ISoundDescriptorGetter> Sound { get; }
         Byte? SoundChance { get; }
 
     }
@@ -737,7 +739,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(INpcSound item)
         {
             ClearPartial();
-            item.Sound = FormLinkNullable<ISoundDescriptorGetter>.Null;
+            item.Sound.Clear();
             item.SoundChance = default;
         }
         
@@ -908,7 +910,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)NpcSound_FieldIndex.Sound) ?? true))
             {
-                item.Sound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.Sound.FormKeyNullable);
+                item.Sound.SetTo(rhs.Sound);
             }
             if ((copyMask?.GetShouldTranslate((int)NpcSound_FieldIndex.SoundChance) ?? true))
             {
@@ -1071,9 +1073,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSound_FieldIndex.Sound) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Sound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Sound.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)NpcSound_FieldIndex.Sound;
                 }
                 case RecordTypeInts.CSDC:
@@ -1154,7 +1157,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Sound
         private int? _SoundLocation;
-        public FormLinkNullable<ISoundDescriptorGetter> Sound => _SoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> Sound => _SoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region SoundChance
         private int? _SoundChanceLocation;

@@ -35,7 +35,7 @@ namespace Mutagen.Bethesda.UnitTests
             var cache = sourceModGetter.ToImmutableLinkCache();
             var otherMod = new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimSE);
             var npc = otherMod.Npcs.AddNew();
-            npc.Race = race;
+            npc.Race.SetTo(race);
             Assert.True(npc.Race.TryResolve(cache, out var _));
         }
 
@@ -206,14 +206,18 @@ namespace Mutagen.Bethesda.UnitTests
             IPerkGetter getter = new Perk(Utility.Form1, SkyrimRelease.SkyrimLE);
             Perk direct = new Perk(Utility.Form2, SkyrimRelease.SkyrimLE);
             IPerk setter = new Perk(Utility.Form2, SkyrimRelease.SkyrimLE);
-            FormLink<IPerkGetter> formLink = new FormLink<IPerkGetter>();
-            formLink = direct;
+            IFormLink<IPerkGetter> formLink = new FormLink<IPerkGetter>();
             formLink = getter.AsLink();
             formLink = direct.AsLink();
             formLink = setter.AsLink();
+            formLink.SetTo(direct);
+            formLink.SetTo(getter);
+            formLink.SetTo(setter);
+            formLink.SetTo(formLink);
 
-            // This fails, due to C# not wanting to implicit convert interfaces
-            //formLink = p;
+            IObjectEffectGetter objGetter = null!;
+            IFormLink<IEffectRecordGetter> aLink = new FormLink<IEffectRecordGetter>();
+            aLink.SetTo(objGetter);
         }
 
         [Fact]
