@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.Core.Persistance
     /// This class is made thread safe by locking internally on the Mod object.
     /// </summary>
     [DebuggerDisplay("TextFileFormKeyAllocatorv2 {patcherName}")]
-    public class TextFileFormKeyAllocatorv2 : IFormKeyAllocator
+    public class TextFileSharedFormKeyAllocator : IFormKeyAllocator, ISharedFormKeyAllocator
     {
         private readonly Dictionary<string, (string patcherName, FormKey formKey)> _cache = new();
 
@@ -28,9 +28,9 @@ namespace Mutagen.Bethesda.Core.Persistance
         /// </summary>
         public IMod Mod { get; }
 
-        public TextFileFormKeyAllocatorv2(IMod mod) : this(mod, "") { }
+        public TextFileSharedFormKeyAllocator(IMod mod) : this(mod, "") { }
 
-        public TextFileFormKeyAllocatorv2(IMod mod, string patcherName)
+        public TextFileSharedFormKeyAllocator(IMod mod, string patcherName)
         {
             this.Mod = mod;
             this.patcherName = patcherName;
@@ -57,17 +57,17 @@ namespace Mutagen.Bethesda.Core.Persistance
             }
         }
 
-        public static TextFileFormKeyAllocatorv2 FromFile(IMod mod, string filePath)
+        public static TextFileSharedFormKeyAllocator FromFile(IMod mod, string filePath)
         {
             // should it be okay to read from an empty/missing file?
-            var self = new TextFileFormKeyAllocatorv2(mod, "");
+            var self = new TextFileSharedFormKeyAllocator(mod, "");
             self.ReadFile(filePath, self.patcherName);
             return self;
         }
 
-        public static TextFileFormKeyAllocatorv2 FromFolder(IMod mod, string folderPath, string patcherName)
+        public static TextFileSharedFormKeyAllocator FromFolder(IMod mod, string folderPath, string patcherName)
         {
-            var self = new TextFileFormKeyAllocatorv2(mod, patcherName);
+            var self = new TextFileSharedFormKeyAllocator(mod, patcherName);
             foreach (var file in Directory.GetFiles(folderPath))
                 self.ReadFile(file, Path.GetFileName(file));
             return self;

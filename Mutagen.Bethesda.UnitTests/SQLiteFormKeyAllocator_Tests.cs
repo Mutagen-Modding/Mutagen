@@ -9,7 +9,7 @@ using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests
 {
-    public class SQLiteFormKeyAllocator_Tests : IFormKeyAllocator_Tests
+    public class SQLiteFormKeyAllocator_Tests : ISharedFormKeyAllocator_Tests
     {
         protected override IFormKeyAllocator CreateFormKeyAllocator(IMod mod)
         {
@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.UnitTests
             return new SQLiteFormKeyAllocator(mod, file.File.Path);
         }
 
-        protected override IFormKeyAllocator CreateFormKeyAllocator(IMod mod, string patcherName)
+        protected override ISharedFormKeyAllocator CreateFormKeyAllocator(IMod mod, string patcherName)
         {
             var file = tempFile.Value;
             return new SQLiteFormKeyAllocator(mod, file.File.Path, patcherName);
@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.UnitTests
             return new SQLiteFormKeyAllocator(mod, file.File.Path);
         }
 
-        protected override IFormKeyAllocator LoadFormKeyAllocator(IMod mod, string patcherName)
+        protected override ISharedFormKeyAllocator LoadFormKeyAllocator(IMod mod, string patcherName)
         {
             var file = tempFile.Value;
             return new SQLiteFormKeyAllocator(mod, file.File.Path, patcherName);
@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.UnitTests
             ((SQLiteFormKeyAllocator)allocator).Dispose();
         }
 
-        protected override void DisposeFormKeyAllocator(IFormKeyAllocator allocator, string patcherName)
+        protected override void DisposeFormKeyAllocator(ISharedFormKeyAllocator allocator, string patcherName)
         {
             ((SQLiteFormKeyAllocator)allocator).Dispose();
         }
@@ -50,7 +50,7 @@ namespace Mutagen.Bethesda.UnitTests
             ((SQLiteFormKeyAllocator)allocator).Commit();
         }
 
-        protected override void SaveFormKeyAllocator(IFormKeyAllocator allocator, string patcherName)
+        protected override void SaveFormKeyAllocator(ISharedFormKeyAllocator allocator, string patcherName)
         {
             ((SQLiteFormKeyAllocator)allocator).Commit();
         }

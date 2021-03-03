@@ -21,6 +21,11 @@ namespace Mutagen.Bethesda.Core.Persistance
         /// </summary>
         public IMod Mod { get; }
 
+        public TextFileFormKeyAllocator(IMod mod)
+        {
+            this.Mod = mod;
+        }
+
         private TextFileFormKeyAllocator(IMod mod, string filePath)
         {
             this.Mod = mod;

@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Core.Persistance
 
     }
 
-    public class SQLiteFormKeyAllocator : IFormKeyAllocator, IDisposable
+    public class SQLiteFormKeyAllocator : IFormKeyAllocator, IDisposable, ISharedFormKeyAllocator
     {
         private readonly IMod Mod;
 

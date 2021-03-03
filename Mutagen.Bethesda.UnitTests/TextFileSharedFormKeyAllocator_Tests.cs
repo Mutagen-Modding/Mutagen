@@ -10,14 +10,14 @@ using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests
 {
-    public class TextFileFormKeyAllocatorv2_Tests : IFormKeyAllocator_Tests
+    public class TextFileFormKeyAllocatorv2_Tests : ISharedFormKeyAllocator_Tests
     {
         protected override IFormKeyAllocator CreateFormKeyAllocator(IMod mod)
         {
             return new TextFileFormKeyAllocatorv2(mod);
         }
 
-        protected override IFormKeyAllocator CreateFormKeyAllocator(IMod mod, string patcherName)
+        protected override ISharedFormKeyAllocator CreateFormKeyAllocator(IMod mod, string patcherName)
         {
             return new TextFileFormKeyAllocatorv2(mod, patcherName);
         }
@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda.UnitTests
             return TextFileFormKeyAllocatorv2.FromFile(mod, file.File.Path);
         }
 
-        protected override IFormKeyAllocator LoadFormKeyAllocator(IMod mod, string patcherName)
+        protected override ISharedFormKeyAllocator LoadFormKeyAllocator(IMod mod, string patcherName)
         {
             var folder = tempFolder.Value;
             return TextFileFormKeyAllocatorv2.FromFolder(mod, folder.Dir.Path, patcherName);
@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.UnitTests
                 tempFile.Value.Dispose();
         }
 
-        protected override void DisposeFormKeyAllocator(IFormKeyAllocator allocator, string patcherName)
+        protected override void DisposeFormKeyAllocator(ISharedFormKeyAllocator allocator, string patcherName)
         {
             if (tempFolder.IsValueCreated)
                 tempFolder.Value.Dispose();
@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.UnitTests
             ((TextFileFormKeyAllocatorv2)allocator).WriteToFile(file.File.Path);
         }
 
-        protected override void SaveFormKeyAllocator(IFormKeyAllocator allocator, string patcherName)
+        protected override void SaveFormKeyAllocator(ISharedFormKeyAllocator allocator, string patcherName)
         {
             var folder = tempFolder.Value;
             ((TextFileFormKeyAllocatorv2)allocator).WriteToFolder(folder.Dir.Path);
@@ -195,20 +195,6 @@ namespace Mutagen.Bethesda.UnitTests
             });
 
             DisposeFormKeyAllocator(allocator, Patcher1);
-        }
-
-        [Fact]
-        public void WritingSinglePatcherStateToDirectoryFails()
-        {
-            var mod = new OblivionMod(Utility.PluginModKey);
-            var allocator = CreateFormKeyAllocator(mod);
-
-            Assert.Throws<InvalidOperationException>(() =>
-            {
-                SaveFormKeyAllocator(allocator, Patcher1);
-            });
-
-            DisposeFormKeyAllocator(allocator);
         }
     }
 }
