@@ -78,7 +78,6 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         
-        // FIXME fails on SimpleFormKeyAllocator and TextFileFormKeyAllocator. Should behaviour change?
         [Fact]
         public void DuplicateAllocationThrows()
         {
