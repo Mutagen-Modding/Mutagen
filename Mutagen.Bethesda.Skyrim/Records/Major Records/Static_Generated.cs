@@ -80,7 +80,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static RangeFloat MaxAngle_Range = new RangeFloat(30f, 120f);
         #endregion
         #region Material
-        public IFormLink<IMaterialObjectGetter> Material { get; init; } = new FormLink<IMaterialObjectGetter>();
+        private IFormLink<IMaterialObjectGetter> _Material = new FormLink<IMaterialObjectGetter>();
+        public IFormLink<IMaterialObjectGetter> Material
+        {
+            get => _Material;
+            set => _Material = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IMaterialObjectGetter> IStaticGetter.Material => this.Material;
         #endregion

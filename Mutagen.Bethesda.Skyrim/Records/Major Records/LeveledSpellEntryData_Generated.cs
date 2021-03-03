@@ -46,7 +46,12 @@ namespace Mutagen.Bethesda.Skyrim
         public Int16 Unknown { get; set; } = default;
         #endregion
         #region Reference
-        public IFormLink<ISpellSpawnGetter> Reference { get; init; } = new FormLink<ISpellSpawnGetter>();
+        private IFormLink<ISpellSpawnGetter> _Reference = new FormLink<ISpellSpawnGetter>();
+        public IFormLink<ISpellSpawnGetter> Reference
+        {
+            get => _Reference;
+            set => _Reference = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISpellSpawnGetter> ILeveledSpellEntryDataGetter.Reference => this.Reference;
         #endregion

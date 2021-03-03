@@ -108,7 +108,12 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region DefaultFaceTexture
-        public IFormLinkNullable<ITextureSetGetter> DefaultFaceTexture { get; init; } = new FormLinkNullable<ITextureSetGetter>();
+        private IFormLinkNullable<ITextureSetGetter> _DefaultFaceTexture = new FormLinkNullable<ITextureSetGetter>();
+        public IFormLinkNullable<ITextureSetGetter> DefaultFaceTexture
+        {
+            get => _DefaultFaceTexture;
+            set => _DefaultFaceTexture = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ITextureSetGetter> IHeadDataGetter.DefaultFaceTexture => this.DefaultFaceTexture;
         #endregion

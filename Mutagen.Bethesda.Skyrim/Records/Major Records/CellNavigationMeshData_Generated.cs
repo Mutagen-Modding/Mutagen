@@ -42,12 +42,22 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region UnusedWorldspaceParent
-        public IFormLink<IWorldspaceGetter> UnusedWorldspaceParent { get; init; } = new FormLink<IWorldspaceGetter>();
+        private IFormLink<IWorldspaceGetter> _UnusedWorldspaceParent = new FormLink<IWorldspaceGetter>();
+        public IFormLink<IWorldspaceGetter> UnusedWorldspaceParent
+        {
+            get => _UnusedWorldspaceParent;
+            set => _UnusedWorldspaceParent = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IWorldspaceGetter> ICellNavigationMeshDataGetter.UnusedWorldspaceParent => this.UnusedWorldspaceParent;
         #endregion
         #region Parent
-        public IFormLink<ICellGetter> Parent { get; init; } = new FormLink<ICellGetter>();
+        private IFormLink<ICellGetter> _Parent = new FormLink<ICellGetter>();
+        public IFormLink<ICellGetter> Parent
+        {
+            get => _Parent;
+            set => _Parent = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ICellGetter> ICellNavigationMeshDataGetter.Parent => this.Parent;
         #endregion

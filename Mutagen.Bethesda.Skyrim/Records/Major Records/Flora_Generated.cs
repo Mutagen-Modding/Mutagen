@@ -164,12 +164,22 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? IFloraGetter.FNAM => this.FNAM;
         #endregion
         #region Ingredient
-        public IFormLinkNullable<IHarvestTargetGetter> Ingredient { get; init; } = new FormLinkNullable<IHarvestTargetGetter>();
+        private IFormLinkNullable<IHarvestTargetGetter> _Ingredient = new FormLinkNullable<IHarvestTargetGetter>();
+        public IFormLinkNullable<IHarvestTargetGetter> Ingredient
+        {
+            get => _Ingredient;
+            set => _Ingredient = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IHarvestTargetGetter> IFloraGetter.Ingredient => this.Ingredient;
         #endregion
         #region HarvestSound
-        public IFormLinkNullable<ISoundDescriptorGetter> HarvestSound { get; init; } = new FormLinkNullable<ISoundDescriptorGetter>();
+        private IFormLinkNullable<ISoundDescriptorGetter> _HarvestSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        public IFormLinkNullable<ISoundDescriptorGetter> HarvestSound
+        {
+            get => _HarvestSound;
+            set => _HarvestSound = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IFloraGetter.HarvestSound => this.HarvestSound;
         #endregion

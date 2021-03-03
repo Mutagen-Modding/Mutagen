@@ -319,22 +319,42 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region ParentLocation
-        public IFormLinkNullable<ILocationGetter> ParentLocation { get; init; } = new FormLinkNullable<ILocationGetter>();
+        private IFormLinkNullable<ILocationGetter> _ParentLocation = new FormLinkNullable<ILocationGetter>();
+        public IFormLinkNullable<ILocationGetter> ParentLocation
+        {
+            get => _ParentLocation;
+            set => _ParentLocation = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILocationGetter> ILocationGetter.ParentLocation => this.ParentLocation;
         #endregion
         #region Music
-        public IFormLinkNullable<IMusicTypeGetter> Music { get; init; } = new FormLinkNullable<IMusicTypeGetter>();
+        private IFormLinkNullable<IMusicTypeGetter> _Music = new FormLinkNullable<IMusicTypeGetter>();
+        public IFormLinkNullable<IMusicTypeGetter> Music
+        {
+            get => _Music;
+            set => _Music = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMusicTypeGetter> ILocationGetter.Music => this.Music;
         #endregion
         #region UnreportedCrimeFaction
-        public IFormLinkNullable<IFactionGetter> UnreportedCrimeFaction { get; init; } = new FormLinkNullable<IFactionGetter>();
+        private IFormLinkNullable<IFactionGetter> _UnreportedCrimeFaction = new FormLinkNullable<IFactionGetter>();
+        public IFormLinkNullable<IFactionGetter> UnreportedCrimeFaction
+        {
+            get => _UnreportedCrimeFaction;
+            set => _UnreportedCrimeFaction = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFactionGetter> ILocationGetter.UnreportedCrimeFaction => this.UnreportedCrimeFaction;
         #endregion
         #region WorldLocationMarkerRef
-        public IFormLinkNullable<IPlacedSimpleGetter> WorldLocationMarkerRef { get; init; } = new FormLinkNullable<IPlacedSimpleGetter>();
+        private IFormLinkNullable<IPlacedSimpleGetter> _WorldLocationMarkerRef = new FormLinkNullable<IPlacedSimpleGetter>();
+        public IFormLinkNullable<IPlacedSimpleGetter> WorldLocationMarkerRef
+        {
+            get => _WorldLocationMarkerRef;
+            set => _WorldLocationMarkerRef = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IPlacedSimpleGetter> ILocationGetter.WorldLocationMarkerRef => this.WorldLocationMarkerRef;
         #endregion
@@ -344,7 +364,12 @@ namespace Mutagen.Bethesda.Skyrim
         Single? ILocationGetter.WorldLocationRadius => this.WorldLocationRadius;
         #endregion
         #region HorseMarkerRef
-        public IFormLinkNullable<IPlacedObjectGetter> HorseMarkerRef { get; init; } = new FormLinkNullable<IPlacedObjectGetter>();
+        private IFormLinkNullable<IPlacedObjectGetter> _HorseMarkerRef = new FormLinkNullable<IPlacedObjectGetter>();
+        public IFormLinkNullable<IPlacedObjectGetter> HorseMarkerRef
+        {
+            get => _HorseMarkerRef;
+            set => _HorseMarkerRef = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IPlacedObjectGetter> ILocationGetter.HorseMarkerRef => this.HorseMarkerRef;
         #endregion

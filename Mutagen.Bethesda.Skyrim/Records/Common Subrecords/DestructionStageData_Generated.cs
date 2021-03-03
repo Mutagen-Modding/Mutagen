@@ -55,12 +55,22 @@ namespace Mutagen.Bethesda.Skyrim
         public Int32 SelfDamagePerSecond { get; set; } = default;
         #endregion
         #region Explosion
-        public IFormLink<IExplosionGetter> Explosion { get; init; } = new FormLink<IExplosionGetter>();
+        private IFormLink<IExplosionGetter> _Explosion = new FormLink<IExplosionGetter>();
+        public IFormLink<IExplosionGetter> Explosion
+        {
+            get => _Explosion;
+            set => _Explosion = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IExplosionGetter> IDestructionStageDataGetter.Explosion => this.Explosion;
         #endregion
         #region Debris
-        public IFormLink<IDebrisGetter> Debris { get; init; } = new FormLink<IDebrisGetter>();
+        private IFormLink<IDebrisGetter> _Debris = new FormLink<IDebrisGetter>();
+        public IFormLink<IDebrisGetter> Debris
+        {
+            get => _Debris;
+            set => _Debris = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IDebrisGetter> IDestructionStageDataGetter.Debris => this.Debris;
         #endregion

@@ -58,7 +58,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #endregion
         #region Script
-        public IFormLinkNullable<IScriptGetter> Script { get; init; } = new FormLinkNullable<IScriptGetter>();
+        private IFormLinkNullable<IScriptGetter> _Script = new FormLinkNullable<IScriptGetter>();
+        public IFormLinkNullable<IScriptGetter> Script
+        {
+            get => _Script;
+            set => _Script = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IScriptGetter> ILightGetter.Script => this.Script;
         #endregion
@@ -99,7 +104,12 @@ namespace Mutagen.Bethesda.Oblivion
         Single? ILightGetter.Fade => this.Fade;
         #endregion
         #region Sound
-        public IFormLinkNullable<ISoundGetter> Sound { get; init; } = new FormLinkNullable<ISoundGetter>();
+        private IFormLinkNullable<ISoundGetter> _Sound = new FormLinkNullable<ISoundGetter>();
+        public IFormLinkNullable<ISoundGetter> Sound
+        {
+            get => _Sound;
+            set => _Sound = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundGetter> ILightGetter.Sound => this.Sound;
         #endregion

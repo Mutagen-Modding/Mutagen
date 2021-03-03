@@ -40,7 +40,12 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Worldspace
-        public IFormLink<IWorldspaceGetter> Worldspace { get; init; } = new FormLink<IWorldspaceGetter>();
+        private IFormLink<IWorldspaceGetter> _Worldspace = new FormLink<IWorldspaceGetter>();
+        public IFormLink<IWorldspaceGetter> Worldspace
+        {
+            get => _Worldspace;
+            set => _Worldspace = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IWorldspaceGetter> IWorldspaceParentGetter.Worldspace => this.Worldspace;
         #endregion

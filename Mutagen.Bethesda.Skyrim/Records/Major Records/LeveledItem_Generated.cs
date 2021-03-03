@@ -66,7 +66,12 @@ namespace Mutagen.Bethesda.Skyrim
         public LeveledItem.Flag Flags { get; set; } = default;
         #endregion
         #region Global
-        public IFormLinkNullable<IGlobalGetter> Global { get; init; } = new FormLinkNullable<IGlobalGetter>();
+        private IFormLinkNullable<IGlobalGetter> _Global = new FormLinkNullable<IGlobalGetter>();
+        public IFormLinkNullable<IGlobalGetter> Global
+        {
+            get => _Global;
+            set => _Global = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IGlobalGetter> ILeveledItemGetter.Global => this.Global;
         #endregion

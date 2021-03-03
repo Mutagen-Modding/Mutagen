@@ -43,12 +43,22 @@ namespace Mutagen.Bethesda.Skyrim
         public LinkedReferences.VersioningBreaks Versioning { get; set; } = default;
         #endregion
         #region KeywordOrReference
-        public IFormLink<IKeywordLinkedReferenceGetter> KeywordOrReference { get; init; } = new FormLink<IKeywordLinkedReferenceGetter>();
+        private IFormLink<IKeywordLinkedReferenceGetter> _KeywordOrReference = new FormLink<IKeywordLinkedReferenceGetter>();
+        public IFormLink<IKeywordLinkedReferenceGetter> KeywordOrReference
+        {
+            get => _KeywordOrReference;
+            set => _KeywordOrReference = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IKeywordLinkedReferenceGetter> ILinkedReferencesGetter.KeywordOrReference => this.KeywordOrReference;
         #endregion
         #region Reference
-        public IFormLink<ILinkedReferenceGetter> Reference { get; init; } = new FormLink<ILinkedReferenceGetter>();
+        private IFormLink<ILinkedReferenceGetter> _Reference = new FormLink<ILinkedReferenceGetter>();
+        public IFormLink<ILinkedReferenceGetter> Reference
+        {
+            get => _Reference;
+            set => _Reference = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ILinkedReferenceGetter> ILinkedReferencesGetter.Reference => this.Reference;
         #endregion

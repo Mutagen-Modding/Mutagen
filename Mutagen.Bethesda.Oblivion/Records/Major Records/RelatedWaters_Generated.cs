@@ -40,17 +40,32 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region RelatedWaterDaytime
-        public IFormLink<IWaterGetter> RelatedWaterDaytime { get; init; } = new FormLink<IWaterGetter>();
+        private IFormLink<IWaterGetter> _RelatedWaterDaytime = new FormLink<IWaterGetter>();
+        public IFormLink<IWaterGetter> RelatedWaterDaytime
+        {
+            get => _RelatedWaterDaytime;
+            set => _RelatedWaterDaytime = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IWaterGetter> IRelatedWatersGetter.RelatedWaterDaytime => this.RelatedWaterDaytime;
         #endregion
         #region RelatedWaterNighttime
-        public IFormLink<IWaterGetter> RelatedWaterNighttime { get; init; } = new FormLink<IWaterGetter>();
+        private IFormLink<IWaterGetter> _RelatedWaterNighttime = new FormLink<IWaterGetter>();
+        public IFormLink<IWaterGetter> RelatedWaterNighttime
+        {
+            get => _RelatedWaterNighttime;
+            set => _RelatedWaterNighttime = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IWaterGetter> IRelatedWatersGetter.RelatedWaterNighttime => this.RelatedWaterNighttime;
         #endregion
         #region RelatedWaterUnderwater
-        public IFormLink<IWaterGetter> RelatedWaterUnderwater { get; init; } = new FormLink<IWaterGetter>();
+        private IFormLink<IWaterGetter> _RelatedWaterUnderwater = new FormLink<IWaterGetter>();
+        public IFormLink<IWaterGetter> RelatedWaterUnderwater
+        {
+            get => _RelatedWaterUnderwater;
+            set => _RelatedWaterUnderwater = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IWaterGetter> IRelatedWatersGetter.RelatedWaterUnderwater => this.RelatedWaterUnderwater;
         #endregion

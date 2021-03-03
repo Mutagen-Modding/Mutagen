@@ -79,12 +79,22 @@ namespace Mutagen.Bethesda.Skyrim
         public Single Priority { get; set; } = default;
         #endregion
         #region Branch
-        public IFormLinkNullable<IDialogBranchGetter> Branch { get; init; } = new FormLinkNullable<IDialogBranchGetter>();
+        private IFormLinkNullable<IDialogBranchGetter> _Branch = new FormLinkNullable<IDialogBranchGetter>();
+        public IFormLinkNullable<IDialogBranchGetter> Branch
+        {
+            get => _Branch;
+            set => _Branch = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IDialogBranchGetter> IDialogTopicGetter.Branch => this.Branch;
         #endregion
         #region Quest
-        public IFormLinkNullable<IQuestGetter> Quest { get; init; } = new FormLinkNullable<IQuestGetter>();
+        private IFormLinkNullable<IQuestGetter> _Quest = new FormLinkNullable<IQuestGetter>();
+        public IFormLinkNullable<IQuestGetter> Quest
+        {
+            get => _Quest;
+            set => _Quest = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IQuestGetter> IDialogTopicGetter.Quest => this.Quest;
         #endregion

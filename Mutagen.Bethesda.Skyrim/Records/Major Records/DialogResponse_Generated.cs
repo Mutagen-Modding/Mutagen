@@ -63,7 +63,12 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte> IDialogResponseGetter.Unknown2 => this.Unknown2;
         #endregion
         #region Sound
-        public IFormLink<ISoundDescriptorGetter> Sound { get; init; } = new FormLink<ISoundDescriptorGetter>();
+        private IFormLink<ISoundDescriptorGetter> _Sound = new FormLink<ISoundDescriptorGetter>();
+        public IFormLink<ISoundDescriptorGetter> Sound
+        {
+            get => _Sound;
+            set => _Sound = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISoundDescriptorGetter> IDialogResponseGetter.Sound => this.Sound;
         #endregion
@@ -92,12 +97,22 @@ namespace Mutagen.Bethesda.Skyrim
         public String Edits { get; set; } = string.Empty;
         #endregion
         #region SpeakerIdleAnimation
-        public IFormLinkNullable<IIdleAnimationGetter> SpeakerIdleAnimation { get; init; } = new FormLinkNullable<IIdleAnimationGetter>();
+        private IFormLinkNullable<IIdleAnimationGetter> _SpeakerIdleAnimation = new FormLinkNullable<IIdleAnimationGetter>();
+        public IFormLinkNullable<IIdleAnimationGetter> SpeakerIdleAnimation
+        {
+            get => _SpeakerIdleAnimation;
+            set => _SpeakerIdleAnimation = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IIdleAnimationGetter> IDialogResponseGetter.SpeakerIdleAnimation => this.SpeakerIdleAnimation;
         #endregion
         #region ListenerIdleAnimation
-        public IFormLinkNullable<IIdleAnimationGetter> ListenerIdleAnimation { get; init; } = new FormLinkNullable<IIdleAnimationGetter>();
+        private IFormLinkNullable<IIdleAnimationGetter> _ListenerIdleAnimation = new FormLinkNullable<IIdleAnimationGetter>();
+        public IFormLinkNullable<IIdleAnimationGetter> ListenerIdleAnimation
+        {
+            get => _ListenerIdleAnimation;
+            set => _ListenerIdleAnimation = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IIdleAnimationGetter> IDialogResponseGetter.ListenerIdleAnimation => this.ListenerIdleAnimation;
         #endregion

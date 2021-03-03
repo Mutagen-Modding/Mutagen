@@ -43,7 +43,12 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Projectile
-        public IFormLink<IProjectileGetter> Projectile { get; init; } = new FormLink<IProjectileGetter>();
+        private IFormLink<IProjectileGetter> _Projectile = new FormLink<IProjectileGetter>();
+        public IFormLink<IProjectileGetter> Projectile
+        {
+            get => _Projectile;
+            set => _Projectile = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IProjectileGetter> IPlacedArrowGetter.Projectile => this.Projectile;
         #endregion

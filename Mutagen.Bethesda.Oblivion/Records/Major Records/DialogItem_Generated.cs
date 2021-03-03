@@ -54,12 +54,22 @@ namespace Mutagen.Bethesda.Oblivion
         IDialogItemDataGetter? IDialogItemGetter.Data => this.Data;
         #endregion
         #region Quest
-        public IFormLinkNullable<IQuestGetter> Quest { get; init; } = new FormLinkNullable<IQuestGetter>();
+        private IFormLinkNullable<IQuestGetter> _Quest = new FormLinkNullable<IQuestGetter>();
+        public IFormLinkNullable<IQuestGetter> Quest
+        {
+            get => _Quest;
+            set => _Quest = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IQuestGetter> IDialogItemGetter.Quest => this.Quest;
         #endregion
         #region PreviousTopic
-        public IFormLinkNullable<IDialogItemGetter> PreviousTopic { get; init; } = new FormLinkNullable<IDialogItemGetter>();
+        private IFormLinkNullable<IDialogItemGetter> _PreviousTopic = new FormLinkNullable<IDialogItemGetter>();
+        public IFormLinkNullable<IDialogItemGetter> PreviousTopic
+        {
+            get => _PreviousTopic;
+            set => _PreviousTopic = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IDialogItemGetter> IDialogItemGetter.PreviousTopic => this.PreviousTopic;
         #endregion

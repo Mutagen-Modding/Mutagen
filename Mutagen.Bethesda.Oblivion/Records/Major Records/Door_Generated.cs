@@ -73,22 +73,42 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #endregion
         #region Script
-        public IFormLinkNullable<IScriptGetter> Script { get; init; } = new FormLinkNullable<IScriptGetter>();
+        private IFormLinkNullable<IScriptGetter> _Script = new FormLinkNullable<IScriptGetter>();
+        public IFormLinkNullable<IScriptGetter> Script
+        {
+            get => _Script;
+            set => _Script = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IScriptGetter> IDoorGetter.Script => this.Script;
         #endregion
         #region OpenSound
-        public IFormLinkNullable<ISoundGetter> OpenSound { get; init; } = new FormLinkNullable<ISoundGetter>();
+        private IFormLinkNullable<ISoundGetter> _OpenSound = new FormLinkNullable<ISoundGetter>();
+        public IFormLinkNullable<ISoundGetter> OpenSound
+        {
+            get => _OpenSound;
+            set => _OpenSound = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundGetter> IDoorGetter.OpenSound => this.OpenSound;
         #endregion
         #region CloseSound
-        public IFormLinkNullable<ISoundGetter> CloseSound { get; init; } = new FormLinkNullable<ISoundGetter>();
+        private IFormLinkNullable<ISoundGetter> _CloseSound = new FormLinkNullable<ISoundGetter>();
+        public IFormLinkNullable<ISoundGetter> CloseSound
+        {
+            get => _CloseSound;
+            set => _CloseSound = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundGetter> IDoorGetter.CloseSound => this.CloseSound;
         #endregion
         #region LoopSound
-        public IFormLinkNullable<ISoundGetter> LoopSound { get; init; } = new FormLinkNullable<ISoundGetter>();
+        private IFormLinkNullable<ISoundGetter> _LoopSound = new FormLinkNullable<ISoundGetter>();
+        public IFormLinkNullable<ISoundGetter> LoopSound
+        {
+            get => _LoopSound;
+            set => _LoopSound = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundGetter> IDoorGetter.LoopSound => this.LoopSound;
         #endregion

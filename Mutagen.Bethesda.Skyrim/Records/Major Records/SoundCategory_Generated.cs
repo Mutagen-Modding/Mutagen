@@ -81,7 +81,12 @@ namespace Mutagen.Bethesda.Skyrim
         SoundCategory.Flag? ISoundCategoryGetter.Flags => this.Flags;
         #endregion
         #region Parent
-        public IFormLinkNullable<ISoundDescriptorGetter> Parent { get; init; } = new FormLinkNullable<ISoundDescriptorGetter>();
+        private IFormLinkNullable<ISoundDescriptorGetter> _Parent = new FormLinkNullable<ISoundDescriptorGetter>();
+        public IFormLinkNullable<ISoundDescriptorGetter> Parent
+        {
+            get => _Parent;
+            set => _Parent = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> ISoundCategoryGetter.Parent => this.Parent;
         #endregion

@@ -122,7 +122,12 @@ namespace Mutagen.Bethesda.Skyrim
         public MoveableStatic.Flag Flags { get; set; } = default;
         #endregion
         #region LoopingSound
-        public IFormLinkNullable<ISoundDescriptorGetter> LoopingSound { get; init; } = new FormLinkNullable<ISoundDescriptorGetter>();
+        private IFormLinkNullable<ISoundDescriptorGetter> _LoopingSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        public IFormLinkNullable<ISoundDescriptorGetter> LoopingSound
+        {
+            get => _LoopingSound;
+            set => _LoopingSound = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IMoveableStaticGetter.LoopingSound => this.LoopingSound;
         #endregion

@@ -43,7 +43,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Base
-        public IFormLinkNullable<INpcGetter> Base { get; init; } = new FormLinkNullable<INpcGetter>();
+        private IFormLinkNullable<INpcGetter> _Base = new FormLinkNullable<INpcGetter>();
+        public IFormLinkNullable<INpcGetter> Base
+        {
+            get => _Base;
+            set => _Base = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<INpcGetter> IPlacedNpcGetter.Base => this.Base;
         #endregion
@@ -92,12 +97,22 @@ namespace Mutagen.Bethesda.Oblivion
         IEnableParentGetter? IPlacedNpcGetter.EnableParent => this.EnableParent;
         #endregion
         #region MerchantContainer
-        public IFormLinkNullable<IPlacedObjectGetter> MerchantContainer { get; init; } = new FormLinkNullable<IPlacedObjectGetter>();
+        private IFormLinkNullable<IPlacedObjectGetter> _MerchantContainer = new FormLinkNullable<IPlacedObjectGetter>();
+        public IFormLinkNullable<IPlacedObjectGetter> MerchantContainer
+        {
+            get => _MerchantContainer;
+            set => _MerchantContainer = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IPlacedObjectGetter> IPlacedNpcGetter.MerchantContainer => this.MerchantContainer;
         #endregion
         #region Horse
-        public IFormLinkNullable<IPlacedCreatureGetter> Horse { get; init; } = new FormLinkNullable<IPlacedCreatureGetter>();
+        private IFormLinkNullable<IPlacedCreatureGetter> _Horse = new FormLinkNullable<IPlacedCreatureGetter>();
+        public IFormLinkNullable<IPlacedCreatureGetter> Horse
+        {
+            get => _Horse;
+            set => _Horse = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IPlacedCreatureGetter> IPlacedNpcGetter.Horse => this.Horse;
         #endregion

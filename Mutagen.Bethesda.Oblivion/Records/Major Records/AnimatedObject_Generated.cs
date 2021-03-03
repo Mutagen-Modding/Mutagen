@@ -58,7 +58,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #endregion
         #region IdleAnimation
-        public IFormLinkNullable<IIdleAnimationGetter> IdleAnimation { get; init; } = new FormLinkNullable<IIdleAnimationGetter>();
+        private IFormLinkNullable<IIdleAnimationGetter> _IdleAnimation = new FormLinkNullable<IIdleAnimationGetter>();
+        public IFormLinkNullable<IIdleAnimationGetter> IdleAnimation
+        {
+            get => _IdleAnimation;
+            set => _IdleAnimation = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IIdleAnimationGetter> IAnimatedObjectGetter.IdleAnimation => this.IdleAnimation;
         #endregion

@@ -114,12 +114,22 @@ namespace Mutagen.Bethesda.Skyrim
         public Single ChargeTime { get; set; } = default;
         #endregion
         #region BaseEnchantment
-        public IFormLink<IObjectEffectGetter> BaseEnchantment { get; init; } = new FormLink<IObjectEffectGetter>();
+        private IFormLink<IObjectEffectGetter> _BaseEnchantment = new FormLink<IObjectEffectGetter>();
+        public IFormLink<IObjectEffectGetter> BaseEnchantment
+        {
+            get => _BaseEnchantment;
+            set => _BaseEnchantment = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IObjectEffectGetter> IObjectEffectGetter.BaseEnchantment => this.BaseEnchantment;
         #endregion
         #region WornRestrictions
-        public IFormLink<IFormListGetter> WornRestrictions { get; init; } = new FormLink<IFormListGetter>();
+        private IFormLink<IFormListGetter> _WornRestrictions = new FormLink<IFormListGetter>();
+        public IFormLink<IFormListGetter> WornRestrictions
+        {
+            get => _WornRestrictions;
+            set => _WornRestrictions = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IFormListGetter> IObjectEffectGetter.WornRestrictions => this.WornRestrictions;
         #endregion

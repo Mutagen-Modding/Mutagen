@@ -43,7 +43,12 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Quest
-        public IFormLink<IQuestGetter> Quest { get; init; } = new FormLink<IQuestGetter>();
+        private IFormLink<IQuestGetter> _Quest = new FormLink<IQuestGetter>();
+        public IFormLink<IQuestGetter> Quest
+        {
+            get => _Quest;
+            set => _Quest = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IQuestGetter> IDialogViewGetter.Quest => this.Quest;
         #endregion

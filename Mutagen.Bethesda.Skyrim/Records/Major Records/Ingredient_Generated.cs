@@ -163,17 +163,32 @@ namespace Mutagen.Bethesda.Skyrim
         IDestructibleGetter? IIngredientGetter.Destructible => this.Destructible;
         #endregion
         #region EquipType
-        public IFormLinkNullable<IEquipTypeGetter> EquipType { get; init; } = new FormLinkNullable<IEquipTypeGetter>();
+        private IFormLinkNullable<IEquipTypeGetter> _EquipType = new FormLinkNullable<IEquipTypeGetter>();
+        public IFormLinkNullable<IEquipTypeGetter> EquipType
+        {
+            get => _EquipType;
+            set => _EquipType = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEquipTypeGetter> IIngredientGetter.EquipType => this.EquipType;
         #endregion
         #region PickUpSound
-        public IFormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; init; } = new FormLinkNullable<ISoundDescriptorGetter>();
+        private IFormLinkNullable<ISoundDescriptorGetter> _PickUpSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        public IFormLinkNullable<ISoundDescriptorGetter> PickUpSound
+        {
+            get => _PickUpSound;
+            set => _PickUpSound = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IIngredientGetter.PickUpSound => this.PickUpSound;
         #endregion
         #region PutDownSound
-        public IFormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; init; } = new FormLinkNullable<ISoundDescriptorGetter>();
+        private IFormLinkNullable<ISoundDescriptorGetter> _PutDownSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        public IFormLinkNullable<ISoundDescriptorGetter> PutDownSound
+        {
+            get => _PutDownSound;
+            set => _PutDownSound = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IIngredientGetter.PutDownSound => this.PutDownSound;
         #endregion

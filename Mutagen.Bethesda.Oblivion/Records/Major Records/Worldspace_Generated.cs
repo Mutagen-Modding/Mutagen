@@ -58,17 +58,32 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #endregion
         #region Parent
-        public IFormLinkNullable<IWorldspaceGetter> Parent { get; init; } = new FormLinkNullable<IWorldspaceGetter>();
+        private IFormLinkNullable<IWorldspaceGetter> _Parent = new FormLinkNullable<IWorldspaceGetter>();
+        public IFormLinkNullable<IWorldspaceGetter> Parent
+        {
+            get => _Parent;
+            set => _Parent = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IWorldspaceGetter> IWorldspaceGetter.Parent => this.Parent;
         #endregion
         #region Climate
-        public IFormLinkNullable<IClimateGetter> Climate { get; init; } = new FormLinkNullable<IClimateGetter>();
+        private IFormLinkNullable<IClimateGetter> _Climate = new FormLinkNullable<IClimateGetter>();
+        public IFormLinkNullable<IClimateGetter> Climate
+        {
+            get => _Climate;
+            set => _Climate = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IClimateGetter> IWorldspaceGetter.Climate => this.Climate;
         #endregion
         #region Water
-        public IFormLinkNullable<IWaterGetter> Water { get; init; } = new FormLinkNullable<IWaterGetter>();
+        private IFormLinkNullable<IWaterGetter> _Water = new FormLinkNullable<IWaterGetter>();
+        public IFormLinkNullable<IWaterGetter> Water
+        {
+            get => _Water;
+            set => _Water = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IWaterGetter> IWorldspaceGetter.Water => this.Water;
         #endregion

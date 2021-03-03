@@ -69,7 +69,12 @@ namespace Mutagen.Bethesda.Skyrim
         public Int32 Unused3 { get; set; } = default;
         #endregion
         #region Effect
-        public IFormLink<ISpellGetter> Effect { get; init; } = new FormLink<ISpellGetter>();
+        private IFormLink<ISpellGetter> _Effect = new FormLink<ISpellGetter>();
+        public IFormLink<ISpellGetter> Effect
+        {
+            get => _Effect;
+            set => _Effect = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISpellGetter> ICriticalDataGetter.Effect => this.Effect;
         #endregion

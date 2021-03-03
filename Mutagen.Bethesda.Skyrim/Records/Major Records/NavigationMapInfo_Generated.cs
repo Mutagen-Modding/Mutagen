@@ -41,7 +41,12 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region NavigationMesh
-        public IFormLink<IANavigationMeshGetter> NavigationMesh { get; init; } = new FormLink<IANavigationMeshGetter>();
+        private IFormLink<IANavigationMeshGetter> _NavigationMesh = new FormLink<IANavigationMeshGetter>();
+        public IFormLink<IANavigationMeshGetter> NavigationMesh
+        {
+            get => _NavigationMesh;
+            set => _NavigationMesh = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IANavigationMeshGetter> INavigationMapInfoGetter.NavigationMesh => this.NavigationMesh;
         #endregion
@@ -111,7 +116,12 @@ namespace Mutagen.Bethesda.Skyrim
         public Int32 Unknown2 { get; set; } = default;
         #endregion
         #region ParentWorldspace
-        public IFormLink<IWorldspaceGetter> ParentWorldspace { get; init; } = new FormLink<IWorldspaceGetter>();
+        private IFormLink<IWorldspaceGetter> _ParentWorldspace = new FormLink<IWorldspaceGetter>();
+        public IFormLink<IWorldspaceGetter> ParentWorldspace
+        {
+            get => _ParentWorldspace;
+            set => _ParentWorldspace = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IWorldspaceGetter> INavigationMapInfoGetter.ParentWorldspace => this.ParentWorldspace;
         #endregion
@@ -119,7 +129,12 @@ namespace Mutagen.Bethesda.Skyrim
         public P2Int16 ParentWorldspaceCoord { get; set; } = default;
         #endregion
         #region ParentCell
-        public IFormLink<ICellGetter> ParentCell { get; init; } = new FormLink<ICellGetter>();
+        private IFormLink<ICellGetter> _ParentCell = new FormLink<ICellGetter>();
+        public IFormLink<ICellGetter> ParentCell
+        {
+            get => _ParentCell;
+            set => _ParentCell = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ICellGetter> INavigationMapInfoGetter.ParentCell => this.ParentCell;
         #endregion

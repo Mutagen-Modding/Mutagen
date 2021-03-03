@@ -40,7 +40,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Texture
-        public IFormLink<ILandTextureGetter> Texture { get; init; } = new FormLink<ILandTextureGetter>();
+        private IFormLink<ILandTextureGetter> _Texture = new FormLink<ILandTextureGetter>();
+        public IFormLink<ILandTextureGetter> Texture
+        {
+            get => _Texture;
+            set => _Texture = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ILandTextureGetter> ILayerHeaderGetter.Texture => this.Texture;
         #endregion

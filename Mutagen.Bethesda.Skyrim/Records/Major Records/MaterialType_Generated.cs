@@ -44,7 +44,12 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Parent
-        public IFormLinkNullable<IMaterialTypeGetter> Parent { get; init; } = new FormLinkNullable<IMaterialTypeGetter>();
+        private IFormLinkNullable<IMaterialTypeGetter> _Parent = new FormLinkNullable<IMaterialTypeGetter>();
+        public IFormLinkNullable<IMaterialTypeGetter> Parent
+        {
+            get => _Parent;
+            set => _Parent = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMaterialTypeGetter> IMaterialTypeGetter.Parent => this.Parent;
         #endregion
@@ -79,7 +84,12 @@ namespace Mutagen.Bethesda.Skyrim
         MaterialType.Flag? IMaterialTypeGetter.Flags => this.Flags;
         #endregion
         #region HavokImpactDataSet
-        public IFormLinkNullable<IImpactDataSetGetter> HavokImpactDataSet { get; init; } = new FormLinkNullable<IImpactDataSetGetter>();
+        private IFormLinkNullable<IImpactDataSetGetter> _HavokImpactDataSet = new FormLinkNullable<IImpactDataSetGetter>();
+        public IFormLinkNullable<IImpactDataSetGetter> HavokImpactDataSet
+        {
+            get => _HavokImpactDataSet;
+            set => _HavokImpactDataSet = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IImpactDataSetGetter> IMaterialTypeGetter.HavokImpactDataSet => this.HavokImpactDataSet;
         #endregion

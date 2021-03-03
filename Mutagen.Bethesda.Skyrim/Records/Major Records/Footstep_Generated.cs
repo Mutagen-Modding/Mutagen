@@ -43,7 +43,12 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region ImpactDataSet
-        public IFormLink<IImpactDataSetGetter> ImpactDataSet { get; init; } = new FormLink<IImpactDataSetGetter>();
+        private IFormLink<IImpactDataSetGetter> _ImpactDataSet = new FormLink<IImpactDataSetGetter>();
+        public IFormLink<IImpactDataSetGetter> ImpactDataSet
+        {
+            get => _ImpactDataSet;
+            set => _ImpactDataSet = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IImpactDataSetGetter> IFootstepGetter.ImpactDataSet => this.ImpactDataSet;
         #endregion

@@ -40,22 +40,42 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Sunrise
-        public IFormLink<IVolumetricLightingGetter> Sunrise { get; init; } = new FormLink<IVolumetricLightingGetter>();
+        private IFormLink<IVolumetricLightingGetter> _Sunrise = new FormLink<IVolumetricLightingGetter>();
+        public IFormLink<IVolumetricLightingGetter> Sunrise
+        {
+            get => _Sunrise;
+            set => _Sunrise = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IVolumetricLightingGetter> IWeatherVolumetricLightingGetter.Sunrise => this.Sunrise;
         #endregion
         #region Day
-        public IFormLink<IVolumetricLightingGetter> Day { get; init; } = new FormLink<IVolumetricLightingGetter>();
+        private IFormLink<IVolumetricLightingGetter> _Day = new FormLink<IVolumetricLightingGetter>();
+        public IFormLink<IVolumetricLightingGetter> Day
+        {
+            get => _Day;
+            set => _Day = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IVolumetricLightingGetter> IWeatherVolumetricLightingGetter.Day => this.Day;
         #endregion
         #region Sunset
-        public IFormLink<IVolumetricLightingGetter> Sunset { get; init; } = new FormLink<IVolumetricLightingGetter>();
+        private IFormLink<IVolumetricLightingGetter> _Sunset = new FormLink<IVolumetricLightingGetter>();
+        public IFormLink<IVolumetricLightingGetter> Sunset
+        {
+            get => _Sunset;
+            set => _Sunset = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IVolumetricLightingGetter> IWeatherVolumetricLightingGetter.Sunset => this.Sunset;
         #endregion
         #region Night
-        public IFormLink<IVolumetricLightingGetter> Night { get; init; } = new FormLink<IVolumetricLightingGetter>();
+        private IFormLink<IVolumetricLightingGetter> _Night = new FormLink<IVolumetricLightingGetter>();
+        public IFormLink<IVolumetricLightingGetter> Night
+        {
+            get => _Night;
+            set => _Night = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IVolumetricLightingGetter> IWeatherVolumetricLightingGetter.Night => this.Night;
         #endregion

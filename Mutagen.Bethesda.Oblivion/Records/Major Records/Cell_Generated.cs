@@ -103,17 +103,32 @@ namespace Mutagen.Bethesda.Oblivion
         Single? ICellGetter.WaterHeight => this.WaterHeight;
         #endregion
         #region Climate
-        public IFormLinkNullable<IClimateGetter> Climate { get; init; } = new FormLinkNullable<IClimateGetter>();
+        private IFormLinkNullable<IClimateGetter> _Climate = new FormLinkNullable<IClimateGetter>();
+        public IFormLinkNullable<IClimateGetter> Climate
+        {
+            get => _Climate;
+            set => _Climate = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IClimateGetter> ICellGetter.Climate => this.Climate;
         #endregion
         #region Water
-        public IFormLinkNullable<IWaterGetter> Water { get; init; } = new FormLinkNullable<IWaterGetter>();
+        private IFormLinkNullable<IWaterGetter> _Water = new FormLinkNullable<IWaterGetter>();
+        public IFormLinkNullable<IWaterGetter> Water
+        {
+            get => _Water;
+            set => _Water = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IWaterGetter> ICellGetter.Water => this.Water;
         #endregion
         #region Owner
-        public IFormLinkNullable<IFactionGetter> Owner { get; init; } = new FormLinkNullable<IFactionGetter>();
+        private IFormLinkNullable<IFactionGetter> _Owner = new FormLinkNullable<IFactionGetter>();
+        public IFormLinkNullable<IFactionGetter> Owner
+        {
+            get => _Owner;
+            set => _Owner = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFactionGetter> ICellGetter.Owner => this.Owner;
         #endregion
@@ -123,7 +138,12 @@ namespace Mutagen.Bethesda.Oblivion
         Int32? ICellGetter.FactionRank => this.FactionRank;
         #endregion
         #region GlobalVariable
-        public IFormLinkNullable<IGlobalGetter> GlobalVariable { get; init; } = new FormLinkNullable<IGlobalGetter>();
+        private IFormLinkNullable<IGlobalGetter> _GlobalVariable = new FormLinkNullable<IGlobalGetter>();
+        public IFormLinkNullable<IGlobalGetter> GlobalVariable
+        {
+            get => _GlobalVariable;
+            set => _GlobalVariable = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IGlobalGetter> ICellGetter.GlobalVariable => this.GlobalVariable;
         #endregion

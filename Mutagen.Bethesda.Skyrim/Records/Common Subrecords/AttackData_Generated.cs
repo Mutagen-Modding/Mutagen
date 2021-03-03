@@ -46,7 +46,12 @@ namespace Mutagen.Bethesda.Skyrim
         public Single Chance { get; set; } = default;
         #endregion
         #region Spell
-        public IFormLink<IASpellGetter> Spell { get; init; } = new FormLink<IASpellGetter>();
+        private IFormLink<IASpellGetter> _Spell = new FormLink<IASpellGetter>();
+        public IFormLink<IASpellGetter> Spell
+        {
+            get => _Spell;
+            set => _Spell = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IASpellGetter> IAttackDataGetter.Spell => this.Spell;
         #endregion
@@ -63,7 +68,12 @@ namespace Mutagen.Bethesda.Skyrim
         public Single Stagger { get; set; } = default;
         #endregion
         #region AttackType
-        public IFormLink<IKeywordGetter> AttackType { get; init; } = new FormLink<IKeywordGetter>();
+        private IFormLink<IKeywordGetter> _AttackType = new FormLink<IKeywordGetter>();
+        public IFormLink<IKeywordGetter> AttackType
+        {
+            get => _AttackType;
+            set => _AttackType = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IKeywordGetter> IAttackDataGetter.AttackType => this.AttackType;
         #endregion

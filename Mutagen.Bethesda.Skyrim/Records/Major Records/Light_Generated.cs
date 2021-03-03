@@ -185,7 +185,12 @@ namespace Mutagen.Bethesda.Skyrim
         public Single FadeValue { get; set; } = default;
         #endregion
         #region Sound
-        public IFormLinkNullable<ISoundDescriptorGetter> Sound { get; init; } = new FormLinkNullable<ISoundDescriptorGetter>();
+        private IFormLinkNullable<ISoundDescriptorGetter> _Sound = new FormLinkNullable<ISoundDescriptorGetter>();
+        public IFormLinkNullable<ISoundDescriptorGetter> Sound
+        {
+            get => _Sound;
+            set => _Sound = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> ILightGetter.Sound => this.Sound;
         #endregion

@@ -47,7 +47,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Int16 Unknown { get; set; } = default;
         #endregion
         #region Reference
-        public IFormLink<T> Reference { get; init; } = new FormLink<T>();
+        private IFormLink<T> _Reference = new FormLink<T>();
+        public IFormLink<T> Reference
+        {
+            get => _Reference;
+            set => _Reference = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<T> ILeveledEntryGetter<T>.Reference => this.Reference;
         #endregion

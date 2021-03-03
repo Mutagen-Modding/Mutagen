@@ -130,17 +130,32 @@ namespace Mutagen.Bethesda.Skyrim
         IDestructibleGetter? IDoorGetter.Destructible => this.Destructible;
         #endregion
         #region OpenSound
-        public IFormLinkNullable<ISoundDescriptorGetter> OpenSound { get; init; } = new FormLinkNullable<ISoundDescriptorGetter>();
+        private IFormLinkNullable<ISoundDescriptorGetter> _OpenSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        public IFormLinkNullable<ISoundDescriptorGetter> OpenSound
+        {
+            get => _OpenSound;
+            set => _OpenSound = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IDoorGetter.OpenSound => this.OpenSound;
         #endregion
         #region CloseSound
-        public IFormLinkNullable<ISoundDescriptorGetter> CloseSound { get; init; } = new FormLinkNullable<ISoundDescriptorGetter>();
+        private IFormLinkNullable<ISoundDescriptorGetter> _CloseSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        public IFormLinkNullable<ISoundDescriptorGetter> CloseSound
+        {
+            get => _CloseSound;
+            set => _CloseSound = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IDoorGetter.CloseSound => this.CloseSound;
         #endregion
         #region LoopSound
-        public IFormLinkNullable<ISoundDescriptorGetter> LoopSound { get; init; } = new FormLinkNullable<ISoundDescriptorGetter>();
+        private IFormLinkNullable<ISoundDescriptorGetter> _LoopSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        public IFormLinkNullable<ISoundDescriptorGetter> LoopSound
+        {
+            get => _LoopSound;
+            set => _LoopSound = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IDoorGetter.LoopSound => this.LoopSound;
         #endregion

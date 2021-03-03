@@ -62,7 +62,12 @@ namespace Mutagen.Bethesda.Oblivion
         public UInt32 CounterEffectCount { get; set; } = default;
         #endregion
         #region Light
-        public IFormLink<ILightGetter> Light { get; init; } = new FormLink<ILightGetter>();
+        private IFormLink<ILightGetter> _Light = new FormLink<ILightGetter>();
+        public IFormLink<ILightGetter> Light
+        {
+            get => _Light;
+            set => _Light = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ILightGetter> IMagicEffectDataGetter.Light => this.Light;
         #endregion
@@ -70,7 +75,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Single ProjectileSpeed { get; set; } = default;
         #endregion
         #region EffectShader
-        public IFormLink<IEffectShaderGetter> EffectShader { get; init; } = new FormLink<IEffectShaderGetter>();
+        private IFormLink<IEffectShaderGetter> _EffectShader = new FormLink<IEffectShaderGetter>();
+        public IFormLink<IEffectShaderGetter> EffectShader
+        {
+            get => _EffectShader;
+            set => _EffectShader = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IEffectShaderGetter> IMagicEffectDataGetter.EffectShader => this.EffectShader;
         #endregion

@@ -157,17 +157,32 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region PickUpSound
-        public IFormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; init; } = new FormLinkNullable<ISoundDescriptorGetter>();
+        private IFormLinkNullable<ISoundDescriptorGetter> _PickUpSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        public IFormLinkNullable<ISoundDescriptorGetter> PickUpSound
+        {
+            get => _PickUpSound;
+            set => _PickUpSound = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IIngestibleGetter.PickUpSound => this.PickUpSound;
         #endregion
         #region PutDownSound
-        public IFormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; init; } = new FormLinkNullable<ISoundDescriptorGetter>();
+        private IFormLinkNullable<ISoundDescriptorGetter> _PutDownSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        public IFormLinkNullable<ISoundDescriptorGetter> PutDownSound
+        {
+            get => _PutDownSound;
+            set => _PutDownSound = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IIngestibleGetter.PutDownSound => this.PutDownSound;
         #endregion
         #region EquipmentType
-        public IFormLinkNullable<IEquipTypeGetter> EquipmentType { get; init; } = new FormLinkNullable<IEquipTypeGetter>();
+        private IFormLinkNullable<IEquipTypeGetter> _EquipmentType = new FormLinkNullable<IEquipTypeGetter>();
+        public IFormLinkNullable<IEquipTypeGetter> EquipmentType
+        {
+            get => _EquipmentType;
+            set => _EquipmentType = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEquipTypeGetter> IIngestibleGetter.EquipmentType => this.EquipmentType;
         #endregion
@@ -181,7 +196,12 @@ namespace Mutagen.Bethesda.Skyrim
         public Ingestible.Flag Flags { get; set; } = default;
         #endregion
         #region Addiction
-        public IFormLink<ISkyrimMajorRecordGetter> Addiction { get; init; } = new FormLink<ISkyrimMajorRecordGetter>();
+        private IFormLink<ISkyrimMajorRecordGetter> _Addiction = new FormLink<ISkyrimMajorRecordGetter>();
+        public IFormLink<ISkyrimMajorRecordGetter> Addiction
+        {
+            get => _Addiction;
+            set => _Addiction = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISkyrimMajorRecordGetter> IIngestibleGetter.Addiction => this.Addiction;
         #endregion
@@ -189,7 +209,12 @@ namespace Mutagen.Bethesda.Skyrim
         public Single AddictionChance { get; set; } = default;
         #endregion
         #region ConsumeSound
-        public IFormLink<ISoundDescriptorGetter> ConsumeSound { get; init; } = new FormLink<ISoundDescriptorGetter>();
+        private IFormLink<ISoundDescriptorGetter> _ConsumeSound = new FormLink<ISoundDescriptorGetter>();
+        public IFormLink<ISoundDescriptorGetter> ConsumeSound
+        {
+            get => _ConsumeSound;
+            set => _ConsumeSound = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISoundDescriptorGetter> IIngestibleGetter.ConsumeSound => this.ConsumeSound;
         #endregion

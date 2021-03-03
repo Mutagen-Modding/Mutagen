@@ -40,7 +40,12 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Sound
-        public IFormLinkNullable<ISoundDescriptorGetter> Sound { get; init; } = new FormLinkNullable<ISoundDescriptorGetter>();
+        private IFormLinkNullable<ISoundDescriptorGetter> _Sound = new FormLinkNullable<ISoundDescriptorGetter>();
+        public IFormLinkNullable<ISoundDescriptorGetter> Sound
+        {
+            get => _Sound;
+            set => _Sound = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> INpcSoundGetter.Sound => this.Sound;
         #endregion

@@ -134,12 +134,22 @@ namespace Mutagen.Bethesda.Skyrim
         public Single Range { get; set; } = default;
         #endregion
         #region Light
-        public IFormLink<ILightGetter> Light { get; init; } = new FormLink<ILightGetter>();
+        private IFormLink<ILightGetter> _Light = new FormLink<ILightGetter>();
+        public IFormLink<ILightGetter> Light
+        {
+            get => _Light;
+            set => _Light = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ILightGetter> IProjectileGetter.Light => this.Light;
         #endregion
         #region MuzzleFlash
-        public IFormLink<ILightGetter> MuzzleFlash { get; init; } = new FormLink<ILightGetter>();
+        private IFormLink<ILightGetter> _MuzzleFlash = new FormLink<ILightGetter>();
+        public IFormLink<ILightGetter> MuzzleFlash
+        {
+            get => _MuzzleFlash;
+            set => _MuzzleFlash = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ILightGetter> IProjectileGetter.MuzzleFlash => this.MuzzleFlash;
         #endregion
@@ -153,12 +163,22 @@ namespace Mutagen.Bethesda.Skyrim
         public Single ExplosionAltTriggerTimer { get; set; } = default;
         #endregion
         #region Explosion
-        public IFormLink<IExplosionGetter> Explosion { get; init; } = new FormLink<IExplosionGetter>();
+        private IFormLink<IExplosionGetter> _Explosion = new FormLink<IExplosionGetter>();
+        public IFormLink<IExplosionGetter> Explosion
+        {
+            get => _Explosion;
+            set => _Explosion = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IExplosionGetter> IProjectileGetter.Explosion => this.Explosion;
         #endregion
         #region Sound
-        public IFormLink<ISoundDescriptorGetter> Sound { get; init; } = new FormLink<ISoundDescriptorGetter>();
+        private IFormLink<ISoundDescriptorGetter> _Sound = new FormLink<ISoundDescriptorGetter>();
+        public IFormLink<ISoundDescriptorGetter> Sound
+        {
+            get => _Sound;
+            set => _Sound = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISoundDescriptorGetter> IProjectileGetter.Sound => this.Sound;
         #endregion
@@ -172,17 +192,32 @@ namespace Mutagen.Bethesda.Skyrim
         public Single ImpactForce { get; set; } = default;
         #endregion
         #region CountdownSound
-        public IFormLink<ISoundDescriptorGetter> CountdownSound { get; init; } = new FormLink<ISoundDescriptorGetter>();
+        private IFormLink<ISoundDescriptorGetter> _CountdownSound = new FormLink<ISoundDescriptorGetter>();
+        public IFormLink<ISoundDescriptorGetter> CountdownSound
+        {
+            get => _CountdownSound;
+            set => _CountdownSound = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISoundDescriptorGetter> IProjectileGetter.CountdownSound => this.CountdownSound;
         #endregion
         #region DisaleSound
-        public IFormLink<ISoundDescriptorGetter> DisaleSound { get; init; } = new FormLink<ISoundDescriptorGetter>();
+        private IFormLink<ISoundDescriptorGetter> _DisaleSound = new FormLink<ISoundDescriptorGetter>();
+        public IFormLink<ISoundDescriptorGetter> DisaleSound
+        {
+            get => _DisaleSound;
+            set => _DisaleSound = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISoundDescriptorGetter> IProjectileGetter.DisaleSound => this.DisaleSound;
         #endregion
         #region DefaultWeaponSource
-        public IFormLink<IWeaponGetter> DefaultWeaponSource { get; init; } = new FormLink<IWeaponGetter>();
+        private IFormLink<IWeaponGetter> _DefaultWeaponSource = new FormLink<IWeaponGetter>();
+        public IFormLink<IWeaponGetter> DefaultWeaponSource
+        {
+            get => _DefaultWeaponSource;
+            set => _DefaultWeaponSource = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IWeaponGetter> IProjectileGetter.DefaultWeaponSource => this.DefaultWeaponSource;
         #endregion
@@ -199,12 +234,22 @@ namespace Mutagen.Bethesda.Skyrim
         public Single RelaunchInterval { get; set; } = default;
         #endregion
         #region DecalData
-        public IFormLink<ITextureSetGetter> DecalData { get; init; } = new FormLink<ITextureSetGetter>();
+        private IFormLink<ITextureSetGetter> _DecalData = new FormLink<ITextureSetGetter>();
+        public IFormLink<ITextureSetGetter> DecalData
+        {
+            get => _DecalData;
+            set => _DecalData = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ITextureSetGetter> IProjectileGetter.DecalData => this.DecalData;
         #endregion
         #region CollisionLayer
-        public IFormLink<ICollisionLayerGetter> CollisionLayer { get; init; } = new FormLink<ICollisionLayerGetter>();
+        private IFormLink<ICollisionLayerGetter> _CollisionLayer = new FormLink<ICollisionLayerGetter>();
+        public IFormLink<ICollisionLayerGetter> CollisionLayer
+        {
+            get => _CollisionLayer;
+            set => _CollisionLayer = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ICollisionLayerGetter> IProjectileGetter.CollisionLayer => this.CollisionLayer;
         #endregion

@@ -134,17 +134,32 @@ namespace Mutagen.Bethesda.Skyrim
         IPackageIdlesGetter? IPackageGetter.IdleAnimations => this.IdleAnimations;
         #endregion
         #region CombatStyle
-        public IFormLinkNullable<ICombatStyleGetter> CombatStyle { get; init; } = new FormLinkNullable<ICombatStyleGetter>();
+        private IFormLinkNullable<ICombatStyleGetter> _CombatStyle = new FormLinkNullable<ICombatStyleGetter>();
+        public IFormLinkNullable<ICombatStyleGetter> CombatStyle
+        {
+            get => _CombatStyle;
+            set => _CombatStyle = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ICombatStyleGetter> IPackageGetter.CombatStyle => this.CombatStyle;
         #endregion
         #region OwnerQuest
-        public IFormLinkNullable<IQuestGetter> OwnerQuest { get; init; } = new FormLinkNullable<IQuestGetter>();
+        private IFormLinkNullable<IQuestGetter> _OwnerQuest = new FormLinkNullable<IQuestGetter>();
+        public IFormLinkNullable<IQuestGetter> OwnerQuest
+        {
+            get => _OwnerQuest;
+            set => _OwnerQuest = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IQuestGetter> IPackageGetter.OwnerQuest => this.OwnerQuest;
         #endregion
         #region PackageTemplate
-        public IFormLink<IPackageGetter> PackageTemplate { get; init; } = new FormLink<IPackageGetter>();
+        private IFormLink<IPackageGetter> _PackageTemplate = new FormLink<IPackageGetter>();
+        public IFormLink<IPackageGetter> PackageTemplate
+        {
+            get => _PackageTemplate;
+            set => _PackageTemplate = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPackageGetter> IPackageGetter.PackageTemplate => this.PackageTemplate;
         #endregion

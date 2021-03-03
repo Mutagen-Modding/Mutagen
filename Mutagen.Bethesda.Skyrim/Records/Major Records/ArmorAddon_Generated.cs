@@ -54,7 +54,12 @@ namespace Mutagen.Bethesda.Skyrim
         IBodyTemplateGetter? IArmorAddonGetter.BodyTemplate => this.BodyTemplate;
         #endregion
         #region Race
-        public IFormLinkNullable<IRaceGetter> Race { get; init; } = new FormLinkNullable<IRaceGetter>();
+        private IFormLinkNullable<IRaceGetter> _Race = new FormLinkNullable<IRaceGetter>();
+        public IFormLinkNullable<IRaceGetter> Race
+        {
+            get => _Race;
+            set => _Race = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IRaceGetter> IArmorAddonGetter.Race => this.Race;
         #endregion
@@ -105,12 +110,22 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region FootstepSound
-        public IFormLinkNullable<IFootstepSetGetter> FootstepSound { get; init; } = new FormLinkNullable<IFootstepSetGetter>();
+        private IFormLinkNullable<IFootstepSetGetter> _FootstepSound = new FormLinkNullable<IFootstepSetGetter>();
+        public IFormLinkNullable<IFootstepSetGetter> FootstepSound
+        {
+            get => _FootstepSound;
+            set => _FootstepSound = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFootstepSetGetter> IArmorAddonGetter.FootstepSound => this.FootstepSound;
         #endregion
         #region ArtObject
-        public IFormLinkNullable<IArtObjectGetter> ArtObject { get; init; } = new FormLinkNullable<IArtObjectGetter>();
+        private IFormLinkNullable<IArtObjectGetter> _ArtObject = new FormLinkNullable<IArtObjectGetter>();
+        public IFormLinkNullable<IArtObjectGetter> ArtObject
+        {
+            get => _ArtObject;
+            set => _ArtObject = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IArtObjectGetter> IArmorAddonGetter.ArtObject => this.ArtObject;
         #endregion

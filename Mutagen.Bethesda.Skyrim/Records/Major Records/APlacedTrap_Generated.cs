@@ -57,7 +57,12 @@ namespace Mutagen.Bethesda.Skyrim
         IVirtualMachineAdapterGetter? IAPlacedTrapGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region EncounterZone
-        public IFormLinkNullable<IEncounterZoneGetter> EncounterZone { get; init; } = new FormLinkNullable<IEncounterZoneGetter>();
+        private IFormLinkNullable<IEncounterZoneGetter> _EncounterZone = new FormLinkNullable<IEncounterZoneGetter>();
+        public IFormLinkNullable<IEncounterZoneGetter> EncounterZone
+        {
+            get => _EncounterZone;
+            set => _EncounterZone = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEncounterZoneGetter> IAPlacedTrapGetter.EncounterZone => this.EncounterZone;
         #endregion
@@ -133,12 +138,22 @@ namespace Mutagen.Bethesda.Skyrim
         IEnableParentGetter? IAPlacedTrapGetter.EnableParent => this.EnableParent;
         #endregion
         #region Emittance
-        public IFormLinkNullable<IEmittanceGetter> Emittance { get; init; } = new FormLinkNullable<IEmittanceGetter>();
+        private IFormLinkNullable<IEmittanceGetter> _Emittance = new FormLinkNullable<IEmittanceGetter>();
+        public IFormLinkNullable<IEmittanceGetter> Emittance
+        {
+            get => _Emittance;
+            set => _Emittance = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEmittanceGetter> IAPlacedTrapGetter.Emittance => this.Emittance;
         #endregion
         #region MultiBoundReference
-        public IFormLinkNullable<IPlacedObjectGetter> MultiBoundReference { get; init; } = new FormLinkNullable<IPlacedObjectGetter>();
+        private IFormLinkNullable<IPlacedObjectGetter> _MultiBoundReference = new FormLinkNullable<IPlacedObjectGetter>();
+        public IFormLinkNullable<IPlacedObjectGetter> MultiBoundReference
+        {
+            get => _MultiBoundReference;
+            set => _MultiBoundReference = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IPlacedObjectGetter> IAPlacedTrapGetter.MultiBoundReference => this.MultiBoundReference;
         #endregion
@@ -168,7 +183,12 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region LocationReference
-        public IFormLinkNullable<ILocationRecordGetter> LocationReference { get; init; } = new FormLinkNullable<ILocationRecordGetter>();
+        private IFormLinkNullable<ILocationRecordGetter> _LocationReference = new FormLinkNullable<ILocationRecordGetter>();
+        public IFormLinkNullable<ILocationRecordGetter> LocationReference
+        {
+            get => _LocationReference;
+            set => _LocationReference = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILocationRecordGetter> IAPlacedTrapGetter.LocationReference => this.LocationReference;
         #endregion

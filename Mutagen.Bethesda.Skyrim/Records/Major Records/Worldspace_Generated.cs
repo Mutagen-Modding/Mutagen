@@ -106,17 +106,32 @@ namespace Mutagen.Bethesda.Skyrim
         P2Int16? IWorldspaceGetter.FixedDimensionsCenterCell => this.FixedDimensionsCenterCell;
         #endregion
         #region InteriorLighting
-        public IFormLinkNullable<ILightingTemplateGetter> InteriorLighting { get; init; } = new FormLinkNullable<ILightingTemplateGetter>();
+        private IFormLinkNullable<ILightingTemplateGetter> _InteriorLighting = new FormLinkNullable<ILightingTemplateGetter>();
+        public IFormLinkNullable<ILightingTemplateGetter> InteriorLighting
+        {
+            get => _InteriorLighting;
+            set => _InteriorLighting = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILightingTemplateGetter> IWorldspaceGetter.InteriorLighting => this.InteriorLighting;
         #endregion
         #region EncounterZone
-        public IFormLinkNullable<IEncounterZoneGetter> EncounterZone { get; init; } = new FormLinkNullable<IEncounterZoneGetter>();
+        private IFormLinkNullable<IEncounterZoneGetter> _EncounterZone = new FormLinkNullable<IEncounterZoneGetter>();
+        public IFormLinkNullable<IEncounterZoneGetter> EncounterZone
+        {
+            get => _EncounterZone;
+            set => _EncounterZone = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEncounterZoneGetter> IWorldspaceGetter.EncounterZone => this.EncounterZone;
         #endregion
         #region Location
-        public IFormLinkNullable<ILocationGetter> Location { get; init; } = new FormLinkNullable<ILocationGetter>();
+        private IFormLinkNullable<ILocationGetter> _Location = new FormLinkNullable<ILocationGetter>();
+        public IFormLinkNullable<ILocationGetter> Location
+        {
+            get => _Location;
+            set => _Location = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILocationGetter> IWorldspaceGetter.Location => this.Location;
         #endregion
@@ -132,17 +147,32 @@ namespace Mutagen.Bethesda.Skyrim
         IWorldspaceParentGetter? IWorldspaceGetter.Parent => this.Parent;
         #endregion
         #region Climate
-        public IFormLinkNullable<IClimateGetter> Climate { get; init; } = new FormLinkNullable<IClimateGetter>();
+        private IFormLinkNullable<IClimateGetter> _Climate = new FormLinkNullable<IClimateGetter>();
+        public IFormLinkNullable<IClimateGetter> Climate
+        {
+            get => _Climate;
+            set => _Climate = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IClimateGetter> IWorldspaceGetter.Climate => this.Climate;
         #endregion
         #region Water
-        public IFormLinkNullable<IWaterGetter> Water { get; init; } = new FormLinkNullable<IWaterGetter>();
+        private IFormLinkNullable<IWaterGetter> _Water = new FormLinkNullable<IWaterGetter>();
+        public IFormLinkNullable<IWaterGetter> Water
+        {
+            get => _Water;
+            set => _Water = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IWaterGetter> IWorldspaceGetter.Water => this.Water;
         #endregion
         #region LodWater
-        public IFormLinkNullable<IWaterGetter> LodWater { get; init; } = new FormLinkNullable<IWaterGetter>();
+        private IFormLinkNullable<IWaterGetter> _LodWater = new FormLinkNullable<IWaterGetter>();
+        public IFormLinkNullable<IWaterGetter> LodWater
+        {
+            get => _LodWater;
+            set => _LodWater = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IWaterGetter> IWorldspaceGetter.LodWater => this.LodWater;
         #endregion
@@ -214,7 +244,12 @@ namespace Mutagen.Bethesda.Skyrim
         IWorldspaceObjectBoundsGetter? IWorldspaceGetter.ObjectBounds => this.ObjectBounds;
         #endregion
         #region Music
-        public IFormLinkNullable<IMusicTypeGetter> Music { get; init; } = new FormLinkNullable<IMusicTypeGetter>();
+        private IFormLinkNullable<IMusicTypeGetter> _Music = new FormLinkNullable<IMusicTypeGetter>();
+        public IFormLinkNullable<IMusicTypeGetter> Music
+        {
+            get => _Music;
+            set => _Music = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMusicTypeGetter> IWorldspaceGetter.Music => this.Music;
         #endregion

@@ -40,7 +40,12 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Owner
-        public IFormLinkNullable<IOwnerGetter> Owner { get; init; } = new FormLinkNullable<IOwnerGetter>();
+        private IFormLinkNullable<IOwnerGetter> _Owner = new FormLinkNullable<IOwnerGetter>();
+        public IFormLinkNullable<IOwnerGetter> Owner
+        {
+            get => _Owner;
+            set => _Owner = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IOwnerGetter> IOwnershipGetter.Owner => this.Owner;
         #endregion

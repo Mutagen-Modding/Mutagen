@@ -43,12 +43,22 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Base
-        public IFormLinkNullable<ICreatureGetter> Base { get; init; } = new FormLinkNullable<ICreatureGetter>();
+        private IFormLinkNullable<ICreatureGetter> _Base = new FormLinkNullable<ICreatureGetter>();
+        public IFormLinkNullable<ICreatureGetter> Base
+        {
+            get => _Base;
+            set => _Base = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ICreatureGetter> IPlacedCreatureGetter.Base => this.Base;
         #endregion
         #region Owner
-        public IFormLinkNullable<IFactionGetter> Owner { get; init; } = new FormLinkNullable<IFactionGetter>();
+        private IFormLinkNullable<IFactionGetter> _Owner = new FormLinkNullable<IFactionGetter>();
+        public IFormLinkNullable<IFactionGetter> Owner
+        {
+            get => _Owner;
+            set => _Owner = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFactionGetter> IPlacedCreatureGetter.Owner => this.Owner;
         #endregion
@@ -58,7 +68,12 @@ namespace Mutagen.Bethesda.Oblivion
         Int32? IPlacedCreatureGetter.FactionRank => this.FactionRank;
         #endregion
         #region GlobalVariable
-        public IFormLinkNullable<IGlobalGetter> GlobalVariable { get; init; } = new FormLinkNullable<IGlobalGetter>();
+        private IFormLinkNullable<IGlobalGetter> _GlobalVariable = new FormLinkNullable<IGlobalGetter>();
+        public IFormLinkNullable<IGlobalGetter> GlobalVariable
+        {
+            get => _GlobalVariable;
+            set => _GlobalVariable = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IGlobalGetter> IPlacedCreatureGetter.GlobalVariable => this.GlobalVariable;
         #endregion

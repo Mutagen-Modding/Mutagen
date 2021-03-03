@@ -65,7 +65,12 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedStringGetter? IQuestLogEntryGetter.Entry => this.Entry;
         #endregion
         #region NextQuest
-        public IFormLinkNullable<IQuestGetter> NextQuest { get; init; } = new FormLinkNullable<IQuestGetter>();
+        private IFormLinkNullable<IQuestGetter> _NextQuest = new FormLinkNullable<IQuestGetter>();
+        public IFormLinkNullable<IQuestGetter> NextQuest
+        {
+            get => _NextQuest;
+            set => _NextQuest = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IQuestGetter> IQuestLogEntryGetter.NextQuest => this.NextQuest;
         #endregion

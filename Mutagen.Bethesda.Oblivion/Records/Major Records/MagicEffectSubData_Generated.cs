@@ -40,27 +40,52 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region EnchantEffect
-        public IFormLink<IEffectShaderGetter> EnchantEffect { get; init; } = new FormLink<IEffectShaderGetter>();
+        private IFormLink<IEffectShaderGetter> _EnchantEffect = new FormLink<IEffectShaderGetter>();
+        public IFormLink<IEffectShaderGetter> EnchantEffect
+        {
+            get => _EnchantEffect;
+            set => _EnchantEffect = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IEffectShaderGetter> IMagicEffectSubDataGetter.EnchantEffect => this.EnchantEffect;
         #endregion
         #region CastingSound
-        public IFormLink<ISoundGetter> CastingSound { get; init; } = new FormLink<ISoundGetter>();
+        private IFormLink<ISoundGetter> _CastingSound = new FormLink<ISoundGetter>();
+        public IFormLink<ISoundGetter> CastingSound
+        {
+            get => _CastingSound;
+            set => _CastingSound = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISoundGetter> IMagicEffectSubDataGetter.CastingSound => this.CastingSound;
         #endregion
         #region BoltSound
-        public IFormLink<ISoundGetter> BoltSound { get; init; } = new FormLink<ISoundGetter>();
+        private IFormLink<ISoundGetter> _BoltSound = new FormLink<ISoundGetter>();
+        public IFormLink<ISoundGetter> BoltSound
+        {
+            get => _BoltSound;
+            set => _BoltSound = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISoundGetter> IMagicEffectSubDataGetter.BoltSound => this.BoltSound;
         #endregion
         #region HitSound
-        public IFormLink<ISoundGetter> HitSound { get; init; } = new FormLink<ISoundGetter>();
+        private IFormLink<ISoundGetter> _HitSound = new FormLink<ISoundGetter>();
+        public IFormLink<ISoundGetter> HitSound
+        {
+            get => _HitSound;
+            set => _HitSound = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISoundGetter> IMagicEffectSubDataGetter.HitSound => this.HitSound;
         #endregion
         #region AreaSound
-        public IFormLink<ISoundGetter> AreaSound { get; init; } = new FormLink<ISoundGetter>();
+        private IFormLink<ISoundGetter> _AreaSound = new FormLink<ISoundGetter>();
+        public IFormLink<ISoundGetter> AreaSound
+        {
+            get => _AreaSound;
+            set => _AreaSound = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISoundGetter> IMagicEffectSubDataGetter.AreaSound => this.AreaSound;
         #endregion

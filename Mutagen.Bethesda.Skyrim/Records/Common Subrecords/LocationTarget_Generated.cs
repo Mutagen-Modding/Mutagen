@@ -42,7 +42,12 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Link
-        public IFormLink<ILocationTargetableGetter> Link { get; init; } = new FormLink<ILocationTargetableGetter>();
+        private IFormLink<ILocationTargetableGetter> _Link = new FormLink<ILocationTargetableGetter>();
+        public IFormLink<ILocationTargetableGetter> Link
+        {
+            get => _Link;
+            set => _Link = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ILocationTargetableGetter> ILocationTargetGetter.Link => this.Link;
         #endregion

@@ -63,7 +63,12 @@ namespace Mutagen.Bethesda.Oblivion
         String? IWaterGetter.MaterialID => this.MaterialID;
         #endregion
         #region Sound
-        public IFormLinkNullable<ISoundGetter> Sound { get; init; } = new FormLinkNullable<ISoundGetter>();
+        private IFormLinkNullable<ISoundGetter> _Sound = new FormLinkNullable<ISoundGetter>();
+        public IFormLinkNullable<ISoundGetter> Sound
+        {
+            get => _Sound;
+            set => _Sound = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundGetter> IWaterGetter.Sound => this.Sound;
         #endregion

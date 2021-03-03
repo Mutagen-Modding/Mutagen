@@ -91,22 +91,42 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region DeathItem
-        public IFormLinkNullable<ILeveledItemGetter> DeathItem { get; init; } = new FormLinkNullable<ILeveledItemGetter>();
+        private IFormLinkNullable<ILeveledItemGetter> _DeathItem = new FormLinkNullable<ILeveledItemGetter>();
+        public IFormLinkNullable<ILeveledItemGetter> DeathItem
+        {
+            get => _DeathItem;
+            set => _DeathItem = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILeveledItemGetter> INpcGetter.DeathItem => this.DeathItem;
         #endregion
         #region Voice
-        public IFormLinkNullable<IVoiceTypeGetter> Voice { get; init; } = new FormLinkNullable<IVoiceTypeGetter>();
+        private IFormLinkNullable<IVoiceTypeGetter> _Voice = new FormLinkNullable<IVoiceTypeGetter>();
+        public IFormLinkNullable<IVoiceTypeGetter> Voice
+        {
+            get => _Voice;
+            set => _Voice = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IVoiceTypeGetter> INpcGetter.Voice => this.Voice;
         #endregion
         #region Template
-        public IFormLinkNullable<INpcSpawnGetter> Template { get; init; } = new FormLinkNullable<INpcSpawnGetter>();
+        private IFormLinkNullable<INpcSpawnGetter> _Template = new FormLinkNullable<INpcSpawnGetter>();
+        public IFormLinkNullable<INpcSpawnGetter> Template
+        {
+            get => _Template;
+            set => _Template = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<INpcSpawnGetter> INpcGetter.Template => this.Template;
         #endregion
         #region Race
-        public IFormLink<IRaceGetter> Race { get; init; } = new FormLink<IRaceGetter>();
+        private IFormLink<IRaceGetter> _Race = new FormLink<IRaceGetter>();
+        public IFormLink<IRaceGetter> Race
+        {
+            get => _Race;
+            set => _Race = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IRaceGetter> INpcGetter.Race => this.Race;
         #endregion
@@ -136,17 +156,32 @@ namespace Mutagen.Bethesda.Skyrim
         IDestructibleGetter? INpcGetter.Destructible => this.Destructible;
         #endregion
         #region WornArmor
-        public IFormLinkNullable<IArmorGetter> WornArmor { get; init; } = new FormLinkNullable<IArmorGetter>();
+        private IFormLinkNullable<IArmorGetter> _WornArmor = new FormLinkNullable<IArmorGetter>();
+        public IFormLinkNullable<IArmorGetter> WornArmor
+        {
+            get => _WornArmor;
+            set => _WornArmor = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IArmorGetter> INpcGetter.WornArmor => this.WornArmor;
         #endregion
         #region FarAwayModel
-        public IFormLinkNullable<IArmorGetter> FarAwayModel { get; init; } = new FormLinkNullable<IArmorGetter>();
+        private IFormLinkNullable<IArmorGetter> _FarAwayModel = new FormLinkNullable<IArmorGetter>();
+        public IFormLinkNullable<IArmorGetter> FarAwayModel
+        {
+            get => _FarAwayModel;
+            set => _FarAwayModel = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IArmorGetter> INpcGetter.FarAwayModel => this.FarAwayModel;
         #endregion
         #region AttackRace
-        public IFormLinkNullable<IRaceGetter> AttackRace { get; init; } = new FormLinkNullable<IRaceGetter>();
+        private IFormLinkNullable<IRaceGetter> _AttackRace = new FormLinkNullable<IRaceGetter>();
+        public IFormLinkNullable<IRaceGetter> AttackRace
+        {
+            get => _AttackRace;
+            set => _AttackRace = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IRaceGetter> INpcGetter.AttackRace => this.AttackRace;
         #endregion
@@ -165,22 +200,42 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region SpectatorOverridePackageList
-        public IFormLinkNullable<IFormListGetter> SpectatorOverridePackageList { get; init; } = new FormLinkNullable<IFormListGetter>();
+        private IFormLinkNullable<IFormListGetter> _SpectatorOverridePackageList = new FormLinkNullable<IFormListGetter>();
+        public IFormLinkNullable<IFormListGetter> SpectatorOverridePackageList
+        {
+            get => _SpectatorOverridePackageList;
+            set => _SpectatorOverridePackageList = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFormListGetter> INpcGetter.SpectatorOverridePackageList => this.SpectatorOverridePackageList;
         #endregion
         #region ObserveDeadBodyOverridePackageList
-        public IFormLinkNullable<IFormListGetter> ObserveDeadBodyOverridePackageList { get; init; } = new FormLinkNullable<IFormListGetter>();
+        private IFormLinkNullable<IFormListGetter> _ObserveDeadBodyOverridePackageList = new FormLinkNullable<IFormListGetter>();
+        public IFormLinkNullable<IFormListGetter> ObserveDeadBodyOverridePackageList
+        {
+            get => _ObserveDeadBodyOverridePackageList;
+            set => _ObserveDeadBodyOverridePackageList = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFormListGetter> INpcGetter.ObserveDeadBodyOverridePackageList => this.ObserveDeadBodyOverridePackageList;
         #endregion
         #region GuardWarnOverridePackageList
-        public IFormLinkNullable<IFormListGetter> GuardWarnOverridePackageList { get; init; } = new FormLinkNullable<IFormListGetter>();
+        private IFormLinkNullable<IFormListGetter> _GuardWarnOverridePackageList = new FormLinkNullable<IFormListGetter>();
+        public IFormLinkNullable<IFormListGetter> GuardWarnOverridePackageList
+        {
+            get => _GuardWarnOverridePackageList;
+            set => _GuardWarnOverridePackageList = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFormListGetter> INpcGetter.GuardWarnOverridePackageList => this.GuardWarnOverridePackageList;
         #endregion
         #region CombatOverridePackageList
-        public IFormLinkNullable<IFormListGetter> CombatOverridePackageList { get; init; } = new FormLinkNullable<IFormListGetter>();
+        private IFormLinkNullable<IFormListGetter> _CombatOverridePackageList = new FormLinkNullable<IFormListGetter>();
+        public IFormLinkNullable<IFormListGetter> CombatOverridePackageList
+        {
+            get => _CombatOverridePackageList;
+            set => _CombatOverridePackageList = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFormListGetter> INpcGetter.CombatOverridePackageList => this.CombatOverridePackageList;
         #endregion
@@ -250,7 +305,12 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region Class
-        public IFormLink<IClassGetter> Class { get; init; } = new FormLink<IClassGetter>();
+        private IFormLink<IClassGetter> _Class = new FormLink<IClassGetter>();
+        public IFormLink<IClassGetter> Class
+        {
+            get => _Class;
+            set => _Class = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IClassGetter> INpcGetter.Class => this.Class;
         #endregion
@@ -318,17 +378,32 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region HairColor
-        public IFormLinkNullable<IColorRecordGetter> HairColor { get; init; } = new FormLinkNullable<IColorRecordGetter>();
+        private IFormLinkNullable<IColorRecordGetter> _HairColor = new FormLinkNullable<IColorRecordGetter>();
+        public IFormLinkNullable<IColorRecordGetter> HairColor
+        {
+            get => _HairColor;
+            set => _HairColor = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IColorRecordGetter> INpcGetter.HairColor => this.HairColor;
         #endregion
         #region CombatStyle
-        public IFormLinkNullable<ICombatStyleGetter> CombatStyle { get; init; } = new FormLinkNullable<ICombatStyleGetter>();
+        private IFormLinkNullable<ICombatStyleGetter> _CombatStyle = new FormLinkNullable<ICombatStyleGetter>();
+        public IFormLinkNullable<ICombatStyleGetter> CombatStyle
+        {
+            get => _CombatStyle;
+            set => _CombatStyle = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ICombatStyleGetter> INpcGetter.CombatStyle => this.CombatStyle;
         #endregion
         #region GiftFilter
-        public IFormLinkNullable<IFormListGetter> GiftFilter { get; init; } = new FormLinkNullable<IFormListGetter>();
+        private IFormLinkNullable<IFormListGetter> _GiftFilter = new FormLinkNullable<IFormListGetter>();
+        public IFormLinkNullable<IFormListGetter> GiftFilter
+        {
+            get => _GiftFilter;
+            set => _GiftFilter = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFormListGetter> INpcGetter.GiftFilter => this.GiftFilter;
         #endregion
@@ -357,27 +432,52 @@ namespace Mutagen.Bethesda.Skyrim
         IANpcSoundDefinitionGetter? INpcGetter.Sound => this.Sound;
         #endregion
         #region DefaultOutfit
-        public IFormLinkNullable<IOutfitGetter> DefaultOutfit { get; init; } = new FormLinkNullable<IOutfitGetter>();
+        private IFormLinkNullable<IOutfitGetter> _DefaultOutfit = new FormLinkNullable<IOutfitGetter>();
+        public IFormLinkNullable<IOutfitGetter> DefaultOutfit
+        {
+            get => _DefaultOutfit;
+            set => _DefaultOutfit = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IOutfitGetter> INpcGetter.DefaultOutfit => this.DefaultOutfit;
         #endregion
         #region SleepingOutfit
-        public IFormLinkNullable<IOutfitGetter> SleepingOutfit { get; init; } = new FormLinkNullable<IOutfitGetter>();
+        private IFormLinkNullable<IOutfitGetter> _SleepingOutfit = new FormLinkNullable<IOutfitGetter>();
+        public IFormLinkNullable<IOutfitGetter> SleepingOutfit
+        {
+            get => _SleepingOutfit;
+            set => _SleepingOutfit = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IOutfitGetter> INpcGetter.SleepingOutfit => this.SleepingOutfit;
         #endregion
         #region DefaultPackageList
-        public IFormLinkNullable<IFormListGetter> DefaultPackageList { get; init; } = new FormLinkNullable<IFormListGetter>();
+        private IFormLinkNullable<IFormListGetter> _DefaultPackageList = new FormLinkNullable<IFormListGetter>();
+        public IFormLinkNullable<IFormListGetter> DefaultPackageList
+        {
+            get => _DefaultPackageList;
+            set => _DefaultPackageList = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFormListGetter> INpcGetter.DefaultPackageList => this.DefaultPackageList;
         #endregion
         #region CrimeFaction
-        public IFormLinkNullable<IFactionGetter> CrimeFaction { get; init; } = new FormLinkNullable<IFactionGetter>();
+        private IFormLinkNullable<IFactionGetter> _CrimeFaction = new FormLinkNullable<IFactionGetter>();
+        public IFormLinkNullable<IFactionGetter> CrimeFaction
+        {
+            get => _CrimeFaction;
+            set => _CrimeFaction = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFactionGetter> INpcGetter.CrimeFaction => this.CrimeFaction;
         #endregion
         #region HeadTexture
-        public IFormLinkNullable<ITextureSetGetter> HeadTexture { get; init; } = new FormLinkNullable<ITextureSetGetter>();
+        private IFormLinkNullable<ITextureSetGetter> _HeadTexture = new FormLinkNullable<ITextureSetGetter>();
+        public IFormLinkNullable<ITextureSetGetter> HeadTexture
+        {
+            get => _HeadTexture;
+            set => _HeadTexture = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ITextureSetGetter> INpcGetter.HeadTexture => this.HeadTexture;
         #endregion

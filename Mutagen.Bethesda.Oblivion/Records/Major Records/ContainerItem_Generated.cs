@@ -40,7 +40,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Item
-        public IFormLink<IAItemGetter> Item { get; init; } = new FormLink<IAItemGetter>();
+        private IFormLink<IAItemGetter> _Item = new FormLink<IAItemGetter>();
+        public IFormLink<IAItemGetter> Item
+        {
+            get => _Item;
+            set => _Item = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IAItemGetter> IContainerItemGetter.Item => this.Item;
         #endregion

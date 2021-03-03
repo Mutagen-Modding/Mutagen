@@ -42,12 +42,22 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Npc
-        public IFormLink<INpcGetter> Npc { get; init; } = new FormLink<INpcGetter>();
+        private IFormLink<INpcGetter> _Npc = new FormLink<INpcGetter>();
+        public IFormLink<INpcGetter> Npc
+        {
+            get => _Npc;
+            set => _Npc = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<INpcGetter> INpcOwnerGetter.Npc => this.Npc;
         #endregion
         #region Global
-        public IFormLink<IGlobalGetter> Global { get; init; } = new FormLink<IGlobalGetter>();
+        private IFormLink<IGlobalGetter> _Global = new FormLink<IGlobalGetter>();
+        public IFormLink<IGlobalGetter> Global
+        {
+            get => _Global;
+            set => _Global = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IGlobalGetter> INpcOwnerGetter.Global => this.Global;
         #endregion

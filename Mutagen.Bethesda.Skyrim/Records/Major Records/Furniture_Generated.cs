@@ -164,7 +164,12 @@ namespace Mutagen.Bethesda.Skyrim
         Furniture.Flag? IFurnitureGetter.Flags => this.Flags;
         #endregion
         #region InteractionKeyword
-        public IFormLinkNullable<IKeywordGetter> InteractionKeyword { get; init; } = new FormLinkNullable<IKeywordGetter>();
+        private IFormLinkNullable<IKeywordGetter> _InteractionKeyword = new FormLinkNullable<IKeywordGetter>();
+        public IFormLinkNullable<IKeywordGetter> InteractionKeyword
+        {
+            get => _InteractionKeyword;
+            set => _InteractionKeyword = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IKeywordGetter> IFurnitureGetter.InteractionKeyword => this.InteractionKeyword;
         #endregion
@@ -180,7 +185,12 @@ namespace Mutagen.Bethesda.Skyrim
         IWorkbenchDataGetter? IFurnitureGetter.WorkbenchData => this.WorkbenchData;
         #endregion
         #region AssociatedSpell
-        public IFormLinkNullable<ISpellGetter> AssociatedSpell { get; init; } = new FormLinkNullable<ISpellGetter>();
+        private IFormLinkNullable<ISpellGetter> _AssociatedSpell = new FormLinkNullable<ISpellGetter>();
+        public IFormLinkNullable<ISpellGetter> AssociatedSpell
+        {
+            get => _AssociatedSpell;
+            set => _AssociatedSpell = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISpellGetter> IFurnitureGetter.AssociatedSpell => this.AssociatedSpell;
         #endregion

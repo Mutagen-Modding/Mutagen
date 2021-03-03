@@ -55,7 +55,12 @@ namespace Mutagen.Bethesda.Skyrim
         IEntryPointsGetter? IFurnitureMarkerGetter.DisabledEntryPoints => this.DisabledEntryPoints;
         #endregion
         #region MarkerKeyword
-        public IFormLinkNullable<IKeywordGetter> MarkerKeyword { get; init; } = new FormLinkNullable<IKeywordGetter>();
+        private IFormLinkNullable<IKeywordGetter> _MarkerKeyword = new FormLinkNullable<IKeywordGetter>();
+        public IFormLinkNullable<IKeywordGetter> MarkerKeyword
+        {
+            get => _MarkerKeyword;
+            set => _MarkerKeyword = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IKeywordGetter> IFurnitureMarkerGetter.MarkerKeyword => this.MarkerKeyword;
         #endregion

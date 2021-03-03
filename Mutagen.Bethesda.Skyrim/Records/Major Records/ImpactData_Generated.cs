@@ -40,12 +40,22 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Material
-        public IFormLink<IMaterialTypeGetter> Material { get; init; } = new FormLink<IMaterialTypeGetter>();
+        private IFormLink<IMaterialTypeGetter> _Material = new FormLink<IMaterialTypeGetter>();
+        public IFormLink<IMaterialTypeGetter> Material
+        {
+            get => _Material;
+            set => _Material = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IMaterialTypeGetter> IImpactDataGetter.Material => this.Material;
         #endregion
         #region Impact
-        public IFormLink<IImpactGetter> Impact { get; init; } = new FormLink<IImpactGetter>();
+        private IFormLink<IImpactGetter> _Impact = new FormLink<IImpactGetter>();
+        public IFormLink<IImpactGetter> Impact
+        {
+            get => _Impact;
+            set => _Impact = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IImpactGetter> IImpactDataGetter.Impact => this.Impact;
         #endregion

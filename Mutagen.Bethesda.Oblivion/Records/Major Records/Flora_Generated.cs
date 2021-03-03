@@ -73,12 +73,22 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #endregion
         #region Script
-        public IFormLinkNullable<IScriptGetter> Script { get; init; } = new FormLinkNullable<IScriptGetter>();
+        private IFormLinkNullable<IScriptGetter> _Script = new FormLinkNullable<IScriptGetter>();
+        public IFormLinkNullable<IScriptGetter> Script
+        {
+            get => _Script;
+            set => _Script = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IScriptGetter> IFloraGetter.Script => this.Script;
         #endregion
         #region Ingredient
-        public IFormLinkNullable<IIngredientGetter> Ingredient { get; init; } = new FormLinkNullable<IIngredientGetter>();
+        private IFormLinkNullable<IIngredientGetter> _Ingredient = new FormLinkNullable<IIngredientGetter>();
+        public IFormLinkNullable<IIngredientGetter> Ingredient
+        {
+            get => _Ingredient;
+            set => _Ingredient = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IIngredientGetter> IFloraGetter.Ingredient => this.Ingredient;
         #endregion

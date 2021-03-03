@@ -40,7 +40,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Destination
-        public IFormLink<IPlacedGetter> Destination { get; init; } = new FormLink<IPlacedGetter>();
+        private IFormLink<IPlacedGetter> _Destination = new FormLink<IPlacedGetter>();
+        public IFormLink<IPlacedGetter> Destination
+        {
+            get => _Destination;
+            set => _Destination = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPlacedGetter> ITeleportDestinationGetter.Destination => this.Destination;
         #endregion

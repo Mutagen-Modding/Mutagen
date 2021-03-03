@@ -41,7 +41,12 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Idle
-        public IFormLinkNullable<IIdleAnimationGetter> Idle { get; init; } = new FormLinkNullable<IIdleAnimationGetter>();
+        private IFormLinkNullable<IIdleAnimationGetter> _Idle = new FormLinkNullable<IIdleAnimationGetter>();
+        public IFormLinkNullable<IIdleAnimationGetter> Idle
+        {
+            get => _Idle;
+            set => _Idle = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IIdleAnimationGetter> IPackageEventGetter.Idle => this.Idle;
         #endregion

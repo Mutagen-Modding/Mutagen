@@ -60,17 +60,32 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region AmbientSound
-        public IFormLinkNullable<ISoundDescriptorGetter> AmbientSound { get; init; } = new FormLinkNullable<ISoundDescriptorGetter>();
+        private IFormLinkNullable<ISoundDescriptorGetter> _AmbientSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        public IFormLinkNullable<ISoundDescriptorGetter> AmbientSound
+        {
+            get => _AmbientSound;
+            set => _AmbientSound = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IAcousticSpaceGetter.AmbientSound => this.AmbientSound;
         #endregion
         #region UseSoundFromRegion
-        public IFormLinkNullable<IRegionGetter> UseSoundFromRegion { get; init; } = new FormLinkNullable<IRegionGetter>();
+        private IFormLinkNullable<IRegionGetter> _UseSoundFromRegion = new FormLinkNullable<IRegionGetter>();
+        public IFormLinkNullable<IRegionGetter> UseSoundFromRegion
+        {
+            get => _UseSoundFromRegion;
+            set => _UseSoundFromRegion = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IRegionGetter> IAcousticSpaceGetter.UseSoundFromRegion => this.UseSoundFromRegion;
         #endregion
         #region EnvironmentType
-        public IFormLinkNullable<IReverbParametersGetter> EnvironmentType { get; init; } = new FormLinkNullable<IReverbParametersGetter>();
+        private IFormLinkNullable<IReverbParametersGetter> _EnvironmentType = new FormLinkNullable<IReverbParametersGetter>();
+        public IFormLinkNullable<IReverbParametersGetter> EnvironmentType
+        {
+            get => _EnvironmentType;
+            set => _EnvironmentType = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IReverbParametersGetter> IAcousticSpaceGetter.EnvironmentType => this.EnvironmentType;
         #endregion

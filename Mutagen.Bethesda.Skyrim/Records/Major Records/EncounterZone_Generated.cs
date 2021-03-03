@@ -43,12 +43,22 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Owner
-        public IFormLink<IOwnerGetter> Owner { get; init; } = new FormLink<IOwnerGetter>();
+        private IFormLink<IOwnerGetter> _Owner = new FormLink<IOwnerGetter>();
+        public IFormLink<IOwnerGetter> Owner
+        {
+            get => _Owner;
+            set => _Owner = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IOwnerGetter> IEncounterZoneGetter.Owner => this.Owner;
         #endregion
         #region Location
-        public IFormLink<ILocationGetter> Location { get; init; } = new FormLink<ILocationGetter>();
+        private IFormLink<ILocationGetter> _Location = new FormLink<ILocationGetter>();
+        public IFormLink<ILocationGetter> Location
+        {
+            get => _Location;
+            set => _Location = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ILocationGetter> IEncounterZoneGetter.Location => this.Location;
         #endregion

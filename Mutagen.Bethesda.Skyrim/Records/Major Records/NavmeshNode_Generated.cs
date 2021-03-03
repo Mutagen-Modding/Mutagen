@@ -40,7 +40,12 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region NavMesh
-        public IFormLink<IANavigationMeshGetter> NavMesh { get; init; } = new FormLink<IANavigationMeshGetter>();
+        private IFormLink<IANavigationMeshGetter> _NavMesh = new FormLink<IANavigationMeshGetter>();
+        public IFormLink<IANavigationMeshGetter> NavMesh
+        {
+            get => _NavMesh;
+            set => _NavMesh = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IANavigationMeshGetter> INavmeshNodeGetter.NavMesh => this.NavMesh;
         #endregion

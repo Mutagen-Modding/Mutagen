@@ -42,7 +42,12 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region InheritsSoundsFrom
-        public IFormLinkNullable<INpcGetter> InheritsSoundsFrom { get; init; } = new FormLinkNullable<INpcGetter>();
+        private IFormLinkNullable<INpcGetter> _InheritsSoundsFrom = new FormLinkNullable<INpcGetter>();
+        public IFormLinkNullable<INpcGetter> InheritsSoundsFrom
+        {
+            get => _InheritsSoundsFrom;
+            set => _InheritsSoundsFrom = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<INpcGetter> INpcInheritSoundGetter.InheritsSoundsFrom => this.InheritsSoundsFrom;
         #endregion

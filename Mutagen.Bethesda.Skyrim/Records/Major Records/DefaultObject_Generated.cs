@@ -43,7 +43,12 @@ namespace Mutagen.Bethesda.Skyrim
         public RecordType Use { get; set; } = RecordType.Null;
         #endregion
         #region Object
-        public IFormLink<ISkyrimMajorRecordGetter> Object { get; init; } = new FormLink<ISkyrimMajorRecordGetter>();
+        private IFormLink<ISkyrimMajorRecordGetter> _Object = new FormLink<ISkyrimMajorRecordGetter>();
+        public IFormLink<ISkyrimMajorRecordGetter> Object
+        {
+            get => _Object;
+            set => _Object = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISkyrimMajorRecordGetter> IDefaultObjectGetter.Object => this.Object;
         #endregion

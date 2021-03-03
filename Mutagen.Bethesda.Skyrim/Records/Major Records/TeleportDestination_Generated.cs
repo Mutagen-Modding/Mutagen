@@ -40,7 +40,12 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Door
-        public IFormLink<IPlacedObjectGetter> Door { get; init; } = new FormLink<IPlacedObjectGetter>();
+        private IFormLink<IPlacedObjectGetter> _Door = new FormLink<IPlacedObjectGetter>();
+        public IFormLink<IPlacedObjectGetter> Door
+        {
+            get => _Door;
+            set => _Door = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPlacedObjectGetter> ITeleportDestinationGetter.Door => this.Door;
         #endregion

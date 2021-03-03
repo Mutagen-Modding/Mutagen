@@ -40,7 +40,12 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Texture
-        public IFormLink<ILandscapeTextureGetter> Texture { get; init; } = new FormLink<ILandscapeTextureGetter>();
+        private IFormLink<ILandscapeTextureGetter> _Texture = new FormLink<ILandscapeTextureGetter>();
+        public IFormLink<ILandscapeTextureGetter> Texture
+        {
+            get => _Texture;
+            set => _Texture = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ILandscapeTextureGetter> ILayerHeaderGetter.Texture => this.Texture;
         #endregion

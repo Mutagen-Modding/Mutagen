@@ -127,17 +127,32 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region TextureSet
-        public IFormLinkNullable<ITextureSetGetter> TextureSet { get; init; } = new FormLinkNullable<ITextureSetGetter>();
+        private IFormLinkNullable<ITextureSetGetter> _TextureSet = new FormLinkNullable<ITextureSetGetter>();
+        public IFormLinkNullable<ITextureSetGetter> TextureSet
+        {
+            get => _TextureSet;
+            set => _TextureSet = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ITextureSetGetter> IHeadPartGetter.TextureSet => this.TextureSet;
         #endregion
         #region Color
-        public IFormLinkNullable<IColorRecordGetter> Color { get; init; } = new FormLinkNullable<IColorRecordGetter>();
+        private IFormLinkNullable<IColorRecordGetter> _Color = new FormLinkNullable<IColorRecordGetter>();
+        public IFormLinkNullable<IColorRecordGetter> Color
+        {
+            get => _Color;
+            set => _Color = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IColorRecordGetter> IHeadPartGetter.Color => this.Color;
         #endregion
         #region ValidRaces
-        public IFormLinkNullable<IFormListGetter> ValidRaces { get; init; } = new FormLinkNullable<IFormListGetter>();
+        private IFormLinkNullable<IFormListGetter> _ValidRaces = new FormLinkNullable<IFormListGetter>();
+        public IFormLinkNullable<IFormListGetter> ValidRaces
+        {
+            get => _ValidRaces;
+            set => _ValidRaces = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFormListGetter> IHeadPartGetter.ValidRaces => this.ValidRaces;
         #endregion

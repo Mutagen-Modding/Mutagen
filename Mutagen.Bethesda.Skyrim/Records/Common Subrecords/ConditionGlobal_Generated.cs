@@ -42,7 +42,12 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region ComparisonValue
-        public IFormLink<IGlobalGetter> ComparisonValue { get; init; } = new FormLink<IGlobalGetter>();
+        private IFormLink<IGlobalGetter> _ComparisonValue = new FormLink<IGlobalGetter>();
+        public IFormLink<IGlobalGetter> ComparisonValue
+        {
+            get => _ComparisonValue;
+            set => _ComparisonValue = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IGlobalGetter> IConditionGlobalGetter.ComparisonValue => this.ComparisonValue;
         #endregion

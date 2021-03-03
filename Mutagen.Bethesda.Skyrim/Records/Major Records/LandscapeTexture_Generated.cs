@@ -43,12 +43,22 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region TextureSet
-        public IFormLinkNullable<ITextureSetGetter> TextureSet { get; init; } = new FormLinkNullable<ITextureSetGetter>();
+        private IFormLinkNullable<ITextureSetGetter> _TextureSet = new FormLinkNullable<ITextureSetGetter>();
+        public IFormLinkNullable<ITextureSetGetter> TextureSet
+        {
+            get => _TextureSet;
+            set => _TextureSet = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ITextureSetGetter> ILandscapeTextureGetter.TextureSet => this.TextureSet;
         #endregion
         #region MaterialType
-        public IFormLink<IMaterialTypeGetter> MaterialType { get; init; } = new FormLink<IMaterialTypeGetter>();
+        private IFormLink<IMaterialTypeGetter> _MaterialType = new FormLink<IMaterialTypeGetter>();
+        public IFormLink<IMaterialTypeGetter> MaterialType
+        {
+            get => _MaterialType;
+            set => _MaterialType = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IMaterialTypeGetter> ILandscapeTextureGetter.MaterialType => this.MaterialType;
         #endregion

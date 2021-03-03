@@ -40,7 +40,12 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Perk
-        public IFormLink<IPerkGetter> Perk { get; init; } = new FormLink<IPerkGetter>();
+        private IFormLink<IPerkGetter> _Perk = new FormLink<IPerkGetter>();
+        public IFormLink<IPerkGetter> Perk
+        {
+            get => _Perk;
+            set => _Perk = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPerkGetter> IActorValuePerkNodeGetter.Perk => this.Perk;
         #endregion
@@ -76,7 +81,12 @@ namespace Mutagen.Bethesda.Skyrim
         Single? IActorValuePerkNodeGetter.VerticalPosition => this.VerticalPosition;
         #endregion
         #region AssociatedSkill
-        public IFormLinkNullable<IActorValueInformationGetter> AssociatedSkill { get; init; } = new FormLinkNullable<IActorValueInformationGetter>();
+        private IFormLinkNullable<IActorValueInformationGetter> _AssociatedSkill = new FormLinkNullable<IActorValueInformationGetter>();
+        public IFormLinkNullable<IActorValueInformationGetter> AssociatedSkill
+        {
+            get => _AssociatedSkill;
+            set => _AssociatedSkill = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IActorValueInformationGetter> IActorValuePerkNodeGetter.AssociatedSkill => this.AssociatedSkill;
         #endregion

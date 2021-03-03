@@ -40,7 +40,12 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Item
-        public IFormLink<IItemGetter> Item { get; init; } = new FormLink<IItemGetter>();
+        private IFormLink<IItemGetter> _Item = new FormLink<IItemGetter>();
+        public IFormLink<IItemGetter> Item
+        {
+            get => _Item;
+            set => _Item = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IItemGetter> IContainerItemGetter.Item => this.Item;
         #endregion

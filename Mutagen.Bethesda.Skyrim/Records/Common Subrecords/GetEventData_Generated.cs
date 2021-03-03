@@ -51,7 +51,12 @@ namespace Mutagen.Bethesda.Skyrim
         public UInt16 EventMember { get; set; } = default;
         #endregion
         #region Parameter3
-        public IFormLink<ISkyrimMajorRecordGetter> Parameter3 { get; init; } = new FormLink<ISkyrimMajorRecordGetter>();
+        private IFormLink<ISkyrimMajorRecordGetter> _Parameter3 = new FormLink<ISkyrimMajorRecordGetter>();
+        public IFormLink<ISkyrimMajorRecordGetter> Parameter3
+        {
+            get => _Parameter3;
+            set => _Parameter3 = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISkyrimMajorRecordGetter> IGetEventDataGetter.Parameter3 => this.Parameter3;
         #endregion
@@ -59,7 +64,12 @@ namespace Mutagen.Bethesda.Skyrim
         public Condition.RunOnType RunOnType { get; set; } = default;
         #endregion
         #region Reference
-        public IFormLink<ISkyrimMajorRecordGetter> Reference { get; init; } = new FormLink<ISkyrimMajorRecordGetter>();
+        private IFormLink<ISkyrimMajorRecordGetter> _Reference = new FormLink<ISkyrimMajorRecordGetter>();
+        public IFormLink<ISkyrimMajorRecordGetter> Reference
+        {
+            get => _Reference;
+            set => _Reference = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISkyrimMajorRecordGetter> IGetEventDataGetter.Reference => this.Reference;
         #endregion

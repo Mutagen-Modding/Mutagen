@@ -42,7 +42,12 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Faction
-        public IFormLink<IFactionGetter> Faction { get; init; } = new FormLink<IFactionGetter>();
+        private IFormLink<IFactionGetter> _Faction = new FormLink<IFactionGetter>();
+        public IFormLink<IFactionGetter> Faction
+        {
+            get => _Faction;
+            set => _Faction = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IFactionGetter> IFactionOwnerGetter.Faction => this.Faction;
         #endregion

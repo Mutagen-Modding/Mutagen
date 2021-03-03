@@ -114,7 +114,12 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region Topic
-        public IFormLinkNullable<IDialogTopicGetter> Topic { get; init; } = new FormLinkNullable<IDialogTopicGetter>();
+        private IFormLinkNullable<IDialogTopicGetter> _Topic = new FormLinkNullable<IDialogTopicGetter>();
+        public IFormLinkNullable<IDialogTopicGetter> Topic
+        {
+            get => _Topic;
+            set => _Topic = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IDialogTopicGetter> ISceneActionGetter.Topic => this.Topic;
         #endregion

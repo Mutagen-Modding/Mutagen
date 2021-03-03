@@ -100,12 +100,22 @@ namespace Mutagen.Bethesda.Skyrim
         public UInt16 ExplodableDebrisCount { get; set; } = default;
         #endregion
         #region ExplodableDebris
-        public IFormLink<IDebrisGetter> ExplodableDebris { get; init; } = new FormLink<IDebrisGetter>();
+        private IFormLink<IDebrisGetter> _ExplodableDebris = new FormLink<IDebrisGetter>();
+        public IFormLink<IDebrisGetter> ExplodableDebris
+        {
+            get => _ExplodableDebris;
+            set => _ExplodableDebris = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IDebrisGetter> IBodyPartGetter.ExplodableDebris => this.ExplodableDebris;
         #endregion
         #region ExplodableExplosion
-        public IFormLink<IExplosionGetter> ExplodableExplosion { get; init; } = new FormLink<IExplosionGetter>();
+        private IFormLink<IExplosionGetter> _ExplodableExplosion = new FormLink<IExplosionGetter>();
+        public IFormLink<IExplosionGetter> ExplodableExplosion
+        {
+            get => _ExplodableExplosion;
+            set => _ExplodableExplosion = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IExplosionGetter> IBodyPartGetter.ExplodableExplosion => this.ExplodableExplosion;
         #endregion
@@ -119,12 +129,22 @@ namespace Mutagen.Bethesda.Skyrim
         public Int32 SeverableDebrisCount { get; set; } = default;
         #endregion
         #region SeverableDebris
-        public IFormLink<IDebrisGetter> SeverableDebris { get; init; } = new FormLink<IDebrisGetter>();
+        private IFormLink<IDebrisGetter> _SeverableDebris = new FormLink<IDebrisGetter>();
+        public IFormLink<IDebrisGetter> SeverableDebris
+        {
+            get => _SeverableDebris;
+            set => _SeverableDebris = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IDebrisGetter> IBodyPartGetter.SeverableDebris => this.SeverableDebris;
         #endregion
         #region SeverableExplosion
-        public IFormLink<IExplosionGetter> SeverableExplosion { get; init; } = new FormLink<IExplosionGetter>();
+        private IFormLink<IExplosionGetter> _SeverableExplosion = new FormLink<IExplosionGetter>();
+        public IFormLink<IExplosionGetter> SeverableExplosion
+        {
+            get => _SeverableExplosion;
+            set => _SeverableExplosion = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IExplosionGetter> IBodyPartGetter.SeverableExplosion => this.SeverableExplosion;
         #endregion
@@ -138,12 +158,22 @@ namespace Mutagen.Bethesda.Skyrim
         public P3Float GoreRotation { get; set; } = default;
         #endregion
         #region SeverableImpactData
-        public IFormLink<IImpactDataSetGetter> SeverableImpactData { get; init; } = new FormLink<IImpactDataSetGetter>();
+        private IFormLink<IImpactDataSetGetter> _SeverableImpactData = new FormLink<IImpactDataSetGetter>();
+        public IFormLink<IImpactDataSetGetter> SeverableImpactData
+        {
+            get => _SeverableImpactData;
+            set => _SeverableImpactData = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IImpactDataSetGetter> IBodyPartGetter.SeverableImpactData => this.SeverableImpactData;
         #endregion
         #region ExplodableImpactData
-        public IFormLink<IImpactDataSetGetter> ExplodableImpactData { get; init; } = new FormLink<IImpactDataSetGetter>();
+        private IFormLink<IImpactDataSetGetter> _ExplodableImpactData = new FormLink<IImpactDataSetGetter>();
+        public IFormLink<IImpactDataSetGetter> ExplodableImpactData
+        {
+            get => _ExplodableImpactData;
+            set => _ExplodableImpactData = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IImpactDataSetGetter> IBodyPartGetter.ExplodableImpactData => this.ExplodableImpactData;
         #endregion

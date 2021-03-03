@@ -40,12 +40,22 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Direct
-        public IFormLink<IPlaceGetter> Direct { get; init; } = new FormLink<IPlaceGetter>();
+        private IFormLink<IPlaceGetter> _Direct = new FormLink<IPlaceGetter>();
+        public IFormLink<IPlaceGetter> Direct
+        {
+            get => _Direct;
+            set => _Direct = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPlaceGetter> ILoadScreenLocationGetter.Direct => this.Direct;
         #endregion
         #region Indirect
-        public IFormLink<IWorldspaceGetter> Indirect { get; init; } = new FormLink<IWorldspaceGetter>();
+        private IFormLink<IWorldspaceGetter> _Indirect = new FormLink<IWorldspaceGetter>();
+        public IFormLink<IWorldspaceGetter> Indirect
+        {
+            get => _Indirect;
+            set => _Indirect = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IWorldspaceGetter> ILoadScreenLocationGetter.Indirect => this.Indirect;
         #endregion

@@ -101,7 +101,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region ImageSpaceModifier
-        public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier { get; init; } = new FormLinkNullable<IImageSpaceAdapterGetter>();
+        private IFormLinkNullable<IImageSpaceAdapterGetter> _ImageSpaceModifier = new FormLinkNullable<IImageSpaceAdapterGetter>();
+        public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier
+        {
+            get => _ImageSpaceModifier;
+            set => _ImageSpaceModifier = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IImageSpaceAdapterGetter> ICameraShotGetter.ImageSpaceModifier => this.ImageSpaceModifier;
         #endregion

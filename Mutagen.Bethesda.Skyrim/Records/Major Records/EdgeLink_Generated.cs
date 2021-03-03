@@ -43,7 +43,12 @@ namespace Mutagen.Bethesda.Skyrim
         public Int32 Unknown { get; set; } = default;
         #endregion
         #region Mesh
-        public IFormLink<IANavigationMeshGetter> Mesh { get; init; } = new FormLink<IANavigationMeshGetter>();
+        private IFormLink<IANavigationMeshGetter> _Mesh = new FormLink<IANavigationMeshGetter>();
+        public IFormLink<IANavigationMeshGetter> Mesh
+        {
+            get => _Mesh;
+            set => _Mesh = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IANavigationMeshGetter> IEdgeLinkGetter.Mesh => this.Mesh;
         #endregion

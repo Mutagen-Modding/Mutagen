@@ -46,7 +46,12 @@ namespace Mutagen.Bethesda.Skyrim
         public Int16 Unknown { get; set; } = default;
         #endregion
         #region Reference
-        public IFormLink<INpcSpawnGetter> Reference { get; init; } = new FormLink<INpcSpawnGetter>();
+        private IFormLink<INpcSpawnGetter> _Reference = new FormLink<INpcSpawnGetter>();
+        public IFormLink<INpcSpawnGetter> Reference
+        {
+            get => _Reference;
+            set => _Reference = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<INpcSpawnGetter> ILeveledNpcEntryDataGetter.Reference => this.Reference;
         #endregion

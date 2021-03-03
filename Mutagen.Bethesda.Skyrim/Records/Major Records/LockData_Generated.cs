@@ -54,7 +54,12 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte> ILockDataGetter.Unused => this.Unused;
         #endregion
         #region Key
-        public IFormLink<IKeyGetter> Key { get; init; } = new FormLink<IKeyGetter>();
+        private IFormLink<IKeyGetter> _Key = new FormLink<IKeyGetter>();
+        public IFormLink<IKeyGetter> Key
+        {
+            get => _Key;
+            set => _Key = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IKeyGetter> ILockDataGetter.Key => this.Key;
         #endregion

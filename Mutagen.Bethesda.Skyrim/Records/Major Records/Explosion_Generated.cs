@@ -119,42 +119,82 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region ObjectEffect
-        public IFormLinkNullable<IEffectRecordGetter> ObjectEffect { get; init; } = new FormLinkNullable<IEffectRecordGetter>();
+        private IFormLinkNullable<IEffectRecordGetter> _ObjectEffect = new FormLinkNullable<IEffectRecordGetter>();
+        public IFormLinkNullable<IEffectRecordGetter> ObjectEffect
+        {
+            get => _ObjectEffect;
+            set => _ObjectEffect = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEffectRecordGetter> IExplosionGetter.ObjectEffect => this.ObjectEffect;
         #endregion
         #region ImageSpaceModifier
-        public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier { get; init; } = new FormLinkNullable<IImageSpaceAdapterGetter>();
+        private IFormLinkNullable<IImageSpaceAdapterGetter> _ImageSpaceModifier = new FormLinkNullable<IImageSpaceAdapterGetter>();
+        public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier
+        {
+            get => _ImageSpaceModifier;
+            set => _ImageSpaceModifier = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IImageSpaceAdapterGetter> IExplosionGetter.ImageSpaceModifier => this.ImageSpaceModifier;
         #endregion
         #region Light
-        public IFormLink<ILightGetter> Light { get; init; } = new FormLink<ILightGetter>();
+        private IFormLink<ILightGetter> _Light = new FormLink<ILightGetter>();
+        public IFormLink<ILightGetter> Light
+        {
+            get => _Light;
+            set => _Light = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ILightGetter> IExplosionGetter.Light => this.Light;
         #endregion
         #region Sound1
-        public IFormLink<ISoundDescriptorGetter> Sound1 { get; init; } = new FormLink<ISoundDescriptorGetter>();
+        private IFormLink<ISoundDescriptorGetter> _Sound1 = new FormLink<ISoundDescriptorGetter>();
+        public IFormLink<ISoundDescriptorGetter> Sound1
+        {
+            get => _Sound1;
+            set => _Sound1 = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISoundDescriptorGetter> IExplosionGetter.Sound1 => this.Sound1;
         #endregion
         #region Sound2
-        public IFormLink<ISoundDescriptorGetter> Sound2 { get; init; } = new FormLink<ISoundDescriptorGetter>();
+        private IFormLink<ISoundDescriptorGetter> _Sound2 = new FormLink<ISoundDescriptorGetter>();
+        public IFormLink<ISoundDescriptorGetter> Sound2
+        {
+            get => _Sound2;
+            set => _Sound2 = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISoundDescriptorGetter> IExplosionGetter.Sound2 => this.Sound2;
         #endregion
         #region ImpactDataSet
-        public IFormLink<IImpactDataSetGetter> ImpactDataSet { get; init; } = new FormLink<IImpactDataSetGetter>();
+        private IFormLink<IImpactDataSetGetter> _ImpactDataSet = new FormLink<IImpactDataSetGetter>();
+        public IFormLink<IImpactDataSetGetter> ImpactDataSet
+        {
+            get => _ImpactDataSet;
+            set => _ImpactDataSet = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IImpactDataSetGetter> IExplosionGetter.ImpactDataSet => this.ImpactDataSet;
         #endregion
         #region PlacedObject
-        public IFormLink<ISkyrimMajorRecordGetter> PlacedObject { get; init; } = new FormLink<ISkyrimMajorRecordGetter>();
+        private IFormLink<ISkyrimMajorRecordGetter> _PlacedObject = new FormLink<ISkyrimMajorRecordGetter>();
+        public IFormLink<ISkyrimMajorRecordGetter> PlacedObject
+        {
+            get => _PlacedObject;
+            set => _PlacedObject = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISkyrimMajorRecordGetter> IExplosionGetter.PlacedObject => this.PlacedObject;
         #endregion
         #region SpawnProjectile
-        public IFormLink<IProjectileGetter> SpawnProjectile { get; init; } = new FormLink<IProjectileGetter>();
+        private IFormLink<IProjectileGetter> _SpawnProjectile = new FormLink<IProjectileGetter>();
+        public IFormLink<IProjectileGetter> SpawnProjectile
+        {
+            get => _SpawnProjectile;
+            set => _SpawnProjectile = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IProjectileGetter> IExplosionGetter.SpawnProjectile => this.SpawnProjectile;
         #endregion

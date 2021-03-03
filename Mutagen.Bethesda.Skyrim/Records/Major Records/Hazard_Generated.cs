@@ -108,7 +108,12 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region ImageSpaceModifier
-        public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier { get; init; } = new FormLinkNullable<IImageSpaceAdapterGetter>();
+        private IFormLinkNullable<IImageSpaceAdapterGetter> _ImageSpaceModifier = new FormLinkNullable<IImageSpaceAdapterGetter>();
+        public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier
+        {
+            get => _ImageSpaceModifier;
+            set => _ImageSpaceModifier = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IImageSpaceAdapterGetter> IHazardGetter.ImageSpaceModifier => this.ImageSpaceModifier;
         #endregion
@@ -131,22 +136,42 @@ namespace Mutagen.Bethesda.Skyrim
         public Hazard.Flag Flags { get; set; } = default;
         #endregion
         #region Spell
-        public IFormLink<IEffectRecordGetter> Spell { get; init; } = new FormLink<IEffectRecordGetter>();
+        private IFormLink<IEffectRecordGetter> _Spell = new FormLink<IEffectRecordGetter>();
+        public IFormLink<IEffectRecordGetter> Spell
+        {
+            get => _Spell;
+            set => _Spell = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IEffectRecordGetter> IHazardGetter.Spell => this.Spell;
         #endregion
         #region Light
-        public IFormLink<ILightGetter> Light { get; init; } = new FormLink<ILightGetter>();
+        private IFormLink<ILightGetter> _Light = new FormLink<ILightGetter>();
+        public IFormLink<ILightGetter> Light
+        {
+            get => _Light;
+            set => _Light = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ILightGetter> IHazardGetter.Light => this.Light;
         #endregion
         #region ImpactDataSet
-        public IFormLink<IImpactDataSetGetter> ImpactDataSet { get; init; } = new FormLink<IImpactDataSetGetter>();
+        private IFormLink<IImpactDataSetGetter> _ImpactDataSet = new FormLink<IImpactDataSetGetter>();
+        public IFormLink<IImpactDataSetGetter> ImpactDataSet
+        {
+            get => _ImpactDataSet;
+            set => _ImpactDataSet = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IImpactDataSetGetter> IHazardGetter.ImpactDataSet => this.ImpactDataSet;
         #endregion
         #region Sound
-        public IFormLink<ISoundDescriptorGetter> Sound { get; init; } = new FormLink<ISoundDescriptorGetter>();
+        private IFormLink<ISoundDescriptorGetter> _Sound = new FormLink<ISoundDescriptorGetter>();
+        public IFormLink<ISoundDescriptorGetter> Sound
+        {
+            get => _Sound;
+            set => _Sound = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISoundDescriptorGetter> IHazardGetter.Sound => this.Sound;
         #endregion

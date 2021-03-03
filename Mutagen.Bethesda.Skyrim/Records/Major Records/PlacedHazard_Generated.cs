@@ -43,7 +43,12 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Hazard
-        public IFormLink<IHazardGetter> Hazard { get; init; } = new FormLink<IHazardGetter>();
+        private IFormLink<IHazardGetter> _Hazard = new FormLink<IHazardGetter>();
+        public IFormLink<IHazardGetter> Hazard
+        {
+            get => _Hazard;
+            set => _Hazard = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IHazardGetter> IPlacedHazardGetter.Hazard => this.Hazard;
         #endregion

@@ -40,7 +40,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Object
-        public IFormLink<IOblivionMajorRecordGetter> Object { get; init; } = new FormLink<IOblivionMajorRecordGetter>();
+        private IFormLink<IOblivionMajorRecordGetter> _Object = new FormLink<IOblivionMajorRecordGetter>();
+        public IFormLink<IOblivionMajorRecordGetter> Object
+        {
+            get => _Object;
+            set => _Object = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IOblivionMajorRecordGetter> IRegionObjectGetter.Object => this.Object;
         #endregion

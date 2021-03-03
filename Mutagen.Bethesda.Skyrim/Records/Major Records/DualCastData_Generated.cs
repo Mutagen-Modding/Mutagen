@@ -60,27 +60,52 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region Projectile
-        public IFormLink<IProjectileGetter> Projectile { get; init; } = new FormLink<IProjectileGetter>();
+        private IFormLink<IProjectileGetter> _Projectile = new FormLink<IProjectileGetter>();
+        public IFormLink<IProjectileGetter> Projectile
+        {
+            get => _Projectile;
+            set => _Projectile = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IProjectileGetter> IDualCastDataGetter.Projectile => this.Projectile;
         #endregion
         #region Explosion
-        public IFormLink<IExplosionGetter> Explosion { get; init; } = new FormLink<IExplosionGetter>();
+        private IFormLink<IExplosionGetter> _Explosion = new FormLink<IExplosionGetter>();
+        public IFormLink<IExplosionGetter> Explosion
+        {
+            get => _Explosion;
+            set => _Explosion = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IExplosionGetter> IDualCastDataGetter.Explosion => this.Explosion;
         #endregion
         #region EffectShader
-        public IFormLink<IEffectShaderGetter> EffectShader { get; init; } = new FormLink<IEffectShaderGetter>();
+        private IFormLink<IEffectShaderGetter> _EffectShader = new FormLink<IEffectShaderGetter>();
+        public IFormLink<IEffectShaderGetter> EffectShader
+        {
+            get => _EffectShader;
+            set => _EffectShader = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IEffectShaderGetter> IDualCastDataGetter.EffectShader => this.EffectShader;
         #endregion
         #region HitEffectArt
-        public IFormLink<IArtObjectGetter> HitEffectArt { get; init; } = new FormLink<IArtObjectGetter>();
+        private IFormLink<IArtObjectGetter> _HitEffectArt = new FormLink<IArtObjectGetter>();
+        public IFormLink<IArtObjectGetter> HitEffectArt
+        {
+            get => _HitEffectArt;
+            set => _HitEffectArt = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IArtObjectGetter> IDualCastDataGetter.HitEffectArt => this.HitEffectArt;
         #endregion
         #region ImpactDataSet
-        public IFormLink<IImpactDataSetGetter> ImpactDataSet { get; init; } = new FormLink<IImpactDataSetGetter>();
+        private IFormLink<IImpactDataSetGetter> _ImpactDataSet = new FormLink<IImpactDataSetGetter>();
+        public IFormLink<IImpactDataSetGetter> ImpactDataSet
+        {
+            get => _ImpactDataSet;
+            set => _ImpactDataSet = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IImpactDataSetGetter> IDualCastDataGetter.ImpactDataSet => this.ImpactDataSet;
         #endregion

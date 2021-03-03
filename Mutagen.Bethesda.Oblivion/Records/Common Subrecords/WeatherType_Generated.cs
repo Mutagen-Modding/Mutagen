@@ -40,7 +40,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Weather
-        public IFormLink<IWeatherGetter> Weather { get; init; } = new FormLink<IWeatherGetter>();
+        private IFormLink<IWeatherGetter> _Weather = new FormLink<IWeatherGetter>();
+        public IFormLink<IWeatherGetter> Weather
+        {
+            get => _Weather;
+            set => _Weather = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IWeatherGetter> IWeatherTypeGetter.Weather => this.Weather;
         #endregion

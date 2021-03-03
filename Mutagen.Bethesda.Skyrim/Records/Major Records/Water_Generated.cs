@@ -110,22 +110,42 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? IWaterGetter.MNAM => this.MNAM;
         #endregion
         #region Material
-        public IFormLinkNullable<IMaterialTypeGetter> Material { get; init; } = new FormLinkNullable<IMaterialTypeGetter>();
+        private IFormLinkNullable<IMaterialTypeGetter> _Material = new FormLinkNullable<IMaterialTypeGetter>();
+        public IFormLinkNullable<IMaterialTypeGetter> Material
+        {
+            get => _Material;
+            set => _Material = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMaterialTypeGetter> IWaterGetter.Material => this.Material;
         #endregion
         #region OpenSound
-        public IFormLinkNullable<ISoundDescriptorGetter> OpenSound { get; init; } = new FormLinkNullable<ISoundDescriptorGetter>();
+        private IFormLinkNullable<ISoundDescriptorGetter> _OpenSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        public IFormLinkNullable<ISoundDescriptorGetter> OpenSound
+        {
+            get => _OpenSound;
+            set => _OpenSound = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IWaterGetter.OpenSound => this.OpenSound;
         #endregion
         #region Spell
-        public IFormLinkNullable<ISpellGetter> Spell { get; init; } = new FormLinkNullable<ISpellGetter>();
+        private IFormLinkNullable<ISpellGetter> _Spell = new FormLinkNullable<ISpellGetter>();
+        public IFormLinkNullable<ISpellGetter> Spell
+        {
+            get => _Spell;
+            set => _Spell = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISpellGetter> IWaterGetter.Spell => this.Spell;
         #endregion
         #region ImageSpace
-        public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace { get; init; } = new FormLinkNullable<IImageSpaceAdapterGetter>();
+        private IFormLinkNullable<IImageSpaceAdapterGetter> _ImageSpace = new FormLinkNullable<IImageSpaceAdapterGetter>();
+        public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace
+        {
+            get => _ImageSpace;
+            set => _ImageSpace = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IImageSpaceAdapterGetter> IWaterGetter.ImageSpace => this.ImageSpace;
         #endregion

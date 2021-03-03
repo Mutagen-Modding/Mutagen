@@ -51,7 +51,12 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? IDialogResponsesUnknownDataGetter.SCHR => this.SCHR;
         #endregion
         #region QNAM
-        public IFormLinkNullable<ISkyrimMajorRecordGetter> QNAM { get; init; } = new FormLinkNullable<ISkyrimMajorRecordGetter>();
+        private IFormLinkNullable<ISkyrimMajorRecordGetter> _QNAM = new FormLinkNullable<ISkyrimMajorRecordGetter>();
+        public IFormLinkNullable<ISkyrimMajorRecordGetter> QNAM
+        {
+            get => _QNAM;
+            set => _QNAM = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISkyrimMajorRecordGetter> IDialogResponsesUnknownDataGetter.QNAM => this.QNAM;
         #endregion

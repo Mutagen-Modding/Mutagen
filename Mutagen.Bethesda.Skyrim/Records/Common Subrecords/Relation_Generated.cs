@@ -40,7 +40,12 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Target
-        public IFormLink<IRelatableGetter> Target { get; init; } = new FormLink<IRelatableGetter>();
+        private IFormLink<IRelatableGetter> _Target = new FormLink<IRelatableGetter>();
+        public IFormLink<IRelatableGetter> Target
+        {
+            get => _Target;
+            set => _Target = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IRelatableGetter> IRelationGetter.Target => this.Target;
         #endregion

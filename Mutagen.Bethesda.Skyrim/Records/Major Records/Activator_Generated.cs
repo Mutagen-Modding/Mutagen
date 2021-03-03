@@ -154,17 +154,32 @@ namespace Mutagen.Bethesda.Skyrim
         Color? IActivatorGetter.MarkerColor => this.MarkerColor;
         #endregion
         #region LoopingSound
-        public IFormLinkNullable<ISoundDescriptorGetter> LoopingSound { get; init; } = new FormLinkNullable<ISoundDescriptorGetter>();
+        private IFormLinkNullable<ISoundDescriptorGetter> _LoopingSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        public IFormLinkNullable<ISoundDescriptorGetter> LoopingSound
+        {
+            get => _LoopingSound;
+            set => _LoopingSound = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IActivatorGetter.LoopingSound => this.LoopingSound;
         #endregion
         #region ActivationSound
-        public IFormLinkNullable<ISoundDescriptorGetter> ActivationSound { get; init; } = new FormLinkNullable<ISoundDescriptorGetter>();
+        private IFormLinkNullable<ISoundDescriptorGetter> _ActivationSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        public IFormLinkNullable<ISoundDescriptorGetter> ActivationSound
+        {
+            get => _ActivationSound;
+            set => _ActivationSound = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IActivatorGetter.ActivationSound => this.ActivationSound;
         #endregion
         #region WaterType
-        public IFormLinkNullable<IWaterGetter> WaterType { get; init; } = new FormLinkNullable<IWaterGetter>();
+        private IFormLinkNullable<IWaterGetter> _WaterType = new FormLinkNullable<IWaterGetter>();
+        public IFormLinkNullable<IWaterGetter> WaterType
+        {
+            get => _WaterType;
+            set => _WaterType = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IWaterGetter> IActivatorGetter.WaterType => this.WaterType;
         #endregion
@@ -179,7 +194,12 @@ namespace Mutagen.Bethesda.Skyrim
         Activator.Flag? IActivatorGetter.Flags => this.Flags;
         #endregion
         #region InteractionKeyword
-        public IFormLinkNullable<IKeywordGetter> InteractionKeyword { get; init; } = new FormLinkNullable<IKeywordGetter>();
+        private IFormLinkNullable<IKeywordGetter> _InteractionKeyword = new FormLinkNullable<IKeywordGetter>();
+        public IFormLinkNullable<IKeywordGetter> InteractionKeyword
+        {
+            get => _InteractionKeyword;
+            set => _InteractionKeyword = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IKeywordGetter> IActivatorGetter.InteractionKeyword => this.InteractionKeyword;
         #endregion

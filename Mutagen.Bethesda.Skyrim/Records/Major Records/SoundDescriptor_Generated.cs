@@ -54,12 +54,22 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? ISoundDescriptorGetter.CNAM => this.CNAM;
         #endregion
         #region Category
-        public IFormLinkNullable<ISoundCategoryGetter> Category { get; init; } = new FormLinkNullable<ISoundCategoryGetter>();
+        private IFormLinkNullable<ISoundCategoryGetter> _Category = new FormLinkNullable<ISoundCategoryGetter>();
+        public IFormLinkNullable<ISoundCategoryGetter> Category
+        {
+            get => _Category;
+            set => _Category = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundCategoryGetter> ISoundDescriptorGetter.Category => this.Category;
         #endregion
         #region AlternateSoundFor
-        public IFormLinkNullable<ISoundDescriptorGetter> AlternateSoundFor { get; init; } = new FormLinkNullable<ISoundDescriptorGetter>();
+        private IFormLinkNullable<ISoundDescriptorGetter> _AlternateSoundFor = new FormLinkNullable<ISoundDescriptorGetter>();
+        public IFormLinkNullable<ISoundDescriptorGetter> AlternateSoundFor
+        {
+            get => _AlternateSoundFor;
+            set => _AlternateSoundFor = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> ISoundDescriptorGetter.AlternateSoundFor => this.AlternateSoundFor;
         #endregion
@@ -78,7 +88,12 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region OutputModel
-        public IFormLinkNullable<ISoundOutputModelGetter> OutputModel { get; init; } = new FormLinkNullable<ISoundOutputModelGetter>();
+        private IFormLinkNullable<ISoundOutputModelGetter> _OutputModel = new FormLinkNullable<ISoundOutputModelGetter>();
+        public IFormLinkNullable<ISoundOutputModelGetter> OutputModel
+        {
+            get => _OutputModel;
+            set => _OutputModel = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundOutputModelGetter> ISoundDescriptorGetter.OutputModel => this.OutputModel;
         #endregion

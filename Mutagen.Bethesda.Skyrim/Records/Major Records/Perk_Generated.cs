@@ -135,7 +135,12 @@ namespace Mutagen.Bethesda.Skyrim
         public Boolean Hidden { get; set; } = default;
         #endregion
         #region NextPerk
-        public IFormLinkNullable<IPerkGetter> NextPerk { get; init; } = new FormLinkNullable<IPerkGetter>();
+        private IFormLinkNullable<IPerkGetter> _NextPerk = new FormLinkNullable<IPerkGetter>();
+        public IFormLinkNullable<IPerkGetter> NextPerk
+        {
+            get => _NextPerk;
+            set => _NextPerk = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IPerkGetter> IPerkGetter.NextPerk => this.NextPerk;
         #endregion

@@ -40,7 +40,12 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Weather
-        public IFormLink<IWeatherGetter> Weather { get; init; } = new FormLink<IWeatherGetter>();
+        private IFormLink<IWeatherGetter> _Weather = new FormLink<IWeatherGetter>();
+        public IFormLink<IWeatherGetter> Weather
+        {
+            get => _Weather;
+            set => _Weather = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IWeatherGetter> IWeatherTypeGetter.Weather => this.Weather;
         #endregion
@@ -48,7 +53,12 @@ namespace Mutagen.Bethesda.Skyrim
         public Int32 Chance { get; set; } = default;
         #endregion
         #region Global
-        public IFormLink<IGlobalGetter> Global { get; init; } = new FormLink<IGlobalGetter>();
+        private IFormLink<IGlobalGetter> _Global = new FormLink<IGlobalGetter>();
+        public IFormLink<IGlobalGetter> Global
+        {
+            get => _Global;
+            set => _Global = value.AsSetter();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IGlobalGetter> IWeatherTypeGetter.Global => this.Global;
         #endregion

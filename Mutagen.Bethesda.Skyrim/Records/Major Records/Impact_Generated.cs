@@ -93,27 +93,52 @@ namespace Mutagen.Bethesda.Skyrim
         IDecalGetter? IImpactGetter.Decal => this.Decal;
         #endregion
         #region TextureSet
-        public IFormLinkNullable<ITextureSetGetter> TextureSet { get; init; } = new FormLinkNullable<ITextureSetGetter>();
+        private IFormLinkNullable<ITextureSetGetter> _TextureSet = new FormLinkNullable<ITextureSetGetter>();
+        public IFormLinkNullable<ITextureSetGetter> TextureSet
+        {
+            get => _TextureSet;
+            set => _TextureSet = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ITextureSetGetter> IImpactGetter.TextureSet => this.TextureSet;
         #endregion
         #region SecondaryTextureSet
-        public IFormLinkNullable<ITextureSetGetter> SecondaryTextureSet { get; init; } = new FormLinkNullable<ITextureSetGetter>();
+        private IFormLinkNullable<ITextureSetGetter> _SecondaryTextureSet = new FormLinkNullable<ITextureSetGetter>();
+        public IFormLinkNullable<ITextureSetGetter> SecondaryTextureSet
+        {
+            get => _SecondaryTextureSet;
+            set => _SecondaryTextureSet = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ITextureSetGetter> IImpactGetter.SecondaryTextureSet => this.SecondaryTextureSet;
         #endregion
         #region Sound1
-        public IFormLinkNullable<ISoundGetter> Sound1 { get; init; } = new FormLinkNullable<ISoundGetter>();
+        private IFormLinkNullable<ISoundGetter> _Sound1 = new FormLinkNullable<ISoundGetter>();
+        public IFormLinkNullable<ISoundGetter> Sound1
+        {
+            get => _Sound1;
+            set => _Sound1 = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundGetter> IImpactGetter.Sound1 => this.Sound1;
         #endregion
         #region Sound2
-        public IFormLinkNullable<ISoundGetter> Sound2 { get; init; } = new FormLinkNullable<ISoundGetter>();
+        private IFormLinkNullable<ISoundGetter> _Sound2 = new FormLinkNullable<ISoundGetter>();
+        public IFormLinkNullable<ISoundGetter> Sound2
+        {
+            get => _Sound2;
+            set => _Sound2 = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundGetter> IImpactGetter.Sound2 => this.Sound2;
         #endregion
         #region Hazard
-        public IFormLinkNullable<IHazardGetter> Hazard { get; init; } = new FormLinkNullable<IHazardGetter>();
+        private IFormLinkNullable<IHazardGetter> _Hazard = new FormLinkNullable<IHazardGetter>();
+        public IFormLinkNullable<IHazardGetter> Hazard
+        {
+            get => _Hazard;
+            set => _Hazard = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IHazardGetter> IImpactGetter.Hazard => this.Hazard;
         #endregion

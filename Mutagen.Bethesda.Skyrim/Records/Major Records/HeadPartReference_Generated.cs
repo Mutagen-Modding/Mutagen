@@ -45,7 +45,12 @@ namespace Mutagen.Bethesda.Skyrim
         Int32? IHeadPartReferenceGetter.Number => this.Number;
         #endregion
         #region Head
-        public IFormLinkNullable<IHeadPartGetter> Head { get; init; } = new FormLinkNullable<IHeadPartGetter>();
+        private IFormLinkNullable<IHeadPartGetter> _Head = new FormLinkNullable<IHeadPartGetter>();
+        public IFormLinkNullable<IHeadPartGetter> Head
+        {
+            get => _Head;
+            set => _Head = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IHeadPartGetter> IHeadPartReferenceGetter.Head => this.Head;
         #endregion

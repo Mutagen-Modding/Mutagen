@@ -71,12 +71,22 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region CreatedObject
-        public IFormLinkNullable<IConstructibleGetter> CreatedObject { get; init; } = new FormLinkNullable<IConstructibleGetter>();
+        private IFormLinkNullable<IConstructibleGetter> _CreatedObject = new FormLinkNullable<IConstructibleGetter>();
+        public IFormLinkNullable<IConstructibleGetter> CreatedObject
+        {
+            get => _CreatedObject;
+            set => _CreatedObject = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IConstructibleGetter> IConstructibleObjectGetter.CreatedObject => this.CreatedObject;
         #endregion
         #region WorkbenchKeyword
-        public IFormLinkNullable<IKeywordGetter> WorkbenchKeyword { get; init; } = new FormLinkNullable<IKeywordGetter>();
+        private IFormLinkNullable<IKeywordGetter> _WorkbenchKeyword = new FormLinkNullable<IKeywordGetter>();
+        public IFormLinkNullable<IKeywordGetter> WorkbenchKeyword
+        {
+            get => _WorkbenchKeyword;
+            set => _WorkbenchKeyword = value.AsNullable();
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IKeywordGetter> IConstructibleObjectGetter.WorkbenchKeyword => this.WorkbenchKeyword;
         #endregion
