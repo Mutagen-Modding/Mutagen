@@ -129,18 +129,20 @@ namespace Mutagen.Bethesda.Binary
                 if (skipMarker)
                 {
                     frame.Position += subHeader.TotalLength;
-                    if (!transl(frame, out item))
+                    if (!transl(frame, out var translItem))
                     {
                         continue;
                     }
+                    item = translItem;
                 }
                 else
                 {
                     frame.Position += subHeader.HeaderLength;
-                    if (!transl(frame.SpawnWithLength(subHeader.ContentLength), out item))
+                    if (!transl(frame.SpawnWithLength(subHeader.ContentLength), out var translItem))
                     {
                         continue;
                     }
+                    item = translItem;
                 }
                 if (type == maleMarker)
                 {
