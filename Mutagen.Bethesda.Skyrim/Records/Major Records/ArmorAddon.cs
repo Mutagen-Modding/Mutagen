@@ -23,14 +23,14 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Male 
             {
                 get => ArmorAddonBinaryCreateTranslation.IsEnabled(_male);
-                set => _male = value ? 2 : 0;
+                set => _male = (byte)(value ? 2 : 0);
             }
 
             internal byte _female;
             public bool Female
             {
                 get => ArmorAddonBinaryCreateTranslation.IsEnabled(_female);
-                set => _female = value ? 2 : 0;
+                set => _female = (byte)(value ? 2 : 0);
             }
 
             public ArmorAddonWeightSliderContainer(byte male, byte female)
