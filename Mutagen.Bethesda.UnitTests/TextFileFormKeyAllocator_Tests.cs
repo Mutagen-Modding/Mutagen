@@ -9,7 +9,7 @@ using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests
 {
-    public class TextFileFormKeyAllocator_Tests : IPersistentFormKeyAllocator_Tests
+    public class TextFileFormKeyAllocator_Tests : PersistentIFormKeyAllocator_Tests
     {
         protected override IFormKeyAllocator CreateFormKeyAllocator(IMod mod) => new TextFileFormKeyAllocator(mod);
 
@@ -17,9 +17,7 @@ namespace Mutagen.Bethesda.UnitTests
 
         protected override IFormKeyAllocator LoadFormKeyAllocator(IMod mod)
         {
-            if (tempFile.Value.File.Exists)
-                return TextFileFormKeyAllocator.FromFile(mod, tempFile.Value.File.Path);
-            return CreateFormKeyAllocator(mod);
+            return TextFileFormKeyAllocator.FromFile(mod, tempFile.Value.File.Path);
         }
 
         protected override void SaveFormKeyAllocator(IFormKeyAllocator allocator)

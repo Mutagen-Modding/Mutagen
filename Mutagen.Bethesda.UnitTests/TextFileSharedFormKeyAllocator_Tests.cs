@@ -10,28 +10,28 @@ using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests
 {
-    public class TextFileFormKeyAllocatorv2_Tests : ISharedFormKeyAllocator_Tests
+    public class TextFileSharedFormKeyAllocator_Tests : ISharedFormKeyAllocator_Tests
     {
         protected override IFormKeyAllocator CreateFormKeyAllocator(IMod mod)
         {
-            return new TextFileFormKeyAllocatorv2(mod);
+            return new TextFileSharedFormKeyAllocator(mod);
         }
 
         protected override ISharedFormKeyAllocator CreateFormKeyAllocator(IMod mod, string patcherName)
         {
-            return new TextFileFormKeyAllocatorv2(mod, patcherName);
+            return new TextFileSharedFormKeyAllocator(mod, patcherName);
         }
 
         protected override IFormKeyAllocator LoadFormKeyAllocator(IMod mod)
         {
             var file = tempFile.Value;
-            return TextFileFormKeyAllocatorv2.FromFile(mod, file.File.Path);
+            return TextFileSharedFormKeyAllocator.FromFile(mod, file.File.Path);
         }
 
         protected override ISharedFormKeyAllocator LoadFormKeyAllocator(IMod mod, string patcherName)
         {
             var folder = tempFolder.Value;
-            return TextFileFormKeyAllocatorv2.FromFolder(mod, folder.Dir.Path, patcherName);
+            return TextFileSharedFormKeyAllocator.FromFolder(mod, folder.Dir.Path, patcherName);
         }
 
         protected override void DisposeFormKeyAllocator(IFormKeyAllocator allocator)
@@ -49,20 +49,20 @@ namespace Mutagen.Bethesda.UnitTests
         protected override void SaveFormKeyAllocator(IFormKeyAllocator allocator)
         {
             var file = tempFile.Value;
-            ((TextFileFormKeyAllocatorv2)allocator).WriteToFile(file.File.Path);
+            ((TextFileSharedFormKeyAllocator)allocator).WriteToFile(file.File.Path);
         }
 
         protected override void SaveFormKeyAllocator(ISharedFormKeyAllocator allocator, string patcherName)
         {
             var folder = tempFolder.Value;
-            ((TextFileFormKeyAllocatorv2)allocator).WriteToFolder(folder.Dir.Path);
+            ((TextFileSharedFormKeyAllocator)allocator).WriteToFolder(folder.Dir.Path);
         }
 
         [Fact]
         public void StaticExport()
         {
             using var file = tempFile.Value;
-            TextFileFormKeyAllocatorv2.WriteToFile(
+            TextFileSharedFormKeyAllocator.WriteToFile(
                 file.File.Path,
                 new (string, FormKey)[]
                 {
@@ -95,7 +95,7 @@ namespace Mutagen.Bethesda.UnitTests
                     Utility.Form2.ToString(),
                 });
             var mod = new OblivionMod(Utility.PluginModKey);
-            var allocator = TextFileFormKeyAllocatorv2.FromFile(mod, file.File.Path);
+            var allocator = TextFileSharedFormKeyAllocator.FromFile(mod, file.File.Path);
             var formID = allocator.GetNextFormKey(Utility.Edid1);
             Assert.Equal(Utility.PluginModKey, formID.ModKey);
             Assert.Equal(formID, Utility.Form1);
@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.UnitTests
             var mod = new OblivionMod(Utility.PluginModKey);
             Assert.Throws<ArgumentException>(() =>
             {
-                TextFileFormKeyAllocatorv2.FromFile(mod, file.File.Path);
+                TextFileSharedFormKeyAllocator.FromFile(mod, file.File.Path);
             });
         }
 
@@ -139,7 +139,7 @@ namespace Mutagen.Bethesda.UnitTests
             var mod = new OblivionMod(Utility.PluginModKey);
             Assert.Throws<ArgumentException>(() =>
             {
-                TextFileFormKeyAllocatorv2.FromFile(mod, file.File.Path);
+                TextFileSharedFormKeyAllocator.FromFile(mod, file.File.Path);
             });
         }
 
@@ -159,7 +159,7 @@ namespace Mutagen.Bethesda.UnitTests
             var mod = new OblivionMod(Utility.PluginModKey);
             Assert.Throws<ArgumentException>(() =>
             {
-                TextFileFormKeyAllocatorv2.FromFile(mod, file.File.Path);
+                TextFileSharedFormKeyAllocator.FromFile(mod, file.File.Path);
             });
         }
 
@@ -172,9 +172,9 @@ namespace Mutagen.Bethesda.UnitTests
                 (Utility.Edid2, Utility.Form2),
             };
             using var file = tempFile.Value;
-            TextFileFormKeyAllocatorv2.WriteToFile(file.File.Path, list);
+            TextFileSharedFormKeyAllocator.WriteToFile(file.File.Path, list);
             var mod = new OblivionMod(Utility.PluginModKey);
-            var allocator = TextFileFormKeyAllocatorv2.FromFile(mod, file.File.Path);
+            var allocator = TextFileSharedFormKeyAllocator.FromFile(mod, file.File.Path);
             var formID = allocator.GetNextFormKey();
             Assert.Equal(Utility.PluginModKey, formID.ModKey);
             formID = allocator.GetNextFormKey(Utility.Edid1);

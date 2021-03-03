@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests
 {
-    public abstract class ISharedFormKeyAllocator_Tests : IPersistentFormKeyAllocator_Tests
+    public abstract class ISharedFormKeyAllocator_Tests : PersistentIFormKeyAllocator_Tests
     {
         public static readonly string Patcher1 = "Patcher1";
 

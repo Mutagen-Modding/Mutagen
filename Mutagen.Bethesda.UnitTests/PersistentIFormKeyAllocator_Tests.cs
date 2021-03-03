@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Oblivion;
+using Mutagen.Bethesda.Oblivion;
 using System;
 using System.Collections.Concurrent;
 using System.Data;
@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests
 {
-    public abstract class IPersistentFormKeyAllocator_Tests : IFormKeyAllocator_Tests
+    public abstract class PersistentIFormKeyAllocator_Tests : IFormKeyAllocator_Tests
     {
         protected abstract IFormKeyAllocator LoadFormKeyAllocator(IMod mod);
 
