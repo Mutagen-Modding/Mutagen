@@ -507,7 +507,7 @@ namespace Mutagen.Bethesda
         public static IFormLinkNullable<TMajor> AsNullable<TMajor>(this IFormLinkGetter<TMajor> link)
             where TMajor : class, IMajorRecordCommonGetter
         {
-            return new FormLinkNullable<TMajor>(link.FormKey);
+            return new FormLinkNullable<TMajor>(link.FormKeyNullable);
         }
 
         /// <summary>
