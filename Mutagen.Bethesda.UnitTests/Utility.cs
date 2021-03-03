@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda.UnitTests
         public static ModPath SkyrimTestMod = ModPath.FromPath("../../../skyrim_test.esp");
         public static ModPath SkyrimOverrideMod = ModPath.FromPath("../../../skyrim_override.esp");
 
-        public static TempFolder GetTempFolder(string folderName, [CallerMemberName] string testName = null)
+        public static TempFolder GetTempFolder(string folderName, [CallerMemberName] string? testName = null)
         {
             return TempFolder.FactoryByAddedPath(Path.Combine(Utility.TempFolderPath, folderName, testName!));
         }
