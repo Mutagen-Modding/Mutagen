@@ -1,9 +1,4 @@
 <Project>
-  <PropertyGroup>
-    <Nullable>enable</Nullable>
-    <LangVersion>preview</LangVersion>
-  </PropertyGroup>
-
   <!-- To be redefined by GitInfo after restore. -->
   <Target Name="GitVersion" />
 
