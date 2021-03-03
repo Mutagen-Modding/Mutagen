@@ -58,10 +58,10 @@
 
   <Target Name="SetVersion" BeforeTargets="GetAssemblyVersion;GetPackageVersion" DependsOnTargets="GitVersion" Returns="$(PackageVersion)">
     <PropertyGroup>
-      <DevLabel Condition="$(GitCommits) != '0'">.1-dev</DevLabel>
+      <DevLabel Condition="$(GitCommits) != '0' And $(GitSemVerDashLabel) != ''">.1-dev</DevLabel>
       <AssemblyDevLabel Condition="$(GitCommits) != '0'">.1</AssemblyDevLabel>
       <FileVersion>$(GitBaseVersionMajor).$(GitBaseVersionMinor).$(GitBaseVersionPatch)$(AssemblyDevLabel)</FileVersion>
-      <PackageVersion>$(GitBaseVersionMajor).$(GitBaseVersionMinor).$(GitBaseVersionPatch)$(DevLabel)</PackageVersion>
+      <PackageVersion>$(GitBaseVersionMajor).$(GitBaseVersionMinor).$(GitBaseVersionPatch)$(DevLabel)$(GitSemVerDashLabel)</PackageVersion>
       <InformationalVersion>$(PackageVersion)</InformationalVersion>
     </PropertyGroup>
   </Target>
