@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Data;
 
 namespace Mutagen.Bethesda.Core.Persistance
 {
@@ -14,7 +15,9 @@ namespace Mutagen.Bethesda.Core.Persistance
     /// </summary>
     public class TextFileFormKeyAllocator : IFormKeyAllocator
     {
-        private readonly Dictionary<string, FormKey> _cache = new Dictionary<string, FormKey>();
+        private readonly Dictionary<string, FormKey> _cache = new();
+
+        private readonly HashSet<string> AllocatedEditorIDs = new();
 
         /// <summary>
         /// Associated Mod
@@ -79,11 +82,22 @@ namespace Mutagen.Bethesda.Core.Persistance
 
         public FormKey GetNextFormKey(string? editorID)
         {
-            if (editorID != null)
+            if (editorID == null) return GetNextFormKey();
+
+            lock (this.Mod)
             {
-                if (_cache.TryGetValue(editorID, out var id)) return id;
+                if (!AllocatedEditorIDs.Add(editorID))
+                    throw new ConstraintException($"Attempted to allocate a duplicate unique FormKey for {editorID}");
+
+                if (_cache.TryGetValue(editorID, out var id))
+                    return id;
+
+                var formKey = GetNextFormKey();
+
+                _cache.Add(editorID, formKey);
+
+                return formKey;
             }
-            return GetNextFormKey();
         }
 
         public static void WriteToFile(string path, uint nextID, IEnumerable<KeyValuePair<string, FormKey>> edidFormKeyPairs)
@@ -97,11 +111,17 @@ namespace Mutagen.Bethesda.Core.Persistance
             }
         }
 
+        public void WriteToFile(string path)
+        {
+            WriteToFile(path,this.Mod.NextFormID, _cache);
+        }
+
+        [Obsolete("Please use the method WriteToFile(path) instead")]
         public static void WriteToFile(string path, IModGetter mod)
         {
             WriteToFile(
                 path,
-                mod.NextFormID, 
+                mod.NextFormID,
                 mod.EnumerateMajorRecords()
                     .SelectWhere(m =>
                     {

@@ -1,10 +1,5 @@
-using Mutagen.Bethesda.Persistance;
 using Mutagen.Bethesda.Oblivion;
-using Noggog.Utility;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
+using Mutagen.Bethesda.Persistance;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests
@@ -14,5 +9,33 @@ namespace Mutagen.Bethesda.UnitTests
         protected override IFormKeyAllocator CreateFormKeyAllocator(IMod mod) => new SimpleFormKeyAllocator(mod);
 
         protected override void DisposeFormKeyAllocator(IFormKeyAllocator allocator) { }
+
+        [Fact]
+        public void TestRegister()
+        {
+            var mod = new OblivionMod(Utility.PluginModKey);
+            var allocator = new SimpleFormKeyAllocator(mod);
+
+            allocator.Register(Utility.Edid1, Utility.Form1);
+
+            var key = allocator.GetNextFormKey(Utility.Edid1);
+
+            Assert.Equal(Utility.Form1, key);
+        }
+
+        [Fact]
+        public void TestTryRegister()
+        {
+            var mod = new OblivionMod(Utility.PluginModKey);
+            var allocator = new SimpleFormKeyAllocator(mod);
+
+            allocator.Register(Utility.Edid1, Utility.Form1);
+
+            Assert.False(allocator.TryRegister(Utility.Edid1, Utility.Form2));
+
+            var key = allocator.GetNextFormKey(Utility.Edid1);
+
+            Assert.Equal(Utility.Form1, key);
+        }
     }
 }

@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.UnitTests
 
         protected override void SaveFormKeyAllocator(IFormKeyAllocator allocator)
         {
-            TextFileFormKeyAllocator.WriteToFile(tempFile.Value.File.Path, ((TextFileFormKeyAllocator)allocator).Mod);
+            ((TextFileFormKeyAllocator)allocator).WriteToFile(tempFile.Value.File.Path);
         }
 
         [Fact]

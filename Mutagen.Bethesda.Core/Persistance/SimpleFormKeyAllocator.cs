@@ -1,6 +1,5 @@
-using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Data;
 
 namespace Mutagen.Bethesda.Persistance
 {
@@ -12,7 +11,9 @@ namespace Mutagen.Bethesda.Persistance
     /// </summary>
     public class SimpleFormKeyAllocator : IFormKeyAllocator
     {
-        private Dictionary<string, FormKey> _cache = new Dictionary<string, FormKey>();
+        private readonly Dictionary<string, FormKey> _cache = new();
+
+        private readonly HashSet<string> AllocatedEditorIDs = new();
 
         /// <summary>
         /// Attached Mod that will be used as reference when allocating new keys
@@ -64,6 +65,8 @@ namespace Mutagen.Bethesda.Persistance
         {
             if (editorID != null)
             {
+                if (!AllocatedEditorIDs.Add(editorID))
+                    throw new ConstraintException($"Attempted to allocate a duplicate unique FormKey for {editorID}");
                 lock (_cache)
                 {
                     if (_cache.TryGetValue(editorID, out var id)) return id;
