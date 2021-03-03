@@ -21,6 +21,17 @@ namespace Mutagen.Bethesda
 
         /// <summary>
         /// Mix in to facilitate converting to FormLinks from interfaces where implicit operators aren't
+        /// available.  This particular extension function shouldn't need an explicitly defined generic
+        /// when calling it.  It only works with non-abstract class types, though.
+        /// </summary>
+        public static IFormLink<TGetter> AsLink<TGetter>(this TGetter rec)
+            where TGetter : class, IMajorRecordCommonGetter
+        {
+            return new FormLink<TGetter>(rec.FormKey);
+        }
+
+        /// <summary>
+        /// Mix in to facilitate converting to FormLinks from interfaces where implicit operators aren't
         /// available.  This particular extension function needs an explicitly defined generic
         /// when calling it, as it doesn't know what link type it should convert to automatically.
         /// </summary>

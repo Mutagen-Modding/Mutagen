@@ -502,15 +502,6 @@ namespace Mutagen.Bethesda
         }
 
         /// <summary>
-        /// Recasts a FormLink to be a new type, with no regard to whether the two types are related or can inherit from each other.
-        /// </summary>
-        public static IFormLink<TMajorRet> AsType<TMajorRet>(this IFormLinkGetter link)
-            where TMajorRet : class, IMajorRecordCommonGetter
-        {
-            return new FormLink<TMajorRet>(link.FormKey);
-        }
-
-        /// <summary>
         /// Creates a new FormLinkNullable with the same type
         /// </summary>
         public static IFormLinkNullable<TMajor> AsNullable<TMajor>(this IFormLinkGetter<TMajor> link)
