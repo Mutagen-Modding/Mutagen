@@ -177,7 +177,10 @@ namespace Mutagen.Bethesda.Core.Persistance
 
         public override void Save()
         {
-            Connection.SaveChanges();
+            lock (Connection)
+            {
+                Connection.SaveChanges();
+            }
         }
 
         protected override void Dispose(bool disposing)

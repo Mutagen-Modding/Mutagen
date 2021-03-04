@@ -87,7 +87,10 @@ namespace Mutagen.Bethesda.Core.Persistance
 
         public override void Save()
         {
-            WriteToFile(SaveLocation.Path, _cache);
+            lock (this.Mod)
+            {
+                WriteToFile(SaveLocation.Path, _cache);
+            }
         }
     }
 }

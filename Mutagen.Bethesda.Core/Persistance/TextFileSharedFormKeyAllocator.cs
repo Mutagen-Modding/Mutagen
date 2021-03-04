@@ -98,10 +98,13 @@ namespace Mutagen.Bethesda.Core.Persistance
 
         public override void Save()
         {
-            var data = _cache
-                .Where(p => p.Value.patcherName == PatcherName)
-                .Select(p => (p.Key, p.Value.formKey));
-            WriteToFile(Path.Combine(SaveLocation.Path, PatcherName), data);
+            lock (_cache)
+            {
+                var data = _cache
+                    .Where(p => p.Value.patcherName == PatcherName)
+                    .Select(p => (p.Key, p.Value.formKey));
+                WriteToFile(Path.Combine(SaveLocation.Path, PatcherName), data);
+            }
         }
 
         internal static void WriteToFile(string thePath, IEnumerable<(string Key, FormKey formKey)> data)
