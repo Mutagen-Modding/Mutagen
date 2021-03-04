@@ -1,9 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics;
-using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Noggog;
+using System;
+using System.Data;
+using System.Linq;
 
 namespace Mutagen.Bethesda.Core.Persistance
 {
@@ -55,33 +54,30 @@ namespace Mutagen.Bethesda.Core.Persistance
 
     }
 
-    public class SQLiteFormKeyAllocator : IFormKeyAllocator, IDisposable, ISharedFormKeyAllocator
+    public class SQLiteFormKeyAllocator : BaseSharedFormKeyAllocator
     {
-        private readonly IMod Mod;
-
         private readonly uint PatcherID;
 
         private readonly SQLiteFormKeyAllocatorDbContext Connection;
 
         private bool disposedValue;
 
-        private HashSet<string> AllocatedEditorIDs = new();
-
         private readonly bool manyPatchers = true;
 
-        public SQLiteFormKeyAllocator(IMod mod, string dbPath) : this(mod, dbPath, "")
+        public SQLiteFormKeyAllocator(IMod mod, FilePath dbPath) : base(mod, dbPath)
         {
             manyPatchers = false;
+            Connection = new SQLiteFormKeyAllocatorDbContext(dbPath.Path);
+            PatcherID = GetOrAddPatcherID(PatcherName);
         }
 
-        public SQLiteFormKeyAllocator(IMod mod, string dbPath, string patcherName)
+        public SQLiteFormKeyAllocator(IMod mod, FilePath dbPath, string patcherName) : base(mod, dbPath, patcherName)
         {
-            Mod = mod;
-            Connection = new SQLiteFormKeyAllocatorDbContext(dbPath);
-            PatcherID = GetOrAddPatcherID(patcherName);
+            Connection = new SQLiteFormKeyAllocatorDbContext(dbPath.Path);
+            PatcherID = GetOrAddPatcherID(PatcherName);
         }
 
-        public FormKey GetNextFormKey()
+        public override FormKey GetNextFormKey()
         {
             lock (Connection)
             {
@@ -94,7 +90,8 @@ namespace Mutagen.Bethesda.Core.Persistance
                     // TODO maybe track ranges of allocated formIDs to make this go faster?
 
                     // should be $"select 1 from FormIDs where FormID = {candidateFormID}"
-                    while (Connection.FormIDs.Any(r => r.FormID == candidateFormID)) {
+                    while (Connection.FormIDs.Any(r => r.FormID == candidateFormID))
+                    {
                         candidateFormID++;
                         if (candidateFormID > 0xFFFFFF)
                             throw new OverflowException();
@@ -107,15 +104,10 @@ namespace Mutagen.Bethesda.Core.Persistance
             }
         }
 
-        public FormKey GetNextFormKey(string? editorID)
+        protected override FormKey GetNextFormKeyNotNull(string editorID)
         {
-            if (editorID == null) return GetNextFormKey();
-
             lock (Connection)
             {
-                if (!AllocatedEditorIDs.Add(editorID))
-                    throw new ConstraintException($"Attempted to allocate a duplicate unique FormKey for {editorID}");
-
                 // should be $"select EditorID, FormID, PatcherID from FormIDs where EditorID = {editorID}"
                 var rec = Connection.FormIDs.AsNoTracking().FirstOrDefault(r => r.EditorID == editorID);
 
@@ -130,7 +122,7 @@ namespace Mutagen.Bethesda.Core.Persistance
                 var formKey = GetNextFormKey();
 
                 Connection.FormIDs.Add(new(editorID, formKey.ID, PatcherID));
-         
+
                 return formKey;
             }
         }
@@ -183,32 +175,22 @@ namespace Mutagen.Bethesda.Core.Persistance
             }
         }
 
-        public void Commit()
+        public override void Save()
         {
-            lock (Connection)
-            {
-                Connection.SaveChanges();
-            }
+            Connection.SaveChanges();
         }
 
-        protected virtual void Dispose(bool disposing)
+        protected override void Dispose(bool disposing)
         {
             if (disposedValue) return;
             if (disposing)
                 Connection?.Dispose();
-            AllocatedEditorIDs = null!;
             disposedValue = true;
         }
 
         ~SQLiteFormKeyAllocator()
         {
             Dispose(disposing: false);
-        }
-
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
         }
     }
 }

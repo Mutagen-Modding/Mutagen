@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Data;
 
 namespace Mutagen.Bethesda.Persistance
 {
@@ -9,24 +8,14 @@ namespace Mutagen.Bethesda.Persistance
     ///
     /// This class is thread safe.
     /// </summary>
-    public class SimpleFormKeyAllocator : IFormKeyAllocator
+    public class SimpleFormKeyAllocator : BaseFormKeyAllocator, IFormKeyAllocator
     {
         private readonly Dictionary<string, FormKey> _cache = new();
-
-        private readonly HashSet<string> AllocatedEditorIDs = new();
-
-        /// <summary>
-        /// Attached Mod that will be used as reference when allocating new keys
-        /// </summary>
-        public IMod Mod { get; }
 
         /// <summary>
         /// Constructs a new SimpleNextIDAllocator that looks to a given Mod for the next key
         /// </summary>
-        public SimpleFormKeyAllocator(IMod mod)
-        {
-            this.Mod = mod;
-        }
+        public SimpleFormKeyAllocator(IMod mod) : base(mod) { }
 
         /// <summary>
         /// Returns a FormKey with the next listed ID in the Mod's header.
@@ -35,7 +24,7 @@ namespace Mutagen.Bethesda.Persistance
         /// The Mod's header will be incremented to mark the allocated key as "used".
         /// </summary>
         /// <returns>The next FormKey from the Mod</returns>
-        public FormKey GetNextFormKey()
+        public override FormKey GetNextFormKey()
         {
             lock (this.Mod)
             {
@@ -61,16 +50,12 @@ namespace Mutagen.Bethesda.Persistance
             }
         }
 
-        public FormKey GetNextFormKey(string? editorID)
+        protected override FormKey GetNextFormKeyNotNull(string editorID)
         {
-            if (editorID != null)
+            lock (_cache)
             {
-                if (!AllocatedEditorIDs.Add(editorID))
-                    throw new ConstraintException($"Attempted to allocate a duplicate unique FormKey for {editorID}");
-                lock (_cache)
-                {
-                    if (_cache.TryGetValue(editorID, out var id)) return id;
-                }
+                if (_cache.TryGetValue(editorID, out var id))
+                    return id;
             }
             return GetNextFormKey();
         }

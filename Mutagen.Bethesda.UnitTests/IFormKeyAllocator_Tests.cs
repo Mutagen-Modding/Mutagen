@@ -1,20 +1,20 @@
 using Mutagen.Bethesda.Oblivion;
-using Noggog.Utility;
 using System;
 using System.Data;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests
 {
-    public abstract class IFormKeyAllocator_Tests
+    public abstract class IFormKeyAllocator_Tests<TFormKeyAllocator>
+        where TFormKeyAllocator : IFormKeyAllocator
     {
-        protected Lazy<TempFolder> tempFolder = new(() => TempFolder.FactoryByPath(path: Utility.TempFolderPath));
+        protected abstract TFormKeyAllocator CreateFormKeyAllocator(IMod mod);
 
-        protected Lazy<TempFile> tempFile = new(() => new TempFile(extraDirectoryPaths: Utility.TempFolderPath));
-
-        protected abstract IFormKeyAllocator CreateFormKeyAllocator(IMod mod);
-
-        protected abstract void DisposeFormKeyAllocator(IFormKeyAllocator allocator);
+        protected void DisposeFormKeyAllocator(IFormKeyAllocator allocator)
+        {
+            if (allocator is IDisposable disposable)
+                disposable.Dispose();
+        }
 
         [Fact]
         public void CanAllocateNewFormKey()
@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda.UnitTests
             DisposeFormKeyAllocator(allocator);
         }
 
-        
+
         [Fact]
         public void DuplicateAllocationThrows()
         {

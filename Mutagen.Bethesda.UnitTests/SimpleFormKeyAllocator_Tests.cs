@@ -4,11 +4,9 @@ using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests
 {
-    public class SimpleFormKeyAllocator_Tests : IFormKeyAllocator_Tests
+    public class SimpleFormKeyAllocator_Tests : IFormKeyAllocator_Tests<SimpleFormKeyAllocator>
     {
-        protected override IFormKeyAllocator CreateFormKeyAllocator(IMod mod) => new SimpleFormKeyAllocator(mod);
-
-        protected override void DisposeFormKeyAllocator(IFormKeyAllocator allocator) { }
+        protected override SimpleFormKeyAllocator CreateFormKeyAllocator(IMod mod) => new(mod);
 
         [Fact]
         public void TestRegister()
