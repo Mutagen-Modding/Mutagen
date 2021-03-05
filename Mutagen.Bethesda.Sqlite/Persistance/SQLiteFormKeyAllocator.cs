@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
-namespace Mutagen.Bethesda.Core.Persistance
+namespace Mutagen.Bethesda.Sqlite
 {
     record SQLiteFormKeyAllocatorFormIDRecord(string EditorID, uint FormID, uint PatcherID);
 
