@@ -18,6 +18,16 @@ namespace Mutagen.Bethesda
             "Dragonborn.esm",
         };
 
+        private readonly static ModKey[] _sseVrImplicitMods = new ModKey[]
+        {
+            "Skyrim.esm",
+            "Update.esm",
+            "Dawnguard.esm",
+            "HearthFires.esm",
+            "Dragonborn.esm",
+            "SkyrimVR.esm"
+        };
+
         private readonly static ModKey[] _fo4ImplicitMods = new ModKey[]
         {
             "Fallout4.esm",
@@ -34,7 +44,7 @@ namespace Mutagen.Bethesda
             return release switch
             {
                 GameRelease.SkyrimSE => _sseImplicitMods,
-                GameRelease.SkyrimVR => _sseImplicitMods,
+                GameRelease.SkyrimVR => _sseVrImplicitMods,
                 GameRelease.Fallout4 => _fo4ImplicitMods,
                 _ => Enumerable.Empty<ModKey>(),
             };

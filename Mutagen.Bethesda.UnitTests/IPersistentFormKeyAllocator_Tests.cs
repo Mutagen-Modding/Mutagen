@@ -1,5 +1,6 @@
 using Mutagen.Bethesda.Core.Persistance;
 using Mutagen.Bethesda.Oblivion;
+using Mutagen.Bethesda.Sqlite;
 using Noggog.Utility;
 using System;
 using System.Collections.Concurrent;
