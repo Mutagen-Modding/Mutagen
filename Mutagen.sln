@@ -35,7 +35,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mutagen.Bethesda.Core.Windo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mutagen.Bethesda.WPF.TestDisplay", "Mutagen.Bethesda.WPF.TestDisplay\Mutagen.Bethesda.WPF.TestDisplay.csproj", "{AB5B2624-FAB0-44A5-86C1-680D04A55B59}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Sqlite", "Mutagen.Bethesda.Sqlite\Mutagen.Bethesda.Sqlite.csproj", "{0AD320EB-A1B4-4471-8777-B1C5484E61CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mutagen.Bethesda.Sqlite", "Mutagen.Bethesda.Sqlite\Mutagen.Bethesda.Sqlite.csproj", "{0AD320EB-A1B4-4471-8777-B1C5484E61CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Json", "Mutagen.Bethesda.Json\Mutagen.Bethesda.Json.csproj", "{3D1F4B15-2CB1-4AEE-BEDB-193930C3A2DE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -99,6 +101,10 @@ Global
 		{0AD320EB-A1B4-4471-8777-B1C5484E61CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0AD320EB-A1B4-4471-8777-B1C5484E61CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0AD320EB-A1B4-4471-8777-B1C5484E61CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D1F4B15-2CB1-4AEE-BEDB-193930C3A2DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D1F4B15-2CB1-4AEE-BEDB-193930C3A2DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D1F4B15-2CB1-4AEE-BEDB-193930C3A2DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D1F4B15-2CB1-4AEE-BEDB-193930C3A2DE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
