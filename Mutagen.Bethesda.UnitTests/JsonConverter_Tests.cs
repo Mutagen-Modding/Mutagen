@@ -366,5 +366,121 @@ namespace Mutagen.Bethesda.UnitTests
         //        .Should().BeNull();
         //}
         #endregion
+
+        #region ModKey
+        class ModKeyClass
+        {
+            public ModKey Member { get; set; } = Utility.MasterModKey2;
+        }
+
+        [Fact]
+        public void ModKeyConverter_Serialize()
+        {
+            var settings = new JsonSerializerSettings();
+            settings.Converters.Add(new ModKeyJsonConverter());
+            var toSerialize = new ModKeyClass()
+            {
+                Member = Utility.LightMasterModKey3
+            };
+            JsonConvert.SerializeObject(toSerialize, settings)
+                .Should().Be($"{{\"Member\":\"{toSerialize.Member}\"}}");
+        }
+
+        [Fact]
+        public void ModKeyConverter_Deserialize()
+        {
+            var settings = new JsonSerializerSettings();
+            settings.Converters.Add(new ModKeyJsonConverter());
+            var target = new ModKeyClass()
+            {
+                Member = Utility.LightMasterModKey3
+            };
+            var toDeserialize = $"{{\"Member\":\"{target.Member}\"}}";
+            JsonConvert.DeserializeObject<ModKeyClass>(toDeserialize, settings)!
+                .Member
+                .Should().Be(target.Member);
+        }
+
+        [Fact]
+        public void ModKeyConverter_Deserialize_Missing()
+        {
+            var settings = new JsonSerializerSettings();
+            settings.Converters.Add(new ModKeyJsonConverter());
+            var target = new ModKeyClass();
+            var toDeserialize = $"{{}}";
+            JsonConvert.DeserializeObject<ModKeyClass>(toDeserialize, settings)!
+                .Member
+                .Should().Be(target.Member);
+        }
+
+        class NullableModKeyClass
+        {
+            public ModKey? Member { get; set; } = Utility.MasterModKey2;
+        }
+
+        [Fact]
+        public void ModKeyConverter_Nullable_Serialize()
+        {
+            var settings = new JsonSerializerSettings();
+            settings.Converters.Add(new ModKeyJsonConverter());
+            var toSerialize = new NullableModKeyClass()
+            {
+                Member = Utility.LightMasterModKey3
+            };
+            JsonConvert.SerializeObject(toSerialize, settings)
+                .Should().Be($"{{\"Member\":\"{toSerialize.Member}\"}}");
+        }
+
+        [Fact]
+        public void ModKeyConverter_Nullable_Serialize_Null()
+        {
+            var settings = new JsonSerializerSettings();
+            settings.Converters.Add(new ModKeyJsonConverter());
+            var toSerialize = new NullableModKeyClass()
+            {
+                Member = null
+            };
+            JsonConvert.SerializeObject(toSerialize, settings)
+                .Should().Be($"{{\"Member\":null}}");
+        }
+
+        [Fact]
+        public void ModKeyConverter_Nullable_Deserialize()
+        {
+            var settings = new JsonSerializerSettings();
+            settings.Converters.Add(new ModKeyJsonConverter());
+            var target = new NullableModKeyClass()
+            {
+                Member = Utility.LightMasterModKey3
+            };
+            var toDeserialize = $"{{\"Member\":\"{target.Member}\"}}";
+            JsonConvert.DeserializeObject<NullableModKeyClass>(toDeserialize, settings)!
+                .Member
+                .Should().Be(target.Member);
+        }
+
+        [Fact]
+        public void ModKeyConverter_Nullable_Deserialize_Missing()
+        {
+            var settings = new JsonSerializerSettings();
+            settings.Converters.Add(new ModKeyJsonConverter());
+            var toDeserialize = $"{{}}";
+            var target = new NullableModKeyClass();
+            JsonConvert.DeserializeObject<NullableModKeyClass>(toDeserialize, settings)!
+                .Member
+                .Should().Be(target.Member);
+        }
+
+        [Fact]
+        public void ModKeyConverter_Nullable_Deserialize_Null()
+        {
+            var settings = new JsonSerializerSettings();
+            settings.Converters.Add(new ModKeyJsonConverter());
+            var toDeserialize = $"{{\"Member\":null}}";
+            JsonConvert.DeserializeObject<NullableModKeyClass>(toDeserialize, settings)!
+                .Member
+                .Should().BeNull();
+        }
+        #endregion
     }
 }
