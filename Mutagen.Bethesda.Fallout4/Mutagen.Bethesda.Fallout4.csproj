@@ -36,6 +36,9 @@
     <Compile Include="Records\Major Records\ActionRecord.cs">
       <DependentUpon>ActionRecord.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\ADamageType.cs">
+      <DependentUpon>DamageType.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\GameSetting.cs">
       <DependentUpon>GameSetting.xml</DependentUpon>
     </Compile>
@@ -181,6 +184,22 @@
     <Compile Include="Interfaces\IObjectId_Generated.cs" />
     <Compile Include="Records\Major Records\GlobalBool_Generated.cs">
       <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ActorValueInformation_Generated.cs">
+      <DependentUpon>ActorValueInformation.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ASpell_Generated.cs">
+      <DependentUpon>ASpell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ADamageType_Generated.cs">
+      <DependentUpon>DamageType.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\DamageTypeIndexed_Generated.cs">
+      <DependentUpon>DamageType.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\IDamageTypeTarget_Generated.cs" />
+    <Compile Include="Records\Major Records\DamageType_Generated.cs">
+      <DependentUpon>DamageType.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

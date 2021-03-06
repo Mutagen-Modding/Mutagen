@@ -4,11 +4,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     {
         public const int AACT = 0x54434141;
         public const int AORU = 0x55524F41;
+        public const int AVIF = 0x46495641;
         public const int CMPO = 0x4F504D43;
         public const int CNAM = 0x4D414E43;
         public const int CUSD = 0x44535543;
         public const int DATA = 0x41544144;
         public const int DELE = 0x454C4544;
+        public const int DMGT = 0x54474D44;
         public const int DNAM = 0x4D414E44;
         public const int DODT = 0x54444F44;
         public const int FLTV = 0x56544C46;

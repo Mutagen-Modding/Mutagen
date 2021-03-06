@@ -23,6 +23,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 typeof(ActionRecord),
             };
             dict[typeof(IIdleRelationGetter)] = dict[typeof(IIdleRelation)];
+            dict[typeof(IDamageTypeTarget)] = new Type[]
+            {
+                typeof(ActorValueInformation),
+                typeof(ASpell),
+            };
+            dict[typeof(IDamageTypeTargetGetter)] = dict[typeof(IDamageTypeTarget)];
             dict[typeof(IKeywordLinkedReference)] = new Type[]
             {
                 typeof(Keyword),

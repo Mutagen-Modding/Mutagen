@@ -11,6 +11,7 @@
       <Group name="Components" refName="Component" />
       <Group name="TextureSets" refName="TextureSet" />
       <Group name="Globals" refName="Global" />
+      <Group name="DamageTypes" refName="ADamageType" />
     </Fields>
   </Object>
 </Loqui>
