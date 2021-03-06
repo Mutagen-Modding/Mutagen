@@ -6,9 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Noggog;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Binary;
-using Wabbajack.Common;
 
 namespace Mutagen.Bethesda.Generation
 {
@@ -919,9 +917,12 @@ namespace Mutagen.Bethesda.Generation
                                                 subFg.AppendLine($"getOrAddAsOverride: (m, r) =>");
                                                 using (new BraceWrapper(subFg))
                                                 {
-                                                    subFg.AppendLine($"var copy = ({contLoqui.TypeName()})(({contLoqui.Interface(getter: true)})r).DeepCopy();");
-                                                    subFg.AppendLine($"getOrAddAsOverride(m, linkCache.Resolve<{obj.Interface(getter: true)}>(obj.FormKey)).{cont.Name}.Add(copy);");
-                                                    subFg.AppendLine($"return copy;");
+                                                    subFg.AppendLine($"var parent = getOrAddAsOverride(m, linkCache.Resolve<{obj.Interface(getter: true)}>(obj.FormKey));");
+                                                    subFg.AppendLine($"var ret = parent.{cont.Name}.FirstOrDefault(x => x.FormKey == r.FormKey);");
+                                                    subFg.AppendLine("if (ret != null) return ret;");
+                                                    subFg.AppendLine($"ret = ({contLoqui.TypeName()})(({contLoqui.Interface(getter: true)})r).DeepCopy();");
+                                                    subFg.AppendLine($"parent.{cont.Name}.Add(ret);");
+                                                    subFg.AppendLine($"return ret;");
                                                 }
                                             });
                                         },

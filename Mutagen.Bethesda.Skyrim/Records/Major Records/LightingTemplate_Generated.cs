@@ -1339,7 +1339,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IAmbientColorsCommonGetter,
         IBinaryItem,
-        ILoquiObject<ILightingTemplateGetter>
+        ILoquiObject<ILightingTemplateGetter>,
+        IMapsToGetter<ILightingTemplateGetter>
     {
         static new ILoquiRegistration Registration => LightingTemplate_Registration.Instance;
         Color AmbientColor { get; }

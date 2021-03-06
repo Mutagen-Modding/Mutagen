@@ -1107,7 +1107,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IArmorAddonGetter>
+        ILoquiObject<IArmorAddonGetter>,
+        IMapsToGetter<IArmorAddonGetter>
     {
         static new ILoquiRegistration Registration => ArmorAddon_Registration.Instance;
         IBodyTemplateGetter? BodyTemplate { get; }

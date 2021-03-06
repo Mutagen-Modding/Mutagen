@@ -719,6 +719,7 @@ namespace Mutagen.Bethesda.Skyrim
         IHarvestTargetGetter,
         IItemGetter,
         ILoquiObject<ILeveledItemGetter>,
+        IMapsToGetter<ILeveledItemGetter>,
         IObjectBoundedGetter,
         IObjectBoundedOptionalGetter,
         IOutfitTargetGetter

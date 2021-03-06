@@ -474,6 +474,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         IBinaryItem,
         ILoquiObject<IStaticGetter>,
+        IMapsToGetter<IStaticGetter>,
         IModeledGetter
     {
         static new ILoquiRegistration Registration => Static_Registration.Instance;

@@ -5,7 +5,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace Mutagen.Bethesda
 {
@@ -38,7 +40,7 @@ namespace Mutagen.Bethesda
         {
             _sourceMod = sourceMod;
             Category = sourceMod.GameRelease.ToCategory();
-            _simple = prefs is LinkCachePreferenceOnlySimple;
+            _simple = prefs is LinkCachePreferenceOnlyIdentifiers;
             _formKeyCache = new ImmutableModLinkCacheCategory<FormKey>(
                 this, 
                 x => TryGet<FormKey>.Succeed(x.FormKey),
@@ -314,7 +316,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public bool TryResolveSimple(FormKey formKey, [MaybeNullWhen(false)] out string? editorId)
+        public bool TryResolveIdentifier(FormKey formKey, [MaybeNullWhen(false)] out string? editorId)
         {
             if (TryResolve(formKey, out var rec))
             {
@@ -326,7 +328,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public bool TryResolveSimple(string editorId, [MaybeNullWhen(false)] out FormKey formKey)
+        public bool TryResolveIdentifier(string editorId, [MaybeNullWhen(false)] out FormKey formKey)
         {
             if (TryResolve(editorId, out var rec))
             {
@@ -338,7 +340,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public bool TryResolveSimple(FormKey formKey, Type type, [MaybeNullWhen(false)] out string? editorId)
+        public bool TryResolveIdentifier(FormKey formKey, Type type, [MaybeNullWhen(false)] out string? editorId)
         {
             if (TryResolve(formKey, type, out var rec))
             {
@@ -350,7 +352,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public bool TryResolveSimple(string editorId, Type type, [MaybeNullWhen(false)] out FormKey formKey)
+        public bool TryResolveIdentifier(string editorId, Type type, [MaybeNullWhen(false)] out FormKey formKey)
         {
             if (TryResolve(editorId, type, out var rec))
             {
@@ -362,7 +364,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public bool TryResolveSimple<TMajor>(FormKey formKey, out string? editorId)
+        public bool TryResolveIdentifier<TMajor>(FormKey formKey, out string? editorId)
             where TMajor : class, IMajorRecordCommonGetter
         {
             if (TryResolve<TMajor>(formKey, out var rec))
@@ -375,7 +377,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public bool TryResolveSimple<TMajor>(string editorId, out FormKey formKey)
+        public bool TryResolveIdentifier<TMajor>(string editorId, out FormKey formKey)
             where TMajor : class, IMajorRecordCommonGetter
         {
             if (TryResolve<TMajor>(editorId, out var rec))
@@ -388,7 +390,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public bool TryResolveSimple(FormKey formKey, [MaybeNullWhen(false)] out string? editorId, params Type[] types)
+        public bool TryResolveIdentifier(FormKey formKey, [MaybeNullWhen(false)] out string? editorId, params Type[] types)
         {
             if (TryResolve(formKey, out var rec, types))
             {
@@ -400,7 +402,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public bool TryResolveSimple(string editorId, [MaybeNullWhen(false)] out FormKey formKey, params Type[] types)
+        public bool TryResolveIdentifier(string editorId, [MaybeNullWhen(false)] out FormKey formKey, params Type[] types)
         {
             if (TryResolve(editorId, out var rec, types))
             {
@@ -412,7 +414,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public bool TryResolveSimple(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out string? editorId)
+        public bool TryResolveIdentifier(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out string? editorId)
         {
             if (TryResolve(formKey, types, out var rec))
             {
@@ -424,7 +426,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public bool TryResolveSimple(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out FormKey formKey)
+        public bool TryResolveIdentifier(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out FormKey formKey)
         {
             if (TryResolve(editorId, types, out var rec))
             {
@@ -435,6 +437,33 @@ namespace Mutagen.Bethesda
             return false;
         }
 
+        /// <inheritdoc />
+        public IEnumerable<IMajorRecordIdentifier> AllIdentifiers(Type type, CancellationToken? cancel = null)
+        {
+            return _formKeyCache.AllIdentifiers(type, cancel);
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<IMajorRecordIdentifier> AllIdentifiers<TMajor>(CancellationToken? cancel = null)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            return _formKeyCache.AllIdentifiers(typeof(TMajor), cancel);
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<IMajorRecordIdentifier> AllIdentifiers(params Type[] types)
+        {
+            return AllIdentifiers((IEnumerable<Type>)types, CancellationToken.None);
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<IMajorRecordIdentifier> AllIdentifiers(IEnumerable<Type> types, CancellationToken? cancel = null)
+        {
+            return types.SelectMany(type => AllIdentifiers(type, cancel))
+                .Distinct(x => x.FormKey);
+        }
+
+        /// <inheritdoc />
         public void Dispose()
         {
         }
@@ -465,7 +494,10 @@ namespace Mutagen.Bethesda
         protected IReadOnlyCache<LinkCacheItem, K> ConstructUntypedCache()
         {
             var majorRecords = new Cache<LinkCacheItem, K>(x => _keyGetter(x).Value);
-            foreach (var majorRec in _parent._sourceMod.EnumerateMajorRecords())
+            foreach (var majorRec in _parent._sourceMod.EnumerateMajorRecords()
+                // ToDo
+                // Capture and expose errors optionally via TryResolve /w out param
+                .Catch((Exception ex) => { }))
             {
                 var item = LinkCacheItem.Factory(majorRec, _parent._simple);
                 var key = _keyGetter(item);
@@ -480,7 +512,10 @@ namespace Mutagen.Bethesda
             IModGetter sourceMod)
         {
             var cache = new Cache<LinkCacheItem, K>(x => _keyGetter(x).Value);
-            foreach (var majorRec in sourceMod.EnumerateMajorRecords(type))
+            foreach (var majorRec in sourceMod.EnumerateMajorRecords(type)
+                // ToDo
+                // Capture and expose errors optionally via TryResolve /w out param
+                .Catch((Exception ex) => { }))
             {
                 var item = LinkCacheItem.Factory(majorRec, _parent._simple);
                 var key = _keyGetter(item);
@@ -559,6 +594,11 @@ namespace Mutagen.Bethesda
                 return false;
             }
             return true;
+        }
+
+        public IEnumerable<LinkCacheItem> AllIdentifiers(Type type, CancellationToken? cancel)
+        {
+            return GetCache(type, _parent.Category, _parent._sourceMod).Items;
         }
     }
 

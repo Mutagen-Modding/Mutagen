@@ -1009,7 +1009,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IMusicTrackGetter>
+        ILoquiObject<IMusicTrackGetter>,
+        IMapsToGetter<IMusicTrackGetter>
     {
         static new ILoquiRegistration Registration => MusicTrack_Registration.Instance;
         MusicTrack.TypeEnum Type { get; }

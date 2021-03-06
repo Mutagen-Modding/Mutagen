@@ -467,7 +467,8 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IGlobalBoolGetter :
         IGlobalGetter,
         IBinaryItem,
-        ILoquiObject<IGlobalBoolGetter>
+        ILoquiObject<IGlobalBoolGetter>,
+        IMapsToGetter<IGlobalBoolGetter>
     {
         static new ILoquiRegistration Registration => GlobalBool_Registration.Instance;
         Boolean? Data { get; }

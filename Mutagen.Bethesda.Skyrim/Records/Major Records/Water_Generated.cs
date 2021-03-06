@@ -2811,6 +2811,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IWaterGetter>,
+        IMapsToGetter<IWaterGetter>,
         INamedGetter,
         INamedRequiredGetter,
         ITranslatedNamedGetter,

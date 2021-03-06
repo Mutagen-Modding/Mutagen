@@ -611,7 +611,8 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<ILoadScreenGetter>
+        ILoquiObject<ILoadScreenGetter>,
+        IMapsToGetter<ILoadScreenGetter>
     {
         static new ILoquiRegistration Registration => LoadScreen_Registration.Instance;
         String? Icon { get; }

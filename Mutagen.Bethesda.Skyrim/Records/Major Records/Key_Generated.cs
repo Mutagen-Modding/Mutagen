@@ -1053,6 +1053,7 @@ namespace Mutagen.Bethesda.Skyrim
         IItemGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IKeyGetter>,
+        IMapsToGetter<IKeyGetter>,
         IModeledGetter,
         INamedRequiredGetter,
         IObjectBoundedGetter,

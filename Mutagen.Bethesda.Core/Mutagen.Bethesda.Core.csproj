@@ -5,7 +5,6 @@
     <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <WarningsAsErrors>nullable</WarningsAsErrors>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -24,7 +23,6 @@
     <None Remove="Translations\Binary\WriteParameters\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Compression.BSA" Version="2.2.1.1" />
     <PackageReference Include="DotNetZip" Version="1.15.0" />
     <PackageReference Include="DynamicData" Version="7.1.1" />
     <PackageReference Include="GitInfo" Version="2.1.2">
@@ -32,12 +30,13 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="K4os.Compression.LZ4.Streams" Version="1.2.6" />
-    <PackageReference Include="Loqui" Version="2.5.0.1-dev" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.5.0.1-dev" />
+    <PackageReference Include="Loqui" Version="2.7" />
+    <PackageReference Include="Noggog.CSharpExt" Version="2.7" />
     <PackageReference Include="NuGetizer" Version="0.6.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="SharpZipLib" Version="1.3.1" />
     <PackageReference Include="System.Collections.Immutable" Version="5.0.0" />
   </ItemGroup>
   <PropertyGroup>
@@ -54,6 +53,9 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IsPackable>true</IsPackable>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net5.0|AnyCPU'">
+    <DocumentationFile>obj\Release\net5.0\Mutagen.Bethesda.Core.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Archives\Archive.cs" />
@@ -86,6 +88,7 @@
     <Compile Include="Exceptions\SubrecordException.cs" />
     <Compile Include="Extensions\EnumerableExt.cs" />
     <Compile Include="Extensions\FormLinkListMixIn.cs" />
+    <Compile Include="Extensions\FormLinkMixIn.cs" />
     <Compile Include="Extensions\GameCategoryExt.cs" />
     <Compile Include="Extensions\HasModsMixIn.cs" />
     <Compile Include="Extensions\ModKeyExt.cs" />
@@ -93,10 +96,6 @@
     <Compile Include="Extensions\RemoveExt.cs" />
     <Compile Include="Extensions\LoadOrderExt.cs" />
     <Compile Include="Extensions\GameReleaseExt.cs" />
-    <Compile Include="Game Location\GameMetaData.cs" />
-    <Compile Include="Game Location\GogHandler.cs" />
-    <Compile Include="Game Location\SteamHandler.cs" />
-    <Compile Include="Game Location\GameLocations.cs" />
     <Compile Include="Interfaces\Aspect\IKeywordCommon.cs" />
     <Compile Include="Interfaces\IGameSettingCommon.cs" />
     <Compile Include="Interfaces\IGroup.cs" />
@@ -105,6 +104,7 @@
     <Compile Include="Interfaces\IMajorRecordCommon.cs" />
     <Compile Include="Interfaces\IMajorRecordContextEnumerable.cs" />
     <Compile Include="Interfaces\IMajorRecordEnumerable.cs" />
+    <Compile Include="Interfaces\IMajorRecordIdentifier.cs" />
     <Compile Include="Interfaces\IMod.cs" />
     <Compile Include="Interfaces\IContextGetterMod.cs" />
     <Compile Include="Interfaces\IModHeaderCommon.cs" />
@@ -113,12 +113,13 @@
     <Compile Include="Interfaces\Aspect\INamedRequired.cs" />
     <Compile Include="Interfaces\Aspect\ITranslatedNamed.cs" />
     <Compile Include="Interfaces\Aspect\ITranslatedNamedRequired.cs" />
+    <Compile Include="Interfaces\IMapsToGetter.cs" />
     <Compile Include="Interfaces\LinkInterfaceMapping.cs" />
     <Compile Include="IsExternalInit.cs" />
     <Compile Include="Interfaces\Aspect\IWeightValue.cs" />
     <Compile Include="Links\Cache\ImmutableModLinkCache.cs" />
     <Compile Include="Links\Cache\LinkCacheItem.cs" />
-    <Compile Include="Links\Cache\Preferences\LinkCachePreferenceOnlySimple.cs" />
+    <Compile Include="Links\Cache\Preferences\LinkCachePreferenceOnlyIdentifiers.cs" />
     <Compile Include="Links\Cache\Preferences\LinkCachePreferenceWholeRecord.cs" />
     <Compile Include="Links\FormLinkNullable.cs" />
     <Compile Include="Links\IFormLink.cs" />
@@ -165,6 +166,8 @@
     <Compile Include="Translations\Binary\ParseResult.cs" />
     <Compile Include="Translations\XML\TranslatedStringXmlTranslation.cs" />
     <Compile Include="Structs\ModContext.cs" />
+    <Compile Include="Utility\GameEnvironment.cs" />
+    <Compile Include="Utility\MajorRecordTypePrinter.cs" />
     <Compile Include="Utility\ModInstantiator.cs" />
     <Compile Include="Utility\RecordInfoCache.cs" />
     <Compile Include="Persistance\TextFileFormKeyAllocator.cs" />

@@ -37,13 +37,22 @@ namespace Mutagen.Bethesda.WPF
              new FrameworkPropertyMetadata(default(ErrorResponse), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
         public static readonly DependencyProperty ErrorProperty = ErrorPropertyKey.DependencyProperty;
 
+        public string Watermark
+        {
+            get => (string)GetValue(WatermarkProperty);
+            set => SetValue(WatermarkProperty, value);
+        }
+        public static readonly DependencyProperty WatermarkProperty = DependencyProperty.Register(nameof(Watermark), typeof(string), typeof(FormKeyBox),
+             new FrameworkPropertyMetadata("FormKey"));
+
         static FormKeyBox()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(FormKeyBox), new FrameworkPropertyMetadata(typeof(FormKeyBox)));
         }
 
-        public FormKeyBox()
+        protected override void OnLoaded()
         {
+            base.OnLoaded();
             this.WhenAnyValue(x => x.FormKey)
                 .DistinctUntilChanged()
                 .Subscribe(x =>

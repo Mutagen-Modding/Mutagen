@@ -1,11 +1,6 @@
-using Loqui;
-using Loqui.Internal;
 using Mutagen.Bethesda.Internals;
-using Noggog;
 using System;
 using System.Buffers.Binary;
-using System.Collections.Generic;
-using System.IO;
 
 namespace Mutagen.Bethesda.Binary
 {
@@ -18,16 +13,7 @@ namespace Mutagen.Bethesda.Binary
             MasterReferenceReader masterReferences)
         {
             var id = BinaryPrimitives.ReadUInt32LittleEndian(span);
-            var modID = span[3];
-            if (modID < masterReferences.Masters.Count)
-            {
-                return new FormKey(
-                    masterReferences.Masters[modID].Master,
-                    id);
-            }
-            return new FormKey(
-                masterReferences.CurrentMod,
-                id);
+            return FormKey.Factory(masterReferences, id);
         }
 
         public bool Parse(

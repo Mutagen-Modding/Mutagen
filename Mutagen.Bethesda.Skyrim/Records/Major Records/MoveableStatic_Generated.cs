@@ -740,6 +740,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IMoveableStaticGetter>,
+        IMapsToGetter<IMoveableStaticGetter>,
         IModeledGetter,
         INamedGetter,
         INamedRequiredGetter,

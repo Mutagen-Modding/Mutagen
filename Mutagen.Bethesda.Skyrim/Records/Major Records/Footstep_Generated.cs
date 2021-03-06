@@ -508,7 +508,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IFootstepGetter>
+        ILoquiObject<IFootstepGetter>,
+        IMapsToGetter<IFootstepGetter>
     {
         static new ILoquiRegistration Registration => Footstep_Registration.Instance;
         FormLink<IImpactDataSetGetter> ImpactDataSet { get; }

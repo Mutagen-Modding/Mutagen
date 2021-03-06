@@ -14,6 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		Directory.Build.props = Directory.Build.props
+		Directory.Build.targets = Directory.Build.targets
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mutagen.Bethesda", "Mutagen.Bethesda\Mutagen.Bethesda.csproj", "{38E3015E-EB1D-4362-8D45-704FF67A0F17}"
@@ -26,9 +27,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mutagen.Bethesda.Tests.GUI"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mutagen.Bethesda.Kernel", "Mutagen.Bethesda.Kernel\Mutagen.Bethesda.Kernel.csproj", "{C9F9A3B4-7603-4D58-8D32-B92E5947EB66}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.WPF", "Mutagen.Bethesda.WPF\Mutagen.Bethesda.WPF.csproj", "{CAFD7BE7-CEF0-4A96-9F77-491908C08591}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mutagen.Bethesda.WPF", "Mutagen.Bethesda.WPF\Mutagen.Bethesda.WPF.csproj", "{CAFD7BE7-CEF0-4A96-9F77-491908C08591}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mutagen.Bethesda.Fallout4", "Mutagen.Bethesda.Fallout4\Mutagen.Bethesda.Fallout4.csproj", "{50B3BCA9-8075-4251-94AC-FD8F07A9F250}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mutagen.Bethesda.Core.Windows", "Mutagen.Bethesda.Core.Windows\Mutagen.Bethesda.Core.Windows.csproj", "{18FBED7C-AE30-42A8-A02F-259583AB58BC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mutagen.Bethesda.WPF.TestDisplay", "Mutagen.Bethesda.WPF.TestDisplay\Mutagen.Bethesda.WPF.TestDisplay.csproj", "{AB5B2624-FAB0-44A5-86C1-680D04A55B59}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mutagen.Bethesda.Sqlite", "Mutagen.Bethesda.Sqlite\Mutagen.Bethesda.Sqlite.csproj", "{0AD320EB-A1B4-4471-8777-B1C5484E61CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Json", "Mutagen.Bethesda.Json\Mutagen.Bethesda.Json.csproj", "{3D1F4B15-2CB1-4AEE-BEDB-193930C3A2DE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -80,6 +89,22 @@ Global
 		{50B3BCA9-8075-4251-94AC-FD8F07A9F250}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50B3BCA9-8075-4251-94AC-FD8F07A9F250}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50B3BCA9-8075-4251-94AC-FD8F07A9F250}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18FBED7C-AE30-42A8-A02F-259583AB58BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18FBED7C-AE30-42A8-A02F-259583AB58BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18FBED7C-AE30-42A8-A02F-259583AB58BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18FBED7C-AE30-42A8-A02F-259583AB58BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB5B2624-FAB0-44A5-86C1-680D04A55B59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB5B2624-FAB0-44A5-86C1-680D04A55B59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB5B2624-FAB0-44A5-86C1-680D04A55B59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB5B2624-FAB0-44A5-86C1-680D04A55B59}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0AD320EB-A1B4-4471-8777-B1C5484E61CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0AD320EB-A1B4-4471-8777-B1C5484E61CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0AD320EB-A1B4-4471-8777-B1C5484E61CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0AD320EB-A1B4-4471-8777-B1C5484E61CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D1F4B15-2CB1-4AEE-BEDB-193930C3A2DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D1F4B15-2CB1-4AEE-BEDB-193930C3A2DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D1F4B15-2CB1-4AEE-BEDB-193930C3A2DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D1F4B15-2CB1-4AEE-BEDB-193930C3A2DE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -567,6 +567,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IBinaryItem,
         ILoquiObject<IEyesGetter>,
+        IMapsToGetter<IEyesGetter>,
         INamedRequiredGetter,
         ITranslatedNamedRequiredGetter
     {

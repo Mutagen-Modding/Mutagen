@@ -621,6 +621,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkContainerGetter,
         IIdleRelationGetter,
         ILoquiObject<IActionRecordGetter>,
+        IMapsToGetter<IActionRecordGetter>,
         INamedGetter,
         INamedRequiredGetter
     {

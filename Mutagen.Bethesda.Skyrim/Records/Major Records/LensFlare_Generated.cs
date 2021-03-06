@@ -426,7 +426,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILensFlareGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<ILensFlareGetter>
+        ILoquiObject<ILensFlareGetter>,
+        IMapsToGetter<ILensFlareGetter>
     {
         static new ILoquiRegistration Registration => LensFlare_Registration.Instance;
 

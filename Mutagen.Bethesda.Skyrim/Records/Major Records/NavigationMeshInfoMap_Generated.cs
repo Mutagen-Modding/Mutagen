@@ -683,7 +683,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<INavigationMeshInfoMapGetter>
+        ILoquiObject<INavigationMeshInfoMapGetter>,
+        IMapsToGetter<INavigationMeshInfoMapGetter>
     {
         static new ILoquiRegistration Registration => NavigationMeshInfoMap_Registration.Instance;
         UInt32? NavMeshVersion { get; }

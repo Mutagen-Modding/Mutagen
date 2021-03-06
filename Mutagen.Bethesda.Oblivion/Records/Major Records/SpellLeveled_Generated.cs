@@ -412,6 +412,7 @@ namespace Mutagen.Bethesda.Oblivion
         ISpellGetter,
         IBinaryItem,
         ILoquiObject<ISpellLeveledGetter>,
+        IMapsToGetter<ISpellLeveledGetter>,
         INamedGetter,
         INamedRequiredGetter
     {

@@ -1012,6 +1012,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IGrassGetter>,
+        IMapsToGetter<IGrassGetter>,
         IModeledGetter,
         IObjectBoundedGetter,
         IObjectBoundedOptionalGetter

@@ -668,7 +668,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IImageSpaceGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<IImageSpaceGetter>
+        ILoquiObject<IImageSpaceGetter>,
+        IMapsToGetter<IImageSpaceGetter>
     {
         static new ILoquiRegistration Registration => ImageSpace_Registration.Instance;
         ReadOnlyMemorySlice<Byte>? ENAM { get; }

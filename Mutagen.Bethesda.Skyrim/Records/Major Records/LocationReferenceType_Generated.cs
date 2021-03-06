@@ -477,7 +477,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IBinaryItem,
         ILocationRecordGetter,
-        ILoquiObject<ILocationReferenceTypeGetter>
+        ILoquiObject<ILocationReferenceTypeGetter>,
+        IMapsToGetter<ILocationReferenceTypeGetter>
     {
         static new ILoquiRegistration Registration => LocationReferenceType_Registration.Instance;
         Color? Color { get; }

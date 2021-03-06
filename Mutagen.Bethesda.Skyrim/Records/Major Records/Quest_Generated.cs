@@ -1563,6 +1563,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IQuestGetter>,
+        IMapsToGetter<IQuestGetter>,
         INamedGetter,
         INamedRequiredGetter,
         ITranslatedNamedGetter,

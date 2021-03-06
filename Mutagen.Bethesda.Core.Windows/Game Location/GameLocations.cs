@@ -1,32 +1,65 @@
+using Mutagen.Bethesda.GameLocation;
 using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda.GameLocation
+namespace Mutagen.Bethesda
 {
     public static class GameLocations
     {
-        private static readonly Lazy<SteamHandler> _steamHandler = new Lazy<SteamHandler>(() => new SteamHandler());
-        private static readonly Lazy<GOGHandler> _gogHandler = new Lazy<GOGHandler>(() => new GOGHandler());
+        private static readonly Lazy<GetResponse<SteamHandler>> _steamHandler = new Lazy<GetResponse<SteamHandler>>(() => SteamHandler.TryFactory());
+        private static readonly Lazy<GetResponse<GOGHandler>> _gogHandler = new Lazy<GetResponse<GOGHandler>>(() => GOGHandler.TryFactory());
 
-        public static bool TryGetGamePath(GameRelease release, [MaybeNullWhen(false)] out string path)
+        public static bool TryGetGameFolder(GameRelease release, [MaybeNullWhen(false)] out string path)
         {
-            if (_steamHandler.Value.Games.TryGetValue(release, out var game))
+            var steamGames = _steamHandler.Value;
+            if (steamGames.Succeeded && steamGames.Value.Games.TryGetValue(release, out var game))
             {
                 path = game.Path;
                 return true;
             }
-            if (_gogHandler.Value.Games.TryGetValue(release, out game))
+            var gogGames = _gogHandler.Value;
+            if (gogGames.Succeeded && gogGames.Value.Games.TryGetValue(release, out game))
             {
                 path = game.Path;
                 return true;
             }
             path = default;
             return false;
+        }
+
+        public static string GetGameFolder(GameRelease release)
+        {
+            if (TryGetGameFolder(release, out var path))
+            {
+                return path;
+            }
+            throw new Exception($"Game folder for {release} cannot be found automatically");
+        }
+
+        public static bool TryGetDataFolder(GameRelease release, [MaybeNullWhen(false)] out string path)
+        {
+            if (TryGetGameFolder(release, out path))
+            {
+                path = Path.Combine(path, "Data");
+                return true;
+            }
+            path = default;
+            return false;
+        }
+
+        public static string GetDataFolder(GameRelease release)
+        {
+            if (TryGetDataFolder(release, out var path))
+            {
+                return path;
+            }
+            throw new Exception($"Data folder for {release} cannot be found automatically");
         }
 
         internal static IReadOnlyDictionary<GameRelease, GameMetaData> Games = new Dictionary<GameRelease, GameMetaData>

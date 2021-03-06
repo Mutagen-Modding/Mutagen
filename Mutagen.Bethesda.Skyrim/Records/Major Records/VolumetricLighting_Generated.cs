@@ -852,7 +852,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IVolumetricLightingGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<IVolumetricLightingGetter>
+        ILoquiObject<IVolumetricLightingGetter>,
+        IMapsToGetter<IVolumetricLightingGetter>
     {
         static new ILoquiRegistration Registration => VolumetricLighting_Registration.Instance;
         Single? Intensity { get; }

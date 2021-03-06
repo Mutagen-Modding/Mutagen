@@ -735,7 +735,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ISoundOutputModelGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<ISoundOutputModelGetter>
+        ILoquiObject<ISoundOutputModelGetter>,
+        IMapsToGetter<ISoundOutputModelGetter>
     {
         static new ILoquiRegistration Registration => SoundOutputModel_Registration.Instance;
         ISoundOutputDataGetter? Data { get; }

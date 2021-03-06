@@ -510,7 +510,8 @@ namespace Mutagen.Bethesda.Skyrim
         IAPlacedTrapGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IPlacedBarrierGetter>
+        ILoquiObject<IPlacedBarrierGetter>,
+        IMapsToGetter<IPlacedBarrierGetter>
     {
         static new ILoquiRegistration Registration => PlacedBarrier_Registration.Instance;
         FormLink<IProjectileGetter> Projectile { get; }

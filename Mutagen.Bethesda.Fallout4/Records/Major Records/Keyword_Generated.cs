@@ -677,6 +677,7 @@ namespace Mutagen.Bethesda.Fallout4
         IKeywordCommonGetter,
         IKeywordLinkedReferenceGetter,
         ILoquiObject<IKeywordGetter>,
+        IMapsToGetter<IKeywordGetter>,
         INamedGetter,
         INamedRequiredGetter,
         ITranslatedNamedGetter,

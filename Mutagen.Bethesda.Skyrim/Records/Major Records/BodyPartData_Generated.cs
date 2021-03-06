@@ -615,6 +615,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IBodyPartDataGetter>,
+        IMapsToGetter<IBodyPartDataGetter>,
         IModeledGetter
     {
         static new ILoquiRegistration Registration => BodyPartData_Registration.Instance;

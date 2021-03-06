@@ -2,7 +2,9 @@ using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace Mutagen.Bethesda
 {
@@ -50,7 +52,10 @@ namespace Mutagen.Bethesda
             }
             // ToDo
             // Upgrade to call EnumerateGroups(), which will perform much better
-            foreach (var item in this._sourceMod.EnumerateMajorRecords())
+            foreach (var item in this._sourceMod.EnumerateMajorRecords()
+                // ToDo
+                // Capture and expose errors optionally via TryResolve /w out param
+                .Catch((Exception ex) => { }))
             {
                 if (item.FormKey == formKey)
                 {
@@ -73,7 +78,10 @@ namespace Mutagen.Bethesda
             }
             // ToDo
             // Upgrade to call EnumerateGroups(), which will perform much better
-            foreach (var item in this._sourceMod.EnumerateMajorRecords())
+            foreach (var item in this._sourceMod.EnumerateMajorRecords()
+                // ToDo
+                // Capture and expose errors optionally via TryResolve /w out param
+                .Catch((Exception ex) => { }))
             {
                 if (editorId.Equals(item.EditorID))
                 {
@@ -96,7 +104,10 @@ namespace Mutagen.Bethesda
             }
             // ToDo
             // Upgrade to EnumerateGroups<TMajor>()
-            foreach (var major in this._sourceMod.EnumerateMajorRecords<TMajor>())
+            foreach (var major in this._sourceMod.EnumerateMajorRecords<TMajor>()
+                // ToDo
+                // Capture and expose errors optionally via TryResolve /w out param
+                .Catch((Exception ex) => { }))
             {
                 if (major.FormKey == formKey)
                 {
@@ -120,7 +131,10 @@ namespace Mutagen.Bethesda
             }
             // ToDo
             // Upgrade to EnumerateGroups<TMajor>()
-            foreach (var major in this._sourceMod.EnumerateMajorRecords<TMajor>())
+            foreach (var major in this._sourceMod.EnumerateMajorRecords<TMajor>()
+                // ToDo
+                // Capture and expose errors optionally via TryResolve /w out param
+                .Catch((Exception ex) => { }))
             {
                 if (editorId.Equals(major.EditorID))
                 {
@@ -143,7 +157,10 @@ namespace Mutagen.Bethesda
             }
             // ToDo
             // Upgrade to EnumerateGroups<TMajor>()
-            foreach (var major in this._sourceMod.EnumerateMajorRecords(type))
+            foreach (var major in this._sourceMod.EnumerateMajorRecords(type)
+                // ToDo
+                // Capture and expose errors optionally via TryResolve /w out param
+                .Catch((Exception ex) => { }))
             {
                 if (major.FormKey == formKey)
                 {
@@ -166,7 +183,10 @@ namespace Mutagen.Bethesda
             }
             // ToDo
             // Upgrade to EnumerateGroups<TMajor>()
-            foreach (var major in this._sourceMod.EnumerateMajorRecords(type))
+            foreach (var major in this._sourceMod.EnumerateMajorRecords(type)
+                // ToDo
+                // Capture and expose errors optionally via TryResolve /w out param
+                .Catch((Exception ex) => { }))
             {
                 if (editorId.Equals(major.EditorID))
                 {
@@ -234,7 +254,10 @@ namespace Mutagen.Bethesda
             }
             // ToDo
             // Upgrade to call EnumerateGroups(), which will perform much better
-            foreach (var item in this._sourceMod.EnumerateMajorRecordContexts<IMajorRecordCommon, IMajorRecordCommonGetter>(this))
+            foreach (var item in this._sourceMod.EnumerateMajorRecordContexts<IMajorRecordCommon, IMajorRecordCommonGetter>(this)
+                // ToDo
+                // Capture and expose errors optionally via TryResolve /w out param
+                .Catch((Exception ex) => { }))
             {
                 if (item.Record.FormKey == formKey)
                 {
@@ -257,7 +280,10 @@ namespace Mutagen.Bethesda
             }
             // ToDo
             // Upgrade to call EnumerateGroups(), which will perform much better
-            foreach (var item in this._sourceMod.EnumerateMajorRecordContexts<IMajorRecordCommon, IMajorRecordCommonGetter>(this))
+            foreach (var item in this._sourceMod.EnumerateMajorRecordContexts<IMajorRecordCommon, IMajorRecordCommonGetter>(this)
+                // ToDo
+                // Capture and expose errors optionally via TryResolve /w out param
+                .Catch((Exception ex) => { }))
             {
                 if (editorId.Equals(item.Record.EditorID))
                 {
@@ -281,7 +307,10 @@ namespace Mutagen.Bethesda
             }
             // ToDo
             // Upgrade to EnumerateGroups<TMajor>()
-            foreach (var major in this._sourceMod.EnumerateMajorRecordContexts<TMajor, TMajorGetter>(this))
+            foreach (var major in this._sourceMod.EnumerateMajorRecordContexts<TMajor, TMajorGetter>(this)
+                // ToDo
+                // Capture and expose errors optionally via TryResolve /w out param
+                .Catch((Exception ex) => { }))
             {
                 if (major.Record.FormKey == formKey)
                 {
@@ -306,7 +335,10 @@ namespace Mutagen.Bethesda
             }
             // ToDo
             // Upgrade to EnumerateGroups<TMajor>()
-            foreach (var major in this._sourceMod.EnumerateMajorRecordContexts<TMajor, TMajorGetter>(this))
+            foreach (var major in this._sourceMod.EnumerateMajorRecordContexts<TMajor, TMajorGetter>(this)
+                // ToDo
+                // Capture and expose errors optionally via TryResolve /w out param
+                .Catch((Exception ex) => { }))
             {
                 if (editorId.Equals(major.Record.EditorID))
                 {
@@ -329,7 +361,10 @@ namespace Mutagen.Bethesda
             }
             // ToDo
             // Upgrade to EnumerateGroups<TMajor>()
-            foreach (var major in this._sourceMod.EnumerateMajorRecordContexts(this, type))
+            foreach (var major in this._sourceMod.EnumerateMajorRecordContexts(this, type)
+                // ToDo
+                // Capture and expose errors optionally via TryResolve /w out param
+                .Catch((Exception ex) => { }))
             {
                 if (major.Record.FormKey == formKey)
                 {
@@ -352,7 +387,10 @@ namespace Mutagen.Bethesda
             }
             // ToDo
             // Upgrade to EnumerateGroups<TMajor>()
-            foreach (var major in this._sourceMod.EnumerateMajorRecordContexts(this, type))
+            foreach (var major in this._sourceMod.EnumerateMajorRecordContexts(this, type)
+                // ToDo
+                // Capture and expose errors optionally via TryResolve /w out param
+                .Catch((Exception ex) => { }))
             {
                 if (editorId.Equals(major.Record.EditorID))
                 {
@@ -598,7 +636,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public bool TryResolveSimple(FormKey formKey, [MaybeNullWhen(false)] out string? editorId)
+        public bool TryResolveIdentifier(FormKey formKey, [MaybeNullWhen(false)] out string? editorId)
         {
             if (TryResolve(formKey, out var rec))
             {
@@ -610,7 +648,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public bool TryResolveSimple(string editorId, [MaybeNullWhen(false)] out FormKey formKey)
+        public bool TryResolveIdentifier(string editorId, [MaybeNullWhen(false)] out FormKey formKey)
         {
             if (TryResolve(editorId, out var rec))
             {
@@ -622,7 +660,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public bool TryResolveSimple(FormKey formKey, Type type, [MaybeNullWhen(false)] out string? editorId)
+        public bool TryResolveIdentifier(FormKey formKey, Type type, [MaybeNullWhen(false)] out string? editorId)
         {
             if (TryResolve(formKey, type, out var rec))
             {
@@ -634,7 +672,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public bool TryResolveSimple(string editorId, Type type, [MaybeNullWhen(false)] out FormKey formKey)
+        public bool TryResolveIdentifier(string editorId, Type type, [MaybeNullWhen(false)] out FormKey formKey)
         {
             if (TryResolve(editorId, type, out var rec))
             {
@@ -646,7 +684,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public bool TryResolveSimple<TMajor>(FormKey formKey, out string? editorId)
+        public bool TryResolveIdentifier<TMajor>(FormKey formKey, out string? editorId)
             where TMajor : class, IMajorRecordCommonGetter
         {
             if (TryResolve<TMajor>(formKey, out var rec))
@@ -659,7 +697,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public bool TryResolveSimple<TMajor>(string editorId, out FormKey formKey)
+        public bool TryResolveIdentifier<TMajor>(string editorId, out FormKey formKey)
             where TMajor : class, IMajorRecordCommonGetter
         {
             if (TryResolve<TMajor>(editorId, out var rec))
@@ -672,7 +710,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public bool TryResolveSimple(FormKey formKey, [MaybeNullWhen(false)] out string? editorId, params Type[] types)
+        public bool TryResolveIdentifier(FormKey formKey, [MaybeNullWhen(false)] out string? editorId, params Type[] types)
         {
             if (TryResolve(formKey, out var rec, types))
             {
@@ -684,7 +722,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public bool TryResolveSimple(string editorId, [MaybeNullWhen(false)] out FormKey formKey, params Type[] types)
+        public bool TryResolveIdentifier(string editorId, [MaybeNullWhen(false)] out FormKey formKey, params Type[] types)
         {
             if (TryResolve(editorId, out var rec, types))
             {
@@ -696,7 +734,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public bool TryResolveSimple(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out string? editorId)
+        public bool TryResolveIdentifier(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out string? editorId)
         {
             if (TryResolve(formKey, types, out var rec))
             {
@@ -708,7 +746,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public bool TryResolveSimple(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out FormKey formKey)
+        public bool TryResolveIdentifier(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out FormKey formKey)
         {
             if (TryResolve(editorId, types, out var rec))
             {
@@ -719,6 +757,42 @@ namespace Mutagen.Bethesda
             return false;
         }
 
+
+        /// <inheritdoc />
+        public IEnumerable<IMajorRecordIdentifier> AllIdentifiers(Type type, CancellationToken? cancel = null)
+        {
+            return AllIdentifiersNoUniqueness(type, cancel)
+                .Distinct(x => x.FormKey);
+        }
+
+
+        /// <inheritdoc />
+        internal IEnumerable<IMajorRecordIdentifier> AllIdentifiersNoUniqueness(Type type, CancellationToken? cancel)
+        {
+            return _sourceMod.EnumerateMajorRecords(type);
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<IMajorRecordIdentifier> AllIdentifiers<TMajor>(CancellationToken? cancel = null)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            return AllIdentifiers(typeof(TMajor), cancel);
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<IMajorRecordIdentifier> AllIdentifiers(params Type[] types)
+        {
+            return AllIdentifiers((IEnumerable<Type>)types, CancellationToken.None);
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<IMajorRecordIdentifier> AllIdentifiers(IEnumerable<Type> types, CancellationToken? cancel = null)
+        {
+            return types.SelectMany(type => AllIdentifiersNoUniqueness(type, cancel))
+                .Distinct(x => x.FormKey);
+        }
+
+        /// <inheritdoc />
         public void Dispose()
         {
         }

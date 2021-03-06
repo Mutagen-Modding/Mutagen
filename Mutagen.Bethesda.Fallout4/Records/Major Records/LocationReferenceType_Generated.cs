@@ -504,7 +504,8 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4MajorRecordGetter,
         IBinaryItem,
         ILocationRecordGetter,
-        ILoquiObject<ILocationReferenceTypeGetter>
+        ILoquiObject<ILocationReferenceTypeGetter>,
+        IMapsToGetter<ILocationReferenceTypeGetter>
     {
         static new ILoquiRegistration Registration => LocationReferenceType_Registration.Instance;
         Color? Color { get; }

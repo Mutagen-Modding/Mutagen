@@ -151,9 +151,9 @@ namespace Mutagen.Bethesda.Skyrim
         public FormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
         #endregion
         #region Quality
-        public AlchemicalApparatus.QualityLevel? Quality { get; set; }
+        public QualityLevel? Quality { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        AlchemicalApparatus.QualityLevel? IAlchemicalApparatusGetter.Quality => this.Quality;
+        QualityLevel? IAlchemicalApparatusGetter.Quality => this.Quality;
         #endregion
         #region Description
         public TranslatedString? Description { get; set; }
@@ -980,7 +980,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Destructible? Destructible { get; set; }
         new FormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; set; }
         new FormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; set; }
-        new AlchemicalApparatus.QualityLevel? Quality { get; set; }
+        new QualityLevel? Quality { get; set; }
         new TranslatedString? Description { get; set; }
         new UInt32 Value { get; set; }
         new Single Weight { get; set; }
@@ -1002,6 +1002,7 @@ namespace Mutagen.Bethesda.Skyrim
         IHasIconsGetter,
         IItemGetter,
         ILoquiObject<IAlchemicalApparatusGetter>,
+        IMapsToGetter<IAlchemicalApparatusGetter>,
         IModeledGetter,
         INamedGetter,
         INamedRequiredGetter,
@@ -1020,7 +1021,7 @@ namespace Mutagen.Bethesda.Skyrim
         IDestructibleGetter? Destructible { get; }
         FormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; }
         FormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; }
-        AlchemicalApparatus.QualityLevel? Quality { get; }
+        QualityLevel? Quality { get; }
         ITranslatedStringGetter? Description { get; }
         UInt32 Value { get; }
         Single Weight { get; }
@@ -2152,7 +2153,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.PutDownSound,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ZNAM));
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<AlchemicalApparatus.QualityLevel>.Instance.WriteNullable(
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<QualityLevel>.Instance.WriteNullable(
                 writer,
                 item.Quality,
                 length: 4,
@@ -2322,7 +2323,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.QUAL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Quality = EnumBinaryTranslation<AlchemicalApparatus.QualityLevel>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.Quality = EnumBinaryTranslation<QualityLevel>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return (int)AlchemicalApparatus_FieldIndex.Quality;
                 }
                 case RecordTypeInts.DESC:
@@ -2431,7 +2432,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Quality
         private int? _QualityLocation;
-        public AlchemicalApparatus.QualityLevel? Quality => _QualityLocation.HasValue ? (AlchemicalApparatus.QualityLevel)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QualityLocation!.Value, _package.MetaData.Constants)) : default(AlchemicalApparatus.QualityLevel?);
+        public QualityLevel? Quality => _QualityLocation.HasValue ? (QualityLevel)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QualityLocation!.Value, _package.MetaData.Constants)) : default(QualityLevel?);
         #endregion
         #region Description
         private int? _DescriptionLocation;

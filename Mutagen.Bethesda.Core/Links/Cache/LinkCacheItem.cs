@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
-    internal class LinkCacheItem
+    internal class LinkCacheItem : IMajorRecordIdentifier
     {
         private readonly IMajorRecordCommonGetter? _record;
         private readonly string? _editorId;

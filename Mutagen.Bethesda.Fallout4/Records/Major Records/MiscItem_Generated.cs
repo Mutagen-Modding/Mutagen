@@ -419,7 +419,8 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IMiscItemGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<IMiscItemGetter>
+        ILoquiObject<IMiscItemGetter>,
+        IMapsToGetter<IMiscItemGetter>
     {
         static new ILoquiRegistration Registration => MiscItem_Registration.Instance;
 

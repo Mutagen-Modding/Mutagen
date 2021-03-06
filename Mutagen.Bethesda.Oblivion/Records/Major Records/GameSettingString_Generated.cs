@@ -455,7 +455,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IGameSettingStringGetter :
         IGameSettingGetter,
         IBinaryItem,
-        ILoquiObject<IGameSettingStringGetter>
+        ILoquiObject<IGameSettingStringGetter>,
+        IMapsToGetter<IGameSettingStringGetter>
     {
         static new ILoquiRegistration Registration => GameSettingString_Registration.Instance;
         String? Data { get; }

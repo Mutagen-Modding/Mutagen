@@ -558,7 +558,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IAssociationTypeGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<IAssociationTypeGetter>
+        ILoquiObject<IAssociationTypeGetter>,
+        IMapsToGetter<IAssociationTypeGetter>
     {
         static new ILoquiRegistration Registration => AssociationType_Registration.Instance;
         IGenderedItemGetter<String?>? ParentTitle { get; }

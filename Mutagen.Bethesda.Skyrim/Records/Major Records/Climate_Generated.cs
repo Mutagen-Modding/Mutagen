@@ -944,6 +944,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IClimateGetter>,
+        IMapsToGetter<IClimateGetter>,
         IModeledGetter
     {
         static new ILoquiRegistration Registration => Climate_Registration.Instance;

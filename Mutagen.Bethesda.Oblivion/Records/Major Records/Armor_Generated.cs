@@ -493,6 +493,7 @@ namespace Mutagen.Bethesda.Oblivion
         IAClothingGetter,
         IBinaryItem,
         ILoquiObject<IArmorGetter>,
+        IMapsToGetter<IArmorGetter>,
         INamedGetter,
         INamedRequiredGetter
     {

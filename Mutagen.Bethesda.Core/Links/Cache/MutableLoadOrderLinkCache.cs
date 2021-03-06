@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading;
 
 namespace Mutagen.Bethesda
 {
@@ -596,7 +597,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public bool TryResolveSimple(FormKey formKey, [MaybeNullWhen(false)] out string? editorId)
+        public bool TryResolveIdentifier(FormKey formKey, [MaybeNullWhen(false)] out string? editorId)
         {
             if (formKey.IsNull)
             {
@@ -605,13 +606,13 @@ namespace Mutagen.Bethesda
             }
             for (int i = _mutableMods.Count - 1; i >= 0; i--)
             {
-                if (_mutableMods[i].TryResolveSimple(formKey, out editorId)) return true;
+                if (_mutableMods[i].TryResolveIdentifier(formKey, out editorId)) return true;
             }
-            return WrappedImmutableCache.TryResolveSimple(formKey, out editorId);
+            return WrappedImmutableCache.TryResolveIdentifier(formKey, out editorId);
         }
 
         /// <inheritdoc />
-        public bool TryResolveSimple(string editorId, [MaybeNullWhen(false)] out FormKey formKey)
+        public bool TryResolveIdentifier(string editorId, [MaybeNullWhen(false)] out FormKey formKey)
         {
             if (editorId.IsNullOrWhitespace())
             {
@@ -620,13 +621,13 @@ namespace Mutagen.Bethesda
             }
             for (int i = _mutableMods.Count - 1; i >= 0; i--)
             {
-                if (_mutableMods[i].TryResolveSimple(editorId, out formKey)) return true;
+                if (_mutableMods[i].TryResolveIdentifier(editorId, out formKey)) return true;
             }
-            return WrappedImmutableCache.TryResolveSimple(editorId, out formKey);
+            return WrappedImmutableCache.TryResolveIdentifier(editorId, out formKey);
         }
 
         /// <inheritdoc />
-        public bool TryResolveSimple(FormKey formKey, Type type, [MaybeNullWhen(false)] out string? editorId)
+        public bool TryResolveIdentifier(FormKey formKey, Type type, [MaybeNullWhen(false)] out string? editorId)
         {
             if (formKey.IsNull)
             {
@@ -635,13 +636,13 @@ namespace Mutagen.Bethesda
             }
             for (int i = _mutableMods.Count - 1; i >= 0; i--)
             {
-                if (_mutableMods[i].TryResolveSimple(formKey, type, out editorId)) return true;
+                if (_mutableMods[i].TryResolveIdentifier(formKey, type, out editorId)) return true;
             }
-            return WrappedImmutableCache.TryResolveSimple(formKey, type, out editorId);
+            return WrappedImmutableCache.TryResolveIdentifier(formKey, type, out editorId);
         }
 
         /// <inheritdoc />
-        public bool TryResolveSimple(string editorId, Type type, [MaybeNullWhen(false)] out FormKey formKey)
+        public bool TryResolveIdentifier(string editorId, Type type, [MaybeNullWhen(false)] out FormKey formKey)
         {
             if (editorId.IsNullOrWhitespace())
             {
@@ -650,43 +651,43 @@ namespace Mutagen.Bethesda
             }
             for (int i = _mutableMods.Count - 1; i >= 0; i--)
             {
-                if (_mutableMods[i].TryResolveSimple(editorId, type, out formKey)) return true;
+                if (_mutableMods[i].TryResolveIdentifier(editorId, type, out formKey)) return true;
             }
-            return WrappedImmutableCache.TryResolveSimple(editorId, type, out formKey);
+            return WrappedImmutableCache.TryResolveIdentifier(editorId, type, out formKey);
         }
 
         /// <inheritdoc />
-        public bool TryResolveSimple<TMajor>(FormKey formKey, out string? editorId)
+        public bool TryResolveIdentifier<TMajor>(FormKey formKey, out string? editorId)
             where TMajor : class, IMajorRecordCommonGetter
         {
-            return TryResolveSimple(formKey, typeof(TMajor), out editorId);
+            return TryResolveIdentifier(formKey, typeof(TMajor), out editorId);
         }
 
         /// <inheritdoc />
-        public bool TryResolveSimple<TMajor>(string editorId, out FormKey formKey)
+        public bool TryResolveIdentifier<TMajor>(string editorId, out FormKey formKey)
             where TMajor : class, IMajorRecordCommonGetter
         {
-            return TryResolveSimple(editorId, typeof(TMajor), out formKey);
+            return TryResolveIdentifier(editorId, typeof(TMajor), out formKey);
         }
 
         /// <inheritdoc />
-        public bool TryResolveSimple(FormKey formKey, [MaybeNullWhen(false)] out string? editorId, params Type[] types)
+        public bool TryResolveIdentifier(FormKey formKey, [MaybeNullWhen(false)] out string? editorId, params Type[] types)
         {
-            return TryResolveSimple(formKey, (IEnumerable<Type>)types, out editorId);
+            return TryResolveIdentifier(formKey, (IEnumerable<Type>)types, out editorId);
         }
 
         /// <inheritdoc />
-        public bool TryResolveSimple(string editorId, [MaybeNullWhen(false)] out FormKey formKey, params Type[] types)
+        public bool TryResolveIdentifier(string editorId, [MaybeNullWhen(false)] out FormKey formKey, params Type[] types)
         {
-            return TryResolveSimple(editorId, (IEnumerable<Type>)types, out formKey);
+            return TryResolveIdentifier(editorId, (IEnumerable<Type>)types, out formKey);
         }
 
         /// <inheritdoc />
-        public bool TryResolveSimple(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out string? editorId)
+        public bool TryResolveIdentifier(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out string? editorId)
         {
             foreach (var type in types)
             {
-                if (TryResolveSimple(formKey, type, out editorId))
+                if (TryResolveIdentifier(formKey, type, out editorId))
                 {
                     return true;
                 }
@@ -696,11 +697,11 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public bool TryResolveSimple(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out FormKey formKey)
+        public bool TryResolveIdentifier(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out FormKey formKey)
         {
             foreach (var type in types)
             {
-                if (TryResolveSimple(editorId, type, out formKey))
+                if (TryResolveIdentifier(editorId, type, out formKey))
                 {
                     return true;
                 }
@@ -709,6 +710,40 @@ namespace Mutagen.Bethesda
             return false;
         }
 
+        private IEnumerable<IMajorRecordIdentifier> AllIdentifiersNoUniqueness(Type type, CancellationToken? cancel)
+        {
+            return _mutableMods.SelectMany(x => x.AllIdentifiersNoUniqueness(type, cancel))
+                .Concat(WrappedImmutableCache.AllIdentifiers(type, cancel));
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<IMajorRecordIdentifier> AllIdentifiers(Type type, CancellationToken? cancel = null)
+        {
+            return AllIdentifiersNoUniqueness(type, cancel)
+                .Distinct(x => x.FormKey);
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<IMajorRecordIdentifier> AllIdentifiers<TMajor>(CancellationToken? cancel = null)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            return AllIdentifiers(typeof(TMajor), cancel);
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<IMajorRecordIdentifier> AllIdentifiers(params Type[] types)
+        {
+            return AllIdentifiers((IEnumerable<Type>)types, CancellationToken.None);
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<IMajorRecordIdentifier> AllIdentifiers(IEnumerable<Type> types, CancellationToken? cancel = null)
+        {
+            return types.SelectMany(type => AllIdentifiersNoUniqueness(type, cancel))
+                .Distinct(x => x.FormKey);
+        }
+
+        /// <inheritdoc />
         public void Dispose()
         {
         }

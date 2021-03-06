@@ -68,8 +68,9 @@ namespace Mutagen.Bethesda.WPF
             DefaultStyleKeyProperty.OverrideMetadata(typeof(ModKeyBox), new FrameworkPropertyMetadata(typeof(ModKeyBox)));
         }
 
-        public ModKeyBox()
+        protected override void OnLoaded()
         {
+            base.OnLoaded();
             this.WhenAnyValue(
                     x => x.FileName,
                     x => x.ModType)

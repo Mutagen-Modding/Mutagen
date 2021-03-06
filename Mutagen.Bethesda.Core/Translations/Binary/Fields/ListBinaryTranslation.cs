@@ -419,12 +419,12 @@ namespace Mutagen.Bethesda.Binary
         {
             if (amount == 0 && nullIfZero) return Enumerable.Empty<T>();
 
-            // Don't return early if count is zero, as we're expecting one
-            // Content record still that is empty
-            var subHeader = frame.GetSubrecord();
-            if (subHeader.RecordType != triggeringRecord)
+            // Don't return early if count is zero, as we're expecting one content record still that is empty
+            // But still okay if it doesn't exist
+            if (!frame.Reader.TryGetSubrecord(triggeringRecord, out var _))
             {
-                throw new ArgumentException($"Unexpected record encountered.");
+                if (amount == 0) return Enumerable.Empty<T>();
+                throw new ArgumentException($"List with a non zero counter did not follow up with expected type: {triggeringRecord}");
             }
             if (!IsLoqui)
             {

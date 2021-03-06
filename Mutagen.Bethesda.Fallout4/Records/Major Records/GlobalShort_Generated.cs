@@ -467,7 +467,8 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IGlobalShortGetter :
         IGlobalGetter,
         IBinaryItem,
-        ILoquiObject<IGlobalShortGetter>
+        ILoquiObject<IGlobalShortGetter>,
+        IMapsToGetter<IGlobalShortGetter>
     {
         static new ILoquiRegistration Registration => GlobalShort_Registration.Instance;
         Int16? Data { get; }

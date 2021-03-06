@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Noggog.WPF" Version="2.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mutagen.Bethesda.WPF\Mutagen.Bethesda.WPF.csproj" />
+    <ProjectReference Include="..\Mutagen.Bethesda\Mutagen.Bethesda.csproj" />
+  </ItemGroup>
+
+  <Target Name="SetVersion" />
+  
+</Project>

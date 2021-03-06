@@ -419,7 +419,8 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface ISoundDescriptorGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<ISoundDescriptorGetter>
+        ILoquiObject<ISoundDescriptorGetter>,
+        IMapsToGetter<ISoundDescriptorGetter>
     {
         static new ILoquiRegistration Registration => SoundDescriptor_Registration.Instance;
 

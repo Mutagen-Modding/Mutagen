@@ -669,6 +669,7 @@ namespace Mutagen.Bethesda.Fallout4
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IComponentGetter>,
+        IMapsToGetter<IComponentGetter>,
         INamedGetter,
         INamedRequiredGetter,
         IObjectBoundedGetter,

@@ -419,7 +419,8 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IAttractionRuleGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<IAttractionRuleGetter>
+        ILoquiObject<IAttractionRuleGetter>,
+        IMapsToGetter<IAttractionRuleGetter>
     {
         static new ILoquiRegistration Registration => AttractionRule_Registration.Instance;
 

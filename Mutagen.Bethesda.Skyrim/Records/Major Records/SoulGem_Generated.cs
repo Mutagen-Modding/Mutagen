@@ -1111,6 +1111,7 @@ namespace Mutagen.Bethesda.Skyrim
         IItemGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<ISoulGemGetter>,
+        IMapsToGetter<ISoulGemGetter>,
         IModeledGetter,
         INamedGetter,
         INamedRequiredGetter,

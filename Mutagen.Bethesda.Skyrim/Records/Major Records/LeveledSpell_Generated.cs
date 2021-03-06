@@ -685,6 +685,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<ILeveledSpellGetter>,
+        IMapsToGetter<ILeveledSpellGetter>,
         IObjectBoundedGetter,
         IObjectBoundedOptionalGetter,
         ISpellSpawnGetter

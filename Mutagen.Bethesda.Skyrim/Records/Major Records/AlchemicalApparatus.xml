@@ -10,7 +10,7 @@
       <RefDirect name="Destructible" refName="Destructible" />
       <FormLink name="PickUpSound" refName="SoundDescriptor" recordType="YNAM" />
       <FormLink name="PutDownSound" refName="SoundDescriptor" recordType="ZNAM" />
-      <Enum name="Quality" enumName="AlchemicalApparatus.QualityLevel" byteLength="4" recordType="QUAL" />
+      <Enum name="Quality" enumName="QualityLevel" byteLength="4" recordType="QUAL" />
       <String name="Description" recordType="DESC" translated="DL" />
       <Data>
         <Fields>

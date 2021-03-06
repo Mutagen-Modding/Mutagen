@@ -510,7 +510,8 @@ namespace Mutagen.Bethesda.Skyrim
         IAPlacedTrapGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IPlacedHazardGetter>
+        ILoquiObject<IPlacedHazardGetter>,
+        IMapsToGetter<IPlacedHazardGetter>
     {
         static new ILoquiRegistration Registration => PlacedHazard_Registration.Instance;
         FormLink<IHazardGetter> Hazard { get; }

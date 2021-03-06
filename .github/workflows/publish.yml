@@ -22,7 +22,7 @@ jobs:
         dotnet clean -c Release && dotnet nuget locals all --clear
         dotnet restore
     - name: Build
-      run: dotnet build --no-restore -c Release /p:Version=${{ github.event.release.tag_name }} -p:PackageReleaseNotes="See https://github.com/Noggog/Mutagen/releases/tag/${{ github.event.release.tag_name }}"
+      run: dotnet build --no-restore -c Release /p:Version=${{ github.event.release.tag_name }} -p:PackageReleaseNotes="See https://github.com/Mutagen-Modding/Mutagen/releases/tag/${{ github.event.release.tag_name }}"
     - name: Test
       run: dotnet test --no-build -c Release
     - name: Publish to Github

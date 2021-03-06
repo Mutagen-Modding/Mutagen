@@ -515,7 +515,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ICombatStyleGetter :
         IOblivionMajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<ICombatStyleGetter>
+        ILoquiObject<ICombatStyleGetter>,
+        IMapsToGetter<ICombatStyleGetter>
     {
         static new ILoquiRegistration Registration => CombatStyle_Registration.Instance;
         ICombatStyleDataGetter? Data { get; }

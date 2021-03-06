@@ -1,6 +1,7 @@
-﻿using Noggog;
+using Noggog;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace Mutagen.Bethesda.Core
@@ -8,6 +9,7 @@ namespace Mutagen.Bethesda.Core
     internal static class LinkInterfaceMappingInternal
     {
         public static Dictionary<GameCategory, IReadOnlyDictionary<Type, Type[]>> Mappings = new Dictionary<GameCategory, IReadOnlyDictionary<Type, Type[]>>();
+        public static Dictionary<string, Type> NameToInterfaceTypeMapping = new Dictionary<string, Type>();
 
         static LinkInterfaceMappingInternal()
         {
@@ -15,8 +17,16 @@ namespace Mutagen.Bethesda.Core
             foreach (var interf in TypeExt.GetInheritingFromInterface<ILinkInterfaceMapping>(
                 loadAssemblies: true))
             {
-                ILinkInterfaceMapping? mapping = Activator.CreateInstance(interf) as ILinkInterfaceMapping;
-                Mappings[mapping!.GameCategory] = mapping!.InterfaceToObjectTypes;
+                Register((Activator.CreateInstance(interf) as ILinkInterfaceMapping)!);
+            }
+        }
+
+        public static void Register(ILinkInterfaceMapping mapping)
+        {
+            Mappings[mapping.GameCategory] = mapping.InterfaceToObjectTypes;
+            foreach (var interf in mapping.InterfaceToObjectTypes.Keys)
+            {
+                NameToInterfaceTypeMapping[interf.FullName!] = interf;
             }
         }
     }
@@ -30,9 +40,14 @@ namespace Mutagen.Bethesda.Core
             return LinkInterfaceMappingInternal.Mappings[mode];
         }
 
+        public static bool TryGetByFullName(string name, [MaybeNullWhen(false)] out Type type)
+        {
+            return LinkInterfaceMappingInternal.NameToInterfaceTypeMapping.TryGetValue(name, out type);
+        }
+
         public static void Register(ILinkInterfaceMapping mapping)
         {
-            LinkInterfaceMappingInternal.Mappings[mapping!.GameCategory] = mapping!.InterfaceToObjectTypes;
+            LinkInterfaceMappingInternal.Register(mapping);
         }
     }
 }

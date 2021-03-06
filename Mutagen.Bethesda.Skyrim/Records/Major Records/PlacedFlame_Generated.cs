@@ -510,7 +510,8 @@ namespace Mutagen.Bethesda.Skyrim
         IAPlacedTrapGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IPlacedFlameGetter>
+        ILoquiObject<IPlacedFlameGetter>,
+        IMapsToGetter<IPlacedFlameGetter>
     {
         static new ILoquiRegistration Registration => PlacedFlame_Registration.Instance;
         FormLink<IProjectileGetter> Projectile { get; }

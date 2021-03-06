@@ -497,7 +497,8 @@ namespace Mutagen.Bethesda.Skyrim
         IANavigationMeshGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IWorldspaceNavigationMeshGetter>
+        ILoquiObject<IWorldspaceNavigationMeshGetter>,
+        IMapsToGetter<IWorldspaceNavigationMeshGetter>
     {
         static new ILoquiRegistration Registration => WorldspaceNavigationMesh_Registration.Instance;
         IWorldspaceNavigationMeshDataGetter? Data { get; }

@@ -40,6 +40,7 @@
     <Compile Include="Enums\Level.cs" />
     <Compile Include="Enums\LockLevel.cs" />
     <Compile Include="Enums\Mood.cs" />
+    <Compile Include="Enums\QualityLevel.cs" />
     <Compile Include="Enums\Responsibility.cs" />
     <Compile Include="Enums\Size.cs" />
     <Compile Include="Enums\Skill.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="Extensions\ModContextExt.cs" />
     <Compile Include="Interfaces\IAmbientColorsCommon.cs" />
     <Compile Include="Interfaces\IBoundableEquipment.cs" />
+    <Compile Include="Interfaces\IConstructible.cs" />
     <Compile Include="Interfaces\IHarvestable.cs" />
     <Compile Include="Interfaces\IHasIcons.cs" />
     <Compile Include="Interfaces\IModeled.cs" />
@@ -131,9 +133,6 @@
     </Compile>
     <Compile Include="Records\Major Records\AddonNode.cs">
       <DependentUpon>AddonNode.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\AlchemicalApparatus.cs">
-      <DependentUpon>AlchemicalApparatus.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\AlphaLayer.cs">
       <DependentUpon>Landscape.xml</DependentUpon>
@@ -2086,8 +2085,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Loqui" Version="2.5.0.1-dev" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.5.0.1-dev" />
+    <PackageReference Include="Loqui" Version="2.7" />
+    <PackageReference Include="Noggog.CSharpExt" Version="2.7" />
     <PackageReference Include="NuGetizer" Version="0.6.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

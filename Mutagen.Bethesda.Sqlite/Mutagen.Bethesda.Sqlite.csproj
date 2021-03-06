@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net5.0;netstandard2.1</TargetFrameworks>
+    <IsPackable>true</IsPackable>
+    <PackageId>Mutagen.Bethesda.Sqlite</PackageId>
+    <Authors>Noggog</Authors>
+    <Company>Mutagen</Company>
+    <Product>Mutagen</Product>
+    <Description>A C# library for Mutagen functionality that makes use of Sqlite</Description>
+    <Copyright>2021</Copyright>
+    <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/Noggog/Mutagen</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Noggog/Mutagen</RepositoryUrl>
+    <PackageReleaseNotes>Bethesda Modding</PackageReleaseNotes>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net5.0|AnyCPU'">
+    <DocumentationFile>Mutagen.Bethesda.Sqlite.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net5.0|AnyCPU'">
+    <DocumentationFile>Mutagen.Bethesda.Sqlite.xml</DocumentationFile>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="GitInfo" Version="2.1.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="NuGetizer" Version="0.6.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.3" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />
+    <ProjectReference Include="..\Mutagen.Bethesda.Kernel\Mutagen.Bethesda.Kernel.csproj" />
+  </ItemGroup>
+
+</Project>

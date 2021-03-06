@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda
             EditorID = edid;
         }
 
-        public RecordException(FormKey? formKey, ModKey? modKey, string? edid, string message, Exception innerException)
+        public RecordException(FormKey? formKey, ModKey? modKey, string? edid, string message, Exception? innerException)
             : base(message, innerException)
         {
             FormKey = formKey;
@@ -88,6 +88,46 @@ namespace Mutagen.Bethesda
                 modKey: modKey,
                 edid: null,
                 innerException: ex);
+        }
+
+        public static RecordException Factory(string message, IMajorRecordCommonGetter majorRec, Exception? innerException = null)
+        {
+            return new RecordException(
+                formKey: majorRec.FormKey,
+                modKey: majorRec.FormKey.ModKey,
+                edid: majorRec.EditorID, 
+                message: message, 
+                innerException: innerException);
+        }
+
+        public static RecordException Factory(string message, ModKey? modKey, IMajorRecordCommonGetter majorRec, Exception? innerException = null)
+        {
+            return new RecordException(
+                formKey: majorRec.FormKey,
+                modKey: modKey,
+                edid: majorRec.EditorID,
+                message: message,
+                innerException: innerException);
+        }
+
+        public static RecordException Factory(string message, FormKey? formKey, string? edid, ModKey? modKey = null, Exception? innerException = null)
+        {
+            return new RecordException(
+                formKey: formKey,
+                modKey: modKey,
+                edid: edid,
+                message: message,
+                innerException: innerException);
+        }
+
+        public static RecordException Factory(string message, ModKey modKey, Exception? innerException = null)
+        {
+            return new RecordException(
+                formKey: null,
+                modKey: modKey,
+                edid: null,
+                message: message,
+                innerException: innerException);
         }
 
         public override string ToString()

@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda.UnitTests
     {
         public enum LinkCacheTestTypes
         {
-            Simple,
+            Identifiers,
             WholeRecord
         }
 
@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.UnitTests
 
         protected LinkCachePreferences GetPrefs(LinkCacheTestTypes type) => type switch
         {
-            LinkCacheTestTypes.Simple => LinkCachePreferences.OnlySimple(),
+            LinkCacheTestTypes.Identifiers => LinkCachePreferences.OnlyIdentifiers(),
             LinkCacheTestTypes.WholeRecord => LinkCachePreferences.WholeRecord(),
             _ => throw new NotImplementedException()
         };
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             switch (cacheType)
             {
-                case LinkCacheTestTypes.Simple when style != LinkCacheStyle.OnlyDirect:
+                case LinkCacheTestTypes.Identifiers when style != LinkCacheStyle.OnlyDirect:
                     Assert.Throws<ArgumentException>(a);
                     break;
                 default:
@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.UnitTests
 
         #region Direct Mod
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void Direct_Empty(LinkCacheTestTypes cacheType)
         {
@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void Direct_NoMatch(LinkCacheTestTypes cacheType)
         {
@@ -170,7 +170,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void Direct_Typical(LinkCacheTestTypes cacheType)
         {
@@ -405,7 +405,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void Direct_ReadOnlyMechanics(LinkCacheTestTypes cacheType)
         {
@@ -462,7 +462,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void LoadOrder_NoMatch(LinkCacheTestTypes cacheType)
         {
@@ -491,7 +491,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void LoadOrder_Single(LinkCacheTestTypes cacheType)
         {
@@ -725,7 +725,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void LoadOrder_OneInEach(LinkCacheTestTypes cacheType)
         {
@@ -960,7 +960,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void LoadOrder_Overridden(LinkCacheTestTypes cacheType)
         {
@@ -1308,7 +1308,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void LoadOrder_ReadOnlyMechanics(LinkCacheTestTypes cacheType)
         {
@@ -1345,7 +1345,7 @@ namespace Mutagen.Bethesda.UnitTests
 
         #region Direct FormLink Resolves
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_Direct_TryResolve_NoLink(LinkCacheTestTypes cacheType)
         {
@@ -1355,7 +1355,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_Direct_TryResolve_Linked(LinkCacheTestTypes cacheType)
         {
@@ -1371,7 +1371,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_Direct_TryResolve_DeepRecord_NoLink(LinkCacheTestTypes cacheType)
         {
@@ -1381,7 +1381,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_Direct_TryResolve_DeepRecord_Linked(LinkCacheTestTypes cacheType)
         {
@@ -1417,7 +1417,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_Direct_Resolve_NoLink(LinkCacheTestTypes cacheType)
         {
@@ -1427,7 +1427,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_Direct_Resolve_Linked(LinkCacheTestTypes cacheType)
         {
@@ -1442,7 +1442,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_Direct_Resolve_DeepRecord_NoLink(LinkCacheTestTypes cacheType)
         {
@@ -1452,7 +1452,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_Direct_Resolve_DeepRecord_Linked(LinkCacheTestTypes cacheType)
         {
@@ -1485,7 +1485,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_Direct_TryResolve_MarkerInterface(LinkCacheTestTypes cacheType)
         {
@@ -1501,7 +1501,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_Direct_TryResolve_MarkerInterface_NoLink(LinkCacheTestTypes cacheType)
         {
@@ -1511,7 +1511,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_Direct_TryResolve_MarkerInterface_DeepRecord_NoLink(LinkCacheTestTypes cacheType)
         {
@@ -1521,7 +1521,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_Direct_TryResolve_MarkerInterface_DeepRecord_Linked(LinkCacheTestTypes cacheType)
         {
@@ -1557,7 +1557,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_Direct_Resolve_MarkerInterface(LinkCacheTestTypes cacheType)
         {
@@ -1572,7 +1572,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_Direct_Resolve_MarkerInterface_NoLink(LinkCacheTestTypes cacheType)
         {
@@ -1582,7 +1582,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_Direct_Resolve_MarkerInterface_DeepRecord_NoLink(LinkCacheTestTypes cacheType)
         {
@@ -1592,7 +1592,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_Direct_Resolve_MarkerInterface_DeepRecord_Linked(LinkCacheTestTypes cacheType)
         {
@@ -1644,7 +1644,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_LoadOrder_TryResolve_Linked(LinkCacheTestTypes cacheType)
         {
@@ -1673,7 +1673,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_LoadOrder_TryResolve_DeepRecord_Linked(LinkCacheTestTypes cacheType)
         {
@@ -1722,7 +1722,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_LoadOrder_Resolve_Linked(LinkCacheTestTypes cacheType)
         {
@@ -1750,7 +1750,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_LoadOrder_Resolve_DeepRecord_Linked(LinkCacheTestTypes cacheType)
         {
@@ -1788,7 +1788,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_LoadOrder_TryResolve_MarkerInterface(LinkCacheTestTypes cacheType)
         {
@@ -1825,7 +1825,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_LoadOrder_TryResolve_MarkerInterface_DeepRecord_Linked(LinkCacheTestTypes cacheType)
         {
@@ -1866,7 +1866,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_LoadOrder_Resolve_MarkerInterface(LinkCacheTestTypes cacheType)
         {
@@ -1902,7 +1902,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_LoadOrder_Resolve_MarkerInterface_DeepRecord_Linked(LinkCacheTestTypes cacheType)
         {
@@ -1942,7 +1942,7 @@ namespace Mutagen.Bethesda.UnitTests
 
         #region Direct FormLink Context Resolves
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_Direct_TryResolveContext_NoLink(LinkCacheTestTypes cacheType)
         {
@@ -1952,7 +1952,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_Direct_TryResolveContext_Linked(LinkCacheTestTypes cacheType)
         {
@@ -1967,7 +1967,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_Direct_TryResolveContext_DeepRecord_NoLink(LinkCacheTestTypes cacheType)
         {
@@ -1977,7 +1977,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_Direct_TryResolveContext_DeepRecord_Linked(LinkCacheTestTypes cacheType)
         {
@@ -2010,7 +2010,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_Direct_ResolveContext_NoLink(LinkCacheTestTypes cacheType)
         {
@@ -2020,7 +2020,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_Direct_ResolveContext_Linked(LinkCacheTestTypes cacheType)
         {
@@ -2035,7 +2035,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_Direct_ResolveContext_DeepRecord_NoLink(LinkCacheTestTypes cacheType)
         {
@@ -2045,7 +2045,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_Direct_ResolveContext_DeepRecord_Linked(LinkCacheTestTypes cacheType)
         {
@@ -2078,7 +2078,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_Direct_TryResolveContext_MarkerInterface(LinkCacheTestTypes cacheType)
         {
@@ -2093,7 +2093,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_Direct_TryResolveContext_MarkerInterface_NoLink(LinkCacheTestTypes cacheType)
         {
@@ -2103,7 +2103,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_Direct_TryResolveContext_MarkerInterface_DeepRecord_NoLink(LinkCacheTestTypes cacheType)
         {
@@ -2113,7 +2113,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_Direct_TryResolveContext_MarkerInterface_DeepRecord_Linked(LinkCacheTestTypes cacheType)
         {
@@ -2146,7 +2146,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_Direct_ResolveContext_MarkerInterface(LinkCacheTestTypes cacheType)
         {
@@ -2161,7 +2161,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_Direct_ResolveContext_MarkerInterface_NoLink(LinkCacheTestTypes cacheType)
         {
@@ -2172,7 +2172,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_Direct_ResolveContext_MarkerInterface_DeepRecord_NoLink(LinkCacheTestTypes cacheType)
         {
@@ -2183,7 +2183,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_Direct_ResolveContext_MarkerInterface_DeepRecord_Linked(LinkCacheTestTypes cacheType)
         {
@@ -2218,7 +2218,7 @@ namespace Mutagen.Bethesda.UnitTests
 
         #region FormLink Direct ResolveAll
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_Direct_ResolveAll_Empty(LinkCacheTestTypes cacheType)
         {
@@ -2228,7 +2228,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_Direct_ResolveAll_Typed_Empty(LinkCacheTestTypes cacheType)
         {
@@ -2238,7 +2238,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_Direct_ResolveAll_Linked(LinkCacheTestTypes cacheType)
         {
@@ -2265,7 +2265,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_LoadOrder_ResolveAll_Linked(LinkCacheTestTypes cacheType)
         {
@@ -2287,7 +2287,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_LoadOrder_ResolveAll_MultipleLinks(LinkCacheTestTypes cacheType)
         {
@@ -2314,7 +2314,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_LoadOrder_ResolveAll_DoubleQuery(LinkCacheTestTypes cacheType)
         {
@@ -2341,7 +2341,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_LoadOrder_ResolveAll_UnrelatedNotIncluded(LinkCacheTestTypes cacheType)
         {
@@ -2369,7 +2369,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_LoadOrder_ResolveAll_SeparateQueries(LinkCacheTestTypes cacheType)
         {
@@ -2406,7 +2406,7 @@ namespace Mutagen.Bethesda.UnitTests
 
         #region FormLink Direct ResolveAllContexts
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_Direct_ResolveAllContexts_Empty(LinkCacheTestTypes cacheType)
         {
@@ -2416,7 +2416,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_Direct_ResolveAllContexts_Typed_Empty(LinkCacheTestTypes cacheType)
         {
@@ -2426,7 +2426,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_Direct_ResolveAllContexts_Linked(LinkCacheTestTypes cacheType)
         {
@@ -2452,7 +2452,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_LoadOrder_ResolveAllContexts_Linked(LinkCacheTestTypes cacheType)
         {
@@ -2473,7 +2473,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_LoadOrder_ResolveAllContexts_MultipleLinks(LinkCacheTestTypes cacheType)
         {
@@ -2501,7 +2501,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_LoadOrder_ResolveAllContexts_DoubleQuery(LinkCacheTestTypes cacheType)
         {
@@ -2530,7 +2530,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_LoadOrder_ResolveAllContexts_UnrelatedNotIncluded(LinkCacheTestTypes cacheType)
         {
@@ -2559,7 +2559,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void FormLink_LoadOrder_ResolveAllContexts_SeparateQueries(LinkCacheTestTypes cacheType)
         {
@@ -2596,7 +2596,7 @@ namespace Mutagen.Bethesda.UnitTests
 
         #region EDIDLink Resolves
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void EDIDLink_TryResolve_NoLink(LinkCacheTestTypes cacheType)
         {
@@ -2609,7 +2609,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void EDIDLink_TryResolve_Linked(LinkCacheTestTypes cacheType)
         {
@@ -2623,7 +2623,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void EDIDLink_Resolve_NoLink(LinkCacheTestTypes cacheType)
         {
@@ -2636,7 +2636,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void EDIDLink_Resolve_Linked(LinkCacheTestTypes cacheType)
         {
@@ -2651,7 +2651,7 @@ namespace Mutagen.Bethesda.UnitTests
 
         #region Subtype Linking
         [Theory]
-        [InlineData(LinkCacheTestTypes.Simple)]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void SubtypeLinking_Typical(LinkCacheTestTypes cacheType)
         {

@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Tests
 
         public (TempFolder TempFolder, Test Test) SetupProcessedFiles()
         {
-            var tmp = new TempFolder(new DirectoryInfo(Path.Combine(Path.GetTempPath(), $"Mutagen_Binary_Tests/{Nickname}")), deleteAfter: Settings.DeleteCachesAfter);
+            var tmp = TempFolder.FactoryByPath(Path.Combine(Path.GetTempPath(), $"Mutagen_Binary_Tests/{Nickname}"), deleteAfter: Settings.DeleteCachesAfter);
 
             var test = new Test(
                 $"Setup Processed Files",

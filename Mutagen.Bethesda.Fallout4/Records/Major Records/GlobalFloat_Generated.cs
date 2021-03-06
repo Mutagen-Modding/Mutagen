@@ -499,7 +499,8 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IGlobalFloatGetter :
         IGlobalGetter,
         IBinaryItem,
-        ILoquiObject<IGlobalFloatGetter>
+        ILoquiObject<IGlobalFloatGetter>,
+        IMapsToGetter<IGlobalFloatGetter>
     {
         static new ILoquiRegistration Registration => GlobalFloat_Registration.Instance;
         Single? Data { get; }

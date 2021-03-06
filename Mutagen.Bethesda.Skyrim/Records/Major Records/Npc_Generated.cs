@@ -2843,6 +2843,7 @@ namespace Mutagen.Bethesda.Skyrim
         IKeywordedGetter<IKeywordGetter>,
         ILockListGetter,
         ILoquiObject<INpcGetter>,
+        IMapsToGetter<INpcGetter>,
         INamedGetter,
         INamedRequiredGetter,
         INpcSpawnGetter,

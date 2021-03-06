@@ -122,7 +122,7 @@ namespace Mutagen.Bethesda.UnitTests
             PlacedObject disabledObj = placedObject;
             disabledObj.Disable();
             //_testOutputHelper.WriteLine($"{disabledPlacedObject.MajorRecordFlagsRaw}");
-            Assert.True(EnumExt.HasFlag(disabledObj.MajorRecordFlagsRaw,Constants.InitiallyDisabled));
+            Assert.True(EnumExt.HasFlag(disabledObj.MajorRecordFlagsRaw, Constants.InitiallyDisabled));
             MajorRecord majorRecord = placedObject;
             majorRecord.Disable();
             Assert.True(EnumExt.HasFlag(majorRecord.MajorRecordFlagsRaw, Constants.InitiallyDisabled));
@@ -182,27 +182,38 @@ namespace Mutagen.Bethesda.UnitTests
             iLink.Resolve<ISkyrimMajorRecordGetter, ILightGetter>(cache);
 
             // Context resolution
-            // ToDo
-            // Enable when generic querying is supported
-            //link.TryResolveContext<ISkyrimMod, ISkyrimMajorRecord>(cache, out var _);
-            //link.TryResolveContext<ISkyrimMod, ISkyrimMajorRecord>(cache, out IModContext<ISkyrimMod, ISkyrimMajorRecord, ISkyrimMajorRecordGetter> _);
-            //link.ResolveContext<ISkyrimMod, ISkyrimMajorRecord>(cache);
+            link.TryResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord>(cache, out var _);
+            link.TryResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord>(cache, out IModContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord, ISkyrimMajorRecordGetter> _);
+            link.ResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord>(cache);
             link.TryResolveContext<ISkyrimMod, ISkyrimModGetter, ILight, ILightGetter>(cache, out var _);
             link.TryResolveContext(cache, out IModContext<ISkyrimMod, ISkyrimModGetter, ILight, ILightGetter> _);
             link.ResolveContext<ISkyrimMod, ISkyrimModGetter, ILight, ILightGetter>(cache);
 
-            //nullableLink.TryResolveContext<ISkyrimMod, ISkyrimMajorRecord>(cache, out var _);
-            //nullableLink.TryResolveContext<ISkyrimMod, ISkyrimMajorRecord>(cache, out IModContext<ISkyrimMod, ISkyrimMajorRecord, ISkyrimMajorRecordGetter> _);
-            //nullableLink.ResolveContext<ISkyrimMod, ISkyrimMajorRecord>(cache);
+            nullableLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord>(cache, out var _);
+            nullableLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord>(cache, out IModContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord, ISkyrimMajorRecordGetter> _);
+            nullableLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord>(cache);
             nullableLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, ILight, ILightGetter>(cache, out var _);
             nullableLink.TryResolveContext(cache, out IModContext<ISkyrimMod, ISkyrimModGetter, ILight, ILightGetter> _);
             nullableLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, ILight, ILightGetter>(cache);
 
-            //iLink.TryResolveContext<ISkyrimMod, ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(cache, out var _);
-            //iLink.ResolveContext<ISkyrimMod, ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(cache);
+            iLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(cache, out var _);
+            iLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(cache);
             iLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecordGetter, ILight, ILightGetter>(cache, out var _);
             iLink.TryResolveContext(cache, out IModContext<ISkyrimMod, ISkyrimModGetter, ILight, ILightGetter> _);
             iLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecordGetter, ILight, ILightGetter>(cache);
+
+            // Getter interface conversion
+            IPerkGetter getter = new Perk(Utility.Form1, SkyrimRelease.SkyrimLE);
+            Perk direct = new Perk(Utility.Form2, SkyrimRelease.SkyrimLE);
+            IPerk setter = new Perk(Utility.Form2, SkyrimRelease.SkyrimLE);
+            FormLink<IPerkGetter> formLink = new FormLink<IPerkGetter>();
+            formLink = direct;
+            formLink = getter.AsLink();
+            formLink = direct.AsLink();
+            formLink = setter.AsLink();
+
+            // This fails, due to C# not wanting to implicit convert interfaces
+            //formLink = p;
         }
 
         [Fact]

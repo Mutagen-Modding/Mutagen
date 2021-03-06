@@ -850,6 +850,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IBinaryItem,
         ILoquiObject<ITextureSetGetter>,
+        IMapsToGetter<ITextureSetGetter>,
         IObjectBoundedGetter,
         IObjectBoundedOptionalGetter,
         IObjectIdGetter

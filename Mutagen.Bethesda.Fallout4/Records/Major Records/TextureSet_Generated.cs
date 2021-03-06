@@ -875,6 +875,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4MajorRecordGetter,
         IBinaryItem,
         ILoquiObject<ITextureSetGetter>,
+        IMapsToGetter<ITextureSetGetter>,
         IObjectBoundedGetter,
         IObjectBoundedOptionalGetter,
         IObjectIdGetter

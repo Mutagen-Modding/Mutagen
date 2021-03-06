@@ -724,6 +724,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<ICollisionLayerGetter>,
+        IMapsToGetter<ICollisionLayerGetter>,
         INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => CollisionLayer_Registration.Instance;

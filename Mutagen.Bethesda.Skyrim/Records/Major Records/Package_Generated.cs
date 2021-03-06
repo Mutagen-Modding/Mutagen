@@ -1793,7 +1793,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IPackageGetter>
+        ILoquiObject<IPackageGetter>,
+        IMapsToGetter<IPackageGetter>
     {
         static new ILoquiRegistration Registration => Package_Registration.Instance;
         IPackageAdapterGetter? VirtualMachineAdapter { get; }

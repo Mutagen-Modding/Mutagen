@@ -467,7 +467,8 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IGlobalIntGetter :
         IGlobalGetter,
         IBinaryItem,
-        ILoquiObject<IGlobalIntGetter>
+        ILoquiObject<IGlobalIntGetter>,
+        IMapsToGetter<IGlobalIntGetter>
     {
         static new ILoquiRegistration Registration => GlobalInt_Registration.Instance;
         Int32? Data { get; }

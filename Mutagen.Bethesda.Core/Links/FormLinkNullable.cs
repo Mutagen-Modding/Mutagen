@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// FormKey of the target record.
         /// </summary>
-        public FormKey? FormKeyNullable { get; private set; }
+        public FormKey? FormKeyNullable { get; }
 
         /// <summary>
         /// Non null FormKey of the target record.  If null, it will instead return FormKey.Null.
@@ -77,8 +77,7 @@ namespace Mutagen.Bethesda
         /// <returns>True if object is ILinkGetter and FormKeys match</returns>
         public override bool Equals(object? obj)
         {
-            if (obj is not IFormLink<TMajorGetter> rhs) return false;
-            return this.Equals(rhs);
+            return IFormLinkExt.EqualsWithInheritanceConsideration(this, obj);
         }
 
         /// <summary>

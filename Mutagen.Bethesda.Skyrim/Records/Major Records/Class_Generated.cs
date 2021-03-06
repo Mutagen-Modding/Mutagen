@@ -1072,6 +1072,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IBinaryItem,
         ILoquiObject<IClassGetter>,
+        IMapsToGetter<IClassGetter>,
         INamedRequiredGetter,
         ITranslatedNamedRequiredGetter
     {

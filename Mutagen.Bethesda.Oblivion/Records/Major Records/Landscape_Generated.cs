@@ -821,6 +821,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<ILandscapeGetter>,
+        IMapsToGetter<ILandscapeGetter>,
         IPlacedGetter
     {
         static new ILoquiRegistration Registration => Landscape_Registration.Instance;

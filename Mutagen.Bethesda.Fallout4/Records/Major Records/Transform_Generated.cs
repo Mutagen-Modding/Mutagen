@@ -650,7 +650,8 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface ITransformGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<ITransformGetter>
+        ILoquiObject<ITransformGetter>,
+        IMapsToGetter<ITransformGetter>
     {
         static new ILoquiRegistration Registration => Transform_Registration.Instance;
         P3Float Position { get; }
