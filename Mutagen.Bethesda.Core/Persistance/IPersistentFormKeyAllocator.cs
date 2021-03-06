@@ -7,21 +7,45 @@ namespace Mutagen.Bethesda
     {
         protected IPath SaveLocation;
 
+        public bool CommitOnDispose = true;
+
+        private bool _disposed = false;
+
         protected BasePersistentFormKeyAllocator(IMod mod, IPath saveLocation) : base(mod)
         {
             this.SaveLocation = saveLocation;
         }
 
-        public abstract void Save();
+        /// <summary>
+        /// Writes state to disk.
+        /// </summary>
+        public abstract void Commit();
 
-        protected virtual void Dispose(bool disposing) { }
+        /// <summary>
+        /// Reloads last committed state from disk.
+        /// </summary>
+        public abstract void Rollback();
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed) return;
+            if (disposing)
+            {
+                if (CommitOnDispose) Commit();
+            }
+            _disposed = true;
+        }
+
+        public void Dispose() => Dispose(true);
+
+        /*
         public void Dispose()
         {
             // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
+        */
     }
 
     /// <summary>
@@ -29,6 +53,8 @@ namespace Mutagen.Bethesda
     /// </summary>
     public interface IPersistentFormKeyAllocator : IFormKeyAllocator, IDisposable
     {
-        public void Save();
+        public void Commit();
+
+        public void Rollback();
     }
 }

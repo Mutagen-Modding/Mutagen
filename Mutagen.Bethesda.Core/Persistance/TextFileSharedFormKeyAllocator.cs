@@ -96,7 +96,7 @@ namespace Mutagen.Bethesda.Core.Persistance
             }
         }
 
-        public override void Save()
+        public override void Commit()
         {
             lock (_cache)
             {
@@ -104,6 +104,16 @@ namespace Mutagen.Bethesda.Core.Persistance
                     .Where(p => p.Value.patcherName == PatcherName)
                     .Select(p => (p.Key, p.Value.formKey));
                 WriteToFile(Path.Combine(SaveLocation.Path, PatcherName), data);
+            }
+        }
+
+        public override void Rollback()
+        {
+            lock (_cache)
+            {
+                _cache.Clear();
+                FormIDSet.Clear();
+                Load();
             }
         }
 

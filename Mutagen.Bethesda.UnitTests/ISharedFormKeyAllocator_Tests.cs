@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.UnitTests
                 var formKey2 = allocator.GetNextFormKey(Utility.Edid2);
                 formID2 = formKey2.ID;
 
-                allocator.Save();
+                allocator.Commit();
             }
 
             {
@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.UnitTests
 
                 input.AsParallel().ForAll(apply);
 
-                allocator.Save();
+                allocator.Commit();
             }
 
             {
@@ -102,7 +102,7 @@ namespace Mutagen.Bethesda.UnitTests
 
                 allocator.GetNextFormKey(Utility.Edid1);
 
-                allocator.Save();
+                allocator.Commit();
             }
 
             {

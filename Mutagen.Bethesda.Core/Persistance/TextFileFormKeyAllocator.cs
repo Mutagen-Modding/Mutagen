@@ -16,24 +16,7 @@ namespace Mutagen.Bethesda.Core.Persistance
 
         public TextFileFormKeyAllocator(IMod mod, FilePath saveLocation) : base(mod, saveLocation)
         {
-            if (!saveLocation.Exists) return;
-            using var streamReader = new StreamReader(saveLocation.Path);
-            while (true)
-            {
-                var edidStr = streamReader.ReadLine();
-                var formKeyStr = streamReader.ReadLine();
-                if (edidStr == null) break;
-                if (formKeyStr == null)
-                {
-                    throw new ArgumentException("Unexpected odd number of lines.");
-                }
-                var formKey = FormKey.Factory(formKeyStr);
-                if (formKey.ModKey != mod.ModKey)
-                {
-                    throw new ArgumentException($"Attempted to load a FormKey belonging to {formKey.ModKey} into the FormKey allocator for {mod.ModKey}.");
-                }
-                _cache.Add(edidStr, formKey);
-            }
+            Load();
         }
 
         /// <summary>
@@ -85,11 +68,42 @@ namespace Mutagen.Bethesda.Core.Persistance
                 File.Move(tempFile, saveLocation);
         }
 
-        public override void Save()
+        public override void Commit()
         {
-            lock (this.Mod)
+            lock (Mod)
             {
                 WriteToFile(SaveLocation.Path, _cache);
+            }
+        }
+
+        private void Load()
+        {
+            if (!SaveLocation.Exists) return;
+            using var streamReader = new StreamReader(SaveLocation.Path);
+            while (true)
+            {
+                var edidStr = streamReader.ReadLine();
+                var formKeyStr = streamReader.ReadLine();
+                if (edidStr == null) break;
+                if (formKeyStr == null)
+                {
+                    throw new ArgumentException("Unexpected odd number of lines.");
+                }
+                var formKey = FormKey.Factory(formKeyStr);
+                if (formKey.ModKey != Mod.ModKey)
+                {
+                    throw new ArgumentException($"Attempted to load a FormKey belonging to {formKey.ModKey} into the FormKey allocator for {Mod.ModKey}.");
+                }
+                _cache.Add(edidStr, formKey);
+            }
+        }
+
+        public override void Rollback()
+        {
+            lock (Mod)
+            {
+                _cache.Clear();
+                Load();
             }
         }
     }

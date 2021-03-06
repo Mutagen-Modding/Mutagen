@@ -34,13 +34,23 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Fact]
-        public void CanSave()
+        public void CanCommit()
         {
             var mod = new OblivionMod(Utility.PluginModKey);
 
             using var allocator = CreateFormKeyAllocator(mod);
 
-            allocator.Save();
+            allocator.Commit();
+        }
+
+        [Fact]
+        public void CanRollback()
+        {
+            var mod = new OblivionMod(Utility.PluginModKey);
+
+            using var allocator = CreateFormKeyAllocator(mod);
+
+            allocator.Rollback();
         }
 
         [Fact]
@@ -57,7 +67,7 @@ namespace Mutagen.Bethesda.UnitTests
 
                 expectedFormKey = allocator.GetNextFormKey();
 
-                allocator.Save();
+                allocator.Commit();
             }
 
             {
@@ -70,6 +80,26 @@ namespace Mutagen.Bethesda.UnitTests
 
                 Assert.Equal(expectedFormKey, formKey);
             }
+        }
+
+        [Fact]
+        public void AllocatesSameFormKeyAfterRollback()
+        {
+            uint nextFormID = 123;
+
+            var mod = new OblivionMod(Utility.PluginModKey);
+            ((IMod)mod).NextFormID = nextFormID;
+
+            using var allocator = CreateFormKeyAllocator(mod);
+
+            var expectedFormKey = allocator.GetNextFormKey();
+
+            allocator.Rollback();
+            ((IMod)mod).NextFormID = nextFormID;
+
+            var formKey = allocator.GetNextFormKey();
+
+            Assert.Equal(expectedFormKey, formKey);
         }
 
         [Fact]
@@ -86,7 +116,7 @@ namespace Mutagen.Bethesda.UnitTests
 
                 expectedFormKey = allocator.GetNextFormKey(null);
 
-                allocator.Save();
+                allocator.Commit();
             }
 
             {
@@ -102,6 +132,26 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Fact]
+        public void AllocatesSameFormKeyForNullEditorIDAfterRollback()
+        {
+            uint nextFormID = 123;
+
+            var mod = new OblivionMod(Utility.PluginModKey);
+            ((IMod)mod).NextFormID = nextFormID;
+
+            using var allocator = CreateFormKeyAllocator(mod);
+
+            var expectedFormKey = allocator.GetNextFormKey(null);
+
+            allocator.Rollback();
+            ((IMod)mod).NextFormID = nextFormID;
+
+            var formKey = allocator.GetNextFormKey(null);
+
+            Assert.Equal(expectedFormKey, formKey);
+        }
+
+        [Fact]
         public void AllocatesSameFormKeyForEditorIDAfterLoad()
         {
             FormKey expectedFormKey;
@@ -111,7 +161,7 @@ namespace Mutagen.Bethesda.UnitTests
 
                 expectedFormKey = allocator.GetNextFormKey(Utility.Edid1);
 
-                allocator.Save();
+                allocator.Commit();
             }
 
             {
@@ -124,6 +174,23 @@ namespace Mutagen.Bethesda.UnitTests
             }
         }
 
+        //[Fact]
+        public void AllocatesSameFormKeyForEditorIDAfterRollback()
+        {
+            uint nextFormID = 123;
+            var mod = new OblivionMod(Utility.PluginModKey);
+            ((IMod)mod).NextFormID = nextFormID;
+            using var allocator = CreateFormKeyAllocator(mod);
+
+            var expectedFormKey = allocator.GetNextFormKey(Utility.Edid1);
+
+            allocator.Rollback();
+            ((IMod)mod).NextFormID = nextFormID;
+
+            var formKey = allocator.GetNextFormKey(Utility.Edid1);
+
+            Assert.Equal(expectedFormKey, formKey);
+        }
 
         [Fact]
         public void OutOfOrderAllocationReturnsSameIdentifiers()
@@ -140,7 +207,7 @@ namespace Mutagen.Bethesda.UnitTests
                 var formKey2 = allocator.GetNextFormKey(Utility.Edid2);
                 formID2 = formKey2.ID;
 
-                allocator.Save();
+                allocator.Commit();
             }
 
             {
@@ -181,7 +248,52 @@ namespace Mutagen.Bethesda.UnitTests
 
                 input.AsParallel().ForAll(apply);
 
-                allocator.Save();
+                allocator.Commit();
+            }
+
+            {
+                using var allocator = CreateFormKeyAllocator(mod);
+
+                void check((int i, string s) x)
+                {
+                    if (x.i % 3 != 0)
+                    {
+                        var key = allocator.GetNextFormKey(x.s);
+                        if (!output1.TryGetValue(x.i, out var expectedID))
+                            throw new Exception("?");
+                        Assert.Equal(expectedID, key.ID);
+                    }
+                }
+
+                input.AsParallel().ForAll(check);
+            }
+        }
+
+        [Fact]
+        public void ParallelAllocationWithCommits()
+        {
+            var input = Enumerable.Range(1, 100).Select(i => (i, i.ToString())).ToList();
+            var output1 = new ConcurrentDictionary<int, uint>();
+
+            var mod = new OblivionMod(Utility.PluginModKey);
+            {
+                using var allocator = CreateFormKeyAllocator(mod);
+
+                void apply((int i, string s) x)
+                {
+                    // "Randomly" allocate some non-unique FormIDs.
+                    if (x.i % 3 == 0)
+                        allocator.Commit();
+                    else
+                    {
+                        var key = allocator.GetNextFormKey(x.s);
+                        output1.TryAdd(x.i, key.ID);
+                    }
+                }
+
+                input.AsParallel().ForAll(apply);
+
+                allocator.Commit();
             }
 
             {

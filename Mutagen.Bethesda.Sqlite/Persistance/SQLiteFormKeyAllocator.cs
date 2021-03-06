@@ -56,9 +56,9 @@ namespace Mutagen.Bethesda.Sqlite
 
     public class SQLiteFormKeyAllocator : BaseSharedFormKeyAllocator
     {
-        private readonly uint PatcherID;
+        private uint PatcherID;
 
-        private readonly SQLiteFormKeyAllocatorDbContext Connection;
+        private SQLiteFormKeyAllocatorDbContext Connection;
 
         private bool disposedValue;
 
@@ -175,7 +175,7 @@ namespace Mutagen.Bethesda.Sqlite
             }
         }
 
-        public override void Save()
+        public override void Commit()
         {
             lock (Connection)
             {
@@ -186,14 +186,20 @@ namespace Mutagen.Bethesda.Sqlite
         protected override void Dispose(bool disposing)
         {
             if (disposedValue) return;
+            base.Dispose(disposing);
             if (disposing)
                 Connection?.Dispose();
             disposedValue = true;
         }
 
-        ~SQLiteFormKeyAllocator()
+        public override void Rollback()
         {
-            Dispose(disposing: false);
+            lock (Mod)
+            {
+                Connection?.Dispose();
+                Connection = new SQLiteFormKeyAllocatorDbContext(SaveLocation.Path);
+                PatcherID = GetOrAddPatcherID(PatcherName);
+            }
         }
     }
 }
