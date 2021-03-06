@@ -104,6 +104,8 @@ namespace Mutagen.Bethesda
         /// Whether a mod has localization enabled
         /// </summary>
         new bool UsingLocalization { get; set; }
+
+        void SetAllocator(IFormKeyAllocator allocator);
     }
 
     /// <summary>
