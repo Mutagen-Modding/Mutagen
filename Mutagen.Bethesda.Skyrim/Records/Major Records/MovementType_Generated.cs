@@ -1928,15 +1928,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item: item.BackRun);
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.RotateInPlaceWalk);
+                    item: item.RotateInPlaceWalk,
+                    multiplier: 57.2958f);
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.RotateInPlaceRun);
+                    item: item.RotateInPlaceRun,
+                    multiplier: 57.2958f);
                 if (!item.SPEDDataTypeState.HasFlag(MovementType.SPEDDataType.Break0))
                 {
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.RotateWhileMovingRun);
+                        item: item.RotateWhileMovingRun,
+                        multiplier: 57.2958f);
                 }
             }
             if (item.AnimationChangeThresholds.TryGet(out var AnimationChangeThresholdsItem))
@@ -2057,14 +2060,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ForwardRun = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.BackWalk = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.BackRun = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.RotateInPlaceWalk = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.RotateInPlaceRun = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.RotateInPlaceWalk = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        multiplier: 57.2958f);
+                    item.RotateInPlaceRun = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        multiplier: 57.2958f);
                     if (dataFrame.Complete)
                     {
                         item.SPEDDataTypeState |= MovementType.SPEDDataType.Break0;
                         return (int)MovementType_FieldIndex.RotateInPlaceRun;
                     }
-                    item.RotateWhileMovingRun = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.RotateWhileMovingRun = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        multiplier: 57.2958f);
                     return (int)MovementType_FieldIndex.RotateWhileMovingRun;
                 }
                 case RecordTypeInts.INAM:
@@ -2179,17 +2188,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region RotateInPlaceWalk
         private int _RotateInPlaceWalkLocation => _SPEDLocation!.Value + 0x20;
         private bool _RotateInPlaceWalk_IsSet => _SPEDLocation.HasValue;
-        public Single RotateInPlaceWalk => _RotateInPlaceWalk_IsSet ? _data.Slice(_RotateInPlaceWalkLocation, 4).Float() : default;
+        public Single RotateInPlaceWalk => _RotateInPlaceWalk_IsSet ? _data.Slice(_RotateInPlaceWalkLocation, 4).Float() * 57.2958f : default;
         #endregion
         #region RotateInPlaceRun
         private int _RotateInPlaceRunLocation => _SPEDLocation!.Value + 0x24;
         private bool _RotateInPlaceRun_IsSet => _SPEDLocation.HasValue;
-        public Single RotateInPlaceRun => _RotateInPlaceRun_IsSet ? _data.Slice(_RotateInPlaceRunLocation, 4).Float() : default;
+        public Single RotateInPlaceRun => _RotateInPlaceRun_IsSet ? _data.Slice(_RotateInPlaceRunLocation, 4).Float() * 57.2958f : default;
         #endregion
         #region RotateWhileMovingRun
         private int _RotateWhileMovingRunLocation => _SPEDLocation!.Value + 0x28;
         private bool _RotateWhileMovingRun_IsSet => _SPEDLocation.HasValue && !SPEDDataTypeState.HasFlag(MovementType.SPEDDataType.Break0);
-        public Single RotateWhileMovingRun => _RotateWhileMovingRun_IsSet ? _data.Slice(_RotateWhileMovingRunLocation, 4).Float() : default;
+        public Single RotateWhileMovingRun => _RotateWhileMovingRun_IsSet ? _data.Slice(_RotateWhileMovingRunLocation, 4).Float() * 57.2958f : default;
         #endregion
         #region AnimationChangeThresholds
         private RangeInt32? _AnimationChangeThresholdsLocation;
