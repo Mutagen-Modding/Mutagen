@@ -12,6 +12,7 @@ namespace Mutagen.Bethesda.Generation
     {
         public FloatIntegerType? IntegerType;
         public double Multiplier;
+        public bool IsRotation;
 
         public override async Task Load(XElement node, bool requireName = true)
         {
@@ -23,6 +24,11 @@ namespace Mutagen.Bethesda.Generation
                 this.Multiplier *= 1 / div;
             }
             this.IntegerType = node.GetAttribute("integerType", default(FloatIntegerType?));
+            this.IsRotation = node.GetAttribute("isRotation", false);
+            if (IsRotation)
+            {
+                this.Multiplier = 57.2958f; //180f / Math.PI;
+            }
             if (this.IntegerType.HasValue)
             {
                 switch (this.IntegerType)
