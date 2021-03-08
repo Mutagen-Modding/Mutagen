@@ -8,7 +8,9 @@ namespace Mutagen.Bethesda.UnitTests
 {
     public class TextFileSharedFormKeyAllocator_Tests : ISharedFormKeyAllocator_Tests<TextFileSharedFormKeyAllocator>
     {
-        protected override TextFileSharedFormKeyAllocator CreateFormKeyAllocator(IMod mod) => new(mod, tempFolder.Value.Dir.Path);
+        private const string DefaultName = "default";
+
+        protected override TextFileSharedFormKeyAllocator CreateFormKeyAllocator(IMod mod) => new(mod, tempFolder.Value.Dir.Path, DefaultName);
 
         protected override TextFileSharedFormKeyAllocator CreateFormKeyAllocator(IMod mod, string patcherName) => new(mod, tempFolder.Value.Dir.Path, patcherName);
 
@@ -72,7 +74,7 @@ namespace Mutagen.Bethesda.UnitTests
                     //Utility.Form2.ToString(),
                 });
             var mod = new OblivionMod(Utility.PluginModKey);
-            Assert.Throws<ArgumentException>(() => new TextFileSharedFormKeyAllocator(mod, folder.Dir.Path));
+            Assert.Throws<ArgumentException>(() => new TextFileSharedFormKeyAllocator(mod, folder.Dir.Path, DefaultName));
         }
 
         [Fact]
@@ -89,7 +91,7 @@ namespace Mutagen.Bethesda.UnitTests
                     Utility.Form1.ToString(),
                 });
             var mod = new OblivionMod(Utility.PluginModKey);
-            Assert.Throws<ArgumentException>(() => new TextFileSharedFormKeyAllocator(mod, folder.Dir.Path));
+            Assert.Throws<ArgumentException>(() => new TextFileSharedFormKeyAllocator(mod, folder.Dir.Path, DefaultName));
         }
 
         [Fact]

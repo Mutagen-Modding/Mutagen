@@ -56,6 +56,8 @@ namespace Mutagen.Bethesda.Sqlite
 
     public class SQLiteFormKeyAllocator : BaseSharedFormKeyAllocator
     {
+        public static readonly string DefaultPatcherName = "default";
+
         private uint PatcherID;
 
         private SQLiteFormKeyAllocatorDbContext Connection;
@@ -65,11 +67,9 @@ namespace Mutagen.Bethesda.Sqlite
         private readonly bool manyPatchers = true;
 
         public SQLiteFormKeyAllocator(IMod mod, string dbPath)
-            : base(mod, dbPath)
+            : this(mod, dbPath, DefaultPatcherName)
         {
             manyPatchers = false;
-            Connection = new SQLiteFormKeyAllocatorDbContext(dbPath);
-            PatcherID = GetOrAddPatcherID(PatcherName);
         }
 
         public SQLiteFormKeyAllocator(IMod mod, string dbPath, string patcherName)

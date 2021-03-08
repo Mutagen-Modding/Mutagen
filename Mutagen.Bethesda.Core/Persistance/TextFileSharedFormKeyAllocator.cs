@@ -19,12 +19,8 @@ namespace Mutagen.Bethesda.Core.Persistance
 
         private readonly HashSet<uint> FormIDSet = new();
 
-        public TextFileSharedFormKeyAllocator(IMod mod, string saveFolder) : base(mod, saveFolder)
-        {
-            Load();
-        }
-
-        public TextFileSharedFormKeyAllocator(IMod mod, string saveFolder, string patcherName) : base(mod, saveFolder, patcherName)
+        public TextFileSharedFormKeyAllocator(IMod mod, string saveFolder, string patcherName) 
+            : base(mod, saveFolder, patcherName)
         {
             Load();
         }
