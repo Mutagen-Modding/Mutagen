@@ -15,11 +15,12 @@ namespace Mutagen.Bethesda.Core.Persistance
 
     public class TextFileSharedFormKeyAllocator : BaseSharedFormKeyAllocator
     {
+        private readonly object _lock = new();
         private readonly Dictionary<string, (string patcherName, FormKey formKey)> _cache = new();
 
         private readonly HashSet<uint> _formIDSet = new();
 
-        public TextFileSharedFormKeyAllocator(IMod mod, string saveFolder, string activePatcherName) 
+        public TextFileSharedFormKeyAllocator(IMod mod, string saveFolder, string activePatcherName)
             : base(mod, saveFolder, activePatcherName)
         {
             Load();
@@ -54,28 +55,31 @@ namespace Mutagen.Bethesda.Core.Persistance
 
         public override FormKey GetNextFormKey()
         {
-            lock (this.Mod)
+            lock (this._lock)
             {
-                var candidateFormID = this.Mod.NextFormID;
-                if (candidateFormID > 0xFFFFFF)
-                    throw new OverflowException();
-
-                while (_formIDSet.Contains(candidateFormID))
+                lock (this.Mod)
                 {
-                    candidateFormID++;
+                    var candidateFormID = this.Mod.NextFormID;
                     if (candidateFormID > 0xFFFFFF)
                         throw new OverflowException();
+
+                    while (_formIDSet.Contains(candidateFormID))
+                    {
+                        candidateFormID++;
+                        if (candidateFormID > 0xFFFFFF)
+                            throw new OverflowException();
+                    }
+
+                    Mod.NextFormID = candidateFormID + 1;
+
+                    return new FormKey(this.Mod.ModKey, candidateFormID);
                 }
-
-                Mod.NextFormID = candidateFormID + 1;
-
-                return new FormKey(this.Mod.ModKey, candidateFormID);
             }
         }
 
         protected override FormKey GetNextFormKeyNotNull(string editorID)
         {
-            lock (_cache)
+            lock (this._lock)
             {
                 if (_cache.TryGetValue(editorID, out var rec))
                 {
@@ -94,7 +98,7 @@ namespace Mutagen.Bethesda.Core.Persistance
 
         public override void Commit()
         {
-            lock (_cache)
+            lock (this._lock)
             {
                 var data = _cache
                     .Where(p => p.Value.patcherName == ActivePatcherName)
@@ -105,7 +109,7 @@ namespace Mutagen.Bethesda.Core.Persistance
 
         public override void Rollback()
         {
-            lock (_cache)
+            lock (this._lock)
             {
                 _cache.Clear();
                 _formIDSet.Clear();

@@ -23,12 +23,15 @@ namespace Mutagen.Bethesda
 
         public FormKey GetNextFormKey(string? editorID)
         {
-            if (editorID is null)
-                return GetNextFormKey();
+            if (editorID is null) return GetNextFormKey();
 
             lock (_allocatedEditorIDs)
+            {
                 if (!_allocatedEditorIDs.Add(editorID))
+                {
                     throw new ConstraintException($"Attempted to allocate a duplicate unique FormKey for {editorID}");
+                }
+            }
 
             return GetNextFormKeyNotNull(editorID);
         }

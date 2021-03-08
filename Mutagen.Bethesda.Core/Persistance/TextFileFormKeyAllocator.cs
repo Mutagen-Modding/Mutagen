@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Core.Persistance
 
         protected override FormKey GetNextFormKeyNotNull(string editorID)
         {
-            lock (this.Mod)
+            lock (this._cache)
             {
                 if (_cache.TryGetValue(editorID, out var id))
                     return id;
@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Core.Persistance
 
         public override void Commit()
         {
-            lock (Mod)
+            lock (_cache)
             {
                 WriteToFile(_saveLocation, _cache);
             }
@@ -101,7 +101,7 @@ namespace Mutagen.Bethesda.Core.Persistance
 
         public override void Rollback()
         {
-            lock (Mod)
+            lock (_cache)
             {
                 _cache.Clear();
                 Load();
