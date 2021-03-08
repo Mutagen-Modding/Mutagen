@@ -17,17 +17,17 @@ namespace Mutagen.Bethesda.Core.Persistance
     {
         private readonly Dictionary<string, (string patcherName, FormKey formKey)> _cache = new();
 
-        private readonly HashSet<uint> FormIDSet = new();
+        private readonly HashSet<uint> _formIDSet = new();
 
-        public TextFileSharedFormKeyAllocator(IMod mod, string saveFolder, string patcherName) 
-            : base(mod, saveFolder, patcherName)
+        public TextFileSharedFormKeyAllocator(IMod mod, string saveFolder, string activePatcherName) 
+            : base(mod, saveFolder, activePatcherName)
         {
             Load();
         }
 
         private void Load()
         {
-            foreach (var file in Directory.GetFiles(SaveLocation, "*.txt"))
+            foreach (var file in Directory.GetFiles(_saveLocation, "*.txt"))
                 ReadFile(file, Path.GetFileNameWithoutExtension(file));
         }
 
@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Core.Persistance
                     throw new ArgumentException("Unexpected odd number of lines.");
                 }
                 var formKey = FormKey.Factory(formKeyStr);
-                if (!FormIDSet.Add(formKey.ID))
+                if (!_formIDSet.Add(formKey.ID))
                 {
                     throw new ArgumentException("Duplicate formKey loaded from {filePath}.");
                 }
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Core.Persistance
                 if (candidateFormID > 0xFFFFFF)
                     throw new OverflowException();
 
-                while (FormIDSet.Contains(candidateFormID))
+                while (_formIDSet.Contains(candidateFormID))
                 {
                     candidateFormID++;
                     if (candidateFormID > 0xFFFFFF)
@@ -79,14 +79,14 @@ namespace Mutagen.Bethesda.Core.Persistance
             {
                 if (_cache.TryGetValue(editorID, out var rec))
                 {
-                    if (rec.patcherName != PatcherName)
+                    if (rec.patcherName != ActivePatcherName)
                         throw new ConstraintException($"Attempted to allocate a unique FormKey for {editorID} when it was previously allocated by {rec.patcherName}");
                     return rec.formKey;
                 }
 
                 var formKey = GetNextFormKey();
 
-                _cache.Add(editorID, (PatcherName, formKey));
+                _cache.Add(editorID, (ActivePatcherName, formKey));
 
                 return formKey;
             }
@@ -97,9 +97,9 @@ namespace Mutagen.Bethesda.Core.Persistance
             lock (_cache)
             {
                 var data = _cache
-                    .Where(p => p.Value.patcherName == PatcherName)
+                    .Where(p => p.Value.patcherName == ActivePatcherName)
                     .Select(p => (p.Key, p.Value.formKey));
-                WriteToFile(Path.Combine(SaveLocation, PatcherName), data);
+                WriteToFile(Path.Combine(_saveLocation, ActivePatcherName), data);
             }
         }
 
@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Core.Persistance
             lock (_cache)
             {
                 _cache.Clear();
-                FormIDSet.Clear();
+                _formIDSet.Clear();
                 Load();
             }
         }

@@ -73,14 +73,14 @@ namespace Mutagen.Bethesda.Core.Persistance
         {
             lock (Mod)
             {
-                WriteToFile(SaveLocation, _cache);
+                WriteToFile(_saveLocation, _cache);
             }
         }
 
         private void Load()
         {
-            if (!File.Exists(SaveLocation)) return;
-            using var streamReader = new StreamReader(SaveLocation);
+            if (!File.Exists(_saveLocation)) return;
+            using var streamReader = new StreamReader(_saveLocation);
             while (true)
             {
                 var edidStr = streamReader.ReadLine();

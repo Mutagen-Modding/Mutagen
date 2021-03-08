@@ -5,7 +5,7 @@ namespace Mutagen.Bethesda
 {
     public abstract class BasePersistentFormKeyAllocator : BaseFormKeyAllocator, IPersistentFormKeyAllocator
     {
-        protected string SaveLocation;
+        protected string _saveLocation;
 
         public bool CommitOnDispose = true;
 
@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda
 
         protected BasePersistentFormKeyAllocator(IMod mod, string saveLocation) : base(mod)
         {
-            this.SaveLocation = saveLocation;
+            this._saveLocation = saveLocation;
         }
 
         /// <summary>

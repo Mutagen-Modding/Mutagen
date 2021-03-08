@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda
         /// </summary>
         public IMod Mod { get; }
 
-        private readonly HashSet<string> AllocatedEditorIDs = new();
+        private readonly HashSet<string> _allocatedEditorIDs = new();
 
         protected BaseFormKeyAllocator(IMod mod)
         {
@@ -26,8 +26,8 @@ namespace Mutagen.Bethesda
             if (editorID is null)
                 return GetNextFormKey();
 
-            lock (AllocatedEditorIDs)
-                if (!AllocatedEditorIDs.Add(editorID))
+            lock (_allocatedEditorIDs)
+                if (!_allocatedEditorIDs.Add(editorID))
                     throw new ConstraintException($"Attempted to allocate a duplicate unique FormKey for {editorID}");
 
             return GetNextFormKeyNotNull(editorID);

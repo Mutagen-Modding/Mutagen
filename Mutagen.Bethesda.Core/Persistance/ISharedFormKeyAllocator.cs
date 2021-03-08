@@ -6,11 +6,12 @@ namespace Mutagen.Bethesda
     [DebuggerDisplay("SharedFormKeyAllocator {Mod} {PatcherName}")]
     public abstract class BaseSharedFormKeyAllocator : BasePersistentFormKeyAllocator, ISharedFormKeyAllocator
     {
-        protected readonly string PatcherName;
+        public string ActivePatcherName { get; }
 
-        protected BaseSharedFormKeyAllocator(IMod mod, string saveLocation, string patcherName) : base(mod, saveLocation)
+        protected BaseSharedFormKeyAllocator(IMod mod, string saveLocation, string activePatcherName)
+            : base(mod, saveLocation)
         {
-            PatcherName = patcherName;
+            ActivePatcherName = activePatcherName;
         }
     }
 
