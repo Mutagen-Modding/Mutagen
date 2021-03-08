@@ -135,6 +135,9 @@
     <Compile Include="Load Order\LoadOrderListing.cs" />
     <Compile Include="Load Order\LoadOrderTimestampComparer.cs" />
     <Compile Include="Load Order\PluginListings.cs" />
+    <Compile Include="Persistance\IPersistentFormKeyAllocator.cs" />
+    <Compile Include="Persistance\ISharedFormKeyAllocator.cs" />
+    <Compile Include="Persistance\TextFileSharedFormKeyAllocator.cs" />
     <Compile Include="Records\RecordTypeInts.cs" />
     <Compile Include="Records\RecordTypes.cs" />
     <Compile Include="Streams\WritingBundle.cs" />

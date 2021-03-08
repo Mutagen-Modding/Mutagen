@@ -1,34 +1,30 @@
 using Mutagen.Bethesda.Core.Persistance;
 using Mutagen.Bethesda.Oblivion;
-using Noggog.Utility;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests
 {
-    public class TextFileFormKeyAllocator_Tests
+    public class TextFileFormKeyAllocator_Tests : IPersistentFormKeyAllocator_Tests<TextFileFormKeyAllocator>
     {
+        protected override TextFileFormKeyAllocator CreateFormKeyAllocator(IMod mod) => new(mod, tempFile.Value.File);
+
         [Fact]
         public void StaticExport()
         {
-            uint nextID = 123;
-            using var file = new TempFile(extraDirectoryPaths: Utility.TempFolderPath);
             TextFileFormKeyAllocator.WriteToFile(
-                file.File.Path,
-                nextID,
+                tempFile.Value.File.Path,
                 new KeyValuePair<string, FormKey>[]
                 {
                     new KeyValuePair<string, FormKey>(Utility.Edid1, Utility.Form1),
                     new KeyValuePair<string, FormKey>(Utility.Edid2, Utility.Form2),
                 });
-            var lines = File.ReadAllLines(file.File.Path);
+
+            var lines = File.ReadAllLines(tempFile.Value.File.Path);
             Assert.Equal(
                 new string[]
                 {
-                    nextID.ToString(),
                     Utility.Edid1,
                     Utility.Form1.ToString(),
                     Utility.Edid2,
@@ -40,24 +36,20 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void TypicalImport()
         {
-            using var file = new TempFile(extraDirectoryPaths: Utility.TempFolderPath);
-            uint nextID = 123;
+            using var file = tempFile.Value;
             File.WriteAllLines(
                 file.File.Path,
                 new string[]
                 {
-                    nextID.ToString(),
                     Utility.Edid1,
                     Utility.Form1.ToString(),
                     Utility.Edid2,
                     Utility.Form2.ToString(),
                 });
             var mod = new OblivionMod(Utility.PluginModKey);
-            var allocator = TextFileFormKeyAllocator.FromFile(mod, file.File.Path);
-            var formID = allocator.GetNextFormKey();
-            Assert.Equal(nextID, formID.ID);
+            using var allocator = new TextFileFormKeyAllocator(mod, file.File);
+            var formID = allocator.GetNextFormKey(Utility.Edid1);
             Assert.Equal(Utility.PluginModKey, formID.ModKey);
-            formID = allocator.GetNextFormKey(Utility.Edid1);
             Assert.Equal(formID, Utility.Form1);
             formID = allocator.GetNextFormKey(Utility.Edid2);
             Assert.Equal(formID, Utility.Form2);
@@ -66,23 +58,18 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void TypicalReimport()
         {
-            uint nextID = 123;
-            var list = new KeyValuePair<string, FormKey>[]
-            {
-                new KeyValuePair<string, FormKey>(Utility.Edid1, Utility.Form1),
-                new KeyValuePair<string, FormKey>(Utility.Edid2, Utility.Form2),
-            };
-            using var file = new TempFile(extraDirectoryPaths: Utility.TempFolderPath);
+            using var file = tempFile.Value;
             TextFileFormKeyAllocator.WriteToFile(
                 file.File.Path,
-                nextID,
-                list);
+                new KeyValuePair<string, FormKey>[]
+                {
+                    new KeyValuePair<string, FormKey>(Utility.Edid1, Utility.Form1),
+                    new KeyValuePair<string, FormKey>(Utility.Edid2, Utility.Form2),
+                });
             var mod = new OblivionMod(Utility.PluginModKey);
-            var allocator = TextFileFormKeyAllocator.FromFile(mod, file.File.Path);
-            var formID = allocator.GetNextFormKey();
-            Assert.Equal(nextID, formID.ID);
+            using var allocator = new TextFileFormKeyAllocator(mod, file.File);
+            var formID = allocator.GetNextFormKey(Utility.Edid1);
             Assert.Equal(Utility.PluginModKey, formID.ModKey);
-            formID = allocator.GetNextFormKey(Utility.Edid1);
             Assert.Equal(formID, Utility.Form1);
             formID = allocator.GetNextFormKey(Utility.Edid2);
             Assert.Equal(formID, Utility.Form2);
