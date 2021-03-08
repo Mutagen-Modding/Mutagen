@@ -13,10 +13,10 @@
           <Float name="ForwardRun" />
           <Float name="BackWalk" />
           <Float name="BackRun" />
-          <Float name="RotateInPlaceWalk" />
-          <Float name="RotateInPlaceRun" />
+          <Float name="RotateInPlaceWalk" isRotation="true" />
+          <Float name="RotateInPlaceRun" isRotation="true" />
           <Break />
-          <Float name="RotateWhileMovingRun" />
+          <Float name="RotateWhileMovingRun" isRotation="true" />
         </Fields>
       </Data>
       <RefDirect name="AnimationChangeThresholds" refName="AnimationChangeThresholds" />
