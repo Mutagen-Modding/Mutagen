@@ -63,6 +63,22 @@ namespace Mutagen.Bethesda.WPF
              new FrameworkPropertyMetadata(default(ErrorResponse), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
         public static readonly DependencyProperty ErrorProperty = ErrorPropertyKey.DependencyProperty;
 
+        public double MaxSearchBoxHeight
+        {
+            get => (double)GetValue(MaxSearchBoxHeightProperty);
+            set => SetValue(MaxSearchBoxHeightProperty, value);
+        }
+        public static readonly DependencyProperty MaxSearchBoxHeightProperty = DependencyProperty.Register(nameof(MaxSearchBoxHeight), typeof(double), typeof(ModKeyBox),
+             new FrameworkPropertyMetadata(double.PositiveInfinity));
+
+        public double SearchBoxHeight
+        {
+            get => (double)GetValue(SearchBoxHeightProperty);
+            set => SetValue(SearchBoxHeightProperty, value);
+        }
+        public static readonly DependencyProperty SearchBoxHeightProperty = DependencyProperty.Register(nameof(SearchBoxHeight), typeof(double), typeof(ModKeyBox),
+             new FrameworkPropertyMetadata(double.NaN));
+
         static ModKeyBox()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(ModKeyBox), new FrameworkPropertyMetadata(typeof(ModKeyBox)));
