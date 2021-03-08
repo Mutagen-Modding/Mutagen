@@ -8,7 +8,7 @@ namespace Mutagen.Bethesda.UnitTests
 {
     public class TextFileFormKeyAllocator_Tests : IPersistentFormKeyAllocator_Tests<TextFileFormKeyAllocator>
     {
-        protected override TextFileFormKeyAllocator CreateFormKeyAllocator(IMod mod) => new(mod, tempFile.Value.File);
+        protected override TextFileFormKeyAllocator CreateFormKeyAllocator(IMod mod) => new(mod, tempFile.Value.File.Path);
 
         [Fact]
         public void StaticExport()
@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.UnitTests
                     Utility.Form2.ToString(),
                 });
             var mod = new OblivionMod(Utility.PluginModKey);
-            using var allocator = new TextFileFormKeyAllocator(mod, file.File);
+            using var allocator = new TextFileFormKeyAllocator(mod, file.File.Path);
             var formID = allocator.GetNextFormKey(Utility.Edid1);
             Assert.Equal(Utility.PluginModKey, formID.ModKey);
             Assert.Equal(formID, Utility.Form1);
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.UnitTests
                     new KeyValuePair<string, FormKey>(Utility.Edid2, Utility.Form2),
                 });
             var mod = new OblivionMod(Utility.PluginModKey);
-            using var allocator = new TextFileFormKeyAllocator(mod, file.File);
+            using var allocator = new TextFileFormKeyAllocator(mod, file.File.Path);
             var formID = allocator.GetNextFormKey(Utility.Edid1);
             Assert.Equal(Utility.PluginModKey, formID.ModKey);
             Assert.Equal(formID, Utility.Form1);

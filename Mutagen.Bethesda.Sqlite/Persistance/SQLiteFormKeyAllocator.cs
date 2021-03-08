@@ -64,16 +64,18 @@ namespace Mutagen.Bethesda.Sqlite
 
         private readonly bool manyPatchers = true;
 
-        public SQLiteFormKeyAllocator(IMod mod, FilePath dbPath) : base(mod, dbPath)
+        public SQLiteFormKeyAllocator(IMod mod, string dbPath)
+            : base(mod, dbPath)
         {
             manyPatchers = false;
-            Connection = new SQLiteFormKeyAllocatorDbContext(dbPath.Path);
+            Connection = new SQLiteFormKeyAllocatorDbContext(dbPath);
             PatcherID = GetOrAddPatcherID(PatcherName);
         }
 
-        public SQLiteFormKeyAllocator(IMod mod, FilePath dbPath, string patcherName) : base(mod, dbPath, patcherName)
+        public SQLiteFormKeyAllocator(IMod mod, string dbPath, string patcherName)
+            : base(mod, dbPath, patcherName)
         {
-            Connection = new SQLiteFormKeyAllocatorDbContext(dbPath.Path);
+            Connection = new SQLiteFormKeyAllocatorDbContext(dbPath);
             PatcherID = GetOrAddPatcherID(PatcherName);
         }
 
@@ -197,7 +199,7 @@ namespace Mutagen.Bethesda.Sqlite
             lock (Mod)
             {
                 Connection?.Dispose();
-                Connection = new SQLiteFormKeyAllocatorDbContext(SaveLocation.Path);
+                Connection = new SQLiteFormKeyAllocatorDbContext(SaveLocation);
                 PatcherID = GetOrAddPatcherID(PatcherName);
             }
         }

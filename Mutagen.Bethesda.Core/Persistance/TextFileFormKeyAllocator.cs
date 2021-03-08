@@ -14,7 +14,8 @@ namespace Mutagen.Bethesda.Core.Persistance
     {
         private readonly Dictionary<string, FormKey> _cache = new();
 
-        public TextFileFormKeyAllocator(IMod mod, FilePath saveLocation) : base(mod, saveLocation)
+        public TextFileFormKeyAllocator(IMod mod, string saveLocation) 
+            : base(mod, saveLocation)
         {
             Load();
         }
@@ -72,14 +73,14 @@ namespace Mutagen.Bethesda.Core.Persistance
         {
             lock (Mod)
             {
-                WriteToFile(SaveLocation.Path, _cache);
+                WriteToFile(SaveLocation, _cache);
             }
         }
 
         private void Load()
         {
-            if (!SaveLocation.Exists) return;
-            using var streamReader = new StreamReader(SaveLocation.Path);
+            if (!File.Exists(SaveLocation)) return;
+            using var streamReader = new StreamReader(SaveLocation);
             while (true)
             {
                 var edidStr = streamReader.ReadLine();

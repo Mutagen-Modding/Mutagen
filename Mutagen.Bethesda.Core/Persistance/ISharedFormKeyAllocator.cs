@@ -10,9 +10,9 @@ namespace Mutagen.Bethesda
 
         protected readonly string PatcherName;
 
-        protected BaseSharedFormKeyAllocator(IMod mod, IPath saveLocation) : this(mod, saveLocation, DefaultPatcherName) { }
+        protected BaseSharedFormKeyAllocator(IMod mod, string saveLocation) : this(mod, saveLocation, DefaultPatcherName) { }
 
-        protected BaseSharedFormKeyAllocator(IMod mod, IPath saveLocation, string patcherName) : base(mod, saveLocation)
+        protected BaseSharedFormKeyAllocator(IMod mod, string saveLocation, string patcherName) : base(mod, saveLocation)
         {
             PatcherName = patcherName;
         }

@@ -19,19 +19,19 @@ namespace Mutagen.Bethesda.Core.Persistance
 
         private readonly HashSet<uint> FormIDSet = new();
 
-        public TextFileSharedFormKeyAllocator(IMod mod, DirectoryPath saveFolder) : base(mod, saveFolder)
+        public TextFileSharedFormKeyAllocator(IMod mod, string saveFolder) : base(mod, saveFolder)
         {
             Load();
         }
 
-        public TextFileSharedFormKeyAllocator(IMod mod, DirectoryPath saveFolder, string patcherName) : base(mod, saveFolder, patcherName)
+        public TextFileSharedFormKeyAllocator(IMod mod, string saveFolder, string patcherName) : base(mod, saveFolder, patcherName)
         {
             Load();
         }
 
         private void Load()
         {
-            foreach (var file in Directory.GetFiles(SaveLocation.Path, "*.txt"))
+            foreach (var file in Directory.GetFiles(SaveLocation, "*.txt"))
                 ReadFile(file, Path.GetFileName(file)[0..^4]);
         }
 
@@ -103,7 +103,7 @@ namespace Mutagen.Bethesda.Core.Persistance
                 var data = _cache
                     .Where(p => p.Value.patcherName == PatcherName)
                     .Select(p => (p.Key, p.Value.formKey));
-                WriteToFile(Path.Combine(SaveLocation.Path, PatcherName), data);
+                WriteToFile(Path.Combine(SaveLocation, PatcherName), data);
             }
         }
 
