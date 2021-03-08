@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Core.Persistance
         private void Load()
         {
             foreach (var file in Directory.GetFiles(SaveLocation, "*.txt"))
-                ReadFile(file, Path.GetFileName(file)[0..^4]);
+                ReadFile(file, Path.GetFileNameWithoutExtension(file));
         }
 
         private void ReadFile(string filePath, string patcherName)
