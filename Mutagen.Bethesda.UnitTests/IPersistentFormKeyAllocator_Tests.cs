@@ -95,7 +95,6 @@ namespace Mutagen.Bethesda.UnitTests
             var expectedFormKey = allocator.GetNextFormKey();
 
             allocator.Rollback();
-            ((IMod)mod).NextFormID = nextFormID;
 
             var formKey = allocator.GetNextFormKey();
 
@@ -144,7 +143,6 @@ namespace Mutagen.Bethesda.UnitTests
             var expectedFormKey = allocator.GetNextFormKey(null);
 
             allocator.Rollback();
-            ((IMod)mod).NextFormID = nextFormID;
 
             var formKey = allocator.GetNextFormKey(null);
 
@@ -185,7 +183,6 @@ namespace Mutagen.Bethesda.UnitTests
             var expectedFormKey = allocator.GetNextFormKey(Utility.Edid1);
 
             allocator.Rollback();
-            ((IMod)mod).NextFormID = nextFormID;
 
             var formKey = allocator.GetNextFormKey(Utility.Edid1);
 

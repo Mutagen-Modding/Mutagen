@@ -16,6 +16,7 @@ namespace Mutagen.Bethesda.Core.Persistance
     public class TextFileSharedFormKeyAllocator : BaseSharedFormKeyAllocator
     {
         private readonly object _lock = new();
+        private readonly uint _initialNextFormID;
         private readonly Dictionary<string, (string patcherName, FormKey formKey)> _cache = new();
 
         private readonly HashSet<uint> _formIDSet = new();
@@ -23,6 +24,7 @@ namespace Mutagen.Bethesda.Core.Persistance
         public TextFileSharedFormKeyAllocator(IMod mod, string saveFolder, string activePatcherName)
             : base(mod, saveFolder, activePatcherName)
         {
+            _initialNextFormID = mod.NextFormID;
             Load();
         }
 
@@ -111,6 +113,10 @@ namespace Mutagen.Bethesda.Core.Persistance
         {
             lock (this._lock)
             {
+                lock (this.Mod)
+                {
+                    this.Mod.NextFormID = _initialNextFormID;
+                }
                 _cache.Clear();
                 _formIDSet.Clear();
                 Load();

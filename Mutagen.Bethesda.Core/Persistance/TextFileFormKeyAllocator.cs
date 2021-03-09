@@ -13,10 +13,12 @@ namespace Mutagen.Bethesda.Core.Persistance
     public class TextFileFormKeyAllocator : BasePersistentFormKeyAllocator
     {
         private readonly Dictionary<string, FormKey> _cache = new();
+        private readonly uint _initialNextFormID;
 
         public TextFileFormKeyAllocator(IMod mod, string saveLocation) 
             : base(mod, saveLocation)
         {
+            _initialNextFormID = mod.NextFormID;
             Load();
         }
 
@@ -103,6 +105,10 @@ namespace Mutagen.Bethesda.Core.Persistance
         {
             lock (_cache)
             {
+                lock (this.Mod)
+                {
+                    this.Mod.NextFormID = _initialNextFormID;
+                }
                 _cache.Clear();
                 Load();
             }

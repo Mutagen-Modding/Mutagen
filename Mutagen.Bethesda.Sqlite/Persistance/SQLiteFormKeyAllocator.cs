@@ -66,6 +66,8 @@ namespace Mutagen.Bethesda.Sqlite
 
         private readonly bool _manyPatchers = true;
 
+        private readonly uint _initialNextFormID;
+
         public SQLiteFormKeyAllocator(IMod mod, string dbPath)
             : this(mod, dbPath, DefaultPatcherName)
         {
@@ -75,6 +77,7 @@ namespace Mutagen.Bethesda.Sqlite
         public SQLiteFormKeyAllocator(IMod mod, string dbPath, string activePatcherName)
             : base(mod, dbPath, activePatcherName)
         {
+            _initialNextFormID = mod.NextFormID;
             _connection = new SQLiteFormKeyAllocatorDbContext(dbPath);
             _patcherID = GetOrAddPatcherID(ActivePatcherName);
         }
@@ -196,8 +199,12 @@ namespace Mutagen.Bethesda.Sqlite
 
         public override void Rollback()
         {
-            lock (Mod)
+            lock (_connection)
             {
+                lock (this.Mod)
+                {
+                    this.Mod.NextFormID = _initialNextFormID;
+                }
                 _connection?.Dispose();
                 _connection = new SQLiteFormKeyAllocatorDbContext(_saveLocation);
                 _patcherID = GetOrAddPatcherID(ActivePatcherName);
