@@ -44,15 +44,15 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region DamageTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IDamageTypeTargetGetter>>? _DamageTypes;
-        public ExtendedList<IFormLink<IDamageTypeTargetGetter>>? DamageTypes
+        private ExtendedList<IFormLinkGetter<IDamageTypeTargetGetter>>? _DamageTypes;
+        public ExtendedList<IFormLinkGetter<IDamageTypeTargetGetter>>? DamageTypes
         {
             get => this._DamageTypes;
             set => this._DamageTypes = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IDamageTypeTargetGetter>>? IDamageTypeGetter.DamageTypes => _DamageTypes;
+        IReadOnlyList<IFormLinkGetter<IDamageTypeTargetGetter>>? IDamageTypeGetter.DamageTypes => _DamageTypes;
         #endregion
 
         #endregion
@@ -539,7 +539,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkContainer,
         ILoquiObjectSetter<IDamageTypeInternal>
     {
-        new ExtendedList<IFormLink<IDamageTypeTargetGetter>>? DamageTypes { get; set; }
+        new ExtendedList<IFormLinkGetter<IDamageTypeTargetGetter>>? DamageTypes { get; set; }
     }
 
     public partial interface IDamageTypeInternal :
@@ -557,7 +557,7 @@ namespace Mutagen.Bethesda.Fallout4
         IMapsToGetter<IDamageTypeGetter>
     {
         static new ILoquiRegistration Registration => DamageType_Registration.Instance;
-        IReadOnlyList<IFormLink<IDamageTypeTargetGetter>>? DamageTypes { get; }
+        IReadOnlyList<IFormLinkGetter<IDamageTypeTargetGetter>>? DamageTypes { get; }
 
     }
 
@@ -1225,8 +1225,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     {
                         item.DamageTypes = 
                             rhs.DamageTypes
-                            .Select(r => (IFormLink<IDamageTypeTargetGetter>)new FormLink<IDamageTypeTargetGetter>(r.FormKey))
-                            .ToExtendedList<IFormLink<IDamageTypeTargetGetter>>();
+                            .Select(r => (IFormLinkGetter<IDamageTypeTargetGetter>)new FormLink<IDamageTypeTargetGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IDamageTypeTargetGetter>>();
                     }
                     else
                     {
@@ -1430,11 +1430,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IDamageTypeTargetGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IDamageTypeTargetGetter>>.Instance.Write(
                 writer: writer,
                 items: item.DamageTypes,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.DNAM),
-                transl: (MutagenWriter subWriter, IFormLink<IDamageTypeTargetGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IDamageTypeTargetGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -1546,10 +1546,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.DamageTypes = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IDamageTypeTargetGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IDamageTypeTargetGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<IDamageTypeTargetGetter>>();
+                        .CastExtendedList<IFormLinkGetter<IDamageTypeTargetGetter>>();
                     return (int)DamageType_FieldIndex.DamageTypes;
                 }
                 default:
@@ -1607,7 +1607,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IReadOnlyList<IFormLink<IDamageTypeTargetGetter>>? DamageTypes { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<IDamageTypeTargetGetter>>? DamageTypes { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1678,7 +1678,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.DamageTypes = BinaryOverlayList.FactoryByStartIndex<IFormLink<IDamageTypeTargetGetter>>(
+                    this.DamageTypes = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IDamageTypeTargetGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,

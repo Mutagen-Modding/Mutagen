@@ -59,7 +59,14 @@ namespace Mutagen.Bethesda.Fallout4
         Keyword.TypeEnum? IKeywordGetter.Type => this.Type;
         #endregion
         #region AttractionRule
-        public FormLinkNullable<IAttractionRuleGetter> AttractionRule { get; set; } = new FormLinkNullable<IAttractionRuleGetter>();
+        private IFormLinkNullable<IAttractionRuleGetter> _AttractionRule = new FormLinkNullable<IAttractionRuleGetter>();
+        public IFormLinkNullable<IAttractionRuleGetter> AttractionRule
+        {
+            get => _AttractionRule;
+            set => _AttractionRule = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IAttractionRuleGetter> IKeywordGetter.AttractionRule => this.AttractionRule;
         #endregion
         #region Name
         public TranslatedString? Name { get; set; }
@@ -658,7 +665,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Color? Color { get; set; }
         new String? Notes { get; set; }
         new Keyword.TypeEnum? Type { get; set; }
-        new FormLinkNullable<IAttractionRuleGetter> AttractionRule { get; set; }
+        new IFormLinkNullable<IAttractionRuleGetter> AttractionRule { get; }
         new TranslatedString? Name { get; set; }
         new String? DisplayName { get; set; }
     }
@@ -687,7 +694,7 @@ namespace Mutagen.Bethesda.Fallout4
         Color? Color { get; }
         String? Notes { get; }
         Keyword.TypeEnum? Type { get; }
-        FormLinkNullable<IAttractionRuleGetter> AttractionRule { get; }
+        IFormLinkNullableGetter<IAttractionRuleGetter> AttractionRule { get; }
         ITranslatedStringGetter? Name { get; }
         String? DisplayName { get; }
 
@@ -949,7 +956,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             item.Color = default;
             item.Notes = default;
             item.Type = default;
-            item.AttractionRule = FormLinkNullable<IAttractionRuleGetter>.Null;
+            item.AttractionRule.Clear();
             item.Name = default;
             item.DisplayName = default;
             base.Clear(item);
@@ -969,7 +976,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void RemapLinks(IKeyword obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.AttractionRule = obj.AttractionRule.Relink(mapping);
+            obj.AttractionRule.Relink(mapping);
         }
         
         #endregion
@@ -1344,7 +1351,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Keyword_FieldIndex.AttractionRule) ?? true))
             {
-                item.AttractionRule = new FormLinkNullable<IAttractionRuleGetter>(rhs.AttractionRule.FormKeyNullable);
+                item.AttractionRule.SetTo(rhs.AttractionRule.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Keyword_FieldIndex.Name) ?? true))
             {
@@ -1654,9 +1661,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AttractionRule = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.AttractionRule.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Keyword_FieldIndex.AttractionRule;
                 }
                 case RecordTypeInts.FULL:
@@ -1745,7 +1753,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         #region AttractionRule
         private int? _AttractionRuleLocation;
-        public FormLinkNullable<IAttractionRuleGetter> AttractionRule => _AttractionRuleLocation.HasValue ? new FormLinkNullable<IAttractionRuleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AttractionRuleLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAttractionRuleGetter>.Null;
+        public IFormLinkNullableGetter<IAttractionRuleGetter> AttractionRule => _AttractionRuleLocation.HasValue ? new FormLinkNullable<IAttractionRuleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AttractionRuleLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAttractionRuleGetter>.Null;
         #endregion
         #region Name
         private int? _NameLocation;

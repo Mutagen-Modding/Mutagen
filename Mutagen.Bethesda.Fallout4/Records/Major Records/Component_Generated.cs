@@ -75,7 +75,14 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #endregion
         #region CraftingSound
-        public FormLinkNullable<ISoundDescriptorGetter> CraftingSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
+        private IFormLinkNullable<ISoundDescriptorGetter> _CraftingSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        public IFormLinkNullable<ISoundDescriptorGetter> CraftingSound
+        {
+            get => _CraftingSound;
+            set => _CraftingSound = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundDescriptorGetter> IComponentGetter.CraftingSound => this.CraftingSound;
         #endregion
         #region AutoCalcValue
         public Int32? AutoCalcValue { get; set; }
@@ -83,10 +90,24 @@ namespace Mutagen.Bethesda.Fallout4
         Int32? IComponentGetter.AutoCalcValue => this.AutoCalcValue;
         #endregion
         #region ScrapItem
-        public FormLinkNullable<IMiscItemGetter> ScrapItem { get; set; } = new FormLinkNullable<IMiscItemGetter>();
+        private IFormLinkNullable<IMiscItemGetter> _ScrapItem = new FormLinkNullable<IMiscItemGetter>();
+        public IFormLinkNullable<IMiscItemGetter> ScrapItem
+        {
+            get => _ScrapItem;
+            set => _ScrapItem = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IMiscItemGetter> IComponentGetter.ScrapItem => this.ScrapItem;
         #endregion
         #region ModScrapScalar
-        public FormLinkNullable<IGlobalGetter> ModScrapScalar { get; set; } = new FormLinkNullable<IGlobalGetter>();
+        private IFormLinkNullable<IGlobalGetter> _ModScrapScalar = new FormLinkNullable<IGlobalGetter>();
+        public IFormLinkNullable<IGlobalGetter> ModScrapScalar
+        {
+            get => _ModScrapScalar;
+            set => _ModScrapScalar = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IGlobalGetter> IComponentGetter.ModScrapScalar => this.ModScrapScalar;
         #endregion
 
         #region To String
@@ -651,10 +672,10 @@ namespace Mutagen.Bethesda.Fallout4
     {
         new ObjectBounds ObjectBounds { get; set; }
         new String? Name { get; set; }
-        new FormLinkNullable<ISoundDescriptorGetter> CraftingSound { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> CraftingSound { get; }
         new Int32? AutoCalcValue { get; set; }
-        new FormLinkNullable<IMiscItemGetter> ScrapItem { get; set; }
-        new FormLinkNullable<IGlobalGetter> ModScrapScalar { get; set; }
+        new IFormLinkNullable<IMiscItemGetter> ScrapItem { get; }
+        new IFormLinkNullable<IGlobalGetter> ModScrapScalar { get; }
     }
 
     public partial interface IComponentInternal :
@@ -678,10 +699,10 @@ namespace Mutagen.Bethesda.Fallout4
         static new ILoquiRegistration Registration => Component_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }
         String? Name { get; }
-        FormLinkNullable<ISoundDescriptorGetter> CraftingSound { get; }
+        IFormLinkNullableGetter<ISoundDescriptorGetter> CraftingSound { get; }
         Int32? AutoCalcValue { get; }
-        FormLinkNullable<IMiscItemGetter> ScrapItem { get; }
-        FormLinkNullable<IGlobalGetter> ModScrapScalar { get; }
+        IFormLinkNullableGetter<IMiscItemGetter> ScrapItem { get; }
+        IFormLinkNullableGetter<IGlobalGetter> ModScrapScalar { get; }
 
     }
 
@@ -940,10 +961,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ClearPartial();
             item.ObjectBounds.Clear();
             item.Name = default;
-            item.CraftingSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
+            item.CraftingSound.Clear();
             item.AutoCalcValue = default;
-            item.ScrapItem = FormLinkNullable<IMiscItemGetter>.Null;
-            item.ModScrapScalar = FormLinkNullable<IGlobalGetter>.Null;
+            item.ScrapItem.Clear();
+            item.ModScrapScalar.Clear();
             base.Clear(item);
         }
         
@@ -961,9 +982,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void RemapLinks(IComponent obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.CraftingSound = obj.CraftingSound.Relink(mapping);
-            obj.ScrapItem = obj.ScrapItem.Relink(mapping);
-            obj.ModScrapScalar = obj.ModScrapScalar.Relink(mapping);
+            obj.CraftingSound.Relink(mapping);
+            obj.ScrapItem.Relink(mapping);
+            obj.ModScrapScalar.Relink(mapping);
         }
         
         #endregion
@@ -1348,7 +1369,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Component_FieldIndex.CraftingSound) ?? true))
             {
-                item.CraftingSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.CraftingSound.FormKeyNullable);
+                item.CraftingSound.SetTo(rhs.CraftingSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Component_FieldIndex.AutoCalcValue) ?? true))
             {
@@ -1356,11 +1377,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Component_FieldIndex.ScrapItem) ?? true))
             {
-                item.ScrapItem = new FormLinkNullable<IMiscItemGetter>(rhs.ScrapItem.FormKeyNullable);
+                item.ScrapItem.SetTo(rhs.ScrapItem.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Component_FieldIndex.ModScrapScalar) ?? true))
             {
-                item.ModScrapScalar = new FormLinkNullable<IGlobalGetter>(rhs.ModScrapScalar.FormKeyNullable);
+                item.ModScrapScalar.SetTo(rhs.ModScrapScalar.FormKeyNullable);
             }
         }
         
@@ -1652,9 +1673,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.CUSD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CraftingSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.CraftingSound.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Component_FieldIndex.CraftingSound;
                 }
                 case RecordTypeInts.DATA:
@@ -1666,17 +1688,19 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.MNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ScrapItem = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.ScrapItem.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Component_FieldIndex.ScrapItem;
                 }
                 case RecordTypeInts.GNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ModScrapScalar = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.ModScrapScalar.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Component_FieldIndex.ModScrapScalar;
                 }
                 default:
@@ -1749,7 +1773,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         #region CraftingSound
         private int? _CraftingSoundLocation;
-        public FormLinkNullable<ISoundDescriptorGetter> CraftingSound => _CraftingSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CraftingSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> CraftingSound => _CraftingSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CraftingSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region AutoCalcValue
         private int? _AutoCalcValueLocation;
@@ -1757,11 +1781,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         #region ScrapItem
         private int? _ScrapItemLocation;
-        public FormLinkNullable<IMiscItemGetter> ScrapItem => _ScrapItemLocation.HasValue ? new FormLinkNullable<IMiscItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ScrapItemLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMiscItemGetter>.Null;
+        public IFormLinkNullableGetter<IMiscItemGetter> ScrapItem => _ScrapItemLocation.HasValue ? new FormLinkNullable<IMiscItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ScrapItemLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMiscItemGetter>.Null;
         #endregion
         #region ModScrapScalar
         private int? _ModScrapScalarLocation;
-        public FormLinkNullable<IGlobalGetter> ModScrapScalar => _ModScrapScalarLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ModScrapScalarLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        public IFormLinkNullableGetter<IGlobalGetter> ModScrapScalar => _ModScrapScalarLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ModScrapScalarLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
