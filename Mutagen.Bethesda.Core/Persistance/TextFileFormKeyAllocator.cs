@@ -2,8 +2,6 @@ using Noggog;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace Mutagen.Bethesda.Core.Persistance
 {
@@ -12,25 +10,79 @@ namespace Mutagen.Bethesda.Core.Persistance
     /// 
     /// This class is made thread safe by locking internally on the Mod object.
     /// </summary>
-    public class TextFileFormKeyAllocator : IFormKeyAllocator
+    public class TextFileFormKeyAllocator : BasePersistentFormKeyAllocator
     {
-        private readonly Dictionary<string, FormKey> _cache = new Dictionary<string, FormKey>();
+        private readonly Dictionary<string, FormKey> _cache = new();
+        private readonly uint _initialNextFormID;
+
+        public TextFileFormKeyAllocator(IMod mod, string saveLocation) 
+            : base(mod, saveLocation)
+        {
+            _initialNextFormID = mod.NextFormID;
+            Load();
+        }
 
         /// <summary>
-        /// Associated Mod
+        /// Returns a FormKey with the next listed ID in the Mod's header.
+        /// No checks will be done that this is truly a unique key; It is assumed the header is in a correct state.
+        ///
+        /// The Mod's header will be incremented to mark the allocated key as "used".
         /// </summary>
-        public IMod Mod { get; }
-
-        private TextFileFormKeyAllocator(IMod mod, string filePath)
+        /// <returns>The next FormKey from the Mod</returns>
+        public override FormKey GetNextFormKey()
         {
-            this.Mod = mod;
-            using var streamReader = new StreamReader(filePath);
-            var idLine = streamReader.ReadLine();
-            if (!uint.TryParse(idLine, out var nextID))
+            lock (this.Mod)
             {
-                throw new ArgumentException($"Unconvertable next ID line: {idLine}");
+                return new FormKey(
+                    this.Mod.ModKey,
+                    checked(this.Mod.NextFormID++));
             }
-            this.Mod.NextFormID = nextID;
+        }
+
+        protected override FormKey GetNextFormKeyNotNull(string editorID)
+        {
+            lock (this._cache)
+            {
+                if (_cache.TryGetValue(editorID, out var id))
+                    return id;
+
+                var formKey = GetNextFormKey();
+
+                _cache.Add(editorID, formKey);
+
+                return formKey;
+            }
+        }
+
+        internal static void WriteToFile(string saveLocation, IEnumerable<KeyValuePair<string, FormKey>> data)
+        {
+            var tempFile = saveLocation + ".tmp";
+            {
+                using var streamWriter = new StreamWriter(tempFile);
+                foreach (var pair in data)
+                {
+                    streamWriter.WriteLine(pair.Key);
+                    streamWriter.WriteLine(pair.Value);
+                }
+            }
+            if (File.Exists(saveLocation))
+                File.Replace(tempFile, saveLocation, null);
+            else
+                File.Move(tempFile, saveLocation);
+        }
+
+        public override void Commit()
+        {
+            lock (_cache)
+            {
+                WriteToFile(_saveLocation, _cache);
+            }
+        }
+
+        private void Load()
+        {
+            if (!File.Exists(_saveLocation)) return;
+            using var streamReader = new StreamReader(_saveLocation);
             while (true)
             {
                 var edidStr = streamReader.ReadLine();
@@ -41,70 +93,25 @@ namespace Mutagen.Bethesda.Core.Persistance
                     throw new ArgumentException("Unexpected odd number of lines.");
                 }
                 var formKey = FormKey.Factory(formKeyStr);
+                if (formKey.ModKey != Mod.ModKey)
+                {
+                    throw new ArgumentException($"Attempted to load a FormKey belonging to {formKey.ModKey} into the FormKey allocator for {Mod.ModKey}.");
+                }
                 _cache.Add(edidStr, formKey);
             }
         }
 
-        public static TextFileFormKeyAllocator FromFile(IMod mod, string filePath)
+        public override void Rollback()
         {
-            return new TextFileFormKeyAllocator(mod, filePath);
-        }
-
-        public static TextFileFormKeyAllocator FromFolder(IMod mod, string folderPath)
-        {
-            return new TextFileFormKeyAllocator(mod, Path.Combine(folderPath, mod.ModKey.FileName));
-        }
-
-        /// <summary>
-        /// Returns a FormKey with the next listed ID in the Mod's header.
-        /// No checks will be done that this is truly a unique key; It is assumed the header is in a correct state.
-        ///
-        /// The Mod's header will be incremented to mark the allocated key as "used".
-        /// </summary>
-        /// <returns>The next FormKey from the Mod</returns>
-        public FormKey GetNextFormKey()
-        {
-            lock (this.Mod)
+            lock (_cache)
             {
-                return new FormKey(
-                    this.Mod.ModKey,
-                    checked(this.Mod.NextFormID++));
+                lock (this.Mod)
+                {
+                    this.Mod.NextFormID = _initialNextFormID;
+                }
+                _cache.Clear();
+                Load();
             }
-        }
-
-        public FormKey GetNextFormKey(string? editorID)
-        {
-            if (editorID != null)
-            {
-                if (_cache.TryGetValue(editorID, out var id)) return id;
-            }
-            return GetNextFormKey();
-        }
-
-        public static void WriteToFile(string path, uint nextID, IEnumerable<KeyValuePair<string, FormKey>> edidFormKeyPairs)
-        {
-            using var streamWriter = new StreamWriter(path);
-            streamWriter.WriteLine(nextID.ToString());
-            foreach (var pair in edidFormKeyPairs)
-            {
-                streamWriter.WriteLine(pair.Key);
-                streamWriter.WriteLine(pair.Value);
-            }
-        }
-
-        public static void WriteToFile(string path, IModGetter mod)
-        {
-            WriteToFile(
-                path,
-                mod.NextFormID, 
-                mod.EnumerateMajorRecords()
-                    .SelectWhere(m =>
-                    {
-                        var edid = m.EditorID;
-                        if (edid == null) return TryGet<KeyValuePair<string, FormKey>>.Failure;
-                        return TryGet<KeyValuePair<string, FormKey>>.Succeed(
-                            new KeyValuePair<string, FormKey>(edid, m.FormKey));
-                    }));
         }
     }
 }

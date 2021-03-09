@@ -1095,7 +1095,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.HoursUntilReset,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM),
+                multiplier: 24f);
         }
 
         public void Write(
@@ -1165,7 +1166,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)StoryManagerQuest_FieldIndex.HoursUntilReset) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HoursUntilReset = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.HoursUntilReset = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        multiplier: 24f);
                     return (int)StoryManagerQuest_FieldIndex.HoursUntilReset;
                 }
                 default:
@@ -1247,7 +1250,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region HoursUntilReset
         private int? _HoursUntilResetLocation;
-        public Single? HoursUntilReset => _HoursUntilResetLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _HoursUntilResetLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? HoursUntilReset => _HoursUntilResetLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _HoursUntilResetLocation.Value, _package.MetaData.Constants).Float() * 24f : default(Single?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

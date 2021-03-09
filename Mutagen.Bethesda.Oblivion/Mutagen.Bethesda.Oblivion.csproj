@@ -48,6 +48,8 @@
     <Compile Include="Enums\SoulLevel.cs" />
     <Compile Include="Enums\Specialization.cs" />
     <Compile Include="Enums\Weekday.cs" />
+    <Compile Include="Extensions\GameSettingGroupMixIn.cs" />
+    <Compile Include="Extensions\GlobalGroupMixIn.cs" />
     <Compile Include="Extensions\ModContextExt.cs" />
     <Compile Include="Interfaces\IModeled.cs" />
     <Compile Include="IsExternalInit.cs" />
