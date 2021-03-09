@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Json
                 case FormKey fk:
                     writer.WriteValue(fk.ToString());
                     break;
-                case IFormLink fl:
+                case IFormLinkGetter fl:
                     writer.WriteValue(fl.FormKey.ToString());
                     break;
                 default:
