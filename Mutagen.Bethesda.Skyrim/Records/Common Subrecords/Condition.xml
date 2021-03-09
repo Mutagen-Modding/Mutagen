@@ -10,13 +10,13 @@
   <Object name="ConditionGlobal" objType="Subrecord" baseClass="Condition" recordType="CTDA" GUID="cafedc3d-b9cf-4eb9-92fc-dd38838b19ce" ID="37" customBinaryEnd="Normal">
     <Fields>
       <FormLink name="ComparisonValue" refName="Global" />
-      <RefDirect name="Data" binary="Custom" refName="ConditionData" generateClassMembers="false" />
+      <RefDirect name="Data" binary="Custom" refName="ConditionData" generateClassMembers="false" override="true" />
     </Fields>
   </Object>
   <Object name="ConditionFloat" objType="Subrecord" baseClass="Condition" recordType="CTDA" GUID="7add21ad-ed61-4e3d-8cf5-c80dbaa322db" ID="38" customBinaryEnd="Normal">
     <Fields>
       <Float name="ComparisonValue" />
-      <RefDirect name="Data" binary="Custom" refName="ConditionData" generateClassMembers="false" />
+      <RefDirect name="Data" binary="Custom" refName="ConditionData" generateClassMembers="false" override="true" />
     </Fields>
   </Object>
   <Object name="ConditionData" objType="Subrecord" abstract="true" GUID="01abc3c5-fb9d-4e48-a375-fe2f3a4fa044" ID="41">

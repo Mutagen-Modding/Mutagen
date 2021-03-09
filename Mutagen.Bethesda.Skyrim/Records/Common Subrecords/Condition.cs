@@ -6,12 +6,18 @@ using Noggog;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
     public partial class Condition
     {
+        public abstract ConditionData Data { get; set; }
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IConditionDataGetter IConditionGetter.Data => this.Data;
+
         // ToDo
         // Confirm correctness and completeness
         [Flags]
@@ -55,6 +61,16 @@ namespace Mutagen.Bethesda.Skyrim
                 return ConditionFloat.CreateFromBinary(frame.SpawnWithLength(subRecMeta.ContentLength, checkFraming: false));
             }
         }
+    }
+
+    public partial interface ICondition
+    {
+        new ConditionData Data { get; set; }
+    }
+
+    public partial interface IConditionGetter
+    {
+        IConditionDataGetter Data { get; }
     }
 
     namespace Internals
@@ -167,8 +183,12 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
 
-        public partial class ConditionBinaryOverlay
+        public abstract partial class ConditionBinaryOverlay
         {
+            public abstract IConditionDataGetter Data { get; }
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            IConditionDataGetter IConditionGetter.Data => this.Data;
+
             private static ICollectionGetter<RecordType> IncludeTriggers = new CollectionGetterWrapper<RecordType>(
                 new RecordType[]
                 {
