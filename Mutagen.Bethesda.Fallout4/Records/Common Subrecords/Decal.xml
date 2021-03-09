@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Decal" objType="Subrecord" recordType="DODT" GUID="3b1e083b-dcb2-4daa-908e-acb0743e042d" ID="41">
+    <Fields>
+      <Float name="MinWidth" />
+      <Float name="MaxWidth" />
+      <Float name="MinHeight" />
+      <Float name="MaxHeight" />
+      <Float name="Depth" />
+      <Float name="Shininess" />
+      <Float name="ParallaxScale" />
+      <UInt8 name="ParallaxPasses" />
+      <Enum name="Flags" enumName="Decal.Flag" byteLength="1" />
+      <UInt16 name="AlphaThreshold" />
+      <Color name="Color" binaryType="Alpha" />
+    </Fields>
+  </Object>
+</Loqui>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ActorValueInformation" objType="Record" recordType="AVIF" baseClass="Fallout4MajorRecord" GUID="9a04bbd8-601a-4566-af72-e3645c9897b2" ID="47">
+    <Fields>
+    </Fields>
+    <LinkInterface>IDamageTypeTarget</LinkInterface>
+  </Object>
+</Loqui>

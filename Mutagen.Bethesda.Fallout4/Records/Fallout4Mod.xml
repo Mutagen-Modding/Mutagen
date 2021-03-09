@@ -5,6 +5,13 @@
       <RefDirect name="ModHeader" refName="Fallout4ModHeader" singleton="true" />
       <Group name="GameSettings" refName="GameSetting" />
       <Group name="Keywords" refName="Keyword" />
+      <Group name="LocationReferenceTypes" refName="LocationReferenceType" />
+      <Group name="Actions" refName="ActionRecord" />
+      <Group name="Transforms" refName="Transform" />
+      <Group name="Components" refName="Component" />
+      <Group name="TextureSets" refName="TextureSet" />
+      <Group name="Globals" refName="Global" />
+      <Group name="DamageTypes" refName="ADamageType" />
     </Fields>
   </Object>
 </Loqui>

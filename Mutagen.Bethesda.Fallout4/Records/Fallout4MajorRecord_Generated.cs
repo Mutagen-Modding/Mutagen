@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
     /// <summary>
-    /// Implemented by: [GameSetting, Keyword]
+    /// Implemented by: [ActionRecord, ActorValueInformation, ASpell, AttractionRule, Component, ADamageType, GameSetting, Global, Keyword, LocationReferenceType, MiscItem, SoundDescriptor, TextureSet, Transform]
     /// </summary>
     public abstract partial class Fallout4MajorRecord :
         MajorRecord,
@@ -384,6 +384,8 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => Fallout4MajorRecordCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => Fallout4MajorRecordSetterCommon.Instance.RemapLinks(this, mapping);
         public Fallout4MajorRecord(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -452,10 +454,11 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     /// <summary>
-    /// Implemented by: [GameSetting, Keyword]
+    /// Implemented by: [ActionRecord, ActorValueInformation, ASpell, AttractionRule, Component, ADamageType, GameSetting, Global, Keyword, LocationReferenceType, MiscItem, SoundDescriptor, TextureSet, Transform]
     /// </summary>
     public partial interface IFallout4MajorRecord :
         IFallout4MajorRecordGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IFallout4MajorRecordInternal>,
         IMajorRecordInternal
     {
@@ -471,11 +474,12 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [GameSetting, Keyword]
+    /// Implemented by: [ActionRecord, ActorValueInformation, ASpell, AttractionRule, Component, ADamageType, GameSetting, Global, Keyword, LocationReferenceType, MiscItem, SoundDescriptor, TextureSet, Transform]
     /// </summary>
     public partial interface IFallout4MajorRecordGetter :
         IMajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IFallout4MajorRecordGetter>
     {
         static new ILoquiRegistration Registration => Fallout4MajorRecord_Registration.Instance;
@@ -1217,6 +1221,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => Fallout4MajorRecordCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => Fallout4MajorRecordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

@@ -5,8 +5,27 @@ An interface would be defined such as 'IItem', which all Armor, Weapon, Ingredie
 
 A `FormLink<IItem>` could then point to all those record types by pointing to the interface instead.
 ## Interfaces to Concrete Classes
+### IDamageTypeTarget
+- ActorValueInformation
+- ASpell
+### IIdleRelation
+- ActionRecord
 ### IKeywordLinkedReference
 - Keyword
+### ILocationRecord
+- LocationReferenceType
+### IObjectId
+- TextureSet
 ## Concrete Classes to Interfaces
+### ActionRecord
+- IIdleRelation
+### ActorValueInformation
+- IDamageTypeTarget
+### ASpell
+- IDamageTypeTarget
 ### Keyword
 - IKeywordLinkedReference
+### LocationReferenceType
+- ILocationRecord
+### TextureSet
+- IObjectId
