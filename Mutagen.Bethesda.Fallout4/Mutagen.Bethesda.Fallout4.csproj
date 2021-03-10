@@ -201,6 +201,12 @@
     <Compile Include="Records\Major Records\DamageType_Generated.cs">
       <DependentUpon>DamageType.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\Properties_Generated.cs">
+      <DependentUpon>Properties.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Class_Generated.cs">
+      <DependentUpon>Class.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.1.2">

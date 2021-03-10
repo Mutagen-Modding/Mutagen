@@ -5,6 +5,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ## Interfaces to Concrete Classes
 ### INamed
 - ActionRecord
+- Class
 - Component
 - Keyword
 ### IObjectBounded
@@ -14,6 +15,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Keyword
 ## Concrete Classes to Interfaces
 ### ActionRecord
+- INamed
+### Class
 - INamed
 ### Component
 - INamed

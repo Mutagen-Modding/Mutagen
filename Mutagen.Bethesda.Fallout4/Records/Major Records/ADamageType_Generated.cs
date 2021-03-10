@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
     /// <summary>
-    /// Implemented by: [DamageType, DamageTypeIndexed]
+    /// Implemented by: [DamageTypeIndexed]
     /// </summary>
     public abstract partial class ADamageType :
         Fallout4MajorRecord,
@@ -314,8 +314,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = ADamageType_Registration.TriggeringRecordType;
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => ADamageTypeCommon.Instance.GetContainedFormLinks(this);
-        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ADamageTypeSetterCommon.Instance.RemapLinks(this, mapping);
         public ADamageType(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -384,12 +382,11 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     /// <summary>
-    /// Implemented by: [DamageType, DamageTypeIndexed]
+    /// Implemented by: [DamageTypeIndexed]
     /// </summary>
     public partial interface IADamageType :
         IADamageTypeGetter,
         IFallout4MajorRecordInternal,
-        IFormLinkContainer,
         ILoquiObjectSetter<IADamageTypeInternal>
     {
     }
@@ -402,12 +399,11 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [DamageType, DamageTypeIndexed]
+    /// Implemented by: [DamageTypeIndexed]
     /// </summary>
     public partial interface IADamageTypeGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
-        IFormLinkContainerGetter,
         ILoquiObject<IADamageTypeGetter>
     {
         static new ILoquiRegistration Registration => ADamageType_Registration.Instance;
@@ -1228,7 +1224,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => ADamageTypeCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ADamageTypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
