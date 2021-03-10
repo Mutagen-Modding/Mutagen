@@ -42,6 +42,23 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region RunOnType
+        public Condition.RunOnType RunOnType { get; set; } = default;
+        #endregion
+        #region Reference
+        private IFormLink<ISkyrimMajorRecordGetter> _Reference = new FormLink<ISkyrimMajorRecordGetter>();
+        public IFormLink<ISkyrimMajorRecordGetter> Reference
+        {
+            get => _Reference;
+            set => _Reference = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ISkyrimMajorRecordGetter> IConditionDataGetter.Reference => this.Reference;
+        #endregion
+        #region Unknown3
+        public readonly static Int32 _Unknown3_Default = -1;
+        public Int32 Unknown3 { get; set; } = _Unknown3_Default;
+        #endregion
 
         #region To String
 
@@ -80,8 +97,20 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public Mask(TItem initialValue)
             {
+                this.RunOnType = initialValue;
+                this.Reference = initialValue;
+                this.Unknown3 = initialValue;
             }
 
+            public Mask(
+                TItem RunOnType,
+                TItem Reference,
+                TItem Unknown3)
+            {
+                this.RunOnType = RunOnType;
+                this.Reference = Reference;
+                this.Unknown3 = Unknown3;
+            }
 
             #pragma warning disable CS8618
             protected Mask()
@@ -89,6 +118,12 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem RunOnType;
+            public TItem Reference;
+            public TItem Unknown3;
             #endregion
 
             #region Equals
@@ -101,11 +136,17 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
+                if (!object.Equals(this.RunOnType, rhs.RunOnType)) return false;
+                if (!object.Equals(this.Reference, rhs.Reference)) return false;
+                if (!object.Equals(this.Unknown3, rhs.Unknown3)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.RunOnType);
+                hash.Add(this.Reference);
+                hash.Add(this.Unknown3);
                 return hash.ToHashCode();
             }
 
@@ -114,6 +155,9 @@ namespace Mutagen.Bethesda.Skyrim
             #region All
             public virtual bool All(Func<TItem, bool> eval)
             {
+                if (!eval(this.RunOnType)) return false;
+                if (!eval(this.Reference)) return false;
+                if (!eval(this.Unknown3)) return false;
                 return true;
             }
             #endregion
@@ -121,6 +165,9 @@ namespace Mutagen.Bethesda.Skyrim
             #region Any
             public virtual bool Any(Func<TItem, bool> eval)
             {
+                if (eval(this.RunOnType)) return true;
+                if (eval(this.Reference)) return true;
+                if (eval(this.Unknown3)) return true;
                 return false;
             }
             #endregion
@@ -135,6 +182,9 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
+                obj.RunOnType = eval(this.RunOnType);
+                obj.Reference = eval(this.Reference);
+                obj.Unknown3 = eval(this.Unknown3);
             }
             #endregion
 
@@ -157,6 +207,18 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.RunOnType ?? true)
+                    {
+                        fg.AppendItem(RunOnType, "RunOnType");
+                    }
+                    if (printMask?.Reference ?? true)
+                    {
+                        fg.AppendItem(Reference, "Reference");
+                    }
+                    if (printMask?.Unknown3 ?? true)
+                    {
+                        fg.AppendItem(Unknown3, "Unknown3");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -182,6 +244,9 @@ namespace Mutagen.Bethesda.Skyrim
                     return _warnings;
                 }
             }
+            public Exception? RunOnType;
+            public Exception? Reference;
+            public Exception? Unknown3;
             #endregion
 
             #region IErrorMask
@@ -190,6 +255,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ConditionData_FieldIndex enu = (ConditionData_FieldIndex)index;
                 switch (enu)
                 {
+                    case ConditionData_FieldIndex.RunOnType:
+                        return RunOnType;
+                    case ConditionData_FieldIndex.Reference:
+                        return Reference;
+                    case ConditionData_FieldIndex.Unknown3:
+                        return Unknown3;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -200,6 +271,15 @@ namespace Mutagen.Bethesda.Skyrim
                 ConditionData_FieldIndex enu = (ConditionData_FieldIndex)index;
                 switch (enu)
                 {
+                    case ConditionData_FieldIndex.RunOnType:
+                        this.RunOnType = ex;
+                        break;
+                    case ConditionData_FieldIndex.Reference:
+                        this.Reference = ex;
+                        break;
+                    case ConditionData_FieldIndex.Unknown3:
+                        this.Unknown3 = ex;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -210,6 +290,15 @@ namespace Mutagen.Bethesda.Skyrim
                 ConditionData_FieldIndex enu = (ConditionData_FieldIndex)index;
                 switch (enu)
                 {
+                    case ConditionData_FieldIndex.RunOnType:
+                        this.RunOnType = (Exception?)obj;
+                        break;
+                    case ConditionData_FieldIndex.Reference:
+                        this.Reference = (Exception?)obj;
+                        break;
+                    case ConditionData_FieldIndex.Unknown3:
+                        this.Unknown3 = (Exception?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -218,6 +307,9 @@ namespace Mutagen.Bethesda.Skyrim
             public virtual bool IsInError()
             {
                 if (Overall != null) return true;
+                if (RunOnType != null) return true;
+                if (Reference != null) return true;
+                if (Unknown3 != null) return true;
                 return false;
             }
             #endregion
@@ -252,6 +344,9 @@ namespace Mutagen.Bethesda.Skyrim
             }
             protected virtual void ToString_FillInternal(FileGeneration fg)
             {
+                fg.AppendItem(RunOnType, "RunOnType");
+                fg.AppendItem(Reference, "Reference");
+                fg.AppendItem(Unknown3, "Unknown3");
             }
             #endregion
 
@@ -260,6 +355,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.RunOnType = this.RunOnType.Combine(rhs.RunOnType);
+                ret.Reference = this.Reference.Combine(rhs.Reference);
+                ret.Unknown3 = this.Unknown3.Combine(rhs.Unknown3);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -283,6 +381,9 @@ namespace Mutagen.Bethesda.Skyrim
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
+            public bool RunOnType;
+            public bool Reference;
+            public bool Unknown3;
             #endregion
 
             #region Ctors
@@ -292,6 +393,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
+                this.RunOnType = defaultOn;
+                this.Reference = defaultOn;
+                this.Unknown3 = defaultOn;
             }
 
             #endregion
@@ -307,6 +411,9 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected virtual void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
+                ret.Add((RunOnType, null));
+                ret.Add((Reference, null));
+                ret.Add((Unknown3, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -362,6 +469,9 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILoquiObjectSetter<IConditionData>
     {
+        new Condition.RunOnType RunOnType { get; set; }
+        new IFormLink<ISkyrimMajorRecordGetter> Reference { get; }
+        new Int32 Unknown3 { get; set; }
     }
 
     /// <summary>
@@ -380,6 +490,9 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => ConditionData_Registration.Instance;
+        Condition.RunOnType RunOnType { get; }
+        IFormLinkGetter<ISkyrimMajorRecordGetter> Reference { get; }
+        Int32 Unknown3 { get; }
 
     }
 
@@ -547,6 +660,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #region Field Index
     public enum ConditionData_FieldIndex
     {
+        RunOnType = 0,
+        Reference = 1,
+        Unknown3 = 2,
     }
     #endregion
 
@@ -564,9 +680,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "01abc3c5-fb9d-4e48-a375-fe2f3a4fa044";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 0;
+        public const ushort FieldCount = 3;
 
         public static readonly Type MaskType = typeof(ConditionData.Mask<>);
 
@@ -634,11 +750,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void Clear(IConditionData item)
         {
             ClearPartial();
+            item.RunOnType = default;
+            item.Reference.Clear();
+            item.Unknown3 = ConditionData._Unknown3_Default;
         }
         
         #region Mutagen
         public void RemapLinks(IConditionData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
+            obj.Reference.Relink(mapping);
         }
         
         #endregion
@@ -679,6 +799,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.RunOnType = item.RunOnType == rhs.RunOnType;
+            ret.Reference = item.Reference.Equals(rhs.Reference);
+            ret.Unknown3 = item.Unknown3 == rhs.Unknown3;
         }
         
         public string ToString(
@@ -725,6 +848,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             ConditionData.Mask<bool>? printMask = null)
         {
+            if (printMask?.RunOnType ?? true)
+            {
+                fg.AppendItem(item.RunOnType, "RunOnType");
+            }
+            if (printMask?.Reference ?? true)
+            {
+                fg.AppendItem(item.Reference.FormKey, "Reference");
+            }
+            if (printMask?.Unknown3 ?? true)
+            {
+                fg.AppendItem(item.Unknown3, "Unknown3");
+            }
         }
         
         #region Equals and Hash
@@ -734,12 +869,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
+            if (lhs.RunOnType != rhs.RunOnType) return false;
+            if (!lhs.Reference.Equals(rhs.Reference)) return false;
+            if (lhs.Unknown3 != rhs.Unknown3) return false;
             return true;
         }
         
         public virtual int GetHashCode(IConditionDataGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.RunOnType);
+            hash.Add(item.Reference);
+            hash.Add(item.Unknown3);
             return hash.ToHashCode();
         }
         
@@ -754,6 +895,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<FormLinkInformation> GetContainedFormLinks(IConditionDataGetter obj)
         {
+            yield return FormLinkInformation.Factory(obj.Reference);
             yield break;
         }
         
@@ -772,6 +914,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
+            if ((copyMask?.GetShouldTranslate((int)ConditionData_FieldIndex.RunOnType) ?? true))
+            {
+                item.RunOnType = rhs.RunOnType;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConditionData_FieldIndex.Reference) ?? true))
+            {
+                item.Reference.SetTo(rhs.Reference.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConditionData_FieldIndex.Unknown3) ?? true))
+            {
+                item.Unknown3 = rhs.Unknown3;
+            }
         }
         
         #endregion
@@ -864,11 +1018,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static ConditionDataBinaryWriteTranslation Instance = new ConditionDataBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            IConditionDataGetter item,
+            MutagenWriter writer)
+        {
+        }
+
         public virtual void Write(
             MutagenWriter writer,
             IConditionDataGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
+            WriteEmbedded(
+                item: item,
+                writer: writer);
         }
 
         public virtual void Write(
@@ -887,6 +1050,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class ConditionDataBinaryCreateTranslation
     {
         public readonly static ConditionDataBinaryCreateTranslation Instance = new ConditionDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IConditionData item,
+            MutagenFrame frame)
+        {
+        }
 
     }
 

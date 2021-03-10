@@ -2700,6 +2700,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 try
                 {
+                    if ("BYOHHousePaleServicesSpouseInnkeeper".Equals(item.EditorID))
+                    {
+                        int wer = 23;
+                        wer++;
+                    }
                     SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);

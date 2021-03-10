@@ -330,9 +330,25 @@ namespace Mutagen.Bethesda.Skyrim
                 item.ParameterTwoNumber = frame.ReadInt32();
                 item.ParameterOneRecord.FormKey = FormKey.Factory(frame.MetaData.MasterReferences!, (uint)item.ParameterOneNumber);
                 item.ParameterTwoRecord.FormKey = FormKey.Factory(frame.MetaData.MasterReferences!, (uint)item.ParameterTwoNumber);
+                GetEventDataBinaryCreateTranslation.FillEndingParams(frame, item);
+            }
+        }
+
+        public partial class GetEventDataBinaryCreateTranslation
+        {
+            public static void FillEndingParams(MutagenFrame frame, IConditionData item)
+            {
+                item.RunOnType = EnumBinaryTranslation<Condition.RunOnType>.Instance.Parse(frame: frame.SpawnWithLength(4));
+                item.Reference.SetTo(
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame,
+                        defaultVal: FormKey.Null));
                 item.Unknown3 = frame.ReadInt32();
-                item.Unknown4 = frame.ReadInt32();
-                item.Unknown5 = frame.ReadInt32();
+            }
+
+            static partial void FillBinaryParameterParsingCustom(MutagenFrame frame, IGetEventData item)
+            {
+                FillEndingParams(frame, item);
             }
         }
 
@@ -367,9 +383,27 @@ namespace Mutagen.Bethesda.Skyrim
                     default:
                         throw new NotImplementedException();
                 }
+                GetEventDataBinaryWriteTranslation.WriteCommonParams(writer, item);
+            }
+        }
+
+        public partial class GetEventDataBinaryWriteTranslation
+        {
+            public static void WriteCommonParams(MutagenWriter writer, IConditionDataGetter item)
+            {
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Condition.RunOnType>.Instance.Write(
+                    writer,
+                    item.RunOnType,
+                    length: 4);
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Reference);
                 writer.Write(item.Unknown3);
-                writer.Write(item.Unknown4);
-                writer.Write(item.Unknown5);
+            }
+
+            static partial void WriteBinaryParameterParsingCustom(MutagenWriter writer, IGetEventDataGetter item)
+            {
+                WriteCommonParams(writer, item);
             }
         }
 
@@ -417,6 +451,13 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
 
+        public partial class ConditionDataBinaryOverlay
+        {
+            public Condition.RunOnType RunOnType => (Condition.RunOnType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0xC, 0x4));
+            public IFormLinkGetter<ISkyrimMajorRecordGetter> Reference => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x10, 0x4))));
+            public Int32 Unknown3 => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x14, 0x4));
+        }
+
         public partial class FunctionConditionDataBinaryOverlay
         {
             private ReadOnlyMemorySlice<byte> _data2;
@@ -428,12 +469,6 @@ namespace Mutagen.Bethesda.Skyrim
             public IFormLinkGetter<ISkyrimMajorRecordGetter> ParameterTwoRecord => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data2.Slice(4))));
 
             public int ParameterTwoNumber => BinaryPrimitives.ReadInt32LittleEndian(_data2.Slice(4));
-            
-            public int Unknown3 => BinaryPrimitives.ReadInt32LittleEndian(_data2.Slice(8));
-
-            public int Unknown4 => BinaryPrimitives.ReadInt32LittleEndian(_data2.Slice(12));
-
-            public int Unknown5 => BinaryPrimitives.ReadInt32LittleEndian(_data2.Slice(16));
 
             private ReadOnlyMemorySlice<byte> _stringParamData1;
             public bool ParameterOneString_IsSet { get; private set; }

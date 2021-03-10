@@ -21,6 +21,9 @@
   </Object>
   <Object name="ConditionData" objType="Subrecord" abstract="true" GUID="01abc3c5-fb9d-4e48-a375-fe2f3a4fa044" ID="41">
     <Fields>
+      <Enum name="RunOnType" enumName="Condition.RunOnType" byteLength="4" binary="NoGeneration" />
+      <FormLink name="Reference" refName="SkyrimMajorRecord" binary="NoGeneration" />
+      <Int32 name="Unknown3" default="-1" binary="NoGeneration" />
     </Fields>
   </Object>
   <Object name="FunctionConditionData" objType="Subrecord" baseClass="ConditionData" GUID="c7686727-e470-4c34-80ce-423cf65c7b92" ID="39">
@@ -34,22 +37,16 @@
       <FormLink name="ParameterTwoRecord" refName="SkyrimMajorRecord" binary="NoGeneration" />
       <Int32 name="ParameterTwoNumber" binary="NoGeneration" />
       <String name="ParameterTwoString" binary="NoGeneration" nullable="True" />
-      <Int32 name="Unknown3" binary="NoGeneration" />
-      <Int32 name="Unknown4" binary="NoGeneration" />
-      <Int32 name="Unknown5" binary="NoGeneration" default="-1" />
     </Fields>
   </Object>
   <Object name="GetEventData" objType="Subrecord" baseClass="ConditionData" GUID="a7f88d12-4a14-4be4-ad02-ffa74d2fa3db" ID="40">
     <Fields>
-      <UInt16 name="Unknown2" />
       <!-- ToDo change to enum -->
       <UInt16 name="EventFunction" />
       <!-- ToDo change to enum -->
       <UInt16 name="EventMember" />
       <FormLink name="Parameter3" refName="SkyrimMajorRecord" />
-      <Enum name="RunOnType" enumName="Condition.RunOnType" byteLength="4" />
-      <FormLink name="Reference" refName="SkyrimMajorRecord" />
-      <Int32 name="Unknown3" default="-1" />
+      <CustomLogic name="ParameterParsing" />
     </Fields>
   </Object>
 </Loqui>

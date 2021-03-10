@@ -911,12 +911,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
             yield return FormLinkInformation.Factory(obj.ComparisonValue);
-            if (obj.Data is IFormLinkContainerGetter DatalinkCont)
+            foreach (var item in obj.Data.ContainedFormLinks)
             {
-                foreach (var item in DatalinkCont.ContainedFormLinks)
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             yield break;
         }
