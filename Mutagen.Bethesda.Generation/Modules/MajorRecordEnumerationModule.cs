@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine("[DebuggerStepThrough]");
                 fg.AppendLine($"IEnumerable<TMajor> {nameof(IMajorRecordEnumerable)}.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal, "TMajor")}(throwIfUnknown: throwIfUnknown);");
                 fg.AppendLine("[DebuggerStepThrough]");
-                fg.AppendLine($"IEnumerable<{nameof(IMajorRecordCommon)}> {nameof(IMajorRecordEnumerable)}.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);");
+                fg.AppendLine($"IEnumerable<{nameof(IMajorRecordCommon)}> {nameof(IMajorRecordEnumerable)}.EnumerateMajorRecords(Type? type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);");
             }
         }
 
@@ -178,14 +178,14 @@ namespace Mutagen.Bethesda.Generation
                 $"public static IEnumerable<{nameof(IMajorRecordCommon)}> EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal)}"))
             {
                 args.Add($"this {obj.Interface(getter: false, internalInterface: true)} obj");
-                args.Add($"Type type");
+                args.Add($"Type? type");
                 args.Add($"bool throwIfUnknown = true");
                 args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.ISetter, obj.Generics));
             }
             using (new BraceWrapper(fg))
             {
                 using (var args = new FunctionWrapper(fg,
-                    $"return {obj.CommonClassInstance("obj", LoquiInterfaceType.ISetter, CommonGenerics.Class)}.EnumerateMajorRecords"))
+                    $"return {obj.CommonClassInstance("obj", LoquiInterfaceType.ISetter, CommonGenerics.Class)}.EnumeratePotentiallyTypedMajorRecords"))
                 {
                     args.AddPassArg("obj");
                     args.AddPassArg("type");
@@ -427,6 +427,20 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine();
                 }
             }
+
+            using (var args = new FunctionWrapper(fg,
+                $"public{overrideStr}IEnumerable<{nameof(IMajorRecordCommonGetter)}> EnumeratePotentiallyTypedMajorRecords"))
+            {
+                args.Add($"{obj.Interface(getter: getter, internalInterface: true)} obj");
+                args.Add($"Type? type");
+                args.Add($"bool throwIfUnknown");
+            }
+            using (new BraceWrapper(fg))
+            {
+                fg.AppendLine("if (type == null) return EnumerateMajorRecords(obj);");
+                fg.AppendLine("return EnumerateMajorRecords(obj, type, throwIfUnknown);");
+            }
+            fg.AppendLine();
 
             using (var args = new FunctionWrapper(fg,
                 $"public{overrideStr}IEnumerable<{nameof(IMajorRecordCommonGetter)}> EnumerateMajorRecords"))
