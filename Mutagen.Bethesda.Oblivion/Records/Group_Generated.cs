@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<T, TMajor>(throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords(Type? type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(FormKey formKey) => this.Remove(formKey);
         [DebuggerStepThrough]
@@ -445,11 +445,11 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords<T>(
             this IGroup<T> obj,
-            Type type,
+            Type? type,
             bool throwIfUnknown = true)
             where T : class, IOblivionMajorRecordInternal, IBinaryItem
         {
-            return ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).EnumerateMajorRecords(
+            return ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).EnumeratePotentiallyTypedMajorRecords(
                 obj: obj,
                 type: type,
                 throwIfUnknown: throwIfUnknown)
@@ -778,6 +778,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
+        public IEnumerable<IMajorRecordCommonGetter> EnumeratePotentiallyTypedMajorRecords(
+            IGroup<T> obj,
+            Type? type,
+            bool throwIfUnknown)
+        {
+            if (type == null) return EnumerateMajorRecords(obj);
+            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+        }
+        
         public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
             IGroup<T> obj,
             Type type,
@@ -1006,6 +1015,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     yield return item;
                 }
             }
+        }
+        
+        public IEnumerable<IMajorRecordCommonGetter> EnumeratePotentiallyTypedMajorRecords(
+            IGroupGetter<T> obj,
+            Type? type,
+            bool throwIfUnknown)
+        {
+            if (type == null) return EnumerateMajorRecords(obj);
+            return EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
