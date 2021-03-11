@@ -31,6 +31,17 @@ namespace Mutagen.Bethesda
             _mutableMods = mutableMods.Select(m => m.ToMutableLinkCache<TMod, TModGetter>()).ToList();
         }
 
+        /// <summary>
+        /// Constructs a mutable load order link cache by combining an existing immutable load order cache,
+        /// plus a set of mods to be put at the end of the load order and allow to be mutable.
+        /// </summary>
+        /// <param name="mutableMods">Set of mods to place at the end of the load order, which are allowed to be modified afterwards</param>
+        public MutableLoadOrderLinkCache(params TMod[] mutableMods)
+        {
+            WrappedImmutableCache = ImmutableLoadOrderLinkCache<TMod, TModGetter>.Empty;
+            _mutableMods = mutableMods.Select(m => m.ToMutableLinkCache<TMod, TModGetter>()).ToList();
+        }
+
         /// <inheritdoc />
         public IReadOnlyList<IModGetter> ListedOrder => throw new NotImplementedException();
 
