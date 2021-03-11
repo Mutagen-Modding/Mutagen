@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="LocationTargetRadius" objType="Subrecord" GUID="80c7f692-a7fd-4829-abc3-8c8e06c031da" ID="60">
+    <Fields>
+      <RefDirect name="Target" refName="ALocationTarget" byteLength="8" generateClassMembers="false" binary="Custom" />
+      <UInt32 name="Radius" />
+      <UInt32 name="CollectionIndex" />
+    </Fields>
+  </Object>
+  <Object name="ALocationTarget" abstract="true" objType="Subrecord" GUID="41e424fb-299b-4d80-8722-26b6eb62db72" ID="61" />
+  <Object name="LocationTarget" baseClass="ALocationTarget" objType="Subrecord" GUID="498d0751-d029-4bf4-b7ab-310a41ae4176" ID="62">
+    <Fields>
+      <FormLink name="Link">
+        <Interface>ILocationTargetable</Interface>
+      </FormLink>
+    </Fields>
+  </Object>
+  <Object name="LocationCell" baseClass="ALocationTarget" objType="Subrecord" GUID="cf3ba334-20b0-4760-885b-9ba08e080e7d" ID="63">
+    <Fields>
+      <FormLink name="Link" refName="Cell" />
+    </Fields>
+  </Object>
+  <Object name="LocationObjectId" baseClass="ALocationTarget" objType="Subrecord" GUID="dc943b02-71c9-49da-bdfc-91e8158e2587" ID="64">
+    <Fields>
+      <FormLink name="Link">
+        <Interface>IObjectId</Interface>
+      </FormLink>
+    </Fields>
+  </Object>
+  <Object name="LocationObjectType" baseClass="ALocationTarget" objType="Subrecord" GUID="ed385a4e-9fc6-4d38-b556-988532b075ca" ID="65">
+    <Fields>
+      <Enum name="Type" enumName="TargetObjectType" />
+    </Fields>
+  </Object>
+  <Object name="LocationKeyword" baseClass="ALocationTarget" objType="Subrecord" GUID="d7ac019c-835f-4eaa-83e0-48a0b7251aec" ID="66">
+    <Fields>
+      <FormLink name="Link" refName="Keyword" />
+    </Fields>
+  </Object>
+  <Object name="LocationFallback" baseClass="ALocationTarget" objType="Subrecord" GUID="1bf4259f-556b-4d20-af26-7030b2b788c3" ID="67">
+    <Fields>
+      <Enum name="Type" enumName="LocationTargetRadius.LocationType" byteLength="4" />
+      <Int32 name="Data" />
+    </Fields>
+  </Object>
+</Loqui>

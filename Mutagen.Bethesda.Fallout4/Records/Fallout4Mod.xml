@@ -13,6 +13,7 @@
       <Group name="Globals" refName="Global" />
       <Group name="DamageTypes" refName="ADamageType" />
       <Group name="Classes" refName="Class" />
+      <Group name="Factions" refName="Faction" />
     </Fields>
   </Object>
 </Loqui>

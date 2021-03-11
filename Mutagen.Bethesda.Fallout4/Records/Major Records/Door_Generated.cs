@@ -28,17 +28,14 @@ using System.Text;
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
-    /// <summary>
-    /// Implemented by: [DamageType, DamageTypeIndexed]
-    /// </summary>
-    public abstract partial class ADamageType :
+    public partial class Door :
         Fallout4MajorRecord,
-        IADamageTypeInternal,
-        IEquatable<IADamageTypeGetter>,
-        ILoquiObjectSetter<ADamageType>
+        IDoorInternal,
+        IEquatable<IDoorGetter>,
+        ILoquiObjectSetter<Door>
     {
         #region Ctor
-        protected ADamageType()
+        protected Door()
         {
             CustomCtor();
         }
@@ -52,7 +49,7 @@ namespace Mutagen.Bethesda.Fallout4
             FileGeneration fg,
             string? name = null)
         {
-            ADamageTypeMixIn.ToString(
+            DoorMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -62,16 +59,16 @@ namespace Mutagen.Bethesda.Fallout4
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IADamageTypeGetter rhs)) return false;
-            return ((ADamageTypeCommon)((IADamageTypeGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (!(obj is IDoorGetter rhs)) return false;
+            return ((DoorCommon)((IDoorGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(IADamageTypeGetter? obj)
+        public bool Equals(IDoorGetter? obj)
         {
-            return ((ADamageTypeCommon)((IADamageTypeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((DoorCommon)((IDoorGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((ADamageTypeCommon)((IADamageTypeGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((DoorCommon)((IDoorGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -153,7 +150,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new ADamageType.Mask<R>();
+                var ret = new Door.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -170,16 +167,16 @@ namespace Mutagen.Bethesda.Fallout4
                 return ToString(printMask: null);
             }
 
-            public string ToString(ADamageType.Mask<bool>? printMask = null)
+            public string ToString(Door.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, ADamageType.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, Door.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(ADamageType.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(Door.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -197,7 +194,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                ADamageType_FieldIndex enu = (ADamageType_FieldIndex)index;
+                Door_FieldIndex enu = (Door_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -207,7 +204,7 @@ namespace Mutagen.Bethesda.Fallout4
 
             public override void SetNthException(int index, Exception ex)
             {
-                ADamageType_FieldIndex enu = (ADamageType_FieldIndex)index;
+                Door_FieldIndex enu = (Door_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -218,7 +215,7 @@ namespace Mutagen.Bethesda.Fallout4
 
             public override void SetNthMask(int index, object obj)
             {
-                ADamageType_FieldIndex enu = (ADamageType_FieldIndex)index;
+                Door_FieldIndex enu = (Door_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -313,16 +310,14 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = ADamageType_Registration.TriggeringRecordType;
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => ADamageTypeCommon.Instance.GetContainedFormLinks(this);
-        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ADamageTypeSetterCommon.Instance.RemapLinks(this, mapping);
-        public ADamageType(FormKey formKey)
+        public static readonly RecordType GrupRecordType = Door_Registration.TriggeringRecordType;
+        public Door(FormKey formKey)
         {
             this.FormKey = formKey;
             CustomCtor();
         }
 
-        private ADamageType(
+        private Door(
             FormKey formKey,
             GameRelease gameRelease)
         {
@@ -331,7 +326,7 @@ namespace Mutagen.Bethesda.Fallout4
             CustomCtor();
         }
 
-        internal ADamageType(
+        internal Door(
             FormKey formKey,
             ushort formVersion)
         {
@@ -340,12 +335,12 @@ namespace Mutagen.Bethesda.Fallout4
             CustomCtor();
         }
 
-        public ADamageType(IFallout4Mod mod)
+        public Door(IFallout4Mod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public ADamageType(IFallout4Mod mod, string editorID)
+        public Door(IFallout4Mod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
@@ -355,15 +350,39 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => ADamageTypeBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => DoorBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((ADamageTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((DoorBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
+        }
+        #region Binary Create
+        public new static Door CreateFromBinary(
+            MutagenFrame frame,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            var ret = new Door();
+            ((DoorSetterCommon)((IDoorGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+                item: ret,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
+            return ret;
+        }
+
+        #endregion
+
+        public static bool TryCreateFromBinary(
+            MutagenFrame frame,
+            out Door item,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            var startPos = frame.Position;
+            item = CreateFromBinary(frame, recordTypeConverter);
+            return startPos != frame.Position;
         }
         #endregion
 
@@ -371,88 +390,85 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IClearable.Clear()
         {
-            ((ADamageTypeSetterCommon)((IADamageTypeGetter)this).CommonSetterInstance()!).Clear(this);
+            ((DoorSetterCommon)((IDoorGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new ADamageType GetNew()
+        internal static new Door GetNew()
         {
-            throw new ArgumentException("New called on an abstract class.");
+            return new Door();
         }
 
     }
     #endregion
 
     #region Interface
-    /// <summary>
-    /// Implemented by: [DamageType, DamageTypeIndexed]
-    /// </summary>
-    public partial interface IADamageType :
-        IADamageTypeGetter,
+    public partial interface IDoor :
+        IDoorGetter,
         IFallout4MajorRecordInternal,
-        IFormLinkContainer,
-        ILoquiObjectSetter<IADamageTypeInternal>
+        ILocationTargetable,
+        ILoquiObjectSetter<IDoorInternal>,
+        IObjectId
     {
     }
 
-    public partial interface IADamageTypeInternal :
+    public partial interface IDoorInternal :
         IFallout4MajorRecordInternal,
-        IADamageType,
-        IADamageTypeGetter
+        IDoor,
+        IDoorGetter
     {
     }
 
-    /// <summary>
-    /// Implemented by: [DamageType, DamageTypeIndexed]
-    /// </summary>
-    public partial interface IADamageTypeGetter :
+    public partial interface IDoorGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
-        IFormLinkContainerGetter,
-        ILoquiObject<IADamageTypeGetter>
+        ILocationTargetableGetter,
+        ILoquiObject<IDoorGetter>,
+        IMapsToGetter<IDoorGetter>,
+        IObjectIdGetter
     {
-        static new ILoquiRegistration Registration => ADamageType_Registration.Instance;
+        static new ILoquiRegistration Registration => Door_Registration.Instance;
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class ADamageTypeMixIn
+    public static partial class DoorMixIn
     {
-        public static void Clear(this IADamageTypeInternal item)
+        public static void Clear(this IDoorInternal item)
         {
-            ((ADamageTypeSetterCommon)((IADamageTypeGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((DoorSetterCommon)((IDoorGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static ADamageType.Mask<bool> GetEqualsMask(
-            this IADamageTypeGetter item,
-            IADamageTypeGetter rhs,
+        public static Door.Mask<bool> GetEqualsMask(
+            this IDoorGetter item,
+            IDoorGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ADamageTypeCommon)((IADamageTypeGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((DoorCommon)((IDoorGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IADamageTypeGetter item,
+            this IDoorGetter item,
             string? name = null,
-            ADamageType.Mask<bool>? printMask = null)
+            Door.Mask<bool>? printMask = null)
         {
-            return ((ADamageTypeCommon)((IADamageTypeGetter)item).CommonInstance()!).ToString(
+            return ((DoorCommon)((IDoorGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IADamageTypeGetter item,
+            this IDoorGetter item,
             FileGeneration fg,
             string? name = null,
-            ADamageType.Mask<bool>? printMask = null)
+            Door.Mask<bool>? printMask = null)
         {
-            ((ADamageTypeCommon)((IADamageTypeGetter)item).CommonInstance()!).ToString(
+            ((DoorCommon)((IDoorGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -460,37 +476,37 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static bool Equals(
-            this IADamageTypeGetter item,
-            IADamageTypeGetter rhs)
+            this IDoorGetter item,
+            IDoorGetter rhs)
         {
-            return ((ADamageTypeCommon)((IADamageTypeGetter)item).CommonInstance()!).Equals(
+            return ((DoorCommon)((IDoorGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyIn(
-            this IADamageTypeInternal lhs,
-            IADamageTypeGetter rhs,
-            out ADamageType.ErrorMask errorMask,
-            ADamageType.TranslationMask? copyMask = null)
+            this IDoorInternal lhs,
+            IDoorGetter rhs,
+            out Door.ErrorMask errorMask,
+            Door.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((ADamageTypeSetterTranslationCommon)((IADamageTypeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((DoorSetterTranslationCommon)((IDoorGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = ADamageType.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Door.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IADamageTypeInternal lhs,
-            IADamageTypeGetter rhs,
+            this IDoorInternal lhs,
+            IDoorGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((ADamageTypeSetterTranslationCommon)((IADamageTypeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((DoorSetterTranslationCommon)((IDoorGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -498,44 +514,44 @@ namespace Mutagen.Bethesda.Fallout4
                 deepCopy: false);
         }
 
-        public static ADamageType DeepCopy(
-            this IADamageTypeGetter item,
-            ADamageType.TranslationMask? copyMask = null)
+        public static Door DeepCopy(
+            this IDoorGetter item,
+            Door.TranslationMask? copyMask = null)
         {
-            return ((ADamageTypeSetterTranslationCommon)((IADamageTypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((DoorSetterTranslationCommon)((IDoorGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static ADamageType DeepCopy(
-            this IADamageTypeGetter item,
-            out ADamageType.ErrorMask errorMask,
-            ADamageType.TranslationMask? copyMask = null)
+        public static Door DeepCopy(
+            this IDoorGetter item,
+            out Door.ErrorMask errorMask,
+            Door.TranslationMask? copyMask = null)
         {
-            return ((ADamageTypeSetterTranslationCommon)((IADamageTypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((DoorSetterTranslationCommon)((IDoorGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static ADamageType DeepCopy(
-            this IADamageTypeGetter item,
+        public static Door DeepCopy(
+            this IDoorGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((ADamageTypeSetterTranslationCommon)((IADamageTypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((DoorSetterTranslationCommon)((IDoorGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Mutagen
-        public static ADamageType Duplicate(
-            this IADamageTypeGetter item,
+        public static Door Duplicate(
+            this IDoorGetter item,
             FormKey formKey,
-            ADamageType.TranslationMask? copyMask = null)
+            Door.TranslationMask? copyMask = null)
         {
-            return ((ADamageTypeCommon)((IADamageTypeGetter)item).CommonInstance()!).Duplicate(
+            return ((DoorCommon)((IDoorGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
@@ -545,11 +561,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IADamageTypeInternal item,
+            this IDoorInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((ADamageTypeSetterCommon)((IADamageTypeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((DoorSetterCommon)((IDoorGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -565,7 +581,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
     #region Field Index
-    public enum ADamageType_FieldIndex
+    public enum Door_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -577,40 +593,40 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class ADamageType_Registration : ILoquiRegistration
+    public partial class Door_Registration : ILoquiRegistration
     {
-        public static readonly ADamageType_Registration Instance = new ADamageType_Registration();
+        public static readonly Door_Registration Instance = new Door_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 49,
+            msgID: 77,
             version: 0);
 
-        public const string GUID = "94b35fef-7da4-4b61-9590-aac89dd64319";
+        public const string GUID = "a7b54091-ef8c-4eec-ac2e-f17b2ae6c1b3";
 
         public const ushort AdditionalFieldCount = 0;
 
         public const ushort FieldCount = 6;
 
-        public static readonly Type MaskType = typeof(ADamageType.Mask<>);
+        public static readonly Type MaskType = typeof(Door.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(ADamageType.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Door.ErrorMask);
 
-        public static readonly Type ClassType = typeof(ADamageType);
+        public static readonly Type ClassType = typeof(Door);
 
-        public static readonly Type GetterType = typeof(IADamageTypeGetter);
+        public static readonly Type GetterType = typeof(IDoorGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IADamageType);
+        public static readonly Type SetterType = typeof(IDoor);
 
-        public static readonly Type? InternalSetterType = typeof(IADamageTypeInternal);
+        public static readonly Type? InternalSetterType = typeof(IDoorInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Fallout4.ADamageType";
+        public const string FullName = "Mutagen.Bethesda.Fallout4.Door";
 
-        public const string Name = "ADamageType";
+        public const string Name = "Door";
 
         public const string Namespace = "Mutagen.Bethesda.Fallout4";
 
@@ -618,8 +634,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.DMGT;
-        public static readonly Type BinaryWriteTranslation = typeof(ADamageTypeBinaryWriteTranslation);
+        public static readonly RecordType TriggeringRecordType = RecordTypes.DOOR;
+        public static readonly Type BinaryWriteTranslation = typeof(DoorBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -652,13 +668,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class ADamageTypeSetterCommon : Fallout4MajorRecordSetterCommon
+    public partial class DoorSetterCommon : Fallout4MajorRecordSetterCommon
     {
-        public new static readonly ADamageTypeSetterCommon Instance = new ADamageTypeSetterCommon();
+        public new static readonly DoorSetterCommon Instance = new DoorSetterCommon();
 
         partial void ClearPartial();
         
-        public virtual void Clear(IADamageTypeInternal item)
+        public void Clear(IDoorInternal item)
         {
             ClearPartial();
             base.Clear(item);
@@ -666,16 +682,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         public override void Clear(IFallout4MajorRecordInternal item)
         {
-            Clear(item: (IADamageTypeInternal)item);
+            Clear(item: (IDoorInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IADamageTypeInternal)item);
+            Clear(item: (IDoorInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IADamageType obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IDoor obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
         }
@@ -684,10 +700,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IADamageTypeInternal item,
+            IDoorInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
+            UtilityTranslation.MajorRecordParse<IDoorInternal>(
+                record: item,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: DoorBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: DoorBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -696,7 +718,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             CopyInFromBinary(
-                item: (ADamageType)item,
+                item: (Door)item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -707,7 +729,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             CopyInFromBinary(
-                item: (ADamageType)item,
+                item: (Door)item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -715,17 +737,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ADamageTypeCommon : Fallout4MajorRecordCommon
+    public partial class DoorCommon : Fallout4MajorRecordCommon
     {
-        public new static readonly ADamageTypeCommon Instance = new ADamageTypeCommon();
+        public new static readonly DoorCommon Instance = new DoorCommon();
 
-        public ADamageType.Mask<bool> GetEqualsMask(
-            IADamageTypeGetter item,
-            IADamageTypeGetter rhs,
+        public Door.Mask<bool> GetEqualsMask(
+            IDoorGetter item,
+            IDoorGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new ADamageType.Mask<bool>(false);
-            ((ADamageTypeCommon)((IADamageTypeGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new Door.Mask<bool>(false);
+            ((DoorCommon)((IDoorGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -734,9 +756,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         public void FillEqualsMask(
-            IADamageTypeGetter item,
-            IADamageTypeGetter rhs,
-            ADamageType.Mask<bool> ret,
+            IDoorGetter item,
+            IDoorGetter rhs,
+            Door.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -744,9 +766,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         public string ToString(
-            IADamageTypeGetter item,
+            IDoorGetter item,
             string? name = null,
-            ADamageType.Mask<bool>? printMask = null)
+            Door.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -758,18 +780,18 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         public void ToString(
-            IADamageTypeGetter item,
+            IDoorGetter item,
             FileGeneration fg,
             string? name = null,
-            ADamageType.Mask<bool>? printMask = null)
+            Door.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ADamageType =>");
+                fg.AppendLine($"Door =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ADamageType) =>");
+                fg.AppendLine($"{name} (Door) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -783,9 +805,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         protected static void ToStringFields(
-            IADamageTypeGetter item,
+            IDoorGetter item,
             FileGeneration fg,
-            ADamageType.Mask<bool>? printMask = null)
+            Door.Mask<bool>? printMask = null)
         {
             Fallout4MajorRecordCommon.ToStringFields(
                 item: item,
@@ -793,39 +815,39 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 printMask: printMask);
         }
         
-        public static ADamageType_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
+        public static Door_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case Fallout4MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (ADamageType_FieldIndex)((int)index);
+                    return (Door_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.FormKey:
-                    return (ADamageType_FieldIndex)((int)index);
+                    return (Door_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.VersionControl:
-                    return (ADamageType_FieldIndex)((int)index);
+                    return (Door_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.EditorID:
-                    return (ADamageType_FieldIndex)((int)index);
+                    return (Door_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
-                    return (ADamageType_FieldIndex)((int)index);
+                    return (Door_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
-                    return (ADamageType_FieldIndex)((int)index);
+                    return (Door_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
         
-        public static new ADamageType_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Door_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (ADamageType_FieldIndex)((int)index);
+                    return (Door_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (ADamageType_FieldIndex)((int)index);
+                    return (Door_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.VersionControl:
-                    return (ADamageType_FieldIndex)((int)index);
+                    return (Door_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (ADamageType_FieldIndex)((int)index);
+                    return (Door_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -833,8 +855,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IADamageTypeGetter? lhs,
-            IADamageTypeGetter? rhs)
+            IDoorGetter? lhs,
+            IDoorGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
@@ -847,8 +869,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IFallout4MajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (IADamageTypeGetter?)lhs,
-                rhs: rhs as IADamageTypeGetter);
+                lhs: (IDoorGetter?)lhs,
+                rhs: rhs as IDoorGetter);
         }
         
         public override bool Equals(
@@ -856,11 +878,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (IADamageTypeGetter?)lhs,
-                rhs: rhs as IADamageTypeGetter);
+                lhs: (IDoorGetter?)lhs,
+                rhs: rhs as IDoorGetter);
         }
         
-        public virtual int GetHashCode(IADamageTypeGetter item)
+        public virtual int GetHashCode(IDoorGetter item)
         {
             var hash = new HashCode();
             hash.Add(base.GetHashCode());
@@ -869,12 +891,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         public override int GetHashCode(IFallout4MajorRecordGetter item)
         {
-            return GetHashCode(item: (IADamageTypeGetter)item);
+            return GetHashCode(item: (IDoorGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (IADamageTypeGetter)item);
+            return GetHashCode(item: (IDoorGetter)item);
         }
         
         #endregion
@@ -882,11 +904,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         public override object GetNew()
         {
-            return ADamageType.GetNew();
+            return Door.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IADamageTypeGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IDoorGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {
@@ -896,12 +918,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Duplicate
-        public virtual ADamageType Duplicate(
-            IADamageTypeGetter item,
+        public Door Duplicate(
+            IDoorGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            throw new NotImplementedException();
+            var newRec = new Door(formKey);
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
         
         public override Fallout4MajorRecord Duplicate(
@@ -910,7 +934,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IADamageType)item,
+                item: (IDoor)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -921,7 +945,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IADamageType)item,
+                item: (IDoor)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -931,14 +955,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ADamageTypeSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    public partial class DoorSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
-        public new static readonly ADamageTypeSetterTranslationCommon Instance = new ADamageTypeSetterTranslationCommon();
+        public new static readonly DoorSetterTranslationCommon Instance = new DoorSetterTranslationCommon();
 
         #region DeepCopyIn
-        public virtual void DeepCopyIn(
-            IADamageTypeInternal item,
-            IADamageTypeGetter rhs,
+        public void DeepCopyIn(
+            IDoorInternal item,
+            IDoorGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -951,9 +975,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 deepCopy: deepCopy);
         }
         
-        public virtual void DeepCopyIn(
-            IADamageType item,
-            IADamageTypeGetter rhs,
+        public void DeepCopyIn(
+            IDoor item,
+            IDoorGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -974,8 +998,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IADamageTypeInternal)item,
-                rhs: (IADamageTypeGetter)rhs,
+                item: (IDoorInternal)item,
+                rhs: (IDoorGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -989,8 +1013,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IADamageType)item,
-                rhs: (IADamageTypeGetter)rhs,
+                item: (IDoor)item,
+                rhs: (IDoorGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1004,8 +1028,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IADamageTypeInternal)item,
-                rhs: (IADamageTypeGetter)rhs,
+                item: (IDoorInternal)item,
+                rhs: (IDoorGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1019,8 +1043,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IADamageType)item,
-                rhs: (IADamageTypeGetter)rhs,
+                item: (IDoor)item,
+                rhs: (IDoorGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1028,12 +1052,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         #endregion
         
-        public ADamageType DeepCopy(
-            IADamageTypeGetter item,
-            ADamageType.TranslationMask? copyMask = null)
+        public Door DeepCopy(
+            IDoorGetter item,
+            Door.TranslationMask? copyMask = null)
         {
-            ADamageType ret = (ADamageType)((ADamageTypeCommon)((IADamageTypeGetter)item).CommonInstance()!).GetNew();
-            ((ADamageTypeSetterTranslationCommon)((IADamageTypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            Door ret = (Door)((DoorCommon)((IDoorGetter)item).CommonInstance()!).GetNew();
+            ((DoorSetterTranslationCommon)((IDoorGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1042,30 +1066,30 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             return ret;
         }
         
-        public ADamageType DeepCopy(
-            IADamageTypeGetter item,
-            out ADamageType.ErrorMask errorMask,
-            ADamageType.TranslationMask? copyMask = null)
+        public Door DeepCopy(
+            IDoorGetter item,
+            out Door.ErrorMask errorMask,
+            Door.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ADamageType ret = (ADamageType)((ADamageTypeCommon)((IADamageTypeGetter)item).CommonInstance()!).GetNew();
-            ((ADamageTypeSetterTranslationCommon)((IADamageTypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            Door ret = (Door)((DoorCommon)((IDoorGetter)item).CommonInstance()!).GetNew();
+            ((DoorSetterTranslationCommon)((IDoorGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = ADamageType.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Door.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public ADamageType DeepCopy(
-            IADamageTypeGetter item,
+        public Door DeepCopy(
+            IDoorGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            ADamageType ret = (ADamageType)((ADamageTypeCommon)((IADamageTypeGetter)item).CommonInstance()!).GetNew();
-            ((ADamageTypeSetterTranslationCommon)((IADamageTypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            Door ret = (Door)((DoorCommon)((IDoorGetter)item).CommonInstance()!).GetNew();
+            ((DoorSetterTranslationCommon)((IDoorGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1081,21 +1105,21 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class ADamageType
+    public partial class Door
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ADamageType_Registration.Instance;
-        public new static ADamageType_Registration Registration => ADamageType_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Door_Registration.Instance;
+        public new static Door_Registration Registration => Door_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => ADamageTypeCommon.Instance;
+        protected override object CommonInstance() => DoorCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return ADamageTypeSetterCommon.Instance;
+            return DoorSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => ADamageTypeSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => DoorSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1106,33 +1130,20 @@ namespace Mutagen.Bethesda.Fallout4
 #region Binary Translation
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
-    public partial class ADamageTypeBinaryWriteTranslation :
+    public partial class DoorBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static ADamageTypeBinaryWriteTranslation Instance = new ADamageTypeBinaryWriteTranslation();
+        public new readonly static DoorBinaryWriteTranslation Instance = new DoorBinaryWriteTranslation();
 
-        static partial void WriteBinaryCustomLogicCustom(
+        public void Write(
             MutagenWriter writer,
-            IADamageTypeGetter item);
-
-        public static void WriteBinaryCustomLogic(
-            MutagenWriter writer,
-            IADamageTypeGetter item)
-        {
-            WriteBinaryCustomLogicCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public virtual void Write(
-            MutagenWriter writer,
-            IADamageTypeGetter item,
+            IDoorGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.DMGT),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.DOOR),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 try
@@ -1158,7 +1169,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IADamageTypeGetter)item,
+                item: (IDoorGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1169,7 +1180,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IADamageTypeGetter)item,
+                item: (IDoorGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1180,21 +1191,26 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IADamageTypeGetter)item,
+                item: (IDoorGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
     }
 
-    public partial class ADamageTypeBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    public partial class DoorBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static ADamageTypeBinaryCreateTranslation Instance = new ADamageTypeBinaryCreateTranslation();
+        public new readonly static DoorBinaryCreateTranslation Instance = new DoorBinaryCreateTranslation();
 
-        public override RecordType RecordType => throw new ArgumentException();
-        static partial void FillBinaryCustomLogicCustom(
-            MutagenFrame frame,
-            IADamageTypeInternal item);
+        public override RecordType RecordType => RecordTypes.DOOR;
+        public static void FillBinaryStructs(
+            IDoorInternal item,
+            MutagenFrame frame)
+        {
+            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
 
     }
 
@@ -1202,7 +1218,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Binary Write Mixins
-    public static class ADamageTypeBinaryTranslationMixIn
+    public static class DoorBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1211,49 +1227,42 @@ namespace Mutagen.Bethesda.Fallout4
 }
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
-    public partial class ADamageTypeBinaryOverlay :
+    public partial class DoorBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
-        IADamageTypeGetter
+        IDoorGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ADamageType_Registration.Instance;
-        public new static ADamageType_Registration Registration => ADamageType_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Door_Registration.Instance;
+        public new static Door_Registration Registration => Door_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => ADamageTypeCommon.Instance;
+        protected override object CommonInstance() => DoorCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => ADamageTypeSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => DoorSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => ADamageTypeCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => ADamageTypeBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => DoorBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((ADamageTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((DoorBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
-        #region CustomLogic
-        partial void CustomLogicCustomParse(
-            OverlayStream stream,
-            int offset);
-        protected int CustomLogicEndingPos;
-        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected ADamageTypeBinaryOverlay(
+        protected DoorBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1263,6 +1272,43 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             this.CustomCtor();
         }
 
+        public static DoorBinaryOverlay DoorFactory(
+            OverlayStream stream,
+            BinaryOverlayFactoryPackage package,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            stream = UtilityTranslation.DecompressStream(stream);
+            var ret = new DoorBinaryOverlay(
+                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                package: package);
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
+            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
+            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret.CustomFactoryEnd(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset);
+            ret.FillSubrecordTypes(
+                majorReference: ret,
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public static DoorBinaryOverlay DoorFactory(
+            ReadOnlyMemorySlice<byte> slice,
+            BinaryOverlayFactoryPackage package,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            return DoorFactory(
+                stream: new OverlayStream(slice, package),
+                package: package,
+                recordTypeConverter: recordTypeConverter);
+        }
 
         #region To String
 
@@ -1270,7 +1316,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             FileGeneration fg,
             string? name = null)
         {
-            ADamageTypeMixIn.ToString(
+            DoorMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -1280,16 +1326,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IADamageTypeGetter rhs)) return false;
-            return ((ADamageTypeCommon)((IADamageTypeGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (!(obj is IDoorGetter rhs)) return false;
+            return ((DoorCommon)((IDoorGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(IADamageTypeGetter? obj)
+        public bool Equals(IDoorGetter? obj)
         {
-            return ((ADamageTypeCommon)((IADamageTypeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((DoorCommon)((IDoorGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((ADamageTypeCommon)((IADamageTypeGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((DoorCommon)((IDoorGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

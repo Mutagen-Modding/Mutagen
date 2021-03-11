@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
     /// <summary>
-    /// Implemented by: [ActionRecord, ActorValueInformation, ASpell, AttractionRule, Class, Component, ADamageType, GameSetting, Global, Keyword, LocationReferenceType, MiscItem, SoundDescriptor, TextureSet, Transform]
+    /// Implemented by: [ActionRecord, ActorValueInformation, ASpell, AttractionRule, Cell, Class, Component, ADamageType, Door, Faction, FormList, GameSetting, Global, Keyword, LocationReferenceType, MiscItem, Outfit, PlacedObject, SoundDescriptor, TextureSet, Transform]
     /// </summary>
     public abstract partial class Fallout4MajorRecord :
         MajorRecord,
@@ -454,7 +454,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     /// <summary>
-    /// Implemented by: [ActionRecord, ActorValueInformation, ASpell, AttractionRule, Class, Component, ADamageType, GameSetting, Global, Keyword, LocationReferenceType, MiscItem, SoundDescriptor, TextureSet, Transform]
+    /// Implemented by: [ActionRecord, ActorValueInformation, ASpell, AttractionRule, Cell, Class, Component, ADamageType, Door, Faction, FormList, GameSetting, Global, Keyword, LocationReferenceType, MiscItem, Outfit, PlacedObject, SoundDescriptor, TextureSet, Transform]
     /// </summary>
     public partial interface IFallout4MajorRecord :
         IFallout4MajorRecordGetter,
@@ -474,7 +474,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [ActionRecord, ActorValueInformation, ASpell, AttractionRule, Class, Component, ADamageType, GameSetting, Global, Keyword, LocationReferenceType, MiscItem, SoundDescriptor, TextureSet, Transform]
+    /// Implemented by: [ActionRecord, ActorValueInformation, ASpell, AttractionRule, Cell, Class, Component, ADamageType, Door, Faction, FormList, GameSetting, Global, Keyword, LocationReferenceType, MiscItem, Outfit, PlacedObject, SoundDescriptor, TextureSet, Transform]
     /// </summary>
     public partial interface IFallout4MajorRecordGetter :
         IMajorRecordGetter,

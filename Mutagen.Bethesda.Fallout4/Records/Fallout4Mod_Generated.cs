@@ -48,6 +48,7 @@ namespace Mutagen.Bethesda.Fallout4
             _Globals_Object = new Group<Global>(this);
             _DamageTypes_Object = new Group<ADamageType>(this);
             _Classes_Object = new Group<Class>(this);
+            _Factions_Object = new Group<Faction>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -130,6 +131,13 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IClassGetter> IFallout4ModGetter.Classes => _Classes_Object;
         #endregion
+        #region Factions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<Faction> _Factions_Object;
+        public Group<Faction> Factions => _Factions_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IFactionGetter> IFallout4ModGetter.Factions => _Factions_Object;
+        #endregion
 
         #region To String
 
@@ -179,6 +187,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Globals = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.DamageTypes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Classes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Factions = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -192,7 +201,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem TextureSets,
                 TItem Globals,
                 TItem DamageTypes,
-                TItem Classes)
+                TItem Classes,
+                TItem Factions)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
@@ -205,6 +215,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Globals = new MaskItem<TItem, Group.Mask<TItem>?>(Globals, new Group.Mask<TItem>(Globals));
                 this.DamageTypes = new MaskItem<TItem, Group.Mask<TItem>?>(DamageTypes, new Group.Mask<TItem>(DamageTypes));
                 this.Classes = new MaskItem<TItem, Group.Mask<TItem>?>(Classes, new Group.Mask<TItem>(Classes));
+                this.Factions = new MaskItem<TItem, Group.Mask<TItem>?>(Factions, new Group.Mask<TItem>(Factions));
             }
 
             #pragma warning disable CS8618
@@ -227,6 +238,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Group.Mask<TItem>?>? Globals { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? DamageTypes { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Classes { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Factions { get; set; }
             #endregion
 
             #region Equals
@@ -250,6 +262,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Globals, rhs.Globals)) return false;
                 if (!object.Equals(this.DamageTypes, rhs.DamageTypes)) return false;
                 if (!object.Equals(this.Classes, rhs.Classes)) return false;
+                if (!object.Equals(this.Factions, rhs.Factions)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -266,6 +279,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Globals);
                 hash.Add(this.DamageTypes);
                 hash.Add(this.Classes);
+                hash.Add(this.Factions);
                 return hash.ToHashCode();
             }
 
@@ -329,6 +343,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.Classes.Overall)) return false;
                     if (this.Classes.Specific != null && !this.Classes.Specific.All(eval)) return false;
                 }
+                if (Factions != null)
+                {
+                    if (!eval(this.Factions.Overall)) return false;
+                    if (this.Factions.Specific != null && !this.Factions.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -391,6 +410,11 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.Classes.Overall)) return true;
                     if (this.Classes.Specific != null && this.Classes.Specific.Any(eval)) return true;
                 }
+                if (Factions != null)
+                {
+                    if (eval(this.Factions.Overall)) return true;
+                    if (this.Factions.Specific != null && this.Factions.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -416,6 +440,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Globals = this.Globals == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Globals.Overall), this.Globals.Specific?.Translate(eval));
                 obj.DamageTypes = this.DamageTypes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.DamageTypes.Overall), this.DamageTypes.Specific?.Translate(eval));
                 obj.Classes = this.Classes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Classes.Overall), this.Classes.Specific?.Translate(eval));
+                obj.Factions = this.Factions == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Factions.Overall), this.Factions.Specific?.Translate(eval));
             }
             #endregion
 
@@ -482,6 +507,10 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         Classes?.ToString(fg);
                     }
+                    if (printMask?.Factions?.Overall ?? true)
+                    {
+                        Factions?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -518,6 +547,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Group.ErrorMask<Global.ErrorMask>?>? Globals;
             public MaskItem<Exception?, Group.ErrorMask<ADamageType.ErrorMask>?>? DamageTypes;
             public MaskItem<Exception?, Group.ErrorMask<Class.ErrorMask>?>? Classes;
+            public MaskItem<Exception?, Group.ErrorMask<Faction.ErrorMask>?>? Factions;
             #endregion
 
             #region IErrorMask
@@ -548,6 +578,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return DamageTypes;
                     case Fallout4Mod_FieldIndex.Classes:
                         return Classes;
+                    case Fallout4Mod_FieldIndex.Factions:
+                        return Factions;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -590,6 +622,9 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4Mod_FieldIndex.Classes:
                         this.Classes = new MaskItem<Exception?, Group.ErrorMask<Class.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout4Mod_FieldIndex.Factions:
+                        this.Factions = new MaskItem<Exception?, Group.ErrorMask<Faction.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -634,6 +669,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4Mod_FieldIndex.Classes:
                         this.Classes = (MaskItem<Exception?, Group.ErrorMask<Class.ErrorMask>?>?)obj;
                         break;
+                    case Fallout4Mod_FieldIndex.Factions:
+                        this.Factions = (MaskItem<Exception?, Group.ErrorMask<Faction.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -653,6 +691,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Globals != null) return true;
                 if (DamageTypes != null) return true;
                 if (Classes != null) return true;
+                if (Factions != null) return true;
                 return false;
             }
             #endregion
@@ -698,6 +737,7 @@ namespace Mutagen.Bethesda.Fallout4
                 Globals?.ToString(fg);
                 DamageTypes?.ToString(fg);
                 Classes?.ToString(fg);
+                Factions?.ToString(fg);
             }
             #endregion
 
@@ -717,6 +757,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Globals = this.Globals.Combine(rhs.Globals, (l, r) => l.Combine(r));
                 ret.DamageTypes = this.DamageTypes.Combine(rhs.DamageTypes, (l, r) => l.Combine(r));
                 ret.Classes = this.Classes.Combine(rhs.Classes, (l, r) => l.Combine(r));
+                ret.Factions = this.Factions.Combine(rhs.Factions, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -751,6 +792,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Group.TranslationMask<Global.TranslationMask>? Globals;
             public Group.TranslationMask<ADamageType.TranslationMask>? DamageTypes;
             public Group.TranslationMask<Class.TranslationMask>? Classes;
+            public Group.TranslationMask<Faction.TranslationMask>? Factions;
             #endregion
 
             #region Ctors
@@ -786,6 +828,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Globals != null ? Globals.OnOverall : DefaultOn, Globals?.GetCrystal()));
                 ret.Add((DamageTypes != null ? DamageTypes.OnOverall : DefaultOn, DamageTypes?.GetCrystal()));
                 ret.Add((Classes != null ? Classes.OnOverall : DefaultOn, Classes?.GetCrystal()));
+                ret.Add((Factions != null ? Factions.OnOverall : DefaultOn, Factions?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -836,6 +879,7 @@ namespace Mutagen.Bethesda.Fallout4
             _Globals_Object = new Group<Global>(this);
             _DamageTypes_Object = new Group<ADamageType>(this);
             _Classes_Object = new Group<Class>(this);
+            _Factions_Object = new Group<Faction>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -882,6 +926,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.Classes.RecordCache.Set(rhsMod.Classes.RecordCache.Items);
             }
+            if (mask?.Factions ?? true)
+            {
+                this.Factions.RecordCache.Set(rhsMod.Factions.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -902,6 +950,7 @@ namespace Mutagen.Bethesda.Fallout4
             count += Globals.RecordCache.Count > 0 ? 1 : default(uint);
             count += DamageTypes.RecordCache.Count > 0 ? 1 : default(uint);
             count += Classes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Factions.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -1137,6 +1186,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Group<Global> Globals { get; }
         new Group<ADamageType> DamageTypes { get; }
         new Group<Class> Classes { get; }
+        new Group<Faction> Factions { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -1166,6 +1216,7 @@ namespace Mutagen.Bethesda.Fallout4
         IGroupGetter<IGlobalGetter> Globals { get; }
         IGroupGetter<IADamageTypeGetter> DamageTypes { get; }
         IGroupGetter<IClassGetter> Classes { get; }
+        IGroupGetter<IFactionGetter> Factions { get; }
 
     }
 
@@ -1696,6 +1747,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         Globals = 8,
         DamageTypes = 9,
         Classes = 10,
+        Factions = 11,
     }
     #endregion
 
@@ -1713,9 +1765,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 11;
+        public const ushort AdditionalFieldCount = 12;
 
-        public const ushort FieldCount = 11;
+        public const ushort FieldCount = 12;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -1794,6 +1846,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             item.Globals.Clear();
             item.DamageTypes.Clear();
             item.Classes.Clear();
+            item.Factions.Clear();
         }
         
         #region Mutagen
@@ -1810,6 +1863,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             obj.Globals.RemapLinks(mapping);
             obj.DamageTypes.RemapLinks(mapping);
             obj.Classes.RemapLinks(mapping);
+            obj.Factions.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IFallout4Mod obj)
@@ -1845,6 +1899,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             obj.Globals.Remove(keys);
             obj.DamageTypes.Remove(keys);
             obj.Classes.Remove(keys);
+            obj.Factions.Remove(keys);
         }
         
         public void Remove(
@@ -1946,9 +2001,30 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         type: type,
                         keys: keys);
                     break;
+                case "Faction":
+                case "IFactionGetter":
+                case "IFaction":
+                case "IFactionInternal":
+                    obj.Factions.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "IIdleRelation":
                 case "IIdleRelationGetter":
                     Remove(obj, keys, typeof(IActionRecordGetter), throwIfUnknown: throwIfUnknown);
+                    break;
+                case "IObjectId":
+                case "IObjectIdGetter":
+                    Remove(obj, keys, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ITextureSetGetter), throwIfUnknown: throwIfUnknown);
+                    break;
+                case "IOwner":
+                case "IOwnerGetter":
+                    Remove(obj, keys, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown);
+                    break;
+                case "IRelatable":
+                case "IRelatableGetter":
+                    Remove(obj, keys, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "IKeywordLinkedReference":
                 case "IKeywordLinkedReferenceGetter":
@@ -1957,10 +2033,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "ILocationRecord":
                 case "ILocationRecordGetter":
                     Remove(obj, keys, typeof(ILocationReferenceTypeGetter), throwIfUnknown: throwIfUnknown);
-                    break;
-                case "IObjectId":
-                case "IObjectIdGetter":
-                    Remove(obj, keys, typeof(ITextureSetGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 default:
                     if (throwIfUnknown)
@@ -2030,6 +2102,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ret.Globals = MaskItemExt.Factory(item.Globals.GetEqualsMask(rhs.Globals, include), include);
             ret.DamageTypes = MaskItemExt.Factory(item.DamageTypes.GetEqualsMask(rhs.DamageTypes, include), include);
             ret.Classes = MaskItemExt.Factory(item.Classes.GetEqualsMask(rhs.Classes, include), include);
+            ret.Factions = MaskItemExt.Factory(item.Factions.GetEqualsMask(rhs.Factions, include), include);
         }
         
         public string ToString(
@@ -2120,6 +2193,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 item.Classes?.ToString(fg, "Classes");
             }
+            if (printMask?.Factions?.Overall ?? true)
+            {
+                item.Factions?.ToString(fg, "Factions");
+            }
         }
         
         #region Equals and Hash
@@ -2140,6 +2217,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             if (!object.Equals(lhs.Globals, rhs.Globals)) return false;
             if (!object.Equals(lhs.DamageTypes, rhs.DamageTypes)) return false;
             if (!object.Equals(lhs.Classes, rhs.Classes)) return false;
+            if (!object.Equals(lhs.Factions, rhs.Factions)) return false;
             return true;
         }
         
@@ -2157,6 +2235,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             hash.Add(item.Globals);
             hash.Add(item.DamageTypes);
             hash.Add(item.Classes);
+            hash.Add(item.Factions);
             return hash.ToHashCode();
         }
         
@@ -2224,6 +2303,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "IClass":
                 case "IClassInternal":
                     return obj.Classes.RecordCache;
+                case "Faction":
+                case "IFactionGetter":
+                case "IFaction":
+                case "IFactionInternal":
+                    return obj.Factions.RecordCache;
                 default:
                     throw new ArgumentException($"Unknown major record type: {typeof(TMajor)}");
             }
@@ -2244,7 +2328,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[10];
+            Stream[] outputStreams = new Stream[11];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, writer.MetaData.MasterReferences!, 0, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.Keywords, writer.MetaData.MasterReferences!, 1, outputStreams, param.StringsWriter));
@@ -2256,6 +2340,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             toDo.Add(() => WriteGroupParallel(item.Globals, writer.MetaData.MasterReferences!, 7, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.DamageTypes, writer.MetaData.MasterReferences!, 8, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.Classes, writer.MetaData.MasterReferences!, 9, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Factions, writer.MetaData.MasterReferences!, 10, outputStreams, param.StringsWriter));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -2379,6 +2464,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     yield return item;
                 }
             }
+            if (obj.Factions is IFormLinkContainerGetter FactionslinkCont)
+            {
+                foreach (var item in FactionslinkCont.ContainedFormLinks)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -2421,6 +2513,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 yield return item;
             }
             foreach (var item in obj.Classes.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Factions.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -2542,6 +2638,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         yield return item;
                     }
                     yield break;
+                case "Faction":
+                case "IFactionGetter":
+                case "IFaction":
+                case "IFactionInternal":
+                    foreach (var item in obj.Factions.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "IIdleRelation":
                 {
                     if (!Fallout4Mod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
@@ -2554,6 +2659,65 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "IIdleRelationGetter":
                 {
                     foreach (var item in EnumerateMajorRecords(obj, typeof(IActionRecordGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
+                case "IObjectId":
+                {
+                    if (!Fallout4Mod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ITextureSetGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
+                case "IObjectIdGetter":
+                {
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ITextureSetGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
+                case "IOwner":
+                {
+                    if (!Fallout4Mod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
+                case "IOwnerGetter":
+                {
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
+                case "IRelatable":
+                {
+                    if (!Fallout4Mod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
+                case "IRelatableGetter":
+                {
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -2588,23 +2752,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "ILocationRecordGetter":
                 {
                     foreach (var item in EnumerateMajorRecords(obj, typeof(ILocationReferenceTypeGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IObjectId":
-                {
-                    if (!Fallout4Mod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ITextureSetGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IObjectIdGetter":
-                {
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(ITextureSetGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -2705,6 +2852,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     record: item,
                     group: (m) => m.Classes,
                     groupGetter: (m) => m.Classes);
+            }
+            foreach (var item in obj.Factions)
+            {
+                yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, Faction, IFactionGetter>(
+                    modKey: obj.ModKey,
+                    record: item,
+                    group: (m) => m.Factions,
+                    groupGetter: (m) => m.Factions);
             }
         }
         
@@ -2869,6 +3024,19 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                             groupGetter: (m) => m.Classes);
                     }
                     yield break;
+                case "Faction":
+                case "IFactionGetter":
+                case "IFaction":
+                case "IFactionInternal":
+                    foreach (var item in obj.Factions)
+                    {
+                        yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, Faction, IFactionGetter>(
+                            modKey: obj.ModKey,
+                            record: item,
+                            group: (m) => m.Factions,
+                            groupGetter: (m) => m.Factions);
+                    }
+                    yield break;
                 case "IIdleRelation":
                 case "IIdleRelationGetter":
                 {
@@ -2876,6 +3044,53 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         obj,
                         linkCache: linkCache,
                         type: typeof(IActionRecordGetter),
+                        throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
+                case "IObjectId":
+                case "IObjectIdGetter":
+                {
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IFactionGetter),
+                        throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(ITextureSetGetter),
+                        throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
+                case "IOwner":
+                case "IOwnerGetter":
+                {
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IFactionGetter),
+                        throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
+                case "IRelatable":
+                case "IRelatableGetter":
+                {
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IFactionGetter),
                         throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
@@ -2902,19 +3117,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         obj,
                         linkCache: linkCache,
                         type: typeof(ILocationReferenceTypeGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
-                case "IObjectId":
-                case "IObjectIdGetter":
-                {
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(ITextureSetGetter),
                         throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
@@ -3168,6 +3370,26 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Factions) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.Factions);
+                try
+                {
+                    item.Factions.DeepCopyIn(
+                        rhs: rhs.Factions,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.Factions));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -3268,6 +3490,7 @@ namespace Mutagen.Bethesda.Fallout4
         public bool Globals;
         public bool DamageTypes;
         public bool Classes;
+        public bool Factions;
         public GroupMask()
         {
         }
@@ -3283,6 +3506,7 @@ namespace Mutagen.Bethesda.Fallout4
             Globals = defaultValue;
             DamageTypes = defaultValue;
             Classes = defaultValue;
+            Factions = defaultValue;
         }
     }
 
@@ -3412,6 +3636,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)ClassesItem).BinaryWriteTranslator).Write<IClassGetter>(
                         item: ClassesItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.Factions ?? true)
+            {
+                var FactionsItem = item.Factions;
+                if (FactionsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)FactionsItem).BinaryWriteTranslator).Write<IFactionGetter>(
+                        item: FactionsItem,
                         writer: writer,
                         recordTypeConverter: recordTypeConverter);
                 }
@@ -3622,6 +3857,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     }
                     return (int)Fallout4Mod_FieldIndex.Classes;
                 }
+                case RecordTypeInts.FACT:
+                {
+                    if (importMask?.Factions ?? true)
+                    {
+                        item.Factions.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout4Mod_FieldIndex.Factions;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -3825,6 +4074,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         private IGroupGetter<IClassGetter>? _Classes => _ClassesLocation.HasValue ? GroupBinaryOverlay<IClassGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _ClassesLocation!.Value.Min, _ClassesLocation!.Value.Max), _package), _package) : default;
         public IGroupGetter<IClassGetter> Classes => _Classes ?? new Group<Class>(this);
         #endregion
+        #region Factions
+        private RangeInt64? _FactionsLocation;
+        private IGroupGetter<IFactionGetter>? _Factions => _FactionsLocation.HasValue ? GroupBinaryOverlay<IFactionGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _FactionsLocation!.Value.Min, _FactionsLocation!.Value.Max), _package), _package) : default;
+        public IGroupGetter<IFactionGetter> Factions => _Factions ?? new Group<Faction>(this);
+        #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -3975,6 +4229,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 {
                     _ClassesLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return (int)Fallout4Mod_FieldIndex.Classes;
+                }
+                case RecordTypeInts.FACT:
+                {
+                    _FactionsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return (int)Fallout4Mod_FieldIndex.Factions;
                 }
                 default:
                     return default(int?);

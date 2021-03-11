@@ -14,8 +14,16 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - Keyword
 ### ILocationRecord
 - LocationReferenceType
+### ILocationTargetable
+- Door
 ### IObjectId
+- Door
+- Faction
 - TextureSet
+### IOwner
+- Faction
+### IRelatable
+- Faction
 ## Concrete Classes to Interfaces
 ### ActionRecord
 - IIdleRelation
@@ -23,6 +31,13 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IDamageTypeTarget
 ### ASpell
 - IDamageTypeTarget
+### Door
+- ILocationTargetable
+- IObjectId
+### Faction
+- IObjectId
+- IOwner
+- IRelatable
 ### Keyword
 - IKeywordLinkedReference
 ### LocationReferenceType

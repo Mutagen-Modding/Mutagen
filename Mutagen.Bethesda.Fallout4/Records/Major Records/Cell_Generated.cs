@@ -28,17 +28,14 @@ using System.Text;
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
-    /// <summary>
-    /// Implemented by: [DamageType, DamageTypeIndexed]
-    /// </summary>
-    public abstract partial class ADamageType :
+    public partial class Cell :
         Fallout4MajorRecord,
-        IADamageTypeInternal,
-        IEquatable<IADamageTypeGetter>,
-        ILoquiObjectSetter<ADamageType>
+        ICellInternal,
+        IEquatable<ICellGetter>,
+        ILoquiObjectSetter<Cell>
     {
         #region Ctor
-        protected ADamageType()
+        protected Cell()
         {
             CustomCtor();
         }
@@ -52,7 +49,7 @@ namespace Mutagen.Bethesda.Fallout4
             FileGeneration fg,
             string? name = null)
         {
-            ADamageTypeMixIn.ToString(
+            CellMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -62,16 +59,16 @@ namespace Mutagen.Bethesda.Fallout4
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IADamageTypeGetter rhs)) return false;
-            return ((ADamageTypeCommon)((IADamageTypeGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (!(obj is ICellGetter rhs)) return false;
+            return ((CellCommon)((ICellGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(IADamageTypeGetter? obj)
+        public bool Equals(ICellGetter? obj)
         {
-            return ((ADamageTypeCommon)((IADamageTypeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((CellCommon)((ICellGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((ADamageTypeCommon)((IADamageTypeGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((CellCommon)((ICellGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -153,7 +150,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new ADamageType.Mask<R>();
+                var ret = new Cell.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -170,16 +167,16 @@ namespace Mutagen.Bethesda.Fallout4
                 return ToString(printMask: null);
             }
 
-            public string ToString(ADamageType.Mask<bool>? printMask = null)
+            public string ToString(Cell.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, ADamageType.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, Cell.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(ADamageType.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(Cell.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -197,7 +194,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                ADamageType_FieldIndex enu = (ADamageType_FieldIndex)index;
+                Cell_FieldIndex enu = (Cell_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -207,7 +204,7 @@ namespace Mutagen.Bethesda.Fallout4
 
             public override void SetNthException(int index, Exception ex)
             {
-                ADamageType_FieldIndex enu = (ADamageType_FieldIndex)index;
+                Cell_FieldIndex enu = (Cell_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -218,7 +215,7 @@ namespace Mutagen.Bethesda.Fallout4
 
             public override void SetNthMask(int index, object obj)
             {
-                ADamageType_FieldIndex enu = (ADamageType_FieldIndex)index;
+                Cell_FieldIndex enu = (Cell_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -313,16 +310,14 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = ADamageType_Registration.TriggeringRecordType;
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => ADamageTypeCommon.Instance.GetContainedFormLinks(this);
-        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ADamageTypeSetterCommon.Instance.RemapLinks(this, mapping);
-        public ADamageType(FormKey formKey)
+        public static readonly RecordType GrupRecordType = Cell_Registration.TriggeringRecordType;
+        public Cell(FormKey formKey)
         {
             this.FormKey = formKey;
             CustomCtor();
         }
 
-        private ADamageType(
+        private Cell(
             FormKey formKey,
             GameRelease gameRelease)
         {
@@ -331,7 +326,7 @@ namespace Mutagen.Bethesda.Fallout4
             CustomCtor();
         }
 
-        internal ADamageType(
+        internal Cell(
             FormKey formKey,
             ushort formVersion)
         {
@@ -340,12 +335,12 @@ namespace Mutagen.Bethesda.Fallout4
             CustomCtor();
         }
 
-        public ADamageType(IFallout4Mod mod)
+        public Cell(IFallout4Mod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public ADamageType(IFallout4Mod mod, string editorID)
+        public Cell(IFallout4Mod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
@@ -355,15 +350,39 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => ADamageTypeBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => CellBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((ADamageTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((CellBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
+        }
+        #region Binary Create
+        public new static Cell CreateFromBinary(
+            MutagenFrame frame,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            var ret = new Cell();
+            ((CellSetterCommon)((ICellGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+                item: ret,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
+            return ret;
+        }
+
+        #endregion
+
+        public static bool TryCreateFromBinary(
+            MutagenFrame frame,
+            out Cell item,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            var startPos = frame.Position;
+            item = CreateFromBinary(frame, recordTypeConverter);
+            return startPos != frame.Position;
         }
         #endregion
 
@@ -371,88 +390,81 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IClearable.Clear()
         {
-            ((ADamageTypeSetterCommon)((IADamageTypeGetter)this).CommonSetterInstance()!).Clear(this);
+            ((CellSetterCommon)((ICellGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new ADamageType GetNew()
+        internal static new Cell GetNew()
         {
-            throw new ArgumentException("New called on an abstract class.");
+            return new Cell();
         }
 
     }
     #endregion
 
     #region Interface
-    /// <summary>
-    /// Implemented by: [DamageType, DamageTypeIndexed]
-    /// </summary>
-    public partial interface IADamageType :
-        IADamageTypeGetter,
+    public partial interface ICell :
+        ICellGetter,
         IFallout4MajorRecordInternal,
-        IFormLinkContainer,
-        ILoquiObjectSetter<IADamageTypeInternal>
+        ILoquiObjectSetter<ICellInternal>
     {
     }
 
-    public partial interface IADamageTypeInternal :
+    public partial interface ICellInternal :
         IFallout4MajorRecordInternal,
-        IADamageType,
-        IADamageTypeGetter
+        ICell,
+        ICellGetter
     {
     }
 
-    /// <summary>
-    /// Implemented by: [DamageType, DamageTypeIndexed]
-    /// </summary>
-    public partial interface IADamageTypeGetter :
+    public partial interface ICellGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
-        IFormLinkContainerGetter,
-        ILoquiObject<IADamageTypeGetter>
+        ILoquiObject<ICellGetter>,
+        IMapsToGetter<ICellGetter>
     {
-        static new ILoquiRegistration Registration => ADamageType_Registration.Instance;
+        static new ILoquiRegistration Registration => Cell_Registration.Instance;
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class ADamageTypeMixIn
+    public static partial class CellMixIn
     {
-        public static void Clear(this IADamageTypeInternal item)
+        public static void Clear(this ICellInternal item)
         {
-            ((ADamageTypeSetterCommon)((IADamageTypeGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((CellSetterCommon)((ICellGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static ADamageType.Mask<bool> GetEqualsMask(
-            this IADamageTypeGetter item,
-            IADamageTypeGetter rhs,
+        public static Cell.Mask<bool> GetEqualsMask(
+            this ICellGetter item,
+            ICellGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ADamageTypeCommon)((IADamageTypeGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((CellCommon)((ICellGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IADamageTypeGetter item,
+            this ICellGetter item,
             string? name = null,
-            ADamageType.Mask<bool>? printMask = null)
+            Cell.Mask<bool>? printMask = null)
         {
-            return ((ADamageTypeCommon)((IADamageTypeGetter)item).CommonInstance()!).ToString(
+            return ((CellCommon)((ICellGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IADamageTypeGetter item,
+            this ICellGetter item,
             FileGeneration fg,
             string? name = null,
-            ADamageType.Mask<bool>? printMask = null)
+            Cell.Mask<bool>? printMask = null)
         {
-            ((ADamageTypeCommon)((IADamageTypeGetter)item).CommonInstance()!).ToString(
+            ((CellCommon)((ICellGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -460,37 +472,37 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static bool Equals(
-            this IADamageTypeGetter item,
-            IADamageTypeGetter rhs)
+            this ICellGetter item,
+            ICellGetter rhs)
         {
-            return ((ADamageTypeCommon)((IADamageTypeGetter)item).CommonInstance()!).Equals(
+            return ((CellCommon)((ICellGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyIn(
-            this IADamageTypeInternal lhs,
-            IADamageTypeGetter rhs,
-            out ADamageType.ErrorMask errorMask,
-            ADamageType.TranslationMask? copyMask = null)
+            this ICellInternal lhs,
+            ICellGetter rhs,
+            out Cell.ErrorMask errorMask,
+            Cell.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((ADamageTypeSetterTranslationCommon)((IADamageTypeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((CellSetterTranslationCommon)((ICellGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = ADamageType.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Cell.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IADamageTypeInternal lhs,
-            IADamageTypeGetter rhs,
+            this ICellInternal lhs,
+            ICellGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((ADamageTypeSetterTranslationCommon)((IADamageTypeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((CellSetterTranslationCommon)((ICellGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -498,44 +510,44 @@ namespace Mutagen.Bethesda.Fallout4
                 deepCopy: false);
         }
 
-        public static ADamageType DeepCopy(
-            this IADamageTypeGetter item,
-            ADamageType.TranslationMask? copyMask = null)
+        public static Cell DeepCopy(
+            this ICellGetter item,
+            Cell.TranslationMask? copyMask = null)
         {
-            return ((ADamageTypeSetterTranslationCommon)((IADamageTypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((CellSetterTranslationCommon)((ICellGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static ADamageType DeepCopy(
-            this IADamageTypeGetter item,
-            out ADamageType.ErrorMask errorMask,
-            ADamageType.TranslationMask? copyMask = null)
+        public static Cell DeepCopy(
+            this ICellGetter item,
+            out Cell.ErrorMask errorMask,
+            Cell.TranslationMask? copyMask = null)
         {
-            return ((ADamageTypeSetterTranslationCommon)((IADamageTypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((CellSetterTranslationCommon)((ICellGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static ADamageType DeepCopy(
-            this IADamageTypeGetter item,
+        public static Cell DeepCopy(
+            this ICellGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((ADamageTypeSetterTranslationCommon)((IADamageTypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((CellSetterTranslationCommon)((ICellGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Mutagen
-        public static ADamageType Duplicate(
-            this IADamageTypeGetter item,
+        public static Cell Duplicate(
+            this ICellGetter item,
             FormKey formKey,
-            ADamageType.TranslationMask? copyMask = null)
+            Cell.TranslationMask? copyMask = null)
         {
-            return ((ADamageTypeCommon)((IADamageTypeGetter)item).CommonInstance()!).Duplicate(
+            return ((CellCommon)((ICellGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
@@ -545,11 +557,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IADamageTypeInternal item,
+            this ICellInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((ADamageTypeSetterCommon)((IADamageTypeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((CellSetterCommon)((ICellGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -565,7 +577,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
     #region Field Index
-    public enum ADamageType_FieldIndex
+    public enum Cell_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -577,40 +589,40 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class ADamageType_Registration : ILoquiRegistration
+    public partial class Cell_Registration : ILoquiRegistration
     {
-        public static readonly ADamageType_Registration Instance = new ADamageType_Registration();
+        public static readonly Cell_Registration Instance = new Cell_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 49,
+            msgID: 69,
             version: 0);
 
-        public const string GUID = "94b35fef-7da4-4b61-9590-aac89dd64319";
+        public const string GUID = "b321b92c-b424-4529-b35e-1628751a402d";
 
         public const ushort AdditionalFieldCount = 0;
 
         public const ushort FieldCount = 6;
 
-        public static readonly Type MaskType = typeof(ADamageType.Mask<>);
+        public static readonly Type MaskType = typeof(Cell.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(ADamageType.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Cell.ErrorMask);
 
-        public static readonly Type ClassType = typeof(ADamageType);
+        public static readonly Type ClassType = typeof(Cell);
 
-        public static readonly Type GetterType = typeof(IADamageTypeGetter);
+        public static readonly Type GetterType = typeof(ICellGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IADamageType);
+        public static readonly Type SetterType = typeof(ICell);
 
-        public static readonly Type? InternalSetterType = typeof(IADamageTypeInternal);
+        public static readonly Type? InternalSetterType = typeof(ICellInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Fallout4.ADamageType";
+        public const string FullName = "Mutagen.Bethesda.Fallout4.Cell";
 
-        public const string Name = "ADamageType";
+        public const string Name = "Cell";
 
         public const string Namespace = "Mutagen.Bethesda.Fallout4";
 
@@ -618,8 +630,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.DMGT;
-        public static readonly Type BinaryWriteTranslation = typeof(ADamageTypeBinaryWriteTranslation);
+        public static readonly RecordType TriggeringRecordType = RecordTypes.CELL;
+        public static readonly Type BinaryWriteTranslation = typeof(CellBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -652,13 +664,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class ADamageTypeSetterCommon : Fallout4MajorRecordSetterCommon
+    public partial class CellSetterCommon : Fallout4MajorRecordSetterCommon
     {
-        public new static readonly ADamageTypeSetterCommon Instance = new ADamageTypeSetterCommon();
+        public new static readonly CellSetterCommon Instance = new CellSetterCommon();
 
         partial void ClearPartial();
         
-        public virtual void Clear(IADamageTypeInternal item)
+        public void Clear(ICellInternal item)
         {
             ClearPartial();
             base.Clear(item);
@@ -666,16 +678,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         public override void Clear(IFallout4MajorRecordInternal item)
         {
-            Clear(item: (IADamageTypeInternal)item);
+            Clear(item: (ICellInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IADamageTypeInternal)item);
+            Clear(item: (ICellInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IADamageType obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(ICell obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
         }
@@ -684,10 +696,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IADamageTypeInternal item,
+            ICellInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
+            UtilityTranslation.MajorRecordParse<ICellInternal>(
+                record: item,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: CellBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: CellBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -696,7 +714,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             CopyInFromBinary(
-                item: (ADamageType)item,
+                item: (Cell)item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -707,7 +725,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             CopyInFromBinary(
-                item: (ADamageType)item,
+                item: (Cell)item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -715,17 +733,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ADamageTypeCommon : Fallout4MajorRecordCommon
+    public partial class CellCommon : Fallout4MajorRecordCommon
     {
-        public new static readonly ADamageTypeCommon Instance = new ADamageTypeCommon();
+        public new static readonly CellCommon Instance = new CellCommon();
 
-        public ADamageType.Mask<bool> GetEqualsMask(
-            IADamageTypeGetter item,
-            IADamageTypeGetter rhs,
+        public Cell.Mask<bool> GetEqualsMask(
+            ICellGetter item,
+            ICellGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new ADamageType.Mask<bool>(false);
-            ((ADamageTypeCommon)((IADamageTypeGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new Cell.Mask<bool>(false);
+            ((CellCommon)((ICellGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -734,9 +752,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         public void FillEqualsMask(
-            IADamageTypeGetter item,
-            IADamageTypeGetter rhs,
-            ADamageType.Mask<bool> ret,
+            ICellGetter item,
+            ICellGetter rhs,
+            Cell.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -744,9 +762,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         public string ToString(
-            IADamageTypeGetter item,
+            ICellGetter item,
             string? name = null,
-            ADamageType.Mask<bool>? printMask = null)
+            Cell.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -758,18 +776,18 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         public void ToString(
-            IADamageTypeGetter item,
+            ICellGetter item,
             FileGeneration fg,
             string? name = null,
-            ADamageType.Mask<bool>? printMask = null)
+            Cell.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ADamageType =>");
+                fg.AppendLine($"Cell =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ADamageType) =>");
+                fg.AppendLine($"{name} (Cell) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -783,9 +801,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         protected static void ToStringFields(
-            IADamageTypeGetter item,
+            ICellGetter item,
             FileGeneration fg,
-            ADamageType.Mask<bool>? printMask = null)
+            Cell.Mask<bool>? printMask = null)
         {
             Fallout4MajorRecordCommon.ToStringFields(
                 item: item,
@@ -793,39 +811,39 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 printMask: printMask);
         }
         
-        public static ADamageType_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
+        public static Cell_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case Fallout4MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (ADamageType_FieldIndex)((int)index);
+                    return (Cell_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.FormKey:
-                    return (ADamageType_FieldIndex)((int)index);
+                    return (Cell_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.VersionControl:
-                    return (ADamageType_FieldIndex)((int)index);
+                    return (Cell_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.EditorID:
-                    return (ADamageType_FieldIndex)((int)index);
+                    return (Cell_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.FormVersion:
-                    return (ADamageType_FieldIndex)((int)index);
+                    return (Cell_FieldIndex)((int)index);
                 case Fallout4MajorRecord_FieldIndex.Version2:
-                    return (ADamageType_FieldIndex)((int)index);
+                    return (Cell_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
         
-        public static new ADamageType_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Cell_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (ADamageType_FieldIndex)((int)index);
+                    return (Cell_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (ADamageType_FieldIndex)((int)index);
+                    return (Cell_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.VersionControl:
-                    return (ADamageType_FieldIndex)((int)index);
+                    return (Cell_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (ADamageType_FieldIndex)((int)index);
+                    return (Cell_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -833,8 +851,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IADamageTypeGetter? lhs,
-            IADamageTypeGetter? rhs)
+            ICellGetter? lhs,
+            ICellGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
@@ -847,8 +865,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IFallout4MajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (IADamageTypeGetter?)lhs,
-                rhs: rhs as IADamageTypeGetter);
+                lhs: (ICellGetter?)lhs,
+                rhs: rhs as ICellGetter);
         }
         
         public override bool Equals(
@@ -856,11 +874,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (IADamageTypeGetter?)lhs,
-                rhs: rhs as IADamageTypeGetter);
+                lhs: (ICellGetter?)lhs,
+                rhs: rhs as ICellGetter);
         }
         
-        public virtual int GetHashCode(IADamageTypeGetter item)
+        public virtual int GetHashCode(ICellGetter item)
         {
             var hash = new HashCode();
             hash.Add(base.GetHashCode());
@@ -869,12 +887,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         public override int GetHashCode(IFallout4MajorRecordGetter item)
         {
-            return GetHashCode(item: (IADamageTypeGetter)item);
+            return GetHashCode(item: (ICellGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (IADamageTypeGetter)item);
+            return GetHashCode(item: (ICellGetter)item);
         }
         
         #endregion
@@ -882,11 +900,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         public override object GetNew()
         {
-            return ADamageType.GetNew();
+            return Cell.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IADamageTypeGetter obj)
+        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ICellGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {
@@ -896,12 +914,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Duplicate
-        public virtual ADamageType Duplicate(
-            IADamageTypeGetter item,
+        public Cell Duplicate(
+            ICellGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            throw new NotImplementedException();
+            var newRec = new Cell(formKey);
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
         
         public override Fallout4MajorRecord Duplicate(
@@ -910,7 +930,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IADamageType)item,
+                item: (ICell)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -921,7 +941,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IADamageType)item,
+                item: (ICell)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -931,14 +951,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ADamageTypeSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    public partial class CellSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
-        public new static readonly ADamageTypeSetterTranslationCommon Instance = new ADamageTypeSetterTranslationCommon();
+        public new static readonly CellSetterTranslationCommon Instance = new CellSetterTranslationCommon();
 
         #region DeepCopyIn
-        public virtual void DeepCopyIn(
-            IADamageTypeInternal item,
-            IADamageTypeGetter rhs,
+        public void DeepCopyIn(
+            ICellInternal item,
+            ICellGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -951,9 +971,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 deepCopy: deepCopy);
         }
         
-        public virtual void DeepCopyIn(
-            IADamageType item,
-            IADamageTypeGetter rhs,
+        public void DeepCopyIn(
+            ICell item,
+            ICellGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -974,8 +994,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IADamageTypeInternal)item,
-                rhs: (IADamageTypeGetter)rhs,
+                item: (ICellInternal)item,
+                rhs: (ICellGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -989,8 +1009,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IADamageType)item,
-                rhs: (IADamageTypeGetter)rhs,
+                item: (ICell)item,
+                rhs: (ICellGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1004,8 +1024,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IADamageTypeInternal)item,
-                rhs: (IADamageTypeGetter)rhs,
+                item: (ICellInternal)item,
+                rhs: (ICellGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1019,8 +1039,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IADamageType)item,
-                rhs: (IADamageTypeGetter)rhs,
+                item: (ICell)item,
+                rhs: (ICellGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1028,12 +1048,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         
         #endregion
         
-        public ADamageType DeepCopy(
-            IADamageTypeGetter item,
-            ADamageType.TranslationMask? copyMask = null)
+        public Cell DeepCopy(
+            ICellGetter item,
+            Cell.TranslationMask? copyMask = null)
         {
-            ADamageType ret = (ADamageType)((ADamageTypeCommon)((IADamageTypeGetter)item).CommonInstance()!).GetNew();
-            ((ADamageTypeSetterTranslationCommon)((IADamageTypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            Cell ret = (Cell)((CellCommon)((ICellGetter)item).CommonInstance()!).GetNew();
+            ((CellSetterTranslationCommon)((ICellGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1042,30 +1062,30 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             return ret;
         }
         
-        public ADamageType DeepCopy(
-            IADamageTypeGetter item,
-            out ADamageType.ErrorMask errorMask,
-            ADamageType.TranslationMask? copyMask = null)
+        public Cell DeepCopy(
+            ICellGetter item,
+            out Cell.ErrorMask errorMask,
+            Cell.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ADamageType ret = (ADamageType)((ADamageTypeCommon)((IADamageTypeGetter)item).CommonInstance()!).GetNew();
-            ((ADamageTypeSetterTranslationCommon)((IADamageTypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            Cell ret = (Cell)((CellCommon)((ICellGetter)item).CommonInstance()!).GetNew();
+            ((CellSetterTranslationCommon)((ICellGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = ADamageType.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Cell.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public ADamageType DeepCopy(
-            IADamageTypeGetter item,
+        public Cell DeepCopy(
+            ICellGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            ADamageType ret = (ADamageType)((ADamageTypeCommon)((IADamageTypeGetter)item).CommonInstance()!).GetNew();
-            ((ADamageTypeSetterTranslationCommon)((IADamageTypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            Cell ret = (Cell)((CellCommon)((ICellGetter)item).CommonInstance()!).GetNew();
+            ((CellSetterTranslationCommon)((ICellGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1081,21 +1101,21 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class ADamageType
+    public partial class Cell
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ADamageType_Registration.Instance;
-        public new static ADamageType_Registration Registration => ADamageType_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Cell_Registration.Instance;
+        public new static Cell_Registration Registration => Cell_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => ADamageTypeCommon.Instance;
+        protected override object CommonInstance() => CellCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return ADamageTypeSetterCommon.Instance;
+            return CellSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => ADamageTypeSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => CellSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1106,33 +1126,20 @@ namespace Mutagen.Bethesda.Fallout4
 #region Binary Translation
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
-    public partial class ADamageTypeBinaryWriteTranslation :
+    public partial class CellBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static ADamageTypeBinaryWriteTranslation Instance = new ADamageTypeBinaryWriteTranslation();
+        public new readonly static CellBinaryWriteTranslation Instance = new CellBinaryWriteTranslation();
 
-        static partial void WriteBinaryCustomLogicCustom(
+        public void Write(
             MutagenWriter writer,
-            IADamageTypeGetter item);
-
-        public static void WriteBinaryCustomLogic(
-            MutagenWriter writer,
-            IADamageTypeGetter item)
-        {
-            WriteBinaryCustomLogicCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public virtual void Write(
-            MutagenWriter writer,
-            IADamageTypeGetter item,
+            ICellGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.DMGT),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.CELL),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 try
@@ -1158,7 +1165,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IADamageTypeGetter)item,
+                item: (ICellGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1169,7 +1176,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IADamageTypeGetter)item,
+                item: (ICellGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1180,21 +1187,26 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IADamageTypeGetter)item,
+                item: (ICellGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
     }
 
-    public partial class ADamageTypeBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    public partial class CellBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static ADamageTypeBinaryCreateTranslation Instance = new ADamageTypeBinaryCreateTranslation();
+        public new readonly static CellBinaryCreateTranslation Instance = new CellBinaryCreateTranslation();
 
-        public override RecordType RecordType => throw new ArgumentException();
-        static partial void FillBinaryCustomLogicCustom(
-            MutagenFrame frame,
-            IADamageTypeInternal item);
+        public override RecordType RecordType => RecordTypes.CELL;
+        public static void FillBinaryStructs(
+            ICellInternal item,
+            MutagenFrame frame)
+        {
+            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
 
     }
 
@@ -1202,7 +1214,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Binary Write Mixins
-    public static class ADamageTypeBinaryTranslationMixIn
+    public static class CellBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1211,49 +1223,42 @@ namespace Mutagen.Bethesda.Fallout4
 }
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
-    public partial class ADamageTypeBinaryOverlay :
+    public partial class CellBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
-        IADamageTypeGetter
+        ICellGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ADamageType_Registration.Instance;
-        public new static ADamageType_Registration Registration => ADamageType_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Cell_Registration.Instance;
+        public new static Cell_Registration Registration => Cell_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => ADamageTypeCommon.Instance;
+        protected override object CommonInstance() => CellCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => ADamageTypeSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => CellSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => ADamageTypeCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => ADamageTypeBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => CellBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((ADamageTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((CellBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
-        #region CustomLogic
-        partial void CustomLogicCustomParse(
-            OverlayStream stream,
-            int offset);
-        protected int CustomLogicEndingPos;
-        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected ADamageTypeBinaryOverlay(
+        protected CellBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1263,6 +1268,43 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             this.CustomCtor();
         }
 
+        public static CellBinaryOverlay CellFactory(
+            OverlayStream stream,
+            BinaryOverlayFactoryPackage package,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            stream = UtilityTranslation.DecompressStream(stream);
+            var ret = new CellBinaryOverlay(
+                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                package: package);
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
+            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret._package.FormVersion = ret;
+            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
+            ret.CustomFactoryEnd(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset);
+            ret.FillSubrecordTypes(
+                majorReference: ret,
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public static CellBinaryOverlay CellFactory(
+            ReadOnlyMemorySlice<byte> slice,
+            BinaryOverlayFactoryPackage package,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            return CellFactory(
+                stream: new OverlayStream(slice, package),
+                package: package,
+                recordTypeConverter: recordTypeConverter);
+        }
 
         #region To String
 
@@ -1270,7 +1312,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             FileGeneration fg,
             string? name = null)
         {
-            ADamageTypeMixIn.ToString(
+            CellMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -1280,16 +1322,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IADamageTypeGetter rhs)) return false;
-            return ((ADamageTypeCommon)((IADamageTypeGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (!(obj is ICellGetter rhs)) return false;
+            return ((CellCommon)((ICellGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(IADamageTypeGetter? obj)
+        public bool Equals(ICellGetter? obj)
         {
-            return ((ADamageTypeCommon)((IADamageTypeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((CellCommon)((ICellGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((ADamageTypeCommon)((IADamageTypeGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((CellCommon)((ICellGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -8,18 +8,18 @@ using Mutagen.Bethesda;
 namespace Mutagen.Bethesda.Fallout4
 {
     /// <summary>
-    /// Implemented by: [Door, Faction, TextureSet]
+    /// Implemented by: [Faction]
     /// </summary>
-    public partial interface IObjectId :
+    public partial interface IRelatable :
         IFallout4MajorRecordInternal,
-        IObjectIdGetter
+        IRelatableGetter
     {
     }
 
     /// <summary>
-    /// Implemented by: [Door, Faction, TextureSet]
+    /// Implemented by: [Faction]
     /// </summary>
-    public partial interface IObjectIdGetter : IFallout4MajorRecordGetter
+    public partial interface IRelatableGetter : IFallout4MajorRecordGetter
     {
     }
 }

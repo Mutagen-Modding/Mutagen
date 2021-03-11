@@ -7,6 +7,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - ActionRecord
 - Class
 - Component
+- Faction
 - Keyword
 ### IObjectBounded
 - Component
@@ -21,6 +22,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### Component
 - INamed
 - IObjectBounded
+### Faction
+- INamed
 ### Keyword
 - INamed
 - Keyword
