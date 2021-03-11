@@ -57,5 +57,53 @@ namespace Mutagen.Bethesda.UnitTests
             newRace.FormKey.Should().Be(newRaceFormKey);
             safeNpc.Race.FormKey.Should().Be(newRaceFormKey);
         }
+
+        [Fact]
+        public void TypedExtraction()
+        {
+            var modToExtract = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimSE);
+            var npc = modToExtract.Npcs.AddNew();
+            var race = modToExtract.Races.AddNew();
+            var unneededRace = modToExtract.Races.AddNew();
+
+            var targetMod = new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimSE);
+            targetMod.Npcs.Add(npc);
+            var safeNpc = targetMod.Npcs.AddNew();
+            safeNpc.Race = new FormLink<IRaceGetter>(race.FormKey);
+
+            var linkCache = new MutableLoadOrderLinkCache<ISkyrimMod, ISkyrimModGetter>(modToExtract, targetMod);
+
+            targetMod.DuplicateFromOnlyReferenced(linkCache, modToExtract.ModKey, out var mapping, typeof(INpcGetter));
+            targetMod.EnumerateMajorRecords().Should().HaveCount(3);
+            targetMod.Npcs.Should().HaveCount(2);
+            targetMod.Races.Should().HaveCount(1);
+            targetMod.Npcs.Should().Contain(safeNpc);
+            var newRaceFormKey = mapping[race.FormKey];
+            var newRace = targetMod.Races.First();
+            newRace.FormKey.Should().Be(newRaceFormKey);
+            safeNpc.Race.FormKey.Should().Be(newRaceFormKey);
+        }
+
+        [Fact]
+        public void MistypedExtraction()
+        {
+            var modToExtract = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimSE);
+            var npc = modToExtract.Npcs.AddNew();
+            var race = modToExtract.Races.AddNew();
+            var unneededRace = modToExtract.Races.AddNew();
+
+            var targetMod = new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimSE);
+            targetMod.Npcs.Add(npc);
+            var safeNpc = targetMod.Npcs.AddNew();
+            safeNpc.Race = new FormLink<IRaceGetter>(race.FormKey);
+
+            var linkCache = new MutableLoadOrderLinkCache<ISkyrimMod, ISkyrimModGetter>(modToExtract, targetMod);
+
+            targetMod.DuplicateFromOnlyReferenced(linkCache, modToExtract.ModKey, out var mapping, typeof(IAmmunitionGetter));
+            targetMod.EnumerateMajorRecords().Should().HaveCount(2);
+            targetMod.Npcs.Should().HaveCount(2);
+            targetMod.Npcs.Should().Contain(safeNpc);
+            targetMod.Npcs.Should().Contain(npc);
+        }
     }
 }
