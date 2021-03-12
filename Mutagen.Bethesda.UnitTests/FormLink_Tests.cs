@@ -102,5 +102,23 @@ namespace Mutagen.Bethesda.UnitTests
             n.Race.SetTo(r);
             n.Race.FormKey.Should().Be(Utility.Form2);
         }
+
+        [Fact]
+        public void NormalCollectionContains()
+        {
+            var set = new HashSet<IFormLinkGetter<ISkyrimMajorRecordGetter>>();
+            set.Add(new FormLink<IFactionGetter>(Utility.Form1));
+            set.Contains(new FormLink<IFactionGetter>(Utility.Form1)).Should().BeTrue();
+            set.Contains(new FormLink<IWeaponGetter>(Utility.Form1)).Should().BeFalse();
+        }
+
+        [Fact]
+        public void TypelessCollectionContains()
+        {
+            var set = new HashSet<IFormLinkGetter<ISkyrimMajorRecordGetter>>(FormLink<ISkyrimMajorRecordGetter>.TypelessComparer);
+            set.Add(new FormLink<IFactionGetter>(Utility.Form1));
+            set.Contains(new FormLink<IFactionGetter>(Utility.Form1)).Should().BeTrue();
+            set.Contains(new FormLink<IWeaponGetter>(Utility.Form1)).Should().BeTrue();
+        }
     }
 }
