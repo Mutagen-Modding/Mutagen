@@ -121,6 +121,7 @@
     <Compile Include="Links\Cache\LinkCacheItem.cs" />
     <Compile Include="Links\Cache\Preferences\LinkCachePreferenceOnlyIdentifiers.cs" />
     <Compile Include="Links\Cache\Preferences\LinkCachePreferenceWholeRecord.cs" />
+    <Compile Include="Links\FormLinkInformation.cs" />
     <Compile Include="Links\FormLinkNullable.cs" />
     <Compile Include="Links\IFormLink.cs" />
     <Compile Include="Links\Cache\ILinkCache.cs" />
