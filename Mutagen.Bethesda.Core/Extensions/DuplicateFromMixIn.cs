@@ -77,23 +77,34 @@ namespace Mutagen.Bethesda
 
             // Compile list of things to duplicate
             HashSet<FormLinkInformation> identifiedLinks = new();
+            HashSet<FormKey> passedLinks = new();
+
+            void AddAllLinks(FormLinkInformation link)
+            {
+                if (link.FormKey.IsNull || !passedLinks.Add(link.FormKey)) return;
+
+                if (link.FormKey.ModKey == modKeyToDuplicateFrom)
+                {
+                    identifiedLinks.Add(link);
+                }
+
+                if (!linkCache.TryResolve(link.FormKey, link.Type, out var linkRec))
+                {
+                    throw new KeyNotFoundException($"Could not locate record to make self contained: {link.FormKey}");
+                }
+
+                foreach (var containedLink in linkRec.ContainedFormLinks)
+                {
+                    AddAllLinks(containedLink);
+                }
+            }
+
             var enumer = typesToInspect == null || typesToInspect.Length == 0
                 ? modToDuplicateInto.EnumerateMajorRecords()
                 : typesToInspect.SelectMany(x => modToDuplicateInto.EnumerateMajorRecords(x));
             foreach (var rec in enumer)
             {
-                if (rec.FormKey.ModKey == modKeyToDuplicateFrom)
-                {
-                    identifiedLinks.Add(new FormLinkInformation(rec.FormKey, rec.Registration.GetterType));
-                }
-
-                foreach (var containedLink in rec.ContainedFormLinks)
-                {
-                    if (containedLink.FormKey.ModKey == modKeyToDuplicateFrom)
-                    {
-                        identifiedLinks.Add(containedLink);
-                    }
-                }
+                AddAllLinks(new FormLinkInformation(rec.FormKey, rec.Registration.GetterType));
             }
 
             // Duplicate in the records

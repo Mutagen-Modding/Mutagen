@@ -38,6 +38,7 @@ namespace Mutagen.Bethesda.UnitTests
             var modToExtract = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimSE);
             var npc = modToExtract.Npcs.AddNew();
             var race = modToExtract.Races.AddNew();
+            race.CloseLootSound = modToExtract.SoundDescriptors.AddNew();
             var unneededRace = modToExtract.Races.AddNew();
 
             var targetMod = new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimSE);
@@ -48,10 +49,42 @@ namespace Mutagen.Bethesda.UnitTests
             var linkCache = new MutableLoadOrderLinkCache<ISkyrimMod, ISkyrimModGetter>(modToExtract, targetMod);
 
             targetMod.DuplicateFromOnlyReferenced(linkCache, modToExtract.ModKey, out var mapping);
-            targetMod.EnumerateMajorRecords().Should().HaveCount(3);
             targetMod.Npcs.Should().HaveCount(2);
             targetMod.Races.Should().HaveCount(1);
+            targetMod.SoundDescriptors.Should().HaveCount(1);
+            targetMod.EnumerateMajorRecords().Should().HaveCount(4);
             targetMod.Npcs.Should().Contain(safeNpc);
+            var newRaceFormKey = mapping[race.FormKey];
+            var newRace = targetMod.Races.First();
+            newRace.FormKey.Should().Be(newRaceFormKey);
+            safeNpc.Race.FormKey.Should().Be(newRaceFormKey);
+        }
+
+        [Fact]
+        public void DuplicateReference()
+        {
+            var modToExtract = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimSE);
+            var npc = modToExtract.Npcs.AddNew();
+            var race = modToExtract.Races.AddNew();
+            race.CloseLootSound = modToExtract.SoundDescriptors.AddNew();
+            var unneededRace = modToExtract.Races.AddNew();
+
+            var targetMod = new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimSE);
+            targetMod.Npcs.Add(npc);
+            var safeNpc = targetMod.Npcs.AddNew();
+            safeNpc.Race = new FormLink<IRaceGetter>(race.FormKey);
+            var safeNpc2 = targetMod.Npcs.AddNew();
+            safeNpc2.Race = new FormLink<IRaceGetter>(race.FormKey);
+
+            var linkCache = new MutableLoadOrderLinkCache<ISkyrimMod, ISkyrimModGetter>(modToExtract, targetMod);
+
+            targetMod.DuplicateFromOnlyReferenced(linkCache, modToExtract.ModKey, out var mapping);
+            targetMod.Npcs.Should().HaveCount(3);
+            targetMod.Races.Should().HaveCount(1);
+            targetMod.SoundDescriptors.Should().HaveCount(1);
+            targetMod.EnumerateMajorRecords().Should().HaveCount(5);
+            targetMod.Npcs.Should().Contain(safeNpc);
+            targetMod.Npcs.Should().Contain(safeNpc2);
             var newRaceFormKey = mapping[race.FormKey];
             var newRace = targetMod.Races.First();
             newRace.FormKey.Should().Be(newRaceFormKey);
@@ -64,6 +97,7 @@ namespace Mutagen.Bethesda.UnitTests
             var modToExtract = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimSE);
             var npc = modToExtract.Npcs.AddNew();
             var race = modToExtract.Races.AddNew();
+            race.CloseLootSound = modToExtract.SoundDescriptors.AddNew();
             var unneededRace = modToExtract.Races.AddNew();
 
             var targetMod = new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimSE);
@@ -74,9 +108,10 @@ namespace Mutagen.Bethesda.UnitTests
             var linkCache = new MutableLoadOrderLinkCache<ISkyrimMod, ISkyrimModGetter>(modToExtract, targetMod);
 
             targetMod.DuplicateFromOnlyReferenced(linkCache, modToExtract.ModKey, out var mapping, typeof(INpcGetter));
-            targetMod.EnumerateMajorRecords().Should().HaveCount(3);
             targetMod.Npcs.Should().HaveCount(2);
             targetMod.Races.Should().HaveCount(1);
+            targetMod.SoundDescriptors.Should().HaveCount(1);
+            targetMod.EnumerateMajorRecords().Should().HaveCount(4);
             targetMod.Npcs.Should().Contain(safeNpc);
             var newRaceFormKey = mapping[race.FormKey];
             var newRace = targetMod.Races.First();
@@ -90,6 +125,7 @@ namespace Mutagen.Bethesda.UnitTests
             var modToExtract = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimSE);
             var npc = modToExtract.Npcs.AddNew();
             var race = modToExtract.Races.AddNew();
+            race.CloseLootSound = modToExtract.SoundDescriptors.AddNew();
             var unneededRace = modToExtract.Races.AddNew();
 
             var targetMod = new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimSE);
