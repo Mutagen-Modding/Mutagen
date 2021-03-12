@@ -747,6 +747,8 @@ namespace Mutagen.Bethesda
         where TMod : class, IContextMod<TMod, TModGetter>, TModGetter
         where TModGetter : class, IContextGetterMod<TMod, TModGetter>
     {
+        public static readonly ImmutableLoadOrderLinkCache<TMod, TModGetter> Empty = new ImmutableLoadOrderLinkCache<TMod, TModGetter>(Enumerable.Empty<TModGetter>(), LinkCachePreferences.Default);
+
         private readonly ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGetter, FormKey> _formKeyContextCache;
         private readonly ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGetter, string> _editorIdContextCache;
 

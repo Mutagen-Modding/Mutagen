@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda
         /// <param name="throwIfUnknown">Whether to throw an exception if type is unknown</param> 
         /// <exception cref="ArgumentException">If a non applicable type is provided, and throw parameter is on</exception>  
         /// <returns>Enumerable of all applicable major records</returns>  
-        new IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(Type t, bool throwIfUnknown = true);
+        new IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(Type? t, bool throwIfUnknown = true);
 
         /// <summary>
         /// Removes any records within matching the given FormKey.
