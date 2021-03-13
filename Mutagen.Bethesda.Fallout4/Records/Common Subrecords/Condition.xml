@@ -34,12 +34,9 @@
       <FormLink name="ParameterTwoRecord" refName="Fallout4MajorRecord" binary="NoGeneration" />
       <Int32 name="ParameterTwoNumber" binary="NoGeneration" />
       <String name="ParameterTwoString" binary="NoGeneration" nullable="True" />
-      
       <FormLink name="ParameterThreeRecord" refName="Fallout4MajorRecord" binary="NoGeneration" />
       <Int32 name="ParameterThreeNumber" binary="NoGeneration" />
-      <String name="ParameterThreeString" binary="NoGeneration" nullable="True" />
-      <!--<Int32 name="Unknown3" binary="NoGeneration" />-->
-      
+      <String name="ParameterThreeString" binary="NoGeneration" nullable="True" />      
       <Int32 name="Unknown4" binary="NoGeneration" />
       <Int32 name="Unknown5" binary="NoGeneration" default="-1" />
     </Fields>
@@ -51,12 +48,9 @@
       <UInt16 name="EventFunction" />
       <!-- ToDo change to enum -->
       <UInt16 name="EventMember" />
-      <!--<FormLink name="Parameter3" refName="Fallout4MajorRecord" />-->
       <Enum name="RunOnType" enumName="Condition.RunOnType" byteLength="4" />
       <FormLink name="Reference" refName="Fallout4MajorRecord" />
-      
       <Int32 name="ParameterThreeNumber" default="-1" />
-      <!--<Int32 name="Unknown3" default="-1" />-->
     </Fields>
   </Object>
 </Loqui>

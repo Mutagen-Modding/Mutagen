@@ -28,6 +28,7 @@
     <Compile Include="Enums\CompareOperator.cs" />
     <Compile Include="Enums\GroupTypeEnum.cs" />
     <Compile Include="Enums\TargetObjectType.cs" />
+    <Compile Include="Interfaces\IModeled.cs" />
     <Compile Include="Interfaces\IObjectBounded.cs" />
     <Compile Include="Interfaces\IPositionRotation.cs" />
     <Compile Include="Records\Common Subrecords\Condition.cs">
@@ -96,8 +97,14 @@
     <Compile Include="Records\Major Records\GlobalShort.cs">
       <DependentUpon>Global.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\HeadPart.cs">
+      <DependentUpon>HeadPart.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Keyword.cs">
       <DependentUpon>Keyword.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Part.cs">
+      <DependentUpon>HeadPart.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\TextureSet.cs">
       <DependentUpon>TextureSet.xml</DependentUpon>
@@ -303,6 +310,24 @@
       <DependentUpon>Door.xml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\ILocationTargetable_Generated.cs" />
+    <Compile Include="Records\Common Subrecords\Model_Generated.cs">
+      <DependentUpon>Model.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ColorRecord_Generated.cs">
+      <DependentUpon>ColorRecord.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\HeadPart_Generated.cs">
+      <DependentUpon>HeadPart.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Part_Generated.cs">
+      <DependentUpon>HeadPart.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MaterialSwap_Generated.cs">
+      <DependentUpon>MaterialSwap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\SimpleModel_Generated.cs">
+      <DependentUpon>Model.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.1.2">

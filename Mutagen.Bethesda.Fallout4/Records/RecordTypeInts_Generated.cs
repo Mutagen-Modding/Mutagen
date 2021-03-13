@@ -8,6 +8,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public const int CELL = 0x4C4C4543;
         public const int CITC = 0x43544943;
         public const int CLAS = 0x53414C43;
+        public const int CLFM = 0x4D464C43;
         public const int CMPO = 0x4F504D43;
         public const int CNAM = 0x4D414E43;
         public const int CRGR = 0x52475243;
@@ -30,7 +31,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public const int GMST = 0x54534D47;
         public const int GNAM = 0x4D414E47;
         public const int GRUP = 0x50555247;
+        public const int HDPT = 0x54504448;
         public const int HEDR = 0x52444548;
+        public const int HNAM = 0x4D414E48;
         public const int ICON = 0x4E4F4349;
         public const int INAM = 0x4D414E49;
         public const int INCC = 0x43434E49;
@@ -42,6 +45,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public const int MAST = 0x5453414D;
         public const int MISC = 0x4353494D;
         public const int MNAM = 0x4D414E4D;
+        public const int MODC = 0x43444F4D;
+        public const int MODF = 0x46444F4D;
+        public const int MODL = 0x4C444F4D;
+        public const int MODS = 0x53444F4D;
+        public const int MODT = 0x54444F4D;
+        public const int MSWP = 0x5057534D;
+        public const int NAM0 = 0x304D414E;
+        public const int NAM1 = 0x314D414E;
         public const int NNAM = 0x4D414E4E;
         public const int OBND = 0x444E424F;
         public const int OFST = 0x5453464F;
@@ -49,6 +60,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public const int OTFT = 0x5446544F;
         public const int PLCN = 0x4E434C50;
         public const int PLVD = 0x44564C50;
+        public const int PNAM = 0x4D414E50;
         public const int PRPS = 0x53505250;
         public const int REFR = 0x52464552;
         public const int RNAM = 0x4D414E52;

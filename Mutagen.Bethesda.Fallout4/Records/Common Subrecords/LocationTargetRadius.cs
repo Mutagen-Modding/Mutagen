@@ -24,14 +24,10 @@ namespace Mutagen.Bethesda.Fallout4
             AtPackageLocation = 7,
             AliasForReference = 8,
             AliasForLocation = 9,
-            // {10} 'Target', // string dump: <Target> --> Interrupt Data - INT
             Target = 10,
-            // {11} 'Target (location)', // string dump: Target: %s, radius %u --> Packdata Target - INT
             TargetLocation = 11,
             NearSelf = 12,
-            // {13} 'Near Editor Location Cell', --> unknown - 8 Bytes
             NearEditorLocationCell = 13,
-            // {14} 'Alias (ref collection)' --> ref collection alias - INT
             AliasForCollection = 14
         }
     }

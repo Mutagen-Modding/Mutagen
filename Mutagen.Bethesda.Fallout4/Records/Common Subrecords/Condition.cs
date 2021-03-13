@@ -315,7 +315,6 @@ namespace Mutagen.Bethesda.Fallout4
                 item.ParameterOneRecord = FormKey.Factory(frame.MetaData.MasterReferences!, (uint)item.ParameterOneNumber);
                 item.ParameterTwoRecord = FormKey.Factory(frame.MetaData.MasterReferences!, (uint)item.ParameterTwoNumber);
                 item.ParameterThreeRecord = FormKey.Factory(frame.MetaData.MasterReferences!, (uint)item.ParameterThreeNumber);
-                //item.Unknown3 = frame.ReadInt32();
                 item.Unknown4 = frame.ReadInt32();
                 item.Unknown5 = frame.ReadInt32();
             }
@@ -371,7 +370,6 @@ namespace Mutagen.Bethesda.Fallout4
                     default:
                         throw new NotImplementedException();
                 }
-                //writer.Write(item.Unknown3);
                 writer.Write(item.Unknown4);
                 writer.Write(item.Unknown5);
             }
@@ -436,8 +434,7 @@ namespace Mutagen.Bethesda.Fallout4
             public FormLink<IFallout4MajorRecordGetter> ParameterThreeRecord => new FormLink<IFallout4MajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data2.Slice(8))));
 
             public int ParameterThreeNumber => BinaryPrimitives.ReadInt32LittleEndian(_data2.Slice(8));
-            //public int Unknown3 => BinaryPrimitives.ReadInt32LittleEndian(_data2.Slice(8));
-
+            
             public int Unknown4 => BinaryPrimitives.ReadInt32LittleEndian(_data2.Slice(12));
 
             public int Unknown5 => BinaryPrimitives.ReadInt32LittleEndian(_data2.Slice(16));
