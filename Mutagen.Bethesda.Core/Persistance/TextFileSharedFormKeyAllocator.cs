@@ -47,9 +47,13 @@ namespace Mutagen.Bethesda.Core.Persistance
                     throw new ArgumentException("Unexpected odd number of lines.");
                 }
                 var formKey = FormKey.Factory(formKeyStr);
+                if (formKey.ModKey != Mod.ModKey)
+                {
+                    throw new ArgumentException($"Attempted to load a FormKey belonging to {formKey.ModKey} into the FormKey allocator for {Mod.ModKey}.");
+                }
                 if (!_formIDSet.Add(formKey.ID))
                 {
-                    throw new ArgumentException("Duplicate formKey loaded from {filePath}.");
+                    throw new ArgumentException($"Duplicate formKey loaded from {filePath}.");
                 }
                 _cache.Add(edidStr, new(patcherName, formKey));
             }
