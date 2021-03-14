@@ -34,7 +34,6 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Weapon
 - Weather
 ### INamed
-- AClothing
 - Activator
 - AlchemicalApparatus
 - Ammunition
@@ -84,8 +83,6 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - SoulGemData
 - WeaponData
 ## Concrete Classes to Interfaces
-### AClothing
-- INamed
 ### Activator
 - IModeled
 - INamed

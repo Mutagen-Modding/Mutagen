@@ -8,7 +8,7 @@ using Mutagen.Bethesda;
 namespace Mutagen.Bethesda.Oblivion
 {
     /// <summary>
-    /// Implemented by: [AClothing, AlchemicalApparatus, Ammunition, Book, Ingredient, Key, LeveledItem, Light, Miscellaneous, Potion, SigilStone, SoulGem, Weapon]
+    /// Implemented by: [AlchemicalApparatus, Ammunition, Armor, Book, Clothing, Ingredient, Key, LeveledItem, Light, Miscellaneous, Potion, SigilStone, SoulGem, Weapon]
     /// </summary>
     public partial interface IItem :
         IItemGetter,
@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Oblivion
     }
 
     /// <summary>
-    /// Implemented by: [AClothing, AlchemicalApparatus, Ammunition, Book, Ingredient, Key, LeveledItem, Light, Miscellaneous, Potion, SigilStone, SoulGem, Weapon]
+    /// Implemented by: [AlchemicalApparatus, Ammunition, Armor, Book, Clothing, Ingredient, Key, LeveledItem, Light, Miscellaneous, Potion, SigilStone, SoulGem, Weapon]
     /// </summary>
     public partial interface IItemGetter : IOblivionMajorRecordGetter
     {

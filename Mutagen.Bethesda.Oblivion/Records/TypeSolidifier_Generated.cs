@@ -7,30 +7,6 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Normal
         /// <summary>
-        /// Scope a load order query to AClothing
-        /// </summary>
-        /// <param name="listings">ModListings to query</param>
-        /// <returns>A typed object to do further queries on AClothing</returns>
-        public static TypedLoadOrderAccess<IOblivionMod, IOblivionModGetter, IAClothing, IAClothingGetter> AClothing(this IEnumerable<IModListing<IOblivionModGetter>> listings)
-        {
-            return new TypedLoadOrderAccess<IOblivionMod, IOblivionModGetter, IAClothing, IAClothingGetter>(
-                (bool includeDeletedRecords) => listings.WinningOverrides<IAClothingGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IAClothing, IAClothingGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
-        }
-
-        /// <summary>
-        /// Scope a load order query to AClothing
-        /// </summary>
-        /// <param name="mods">Mods to query</param>
-        /// <returns>A typed object to do further queries on AClothing</returns>
-        public static TypedLoadOrderAccess<IOblivionMod, IOblivionModGetter, IAClothing, IAClothingGetter> AClothing(this IEnumerable<IOblivionModGetter> mods)
-        {
-            return new TypedLoadOrderAccess<IOblivionMod, IOblivionModGetter, IAClothing, IAClothingGetter>(
-                (bool includeDeletedRecords) => mods.WinningOverrides<IAClothingGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IAClothing, IAClothingGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
-        }
-
-        /// <summary>
         /// Scope a load order query to Activator
         /// </summary>
         /// <param name="listings">ModListings to query</param>

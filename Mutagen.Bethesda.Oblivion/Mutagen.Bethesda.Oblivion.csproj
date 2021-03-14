@@ -327,12 +327,6 @@
     <Compile Include="Records\Common Subrecords\WeatherType_Generated.cs">
       <DependentUpon>WeatherType.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\AClothing_Generated.cs">
-      <DependentUpon>AClothing.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\ClothingFlags_Generated.cs">
-      <DependentUpon>AClothing.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\Activator_Generated.cs">
       <DependentUpon>Activator.xml</DependentUpon>
     </Compile>
@@ -889,6 +883,9 @@
     <Compile Include="Interfaces\IItem_Generated.cs" />
     <Compile Include="Interfaces\INpcSpawn_Generated.cs" />
     <Compile Include="Interfaces\INpcRecord_Generated.cs" />
+    <Compile Include="Records\Common Subrecords\ClothingFlags_Generated.cs">
+      <DependentUpon>ClothingFlags.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.1.2">

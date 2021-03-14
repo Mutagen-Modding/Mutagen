@@ -20,10 +20,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var dict = new Dictionary<Type, Type[]>();
             dict[typeof(IItem)] = new Type[]
             {
-                typeof(AClothing),
                 typeof(AlchemicalApparatus),
                 typeof(Ammunition),
+                typeof(Armor),
                 typeof(Book),
+                typeof(Clothing),
                 typeof(Ingredient),
                 typeof(Key),
                 typeof(LeveledItem),
