@@ -366,12 +366,6 @@
     <Compile Include="Records\Major Records\AnimatedObject_Generated.cs">
       <DependentUpon>AnimatedObject.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\ANpc_Generated.cs">
-      <DependentUpon>ANpc.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\ANpcSpawn_Generated.cs">
-      <DependentUpon>ANpcSpawn.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\Armor_Generated.cs">
       <DependentUpon>Armor.xml</DependentUpon>
     </Compile>
@@ -893,6 +887,8 @@
     </Compile>
     <Compile Include="Interfaces\ISpellRecord_Generated.cs" />
     <Compile Include="Interfaces\IItem_Generated.cs" />
+    <Compile Include="Interfaces\INpcSpawn_Generated.cs" />
+    <Compile Include="Interfaces\INpcRecord_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.1.2">

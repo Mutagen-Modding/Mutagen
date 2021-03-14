@@ -151,54 +151,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         /// <summary>
-        /// Scope a load order query to ANpc
-        /// </summary>
-        /// <param name="listings">ModListings to query</param>
-        /// <returns>A typed object to do further queries on ANpc</returns>
-        public static TypedLoadOrderAccess<IOblivionMod, IOblivionModGetter, IANpc, IANpcGetter> ANpc(this IEnumerable<IModListing<IOblivionModGetter>> listings)
-        {
-            return new TypedLoadOrderAccess<IOblivionMod, IOblivionModGetter, IANpc, IANpcGetter>(
-                (bool includeDeletedRecords) => listings.WinningOverrides<IANpcGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IANpc, IANpcGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
-        }
-
-        /// <summary>
-        /// Scope a load order query to ANpc
-        /// </summary>
-        /// <param name="mods">Mods to query</param>
-        /// <returns>A typed object to do further queries on ANpc</returns>
-        public static TypedLoadOrderAccess<IOblivionMod, IOblivionModGetter, IANpc, IANpcGetter> ANpc(this IEnumerable<IOblivionModGetter> mods)
-        {
-            return new TypedLoadOrderAccess<IOblivionMod, IOblivionModGetter, IANpc, IANpcGetter>(
-                (bool includeDeletedRecords) => mods.WinningOverrides<IANpcGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IANpc, IANpcGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
-        }
-
-        /// <summary>
-        /// Scope a load order query to ANpcSpawn
-        /// </summary>
-        /// <param name="listings">ModListings to query</param>
-        /// <returns>A typed object to do further queries on ANpcSpawn</returns>
-        public static TypedLoadOrderAccess<IOblivionMod, IOblivionModGetter, IANpcSpawn, IANpcSpawnGetter> ANpcSpawn(this IEnumerable<IModListing<IOblivionModGetter>> listings)
-        {
-            return new TypedLoadOrderAccess<IOblivionMod, IOblivionModGetter, IANpcSpawn, IANpcSpawnGetter>(
-                (bool includeDeletedRecords) => listings.WinningOverrides<IANpcSpawnGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IANpcSpawn, IANpcSpawnGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
-        }
-
-        /// <summary>
-        /// Scope a load order query to ANpcSpawn
-        /// </summary>
-        /// <param name="mods">Mods to query</param>
-        /// <returns>A typed object to do further queries on ANpcSpawn</returns>
-        public static TypedLoadOrderAccess<IOblivionMod, IOblivionModGetter, IANpcSpawn, IANpcSpawnGetter> ANpcSpawn(this IEnumerable<IOblivionModGetter> mods)
-        {
-            return new TypedLoadOrderAccess<IOblivionMod, IOblivionModGetter, IANpcSpawn, IANpcSpawnGetter>(
-                (bool includeDeletedRecords) => mods.WinningOverrides<IANpcSpawnGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IANpcSpawn, IANpcSpawnGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
-        }
-
-        /// <summary>
         /// Scope a load order query to Armor
         /// </summary>
         /// <param name="listings">ModListings to query</param>
@@ -1855,6 +1807,54 @@ namespace Mutagen.Bethesda.Oblivion
             return new TypedLoadOrderAccess<IOblivionMod, IOblivionModGetter, IItem, IItemGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IItemGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, IItem, IItemGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to INpcSpawn
+        /// </summary>
+        /// <param name="listings">ModListings to query</param>
+        /// <returns>A typed object to do further queries on INpcSpawn</returns>
+        public static TypedLoadOrderAccess<IOblivionMod, IOblivionModGetter, INpcSpawn, INpcSpawnGetter> INpcSpawn(this IEnumerable<IModListing<IOblivionModGetter>> listings)
+        {
+            return new TypedLoadOrderAccess<IOblivionMod, IOblivionModGetter, INpcSpawn, INpcSpawnGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<INpcSpawnGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, INpcSpawn, INpcSpawnGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to INpcSpawn
+        /// </summary>
+        /// <param name="mods">Mods to query</param>
+        /// <returns>A typed object to do further queries on INpcSpawn</returns>
+        public static TypedLoadOrderAccess<IOblivionMod, IOblivionModGetter, INpcSpawn, INpcSpawnGetter> INpcSpawn(this IEnumerable<IOblivionModGetter> mods)
+        {
+            return new TypedLoadOrderAccess<IOblivionMod, IOblivionModGetter, INpcSpawn, INpcSpawnGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<INpcSpawnGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, INpcSpawn, INpcSpawnGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to INpcRecord
+        /// </summary>
+        /// <param name="listings">ModListings to query</param>
+        /// <returns>A typed object to do further queries on INpcRecord</returns>
+        public static TypedLoadOrderAccess<IOblivionMod, IOblivionModGetter, INpcRecord, INpcRecordGetter> INpcRecord(this IEnumerable<IModListing<IOblivionModGetter>> listings)
+        {
+            return new TypedLoadOrderAccess<IOblivionMod, IOblivionModGetter, INpcRecord, INpcRecordGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<INpcRecordGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, INpcRecord, INpcRecordGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to INpcRecord
+        /// </summary>
+        /// <param name="mods">Mods to query</param>
+        /// <returns>A typed object to do further queries on INpcRecord</returns>
+        public static TypedLoadOrderAccess<IOblivionMod, IOblivionModGetter, INpcRecord, INpcRecordGetter> INpcRecord(this IEnumerable<IOblivionModGetter> mods)
+        {
+            return new TypedLoadOrderAccess<IOblivionMod, IOblivionModGetter, INpcRecord, INpcRecordGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<INpcRecordGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IOblivionMod, IOblivionModGetter, INpcRecord, INpcRecordGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>

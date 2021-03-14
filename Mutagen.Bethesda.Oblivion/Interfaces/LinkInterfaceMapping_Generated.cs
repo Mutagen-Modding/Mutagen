@@ -35,6 +35,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 typeof(Weapon),
             };
             dict[typeof(IItemGetter)] = dict[typeof(IItem)];
+            dict[typeof(INpcSpawn)] = new Type[]
+            {
+                typeof(Creature),
+                typeof(LeveledCreature),
+                typeof(Npc),
+            };
+            dict[typeof(INpcSpawnGetter)] = dict[typeof(INpcSpawn)];
+            dict[typeof(INpcRecord)] = new Type[]
+            {
+                typeof(Creature),
+                typeof(Npc),
+            };
+            dict[typeof(INpcRecordGetter)] = dict[typeof(INpcRecord)];
             dict[typeof(IOwner)] = new Type[]
             {
                 typeof(Faction),

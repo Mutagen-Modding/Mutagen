@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Npc :
-        ANpc,
+        OblivionMajorRecord,
         IEquatable<INpcGetter>,
         ILoquiObjectSetter<Npc>,
         INpcInternal
@@ -336,7 +336,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public new class Mask<TItem> :
-            ANpc.Mask<TItem>,
+            OblivionMajorRecord.Mask<TItem>,
             IEquatable<Mask<TItem>>,
             IMask<TItem>
         {
@@ -1100,7 +1100,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public new class ErrorMask :
-            ANpc.ErrorMask,
+            OblivionMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
@@ -1605,7 +1605,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         }
         public new class TranslationMask :
-            ANpc.TranslationMask,
+            OblivionMajorRecord.TranslationMask,
             ITranslationMask
         {
             #region Members
@@ -1783,13 +1783,15 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface INpc :
-        IANpcInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<INpcInternal>,
         IModeled,
         INamed,
         INamedRequired,
         INpcGetter,
+        INpcRecord,
+        INpcSpawn,
+        IOblivionMajorRecordInternal,
         IOwner
     {
         new String? Name { get; set; }
@@ -1818,14 +1820,14 @@ namespace Mutagen.Bethesda.Oblivion
     }
 
     public partial interface INpcInternal :
-        IANpcInternal,
+        IOblivionMajorRecordInternal,
         INpc,
         INpcGetter
     {
     }
 
     public partial interface INpcGetter :
-        IANpcGetter,
+        IOblivionMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<INpcGetter>,
@@ -1833,6 +1835,8 @@ namespace Mutagen.Bethesda.Oblivion
         IModeledGetter,
         INamedGetter,
         INamedRequiredGetter,
+        INpcRecordGetter,
+        INpcSpawnGetter,
         IOwnerGetter
     {
         static new ILoquiRegistration Registration => Npc_Registration.Instance;
@@ -2122,7 +2126,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class NpcSetterCommon : ANpcSetterCommon
+    public partial class NpcSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly NpcSetterCommon Instance = new NpcSetterCommon();
 
@@ -2155,16 +2159,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.FaceGenTextureSymmetric = default;
             item.FNAM = default;
             base.Clear(item);
-        }
-        
-        public override void Clear(IANpcInternal item)
-        {
-            Clear(item: (INpcInternal)item);
-        }
-        
-        public override void Clear(IANpcSpawnInternal item)
-        {
-            Clear(item: (INpcInternal)item);
         }
         
         public override void Clear(IOblivionMajorRecordInternal item)
@@ -2211,28 +2205,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override void CopyInFromBinary(
-            IANpcInternal item,
-            MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            CopyInFromBinary(
-                item: (Npc)item,
-                frame: frame,
-                recordTypeConverter: recordTypeConverter);
-        }
-        
-        public override void CopyInFromBinary(
-            IANpcSpawnInternal item,
-            MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            CopyInFromBinary(
-                item: (Npc)item,
-                frame: frame,
-                recordTypeConverter: recordTypeConverter);
-        }
-        
-        public override void CopyInFromBinary(
             IOblivionMajorRecordInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -2257,7 +2229,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class NpcCommon : ANpcCommon
+    public partial class NpcCommon : OblivionMajorRecordCommon
     {
         public new static readonly NpcCommon Instance = new NpcCommon();
 
@@ -2386,7 +2358,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             Npc.Mask<bool>? printMask = null)
         {
-            ANpcCommon.ToStringFields(
+            OblivionMajorRecordCommon.ToStringFields(
                 item: item,
                 fg: fg,
                 printMask: printMask);
@@ -2581,45 +2553,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Npc_FieldIndex ConvertFieldIndex(ANpc_FieldIndex index)
-        {
-            switch (index)
-            {
-                case ANpc_FieldIndex.MajorRecordFlagsRaw:
-                    return (Npc_FieldIndex)((int)index);
-                case ANpc_FieldIndex.FormKey:
-                    return (Npc_FieldIndex)((int)index);
-                case ANpc_FieldIndex.VersionControl:
-                    return (Npc_FieldIndex)((int)index);
-                case ANpc_FieldIndex.EditorID:
-                    return (Npc_FieldIndex)((int)index);
-                case ANpc_FieldIndex.OblivionMajorRecordFlags:
-                    return (Npc_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-        
-        public static new Npc_FieldIndex ConvertFieldIndex(ANpcSpawn_FieldIndex index)
-        {
-            switch (index)
-            {
-                case ANpcSpawn_FieldIndex.MajorRecordFlagsRaw:
-                    return (Npc_FieldIndex)((int)index);
-                case ANpcSpawn_FieldIndex.FormKey:
-                    return (Npc_FieldIndex)((int)index);
-                case ANpcSpawn_FieldIndex.VersionControl:
-                    return (Npc_FieldIndex)((int)index);
-                case ANpcSpawn_FieldIndex.EditorID:
-                    return (Npc_FieldIndex)((int)index);
-                case ANpcSpawn_FieldIndex.OblivionMajorRecordFlags:
-                    return (Npc_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-        
-        public static new Npc_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        public static Npc_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -2662,7 +2596,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IANpcGetter)lhs, (IANpcGetter)rhs)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (!object.Equals(lhs.Configuration, rhs.Configuration)) return false;
@@ -2687,24 +2621,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!MemorySliceExt.Equal(lhs.FaceGenTextureSymmetric, rhs.FaceGenTextureSymmetric)) return false;
             if (!MemorySliceExt.Equal(lhs.FNAM, rhs.FNAM)) return false;
             return true;
-        }
-        
-        public override bool Equals(
-            IANpcGetter? lhs,
-            IANpcGetter? rhs)
-        {
-            return Equals(
-                lhs: (INpcGetter?)lhs,
-                rhs: rhs as INpcGetter);
-        }
-        
-        public override bool Equals(
-            IANpcSpawnGetter? lhs,
-            IANpcSpawnGetter? rhs)
-        {
-            return Equals(
-                lhs: (INpcGetter?)lhs,
-                rhs: rhs as INpcGetter);
         }
         
         public override bool Equals(
@@ -2786,16 +2702,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
-        }
-        
-        public override int GetHashCode(IANpcGetter item)
-        {
-            return GetHashCode(item: (INpcGetter)item);
-        }
-        
-        public override int GetHashCode(IANpcSpawnGetter item)
-        {
-            return GetHashCode(item: (INpcGetter)item);
         }
         
         public override int GetHashCode(IOblivionMajorRecordGetter item)
@@ -2884,28 +2790,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return newRec;
         }
         
-        public override ANpc Duplicate(
-            IANpcGetter item,
-            FormKey formKey,
-            TranslationCrystal? copyMask)
-        {
-            return this.Duplicate(
-                item: (INpc)item,
-                formKey: formKey,
-                copyMask: copyMask);
-        }
-        
-        public override ANpcSpawn Duplicate(
-            IANpcSpawnGetter item,
-            FormKey formKey,
-            TranslationCrystal? copyMask)
-        {
-            return this.Duplicate(
-                item: (INpc)item,
-                formKey: formKey,
-                copyMask: copyMask);
-        }
-        
         public override OblivionMajorRecord Duplicate(
             IOblivionMajorRecordGetter item,
             FormKey formKey,
@@ -2933,7 +2817,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class NpcSetterTranslationCommon : ANpcSetterTranslationCommon
+    public partial class NpcSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly NpcSetterTranslationCommon Instance = new NpcSetterTranslationCommon();
 
@@ -2961,8 +2845,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool deepCopy)
         {
             base.DeepCopyIn(
-                (IANpc)item,
-                (IANpcGetter)rhs,
+                (IOblivionMajorRecord)item,
+                (IOblivionMajorRecordGetter)rhs,
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
@@ -3292,66 +3176,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override void DeepCopyIn(
-            IANpcInternal item,
-            IANpcGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (INpcInternal)item,
-                rhs: (INpcGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
-            IANpc item,
-            IANpcGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (INpc)item,
-                rhs: (INpcGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
-            IANpcSpawnInternal item,
-            IANpcSpawnGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (INpcInternal)item,
-                rhs: (INpcGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
-            IANpcSpawn item,
-            IANpcSpawnGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (INpc)item,
-                rhs: (INpcGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
             IOblivionMajorRecordInternal item,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -3492,7 +3316,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class NpcBinaryWriteTranslation :
-        ANpcBinaryWriteTranslation,
+        OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
         public new readonly static NpcBinaryWriteTranslation Instance = new NpcBinaryWriteTranslation();
@@ -3688,28 +3512,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void Write(
             MutagenWriter writer,
-            IANpcGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            Write(
-                item: (INpcGetter)item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
-        }
-
-        public override void Write(
-            MutagenWriter writer,
-            IANpcSpawnGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            Write(
-                item: (INpcGetter)item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
-        }
-
-        public override void Write(
-            MutagenWriter writer,
             IOblivionMajorRecordGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -3732,7 +3534,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class NpcBinaryCreateTranslation : ANpcBinaryCreateTranslation
+    public partial class NpcBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static NpcBinaryCreateTranslation Instance = new NpcBinaryCreateTranslation();
 
@@ -3741,7 +3543,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             INpcInternal item,
             MutagenFrame frame)
         {
-            ANpcBinaryCreateTranslation.FillBinaryStructs(
+            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
         }
@@ -3943,7 +3745,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (int)Npc_FieldIndex.FNAM;
                 }
                 default:
-                    return ANpcBinaryCreateTranslation.FillBinaryRecordTypes(
+                    return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         recordParseCount: recordParseCount,
@@ -3968,7 +3770,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class NpcBinaryOverlay :
-        ANpcBinaryOverlay,
+        OblivionMajorRecordBinaryOverlay,
         INpcGetter
     {
         #region Common Routing

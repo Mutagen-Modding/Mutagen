@@ -19,6 +19,13 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - SigilStone
 - SoulGem
 - Weapon
+### INpcRecord
+- Creature
+- Npc
+### INpcSpawn
+- Creature
+- LeveledCreature
+- Npc
 ### IOwner
 - Faction
 - Npc
@@ -39,6 +46,9 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IItem
 ### Book
 - IItem
+### Creature
+- INpcRecord
+- INpcSpawn
 ### Faction
 - IOwner
 ### Ingredient
@@ -47,6 +57,8 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IItem
 ### Landscape
 - IPlaced
+### LeveledCreature
+- INpcSpawn
 ### LeveledItem
 - IItem
 ### LeveledSpell
@@ -56,6 +68,8 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### Miscellaneous
 - IItem
 ### Npc
+- INpcRecord
+- INpcSpawn
 - IOwner
 ### PlacedCreature
 - IPlaced

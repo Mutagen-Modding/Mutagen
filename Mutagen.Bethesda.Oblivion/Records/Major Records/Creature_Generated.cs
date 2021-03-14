@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Creature :
-        ANpc,
+        OblivionMajorRecord,
         ICreatureInternal,
         IEquatable<ICreatureGetter>,
         ILoquiObjectSetter<Creature>
@@ -316,7 +316,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public new class Mask<TItem> :
-            ANpc.Mask<TItem>,
+            OblivionMajorRecord.Mask<TItem>,
             IEquatable<Mask<TItem>>,
             IMask<TItem>
         {
@@ -1135,7 +1135,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public new class ErrorMask :
-            ANpc.ErrorMask,
+            OblivionMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
@@ -1661,7 +1661,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         }
         public new class TranslationMask :
-            ANpc.TranslationMask,
+            OblivionMajorRecord.TranslationMask,
             ITranslationMask
         {
             #region Members
@@ -1838,13 +1838,15 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ICreature :
-        IANpcInternal,
         ICreatureGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<ICreatureInternal>,
         IModeled,
         INamed,
-        INamedRequired
+        INamedRequired,
+        INpcRecord,
+        INpcSpawn,
+        IOblivionMajorRecordInternal
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
@@ -1872,21 +1874,23 @@ namespace Mutagen.Bethesda.Oblivion
     }
 
     public partial interface ICreatureInternal :
-        IANpcInternal,
+        IOblivionMajorRecordInternal,
         ICreature,
         ICreatureGetter
     {
     }
 
     public partial interface ICreatureGetter :
-        IANpcGetter,
+        IOblivionMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<ICreatureGetter>,
         IMapsToGetter<ICreatureGetter>,
         IModeledGetter,
         INamedGetter,
-        INamedRequiredGetter
+        INamedRequiredGetter,
+        INpcRecordGetter,
+        INpcSpawnGetter
     {
         static new ILoquiRegistration Registration => Creature_Registration.Instance;
         String? Name { get; }
@@ -2175,7 +2179,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class CreatureSetterCommon : ANpcSetterCommon
+    public partial class CreatureSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly CreatureSetterCommon Instance = new CreatureSetterCommon();
 
@@ -2208,16 +2212,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.InheritsSoundFrom.Clear();
             item.Sounds.Clear();
             base.Clear(item);
-        }
-        
-        public override void Clear(IANpcInternal item)
-        {
-            Clear(item: (ICreatureInternal)item);
-        }
-        
-        public override void Clear(IANpcSpawnInternal item)
-        {
-            Clear(item: (ICreatureInternal)item);
         }
         
         public override void Clear(IOblivionMajorRecordInternal item)
@@ -2262,28 +2256,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override void CopyInFromBinary(
-            IANpcInternal item,
-            MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            CopyInFromBinary(
-                item: (Creature)item,
-                frame: frame,
-                recordTypeConverter: recordTypeConverter);
-        }
-        
-        public override void CopyInFromBinary(
-            IANpcSpawnInternal item,
-            MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            CopyInFromBinary(
-                item: (Creature)item,
-                frame: frame,
-                recordTypeConverter: recordTypeConverter);
-        }
-        
-        public override void CopyInFromBinary(
             IOblivionMajorRecordInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -2308,7 +2280,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class CreatureCommon : ANpcCommon
+    public partial class CreatureCommon : OblivionMajorRecordCommon
     {
         public new static readonly CreatureCommon Instance = new CreatureCommon();
 
@@ -2440,7 +2412,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             Creature.Mask<bool>? printMask = null)
         {
-            ANpcCommon.ToStringFields(
+            OblivionMajorRecordCommon.ToStringFields(
                 item: item,
                 fg: fg,
                 printMask: printMask);
@@ -2650,45 +2622,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Creature_FieldIndex ConvertFieldIndex(ANpc_FieldIndex index)
-        {
-            switch (index)
-            {
-                case ANpc_FieldIndex.MajorRecordFlagsRaw:
-                    return (Creature_FieldIndex)((int)index);
-                case ANpc_FieldIndex.FormKey:
-                    return (Creature_FieldIndex)((int)index);
-                case ANpc_FieldIndex.VersionControl:
-                    return (Creature_FieldIndex)((int)index);
-                case ANpc_FieldIndex.EditorID:
-                    return (Creature_FieldIndex)((int)index);
-                case ANpc_FieldIndex.OblivionMajorRecordFlags:
-                    return (Creature_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-        
-        public static new Creature_FieldIndex ConvertFieldIndex(ANpcSpawn_FieldIndex index)
-        {
-            switch (index)
-            {
-                case ANpcSpawn_FieldIndex.MajorRecordFlagsRaw:
-                    return (Creature_FieldIndex)((int)index);
-                case ANpcSpawn_FieldIndex.FormKey:
-                    return (Creature_FieldIndex)((int)index);
-                case ANpcSpawn_FieldIndex.VersionControl:
-                    return (Creature_FieldIndex)((int)index);
-                case ANpcSpawn_FieldIndex.EditorID:
-                    return (Creature_FieldIndex)((int)index);
-                case ANpcSpawn_FieldIndex.OblivionMajorRecordFlags:
-                    return (Creature_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-        
-        public static new Creature_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        public static Creature_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -2731,7 +2665,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IANpcGetter)lhs, (IANpcGetter)rhs)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (!lhs.Items.SequenceEqualNullable(rhs.Items)) return false;
@@ -2756,24 +2690,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!lhs.InheritsSoundFrom.Equals(rhs.InheritsSoundFrom)) return false;
             if (!lhs.Sounds.SequenceEqualNullable(rhs.Sounds)) return false;
             return true;
-        }
-        
-        public override bool Equals(
-            IANpcGetter? lhs,
-            IANpcGetter? rhs)
-        {
-            return Equals(
-                lhs: (ICreatureGetter?)lhs,
-                rhs: rhs as ICreatureGetter);
-        }
-        
-        public override bool Equals(
-            IANpcSpawnGetter? lhs,
-            IANpcSpawnGetter? rhs)
-        {
-            return Equals(
-                lhs: (ICreatureGetter?)lhs,
-                rhs: rhs as ICreatureGetter);
         }
         
         public override bool Equals(
@@ -2860,16 +2776,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return hash.ToHashCode();
         }
         
-        public override int GetHashCode(IANpcGetter item)
-        {
-            return GetHashCode(item: (ICreatureGetter)item);
-        }
-        
-        public override int GetHashCode(IANpcSpawnGetter item)
-        {
-            return GetHashCode(item: (ICreatureGetter)item);
-        }
-        
         public override int GetHashCode(IOblivionMajorRecordGetter item)
         {
             return GetHashCode(item: (ICreatureGetter)item);
@@ -2945,28 +2851,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return newRec;
         }
         
-        public override ANpc Duplicate(
-            IANpcGetter item,
-            FormKey formKey,
-            TranslationCrystal? copyMask)
-        {
-            return this.Duplicate(
-                item: (ICreature)item,
-                formKey: formKey,
-                copyMask: copyMask);
-        }
-        
-        public override ANpcSpawn Duplicate(
-            IANpcSpawnGetter item,
-            FormKey formKey,
-            TranslationCrystal? copyMask)
-        {
-            return this.Duplicate(
-                item: (ICreature)item,
-                formKey: formKey,
-                copyMask: copyMask);
-        }
-        
         public override OblivionMajorRecord Duplicate(
             IOblivionMajorRecordGetter item,
             FormKey formKey,
@@ -2994,7 +2878,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class CreatureSetterTranslationCommon : ANpcSetterTranslationCommon
+    public partial class CreatureSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly CreatureSetterTranslationCommon Instance = new CreatureSetterTranslationCommon();
 
@@ -3022,8 +2906,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool deepCopy)
         {
             base.DeepCopyIn(
-                (IANpc)item,
-                (IANpcGetter)rhs,
+                (IOblivionMajorRecord)item,
+                (IOblivionMajorRecordGetter)rhs,
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
@@ -3351,66 +3235,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override void DeepCopyIn(
-            IANpcInternal item,
-            IANpcGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (ICreatureInternal)item,
-                rhs: (ICreatureGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
-            IANpc item,
-            IANpcGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (ICreature)item,
-                rhs: (ICreatureGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
-            IANpcSpawnInternal item,
-            IANpcSpawnGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (ICreatureInternal)item,
-                rhs: (ICreatureGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
-            IANpcSpawn item,
-            IANpcSpawnGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (ICreature)item,
-                rhs: (ICreatureGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
             IOblivionMajorRecordInternal item,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -3551,7 +3375,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class CreatureBinaryWriteTranslation :
-        ANpcBinaryWriteTranslation,
+        OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
         public new readonly static CreatureBinaryWriteTranslation Instance = new CreatureBinaryWriteTranslation();
@@ -3751,28 +3575,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void Write(
             MutagenWriter writer,
-            IANpcGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            Write(
-                item: (ICreatureGetter)item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
-        }
-
-        public override void Write(
-            MutagenWriter writer,
-            IANpcSpawnGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            Write(
-                item: (ICreatureGetter)item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
-        }
-
-        public override void Write(
-            MutagenWriter writer,
             IOblivionMajorRecordGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -3795,7 +3597,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class CreatureBinaryCreateTranslation : ANpcBinaryCreateTranslation
+    public partial class CreatureBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static CreatureBinaryCreateTranslation Instance = new CreatureBinaryCreateTranslation();
 
@@ -3804,7 +3606,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICreatureInternal item,
             MutagenFrame frame)
         {
-            ANpcBinaryCreateTranslation.FillBinaryStructs(
+            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
         }
@@ -4017,7 +3819,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (int)Creature_FieldIndex.Sounds;
                 }
                 default:
-                    return ANpcBinaryCreateTranslation.FillBinaryRecordTypes(
+                    return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         recordParseCount: recordParseCount,
@@ -4042,7 +3844,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class CreatureBinaryOverlay :
-        ANpcBinaryOverlay,
+        OblivionMajorRecordBinaryOverlay,
         ICreatureGetter
     {
         #region Common Routing

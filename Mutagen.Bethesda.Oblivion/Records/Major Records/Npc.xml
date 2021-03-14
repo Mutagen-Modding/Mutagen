@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Npc" baseClass="ANpc" objType="Record" recordType="NPC_" GUID="96396343-a32a-4165-b745-e038c5e06eeb" ID="84">
+  <Object name="Npc" baseClass="OblivionMajorRecord" objType="Record" recordType="NPC_" GUID="96396343-a32a-4165-b745-e038c5e06eeb" ID="84">
     <Fields>
       <String name="Name" recordType="FULL" />
       <RefDirect name="Model" refName="Model" />
@@ -43,6 +43,8 @@
       <ByteArray name="FNAM" recordType="FNAM" />
     </Fields>
     <LinkInterface>IOwner</LinkInterface>
+    <LinkInterface>INpcSpawn</LinkInterface>
+    <LinkInterface>INpcRecord</LinkInterface>
   </Object>
   <Object name="NpcConfiguration" objType="Subrecord" recordType="ACBS" GUID="01742ef6-ce08-4574-bb21-c03ac0e59d3a" ID="198">
     <Fields>
