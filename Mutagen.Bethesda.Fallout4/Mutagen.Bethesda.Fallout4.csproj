@@ -190,9 +190,6 @@
     <Compile Include="Records\Major Records\ActorValueInformation_Generated.cs">
       <DependentUpon>ActorValueInformation.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\ASpell_Generated.cs">
-      <DependentUpon>ASpell.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\ADamageType_Generated.cs">
       <DependentUpon>DamageType.xml</DependentUpon>
     </Compile>

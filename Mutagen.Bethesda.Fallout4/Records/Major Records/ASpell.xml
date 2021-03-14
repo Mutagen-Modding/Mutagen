@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="us-ascii"?>
-<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ASpell" abstract="true" objType="Record" baseClass="Fallout4MajorRecord" GUID="2883942a-9afa-4e92-8344-2da9c6cd94b8" ID="48">
-    <Fields>
-    </Fields>
-    <LinkInterface>IDamageTypeTarget</LinkInterface>
-  </Object>
-</Loqui>
