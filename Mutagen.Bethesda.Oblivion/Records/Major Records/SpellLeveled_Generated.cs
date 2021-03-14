@@ -675,11 +675,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ISpellLeveledInternal)item);
         }
         
-        public override void Clear(IASpellInternal item)
-        {
-            Clear(item: (ISpellLeveledInternal)item);
-        }
-        
         public override void Clear(IOblivionMajorRecordInternal item)
         {
             Clear(item: (ISpellLeveledInternal)item);
@@ -714,17 +709,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public override void CopyInFromBinary(
             ISpellInternal item,
-            MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            CopyInFromBinary(
-                item: (SpellLeveled)item,
-                frame: frame,
-                recordTypeConverter: recordTypeConverter);
-        }
-        
-        public override void CopyInFromBinary(
-            IASpellInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -858,25 +842,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static new SpellLeveled_FieldIndex ConvertFieldIndex(ASpell_FieldIndex index)
-        {
-            switch (index)
-            {
-                case ASpell_FieldIndex.MajorRecordFlagsRaw:
-                    return (SpellLeveled_FieldIndex)((int)index);
-                case ASpell_FieldIndex.FormKey:
-                    return (SpellLeveled_FieldIndex)((int)index);
-                case ASpell_FieldIndex.VersionControl:
-                    return (SpellLeveled_FieldIndex)((int)index);
-                case ASpell_FieldIndex.EditorID:
-                    return (SpellLeveled_FieldIndex)((int)index);
-                case ASpell_FieldIndex.OblivionMajorRecordFlags:
-                    return (SpellLeveled_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-        
         public static new SpellLeveled_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -934,15 +899,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override bool Equals(
-            IASpellGetter? lhs,
-            IASpellGetter? rhs)
-        {
-            return Equals(
-                lhs: (ISpellLeveledGetter?)lhs,
-                rhs: rhs as ISpellLeveledGetter);
-        }
-        
-        public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
             IOblivionMajorRecordGetter? rhs)
         {
@@ -968,11 +924,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override int GetHashCode(ISpellGetter item)
-        {
-            return GetHashCode(item: (ISpellLeveledGetter)item);
-        }
-        
-        public override int GetHashCode(IASpellGetter item)
         {
             return GetHashCode(item: (ISpellLeveledGetter)item);
         }
@@ -1018,17 +969,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public override Spell Duplicate(
             ISpellGetter item,
-            FormKey formKey,
-            TranslationCrystal? copyMask)
-        {
-            return this.Duplicate(
-                item: (ISpellLeveled)item,
-                formKey: formKey,
-                copyMask: copyMask);
-        }
-        
-        public override ASpell Duplicate(
-            IASpellGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
@@ -1118,36 +1058,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void DeepCopyIn(
             ISpell item,
             ISpellGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (ISpellLeveled)item,
-                rhs: (ISpellLeveledGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
-            IASpellInternal item,
-            IASpellGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (ISpellLeveledInternal)item,
-                rhs: (ISpellLeveledGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
-            IASpell item,
-            IASpellGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1347,17 +1257,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             ISpellGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            Write(
-                item: (ISpellLeveledGetter)item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
-        }
-
-        public override void Write(
-            MutagenWriter writer,
-            IASpellGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(

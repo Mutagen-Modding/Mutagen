@@ -8,7 +8,9 @@
         <RefDirect refName="ItemEntry" />
       </List>
       <List name="Spells">
-        <FormLink refName="ASpell" recordType="SPLO" />
+        <FormLink recordType="SPLO" >
+          <Interface>ISpellRecord</Interface>
+        </FormLink>
       </List>
       <List name="Models" recordType="NIFZ">
         <String />

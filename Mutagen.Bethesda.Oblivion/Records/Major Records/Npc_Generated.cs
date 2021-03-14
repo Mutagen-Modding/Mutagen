@@ -120,15 +120,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Spells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLinkGetter<IASpellGetter>> _Spells = new ExtendedList<IFormLinkGetter<IASpellGetter>>();
-        public ExtendedList<IFormLinkGetter<IASpellGetter>> Spells
+        private ExtendedList<IFormLinkGetter<ISpellRecordGetter>> _Spells = new ExtendedList<IFormLinkGetter<ISpellRecordGetter>>();
+        public ExtendedList<IFormLinkGetter<ISpellRecordGetter>> Spells
         {
             get => this._Spells;
             protected set => this._Spells = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<IASpellGetter>> INpcGetter.Spells => _Spells;
+        IReadOnlyList<IFormLinkGetter<ISpellRecordGetter>> INpcGetter.Spells => _Spells;
         #endregion
 
         #endregion
@@ -1798,7 +1798,7 @@ namespace Mutagen.Bethesda.Oblivion
         new ExtendedList<RankPlacement> Factions { get; }
         new IFormLinkNullable<IAItemGetter> DeathItem { get; }
         new IFormLinkNullable<IRaceGetter> Race { get; }
-        new ExtendedList<IFormLinkGetter<IASpellGetter>> Spells { get; }
+        new ExtendedList<IFormLinkGetter<ISpellRecordGetter>> Spells { get; }
         new IFormLinkNullable<IScriptGetter> Script { get; }
         new ExtendedList<ItemEntry> Items { get; }
         new AIData? AIData { get; set; }
@@ -1842,7 +1842,7 @@ namespace Mutagen.Bethesda.Oblivion
         IReadOnlyList<IRankPlacementGetter> Factions { get; }
         IFormLinkNullableGetter<IAItemGetter> DeathItem { get; }
         IFormLinkNullableGetter<IRaceGetter> Race { get; }
-        IReadOnlyList<IFormLinkGetter<IASpellGetter>> Spells { get; }
+        IReadOnlyList<IFormLinkGetter<ISpellRecordGetter>> Spells { get; }
         IFormLinkNullableGetter<IScriptGetter> Script { get; }
         IReadOnlyList<IItemEntryGetter> Items { get; }
         IAIDataGetter? AIData { get; }
@@ -3061,7 +3061,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Spells.SetTo(
                         rhs.Spells
-                        .Select(r => (IFormLinkGetter<IASpellGetter>)new FormLink<IASpellGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<ISpellRecordGetter>)new FormLink<ISpellRecordGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3544,10 +3544,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.Race,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM));
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IASpellGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ISpellRecordGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Spells,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IASpellGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ISpellRecordGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -3808,7 +3808,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.SPLO:
                 {
                     item.Spells.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IASpellGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ISpellRecordGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SPLO),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -4019,7 +4019,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _RaceLocation;
         public IFormLinkNullableGetter<IRaceGetter> Race => _RaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _RaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IASpellGetter>> Spells { get; private set; } = ListExt.Empty<IFormLinkGetter<IASpellGetter>>();
+        public IReadOnlyList<IFormLinkGetter<ISpellRecordGetter>> Spells { get; private set; } = ListExt.Empty<IFormLinkGetter<ISpellRecordGetter>>();
         #region Script
         private int? _ScriptLocation;
         public IFormLinkNullableGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
@@ -4182,10 +4182,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.SPLO:
                 {
-                    this.Spells = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IASpellGetter>>(
+                    this.Spells = BinaryOverlayList.FactoryByArray<IFormLinkGetter<ISpellRecordGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<IASpellGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => new FormLink<ISpellRecordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,

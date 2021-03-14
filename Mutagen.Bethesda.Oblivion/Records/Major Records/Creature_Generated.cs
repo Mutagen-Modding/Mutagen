@@ -88,15 +88,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Spells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLinkGetter<IASpellGetter>> _Spells = new ExtendedList<IFormLinkGetter<IASpellGetter>>();
-        public ExtendedList<IFormLinkGetter<IASpellGetter>> Spells
+        private ExtendedList<IFormLinkGetter<ISpellRecordGetter>> _Spells = new ExtendedList<IFormLinkGetter<ISpellRecordGetter>>();
+        public ExtendedList<IFormLinkGetter<ISpellRecordGetter>> Spells
         {
             get => this._Spells;
             protected set => this._Spells = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<IASpellGetter>> ICreatureGetter.Spells => _Spells;
+        IReadOnlyList<IFormLinkGetter<ISpellRecordGetter>> ICreatureGetter.Spells => _Spells;
         #endregion
 
         #endregion
@@ -1849,7 +1849,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Name { get; set; }
         new Model? Model { get; set; }
         new ExtendedList<ItemEntry> Items { get; }
-        new ExtendedList<IFormLinkGetter<IASpellGetter>> Spells { get; }
+        new ExtendedList<IFormLinkGetter<ISpellRecordGetter>> Spells { get; }
         new ExtendedList<String>? Models { get; set; }
         new MemorySlice<Byte>? NIFT { get; set; }
         new CreatureConfiguration? Configuration { get; set; }
@@ -1892,7 +1892,7 @@ namespace Mutagen.Bethesda.Oblivion
         String? Name { get; }
         IModelGetter? Model { get; }
         IReadOnlyList<IItemEntryGetter> Items { get; }
-        IReadOnlyList<IFormLinkGetter<IASpellGetter>> Spells { get; }
+        IReadOnlyList<IFormLinkGetter<ISpellRecordGetter>> Spells { get; }
         IReadOnlyList<String>? Models { get; }
         ReadOnlyMemorySlice<Byte>? NIFT { get; }
         ICreatureConfigurationGetter? Configuration { get; }
@@ -3088,7 +3088,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Spells.SetTo(
                         rhs.Spells
-                        .Select(r => (IFormLinkGetter<IASpellGetter>)new FormLink<IASpellGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<ISpellRecordGetter>)new FormLink<ISpellRecordGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3588,10 +3588,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IASpellGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ISpellRecordGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Spells,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IASpellGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ISpellRecordGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -3848,7 +3848,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.SPLO:
                 {
                     item.Spells.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IASpellGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ISpellRecordGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SPLO),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -4081,7 +4081,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         public IModelGetter? Model { get; private set; }
         public IReadOnlyList<IItemEntryGetter> Items { get; private set; } = ListExt.Empty<ItemEntryBinaryOverlay>();
-        public IReadOnlyList<IFormLinkGetter<IASpellGetter>> Spells { get; private set; } = ListExt.Empty<IFormLinkGetter<IASpellGetter>>();
+        public IReadOnlyList<IFormLinkGetter<ISpellRecordGetter>> Spells { get; private set; } = ListExt.Empty<IFormLinkGetter<ISpellRecordGetter>>();
         public IReadOnlyList<String>? Models { get; private set; }
         #region NIFT
         private int? _NIFTLocation;
@@ -4238,10 +4238,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.SPLO:
                 {
-                    this.Spells = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IASpellGetter>>(
+                    this.Spells = BinaryOverlayList.FactoryByArray<IFormLinkGetter<ISpellRecordGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<IASpellGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => new FormLink<ISpellRecordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,

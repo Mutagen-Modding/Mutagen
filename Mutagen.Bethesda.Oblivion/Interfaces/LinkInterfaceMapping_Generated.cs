@@ -32,6 +32,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 typeof(PlacedObject),
             };
             dict[typeof(IPlacedGetter)] = dict[typeof(IPlaced)];
+            dict[typeof(ISpellRecord)] = new Type[]
+            {
+                typeof(LeveledSpell),
+                typeof(Spell),
+            };
+            dict[typeof(ISpellRecordGetter)] = dict[typeof(ISpellRecord)];
             InterfaceToObjectTypes = dict;
         }
     }

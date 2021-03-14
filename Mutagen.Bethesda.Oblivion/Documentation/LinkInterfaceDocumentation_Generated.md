@@ -13,11 +13,16 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - PlacedCreature
 - PlacedNpc
 - PlacedObject
+### ISpellRecord
+- LeveledSpell
+- Spell
 ## Concrete Classes to Interfaces
 ### Faction
 - IOwner
 ### Landscape
 - IPlaced
+### LeveledSpell
+- ISpellRecord
 ### Npc
 - IOwner
 ### PlacedCreature
@@ -26,3 +31,5 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IPlaced
 ### PlacedObject
 - IPlaced
+### Spell
+- ISpellRecord

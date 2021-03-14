@@ -11,7 +11,9 @@
       <FormLink name="DeathItem" refName="AItem" recordType="INAM" />
       <FormLink name="Race" refName="Race" recordType="RNAM" />
       <List name="Spells">
-        <FormLink refName="ASpell" recordType="SPLO" />
+        <FormLink recordType="SPLO" >
+          <Interface>ISpellRecord</Interface>
+        </FormLink>
       </List>
       <FormLink name="Script" refName="Script" recordType="SCRI" />
       <List name="Items">

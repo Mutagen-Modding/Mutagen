@@ -4898,6 +4898,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         type: type,
                         keys: keys);
                     break;
+                case "ISpellRecord":
+                case "ISpellRecordGetter":
+                    Remove(obj, keys, typeof(ILeveledSpellGetter), throwIfUnknown: throwIfUnknown);
+                    break;
                 default:
                     if (throwIfUnknown)
                     {
@@ -7132,6 +7136,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     yield break;
                 }
+                case "ISpellRecord":
+                {
+                    if (!OblivionMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILeveledSpellGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
+                case "ISpellRecordGetter":
+                {
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ILeveledSpellGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
                 default:
                     if (throwIfUnknown)
                     {
@@ -8623,6 +8644,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         {
                             yield return item;
                         }
+                    }
+                    yield break;
+                }
+                case "ISpellRecord":
+                case "ISpellRecordGetter":
+                {
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(ILeveledSpellGetter),
+                        throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
                     }
                     yield break;
                 }

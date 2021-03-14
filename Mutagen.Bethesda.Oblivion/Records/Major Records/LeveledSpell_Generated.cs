@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class LeveledSpell :
-        ASpell,
+        OblivionMajorRecord,
         IEquatable<ILeveledSpellGetter>,
         ILeveledSpellInternal,
         ILoquiObjectSetter<LeveledSpell>
@@ -98,7 +98,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public new class Mask<TItem> :
-            ASpell.Mask<TItem>,
+            OblivionMajorRecord.Mask<TItem>,
             IEquatable<Mask<TItem>>,
             IMask<TItem>
         {
@@ -307,7 +307,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public new class ErrorMask :
-            ASpell.ErrorMask,
+            OblivionMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
@@ -467,7 +467,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         }
         public new class TranslationMask :
-            ASpell.TranslationMask,
+            OblivionMajorRecord.TranslationMask,
             ITranslationMask
         {
             #region Members
@@ -590,10 +590,11 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ILeveledSpell :
-        IASpellInternal,
         IFormLinkContainer,
         ILeveledSpellGetter,
-        ILoquiObjectSetter<ILeveledSpellInternal>
+        ILoquiObjectSetter<ILeveledSpellInternal>,
+        IOblivionMajorRecordInternal,
+        ISpellRecord
     {
         new Byte? ChanceNone { get; set; }
         new LeveledFlag? Flags { get; set; }
@@ -601,18 +602,19 @@ namespace Mutagen.Bethesda.Oblivion
     }
 
     public partial interface ILeveledSpellInternal :
-        IASpellInternal,
+        IOblivionMajorRecordInternal,
         ILeveledSpell,
         ILeveledSpellGetter
     {
     }
 
     public partial interface ILeveledSpellGetter :
-        IASpellGetter,
+        IOblivionMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<ILeveledSpellGetter>,
-        IMapsToGetter<ILeveledSpellGetter>
+        IMapsToGetter<ILeveledSpellGetter>,
+        ISpellRecordGetter
     {
         static new ILoquiRegistration Registration => LeveledSpell_Registration.Instance;
         Byte? ChanceNone { get; }
@@ -861,7 +863,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class LeveledSpellSetterCommon : ASpellSetterCommon
+    public partial class LeveledSpellSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly LeveledSpellSetterCommon Instance = new LeveledSpellSetterCommon();
 
@@ -874,11 +876,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Flags = default;
             item.Entries.Clear();
             base.Clear(item);
-        }
-        
-        public override void Clear(IASpellInternal item)
-        {
-            Clear(item: (ILeveledSpellInternal)item);
         }
         
         public override void Clear(IOblivionMajorRecordInternal item)
@@ -915,17 +912,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override void CopyInFromBinary(
-            IASpellInternal item,
-            MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            CopyInFromBinary(
-                item: (LeveledSpell)item,
-                frame: frame,
-                recordTypeConverter: recordTypeConverter);
-        }
-        
-        public override void CopyInFromBinary(
             IOblivionMajorRecordInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -950,7 +936,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LeveledSpellCommon : ASpellCommon
+    public partial class LeveledSpellCommon : OblivionMajorRecordCommon
     {
         public new static readonly LeveledSpellCommon Instance = new LeveledSpellCommon();
 
@@ -1028,7 +1014,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             LeveledSpell.Mask<bool>? printMask = null)
         {
-            ASpellCommon.ToStringFields(
+            OblivionMajorRecordCommon.ToStringFields(
                 item: item,
                 fg: fg,
                 printMask: printMask);
@@ -1062,26 +1048,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static LeveledSpell_FieldIndex ConvertFieldIndex(ASpell_FieldIndex index)
-        {
-            switch (index)
-            {
-                case ASpell_FieldIndex.MajorRecordFlagsRaw:
-                    return (LeveledSpell_FieldIndex)((int)index);
-                case ASpell_FieldIndex.FormKey:
-                    return (LeveledSpell_FieldIndex)((int)index);
-                case ASpell_FieldIndex.VersionControl:
-                    return (LeveledSpell_FieldIndex)((int)index);
-                case ASpell_FieldIndex.EditorID:
-                    return (LeveledSpell_FieldIndex)((int)index);
-                case ASpell_FieldIndex.OblivionMajorRecordFlags:
-                    return (LeveledSpell_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-        
-        public static new LeveledSpell_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        public static LeveledSpell_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -1124,20 +1091,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IASpellGetter)lhs, (IASpellGetter)rhs)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
             if (lhs.ChanceNone != rhs.ChanceNone) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (!lhs.Entries.SequenceEqualNullable(rhs.Entries)) return false;
             return true;
-        }
-        
-        public override bool Equals(
-            IASpellGetter? lhs,
-            IASpellGetter? rhs)
-        {
-            return Equals(
-                lhs: (ILeveledSpellGetter?)lhs,
-                rhs: rhs as ILeveledSpellGetter);
         }
         
         public override bool Equals(
@@ -1172,11 +1130,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             hash.Add(item.Entries);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
-        }
-        
-        public override int GetHashCode(IASpellGetter item)
-        {
-            return GetHashCode(item: (ILeveledSpellGetter)item);
         }
         
         public override int GetHashCode(IOblivionMajorRecordGetter item)
@@ -1222,17 +1175,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return newRec;
         }
         
-        public override ASpell Duplicate(
-            IASpellGetter item,
-            FormKey formKey,
-            TranslationCrystal? copyMask)
-        {
-            return this.Duplicate(
-                item: (ILeveledSpell)item,
-                formKey: formKey,
-                copyMask: copyMask);
-        }
-        
         public override OblivionMajorRecord Duplicate(
             IOblivionMajorRecordGetter item,
             FormKey formKey,
@@ -1260,7 +1202,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LeveledSpellSetterTranslationCommon : ASpellSetterTranslationCommon
+    public partial class LeveledSpellSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly LeveledSpellSetterTranslationCommon Instance = new LeveledSpellSetterTranslationCommon();
 
@@ -1288,8 +1230,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool deepCopy)
         {
             base.DeepCopyIn(
-                (IASpell)item,
-                (IASpellGetter)rhs,
+                (IOblivionMajorRecord)item,
+                (IOblivionMajorRecordGetter)rhs,
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
@@ -1325,36 +1267,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-        }
-        
-        public override void DeepCopyIn(
-            IASpellInternal item,
-            IASpellGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (ILeveledSpellInternal)item,
-                rhs: (ILeveledSpellGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
-            IASpell item,
-            IASpellGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (ILeveledSpell)item,
-                rhs: (ILeveledSpellGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
         }
         
         public override void DeepCopyIn(
@@ -1498,7 +1410,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class LeveledSpellBinaryWriteTranslation :
-        ASpellBinaryWriteTranslation,
+        OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
         public new readonly static LeveledSpellBinaryWriteTranslation Instance = new LeveledSpellBinaryWriteTranslation();
@@ -1576,17 +1488,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void Write(
             MutagenWriter writer,
-            IASpellGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            Write(
-                item: (ILeveledSpellGetter)item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
-        }
-
-        public override void Write(
-            MutagenWriter writer,
             IOblivionMajorRecordGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1609,7 +1510,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class LeveledSpellBinaryCreateTranslation : ASpellBinaryCreateTranslation
+    public partial class LeveledSpellBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static LeveledSpellBinaryCreateTranslation Instance = new LeveledSpellBinaryCreateTranslation();
 
@@ -1618,7 +1519,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILeveledSpellInternal item,
             MutagenFrame frame)
         {
-            ASpellBinaryCreateTranslation.FillBinaryStructs(
+            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
         }
@@ -1657,7 +1558,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (int)LeveledSpell_FieldIndex.Entries;
                 }
                 default:
-                    return ASpellBinaryCreateTranslation.FillBinaryRecordTypes(
+                    return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         recordParseCount: recordParseCount,
@@ -1682,7 +1583,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class LeveledSpellBinaryOverlay :
-        ASpellBinaryOverlay,
+        OblivionMajorRecordBinaryOverlay,
         ILeveledSpellGetter
     {
         #region Common Routing
