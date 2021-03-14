@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// A readonly singleton representing an unlinked and null FormLinkNullable
         /// </summary>
-        public static readonly FormLinkNullable<TMajorGetter> Null = new FormLinkNullable<TMajorGetter>();
+        public static IFormLinkNullableGetter<TMajorGetter> Null => new FormLinkNullable<TMajorGetter>();
 
         /// <summary>
         /// FormKey of the target record.

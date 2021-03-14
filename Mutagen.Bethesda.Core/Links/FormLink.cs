@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// A readonly singleton representing an unlinked FormLink
         /// </summary>
-        public static readonly FormLink<TMajorGetter> Null = new FormLink<TMajorGetter>();
+        public static IFormLinkGetter<TMajorGetter> Null => new FormLink<TMajorGetter>();
 
         /// <summary>
         /// FormKey of the target record
