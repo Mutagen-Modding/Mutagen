@@ -4,10 +4,17 @@
     <Fields>
       <UInt8 name="ChanceNone" recordType="LVLD" />
       <Enum name="Flags" enumName="LeveledFlag" byteLength="1" recordType="LVLF" binaryOverlay="Custom" />
-      <RefList name="Entries" refName="LeveledEntry">
-        <GenericSpecification TypeToSpecify="T" Definition="AItem" />
-      </RefList>
+      <RefList name="Entries" refName="LeveledItemEntry" />
       <CustomLogic name="Vestigial" recordType="DATA" />
     </Fields>
   </Object>
-  </Loqui>
+  <Object name="LeveledItemEntry" objType="Subrecord" recordType="LVLO" GUID="71008cec-6776-4778-81b4-0110ed02d6fc" ID="222">
+    <Fields>
+      <Int16 name="Level" />
+      <Int16 name="Unknown" />
+      <FormLink name="Reference" refName="AItem" />
+      <Int16 name="Count" nullable="True" />
+      <Int16 name="Unknown2" nullable="True" />
+    </Fields>
+  </Object>
+</Loqui>

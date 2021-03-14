@@ -315,9 +315,6 @@
     <Compile Include="Records\Common Subrecords\EnableParent_Generated.cs">
       <DependentUpon>EnableParent.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Common Subrecords\LeveledEntry_Generated.cs">
-      <DependentUpon>LeveledEntry.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Common Subrecords\Location_Generated.cs">
       <DependentUpon>Location.xml</DependentUpon>
     </Compile>
@@ -891,6 +888,15 @@
     </Compile>
     <Compile Include="Records\TypeSolidifier_Generated.cs" />
     <Compile Include="Records\LinkCacheMixIns_Generated.cs" />
+    <Compile Include="Records\Major Records\LeveledCreatureEntry_Generated.cs">
+      <DependentUpon>LeveledCreature.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LeveledItemEntry_Generated.cs">
+      <DependentUpon>LeveledItem.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LeveledSpellEntry_Generated.cs">
+      <DependentUpon>LeveledSpell.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.1.2">

@@ -4,11 +4,18 @@
     <Fields>
       <UInt8 name="ChanceNone" recordType="LVLD" />
       <Enum name="Flags" enumName="LeveledFlag" byteLength="1" recordType="LVLF" />
-      <RefList name="Entries" refName="LeveledEntry">
-        <GenericSpecification TypeToSpecify="T" Definition="ANpcSpawn" />
-      </RefList>
+      <RefList name="Entries" refName="LeveledCreatureEntry" />
       <FormLink name="Script" refName="Script" recordType="SCRI" />
       <FormLink name="Template" refName="ANpc" recordType="TNAM" />
+    </Fields>
+  </Object>
+  <Object name="LeveledCreatureEntry" objType="Subrecord" recordType="LVLO" GUID="9de329c6-4592-4106-bbab-1b424ce5f900" ID="221">
+    <Fields>
+      <Int16 name="Level" />
+      <Int16 name="Unknown" />
+      <FormLink name="Reference" refName="ANpcSpawn" />
+      <Int16 name="Count" nullable="True" />
+      <Int16 name="Unknown2" nullable="True" />
     </Fields>
   </Object>
 </Loqui>

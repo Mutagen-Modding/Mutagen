@@ -4,9 +4,16 @@
     <Fields>
       <UInt8 name="ChanceNone" recordType="LVLD" />
       <Enum name="Flags" enumName="LeveledFlag" byteLength="1" recordType="LVLF" />
-      <RefList name="Entries" refName="LeveledEntry">
-        <GenericSpecification TypeToSpecify="T" Definition="ASpell" />
-      </RefList>
+      <RefList name="Entries" refName="LeveledSpellEntry" />
+    </Fields>
+  </Object>
+  <Object name="LeveledSpellEntry" objType="Subrecord" recordType="LVLO" GUID="0d385b6f-0595-48f1-a299-ba0c1526329d" ID="223">
+    <Fields>
+      <Int16 name="Level" />
+      <Int16 name="Unknown" />
+      <FormLink name="Reference" refName="ASpell" />
+      <Int16 name="Count" nullable="True" />
+      <Int16 name="Unknown2" nullable="True" />
     </Fields>
   </Object>
 </Loqui>

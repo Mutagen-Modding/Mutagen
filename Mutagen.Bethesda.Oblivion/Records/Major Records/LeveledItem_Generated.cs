@@ -54,15 +54,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Entries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LeveledEntry<AItem>> _Entries = new ExtendedList<LeveledEntry<AItem>>();
-        public ExtendedList<LeveledEntry<AItem>> Entries
+        private ExtendedList<LeveledItemEntry> _Entries = new ExtendedList<LeveledItemEntry>();
+        public ExtendedList<LeveledItemEntry> Entries
         {
             get => this._Entries;
             protected set => this._Entries = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<ILeveledEntryGetter<IAItemGetter>> ILeveledItemGetter.Entries => _Entries;
+        IReadOnlyList<ILeveledItemEntryGetter> ILeveledItemGetter.Entries => _Entries;
         #endregion
 
         #endregion
@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.ChanceNone = initialValue;
                 this.Flags = initialValue;
-                this.Entries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LeveledEntry.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LeveledEntry.Mask<TItem>?>>());
+                this.Entries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LeveledItemEntry.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LeveledItemEntry.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -129,7 +129,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.ChanceNone = ChanceNone;
                 this.Flags = Flags;
-                this.Entries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LeveledEntry.Mask<TItem>?>>?>(Entries, Enumerable.Empty<MaskItemIndexed<TItem, LeveledEntry.Mask<TItem>?>>());
+                this.Entries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LeveledItemEntry.Mask<TItem>?>>?>(Entries, Enumerable.Empty<MaskItemIndexed<TItem, LeveledItemEntry.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -143,7 +143,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Members
             public TItem ChanceNone;
             public TItem Flags;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LeveledEntry.Mask<TItem>?>>?>? Entries;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LeveledItemEntry.Mask<TItem>?>>?>? Entries;
             #endregion
 
             #region Equals
@@ -233,14 +233,14 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Flags = eval(this.Flags);
                 if (Entries != null)
                 {
-                    obj.Entries = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LeveledEntry.Mask<R>?>>?>(eval(this.Entries.Overall), Enumerable.Empty<MaskItemIndexed<R, LeveledEntry.Mask<R>?>>());
+                    obj.Entries = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LeveledItemEntry.Mask<R>?>>?>(eval(this.Entries.Overall), Enumerable.Empty<MaskItemIndexed<R, LeveledItemEntry.Mask<R>?>>());
                     if (Entries.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, LeveledEntry.Mask<R>?>>();
+                        var l = new List<MaskItemIndexed<R, LeveledItemEntry.Mask<R>?>>();
                         obj.Entries.Specific = l;
                         foreach (var item in Entries.Specific.WithIndex())
                         {
-                            MaskItemIndexed<R, LeveledEntry.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LeveledEntry.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, LeveledItemEntry.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LeveledItemEntry.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -313,7 +313,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Members
             public Exception? ChanceNone;
             public Exception? Flags;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledEntry.ErrorMask<AItem.ErrorMask>?>>?>? Entries;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledItemEntry.ErrorMask?>>?>? Entries;
             #endregion
 
             #region IErrorMask
@@ -345,7 +345,7 @@ namespace Mutagen.Bethesda.Oblivion
                         this.Flags = ex;
                         break;
                     case LeveledItem_FieldIndex.Entries:
-                        this.Entries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledEntry.ErrorMask<AItem.ErrorMask>?>>?>(ex, null);
+                        this.Entries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledItemEntry.ErrorMask?>>?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -365,7 +365,7 @@ namespace Mutagen.Bethesda.Oblivion
                         this.Flags = (Exception?)obj;
                         break;
                     case LeveledItem_FieldIndex.Entries:
-                        this.Entries = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledEntry.ErrorMask<AItem.ErrorMask>?>>?>)obj;
+                        this.Entries = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledItemEntry.ErrorMask?>>?>)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -448,7 +448,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var ret = new ErrorMask();
                 ret.ChanceNone = this.ChanceNone.Combine(rhs.ChanceNone);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.Entries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledEntry.ErrorMask<AItem.ErrorMask>?>>?>(ExceptionExt.Combine(this.Entries?.Overall, rhs.Entries?.Overall), ExceptionExt.Combine(this.Entries?.Specific, rhs.Entries?.Specific));
+                ret.Entries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledItemEntry.ErrorMask?>>?>(ExceptionExt.Combine(this.Entries?.Overall, rhs.Entries?.Overall), ExceptionExt.Combine(this.Entries?.Specific, rhs.Entries?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -473,7 +473,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Members
             public bool ChanceNone;
             public bool Flags;
-            public LeveledEntry.TranslationMask<AItem.TranslationMask>? Entries;
+            public LeveledItemEntry.TranslationMask? Entries;
             #endregion
 
             #region Ctors
@@ -597,7 +597,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new Byte? ChanceNone { get; set; }
         new LeveledFlag? Flags { get; set; }
-        new ExtendedList<LeveledEntry<AItem>> Entries { get; }
+        new ExtendedList<LeveledItemEntry> Entries { get; }
     }
 
     public partial interface ILeveledItemInternal :
@@ -617,7 +617,7 @@ namespace Mutagen.Bethesda.Oblivion
         static new ILoquiRegistration Registration => LeveledItem_Registration.Instance;
         Byte? ChanceNone { get; }
         LeveledFlag? Flags { get; }
-        IReadOnlyList<ILeveledEntryGetter<IAItemGetter>> Entries { get; }
+        IReadOnlyList<ILeveledItemEntryGetter> Entries { get; }
 
     }
 
@@ -1310,7 +1310,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs.Entries
                         .Select(r =>
                         {
-                            return r.DeepCopy<AItem, IAItemGetter>(
+                            return r.DeepCopy(
                                 errorMask: errorMask,
                                 default(TranslationCrystal));
                         }));
@@ -1534,13 +1534,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item.Flags,
                 length: 1,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.LVLF));
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<ILeveledEntryGetter<IAItemGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<ILeveledItemEntryGetter>.Instance.Write(
                 writer: writer,
                 items: item.Entries,
-                transl: (MutagenWriter subWriter, ILeveledEntryGetter<IAItemGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, ILeveledItemEntryGetter subItem, RecordTypeConverter? conv) =>
                 {
                     var Item = subItem;
-                    ((LeveledEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write<IAItemGetter>(
+                    ((LeveledItemEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
                         recordTypeConverter: conv);
@@ -1665,11 +1665,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.LVLO:
                 {
                     item.Entries.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<LeveledEntry<AItem>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<LeveledItemEntry>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: RecordTypes.LVLO,
                             recordTypeConverter: recordTypeConverter,
-                            transl: LeveledEntry<AItem>.TryCreateFromBinary));
+                            transl: LeveledItemEntry.TryCreateFromBinary));
                     return (int)LeveledItem_FieldIndex.Entries;
                 }
                 case RecordTypeInts.DATA:
@@ -1749,7 +1749,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int offset);
         public LeveledFlag? Flags => GetFlagsCustom();
         #endregion
-        public IReadOnlyList<ILeveledEntryGetter<IAItemGetter>> Entries { get; private set; } = ListExt.Empty<LeveledEntryBinaryOverlay<IAItemGetter>>();
+        public IReadOnlyList<ILeveledItemEntryGetter> Entries { get; private set; } = ListExt.Empty<LeveledItemEntryBinaryOverlay>();
         #region Vestigial
         partial void VestigialCustomParse(
             OverlayStream stream,
@@ -1836,11 +1836,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.LVLO:
                 {
-                    this.Entries = BinaryOverlayList.FactoryByArray<LeveledEntryBinaryOverlay<IAItemGetter>>(
+                    this.Entries = BinaryOverlayList.FactoryByArray<LeveledItemEntryBinaryOverlay>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,
-                        getter: (s, p, recConv) => LeveledEntryBinaryOverlay<IAItemGetter>.LeveledEntryFactory(new OverlayStream(s, p), p, recConv),
+                        getter: (s, p, recConv) => LeveledItemEntryBinaryOverlay.LeveledItemEntryFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
                             trigger: type,
