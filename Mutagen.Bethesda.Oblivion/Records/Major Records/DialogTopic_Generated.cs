@@ -107,22 +107,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IDialogTopicGetter rhs)) return false;
-            return ((DialogTopicCommon)((IDialogTopicGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IDialogTopicGetter? obj)
-        {
-            return ((DialogTopicCommon)((IDialogTopicGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((DialogTopicCommon)((IDialogTopicGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
@@ -723,6 +707,26 @@ namespace Mutagen.Bethesda.Oblivion
         void IMajorRecordEnumerable.Remove<TMajor>(TMajor record, bool throwIfUnknown) => this.Remove<TMajor>(record, throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<TMajor>(records, throwIfUnknown);
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IDialogTopicGetter rhs) return false;
+            return ((DialogTopicCommon)((IDialogTopicGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IDialogTopicGetter? obj)
+        {
+            return ((DialogTopicCommon)((IDialogTopicGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((DialogTopicCommon)((IDialogTopicGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -2543,7 +2547,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IDialogTopicGetter rhs)) return false;
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IDialogTopicGetter rhs) return false;
             return ((DialogTopicCommon)((IDialogTopicGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 

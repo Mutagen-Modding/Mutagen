@@ -82,22 +82,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IVisualEffectGetter rhs)) return false;
-            return ((VisualEffectCommon)((IVisualEffectGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IVisualEffectGetter? obj)
-        {
-            return ((VisualEffectCommon)((IVisualEffectGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((VisualEffectCommon)((IVisualEffectGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -511,6 +495,26 @@ namespace Mutagen.Bethesda.Skyrim
         public enum DATADataType
         {
         }
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IVisualEffectGetter rhs) return false;
+            return ((VisualEffectCommon)((IVisualEffectGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IVisualEffectGetter? obj)
+        {
+            return ((VisualEffectCommon)((IVisualEffectGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((VisualEffectCommon)((IVisualEffectGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -1669,7 +1673,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IVisualEffectGetter rhs)) return false;
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IVisualEffectGetter rhs) return false;
             return ((VisualEffectCommon)((IVisualEffectGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 

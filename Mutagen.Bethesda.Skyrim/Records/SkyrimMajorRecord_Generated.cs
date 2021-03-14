@@ -64,22 +64,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is ISkyrimMajorRecordGetter rhs)) return false;
-            return ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(ISkyrimMajorRecordGetter? obj)
-        {
-            return ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             MajorRecord.Mask<TItem>,
@@ -462,6 +446,26 @@ namespace Mutagen.Bethesda.Skyrim
         void IMajorRecordEnumerable.Remove<TMajor>(TMajor record, bool throwIfUnknown) => this.Remove<TMajor>(record, throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<TMajor>(records, throwIfUnknown);
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not ISkyrimMajorRecordGetter rhs) return false;
+            return ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ISkyrimMajorRecordGetter? obj)
+        {
+            return ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -1647,7 +1651,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ISkyrimMajorRecordGetter rhs)) return false;
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not ISkyrimMajorRecordGetter rhs) return false;
             return ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 

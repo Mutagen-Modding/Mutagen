@@ -304,22 +304,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IPlacedNpcGetter rhs)) return false;
-            return ((PlacedNpcCommon)((IPlacedNpcGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IPlacedNpcGetter? obj)
-        {
-            return ((PlacedNpcCommon)((IPlacedNpcGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((PlacedNpcCommon)((IPlacedNpcGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -1603,6 +1587,26 @@ namespace Mutagen.Bethesda.Skyrim
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
         }
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IPlacedNpcGetter rhs) return false;
+            return ((PlacedNpcCommon)((IPlacedNpcGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPlacedNpcGetter? obj)
+        {
+            return ((PlacedNpcCommon)((IPlacedNpcGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PlacedNpcCommon)((IPlacedNpcGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -4118,7 +4122,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPlacedNpcGetter rhs)) return false;
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IPlacedNpcGetter rhs) return false;
             return ((PlacedNpcCommon)((IPlacedNpcGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 

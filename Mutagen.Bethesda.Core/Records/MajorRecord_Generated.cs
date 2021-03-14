@@ -70,22 +70,6 @@ namespace Mutagen.Bethesda
 
         #endregion
 
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IMajorRecordGetter rhs)) return false;
-            return ((MajorRecordCommon)((IMajorRecordGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IMajorRecordGetter? obj)
-        {
-            return ((MajorRecordCommon)((IMajorRecordGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((MajorRecordCommon)((IMajorRecordGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
         #region Mask
         public class Mask<TItem> :
             IEquatable<Mask<TItem>>,
@@ -511,6 +495,26 @@ namespace Mutagen.Bethesda
         void IMajorRecordEnumerable.Remove<TMajor>(TMajor record, bool throwIfUnknown) => this.Remove<TMajor>(record, throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<TMajor>(records, throwIfUnknown);
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IMajorRecordGetter rhs) return false;
+            return ((MajorRecordCommon)((IMajorRecordGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IMajorRecordGetter? obj)
+        {
+            return ((MajorRecordCommon)((IMajorRecordGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((MajorRecordCommon)((IMajorRecordGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -1718,7 +1722,11 @@ namespace Mutagen.Bethesda.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IMajorRecordGetter rhs)) return false;
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IMajorRecordGetter rhs) return false;
             return ((MajorRecordCommon)((IMajorRecordGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 

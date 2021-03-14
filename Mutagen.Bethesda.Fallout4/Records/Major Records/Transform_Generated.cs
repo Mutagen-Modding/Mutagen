@@ -94,22 +94,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is ITransformGetter rhs)) return false;
-            return ((TransformCommon)((ITransformGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(ITransformGetter? obj)
-        {
-            return ((TransformCommon)((ITransformGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((TransformCommon)((ITransformGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             Fallout4MajorRecord.Mask<TItem>,
@@ -571,6 +555,26 @@ namespace Mutagen.Bethesda.Fallout4
         {
             Break0 = 1
         }
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not ITransformGetter rhs) return false;
+            return ((TransformCommon)((ITransformGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ITransformGetter? obj)
+        {
+            return ((TransformCommon)((ITransformGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((TransformCommon)((ITransformGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -1776,7 +1780,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ITransformGetter rhs)) return false;
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not ITransformGetter rhs) return false;
             return ((TransformCommon)((ITransformGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 

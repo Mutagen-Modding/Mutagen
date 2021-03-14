@@ -112,22 +112,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is ITreeGetter rhs)) return false;
-            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(ITreeGetter? obj)
-        {
-            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((TreeCommon)((ITreeGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
@@ -637,6 +621,26 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.EditorID = editorID;
         }
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not ITreeGetter rhs) return false;
+            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ITreeGetter? obj)
+        {
+            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((TreeCommon)((ITreeGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
 
         #endregion
 
@@ -1993,7 +1997,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ITreeGetter rhs)) return false;
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not ITreeGetter rhs) return false;
             return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 

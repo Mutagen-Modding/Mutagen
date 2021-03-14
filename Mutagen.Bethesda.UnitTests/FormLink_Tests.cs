@@ -120,5 +120,14 @@ namespace Mutagen.Bethesda.UnitTests
             set.Contains(new FormLink<IFactionGetter>(Utility.Form1)).Should().BeTrue();
             set.Contains(new FormLink<IWeaponGetter>(Utility.Form1)).Should().BeTrue();
         }
+
+        [Fact]
+        public void EqualityToActualRecord()
+        {
+            var npc = new Npc(Utility.Form1, SkyrimRelease.SkyrimSE);
+            var link = npc.AsLink();
+            npc.Should().Be(link);
+            link.Should().Be(npc);
+        }
     }
 }

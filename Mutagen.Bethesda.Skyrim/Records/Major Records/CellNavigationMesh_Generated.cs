@@ -67,22 +67,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is ICellNavigationMeshGetter rhs)) return false;
-            return ((CellNavigationMeshCommon)((ICellNavigationMeshGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(ICellNavigationMeshGetter? obj)
-        {
-            return ((CellNavigationMeshCommon)((ICellNavigationMeshGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((CellNavigationMeshCommon)((ICellNavigationMeshGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             ANavigationMesh.Mask<TItem>,
@@ -420,6 +404,26 @@ namespace Mutagen.Bethesda.Skyrim
         {
             this.EditorID = editorID;
         }
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not ICellNavigationMeshGetter rhs) return false;
+            return ((CellNavigationMeshCommon)((ICellNavigationMeshGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ICellNavigationMeshGetter? obj)
+        {
+            return ((CellNavigationMeshCommon)((ICellNavigationMeshGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((CellNavigationMeshCommon)((ICellNavigationMeshGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
 
         #endregion
 
@@ -1574,7 +1578,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ICellNavigationMeshGetter rhs)) return false;
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not ICellNavigationMeshGetter rhs) return false;
             return ((CellNavigationMeshCommon)((ICellNavigationMeshGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 

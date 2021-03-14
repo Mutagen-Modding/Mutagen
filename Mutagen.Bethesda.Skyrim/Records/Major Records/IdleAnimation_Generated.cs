@@ -112,22 +112,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IIdleAnimationGetter rhs)) return false;
-            return ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IIdleAnimationGetter? obj)
-        {
-            return ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -857,6 +841,26 @@ namespace Mutagen.Bethesda.Skyrim
         public enum DATADataType
         {
         }
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IIdleAnimationGetter rhs) return false;
+            return ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IIdleAnimationGetter? obj)
+        {
+            return ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -2316,7 +2320,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IIdleAnimationGetter rhs)) return false;
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IIdleAnimationGetter rhs) return false;
             return ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 

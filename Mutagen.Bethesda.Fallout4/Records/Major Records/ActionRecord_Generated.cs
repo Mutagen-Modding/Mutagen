@@ -97,22 +97,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IActionRecordGetter rhs)) return false;
-            return ((ActionRecordCommon)((IActionRecordGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IActionRecordGetter? obj)
-        {
-            return ((ActionRecordCommon)((IActionRecordGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((ActionRecordCommon)((IActionRecordGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             Fallout4MajorRecord.Mask<TItem>,
@@ -542,6 +526,26 @@ namespace Mutagen.Bethesda.Fallout4
         {
             this.EditorID = editorID;
         }
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IActionRecordGetter rhs) return false;
+            return ((ActionRecordCommon)((IActionRecordGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IActionRecordGetter? obj)
+        {
+            return ((ActionRecordCommon)((IActionRecordGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ActionRecordCommon)((IActionRecordGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
 
         #endregion
 
@@ -1789,7 +1793,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IActionRecordGetter rhs)) return false;
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IActionRecordGetter rhs) return false;
             return ((ActionRecordCommon)((IActionRecordGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 

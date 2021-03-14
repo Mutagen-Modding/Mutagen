@@ -61,22 +61,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IGlobalShortGetter rhs)) return false;
-            return ((GlobalShortCommon)((IGlobalShortGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IGlobalShortGetter? obj)
-        {
-            return ((GlobalShortCommon)((IGlobalShortGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((GlobalShortCommon)((IGlobalShortGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             Global.Mask<TItem>,
@@ -392,6 +376,26 @@ namespace Mutagen.Bethesda.Fallout4
         {
             this.EditorID = editorID;
         }
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IGlobalShortGetter rhs) return false;
+            return ((GlobalShortCommon)((IGlobalShortGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IGlobalShortGetter? obj)
+        {
+            return ((GlobalShortCommon)((IGlobalShortGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((GlobalShortCommon)((IGlobalShortGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
 
         #endregion
 
@@ -1589,7 +1593,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IGlobalShortGetter rhs)) return false;
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IGlobalShortGetter rhs) return false;
             return ((GlobalShortCommon)((IGlobalShortGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 

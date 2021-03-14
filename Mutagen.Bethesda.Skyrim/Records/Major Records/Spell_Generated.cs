@@ -199,22 +199,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is ISpellGetter rhs)) return false;
-            return ((SpellCommon)((ISpellGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(ISpellGetter? obj)
-        {
-            return ((SpellCommon)((ISpellGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((SpellCommon)((ISpellGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -1147,6 +1131,26 @@ namespace Mutagen.Bethesda.Skyrim
         public enum SPITDataType
         {
         }
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not ISpellGetter rhs) return false;
+            return ((SpellCommon)((ISpellGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ISpellGetter? obj)
+        {
+            return ((SpellCommon)((ISpellGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((SpellCommon)((ISpellGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -2890,7 +2894,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ISpellGetter rhs)) return false;
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not ISpellGetter rhs) return false;
             return ((SpellCommon)((ISpellGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 

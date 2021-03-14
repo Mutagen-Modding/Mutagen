@@ -3251,11 +3251,13 @@ namespace Mutagen.Bethesda.Generation
                 await obj.GenerateToStringCode(fg);
 
                 obj.GenerateEqualsSection(fg);
+                await MajorRecordLinkEqualityModule.Generate(obj, fg);
 
                 if (obj.GetObjectType() == ObjectType.Mod)
                 {
                     fg.AppendLine($"IMask<bool> {nameof(IEqualsMask)}.{nameof(IEqualsMask.GetEqualsMask)}(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => {obj.MixInClassName}.GetEqualsMask(this, ({obj.Interface(getter: true, internalInterface: true)})rhs, include);");
                 }
+
             }
             fg.AppendLine();
         }

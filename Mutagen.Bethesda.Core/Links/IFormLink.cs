@@ -470,7 +470,11 @@ namespace Mutagen.Bethesda
         internal static bool EqualsWithInheritanceConsideration<TMajorGetter>(IFormLinkGetter<TMajorGetter> link, object? obj)
             where TMajorGetter : class, IMajorRecordCommonGetter
         {
-            if (obj is IFormLinkGetter<TMajorGetter> rhs)
+            if (obj == null)
+            {
+                return link.IsNull;
+            }
+            else if (obj is IFormLinkGetter<TMajorGetter> rhs)
             {
                 return link.FormKey == rhs.FormKey;
             }
@@ -478,6 +482,10 @@ namespace Mutagen.Bethesda
                 && rhsLink.TargetType.IsAssignableFrom(typeof(TMajorGetter)))
             {
                 return link.FormKey == rhsLink.FormKey;
+            }
+            else if (obj is TMajorGetter maj)
+            {
+                return link.FormKey == maj.FormKey;
             }
             else
             {

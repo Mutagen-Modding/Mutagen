@@ -56,22 +56,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IAttractionRuleGetter rhs)) return false;
-            return ((AttractionRuleCommon)((IAttractionRuleGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IAttractionRuleGetter? obj)
-        {
-            return ((AttractionRuleCommon)((IAttractionRuleGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((AttractionRuleCommon)((IAttractionRuleGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             Fallout4MajorRecord.Mask<TItem>,
@@ -345,6 +329,26 @@ namespace Mutagen.Bethesda.Fallout4
         {
             this.EditorID = editorID;
         }
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IAttractionRuleGetter rhs) return false;
+            return ((AttractionRuleCommon)((IAttractionRuleGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IAttractionRuleGetter? obj)
+        {
+            return ((AttractionRuleCommon)((IAttractionRuleGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((AttractionRuleCommon)((IAttractionRuleGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
 
         #endregion
 
@@ -1322,7 +1326,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAttractionRuleGetter rhs)) return false;
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IAttractionRuleGetter rhs) return false;
             return ((AttractionRuleCommon)((IAttractionRuleGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 

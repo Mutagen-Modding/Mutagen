@@ -62,22 +62,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IKeywordGetter rhs)) return false;
-            return ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IKeywordGetter? obj)
-        {
-            return ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -400,6 +384,26 @@ namespace Mutagen.Bethesda.Skyrim
         {
             this.EditorID = editorID;
         }
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IKeywordGetter rhs) return false;
+            return ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IKeywordGetter? obj)
+        {
+            return ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
 
         #endregion
 
@@ -1475,7 +1479,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IKeywordGetter rhs)) return false;
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IKeywordGetter rhs) return false;
             return ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 

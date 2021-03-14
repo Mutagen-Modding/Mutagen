@@ -61,22 +61,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IGameSettingIntGetter rhs)) return false;
-            return ((GameSettingIntCommon)((IGameSettingIntGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IGameSettingIntGetter? obj)
-        {
-            return ((GameSettingIntCommon)((IGameSettingIntGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((GameSettingIntCommon)((IGameSettingIntGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             GameSetting.Mask<TItem>,
@@ -392,6 +376,26 @@ namespace Mutagen.Bethesda.Fallout4
         {
             this.EditorID = editorID;
         }
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IGameSettingIntGetter rhs) return false;
+            return ((GameSettingIntCommon)((IGameSettingIntGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IGameSettingIntGetter? obj)
+        {
+            return ((GameSettingIntCommon)((IGameSettingIntGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((GameSettingIntCommon)((IGameSettingIntGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
 
         #endregion
 
@@ -1566,7 +1570,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IGameSettingIntGetter rhs)) return false;
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IGameSettingIntGetter rhs) return false;
             return ((GameSettingIntCommon)((IGameSettingIntGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
