@@ -138,7 +138,7 @@ namespace Mutagen.Bethesda.UnitTests
             placedTrap.Disable(IPlaced.DisableType.DisableWithoutZOffset);
             interfacePlaced = placedTrap;
             interfacePlaced.Disable(IPlaced.DisableType.JustInitiallyDisabled);
-            APlaced abstractPlaced = placedTrap;
+            IPlaced abstractPlaced = placedTrap;
             abstractPlaced.Disable();
             abstractPlaced.Disable(IPlaced.DisableType.SafeDisable);
 

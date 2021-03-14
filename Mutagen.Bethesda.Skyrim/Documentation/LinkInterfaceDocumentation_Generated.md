@@ -109,7 +109,6 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - Faction
 - PlacedNpc
 ### IPlaced
-- APlaced
 - APlacedTrap
 - PlacedNpc
 - PlacedObject
@@ -149,8 +148,6 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IConstructible
 - IItem
 - IObjectId
-### APlaced
-- IPlaced
 ### APlacedTrap
 - IKeywordLinkedReference
 - ILinkedReference

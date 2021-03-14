@@ -55,6 +55,7 @@
     <Compile Include="Enums\Emotion.cs" />
     <Compile Include="Extensions\GameSettingGroupMixIn.cs" />
     <Compile Include="Extensions\GlobalGroupMixIn.cs" />
+    <Compile Include="Extensions\IPlacedExt.cs" />
     <Compile Include="Extensions\ModContextExt.cs" />
     <Compile Include="Interfaces\IAmbientColorsCommon.cs" />
     <Compile Include="Interfaces\IBoundableEquipment.cs" />
@@ -161,9 +162,6 @@
     </Compile>
     <Compile Include="Records\Major Records\APerkEntryPointEffect.cs">
       <DependentUpon>Perk.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\APlaced.cs">
-      <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\APlacedTrap.cs">
       <DependentUpon>PlacedTrap.xml</DependentUpon>
@@ -2078,9 +2076,6 @@
       <DependentUpon>Perk.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\TypeSolidifier_Generated.cs" />
-    <Compile Include="Records\Major Records\APlaced_Generated.cs">
-      <DependentUpon>PlacedObject.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\LinkCacheMixIns_Generated.cs" />
     <Compile Include="Interfaces\IConstructible_Generated.cs" />
   </ItemGroup>

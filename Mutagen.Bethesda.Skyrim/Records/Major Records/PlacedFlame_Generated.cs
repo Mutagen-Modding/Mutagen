@@ -396,7 +396,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = PlacedFlame_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = PlacedFlame_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => PlacedFlameCommon.Instance.GetContainedFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedFlameSetterCommon.Instance.RemapLinks(this, mapping);
         public PlacedFlame(
@@ -799,11 +799,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IPlacedFlameInternal)item);
         }
         
-        public override void Clear(IAPlacedInternal item)
-        {
-            Clear(item: (IPlacedFlameInternal)item);
-        }
-        
         public override void Clear(ISkyrimMajorRecordInternal item)
         {
             Clear(item: (IPlacedFlameInternal)item);
@@ -839,17 +834,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override void CopyInFromBinary(
             IAPlacedTrapInternal item,
-            MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            CopyInFromBinary(
-                item: (PlacedFlame)item,
-                frame: frame,
-                recordTypeConverter: recordTypeConverter);
-        }
-        
-        public override void CopyInFromBinary(
-            IAPlacedInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1022,27 +1006,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public static new PlacedFlame_FieldIndex ConvertFieldIndex(APlaced_FieldIndex index)
-        {
-            switch (index)
-            {
-                case APlaced_FieldIndex.MajorRecordFlagsRaw:
-                    return (PlacedFlame_FieldIndex)((int)index);
-                case APlaced_FieldIndex.FormKey:
-                    return (PlacedFlame_FieldIndex)((int)index);
-                case APlaced_FieldIndex.VersionControl:
-                    return (PlacedFlame_FieldIndex)((int)index);
-                case APlaced_FieldIndex.EditorID:
-                    return (PlacedFlame_FieldIndex)((int)index);
-                case APlaced_FieldIndex.FormVersion:
-                    return (PlacedFlame_FieldIndex)((int)index);
-                case APlaced_FieldIndex.Version2:
-                    return (PlacedFlame_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-        
         public static new PlacedFlame_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -1103,15 +1066,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public override bool Equals(
-            IAPlacedGetter? lhs,
-            IAPlacedGetter? rhs)
-        {
-            return Equals(
-                lhs: (IPlacedFlameGetter?)lhs,
-                rhs: rhs as IPlacedFlameGetter);
-        }
-        
-        public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs)
         {
@@ -1138,11 +1092,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public override int GetHashCode(IAPlacedTrapGetter item)
-        {
-            return GetHashCode(item: (IPlacedFlameGetter)item);
-        }
-        
-        public override int GetHashCode(IAPlacedGetter item)
         {
             return GetHashCode(item: (IPlacedFlameGetter)item);
         }
@@ -1189,17 +1138,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override APlacedTrap Duplicate(
             IAPlacedTrapGetter item,
-            FormKey formKey,
-            TranslationCrystal? copyMask)
-        {
-            return this.Duplicate(
-                item: (IPlacedFlame)item,
-                formKey: formKey,
-                copyMask: copyMask);
-        }
-        
-        public override APlaced Duplicate(
-            IAPlacedGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
@@ -1293,36 +1231,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void DeepCopyIn(
             IAPlacedTrap item,
             IAPlacedTrapGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (IPlacedFlame)item,
-                rhs: (IPlacedFlameGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
-            IAPlacedInternal item,
-            IAPlacedGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (IPlacedFlameInternal)item,
-                rhs: (IPlacedFlameGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
-            IAPlaced item,
-            IAPlacedGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1531,17 +1439,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IAPlacedTrapGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            Write(
-                item: (IPlacedFlameGetter)item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
-        }
-
-        public override void Write(
-            MutagenWriter writer,
-            IAPlacedGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(

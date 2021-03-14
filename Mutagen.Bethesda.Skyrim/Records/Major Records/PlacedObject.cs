@@ -3,6 +3,7 @@ using Noggog;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
@@ -158,6 +159,11 @@ namespace Mutagen.Bethesda.Skyrim
             NoRespawn = 0x4000_0000,
             Multibound = 0x8000_0000,
         }
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPlacementGetter? IPlacedGetter.Placement => this.Placement;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnableParentGetter? IPlacedGetter.EnableParent => this.EnableParent;
     }
 
     namespace Internals

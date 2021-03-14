@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
     /// Implemented by: [PlacedArrow, PlacedBeam, PlacedFlame, PlacedCone, PlacedBarrier, PlacedTrap, PlacedHazard, PlacedMissile]
     /// </summary>
     public abstract partial class APlacedTrap :
-        APlaced,
+        SkyrimMajorRecord,
         IAPlacedTrapInternal,
         IEquatable<IAPlacedTrapGetter>,
         ILoquiObjectSetter<APlacedTrap>
@@ -254,7 +254,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public new class Mask<TItem> :
-            APlaced.Mask<TItem>,
+            SkyrimMajorRecord.Mask<TItem>,
             IEquatable<Mask<TItem>>,
             IMask<TItem>
         {
@@ -846,7 +846,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public new class ErrorMask :
-            APlaced.ErrorMask,
+            SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
@@ -1237,7 +1237,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         }
         public new class TranslationMask :
-            APlaced.TranslationMask,
+            SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
             #region Members
@@ -1396,14 +1396,14 @@ namespace Mutagen.Bethesda.Skyrim
     /// Implemented by: [PlacedArrow, PlacedBeam, PlacedFlame, PlacedCone, PlacedBarrier, PlacedTrap, PlacedHazard, PlacedMissile]
     /// </summary>
     public partial interface IAPlacedTrap :
-        IAPlacedInternal,
         IAPlacedTrapGetter,
         IFormLinkContainer,
         IKeywordLinkedReference,
         ILinkedReference,
         ILoquiObjectSetter<IAPlacedTrapInternal>,
         IPlaced,
-        IPlacedThing
+        IPlacedThing,
+        ISkyrimMajorRecordInternal
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new IFormLinkNullable<IEncounterZoneGetter> EncounterZone { get; }
@@ -1429,7 +1429,7 @@ namespace Mutagen.Bethesda.Skyrim
     }
 
     public partial interface IAPlacedTrapInternal :
-        IAPlacedInternal,
+        ISkyrimMajorRecordInternal,
         IAPlacedTrap,
         IAPlacedTrapGetter
     {
@@ -1439,7 +1439,7 @@ namespace Mutagen.Bethesda.Skyrim
     /// Implemented by: [PlacedArrow, PlacedBeam, PlacedFlame, PlacedCone, PlacedBarrier, PlacedTrap, PlacedHazard, PlacedMissile]
     /// </summary>
     public partial interface IAPlacedTrapGetter :
-        IAPlacedGetter,
+        ISkyrimMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         IKeywordLinkedReferenceGetter,
@@ -1764,7 +1764,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class APlacedTrapSetterCommon : APlacedSetterCommon
+    public partial class APlacedTrapSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly APlacedTrapSetterCommon Instance = new APlacedTrapSetterCommon();
 
@@ -1791,11 +1791,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Scale = default;
             item.Placement = null;
             base.Clear(item);
-        }
-        
-        public override void Clear(IAPlacedInternal item)
-        {
-            Clear(item: (IAPlacedTrapInternal)item);
         }
         
         public override void Clear(ISkyrimMajorRecordInternal item)
@@ -1836,17 +1831,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public override void CopyInFromBinary(
-            IAPlacedInternal item,
-            MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            CopyInFromBinary(
-                item: (APlacedTrap)item,
-                frame: frame,
-                recordTypeConverter: recordTypeConverter);
-        }
-        
-        public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1871,7 +1855,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class APlacedTrapCommon : APlacedCommon
+    public partial class APlacedTrapCommon : SkyrimMajorRecordCommon
     {
         public new static readonly APlacedTrapCommon Instance = new APlacedTrapCommon();
 
@@ -1992,7 +1976,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             APlacedTrap.Mask<bool>? printMask = null)
         {
-            APlacedCommon.ToStringFields(
+            SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
                 fg: fg,
                 printMask: printMask);
@@ -2133,28 +2117,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public static APlacedTrap_FieldIndex ConvertFieldIndex(APlaced_FieldIndex index)
-        {
-            switch (index)
-            {
-                case APlaced_FieldIndex.MajorRecordFlagsRaw:
-                    return (APlacedTrap_FieldIndex)((int)index);
-                case APlaced_FieldIndex.FormKey:
-                    return (APlacedTrap_FieldIndex)((int)index);
-                case APlaced_FieldIndex.VersionControl:
-                    return (APlacedTrap_FieldIndex)((int)index);
-                case APlaced_FieldIndex.EditorID:
-                    return (APlacedTrap_FieldIndex)((int)index);
-                case APlaced_FieldIndex.FormVersion:
-                    return (APlacedTrap_FieldIndex)((int)index);
-                case APlaced_FieldIndex.Version2:
-                    return (APlacedTrap_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-        
-        public static new APlacedTrap_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
+        public static APlacedTrap_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -2199,7 +2162,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IAPlacedGetter)lhs, (IAPlacedGetter)rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
             if (!lhs.EncounterZone.Equals(rhs.EncounterZone)) return false;
             if (!object.Equals(lhs.Ownership, rhs.Ownership)) return false;
@@ -2218,15 +2181,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.Scale.EqualsWithin(rhs.Scale)) return false;
             if (!object.Equals(lhs.Placement, rhs.Placement)) return false;
             return true;
-        }
-        
-        public override bool Equals(
-            IAPlacedGetter? lhs,
-            IAPlacedGetter? rhs)
-        {
-            return Equals(
-                lhs: (IAPlacedTrapGetter?)lhs,
-                rhs: rhs as IAPlacedTrapGetter);
         }
         
         public override bool Equals(
@@ -2296,11 +2250,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
-        }
-        
-        public override int GetHashCode(IAPlacedGetter item)
-        {
-            return GetHashCode(item: (IAPlacedTrapGetter)item);
         }
         
         public override int GetHashCode(ISkyrimMajorRecordGetter item)
@@ -2399,17 +2348,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             throw new NotImplementedException();
         }
         
-        public override APlaced Duplicate(
-            IAPlacedGetter item,
-            FormKey formKey,
-            TranslationCrystal? copyMask)
-        {
-            return this.Duplicate(
-                item: (IAPlacedTrap)item,
-                formKey: formKey,
-                copyMask: copyMask);
-        }
-        
         public override SkyrimMajorRecord Duplicate(
             ISkyrimMajorRecordGetter item,
             FormKey formKey,
@@ -2437,7 +2375,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class APlacedTrapSetterTranslationCommon : APlacedSetterTranslationCommon
+    public partial class APlacedTrapSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly APlacedTrapSetterTranslationCommon Instance = new APlacedTrapSetterTranslationCommon();
 
@@ -2465,8 +2403,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             bool deepCopy)
         {
             base.DeepCopyIn(
-                (IAPlaced)item,
-                (IAPlacedGetter)rhs,
+                (ISkyrimMajorRecord)item,
+                (ISkyrimMajorRecordGetter)rhs,
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
@@ -2743,36 +2681,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public override void DeepCopyIn(
-            IAPlacedInternal item,
-            IAPlacedGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (IAPlacedTrapInternal)item,
-                rhs: (IAPlacedTrapGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
-            IAPlaced item,
-            IAPlacedGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (IAPlacedTrap)item,
-                rhs: (IAPlacedTrapGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
             ISkyrimMajorRecordInternal item,
             ISkyrimMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -2913,7 +2821,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class APlacedTrapBinaryWriteTranslation :
-        APlacedBinaryWriteTranslation,
+        SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
         public new readonly static APlacedTrapBinaryWriteTranslation Instance = new APlacedTrapBinaryWriteTranslation();
@@ -3085,17 +2993,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public override void Write(
             MutagenWriter writer,
-            IAPlacedGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            Write(
-                item: (IAPlacedTrapGetter)item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
-        }
-
-        public override void Write(
-            MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -3118,7 +3015,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class APlacedTrapBinaryCreateTranslation : APlacedBinaryCreateTranslation
+    public partial class APlacedTrapBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static APlacedTrapBinaryCreateTranslation Instance = new APlacedTrapBinaryCreateTranslation();
 
@@ -3272,7 +3169,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (int)APlacedTrap_FieldIndex.Placement;
                 }
                 default:
-                    return APlacedBinaryCreateTranslation.FillBinaryRecordTypes(
+                    return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         recordParseCount: recordParseCount,
@@ -3301,7 +3198,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class APlacedTrapBinaryOverlay :
-        APlacedBinaryOverlay,
+        SkyrimMajorRecordBinaryOverlay,
         IAPlacedTrapGetter
     {
         #region Common Routing
