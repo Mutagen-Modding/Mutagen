@@ -8,18 +8,18 @@ using Mutagen.Bethesda;
 namespace Mutagen.Bethesda.Skyrim
 {
     /// <summary>
-    /// Implemented by: [LeveledSpell, Spell]
+    /// Implemented by: [LeveledSpell, Shout, Spell]
     /// </summary>
-    public partial interface ISpellSpawn :
+    public partial interface ISpellRecord :
         ISkyrimMajorRecordInternal,
-        ISpellSpawnGetter
+        ISpellRecordGetter
     {
     }
 
     /// <summary>
-    /// Implemented by: [LeveledSpell, Spell]
+    /// Implemented by: [LeveledSpell, Shout, Spell]
     /// </summary>
-    public partial interface ISpellSpawnGetter : ISkyrimMajorRecordGetter
+    public partial interface ISpellRecordGetter : ISkyrimMajorRecordGetter
     {
     }
 }

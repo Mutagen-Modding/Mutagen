@@ -319,30 +319,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         /// <summary>
-        /// Scope a load order query to ASpell
-        /// </summary>
-        /// <param name="listings">ModListings to query</param>
-        /// <returns>A typed object to do further queries on ASpell</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IASpell, IASpellGetter> ASpell(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
-        {
-            return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IASpell, IASpellGetter>(
-                (bool includeDeletedRecords) => listings.WinningOverrides<IASpellGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<ISkyrimMod, ISkyrimModGetter, IASpell, IASpellGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
-        }
-
-        /// <summary>
-        /// Scope a load order query to ASpell
-        /// </summary>
-        /// <param name="mods">Mods to query</param>
-        /// <returns>A typed object to do further queries on ASpell</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IASpell, IASpellGetter> ASpell(this IEnumerable<ISkyrimModGetter> mods)
-        {
-            return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IASpell, IASpellGetter>(
-                (bool includeDeletedRecords) => mods.WinningOverrides<IASpellGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<ISkyrimMod, ISkyrimModGetter, IASpell, IASpellGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
-        }
-
-        /// <summary>
         /// Scope a load order query to AssociationType
         /// </summary>
         /// <param name="listings">ModListings to query</param>
@@ -3778,27 +3754,27 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         /// <summary>
-        /// Scope a load order query to ISpellSpawn
+        /// Scope a load order query to ISpellRecord
         /// </summary>
         /// <param name="listings">ModListings to query</param>
-        /// <returns>A typed object to do further queries on ISpellSpawn</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ISpellSpawn, ISpellSpawnGetter> ISpellSpawn(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        /// <returns>A typed object to do further queries on ISpellRecord</returns>
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ISpellRecord, ISpellRecordGetter> ISpellRecord(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ISpellSpawn, ISpellSpawnGetter>(
-                (bool includeDeletedRecords) => listings.WinningOverrides<ISpellSpawnGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<ISkyrimMod, ISkyrimModGetter, ISpellSpawn, ISpellSpawnGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+            return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ISpellRecord, ISpellRecordGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<ISpellRecordGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<ISkyrimMod, ISkyrimModGetter, ISpellRecord, ISpellRecordGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
-        /// Scope a load order query to ISpellSpawn
+        /// Scope a load order query to ISpellRecord
         /// </summary>
         /// <param name="mods">Mods to query</param>
-        /// <returns>A typed object to do further queries on ISpellSpawn</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ISpellSpawn, ISpellSpawnGetter> ISpellSpawn(this IEnumerable<ISkyrimModGetter> mods)
+        /// <returns>A typed object to do further queries on ISpellRecord</returns>
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ISpellRecord, ISpellRecordGetter> ISpellRecord(this IEnumerable<ISkyrimModGetter> mods)
         {
-            return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ISpellSpawn, ISpellSpawnGetter>(
-                (bool includeDeletedRecords) => mods.WinningOverrides<ISpellSpawnGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<ISkyrimMod, ISkyrimModGetter, ISpellSpawn, ISpellSpawnGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+            return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ISpellRecord, ISpellRecordGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<ISpellRecordGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<ISkyrimMod, ISkyrimModGetter, ISpellRecord, ISpellRecordGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>

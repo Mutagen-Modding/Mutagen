@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class Spell :
-        ASpell,
+        SkyrimMajorRecord,
         IEquatable<ISpellGetter>,
         ILoquiObjectSetter<Spell>,
         ISpellInternal
@@ -217,7 +217,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public new class Mask<TItem> :
-            ASpell.Mask<TItem>,
+            SkyrimMajorRecord.Mask<TItem>,
             IEquatable<Mask<TItem>>,
             IMask<TItem>
         {
@@ -670,7 +670,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public new class ErrorMask :
-            ASpell.ErrorMask,
+            SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
@@ -1019,7 +1019,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         }
         public new class TranslationMask :
-            ASpell.TranslationMask,
+            SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
             #region Members
@@ -1204,7 +1204,6 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ISpell :
-        IASpellInternal,
         IEffectRecord,
         IFormLinkContainer,
         IKeyworded<IKeywordGetter>,
@@ -1214,8 +1213,9 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBounded,
         IObjectBoundedOptional,
         IObjectId,
+        ISkyrimMajorRecordInternal,
         ISpellGetter,
-        ISpellSpawn,
+        ISpellRecord,
         ITranslatedNamed,
         ITranslatedNamedRequired
     {
@@ -1239,14 +1239,14 @@ namespace Mutagen.Bethesda.Skyrim
     }
 
     public partial interface ISpellInternal :
-        IASpellInternal,
+        ISkyrimMajorRecordInternal,
         ISpell,
         ISpellGetter
     {
     }
 
     public partial interface ISpellGetter :
-        IASpellGetter,
+        ISkyrimMajorRecordGetter,
         IBinaryItem,
         IEffectRecordGetter,
         IFormLinkContainerGetter,
@@ -1258,7 +1258,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundedGetter,
         IObjectBoundedOptionalGetter,
         IObjectIdGetter,
-        ISpellSpawnGetter,
+        ISpellRecordGetter,
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {
@@ -1538,7 +1538,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class SpellSetterCommon : ASpellSetterCommon
+    public partial class SpellSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly SpellSetterCommon Instance = new SpellSetterCommon();
 
@@ -1565,11 +1565,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Effects.Clear();
             item.SPITDataTypeState = default;
             base.Clear(item);
-        }
-        
-        public override void Clear(IASpellInternal item)
-        {
-            Clear(item: (ISpellInternal)item);
         }
         
         public override void Clear(ISkyrimMajorRecordInternal item)
@@ -1610,17 +1605,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public override void CopyInFromBinary(
-            IASpellInternal item,
-            MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            CopyInFromBinary(
-                item: (Spell)item,
-                frame: frame,
-                recordTypeConverter: recordTypeConverter);
-        }
-        
-        public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1645,7 +1629,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SpellCommon : ASpellCommon
+    public partial class SpellCommon : SkyrimMajorRecordCommon
     {
         public new static readonly SpellCommon Instance = new SpellCommon();
 
@@ -1740,7 +1724,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             Spell.Mask<bool>? printMask = null)
         {
-            ASpellCommon.ToStringFields(
+            SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
                 fg: fg,
                 printMask: printMask);
@@ -1844,28 +1828,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public static Spell_FieldIndex ConvertFieldIndex(ASpell_FieldIndex index)
-        {
-            switch (index)
-            {
-                case ASpell_FieldIndex.MajorRecordFlagsRaw:
-                    return (Spell_FieldIndex)((int)index);
-                case ASpell_FieldIndex.FormKey:
-                    return (Spell_FieldIndex)((int)index);
-                case ASpell_FieldIndex.VersionControl:
-                    return (Spell_FieldIndex)((int)index);
-                case ASpell_FieldIndex.EditorID:
-                    return (Spell_FieldIndex)((int)index);
-                case ASpell_FieldIndex.FormVersion:
-                    return (Spell_FieldIndex)((int)index);
-                case ASpell_FieldIndex.Version2:
-                    return (Spell_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-        
-        public static new Spell_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
+        public static Spell_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -1910,7 +1873,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IASpellGetter)lhs, (IASpellGetter)rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
             if (!object.Equals(lhs.Name, rhs.Name)) return false;
             if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
@@ -1929,15 +1892,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.Effects.SequenceEqualNullable(rhs.Effects)) return false;
             if (lhs.SPITDataTypeState != rhs.SPITDataTypeState) return false;
             return true;
-        }
-        
-        public override bool Equals(
-            IASpellGetter? lhs,
-            IASpellGetter? rhs)
-        {
-            return Equals(
-                lhs: (ISpellGetter?)lhs,
-                rhs: rhs as ISpellGetter);
         }
         
         public override bool Equals(
@@ -1983,11 +1937,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.SPITDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
-        }
-        
-        public override int GetHashCode(IASpellGetter item)
-        {
-            return GetHashCode(item: (ISpellGetter)item);
         }
         
         public override int GetHashCode(ISkyrimMajorRecordGetter item)
@@ -2049,17 +1998,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return newRec;
         }
         
-        public override ASpell Duplicate(
-            IASpellGetter item,
-            FormKey formKey,
-            TranslationCrystal? copyMask)
-        {
-            return this.Duplicate(
-                item: (ISpell)item,
-                formKey: formKey,
-                copyMask: copyMask);
-        }
-        
         public override SkyrimMajorRecord Duplicate(
             ISkyrimMajorRecordGetter item,
             FormKey formKey,
@@ -2087,7 +2025,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SpellSetterTranslationCommon : ASpellSetterTranslationCommon
+    public partial class SpellSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly SpellSetterTranslationCommon Instance = new SpellSetterTranslationCommon();
 
@@ -2115,8 +2053,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             bool deepCopy)
         {
             base.DeepCopyIn(
-                (IASpell)item,
-                (IASpellGetter)rhs,
+                (ISkyrimMajorRecord)item,
+                (ISkyrimMajorRecordGetter)rhs,
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
@@ -2249,36 +2187,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.SPITDataTypeState = rhs.SPITDataTypeState;
             }
-        }
-        
-        public override void DeepCopyIn(
-            IASpellInternal item,
-            IASpellGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (ISpellInternal)item,
-                rhs: (ISpellGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
-            IASpell item,
-            IASpellGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (ISpell)item,
-                rhs: (ISpellGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
         }
         
         public override void DeepCopyIn(
@@ -2422,7 +2330,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class SpellBinaryWriteTranslation :
-        ASpellBinaryWriteTranslation,
+        SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
         public new readonly static SpellBinaryWriteTranslation Instance = new SpellBinaryWriteTranslation();
@@ -2569,17 +2477,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public override void Write(
             MutagenWriter writer,
-            IASpellGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            Write(
-                item: (ISpellGetter)item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
-        }
-
-        public override void Write(
-            MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2602,7 +2499,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class SpellBinaryCreateTranslation : ASpellBinaryCreateTranslation
+    public partial class SpellBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static SpellBinaryCreateTranslation Instance = new SpellBinaryCreateTranslation();
 
@@ -2611,7 +2508,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISpellInternal item,
             MutagenFrame frame)
         {
-            ASpellBinaryCreateTranslation.FillBinaryStructs(
+            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
         }
@@ -2712,7 +2609,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (int)Spell_FieldIndex.Effects;
                 }
                 default:
-                    return ASpellBinaryCreateTranslation.FillBinaryRecordTypes(
+                    return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         recordParseCount: recordParseCount,
@@ -2737,7 +2634,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class SpellBinaryOverlay :
-        ASpellBinaryOverlay,
+        SkyrimMajorRecordBinaryOverlay,
         ISpellGetter
     {
         #region Common Routing

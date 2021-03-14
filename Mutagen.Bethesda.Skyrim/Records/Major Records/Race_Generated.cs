@@ -81,15 +81,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ActorEffect
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLinkGetter<IASpellGetter>>? _ActorEffect;
-        public ExtendedList<IFormLinkGetter<IASpellGetter>>? ActorEffect
+        private ExtendedList<IFormLinkGetter<ISpellRecordGetter>>? _ActorEffect;
+        public ExtendedList<IFormLinkGetter<ISpellRecordGetter>>? ActorEffect
         {
             get => this._ActorEffect;
             set => this._ActorEffect = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<IASpellGetter>>? IRaceGetter.ActorEffect => _ActorEffect;
+        IReadOnlyList<IFormLinkGetter<ISpellRecordGetter>>? IRaceGetter.ActorEffect => _ActorEffect;
         #endregion
 
         #endregion
@@ -4001,7 +4001,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new TranslatedString? Name { get; set; }
         new TranslatedString Description { get; set; }
-        new ExtendedList<IFormLinkGetter<IASpellGetter>>? ActorEffect { get; set; }
+        new ExtendedList<IFormLinkGetter<ISpellRecordGetter>>? ActorEffect { get; set; }
         new IFormLinkNullable<IArmorGetter> Skin { get; }
         new BodyTemplate? BodyTemplate { get; set; }
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
@@ -4112,7 +4112,7 @@ namespace Mutagen.Bethesda.Skyrim
         static new ILoquiRegistration Registration => Race_Registration.Instance;
         ITranslatedStringGetter? Name { get; }
         ITranslatedStringGetter Description { get; }
-        IReadOnlyList<IFormLinkGetter<IASpellGetter>>? ActorEffect { get; }
+        IReadOnlyList<IFormLinkGetter<ISpellRecordGetter>>? ActorEffect { get; }
         IFormLinkNullableGetter<IArmorGetter> Skin { get; }
         IBodyTemplateGetter? BodyTemplate { get; }
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
@@ -5875,8 +5875,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.ActorEffect = 
                             rhs.ActorEffect
-                            .Select(r => (IFormLinkGetter<IASpellGetter>)new FormLink<IASpellGetter>(r.FormKey))
-                            .ToExtendedList<IFormLinkGetter<IASpellGetter>>();
+                            .Select(r => (IFormLinkGetter<ISpellRecordGetter>)new FormLink<ISpellRecordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<ISpellRecordGetter>>();
                     }
                     else
                     {
@@ -6784,14 +6784,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DESC),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.DL);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IASpellGetter>>.Instance.WriteWithCounter(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ISpellRecordGetter>>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.ActorEffect,
                 counterType: RecordTypes.SPCT,
                 counterLength: 4,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.SPLO),
                 subRecordPerItem: true,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IASpellGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ISpellRecordGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -7306,13 +7306,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.SPCT:
                 {
                     item.ActorEffect = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IASpellGetter>>.Instance.ParsePerItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ISpellRecordGetter>>.Instance.ParsePerItem(
                             frame: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SPCT),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SPLO),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLinkGetter<IASpellGetter>>();
+                        .CastExtendedList<IFormLinkGetter<ISpellRecordGetter>>();
                     return (int)Race_FieldIndex.ActorEffect;
                 }
                 case RecordTypeInts.WNAM:
@@ -7817,7 +7817,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _DescriptionLocation;
         public ITranslatedStringGetter Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, _package.MetaData.StringsLookup) : TranslatedString.Empty;
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IASpellGetter>>? ActorEffect { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<ISpellRecordGetter>>? ActorEffect { get; private set; }
         #region Skin
         private int? _SkinLocation;
         public IFormLinkNullableGetter<IArmorGetter> Skin => _SkinLocation.HasValue ? new FormLinkNullable<IArmorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SkinLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArmorGetter>.Null;
@@ -8262,14 +8262,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.SPLO:
                 case RecordTypeInts.SPCT:
                 {
-                    this.ActorEffect = BinaryOverlayList.FactoryByCountPerItem<IFormLinkGetter<IASpellGetter>>(
+                    this.ActorEffect = BinaryOverlayList.FactoryByCountPerItem<IFormLinkGetter<ISpellRecordGetter>>(
                         stream: stream,
                         package: _package,
                         itemLength: 0x4,
                         countLength: 4,
                         countType: RecordTypes.SPCT,
                         subrecordType: RecordTypes.SPLO,
-                        getter: (s, p) => new FormLink<IASpellGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => new FormLink<ISpellRecordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     return (int)Race_FieldIndex.ActorEffect;
                 }
                 case RecordTypeInts.WNAM:

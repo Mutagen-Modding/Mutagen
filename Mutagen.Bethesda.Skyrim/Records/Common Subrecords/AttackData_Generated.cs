@@ -46,14 +46,14 @@ namespace Mutagen.Bethesda.Skyrim
         public Single Chance { get; set; } = default;
         #endregion
         #region Spell
-        private IFormLink<IASpellGetter> _Spell = new FormLink<IASpellGetter>();
-        public IFormLink<IASpellGetter> Spell
+        private IFormLink<ISpellRecordGetter> _Spell = new FormLink<ISpellRecordGetter>();
+        public IFormLink<ISpellRecordGetter> Spell
         {
             get => _Spell;
             set => _Spell = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IASpellGetter> IAttackDataGetter.Spell => this.Spell;
+        IFormLinkGetter<ISpellRecordGetter> IAttackDataGetter.Spell => this.Spell;
         #endregion
         #region Flags
         public AttackData.Flag Flags { get; set; } = default;
@@ -744,7 +744,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new Single DamageMult { get; set; }
         new Single Chance { get; set; }
-        new IFormLink<IASpellGetter> Spell { get; }
+        new IFormLink<ISpellRecordGetter> Spell { get; }
         new AttackData.Flag Flags { get; set; }
         new Single AttackAngle { get; set; }
         new Single StrikeAngle { get; set; }
@@ -770,7 +770,7 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => AttackData_Registration.Instance;
         Single DamageMult { get; }
         Single Chance { get; }
-        IFormLinkGetter<IASpellGetter> Spell { get; }
+        IFormLinkGetter<ISpellRecordGetter> Spell { get; }
         AttackData.Flag Flags { get; }
         Single AttackAngle { get; }
         Single StrikeAngle { get; }
@@ -1581,7 +1581,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public Single DamageMult => _data.Slice(0x0, 0x4).Float();
         public Single Chance => _data.Slice(0x4, 0x4).Float();
-        public IFormLinkGetter<IASpellGetter> Spell => new FormLink<IASpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
+        public IFormLinkGetter<ISpellRecordGetter> Spell => new FormLink<ISpellRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
         public AttackData.Flag Flags => (AttackData.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0xC, 0x4));
         public Single AttackAngle => _data.Slice(0x10, 0x4).Float();
         public Single StrikeAngle => _data.Slice(0x14, 0x4).Float();

@@ -8694,9 +8694,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     Remove(obj, keys, typeof(ILeveledNpcGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(INpcGetter), throwIfUnknown: throwIfUnknown);
                     break;
-                case "ISpellSpawn":
-                case "ISpellSpawnGetter":
+                case "ISpellRecord":
+                case "ISpellRecordGetter":
                     Remove(obj, keys, typeof(ILeveledSpellGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IShoutGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ISpellGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "IEmittance":
@@ -13645,10 +13646,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     yield break;
                 }
-                case "ISpellSpawn":
+                case "ISpellRecord":
                 {
                     if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
                     foreach (var item in EnumerateMajorRecords(obj, typeof(ILeveledSpellGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IShoutGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13658,9 +13663,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     yield break;
                 }
-                case "ISpellSpawnGetter":
+                case "ISpellRecordGetter":
                 {
                     foreach (var item in EnumerateMajorRecords(obj, typeof(ILeveledSpellGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IShoutGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -17273,13 +17282,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     yield break;
                 }
-                case "ISpellSpawn":
-                case "ISpellSpawnGetter":
+                case "ISpellRecord":
+                case "ISpellRecordGetter":
                 {
                     foreach (var item in EnumerateMajorRecordContexts(
                         obj,
                         linkCache: linkCache,
                         type: typeof(ILeveledSpellGetter),
+                        throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IShoutGetter),
                         throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;

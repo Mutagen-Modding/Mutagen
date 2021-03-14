@@ -133,8 +133,9 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### ISound
 - SoundDescriptor
 - SoundMarker
-### ISpellSpawn
+### ISpellRecord
 - LeveledSpell
+- Shout
 - Spell
 ## Concrete Classes to Interfaces
 ### ActionRecord
@@ -215,7 +216,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### LeveledNpc
 - INpcSpawn
 ### LeveledSpell
-- ISpellSpawn
+- ISpellRecord
 ### Light
 - IConstructible
 - IEmittance
@@ -267,6 +268,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IObjectId
 ### Shout
 - IObjectId
+- ISpellRecord
 ### SoulGem
 - IConstructible
 - IItem
@@ -278,7 +280,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### Spell
 - IEffectRecord
 - IObjectId
-- ISpellSpawn
+- ISpellRecord
 ### Static
 - IObjectId
 - IRegionTarget

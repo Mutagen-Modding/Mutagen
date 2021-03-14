@@ -998,9 +998,6 @@
     <Compile Include="Records\Major Records\ArtObject_Generated.cs">
       <DependentUpon>ArtObject.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\ASpell_Generated.cs">
-      <DependentUpon>ASpell.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\BodyPartData_Generated.cs">
       <DependentUpon>BodyPartData.xml</DependentUpon>
     </Compile>
@@ -1928,7 +1925,6 @@
     <Compile Include="Interfaces\IHarvestTarget_Generated.cs" />
     <Compile Include="Interfaces\IKeywordLinkedReference_Generated.cs" />
     <Compile Include="Interfaces\INpcSpawn_Generated.cs" />
-    <Compile Include="Interfaces\ISpellSpawn_Generated.cs" />
     <Compile Include="Interfaces\IEmittance_Generated.cs" />
     <Compile Include="Interfaces\ILocationRecord_Generated.cs" />
     <Compile Include="Interfaces\IEffectRecord_Generated.cs" />
@@ -2078,6 +2074,7 @@
     <Compile Include="Records\TypeSolidifier_Generated.cs" />
     <Compile Include="Records\LinkCacheMixIns_Generated.cs" />
     <Compile Include="Interfaces\IConstructible_Generated.cs" />
+    <Compile Include="Interfaces\ISpellRecord_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.1.2">

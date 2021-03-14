@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class LeveledSpell :
-        ASpell,
+        SkyrimMajorRecord,
         IEquatable<ILeveledSpellGetter>,
         ILeveledSpellInternal,
         ILoquiObjectSetter<LeveledSpell>
@@ -113,7 +113,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public new class Mask<TItem> :
-            ASpell.Mask<TItem>,
+            SkyrimMajorRecord.Mask<TItem>,
             IEquatable<Mask<TItem>>,
             IMask<TItem>
         {
@@ -345,7 +345,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public new class ErrorMask :
-            ASpell.ErrorMask,
+            SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
@@ -517,7 +517,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         }
         public new class TranslationMask :
-            ASpell.TranslationMask,
+            SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
             #region Members
@@ -659,13 +659,13 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ILeveledSpell :
-        IASpellInternal,
         IFormLinkContainer,
         ILeveledSpellGetter,
         ILoquiObjectSetter<ILeveledSpellInternal>,
         IObjectBounded,
         IObjectBoundedOptional,
-        ISpellSpawn
+        ISkyrimMajorRecordInternal,
+        ISpellRecord
     {
         new ObjectBounds ObjectBounds { get; set; }
         new Byte? ChanceNone { get; set; }
@@ -674,21 +674,21 @@ namespace Mutagen.Bethesda.Skyrim
     }
 
     public partial interface ILeveledSpellInternal :
-        IASpellInternal,
+        ISkyrimMajorRecordInternal,
         ILeveledSpell,
         ILeveledSpellGetter
     {
     }
 
     public partial interface ILeveledSpellGetter :
-        IASpellGetter,
+        ISkyrimMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<ILeveledSpellGetter>,
         IMapsToGetter<ILeveledSpellGetter>,
         IObjectBoundedGetter,
         IObjectBoundedOptionalGetter,
-        ISpellSpawnGetter
+        ISpellRecordGetter
     {
         static new ILoquiRegistration Registration => LeveledSpell_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }
@@ -940,7 +940,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class LeveledSpellSetterCommon : ASpellSetterCommon
+    public partial class LeveledSpellSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly LeveledSpellSetterCommon Instance = new LeveledSpellSetterCommon();
 
@@ -954,11 +954,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Flags = default;
             item.Entries = null;
             base.Clear(item);
-        }
-        
-        public override void Clear(IASpellInternal item)
-        {
-            Clear(item: (ILeveledSpellInternal)item);
         }
         
         public override void Clear(ISkyrimMajorRecordInternal item)
@@ -995,17 +990,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public override void CopyInFromBinary(
-            IASpellInternal item,
-            MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            CopyInFromBinary(
-                item: (LeveledSpell)item,
-                frame: frame,
-                recordTypeConverter: recordTypeConverter);
-        }
-        
-        public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1030,7 +1014,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LeveledSpellCommon : ASpellCommon
+    public partial class LeveledSpellCommon : SkyrimMajorRecordCommon
     {
         public new static readonly LeveledSpellCommon Instance = new LeveledSpellCommon();
 
@@ -1109,7 +1093,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             LeveledSpell.Mask<bool>? printMask = null)
         {
-            ASpellCommon.ToStringFields(
+            SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
                 fg: fg,
                 printMask: printMask);
@@ -1147,28 +1131,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public static LeveledSpell_FieldIndex ConvertFieldIndex(ASpell_FieldIndex index)
-        {
-            switch (index)
-            {
-                case ASpell_FieldIndex.MajorRecordFlagsRaw:
-                    return (LeveledSpell_FieldIndex)((int)index);
-                case ASpell_FieldIndex.FormKey:
-                    return (LeveledSpell_FieldIndex)((int)index);
-                case ASpell_FieldIndex.VersionControl:
-                    return (LeveledSpell_FieldIndex)((int)index);
-                case ASpell_FieldIndex.EditorID:
-                    return (LeveledSpell_FieldIndex)((int)index);
-                case ASpell_FieldIndex.FormVersion:
-                    return (LeveledSpell_FieldIndex)((int)index);
-                case ASpell_FieldIndex.Version2:
-                    return (LeveledSpell_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-        
-        public static new LeveledSpell_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
+        public static LeveledSpell_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -1213,21 +1176,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IASpellGetter)lhs, (IASpellGetter)rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
             if (lhs.ChanceNone != rhs.ChanceNone) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (!lhs.Entries.SequenceEqualNullable(rhs.Entries)) return false;
             return true;
-        }
-        
-        public override bool Equals(
-            IASpellGetter? lhs,
-            IASpellGetter? rhs)
-        {
-            return Equals(
-                lhs: (ILeveledSpellGetter?)lhs,
-                rhs: rhs as ILeveledSpellGetter);
         }
         
         public override bool Equals(
@@ -1260,11 +1214,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Entries);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
-        }
-        
-        public override int GetHashCode(IASpellGetter item)
-        {
-            return GetHashCode(item: (ILeveledSpellGetter)item);
         }
         
         public override int GetHashCode(ISkyrimMajorRecordGetter item)
@@ -1314,17 +1263,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return newRec;
         }
         
-        public override ASpell Duplicate(
-            IASpellGetter item,
-            FormKey formKey,
-            TranslationCrystal? copyMask)
-        {
-            return this.Duplicate(
-                item: (ILeveledSpell)item,
-                formKey: formKey,
-                copyMask: copyMask);
-        }
-        
         public override SkyrimMajorRecord Duplicate(
             ISkyrimMajorRecordGetter item,
             FormKey formKey,
@@ -1352,7 +1290,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LeveledSpellSetterTranslationCommon : ASpellSetterTranslationCommon
+    public partial class LeveledSpellSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly LeveledSpellSetterTranslationCommon Instance = new LeveledSpellSetterTranslationCommon();
 
@@ -1380,8 +1318,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             bool deepCopy)
         {
             base.DeepCopyIn(
-                (IASpell)item,
-                (IASpellGetter)rhs,
+                (ISkyrimMajorRecord)item,
+                (ISkyrimMajorRecordGetter)rhs,
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
@@ -1447,36 +1385,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-        }
-        
-        public override void DeepCopyIn(
-            IASpellInternal item,
-            IASpellGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (ILeveledSpellInternal)item,
-                rhs: (ILeveledSpellGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
-            IASpell item,
-            IASpellGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (ILeveledSpell)item,
-                rhs: (ILeveledSpellGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
         }
         
         public override void DeepCopyIn(
@@ -1620,7 +1528,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class LeveledSpellBinaryWriteTranslation :
-        ASpellBinaryWriteTranslation,
+        SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
         public new readonly static LeveledSpellBinaryWriteTranslation Instance = new LeveledSpellBinaryWriteTranslation();
@@ -1705,17 +1613,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public override void Write(
             MutagenWriter writer,
-            IASpellGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            Write(
-                item: (ILeveledSpellGetter)item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
-        }
-
-        public override void Write(
-            MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1738,7 +1635,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class LeveledSpellBinaryCreateTranslation : ASpellBinaryCreateTranslation
+    public partial class LeveledSpellBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static LeveledSpellBinaryCreateTranslation Instance = new LeveledSpellBinaryCreateTranslation();
 
@@ -1747,7 +1644,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILeveledSpellInternal item,
             MutagenFrame frame)
         {
-            ASpellBinaryCreateTranslation.FillBinaryStructs(
+            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
         }
@@ -1796,7 +1693,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (int)LeveledSpell_FieldIndex.Entries;
                 }
                 default:
-                    return ASpellBinaryCreateTranslation.FillBinaryRecordTypes(
+                    return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         recordParseCount: recordParseCount,
@@ -1821,7 +1718,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class LeveledSpellBinaryOverlay :
-        ASpellBinaryOverlay,
+        SkyrimMajorRecordBinaryOverlay,
         ILeveledSpellGetter
     {
         #region Common Routing
