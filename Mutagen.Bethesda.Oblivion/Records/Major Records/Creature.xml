@@ -20,7 +20,9 @@
       <List name="Factions">
         <RefDirect refName="RankPlacement" />
       </List>
-      <FormLink name="DeathItem" refName="AItem" recordType="INAM" />
+      <FormLink name="DeathItem" recordType="INAM" >
+        <Interface>IItem</Interface>
+      </FormLink>
       <FormLink name="Script" refName="Script" recordType="SCRI" />
       <RefDirect name="AIData" refName="CreatureAIData" />
       <List name="AIPackages">

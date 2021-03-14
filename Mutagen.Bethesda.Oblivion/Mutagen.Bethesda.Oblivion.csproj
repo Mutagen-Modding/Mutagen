@@ -351,9 +351,6 @@
     <Compile Include="Records\Major Records\AIPackageData_Generated.cs">
       <DependentUpon>AIPackage.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\AItem_Generated.cs">
-      <DependentUpon>AItem.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\AlchemicalApparatus_Generated.cs">
       <DependentUpon>AlchemicalApparatus.xml</DependentUpon>
     </Compile>
@@ -895,6 +892,7 @@
       <DependentUpon>LeveledSpell.xml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\ISpellRecord_Generated.cs" />
+    <Compile Include="Interfaces\IItem_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.1.2">

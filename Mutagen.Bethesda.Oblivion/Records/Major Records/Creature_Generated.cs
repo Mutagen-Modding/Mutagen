@@ -151,14 +151,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region DeathItem
-        private IFormLinkNullable<IAItemGetter> _DeathItem = new FormLinkNullable<IAItemGetter>();
-        public IFormLinkNullable<IAItemGetter> DeathItem
+        private IFormLinkNullable<IItemGetter> _DeathItem = new FormLinkNullable<IItemGetter>();
+        public IFormLinkNullable<IItemGetter> DeathItem
         {
             get => _DeathItem;
             set => _DeathItem = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IAItemGetter> ICreatureGetter.DeathItem => this.DeathItem;
+        IFormLinkNullableGetter<IItemGetter> ICreatureGetter.DeathItem => this.DeathItem;
         #endregion
         #region Script
         private IFormLinkNullable<IScriptGetter> _Script = new FormLinkNullable<IScriptGetter>();
@@ -1854,7 +1854,7 @@ namespace Mutagen.Bethesda.Oblivion
         new MemorySlice<Byte>? NIFT { get; set; }
         new CreatureConfiguration? Configuration { get; set; }
         new ExtendedList<RankPlacement> Factions { get; }
-        new IFormLinkNullable<IAItemGetter> DeathItem { get; }
+        new IFormLinkNullable<IItemGetter> DeathItem { get; }
         new IFormLinkNullable<IScriptGetter> Script { get; }
         new CreatureAIData? AIData { get; set; }
         new ExtendedList<IFormLinkGetter<IAIPackageGetter>> AIPackages { get; }
@@ -1897,7 +1897,7 @@ namespace Mutagen.Bethesda.Oblivion
         ReadOnlyMemorySlice<Byte>? NIFT { get; }
         ICreatureConfigurationGetter? Configuration { get; }
         IReadOnlyList<IRankPlacementGetter> Factions { get; }
-        IFormLinkNullableGetter<IAItemGetter> DeathItem { get; }
+        IFormLinkNullableGetter<IItemGetter> DeathItem { get; }
         IFormLinkNullableGetter<IScriptGetter> Script { get; }
         ICreatureAIDataGetter? AIData { get; }
         IReadOnlyList<IFormLinkGetter<IAIPackageGetter>> AIPackages { get; }
@@ -4094,7 +4094,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlyList<IRankPlacementGetter> Factions { get; private set; } = ListExt.Empty<RankPlacementBinaryOverlay>();
         #region DeathItem
         private int? _DeathItemLocation;
-        public IFormLinkNullableGetter<IAItemGetter> DeathItem => _DeathItemLocation.HasValue ? new FormLinkNullable<IAItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DeathItemLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAItemGetter>.Null;
+        public IFormLinkNullableGetter<IItemGetter> DeathItem => _DeathItemLocation.HasValue ? new FormLinkNullable<IItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DeathItemLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IItemGetter>.Null;
         #endregion
         #region Script
         private int? _ScriptLocation;

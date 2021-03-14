@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Ingredient :
-        AItem,
+        OblivionMajorRecord,
         IEquatable<IIngredientGetter>,
         IIngredientInternal,
         ILoquiObjectSetter<Ingredient>
@@ -149,7 +149,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public new class Mask<TItem> :
-            AItem.Mask<TItem>,
+            OblivionMajorRecord.Mask<TItem>,
             IEquatable<Mask<TItem>>,
             IMask<TItem>
         {
@@ -426,7 +426,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public new class ErrorMask :
-            AItem.ErrorMask,
+            OblivionMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
@@ -634,7 +634,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         }
         public new class TranslationMask :
-            AItem.TranslationMask,
+            OblivionMajorRecord.TranslationMask,
             ITranslationMask
         {
             #region Members
@@ -767,13 +767,14 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IIngredient :
-        IAItemInternal,
         IFormLinkContainer,
         IIngredientGetter,
+        IItem,
         ILoquiObjectSetter<IIngredientInternal>,
         IModeled,
         INamed,
-        INamedRequired
+        INamedRequired,
+        IOblivionMajorRecordInternal
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
@@ -785,16 +786,17 @@ namespace Mutagen.Bethesda.Oblivion
     }
 
     public partial interface IIngredientInternal :
-        IAItemInternal,
+        IOblivionMajorRecordInternal,
         IIngredient,
         IIngredientGetter
     {
     }
 
     public partial interface IIngredientGetter :
-        IAItemGetter,
+        IOblivionMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IItemGetter,
         ILoquiObject<IIngredientGetter>,
         IMapsToGetter<IIngredientGetter>,
         IModeledGetter,
@@ -1056,7 +1058,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class IngredientSetterCommon : AItemSetterCommon
+    public partial class IngredientSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly IngredientSetterCommon Instance = new IngredientSetterCommon();
 
@@ -1073,11 +1075,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Data = null;
             item.Effects.Clear();
             base.Clear(item);
-        }
-        
-        public override void Clear(IAItemInternal item)
-        {
-            Clear(item: (IIngredientInternal)item);
         }
         
         public override void Clear(IOblivionMajorRecordInternal item)
@@ -1115,17 +1112,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override void CopyInFromBinary(
-            IAItemInternal item,
-            MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            CopyInFromBinary(
-                item: (Ingredient)item,
-                frame: frame,
-                recordTypeConverter: recordTypeConverter);
-        }
-        
-        public override void CopyInFromBinary(
             IOblivionMajorRecordInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1150,7 +1136,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class IngredientCommon : AItemCommon
+    public partial class IngredientCommon : OblivionMajorRecordCommon
     {
         public new static readonly IngredientCommon Instance = new IngredientCommon();
 
@@ -1240,7 +1226,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             Ingredient.Mask<bool>? printMask = null)
         {
-            AItemCommon.ToStringFields(
+            OblivionMajorRecordCommon.ToStringFields(
                 item: item,
                 fg: fg,
                 printMask: printMask);
@@ -1293,26 +1279,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Ingredient_FieldIndex ConvertFieldIndex(AItem_FieldIndex index)
-        {
-            switch (index)
-            {
-                case AItem_FieldIndex.MajorRecordFlagsRaw:
-                    return (Ingredient_FieldIndex)((int)index);
-                case AItem_FieldIndex.FormKey:
-                    return (Ingredient_FieldIndex)((int)index);
-                case AItem_FieldIndex.VersionControl:
-                    return (Ingredient_FieldIndex)((int)index);
-                case AItem_FieldIndex.EditorID:
-                    return (Ingredient_FieldIndex)((int)index);
-                case AItem_FieldIndex.OblivionMajorRecordFlags:
-                    return (Ingredient_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-        
-        public static new Ingredient_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        public static Ingredient_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -1355,7 +1322,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IAItemGetter)lhs, (IAItemGetter)rhs)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
@@ -1364,15 +1331,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(lhs.Data, rhs.Data)) return false;
             if (!lhs.Effects.SequenceEqualNullable(rhs.Effects)) return false;
             return true;
-        }
-        
-        public override bool Equals(
-            IAItemGetter? lhs,
-            IAItemGetter? rhs)
-        {
-            return Equals(
-                lhs: (IIngredientGetter?)lhs,
-                rhs: rhs as IIngredientGetter);
         }
         
         public override bool Equals(
@@ -1422,11 +1380,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return hash.ToHashCode();
         }
         
-        public override int GetHashCode(IAItemGetter item)
-        {
-            return GetHashCode(item: (IIngredientGetter)item);
-        }
-        
         public override int GetHashCode(IOblivionMajorRecordGetter item)
         {
             return GetHashCode(item: (IIngredientGetter)item);
@@ -1474,17 +1427,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return newRec;
         }
         
-        public override AItem Duplicate(
-            IAItemGetter item,
-            FormKey formKey,
-            TranslationCrystal? copyMask)
-        {
-            return this.Duplicate(
-                item: (IIngredient)item,
-                formKey: formKey,
-                copyMask: copyMask);
-        }
-        
         public override OblivionMajorRecord Duplicate(
             IOblivionMajorRecordGetter item,
             FormKey formKey,
@@ -1512,7 +1454,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class IngredientSetterTranslationCommon : AItemSetterTranslationCommon
+    public partial class IngredientSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly IngredientSetterTranslationCommon Instance = new IngredientSetterTranslationCommon();
 
@@ -1540,8 +1482,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool deepCopy)
         {
             base.DeepCopyIn(
-                (IAItem)item,
-                (IAItemGetter)rhs,
+                (IOblivionMajorRecord)item,
+                (IOblivionMajorRecordGetter)rhs,
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
@@ -1637,36 +1579,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-        }
-        
-        public override void DeepCopyIn(
-            IAItemInternal item,
-            IAItemGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (IIngredientInternal)item,
-                rhs: (IIngredientGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
-            IAItem item,
-            IAItemGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (IIngredient)item,
-                rhs: (IIngredientGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
         }
         
         public override void DeepCopyIn(
@@ -1810,7 +1722,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class IngredientBinaryWriteTranslation :
-        AItemBinaryWriteTranslation,
+        OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
         public new readonly static IngredientBinaryWriteTranslation Instance = new IngredientBinaryWriteTranslation();
@@ -1911,17 +1823,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void Write(
             MutagenWriter writer,
-            IAItemGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            Write(
-                item: (IIngredientGetter)item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
-        }
-
-        public override void Write(
-            MutagenWriter writer,
             IOblivionMajorRecordGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1944,7 +1845,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class IngredientBinaryCreateTranslation : AItemBinaryCreateTranslation
+    public partial class IngredientBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static IngredientBinaryCreateTranslation Instance = new IngredientBinaryCreateTranslation();
 
@@ -1953,7 +1854,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IIngredientInternal item,
             MutagenFrame frame)
         {
-            AItemBinaryCreateTranslation.FillBinaryStructs(
+            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
         }
@@ -2024,7 +1925,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (int)Ingredient_FieldIndex.Effects;
                 }
                 default:
-                    return AItemBinaryCreateTranslation.FillBinaryRecordTypes(
+                    return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         recordParseCount: recordParseCount,
@@ -2049,7 +1950,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class IngredientBinaryOverlay :
-        AItemBinaryOverlay,
+        OblivionMajorRecordBinaryOverlay,
         IIngredientGetter
     {
         #region Common Routing

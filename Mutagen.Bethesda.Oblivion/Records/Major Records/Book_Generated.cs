@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Book :
-        AItem,
+        OblivionMajorRecord,
         IBookInternal,
         IEquatable<IBookGetter>,
         ILoquiObjectSetter<Book>
@@ -150,7 +150,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public new class Mask<TItem> :
-            AItem.Mask<TItem>,
+            OblivionMajorRecord.Mask<TItem>,
             IEquatable<Mask<TItem>>,
             IMask<TItem>
         {
@@ -385,7 +385,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public new class ErrorMask :
-            AItem.ErrorMask,
+            OblivionMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
@@ -584,7 +584,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         }
         public new class TranslationMask :
-            AItem.TranslationMask,
+            OblivionMajorRecord.TranslationMask,
             ITranslationMask
         {
             #region Members
@@ -721,13 +721,14 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IBook :
-        IAItemInternal,
         IBookGetter,
         IFormLinkContainer,
+        IItem,
         ILoquiObjectSetter<IBookInternal>,
         IModeled,
         INamed,
-        INamedRequired
+        INamedRequired,
+        IOblivionMajorRecordInternal
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
@@ -740,16 +741,17 @@ namespace Mutagen.Bethesda.Oblivion
     }
 
     public partial interface IBookInternal :
-        IAItemInternal,
+        IOblivionMajorRecordInternal,
         IBook,
         IBookGetter
     {
     }
 
     public partial interface IBookGetter :
-        IAItemGetter,
+        IOblivionMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IItemGetter,
         ILoquiObject<IBookGetter>,
         IMapsToGetter<IBookGetter>,
         IModeledGetter,
@@ -1013,7 +1015,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class BookSetterCommon : AItemSetterCommon
+    public partial class BookSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly BookSetterCommon Instance = new BookSetterCommon();
 
@@ -1031,11 +1033,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Description = default;
             item.Data = null;
             base.Clear(item);
-        }
-        
-        public override void Clear(IAItemInternal item)
-        {
-            Clear(item: (IBookInternal)item);
         }
         
         public override void Clear(IOblivionMajorRecordInternal item)
@@ -1073,17 +1070,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override void CopyInFromBinary(
-            IAItemInternal item,
-            MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            CopyInFromBinary(
-                item: (Book)item,
-                frame: frame,
-                recordTypeConverter: recordTypeConverter);
-        }
-        
-        public override void CopyInFromBinary(
             IOblivionMajorRecordInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1108,7 +1094,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class BookCommon : AItemCommon
+    public partial class BookCommon : OblivionMajorRecordCommon
     {
         public new static readonly BookCommon Instance = new BookCommon();
 
@@ -1196,7 +1182,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             Book.Mask<bool>? printMask = null)
         {
-            AItemCommon.ToStringFields(
+            OblivionMajorRecordCommon.ToStringFields(
                 item: item,
                 fg: fg,
                 printMask: printMask);
@@ -1240,26 +1226,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Book_FieldIndex ConvertFieldIndex(AItem_FieldIndex index)
-        {
-            switch (index)
-            {
-                case AItem_FieldIndex.MajorRecordFlagsRaw:
-                    return (Book_FieldIndex)((int)index);
-                case AItem_FieldIndex.FormKey:
-                    return (Book_FieldIndex)((int)index);
-                case AItem_FieldIndex.VersionControl:
-                    return (Book_FieldIndex)((int)index);
-                case AItem_FieldIndex.EditorID:
-                    return (Book_FieldIndex)((int)index);
-                case AItem_FieldIndex.OblivionMajorRecordFlags:
-                    return (Book_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-        
-        public static new Book_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        public static Book_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -1302,7 +1269,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IAItemGetter)lhs, (IAItemGetter)rhs)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
@@ -1312,15 +1279,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!string.Equals(lhs.Description, rhs.Description)) return false;
             if (!object.Equals(lhs.Data, rhs.Data)) return false;
             return true;
-        }
-        
-        public override bool Equals(
-            IAItemGetter? lhs,
-            IAItemGetter? rhs)
-        {
-            return Equals(
-                lhs: (IBookGetter?)lhs,
-                rhs: rhs as IBookGetter);
         }
         
         public override bool Equals(
@@ -1374,11 +1332,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return hash.ToHashCode();
         }
         
-        public override int GetHashCode(IAItemGetter item)
-        {
-            return GetHashCode(item: (IBookGetter)item);
-        }
-        
         public override int GetHashCode(IOblivionMajorRecordGetter item)
         {
             return GetHashCode(item: (IBookGetter)item);
@@ -1426,17 +1379,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return newRec;
         }
         
-        public override AItem Duplicate(
-            IAItemGetter item,
-            FormKey formKey,
-            TranslationCrystal? copyMask)
-        {
-            return this.Duplicate(
-                item: (IBook)item,
-                formKey: formKey,
-                copyMask: copyMask);
-        }
-        
         public override OblivionMajorRecord Duplicate(
             IOblivionMajorRecordGetter item,
             FormKey formKey,
@@ -1464,7 +1406,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class BookSetterTranslationCommon : AItemSetterTranslationCommon
+    public partial class BookSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly BookSetterTranslationCommon Instance = new BookSetterTranslationCommon();
 
@@ -1492,8 +1434,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool deepCopy)
         {
             base.DeepCopyIn(
-                (IAItem)item,
-                (IAItemGetter)rhs,
+                (IOblivionMajorRecord)item,
+                (IOblivionMajorRecordGetter)rhs,
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
@@ -1573,36 +1515,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-        }
-        
-        public override void DeepCopyIn(
-            IAItemInternal item,
-            IAItemGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (IBookInternal)item,
-                rhs: (IBookGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
-            IAItem item,
-            IAItemGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (IBook)item,
-                rhs: (IBookGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
         }
         
         public override void DeepCopyIn(
@@ -1746,7 +1658,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class BookBinaryWriteTranslation :
-        AItemBinaryWriteTranslation,
+        OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
         public new readonly static BookBinaryWriteTranslation Instance = new BookBinaryWriteTranslation();
@@ -1845,17 +1757,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void Write(
             MutagenWriter writer,
-            IAItemGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            Write(
-                item: (IBookGetter)item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
-        }
-
-        public override void Write(
-            MutagenWriter writer,
             IOblivionMajorRecordGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1878,7 +1779,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class BookBinaryCreateTranslation : AItemBinaryCreateTranslation
+    public partial class BookBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static BookBinaryCreateTranslation Instance = new BookBinaryCreateTranslation();
 
@@ -1887,7 +1788,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IBookInternal item,
             MutagenFrame frame)
         {
-            AItemBinaryCreateTranslation.FillBinaryStructs(
+            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
         }
@@ -1964,7 +1865,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (int)Book_FieldIndex.Data;
                 }
                 default:
-                    return AItemBinaryCreateTranslation.FillBinaryRecordTypes(
+                    return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         recordParseCount: recordParseCount,
@@ -1989,7 +1890,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class BookBinaryOverlay :
-        AItemBinaryOverlay,
+        OblivionMajorRecordBinaryOverlay,
         IBookGetter
     {
         #region Common Routing

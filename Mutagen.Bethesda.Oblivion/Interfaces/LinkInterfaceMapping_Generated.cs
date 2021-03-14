@@ -18,6 +18,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public LinkInterfaceMapping()
         {
             var dict = new Dictionary<Type, Type[]>();
+            dict[typeof(IItem)] = new Type[]
+            {
+                typeof(AClothing),
+                typeof(AlchemicalApparatus),
+                typeof(Ammunition),
+                typeof(Book),
+                typeof(Ingredient),
+                typeof(Key),
+                typeof(LeveledItem),
+                typeof(Light),
+                typeof(Miscellaneous),
+                typeof(Potion),
+                typeof(SigilStone),
+                typeof(SoulGem),
+                typeof(Weapon),
+            };
+            dict[typeof(IItemGetter)] = dict[typeof(IItem)];
             dict[typeof(IOwner)] = new Type[]
             {
                 typeof(Faction),

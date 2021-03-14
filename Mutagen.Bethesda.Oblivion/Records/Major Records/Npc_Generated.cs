@@ -99,14 +99,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region DeathItem
-        private IFormLinkNullable<IAItemGetter> _DeathItem = new FormLinkNullable<IAItemGetter>();
-        public IFormLinkNullable<IAItemGetter> DeathItem
+        private IFormLinkNullable<IItemGetter> _DeathItem = new FormLinkNullable<IItemGetter>();
+        public IFormLinkNullable<IItemGetter> DeathItem
         {
             get => _DeathItem;
             set => _DeathItem = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IAItemGetter> INpcGetter.DeathItem => this.DeathItem;
+        IFormLinkNullableGetter<IItemGetter> INpcGetter.DeathItem => this.DeathItem;
         #endregion
         #region Race
         private IFormLinkNullable<IRaceGetter> _Race = new FormLinkNullable<IRaceGetter>();
@@ -1796,7 +1796,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Model? Model { get; set; }
         new NpcConfiguration? Configuration { get; set; }
         new ExtendedList<RankPlacement> Factions { get; }
-        new IFormLinkNullable<IAItemGetter> DeathItem { get; }
+        new IFormLinkNullable<IItemGetter> DeathItem { get; }
         new IFormLinkNullable<IRaceGetter> Race { get; }
         new ExtendedList<IFormLinkGetter<ISpellRecordGetter>> Spells { get; }
         new IFormLinkNullable<IScriptGetter> Script { get; }
@@ -1840,7 +1840,7 @@ namespace Mutagen.Bethesda.Oblivion
         IModelGetter? Model { get; }
         INpcConfigurationGetter? Configuration { get; }
         IReadOnlyList<IRankPlacementGetter> Factions { get; }
-        IFormLinkNullableGetter<IAItemGetter> DeathItem { get; }
+        IFormLinkNullableGetter<IItemGetter> DeathItem { get; }
         IFormLinkNullableGetter<IRaceGetter> Race { get; }
         IReadOnlyList<IFormLinkGetter<ISpellRecordGetter>> Spells { get; }
         IFormLinkNullableGetter<IScriptGetter> Script { get; }
@@ -4013,7 +4013,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlyList<IRankPlacementGetter> Factions { get; private set; } = ListExt.Empty<RankPlacementBinaryOverlay>();
         #region DeathItem
         private int? _DeathItemLocation;
-        public IFormLinkNullableGetter<IAItemGetter> DeathItem => _DeathItemLocation.HasValue ? new FormLinkNullable<IAItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DeathItemLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAItemGetter>.Null;
+        public IFormLinkNullableGetter<IItemGetter> DeathItem => _DeathItemLocation.HasValue ? new FormLinkNullable<IItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DeathItemLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IItemGetter>.Null;
         #endregion
         #region Race
         private int? _RaceLocation;

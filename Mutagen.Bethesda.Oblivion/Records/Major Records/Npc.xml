@@ -8,7 +8,9 @@
       <List name="Factions">
         <RefDirect refName="RankPlacement" />
       </List>
-      <FormLink name="DeathItem" refName="AItem" recordType="INAM" />
+      <FormLink name="DeathItem" recordType="INAM" >
+        <Interface>IItem</Interface>
+      </FormLink>
       <FormLink name="Race" refName="Race" recordType="RNAM" />
       <List name="Spells">
         <FormLink recordType="SPLO" >
@@ -108,7 +110,9 @@
   </Object>
   <Object name="ItemEntry" objType="Subrecord" recordType="CNTO" GUID="c4622b63-e996-4d1d-b707-e75cba9c197d" ID="86">
     <Fields>
-      <FormLink name="Item" refName="AItem" />
+      <FormLink name="Item">
+        <Interface>IItem</Interface>
+      </FormLink>
       <Int32 name="Count" nullable="True" />
     </Fields>
   </Object>

@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class SoulGem :
-        AItem,
+        OblivionMajorRecord,
         IEquatable<ISoulGemGetter>,
         ILoquiObjectSetter<SoulGem>,
         ISoulGemInternal
@@ -140,7 +140,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public new class Mask<TItem> :
-            AItem.Mask<TItem>,
+            OblivionMajorRecord.Mask<TItem>,
             IEquatable<Mask<TItem>>,
             IMask<TItem>
         {
@@ -362,7 +362,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public new class ErrorMask :
-            AItem.ErrorMask,
+            OblivionMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
@@ -549,7 +549,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         }
         public new class TranslationMask :
-            AItem.TranslationMask,
+            OblivionMajorRecord.TranslationMask,
             ITranslationMask
         {
             #region Members
@@ -683,12 +683,13 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ISoulGem :
-        IAItemInternal,
         IFormLinkContainer,
+        IItem,
         ILoquiObjectSetter<ISoulGemInternal>,
         IModeled,
         INamed,
         INamedRequired,
+        IOblivionMajorRecordInternal,
         ISoulGemGetter
     {
         new String? Name { get; set; }
@@ -701,16 +702,17 @@ namespace Mutagen.Bethesda.Oblivion
     }
 
     public partial interface ISoulGemInternal :
-        IAItemInternal,
+        IOblivionMajorRecordInternal,
         ISoulGem,
         ISoulGemGetter
     {
     }
 
     public partial interface ISoulGemGetter :
-        IAItemGetter,
+        IOblivionMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IItemGetter,
         ILoquiObject<ISoulGemGetter>,
         IMapsToGetter<ISoulGemGetter>,
         IModeledGetter,
@@ -972,7 +974,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class SoulGemSetterCommon : AItemSetterCommon
+    public partial class SoulGemSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly SoulGemSetterCommon Instance = new SoulGemSetterCommon();
 
@@ -989,11 +991,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ContainedSoul = default;
             item.MaximumCapacity = default;
             base.Clear(item);
-        }
-        
-        public override void Clear(IAItemInternal item)
-        {
-            Clear(item: (ISoulGemInternal)item);
         }
         
         public override void Clear(IOblivionMajorRecordInternal item)
@@ -1030,17 +1027,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override void CopyInFromBinary(
-            IAItemInternal item,
-            MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            CopyInFromBinary(
-                item: (SoulGem)item,
-                frame: frame,
-                recordTypeConverter: recordTypeConverter);
-        }
-        
-        public override void CopyInFromBinary(
             IOblivionMajorRecordInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1065,7 +1051,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class SoulGemCommon : AItemCommon
+    public partial class SoulGemCommon : OblivionMajorRecordCommon
     {
         public new static readonly SoulGemCommon Instance = new SoulGemCommon();
 
@@ -1152,7 +1138,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             SoulGem.Mask<bool>? printMask = null)
         {
-            AItemCommon.ToStringFields(
+            OblivionMajorRecordCommon.ToStringFields(
                 item: item,
                 fg: fg,
                 printMask: printMask);
@@ -1192,26 +1178,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static SoulGem_FieldIndex ConvertFieldIndex(AItem_FieldIndex index)
-        {
-            switch (index)
-            {
-                case AItem_FieldIndex.MajorRecordFlagsRaw:
-                    return (SoulGem_FieldIndex)((int)index);
-                case AItem_FieldIndex.FormKey:
-                    return (SoulGem_FieldIndex)((int)index);
-                case AItem_FieldIndex.VersionControl:
-                    return (SoulGem_FieldIndex)((int)index);
-                case AItem_FieldIndex.EditorID:
-                    return (SoulGem_FieldIndex)((int)index);
-                case AItem_FieldIndex.OblivionMajorRecordFlags:
-                    return (SoulGem_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-        
-        public static new SoulGem_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        public static SoulGem_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -1254,7 +1221,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IAItemGetter)lhs, (IAItemGetter)rhs)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
@@ -1263,15 +1230,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs.ContainedSoul != rhs.ContainedSoul) return false;
             if (lhs.MaximumCapacity != rhs.MaximumCapacity) return false;
             return true;
-        }
-        
-        public override bool Equals(
-            IAItemGetter? lhs,
-            IAItemGetter? rhs)
-        {
-            return Equals(
-                lhs: (ISoulGemGetter?)lhs,
-                rhs: rhs as ISoulGemGetter);
         }
         
         public override bool Equals(
@@ -1324,11 +1282,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return hash.ToHashCode();
         }
         
-        public override int GetHashCode(IAItemGetter item)
-        {
-            return GetHashCode(item: (ISoulGemGetter)item);
-        }
-        
         public override int GetHashCode(IOblivionMajorRecordGetter item)
         {
             return GetHashCode(item: (ISoulGemGetter)item);
@@ -1372,17 +1325,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return newRec;
         }
         
-        public override AItem Duplicate(
-            IAItemGetter item,
-            FormKey formKey,
-            TranslationCrystal? copyMask)
-        {
-            return this.Duplicate(
-                item: (ISoulGem)item,
-                formKey: formKey,
-                copyMask: copyMask);
-        }
-        
         public override OblivionMajorRecord Duplicate(
             IOblivionMajorRecordGetter item,
             FormKey formKey,
@@ -1410,7 +1352,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class SoulGemSetterTranslationCommon : AItemSetterTranslationCommon
+    public partial class SoulGemSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly SoulGemSetterTranslationCommon Instance = new SoulGemSetterTranslationCommon();
 
@@ -1438,8 +1380,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool deepCopy)
         {
             base.DeepCopyIn(
-                (IAItem)item,
-                (IAItemGetter)rhs,
+                (IOblivionMajorRecord)item,
+                (IOblivionMajorRecordGetter)rhs,
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
@@ -1515,36 +1457,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.MaximumCapacity = rhs.MaximumCapacity;
             }
-        }
-        
-        public override void DeepCopyIn(
-            IAItemInternal item,
-            IAItemGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (ISoulGemInternal)item,
-                rhs: (ISoulGemGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
-            IAItem item,
-            IAItemGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (ISoulGem)item,
-                rhs: (ISoulGemGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
         }
         
         public override void DeepCopyIn(
@@ -1688,7 +1600,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class SoulGemBinaryWriteTranslation :
-        AItemBinaryWriteTranslation,
+        OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
         public new readonly static SoulGemBinaryWriteTranslation Instance = new SoulGemBinaryWriteTranslation();
@@ -1784,17 +1696,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void Write(
             MutagenWriter writer,
-            IAItemGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            Write(
-                item: (ISoulGemGetter)item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
-        }
-
-        public override void Write(
-            MutagenWriter writer,
             IOblivionMajorRecordGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1817,7 +1718,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class SoulGemBinaryCreateTranslation : AItemBinaryCreateTranslation
+    public partial class SoulGemBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static SoulGemBinaryCreateTranslation Instance = new SoulGemBinaryCreateTranslation();
 
@@ -1826,7 +1727,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISoulGemInternal item,
             MutagenFrame frame)
         {
-            AItemBinaryCreateTranslation.FillBinaryStructs(
+            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
         }
@@ -1892,7 +1793,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (int)SoulGem_FieldIndex.MaximumCapacity;
                 }
                 default:
-                    return AItemBinaryCreateTranslation.FillBinaryRecordTypes(
+                    return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         recordParseCount: recordParseCount,
@@ -1917,7 +1818,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class SoulGemBinaryOverlay :
-        AItemBinaryOverlay,
+        OblivionMajorRecordBinaryOverlay,
         ISoulGemGetter
     {
         #region Common Routing

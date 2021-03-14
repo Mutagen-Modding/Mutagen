@@ -46,14 +46,14 @@ namespace Mutagen.Bethesda.Oblivion
         public Int16 Unknown { get; set; } = default;
         #endregion
         #region Reference
-        private IFormLink<IAItemGetter> _Reference = new FormLink<IAItemGetter>();
-        public IFormLink<IAItemGetter> Reference
+        private IFormLink<IItemGetter> _Reference = new FormLink<IItemGetter>();
+        public IFormLink<IItemGetter> Reference
         {
             get => _Reference;
             set => _Reference = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IAItemGetter> ILeveledItemEntryGetter.Reference => this.Reference;
+        IFormLinkGetter<IItemGetter> ILeveledItemEntryGetter.Reference => this.Reference;
         #endregion
         #region Count
         public Int16? Count { get; set; }
@@ -555,7 +555,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new Int16 Level { get; set; }
         new Int16 Unknown { get; set; }
-        new IFormLink<IAItemGetter> Reference { get; }
+        new IFormLink<IItemGetter> Reference { get; }
         new Int16? Count { get; set; }
         new Int16? Unknown2 { get; set; }
     }
@@ -575,7 +575,7 @@ namespace Mutagen.Bethesda.Oblivion
         static ILoquiRegistration Registration => LeveledItemEntry_Registration.Instance;
         Int16 Level { get; }
         Int16 Unknown { get; }
-        IFormLinkGetter<IAItemGetter> Reference { get; }
+        IFormLinkGetter<IItemGetter> Reference { get; }
         Int16? Count { get; }
         Int16? Unknown2 { get; }
 
@@ -1274,7 +1274,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public Int16 Level => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x0, 0x2));
         public Int16 Unknown => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x2, 0x2));
-        public IFormLinkGetter<IAItemGetter> Reference => new FormLink<IAItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<IItemGetter> Reference => new FormLink<IItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         public Int16? Count => _data.Length >= 10 ? BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x8, 0x2)) : default(Int16?);
         public Int16? Unknown2 => _data.Length >= 12 ? BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0xA, 0x2)) : default(Int16?);
         partial void CustomFactoryEnd(

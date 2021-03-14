@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Book" baseClass="AItem" objType="Record" recordType="BOOK" GUID="e16c811f-5052-494d-8102-b7450f5b6833" ID="68">
+  <Object name="Book" baseClass="OblivionMajorRecord" objType="Record" recordType="BOOK" GUID="e16c811f-5052-494d-8102-b7450f5b6833" ID="68">
     <Fields>
       <String name="Name" recordType="FULL" />
       <RefDirect name="Model" refName="Model" />
@@ -11,6 +11,7 @@
       <String name="Description" recordType="DESC" />
       <RefDirect name="Data" refName="BookData" />
     </Fields>
+    <LinkInterface>IItem</LinkInterface>
   </Object>
   <Object name="BookData" recordType="DATA" objType="Subrecord" GUID="aefa2aca-68c8-4782-941f-593ea5528f3e" ID="177">
     <Fields>

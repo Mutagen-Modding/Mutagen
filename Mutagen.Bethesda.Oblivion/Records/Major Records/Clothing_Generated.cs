@@ -769,11 +769,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IClothingInternal)item);
         }
         
-        public override void Clear(IAItemInternal item)
-        {
-            Clear(item: (IClothingInternal)item);
-        }
-        
         public override void Clear(IOblivionMajorRecordInternal item)
         {
             Clear(item: (IClothingInternal)item);
@@ -808,17 +803,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public override void CopyInFromBinary(
             IAClothingInternal item,
-            MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            CopyInFromBinary(
-                item: (Clothing)item,
-                frame: frame,
-                recordTypeConverter: recordTypeConverter);
-        }
-        
-        public override void CopyInFromBinary(
-            IAItemInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -982,25 +966,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static new Clothing_FieldIndex ConvertFieldIndex(AItem_FieldIndex index)
-        {
-            switch (index)
-            {
-                case AItem_FieldIndex.MajorRecordFlagsRaw:
-                    return (Clothing_FieldIndex)((int)index);
-                case AItem_FieldIndex.FormKey:
-                    return (Clothing_FieldIndex)((int)index);
-                case AItem_FieldIndex.VersionControl:
-                    return (Clothing_FieldIndex)((int)index);
-                case AItem_FieldIndex.EditorID:
-                    return (Clothing_FieldIndex)((int)index);
-                case AItem_FieldIndex.OblivionMajorRecordFlags:
-                    return (Clothing_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-        
         public static new Clothing_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -1059,15 +1024,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override bool Equals(
-            IAItemGetter? lhs,
-            IAItemGetter? rhs)
-        {
-            return Equals(
-                lhs: (IClothingGetter?)lhs,
-                rhs: rhs as IClothingGetter);
-        }
-        
-        public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
             IOblivionMajorRecordGetter? rhs)
         {
@@ -1097,11 +1053,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override int GetHashCode(IAClothingGetter item)
-        {
-            return GetHashCode(item: (IClothingGetter)item);
-        }
-        
-        public override int GetHashCode(IAItemGetter item)
         {
             return GetHashCode(item: (IClothingGetter)item);
         }
@@ -1147,17 +1098,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public override AClothing Duplicate(
             IAClothingGetter item,
-            FormKey formKey,
-            TranslationCrystal? copyMask)
-        {
-            return this.Duplicate(
-                item: (IClothing)item,
-                formKey: formKey,
-                copyMask: copyMask);
-        }
-        
-        public override AItem Duplicate(
-            IAItemGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
@@ -1273,36 +1213,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void DeepCopyIn(
             IAClothing item,
             IAClothingGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (IClothing)item,
-                rhs: (IClothingGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
-            IAItemInternal item,
-            IAItemGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (IClothingInternal)item,
-                rhs: (IClothingGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
-            IAItem item,
-            IAItemGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1522,17 +1432,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IAClothingGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            Write(
-                item: (IClothingGetter)item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
-        }
-
-        public override void Write(
-            MutagenWriter writer,
-            IAItemGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(

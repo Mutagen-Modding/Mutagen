@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Light :
-        AItem,
+        OblivionMajorRecord,
         IEquatable<ILightGetter>,
         ILightInternal,
         ILoquiObjectSetter<Light>
@@ -145,7 +145,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public new class Mask<TItem> :
-            AItem.Mask<TItem>,
+            OblivionMajorRecord.Mask<TItem>,
             IEquatable<Mask<TItem>>,
             IMask<TItem>
         {
@@ -367,7 +367,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public new class ErrorMask :
-            AItem.ErrorMask,
+            OblivionMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
@@ -554,7 +554,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         }
         public new class TranslationMask :
-            AItem.TranslationMask,
+            OblivionMajorRecord.TranslationMask,
             ITranslationMask
         {
             #region Members
@@ -688,13 +688,14 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ILight :
-        IAItemInternal,
         IFormLinkContainer,
+        IItem,
         ILightGetter,
         ILoquiObjectSetter<ILightInternal>,
         IModeled,
         INamed,
-        INamedRequired
+        INamedRequired,
+        IOblivionMajorRecordInternal
     {
         new Model? Model { get; set; }
         new IFormLinkNullable<IScriptGetter> Script { get; }
@@ -706,16 +707,17 @@ namespace Mutagen.Bethesda.Oblivion
     }
 
     public partial interface ILightInternal :
-        IAItemInternal,
+        IOblivionMajorRecordInternal,
         ILight,
         ILightGetter
     {
     }
 
     public partial interface ILightGetter :
-        IAItemGetter,
+        IOblivionMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IItemGetter,
         ILoquiObject<ILightGetter>,
         IMapsToGetter<ILightGetter>,
         IModeledGetter,
@@ -977,7 +979,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class LightSetterCommon : AItemSetterCommon
+    public partial class LightSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly LightSetterCommon Instance = new LightSetterCommon();
 
@@ -994,11 +996,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Fade = default;
             item.Sound.Clear();
             base.Clear(item);
-        }
-        
-        public override void Clear(IAItemInternal item)
-        {
-            Clear(item: (ILightInternal)item);
         }
         
         public override void Clear(IOblivionMajorRecordInternal item)
@@ -1036,17 +1033,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override void CopyInFromBinary(
-            IAItemInternal item,
-            MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            CopyInFromBinary(
-                item: (Light)item,
-                frame: frame,
-                recordTypeConverter: recordTypeConverter);
-        }
-        
-        public override void CopyInFromBinary(
             IOblivionMajorRecordInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1071,7 +1057,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LightCommon : AItemCommon
+    public partial class LightCommon : OblivionMajorRecordCommon
     {
         public new static readonly LightCommon Instance = new LightCommon();
 
@@ -1158,7 +1144,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             Light.Mask<bool>? printMask = null)
         {
-            AItemCommon.ToStringFields(
+            OblivionMajorRecordCommon.ToStringFields(
                 item: item,
                 fg: fg,
                 printMask: printMask);
@@ -1197,26 +1183,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Light_FieldIndex ConvertFieldIndex(AItem_FieldIndex index)
-        {
-            switch (index)
-            {
-                case AItem_FieldIndex.MajorRecordFlagsRaw:
-                    return (Light_FieldIndex)((int)index);
-                case AItem_FieldIndex.FormKey:
-                    return (Light_FieldIndex)((int)index);
-                case AItem_FieldIndex.VersionControl:
-                    return (Light_FieldIndex)((int)index);
-                case AItem_FieldIndex.EditorID:
-                    return (Light_FieldIndex)((int)index);
-                case AItem_FieldIndex.OblivionMajorRecordFlags:
-                    return (Light_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-        
-        public static new Light_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        public static Light_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -1259,7 +1226,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IAItemGetter)lhs, (IAItemGetter)rhs)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (!lhs.Script.Equals(rhs.Script)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
@@ -1268,15 +1235,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!lhs.Fade.EqualsWithin(rhs.Fade)) return false;
             if (!lhs.Sound.Equals(rhs.Sound)) return false;
             return true;
-        }
-        
-        public override bool Equals(
-            IAItemGetter? lhs,
-            IAItemGetter? rhs)
-        {
-            return Equals(
-                lhs: (ILightGetter?)lhs,
-                rhs: rhs as ILightGetter);
         }
         
         public override bool Equals(
@@ -1326,11 +1284,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return hash.ToHashCode();
         }
         
-        public override int GetHashCode(IAItemGetter item)
-        {
-            return GetHashCode(item: (ILightGetter)item);
-        }
-        
         public override int GetHashCode(IOblivionMajorRecordGetter item)
         {
             return GetHashCode(item: (ILightGetter)item);
@@ -1378,17 +1331,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return newRec;
         }
         
-        public override AItem Duplicate(
-            IAItemGetter item,
-            FormKey formKey,
-            TranslationCrystal? copyMask)
-        {
-            return this.Duplicate(
-                item: (ILight)item,
-                formKey: formKey,
-                copyMask: copyMask);
-        }
-        
         public override OblivionMajorRecord Duplicate(
             IOblivionMajorRecordGetter item,
             FormKey formKey,
@@ -1416,7 +1358,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LightSetterTranslationCommon : AItemSetterTranslationCommon
+    public partial class LightSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly LightSetterTranslationCommon Instance = new LightSetterTranslationCommon();
 
@@ -1444,8 +1386,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool deepCopy)
         {
             base.DeepCopyIn(
-                (IAItem)item,
-                (IAItemGetter)rhs,
+                (IOblivionMajorRecord)item,
+                (IOblivionMajorRecordGetter)rhs,
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
@@ -1521,36 +1463,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.Sound.SetTo(rhs.Sound.FormKeyNullable);
             }
-        }
-        
-        public override void DeepCopyIn(
-            IAItemInternal item,
-            IAItemGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (ILightInternal)item,
-                rhs: (ILightGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
-            IAItem item,
-            IAItemGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (ILight)item,
-                rhs: (ILightGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
         }
         
         public override void DeepCopyIn(
@@ -1694,7 +1606,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class LightBinaryWriteTranslation :
-        AItemBinaryWriteTranslation,
+        OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
         public new readonly static LightBinaryWriteTranslation Instance = new LightBinaryWriteTranslation();
@@ -1788,17 +1700,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void Write(
             MutagenWriter writer,
-            IAItemGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            Write(
-                item: (ILightGetter)item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
-        }
-
-        public override void Write(
-            MutagenWriter writer,
             IOblivionMajorRecordGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1821,7 +1722,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class LightBinaryCreateTranslation : AItemBinaryCreateTranslation
+    public partial class LightBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static LightBinaryCreateTranslation Instance = new LightBinaryCreateTranslation();
 
@@ -1830,7 +1731,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILightInternal item,
             MutagenFrame frame)
         {
-            AItemBinaryCreateTranslation.FillBinaryStructs(
+            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
         }
@@ -1899,7 +1800,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (int)Light_FieldIndex.Sound;
                 }
                 default:
-                    return AItemBinaryCreateTranslation.FillBinaryRecordTypes(
+                    return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         recordParseCount: recordParseCount,
@@ -1924,7 +1825,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class LightBinaryOverlay :
-        AItemBinaryOverlay,
+        OblivionMajorRecordBinaryOverlay,
         ILightGetter
     {
         #region Common Routing

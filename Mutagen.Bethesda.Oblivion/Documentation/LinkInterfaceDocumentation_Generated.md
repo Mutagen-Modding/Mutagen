@@ -5,6 +5,20 @@ An interface would be defined such as 'IItem', which all Armor, Weapon, Ingredie
 
 A `FormLink<IItem>` could then point to all those record types by pointing to the interface instead.
 ## Interfaces to Concrete Classes
+### IItem
+- AClothing
+- AlchemicalApparatus
+- Ammunition
+- Book
+- Ingredient
+- Key
+- LeveledItem
+- Light
+- Miscellaneous
+- Potion
+- SigilStone
+- SoulGem
+- Weapon
 ### IOwner
 - Faction
 - Npc
@@ -17,12 +31,30 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - LeveledSpell
 - Spell
 ## Concrete Classes to Interfaces
+### AClothing
+- IItem
+### AlchemicalApparatus
+- IItem
+### Ammunition
+- IItem
+### Book
+- IItem
 ### Faction
 - IOwner
+### Ingredient
+- IItem
+### Key
+- IItem
 ### Landscape
 - IPlaced
+### LeveledItem
+- IItem
 ### LeveledSpell
 - ISpellRecord
+### Light
+- IItem
+### Miscellaneous
+- IItem
 ### Npc
 - IOwner
 ### PlacedCreature
@@ -31,5 +63,13 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IPlaced
 ### PlacedObject
 - IPlaced
+### Potion
+- IItem
+### SigilStone
+- IItem
+### SoulGem
+- IItem
 ### Spell
 - ISpellRecord
+### Weapon
+- IItem

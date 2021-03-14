@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class AlchemicalApparatus :
-        AItem,
+        OblivionMajorRecord,
         IAlchemicalApparatusInternal,
         IEquatable<IAlchemicalApparatusGetter>,
         ILoquiObjectSetter<AlchemicalApparatus>
@@ -130,7 +130,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public new class Mask<TItem> :
-            AItem.Mask<TItem>,
+            OblivionMajorRecord.Mask<TItem>,
             IEquatable<Mask<TItem>>,
             IMask<TItem>
         {
@@ -326,7 +326,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public new class ErrorMask :
-            AItem.ErrorMask,
+            OblivionMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
@@ -489,7 +489,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         }
         public new class TranslationMask :
-            AItem.TranslationMask,
+            OblivionMajorRecord.TranslationMask,
             ITranslationMask
         {
             #region Members
@@ -617,13 +617,14 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IAlchemicalApparatus :
-        IAItemInternal,
         IAlchemicalApparatusGetter,
         IFormLinkContainer,
+        IItem,
         ILoquiObjectSetter<IAlchemicalApparatusInternal>,
         IModeled,
         INamed,
-        INamedRequired
+        INamedRequired,
+        IOblivionMajorRecordInternal
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
@@ -633,16 +634,17 @@ namespace Mutagen.Bethesda.Oblivion
     }
 
     public partial interface IAlchemicalApparatusInternal :
-        IAItemInternal,
+        IOblivionMajorRecordInternal,
         IAlchemicalApparatus,
         IAlchemicalApparatusGetter
     {
     }
 
     public partial interface IAlchemicalApparatusGetter :
-        IAItemGetter,
+        IOblivionMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IItemGetter,
         ILoquiObject<IAlchemicalApparatusGetter>,
         IMapsToGetter<IAlchemicalApparatusGetter>,
         IModeledGetter,
@@ -900,7 +902,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class AlchemicalApparatusSetterCommon : AItemSetterCommon
+    public partial class AlchemicalApparatusSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly AlchemicalApparatusSetterCommon Instance = new AlchemicalApparatusSetterCommon();
 
@@ -915,11 +917,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Script.Clear();
             item.Data = null;
             base.Clear(item);
-        }
-        
-        public override void Clear(IAItemInternal item)
-        {
-            Clear(item: (IAlchemicalApparatusInternal)item);
         }
         
         public override void Clear(IOblivionMajorRecordInternal item)
@@ -956,17 +953,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override void CopyInFromBinary(
-            IAItemInternal item,
-            MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            CopyInFromBinary(
-                item: (AlchemicalApparatus)item,
-                frame: frame,
-                recordTypeConverter: recordTypeConverter);
-        }
-        
-        public override void CopyInFromBinary(
             IOblivionMajorRecordInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
@@ -991,7 +977,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class AlchemicalApparatusCommon : AItemCommon
+    public partial class AlchemicalApparatusCommon : OblivionMajorRecordCommon
     {
         public new static readonly AlchemicalApparatusCommon Instance = new AlchemicalApparatusCommon();
 
@@ -1076,7 +1062,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             AlchemicalApparatus.Mask<bool>? printMask = null)
         {
-            AItemCommon.ToStringFields(
+            OblivionMajorRecordCommon.ToStringFields(
                 item: item,
                 fg: fg,
                 printMask: printMask);
@@ -1106,26 +1092,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static AlchemicalApparatus_FieldIndex ConvertFieldIndex(AItem_FieldIndex index)
-        {
-            switch (index)
-            {
-                case AItem_FieldIndex.MajorRecordFlagsRaw:
-                    return (AlchemicalApparatus_FieldIndex)((int)index);
-                case AItem_FieldIndex.FormKey:
-                    return (AlchemicalApparatus_FieldIndex)((int)index);
-                case AItem_FieldIndex.VersionControl:
-                    return (AlchemicalApparatus_FieldIndex)((int)index);
-                case AItem_FieldIndex.EditorID:
-                    return (AlchemicalApparatus_FieldIndex)((int)index);
-                case AItem_FieldIndex.OblivionMajorRecordFlags:
-                    return (AlchemicalApparatus_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-        
-        public static new AlchemicalApparatus_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        public static AlchemicalApparatus_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -1168,22 +1135,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IAItemGetter)lhs, (IAItemGetter)rhs)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
             if (!lhs.Script.Equals(rhs.Script)) return false;
             if (!object.Equals(lhs.Data, rhs.Data)) return false;
             return true;
-        }
-        
-        public override bool Equals(
-            IAItemGetter? lhs,
-            IAItemGetter? rhs)
-        {
-            return Equals(
-                lhs: (IAlchemicalApparatusGetter?)lhs,
-                rhs: rhs as IAlchemicalApparatusGetter);
         }
         
         public override bool Equals(
@@ -1226,11 +1184,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
-        }
-        
-        public override int GetHashCode(IAItemGetter item)
-        {
-            return GetHashCode(item: (IAlchemicalApparatusGetter)item);
         }
         
         public override int GetHashCode(IOblivionMajorRecordGetter item)
@@ -1276,17 +1229,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return newRec;
         }
         
-        public override AItem Duplicate(
-            IAItemGetter item,
-            FormKey formKey,
-            TranslationCrystal? copyMask)
-        {
-            return this.Duplicate(
-                item: (IAlchemicalApparatus)item,
-                formKey: formKey,
-                copyMask: copyMask);
-        }
-        
         public override OblivionMajorRecord Duplicate(
             IOblivionMajorRecordGetter item,
             FormKey formKey,
@@ -1314,7 +1256,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class AlchemicalApparatusSetterTranslationCommon : AItemSetterTranslationCommon
+    public partial class AlchemicalApparatusSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly AlchemicalApparatusSetterTranslationCommon Instance = new AlchemicalApparatusSetterTranslationCommon();
 
@@ -1342,8 +1284,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool deepCopy)
         {
             base.DeepCopyIn(
-                (IAItem)item,
-                (IAItemGetter)rhs,
+                (IOblivionMajorRecord)item,
+                (IOblivionMajorRecordGetter)rhs,
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
@@ -1411,36 +1353,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-        }
-        
-        public override void DeepCopyIn(
-            IAItemInternal item,
-            IAItemGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (IAlchemicalApparatusInternal)item,
-                rhs: (IAlchemicalApparatusGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
-            IAItem item,
-            IAItemGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (IAlchemicalApparatus)item,
-                rhs: (IAlchemicalApparatusGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
         }
         
         public override void DeepCopyIn(
@@ -1584,7 +1496,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class AlchemicalApparatusBinaryWriteTranslation :
-        AItemBinaryWriteTranslation,
+        OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
         public new readonly static AlchemicalApparatusBinaryWriteTranslation Instance = new AlchemicalApparatusBinaryWriteTranslation();
@@ -1670,17 +1582,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void Write(
             MutagenWriter writer,
-            IAItemGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            Write(
-                item: (IAlchemicalApparatusGetter)item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
-        }
-
-        public override void Write(
-            MutagenWriter writer,
             IOblivionMajorRecordGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1703,7 +1604,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class AlchemicalApparatusBinaryCreateTranslation : AItemBinaryCreateTranslation
+    public partial class AlchemicalApparatusBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static AlchemicalApparatusBinaryCreateTranslation Instance = new AlchemicalApparatusBinaryCreateTranslation();
 
@@ -1712,7 +1613,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAlchemicalApparatusInternal item,
             MutagenFrame frame)
         {
-            AItemBinaryCreateTranslation.FillBinaryStructs(
+            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
         }
@@ -1766,7 +1667,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (int)AlchemicalApparatus_FieldIndex.Data;
                 }
                 default:
-                    return AItemBinaryCreateTranslation.FillBinaryRecordTypes(
+                    return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         recordParseCount: recordParseCount,
@@ -1791,7 +1692,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class AlchemicalApparatusBinaryOverlay :
-        AItemBinaryOverlay,
+        OblivionMajorRecordBinaryOverlay,
         IAlchemicalApparatusGetter
     {
         #region Common Routing

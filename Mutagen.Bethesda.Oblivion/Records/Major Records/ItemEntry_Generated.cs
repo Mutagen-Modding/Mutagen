@@ -40,14 +40,14 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Item
-        private IFormLink<IAItemGetter> _Item = new FormLink<IAItemGetter>();
-        public IFormLink<IAItemGetter> Item
+        private IFormLink<IItemGetter> _Item = new FormLink<IItemGetter>();
+        public IFormLink<IItemGetter> Item
         {
             get => _Item;
             set => _Item = value.AsSetter();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IAItemGetter> IItemEntryGetter.Item => this.Item;
+        IFormLinkGetter<IItemGetter> IItemEntryGetter.Item => this.Item;
         #endregion
         #region Count
         public Int32? Count { get; set; }
@@ -458,7 +458,7 @@ namespace Mutagen.Bethesda.Oblivion
         IItemEntryGetter,
         ILoquiObjectSetter<IItemEntry>
     {
-        new IFormLink<IAItemGetter> Item { get; }
+        new IFormLink<IItemGetter> Item { get; }
         new Int32? Count { get; set; }
     }
 
@@ -475,7 +475,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => ItemEntry_Registration.Instance;
-        IFormLinkGetter<IAItemGetter> Item { get; }
+        IFormLinkGetter<IItemGetter> Item { get; }
         Int32? Count { get; }
 
     }
@@ -1121,7 +1121,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLinkGetter<IAItemGetter> Item => new FormLink<IAItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IItemGetter> Item => new FormLink<IItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public Int32? Count => _data.Length >= 8 ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4)) : default(Int32?);
         partial void CustomFactoryEnd(
             OverlayStream stream,
