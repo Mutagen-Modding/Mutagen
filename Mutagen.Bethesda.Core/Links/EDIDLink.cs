@@ -154,13 +154,13 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="cache">Link Cache to resolve against</param>
         /// <returns>TryGet object with located record if successful</returns>
-        public ITryGetter<TMajor> TryResolve(ILinkCache cache) 
+        public TMajor? TryResolve(ILinkCache cache) 
         {
             if (TryResolve(cache, out TMajor rec))
             {
-                return TryGet<TMajor>.Succeed(rec);
+                return rec;
             }
-            return TryGet<TMajor>.Failure;
+            return null;
         }
 
         bool ILink.TryGetModKey([MaybeNullWhen(false)] out ModKey modKey)

@@ -198,13 +198,13 @@ namespace Mutagen.Bethesda
         /// </summary> 
         /// <param name="cache">Link Cache to resolve against</param> 
         /// <returns>TryGet object with located record if successful</returns> 
-        public ITryGetter<TMajorGetter> TryResolve(ILinkCache cache)
+        public TMajorGetter? TryResolve(ILinkCache cache)
         {
             if (this.TryResolve(cache, out var rec))
             {
-                return TryGet<TMajorGetter>.Succeed(rec);
+                return rec;
             }
-            return TryGet<TMajorGetter>.Failure;
+            return default;
         }
 
         public bool Equals(TMajorGetter? other)

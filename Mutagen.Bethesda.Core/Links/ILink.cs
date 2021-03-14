@@ -50,6 +50,6 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="cache">Link Cache to resolve against</param>
         /// <returns>TryGet object with located record if successful</returns>
-        ITryGetter<TMajor> TryResolve(ILinkCache cache);
+        TMajor? TryResolve(ILinkCache cache);
     }
 }

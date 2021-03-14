@@ -1423,7 +1423,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var formLink = new FormLink<INpcGetter>(UnusedFormKey);
             var (style, package) = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
-            Assert.Null(formLink.Resolve(package));
+            Assert.Null(formLink.TryResolve(package));
         }
 
         [Theory]
@@ -1437,7 +1437,7 @@ namespace Mutagen.Bethesda.UnitTests
             FormLink<INpc> formLink = new FormLink<INpc>(npc.FormKey);
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.Same(npc, formLink.Resolve(package));
+                Assert.Same(npc, formLink.TryResolve(package));
             });
         }
 
@@ -1448,7 +1448,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var formLink = new FormLink<IPlacedNpcGetter>(UnusedFormKey);
             var (style, package) = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
-            Assert.Null(formLink.Resolve(package));
+            Assert.Null(formLink.TryResolve(package));
         }
 
         [Theory]
@@ -1470,17 +1470,17 @@ namespace Mutagen.Bethesda.UnitTests
             var placedFormLink = new FormLink<IPlacedNpcGetter>(placedNpc.FormKey);
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.Same(placedNpc, placedFormLink.Resolve(package));
+                Assert.Same(placedNpc, placedFormLink.TryResolve(package));
             });
             var cellFormLink = new FormLink<ICellGetter>(cell.FormKey);
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.Same(cell, cellFormLink.Resolve(package));
+                Assert.Same(cell, cellFormLink.TryResolve(package));
             });
             var worldspaceFormLink = new FormLink<IWorldspaceGetter>(worldspace.FormKey);
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.Same(worldspace, worldspaceFormLink.Resolve(package));
+                Assert.Same(worldspace, worldspaceFormLink.TryResolve(package));
             });
         }
 
@@ -1567,7 +1567,7 @@ namespace Mutagen.Bethesda.UnitTests
             var formLink = new FormLink<IEffectRecordGetter>(spell.FormKey);
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.Same(spell, formLink.Resolve(package));
+                Assert.Same(spell, formLink.TryResolve(package));
             });
         }
 
@@ -1578,7 +1578,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var formLink = new FormLink<IEffectRecordGetter>(UnusedFormKey);
             var (style, package) = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
-            Assert.Null(formLink.Resolve(package));
+            Assert.Null(formLink.TryResolve(package));
         }
 
         [Theory]
@@ -1588,7 +1588,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var formLink = new FormLink<IPlacedGetter>(UnusedFormKey);
             var (style, package) = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
-            Assert.Null(formLink.Resolve(package));
+            Assert.Null(formLink.TryResolve(package));
         }
 
         [Theory]
@@ -1610,17 +1610,17 @@ namespace Mutagen.Bethesda.UnitTests
             var placedFormLink = new FormLink<IPlacedGetter>(placedNpc.FormKey);
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.Same(placedNpc, placedFormLink.Resolve(package));
+                Assert.Same(placedNpc, placedFormLink.TryResolve(package));
             });
             var cellFormLink = new FormLink<ICellGetter>(cell.FormKey);
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.Same(cell, cellFormLink.Resolve(package));
+                Assert.Same(cell, cellFormLink.TryResolve(package));
             });
             var worldspaceFormLink = new FormLink<IWorldspaceGetter>(worldspace.FormKey);
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.Same(worldspace, worldspaceFormLink.Resolve(package));
+                Assert.Same(worldspace, worldspaceFormLink.TryResolve(package));
             });
         }
         #endregion
@@ -1718,7 +1718,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var package = TypicalLoadOrder().ToImmutableLinkCache();
             FormLink<INpc> formLink = new FormLink<INpc>(UnusedFormKey);
-            Assert.Null(formLink.Resolve(package));
+            Assert.Null(formLink.TryResolve(package));
         }
 
         [Theory]
@@ -1737,7 +1737,7 @@ namespace Mutagen.Bethesda.UnitTests
             FormLink<INpc> formLink = new FormLink<INpc>(npc.FormKey);
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.Same(npc, formLink.Resolve(package));
+                Assert.Same(npc, formLink.TryResolve(package));
             });
         }
 
@@ -1746,7 +1746,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             FormLink<IPlacedNpc> formLink = new FormLink<IPlacedNpc>(UnusedFormKey);
             var package = TypicalLoadOrder().ToImmutableLinkCache();
-            Assert.Null(formLink.Resolve(package));
+            Assert.Null(formLink.TryResolve(package));
         }
 
         [Theory]
@@ -1773,17 +1773,17 @@ namespace Mutagen.Bethesda.UnitTests
             FormLink<IPlacedNpc> placedFormLink = new FormLink<IPlacedNpc>(placedNpc.FormKey);
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.Same(placedNpc, placedFormLink.Resolve(package));
+                Assert.Same(placedNpc, placedFormLink.TryResolve(package));
             });
             FormLink<ICell> cellFormLink = new FormLink<ICell>(cell.FormKey);
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.Same(cell, cellFormLink.Resolve(package));
+                Assert.Same(cell, cellFormLink.TryResolve(package));
             });
             FormLink<IWorldspace> worldspaceFormLink = new FormLink<IWorldspace>(worldspace.FormKey);
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.Same(worldspace, worldspaceFormLink.Resolve(package));
+                Assert.Same(worldspace, worldspaceFormLink.TryResolve(package));
             });
         }
 
@@ -1881,7 +1881,7 @@ namespace Mutagen.Bethesda.UnitTests
             FormLink<IEffectRecord> formLink = new FormLink<IEffectRecord>(spell.FormKey);
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.Same(spell, formLink.Resolve(package));
+                Assert.Same(spell, formLink.TryResolve(package));
             });
         }
 
@@ -1890,7 +1890,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             FormLink<IEffectRecord> formLink = new FormLink<IEffectRecord>(UnusedFormKey);
             var package = TypicalLoadOrder().ToImmutableLinkCache();
-            Assert.Null(formLink.Resolve(package));
+            Assert.Null(formLink.TryResolve(package));
         }
 
         [Fact]
@@ -1898,7 +1898,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             FormLink<IPlaced> formLink = new FormLink<IPlaced>(UnusedFormKey);
             var package = TypicalLoadOrder().ToImmutableLinkCache();
-            Assert.Null(formLink.Resolve(package));
+            Assert.Null(formLink.TryResolve(package));
         }
 
         [Theory]
@@ -2632,7 +2632,7 @@ namespace Mutagen.Bethesda.UnitTests
             effect.EditorID = "NULL";
             EDIDLink<IMagicEffect> link = new EDIDLink<IMagicEffect>(new RecordType("LINK"));
             var (style, package) = GetLinkCache(mod, cacheType);
-            Assert.Null(link.TryResolve(package).Value);
+            Assert.Null(link.TryResolve(package));
         }
 
         [Theory]
@@ -2645,7 +2645,7 @@ namespace Mutagen.Bethesda.UnitTests
             effect.EditorID = "LINK";
             var (style, package) = GetLinkCache(mod, cacheType);
             EDIDLink<IMagicEffect> link = new EDIDLink<IMagicEffect>(new RecordType("LINK"));
-            Assert.Same(effect, link.TryResolve(package).Value);
+            Assert.Same(effect, link.TryResolve(package));
         }
         #endregion
 
