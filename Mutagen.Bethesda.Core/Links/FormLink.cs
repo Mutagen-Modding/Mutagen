@@ -15,7 +15,8 @@ namespace Mutagen.Bethesda
         IEquatable<FormLink<TMajorGetter>>,
         IEquatable<FormLinkNullable<TMajorGetter>>,
         IEquatable<IFormLinkGetter<TMajorGetter>>,
-        IEquatable<IFormLinkNullableGetter<TMajorGetter>>
+        IEquatable<IFormLinkNullableGetter<TMajorGetter>>,
+        IEquatable<TMajorGetter>
         where TMajorGetter : class, IMajorRecordCommonGetter
     {
         /// <summary>
@@ -34,6 +35,9 @@ namespace Mutagen.Bethesda
         /// True if unlinked and ID points to Null
         /// </summary>
         public bool IsNull => this.FormKey.IsNull;
+
+        /// <inheritdoc />
+        public Type Type => typeof(TMajorGetter);
 
         FormKey? IFormLinkGetter.FormKeyNullable => this.FormKey;
 
@@ -201,6 +205,11 @@ namespace Mutagen.Bethesda
                 return TryGet<TMajorGetter>.Succeed(rec);
             }
             return TryGet<TMajorGetter>.Failure;
+        }
+
+        public bool Equals(TMajorGetter? other)
+        {
+            return IFormLinkExt.EqualsWithInheritanceConsideration(this, other);
         }
 
         public static implicit operator FormLink<TMajorGetter>(TMajorGetter major)

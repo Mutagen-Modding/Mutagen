@@ -41,6 +41,9 @@ namespace Mutagen.Bethesda
         
         Type ILink.TargetType => typeof(TMajorGetter);
 
+        /// <inheritdoc />
+        public Type Type => typeof(TMajorGetter);
+
         /// <summary>
         /// True if unlinked and ID points to Null
         /// </summary>

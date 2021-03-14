@@ -26,6 +26,11 @@ namespace Mutagen.Bethesda
         /// FormKey to link against
         /// </summary>
         FormKey FormKey { get; }
+
+        /// <summary>
+        /// Type that the FormLink points to
+        /// </summary>
+        Type Type { get; }
     }
 
     /// <summary>
