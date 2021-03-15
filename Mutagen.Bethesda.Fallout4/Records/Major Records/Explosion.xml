@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Explosion" recordType="EXPL" objType="Record" baseClass="Fallout4MajorRecord" GUID="6a469e1c-3dbf-4c21-ba4b-7c0acd6819b2" ID="90">
+  </Object>
+</Loqui>

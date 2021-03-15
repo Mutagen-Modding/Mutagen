@@ -49,6 +49,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             dict[typeof(IRelatable)] = new Type[]
             {
                 typeof(Faction),
+                typeof(Race),
             };
             dict[typeof(IRelatableGetter)] = dict[typeof(IRelatable)];
             dict[typeof(IKeywordLinkedReference)] = new Type[]

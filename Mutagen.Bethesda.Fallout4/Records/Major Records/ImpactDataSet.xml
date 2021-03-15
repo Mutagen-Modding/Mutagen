@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ImpactDataSet" objType="Record" recordType="IPDS" baseClass="Fallout4MajorRecord" GUID="e668bafe-1e46-49ba-96e2-3417369f5dd2" ID="91">
+  </Object>
+</Loqui>

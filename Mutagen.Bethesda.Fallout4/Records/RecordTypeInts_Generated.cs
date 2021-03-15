@@ -4,7 +4,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     {
         public const int AACT = 0x54434141;
         public const int AORU = 0x55524F41;
+        public const int APPR = 0x52505041;
+        public const int ARMO = 0x4F4D5241;
         public const int AVIF = 0x46495641;
+        public const int BOD2 = 0x32444F42;
         public const int CELL = 0x4C4C4543;
         public const int CITC = 0x43544943;
         public const int CLAS = 0x53414C43;
@@ -16,12 +19,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public const int CTDA = 0x41445443;
         public const int CUSD = 0x44535543;
         public const int DATA = 0x41544144;
+        public const int DEBR = 0x52424544;
         public const int DELE = 0x454C4544;
         public const int DESC = 0x43534544;
         public const int DMGT = 0x54474D44;
         public const int DNAM = 0x4D414E44;
         public const int DODT = 0x54444F44;
         public const int DOOR = 0x524F4F44;
+        public const int EXPL = 0x4C505845;
         public const int FACT = 0x54434146;
         public const int FLST = 0x54534C46;
         public const int FLTV = 0x56544C46;
@@ -38,8 +43,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public const int INAM = 0x4D414E49;
         public const int INCC = 0x43434E49;
         public const int INTV = 0x56544E49;
+        public const int IPDS = 0x53445049;
         public const int JAIL = 0x4C49414A;
         public const int JOUT = 0x54554F4A;
+        public const int KSIZ = 0x5A49534B;
+        public const int KWDA = 0x4144574B;
         public const int KYWD = 0x4457594B;
         public const int LCRT = 0x5452434C;
         public const int MAST = 0x5453414D;
@@ -62,11 +70,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public const int PLVD = 0x44564C50;
         public const int PNAM = 0x4D414E50;
         public const int PRPS = 0x53505250;
+        public const int RACE = 0x45434152;
         public const int REFR = 0x52464552;
         public const int RNAM = 0x4D414E52;
         public const int SCRN = 0x4E524353;
         public const int SNAM = 0x4D414E53;
         public const int SNDR = 0x52444E53;
+        public const int SPCT = 0x54435053;
+        public const int SPLO = 0x4F4C5053;
+        public const int STAG = 0x47415453;
+        public const int STCP = 0x50435453;
         public const int STOL = 0x4C4F5453;
         public const int TES4 = 0x34534554;
         public const int TNAM = 0x4D414E54;
@@ -84,6 +97,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public const int VEND = 0x444E4556;
         public const int VENV = 0x564E4556;
         public const int WAIT = 0x54494157;
+        public const int WNAM = 0x4D414E57;
         public const int XNAM = 0x4D414E58;
         public const int XXXX = 0x58585858;
     }

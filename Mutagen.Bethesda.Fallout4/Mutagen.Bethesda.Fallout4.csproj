@@ -24,9 +24,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
+    <Compile Include="Enums\BipedObject.cs" />
     <Compile Include="Enums\CombatReaction.cs" />
     <Compile Include="Enums\CompareOperator.cs" />
     <Compile Include="Enums\GroupTypeEnum.cs" />
+    <Compile Include="Enums\Size.cs" />
     <Compile Include="Enums\TargetObjectType.cs" />
     <Compile Include="Interfaces\IModeled.cs" />
     <Compile Include="Interfaces\IObjectBounded.cs" />
@@ -105,6 +107,9 @@
     </Compile>
     <Compile Include="Records\Major Records\Part.cs">
       <DependentUpon>HeadPart.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Race.cs">
+      <DependentUpon>Race.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\TextureSet.cs">
       <DependentUpon>TextureSet.xml</DependentUpon>
@@ -327,6 +332,30 @@
     </Compile>
     <Compile Include="Records\Common Subrecords\SimpleModel_Generated.cs">
       <DependentUpon>Model.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\BipedBodyTemplate_Generated.cs">
+      <DependentUpon>BipedBodyTemplate.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Armor_Generated.cs">
+      <DependentUpon>Armor.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Race_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AnimationSoundTagSet_Generated.cs">
+      <DependentUpon>AnimationSoundTagSet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Debris_Generated.cs">
+      <DependentUpon>Debris.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Explosion_Generated.cs">
+      <DependentUpon>Explosion.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ImpactDataSet_Generated.cs">
+      <DependentUpon>ImpactDataSet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\DefaultWeightObject_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

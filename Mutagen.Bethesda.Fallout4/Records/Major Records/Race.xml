@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Race" recordType="RACE" objType="Record" baseClass="Fallout4MajorRecord" majorFlag="true" GUID="6aa2e080-6569-4300-86f2-cc15ca14e935" ID="88">
+    <Fields>
+      <FormLink name="AnimationSound" refName="AnimationSoundTagSet" recordType="STCP" />
+      <String name="Name" recordType="FULL" />
+      <String name="Description" recordType="DESC" nullable="False" translated="DL" />
+      <List name="ActorEffect" counterRecType="SPCT">
+        <FormLink refName="ASpell" recordType="SPLO" />
+      </List>
+      <FormLink name="Skin" refName="Armor" recordType="WNAM" />
+      <RefDirect name="BipedBodyTemplate" refName="BipedBodyTemplate" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <RefDirect name="Properties" refName="Properties" />
+      <List name="AttachParentSlots" recordType="APPR">
+        <FormLink refName="Keyword" />
+      </List>
+      <Data>
+        <Fields>
+          <Gendered name="Height">
+            <Fields>
+              <Float />
+            </Fields>
+          </Gendered>
+          <Gendered name="DefaultWeight">
+            <Fields>
+              <Float name="Thin" />
+              <Float name="Muscular" />
+              <Float name="Fat" />
+            </Fields>
+          </Gendered>
+          <Enum name="Flags" enumName="Race.Flag" byteLength="4" />
+          <Float name="AccelerationRate" />
+          <Float name="DecelerationRate" />
+          <Enum name="Size" enumName="Size" byteLength="4" />
+          <ByteArray name="Unknown" byteLength="16" nullable="False" />
+          <Float name="InjuredHealthPercent" />
+          <Enum name="ShieldBipedObject" enumName="BipedObject" byteLength="4" default="BipedObject.None" />
+          <Enum name="BearddBipedObject" enumName="BipedObject" byteLength="4" default="BipedObject.None" />
+          <Enum name="BodyBipedObject" enumName="BipedObject" byteLength="4" default="BipedObject.None" />
+          <Float name="AimAngleTolerance" />
+          <Float name="FlightRadius" />
+          <Float name="AngularAccelerationRate" />
+          <Float name="AngularTolerance" />
+          <Enum name="Flags2" enumName="Race.Flag2" byteLength="4" />
+          <ByteArray name="Unknown2" byteLength="72" nullable="False" />
+          <Enum name="PipboyBipedObject" enumName="BipedObject" byteLength="4" default="BipedObject.None" />
+          <Int16 name="XPValue" />
+          <Float name="SeverableDebrisScale" />
+          <UInt8 name="SeverableDebrisCount" />
+          <UInt8 name="SeverableDecalCount" />
+          <Float name="ExplodableDebrisScale" />
+          <UInt8 name="ExplodableDebrisCount" />
+          <UInt8 name="ExplodableDecalCount" />
+          <FormLink name="SeverableExplosion" refName="Explosion" />
+          <FormLink name="SeverableDebris" refName="Debris" />
+          <FormLink name="SeverableImpactDataSet" refName="ImpactDataSet" />
+          <FormLink name="ExplodableExplosion" refName="Explosion" />
+          <FormLink name="ExplodableDebris" refName="Debris" />
+          <FormLink name="ExplodableImpactDataSet" refName="ImpactDataSet" />
+
+          <!--when this tag is commented in, it switches to the "Frame did not have enough remaining" error-->
+          <!--<Float name="OnCrippleDebrisScale" />-->
+          <UInt8 name="OnCrippleDebrisCount" />
+          <UInt8 name="OnCrippleDecalCount" />
+
+          <FormLink name="OnCrippleExplosion" refName="Explosion" />
+          <FormLink name="OnCrippleDebris" refName="Debris" />
+          <FormLink name="OnCrippleImpactDataSet" refName="ImpactDataSet" />
+          <FormLink name="ExplodableSubsegmentExplosion" refName="Explosion" />
+
+          <!--when one of these tags are commented in, it switches to the "Frame did not have enough remaining" error-->
+          <!--<Float name="OrientationLimitsPitch" />
+          <Float name="OrientationLimitsRoll" />-->
+        </Fields>
+      </Data>
+    </Fields>
+    <LinkInterface>IRelatable</LinkInterface>
+  </Object>
+</Loqui>

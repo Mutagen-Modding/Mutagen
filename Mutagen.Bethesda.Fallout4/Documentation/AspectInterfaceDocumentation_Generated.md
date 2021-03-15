@@ -3,6 +3,8 @@ Aspect Interfaces expose common aspects of records.  For example, `INamed` are i
 
 Functions can then be written that take in `INamed`, allowing any record that has a name to be passed in.
 ## Interfaces to Concrete Classes
+### IKeyworded
+- Race
 ### IModeled
 - HeadPart
 ### INamed
@@ -12,6 +14,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Faction
 - HeadPart
 - Keyword
+- Race
 ### IObjectBounded
 - Component
 - TextureSet
@@ -33,5 +36,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### Keyword
 - INamed
 - Keyword
+### Race
+- IKeyworded
+- INamed
 ### TextureSet
 - IObjectBounded

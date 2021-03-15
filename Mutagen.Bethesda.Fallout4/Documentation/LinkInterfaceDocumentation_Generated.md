@@ -24,6 +24,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - Faction
 ### IRelatable
 - Faction
+- Race
 ## Concrete Classes to Interfaces
 ### ActionRecord
 - IIdleRelation
@@ -42,5 +43,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IKeywordLinkedReference
 ### LocationReferenceType
 - ILocationRecord
+### Race
+- IRelatable
 ### TextureSet
 - IObjectId

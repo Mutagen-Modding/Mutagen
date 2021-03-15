@@ -8,7 +8,7 @@ using Mutagen.Bethesda;
 namespace Mutagen.Bethesda.Fallout4
 {
     /// <summary>
-    /// Implemented by: [Faction]
+    /// Implemented by: [Faction, Race]
     /// </summary>
     public partial interface IRelatable :
         IFallout4MajorRecordInternal,
@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [Faction]
+    /// Implemented by: [Faction, Race]
     /// </summary>
     public partial interface IRelatableGetter : IFallout4MajorRecordGetter
     {
