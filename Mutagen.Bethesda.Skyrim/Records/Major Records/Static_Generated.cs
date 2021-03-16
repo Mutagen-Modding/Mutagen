@@ -1767,19 +1767,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item: item.Material);
                 if (!item.DNAMDataTypeState.HasFlag(Static.DNAMDataType.Break0))
                 {
-                    if (writer.MetaData.FormVersion!.Value >= 44)
-                    {
-                        Mutagen.Bethesda.Binary.EnumBinaryTranslation<Static.Flag>.Instance.Write(
-                            writer,
-                            item.Flags,
-                            length: 1);
-                    }
-                    if (writer.MetaData.FormVersion!.Value >= 44)
-                    {
-                        Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.Unused);
-                    }
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Static.Flag>.Instance.Write(
+                        writer,
+                        item.Flags,
+                        length: 1);
+                    Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Unused);
                 }
             }
             if (item.Lod.TryGet(out var LodItem))
@@ -1906,14 +1900,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item.DNAMDataTypeState |= Static.DNAMDataType.Break0;
                         return (int)Static_FieldIndex.Material;
                     }
-                    if (frame.MetaData.FormVersion!.Value >= 44)
-                    {
-                        item.Flags = EnumBinaryTranslation<Static.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
-                    }
-                    if (frame.MetaData.FormVersion!.Value >= 44)
-                    {
-                        item.Unused = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: dataFrame.SpawnWithLength(3));
-                    }
+                    item.Flags = EnumBinaryTranslation<Static.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
+                    item.Unused = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: dataFrame.SpawnWithLength(3));
                     return (int)Static_FieldIndex.Unused;
                 }
                 case RecordTypeInts.MNAM:
@@ -1997,15 +1985,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Flags
         private int _FlagsLocation => _DNAMLocation!.Value + 0x8;
-        private bool _Flags_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(Static.DNAMDataType.Break0) && _package.FormVersion!.FormVersion!.Value >= 44;
+        private bool _Flags_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(Static.DNAMDataType.Break0);
         public Static.Flag Flags => _Flags_IsSet ? (Static.Flag)_data.Span.Slice(_FlagsLocation, 0x1)[0] : default;
-        int FlagsVersioningOffset => _package.FormVersion!.FormVersion!.Value < 44 ? -1 : 0;
         #endregion
         #region Unused
-        private int _UnusedLocation => _DNAMLocation!.Value + FlagsVersioningOffset + 0x9;
-        private bool _Unused_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(Static.DNAMDataType.Break0) && _package.FormVersion!.FormVersion!.Value >= 44;
+        private int _UnusedLocation => _DNAMLocation!.Value + 0x9;
+        private bool _Unused_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(Static.DNAMDataType.Break0);
         public ReadOnlyMemorySlice<Byte> Unused => _Unused_IsSet ? _data.Span.Slice(_UnusedLocation, 3).ToArray() : default(ReadOnlyMemorySlice<byte>);
-        int UnusedVersioningOffset => FlagsVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 44 ? -3 : 0);
         #endregion
         #region Lod
         private RangeInt32? _LodLocation;

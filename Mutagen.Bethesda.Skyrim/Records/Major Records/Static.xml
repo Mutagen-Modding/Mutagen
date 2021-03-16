@@ -9,12 +9,8 @@
           <Float name="MaxAngle" min="30" max="120" default="30" />
           <FormLink name="Material" refName="MaterialObject" />
           <Break />
-          <Enum name="Flags" enumName="Static.Flag" byteLength="1"  >
-            <Versioning formVersion="44" />
-          </Enum>
-          <ByteArray name="Unused" byteLength="3" nullable="False" >
-            <Versioning formVersion="44" />
-          </ByteArray>
+          <Enum name="Flags" enumName="Static.Flag" byteLength="1" />
+          <ByteArray name="Unused" byteLength="3" nullable="False" />
         </Fields>
       </Data>
       <RefDirect name="Lod" refName="Lod" />
