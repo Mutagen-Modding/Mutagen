@@ -86,6 +86,7 @@
     <Compile Include="Exceptions\RecordCollisionException.cs" />
     <Compile Include="Exceptions\RecordException.cs" />
     <Compile Include="Exceptions\SubrecordException.cs" />
+    <Compile Include="Extensions\IGroupMixIns.cs" />
     <Compile Include="Extensions\DuplicateFromMixIn.cs" />
     <Compile Include="Extensions\EnumerableExt.cs" />
     <Compile Include="Extensions\FormLinkListMixIn.cs" />

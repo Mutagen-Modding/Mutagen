@@ -85,31 +85,6 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public TMajor AddNew(FormKey formKey)
-        {
-            var ret = MajorRecordInstantiator<TMajor>.Activator(formKey, _release);
-            InternalCache.Set(ret);
-            return ret;
-        }
-
-        /// <inheritdoc />
-        public TMajor AddNew()
-        {
-            var ret = MajorRecordInstantiator<TMajor>.Activator(SourceMod.GetNextFormKey(), _release);
-            InternalCache.Set(ret);
-            return ret;
-        }
-
-        /// <inheritdoc />
-        public TMajor AddNew(string? editorID)
-        {
-            var ret = MajorRecordInstantiator<TMajor>.Activator(SourceMod.GetNextFormKey(editorID), _release);
-            ret.EditorID = editorID;
-            InternalCache.Set(ret);
-            return ret;
-        }
-
-        /// <inheritdoc />
         public IEnumerator<TMajor> GetEnumerator()
         {
             return InternalCache.Items.GetEnumerator();
