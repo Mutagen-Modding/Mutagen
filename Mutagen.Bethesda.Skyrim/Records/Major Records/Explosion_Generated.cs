@@ -2041,7 +2041,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Explosion(formKey, default(SkyrimRelease));
+            var newRec = new Explosion(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }

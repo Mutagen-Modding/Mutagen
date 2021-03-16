@@ -1981,7 +1981,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Ammunition(formKey, default(SkyrimRelease));
+            var newRec = new Ammunition(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }

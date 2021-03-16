@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Generation
                     }
                     else
                     {
-                        fg.AppendLine($"var newRec = new {obj.Name}(formKey{(obj.GetObjectData().HasMultipleReleases ? $", default({obj.GetObjectData().GameCategory}Release)" : null)});");
+                        fg.AppendLine($"var newRec = new {obj.Name}(formKey{(obj.GetObjectData().HasMultipleReleases ? $", item.FormVersion" : null)});");
                         fg.AppendLine($"newRec.DeepCopyIn(item, default({nameof(ErrorMaskBuilder)}?), copyMask);");
                         fg.AppendLine("return newRec;");
                     }
