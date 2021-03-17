@@ -11938,6 +11938,7 @@ namespace Mutagen.Bethesda.Oblivion
                 path: path);
             var bundle = new WritingBundle(GameRelease.Oblivion)
             {
+                CleanNulls = param.CleanNulls
             };
             using var memStream = new MemoryTributary();
             using (var writer = new MutagenWriter(

@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Internals;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -34,6 +34,11 @@ namespace Mutagen.Bethesda.Binary
         /// Tracker of current major record version
         /// </summary>
         public ushort? FormVersion { get; set; }
+
+        /// <summary>
+        /// If a FormID has all zeros for the ID, but a non-zero mod index, then set mod index to zero as well.
+        /// </summary>
+        public bool CleanNulls { get; set; } = true;
 
         public WritingBundle(GameConstants constants)
         {

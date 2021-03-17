@@ -126,18 +126,6 @@ namespace Mutagen.Bethesda.Binary
 
         public void Write<T>(
             MutagenWriter writer,
-            IEDIDLink<T> item,
-            MasterReferenceReader masterReferences)
-            where T : class, IMajorRecordCommonGetter
-        {
-            this.Write(
-                writer,
-                item,
-                masterReferences);
-        }
-
-        public void Write<T>(
-            MutagenWriter writer,
             FormLink<T> item,
             RecordType header)
             where T : class, IMajorRecordCommonGetter

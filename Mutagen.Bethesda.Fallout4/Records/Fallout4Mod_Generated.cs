@@ -3519,7 +3519,8 @@ namespace Mutagen.Bethesda.Fallout4
             var stringsWriter = param.StringsWriter ?? (EnumExt.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter(GameRelease.Fallout4, modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings")) : null);
             var bundle = new WritingBundle(GameRelease.Fallout4)
             {
-                StringsWriter = stringsWriter
+                StringsWriter = stringsWriter,
+                CleanNulls = param.CleanNulls
             };
             using var memStream = new MemoryTributary();
             using (var writer = new MutagenWriter(

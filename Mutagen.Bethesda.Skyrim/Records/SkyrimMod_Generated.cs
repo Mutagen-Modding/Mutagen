@@ -23130,7 +23130,8 @@ namespace Mutagen.Bethesda.Skyrim
             var stringsWriter = param.StringsWriter ?? (EnumExt.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter(item.SkyrimRelease.ToGameRelease(), modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings")) : null);
             var bundle = new WritingBundle(item.SkyrimRelease.ToGameRelease())
             {
-                StringsWriter = stringsWriter
+                StringsWriter = stringsWriter,
+                CleanNulls = param.CleanNulls
             };
             using var memStream = new MemoryTributary();
             using (var writer = new MutagenWriter(

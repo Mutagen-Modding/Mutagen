@@ -1341,6 +1341,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     prop.Add($"{nameof(WritingBundle.StringsWriter)} = stringsWriter");
                 }
+                prop.Add($"{nameof(WritingBundle.CleanNulls)} = param.{nameof(BinaryWriteParameters.CleanNulls)}");
             }
             fg.AppendLine("using var memStream = new MemoryTributary();");
             using (var args = new ArgsWrapper(fg,
