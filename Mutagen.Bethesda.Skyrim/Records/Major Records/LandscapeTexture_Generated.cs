@@ -1434,7 +1434,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ILandscapeTexture)item,
+                item: (ILandscapeTextureGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1445,7 +1445,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ILandscapeTexture)item,
+                item: (ILandscapeTextureGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }

@@ -1421,7 +1421,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IConstructibleObject)item,
+                item: (IConstructibleObjectGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1432,7 +1432,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IConstructibleObject)item,
+                item: (IConstructibleObjectGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }

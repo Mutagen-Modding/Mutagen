@@ -91,7 +91,7 @@ namespace Mutagen.Bethesda.Generation
                         using (var args = new ArgsWrapper(fg,
                             $"return this.Duplicate"))
                         {
-                            args.Add($"item: ({obj.Interface(getter: false)})item");
+                            args.Add($"item: ({obj.Interface(getter: true)})item");
                             args.AddPassArg("formKey");
                             args.AddPassArg("copyMask");
                         }

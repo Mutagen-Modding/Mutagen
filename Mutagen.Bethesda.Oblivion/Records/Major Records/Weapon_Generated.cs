@@ -1341,7 +1341,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IWeapon)item,
+                item: (IWeaponGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1352,7 +1352,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IWeapon)item,
+                item: (IWeaponGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }

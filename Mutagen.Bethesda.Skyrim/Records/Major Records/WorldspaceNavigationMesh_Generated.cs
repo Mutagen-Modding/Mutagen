@@ -1098,7 +1098,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IWorldspaceNavigationMesh)item,
+                item: (IWorldspaceNavigationMeshGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1109,7 +1109,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IWorldspaceNavigationMesh)item,
+                item: (IWorldspaceNavigationMeshGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1120,7 +1120,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IWorldspaceNavigationMesh)item,
+                item: (IWorldspaceNavigationMeshGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }

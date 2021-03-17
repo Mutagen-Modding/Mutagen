@@ -1123,7 +1123,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IStoryManagerBranchNode)item,
+                item: (IStoryManagerBranchNodeGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1134,7 +1134,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IStoryManagerBranchNode)item,
+                item: (IStoryManagerBranchNodeGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1145,7 +1145,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IStoryManagerBranchNode)item,
+                item: (IStoryManagerBranchNodeGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }

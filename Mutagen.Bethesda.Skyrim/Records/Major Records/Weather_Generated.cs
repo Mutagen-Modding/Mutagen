@@ -4439,7 +4439,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IWeather)item,
+                item: (IWeatherGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -4450,7 +4450,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IWeather)item,
+                item: (IWeatherGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }

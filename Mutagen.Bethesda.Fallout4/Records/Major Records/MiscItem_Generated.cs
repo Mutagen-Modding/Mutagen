@@ -934,7 +934,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IMiscItem)item,
+                item: (IMiscItemGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -945,7 +945,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IMiscItem)item,
+                item: (IMiscItemGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }

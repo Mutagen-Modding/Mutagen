@@ -1111,7 +1111,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IOutfit)item,
+                item: (IOutfitGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1122,7 +1122,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IOutfit)item,
+                item: (IOutfitGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }

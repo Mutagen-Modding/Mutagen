@@ -1089,7 +1089,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IGlobalFloat)item,
+                item: (IGlobalFloatGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1100,7 +1100,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IGlobalFloat)item,
+                item: (IGlobalFloatGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1111,7 +1111,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IGlobalFloat)item,
+                item: (IGlobalFloatGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
