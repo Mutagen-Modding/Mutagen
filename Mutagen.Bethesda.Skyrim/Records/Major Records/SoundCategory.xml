@@ -4,7 +4,7 @@
     <Fields>
       <String name="Name" recordType="FULL" translated="Normal" />
       <Enum name="Flags" enumName="SoundCategory.Flag" byteLength="4" recordType="FNAM" />
-      <FormLink name="Parent" recordType="PNAM" refName="SoundDescriptor" />
+      <FormLink name="Parent" recordType="PNAM" refName="SoundCategory" />
       <Float name="StaticVolumeMultiplier" integerType="UShort" recordType="VNAM" divisor="65535" />
       <Float name="DefaultMenuVolume" integerType="UShort" recordType="UNAM" divisor="65535" />
     </Fields>

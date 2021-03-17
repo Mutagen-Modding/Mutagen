@@ -81,14 +81,14 @@ namespace Mutagen.Bethesda.Skyrim
         SoundCategory.Flag? ISoundCategoryGetter.Flags => this.Flags;
         #endregion
         #region Parent
-        private IFormLinkNullable<ISoundDescriptorGetter> _Parent = new FormLinkNullable<ISoundDescriptorGetter>();
-        public IFormLinkNullable<ISoundDescriptorGetter> Parent
+        private IFormLinkNullable<ISoundCategoryGetter> _Parent = new FormLinkNullable<ISoundCategoryGetter>();
+        public IFormLinkNullable<ISoundCategoryGetter> Parent
         {
             get => _Parent;
             set => _Parent = value.AsNullable();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ISoundDescriptorGetter> ISoundCategoryGetter.Parent => this.Parent;
+        IFormLinkNullableGetter<ISoundCategoryGetter> ISoundCategoryGetter.Parent => this.Parent;
         #endregion
         #region StaticVolumeMultiplier
         public Single? StaticVolumeMultiplier { get; set; }
@@ -639,7 +639,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new TranslatedString? Name { get; set; }
         new SoundCategory.Flag? Flags { get; set; }
-        new IFormLinkNullable<ISoundDescriptorGetter> Parent { get; }
+        new IFormLinkNullable<ISoundCategoryGetter> Parent { get; }
         new Single? StaticVolumeMultiplier { get; set; }
         new Single? DefaultMenuVolume { get; set; }
     }
@@ -665,7 +665,7 @@ namespace Mutagen.Bethesda.Skyrim
         static new ILoquiRegistration Registration => SoundCategory_Registration.Instance;
         ITranslatedStringGetter? Name { get; }
         SoundCategory.Flag? Flags { get; }
-        IFormLinkNullableGetter<ISoundDescriptorGetter> Parent { get; }
+        IFormLinkNullableGetter<ISoundCategoryGetter> Parent { get; }
         Single? StaticVolumeMultiplier { get; }
         Single? DefaultMenuVolume { get; }
 
@@ -1705,7 +1705,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Parent
         private int? _ParentLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> Parent => _ParentLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ParentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullableGetter<ISoundCategoryGetter> Parent => _ParentLocation.HasValue ? new FormLinkNullable<ISoundCategoryGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ParentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundCategoryGetter>.Null;
         #endregion
         #region StaticVolumeMultiplier
         private int? _StaticVolumeMultiplierLocation;
