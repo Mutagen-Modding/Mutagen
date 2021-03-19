@@ -134,6 +134,7 @@
     <Compile Include="Links\Cache\Preferences\LinkCachePreferences.cs" />
     <Compile Include="Links\Cache\MutableModLinkCache.cs" />
     <Compile Include="Links\Cache\MutableLoadOrderLinkCache.cs" />
+    <Compile Include="Links\FormLinkTypelessComparer.cs" />
     <Compile Include="Load Order\CreationClubListings.cs" />
     <Compile Include="Load Order\LoadOrder.cs" />
     <Compile Include="Extensions\OverrideMixIns.cs" />
