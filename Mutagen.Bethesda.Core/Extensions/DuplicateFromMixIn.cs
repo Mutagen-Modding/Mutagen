@@ -78,10 +78,12 @@ namespace Mutagen.Bethesda
             // Compile list of things to duplicate
             HashSet<FormLinkInformation> identifiedLinks = new();
             HashSet<FormKey> passedLinks = new();
+            var implicits = Implicits.Get(modToDuplicateInto.GameRelease);
 
             void AddAllLinks(FormLinkInformation link)
             {
                 if (link.FormKey.IsNull || !passedLinks.Add(link.FormKey)) return;
+                if (implicits.RecordFormKeys.Contains(link.FormKey)) return;
 
                 if (link.FormKey.ModKey == modKeyToDuplicateFrom)
                 {
