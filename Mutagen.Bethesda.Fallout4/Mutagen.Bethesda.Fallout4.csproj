@@ -200,6 +200,7 @@
     <Compile Include="Records\Major Records\DamageType_Generated.cs">
       <DependentUpon>DamageType.xml</DependentUpon>
     </Compile>
+    <Compile Include="ImplicitsMixIn_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.1.2">

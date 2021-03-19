@@ -886,6 +886,7 @@
     <Compile Include="Records\Common Subrecords\ClothingFlags_Generated.cs">
       <DependentUpon>ClothingFlags.xml</DependentUpon>
     </Compile>
+    <Compile Include="ImplicitsMixIn_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.1.2">

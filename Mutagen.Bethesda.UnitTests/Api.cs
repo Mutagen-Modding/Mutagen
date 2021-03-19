@@ -1,13 +1,14 @@
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Diagnostics.Tracing.Parsers.FrameworkEventSource;
 using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda;
 using Noggog;
 using Xunit;
 using Xunit.Abstractions;
 using Constants = Mutagen.Bethesda.Internals.Constants;
+using Mutagen.Bethesda.UnitTests;
 
-namespace Mutagen.Bethesda.UnitTests
+namespace Api
 {
     /// <summary>
     /// Some tests that are less about testing correct functionality, and more confirming
@@ -240,6 +241,12 @@ namespace Mutagen.Bethesda.UnitTests
             if (group.TryGetValue(Utility.Form1, out var npc))
             {
             }
+        }
+
+        [Fact]
+        public static void ImplicitsApi()
+        {
+            Implicits.Listings.Skyrim(SkyrimRelease.SkyrimSE).Contains(Utility.PluginModKey);
         }
     }
 }
