@@ -82,7 +82,8 @@ namespace Mutagen.Bethesda
 
             void AddAllLinks(FormLinkInformation link)
             {
-                if (link.FormKey.IsNull || !passedLinks.Add(link.FormKey)) return;
+                if (link.FormKey.IsNull) return;
+                if (!passedLinks.Add(link.FormKey)) return;
                 if (implicits.RecordFormKeys.Contains(link.FormKey)) return;
 
                 if (link.FormKey.ModKey == modKeyToDuplicateFrom)
@@ -92,11 +93,12 @@ namespace Mutagen.Bethesda
 
                 if (!linkCache.TryResolve(link.FormKey, link.Type, out var linkRec))
                 {
-                    throw new KeyNotFoundException($"Could not locate record to make self contained: {link.FormKey}");
+                    return;
                 }
 
                 foreach (var containedLink in linkRec.ContainedFormLinks)
                 {
+                    if (containedLink.FormKey.ModKey != modKeyToDuplicateFrom) continue;
                     AddAllLinks(containedLink);
                 }
             }
