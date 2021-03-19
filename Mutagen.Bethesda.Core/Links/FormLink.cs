@@ -10,8 +10,7 @@ namespace Mutagen.Bethesda
     /// This provides type safety concepts on top of a basic FormKey.
     /// </summary>
     /// <typeparam name="TMajorGetter">The type of Major Record the Link is allowed to connect with</typeparam>
-    public class FormLink<TMajorGetter> : 
-        IFormLink<TMajorGetter>,
+    public class FormLinkGetter<TMajorGetter> : IFormLinkGetter<TMajorGetter>,
         IEquatable<FormLink<TMajorGetter>>,
         IEquatable<FormLinkNullable<TMajorGetter>>,
         IEquatable<IFormLinkGetter<TMajorGetter>>,
@@ -19,16 +18,18 @@ namespace Mutagen.Bethesda
         IEquatable<TMajorGetter>
         where TMajorGetter : class, IMajorRecordCommonGetter
     {
+        protected FormKey _formKey;
+
         /// <summary>
         /// A readonly singleton representing an unlinked FormLink
         /// </summary>
-        public static IFormLinkGetter<TMajorGetter> Null => new FormLink<TMajorGetter>();
+        public static readonly IFormLinkGetter<TMajorGetter> Null = new FormLinkGetter<TMajorGetter>();
 
         /// <summary>
         /// FormKey of the target record
         /// </summary>
-        public FormKey FormKey { get; set; }
-        
+        public FormKey FormKey => _formKey;
+
         Type ILink.TargetType => typeof(TMajorGetter);
 
         /// <summary>
@@ -40,6 +41,118 @@ namespace Mutagen.Bethesda
         public Type Type => typeof(TMajorGetter);
 
         FormKey? IFormLinkGetter.FormKeyNullable => this.FormKey;
+
+        public bool TryResolveFormKey(ILinkCache cache, [MaybeNullWhen(false)] out FormKey formKey)
+        {
+            formKey = this.FormKey;
+            return true;
+        }
+
+        public bool TryResolveCommon(ILinkCache cache, [MaybeNullWhen(false)] out IMajorRecordCommonGetter formKey)
+        {
+            if (this.TryResolve(cache, out var rec))
+            {
+                formKey = rec;
+                return true;
+            }
+            formKey = default!;
+            return false;
+        }
+
+        public bool TryGetModKey([MaybeNullWhen(false)] out ModKey modKey)
+        {
+            modKey = this.FormKey.ModKey;
+            return true;
+        }
+
+        /// <summary> 
+        /// Attempts to locate link target in given Link Cache. 
+        /// </summary> 
+        /// <param name="cache">Link Cache to resolve against</param> 
+        /// <returns>TryGet object with located record if successful</returns> 
+        public TMajorGetter? TryResolve(ILinkCache cache)
+        {
+            if (this.TryResolve(cache, out var rec))
+            {
+                return rec;
+            }
+            return default;
+        }
+
+        /// <summary>
+        /// Default Equality
+        /// </summary>
+        /// <param name="obj">Object to compare to</param>
+        /// <returns>True if object is ILinkGetter and FormKeys match</returns>
+        public override bool Equals(object? obj)
+        {
+            return IFormLinkExt.EqualsWithInheritanceConsideration(this, obj);
+        }
+
+        /// <summary>
+        /// Compares equality of two links.
+        /// </summary>
+        /// <param name="other">Other link to compare to</param>
+        /// <returns>True if FormKey members are equal</returns>
+        public bool Equals(FormLink<TMajorGetter>? other) => this.FormKey.Equals(other?.FormKey ?? FormKey.Null);
+
+        /// <summary>
+        /// Compares equality of two links, where rhs is a nullable link.
+        /// </summary>
+        /// <param name="other">Other link to compare to</param>
+        /// <returns>True if FormKey members are equal</returns>
+        public bool Equals(FormLinkNullable<TMajorGetter>? other) => EqualityComparer<FormKey?>.Default.Equals(this.FormKey, other?.FormKeyNullable);
+
+        /// <summary>
+        /// Compares equality of two links.
+        /// </summary>
+        /// <param name="other">Other link to compare to</param>
+        /// <returns>True if FormKey members are equal</returns>
+        public bool Equals(IFormLinkGetter<TMajorGetter>? other) => this.FormKey.Equals(other?.FormKey);
+
+        /// <summary>
+        /// Compares equality of two links, where rhs is a nullable link.
+        /// </summary>
+        /// <param name="other">Other link to compare to</param>
+        /// <returns>True if FormKey members are equal</returns>
+        public bool Equals(IFormLinkNullableGetter<TMajorGetter>? other) => EqualityComparer<FormKey?>.Default.Equals(this.FormKey, other?.FormKeyNullable);
+
+        /// <summary>
+        /// Returns hash code
+        /// </summary>
+        /// <returns>Hash code evaluated from FormKey member</returns>
+        public override int GetHashCode() => this.FormKey.GetHashCode();
+
+        /// <summary>
+        /// Returns string representation of link
+        /// </summary>
+        /// <returns>Returns FormKey string</returns>
+        public override string ToString() => $"<{MajorRecordTypePrinter<TMajorGetter>.TypeString}>{this.FormKey}";
+
+        public bool Equals(TMajorGetter? other)
+        {
+            return IFormLinkExt.EqualsWithInheritanceConsideration(this, other);
+        }
+
+        public static IEqualityComparer<IFormLinkGetter<TMajorGetter>> TypelessComparer => FormLinkTypelessComparer<TMajorGetter>.Instance;
+    }
+
+    /// <summary>
+    /// A FormKey with an associated Major Record Type that it is allowed to link to.
+    /// This provides type safety concepts on top of a basic FormKey.
+    /// </summary>
+    /// <typeparam name="TMajorGetter">The type of Major Record the Link is allowed to connect with</typeparam>
+    public class FormLink<TMajorGetter> : FormLinkGetter<TMajorGetter>, IFormLink<TMajorGetter>
+        where TMajorGetter : class, IMajorRecordCommonGetter
+    {
+        /// <summary>
+        /// FormKey of the target record
+        /// </summary>
+        public new FormKey FormKey
+        {
+            get => _formKey;
+            set => _formKey = value;
+        }
 
         FormKey? IFormLink<TMajorGetter>.FormKeyNullable
         {
@@ -100,118 +213,6 @@ namespace Mutagen.Bethesda
             this.FormKey = FormKey.Null;
         }
 
-        public static bool operator ==(FormLink<TMajorGetter> lhs, FormLink<TMajorGetter> rhs)
-        {
-            return lhs.FormKey.Equals(rhs.FormKey);
-        }
-
-        public static bool operator !=(FormLink<TMajorGetter> lhs, FormLink<TMajorGetter> rhs)
-        {
-            return !lhs.FormKey.Equals(rhs.FormKey);
-        }
-
-        public static bool operator ==(FormLink<TMajorGetter> lhs, FormLinkNullable<TMajorGetter> rhs)
-        {
-            return EqualityComparer<FormKey?>.Default.Equals(lhs.FormKey, rhs.FormKeyNullable);
-        }
-
-        public static bool operator !=(FormLink<TMajorGetter> lhs, FormLinkNullable<TMajorGetter> rhs)
-        {
-            return !EqualityComparer<FormKey?>.Default.Equals(lhs.FormKey, rhs.FormKeyNullable);
-        }
-
-        /// <summary>
-        /// Default Equality
-        /// </summary>
-        /// <param name="obj">Object to compare to</param>
-        /// <returns>True if object is ILinkGetter and FormKeys match</returns>
-        public override bool Equals(object? obj)
-        {
-            return IFormLinkExt.EqualsWithInheritanceConsideration(this, obj);
-        }
-
-        /// <summary>
-        /// Compares equality of two links.
-        /// </summary>
-        /// <param name="other">Other link to compare to</param>
-        /// <returns>True if FormKey members are equal</returns>
-        public bool Equals(FormLink<TMajorGetter>? other) => this.FormKey.Equals(other?.FormKey ?? FormKey.Null);
-
-        /// <summary>
-        /// Compares equality of two links, where rhs is a nullable link.
-        /// </summary>
-        /// <param name="other">Other link to compare to</param>
-        /// <returns>True if FormKey members are equal</returns>
-        public bool Equals(FormLinkNullable<TMajorGetter>? other) => EqualityComparer<FormKey?>.Default.Equals(this.FormKey, other?.FormKeyNullable);
-
-        /// <summary>
-        /// Compares equality of two links.
-        /// </summary>
-        /// <param name="other">Other link to compare to</param>
-        /// <returns>True if FormKey members are equal</returns>
-        public bool Equals(IFormLinkGetter<TMajorGetter>? other) => this.FormKey.Equals(other?.FormKey);
-
-        /// <summary>
-        /// Compares equality of two links, where rhs is a nullable link.
-        /// </summary>
-        /// <param name="other">Other link to compare to</param>
-        /// <returns>True if FormKey members are equal</returns>
-        public bool Equals(IFormLinkNullableGetter<TMajorGetter>? other) => EqualityComparer<FormKey?>.Default.Equals(this.FormKey, other?.FormKeyNullable);
-
-        /// <summary>
-        /// Returns hash code
-        /// </summary>
-        /// <returns>Hash code evaluated from FormKey member</returns>
-        public override int GetHashCode() => this.FormKey.GetHashCode();
-
-        /// <summary>
-        /// Returns string representation of link
-        /// </summary>
-        /// <returns>Returns FormKey string</returns>
-        public override string ToString() => $"<{MajorRecordTypePrinter<TMajorGetter>.TypeString}>{this.FormKey}";
-
-        bool ILink.TryResolveFormKey(ILinkCache cache, [MaybeNullWhen(false)] out FormKey formKey)
-        {
-            formKey = this.FormKey;
-            return true;
-        }
-
-        bool ILink.TryResolveCommon(ILinkCache cache, [MaybeNullWhen(false)] out IMajorRecordCommonGetter formKey)
-        {
-            if (this.TryResolve(cache, out var rec))
-            {
-                formKey = rec;
-                return true;
-            }
-            formKey = default!;
-            return false;
-        }
-
-        bool ILink.TryGetModKey([MaybeNullWhen(false)] out ModKey modKey)
-        {
-            modKey = this.FormKey.ModKey;
-            return true;
-        }
-
-        /// <summary> 
-        /// Attempts to locate link target in given Link Cache. 
-        /// </summary> 
-        /// <param name="cache">Link Cache to resolve against</param> 
-        /// <returns>TryGet object with located record if successful</returns> 
-        public TMajorGetter? TryResolve(ILinkCache cache)
-        {
-            if (this.TryResolve(cache, out var rec))
-            {
-                return rec;
-            }
-            return default;
-        }
-
-        public bool Equals(TMajorGetter? other)
-        {
-            return IFormLinkExt.EqualsWithInheritanceConsideration(this, other);
-        }
-
         public static implicit operator FormLink<TMajorGetter>(TMajorGetter major)
         {
             return new FormLink<TMajorGetter>(major.FormKey);
@@ -226,8 +227,6 @@ namespace Mutagen.Bethesda
         {
             return link.FormKey;
         }
-
-        public static IEqualityComparer<IFormLinkGetter<TMajorGetter>> TypelessComparer => FormLinkTypelessComparer<TMajorGetter>.Instance;
     }
 
     public struct FormLink<TMajor, TMajorGetter>
