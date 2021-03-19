@@ -2454,7 +2454,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         if (obj.TopCell.TryGet(out var PathGridTopCellitem))
                         {
-                            yield return PathGridTopCellitem;
                             foreach (var item in PathGridTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
                             {
                                 yield return item;
@@ -2476,7 +2475,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         if (obj.TopCell.TryGet(out var LandscapeTopCellitem))
                         {
-                            yield return LandscapeTopCellitem;
                             foreach (var item in LandscapeTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
                             {
                                 yield return item;
@@ -2498,7 +2496,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         if (obj.TopCell.TryGet(out var PlacedCreatureTopCellitem))
                         {
-                            yield return PlacedCreatureTopCellitem;
                             foreach (var item in PlacedCreatureTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
                             {
                                 yield return item;
@@ -2520,7 +2517,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         if (obj.TopCell.TryGet(out var PlacedNpcTopCellitem))
                         {
-                            yield return PlacedNpcTopCellitem;
                             foreach (var item in PlacedNpcTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
                             {
                                 yield return item;
@@ -2542,7 +2538,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         if (obj.TopCell.TryGet(out var PlacedObjectTopCellitem))
                         {
-                            yield return PlacedObjectTopCellitem;
                             foreach (var item in PlacedObjectTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
                             {
                                 yield return item;

@@ -3485,7 +3485,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (obj.TopCell.TryGet(out var LandscapeTopCellitem))
                         {
-                            yield return LandscapeTopCellitem;
                             foreach (var item in LandscapeTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
                             {
                                 yield return item;
@@ -3507,7 +3506,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (obj.TopCell.TryGet(out var ANavigationMeshTopCellitem))
                         {
-                            yield return ANavigationMeshTopCellitem;
                             foreach (var item in ANavigationMeshTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
                             {
                                 yield return item;
@@ -3529,7 +3527,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (obj.TopCell.TryGet(out var PlacedNpcTopCellitem))
                         {
-                            yield return PlacedNpcTopCellitem;
                             foreach (var item in PlacedNpcTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
                             {
                                 yield return item;
@@ -3551,7 +3548,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (obj.TopCell.TryGet(out var PlacedObjectTopCellitem))
                         {
-                            yield return PlacedObjectTopCellitem;
                             foreach (var item in PlacedObjectTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
                             {
                                 yield return item;
@@ -3573,7 +3569,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         if (obj.TopCell.TryGet(out var APlacedTrapTopCellitem))
                         {
-                            yield return APlacedTrapTopCellitem;
                             foreach (var item in APlacedTrapTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
                             {
                                 yield return item;
