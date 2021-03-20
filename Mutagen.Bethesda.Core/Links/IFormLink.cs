@@ -531,5 +531,19 @@ namespace Mutagen.Bethesda
         {
             return new FormLink<TMajor>(link.FormKey);
         }
+
+        public static IFormLink<TMajorRet> Cast<TMajor, TMajorRet>(this IFormLinkGetter<TMajor> link)
+            where TMajor : class, IMajorRecordCommonGetter
+            where TMajorRet : class, IMajorRecordCommonGetter
+        {
+            return new FormLink<TMajorRet>(link.FormKey);
+        }
+
+        public static IFormLinkNullable<TMajorRet> Cast<TMajor, TMajorRet>(this IFormLinkNullableGetter<TMajor> link)
+            where TMajor : class, IMajorRecordCommonGetter
+            where TMajorRet : class, IMajorRecordCommonGetter
+        {
+            return new FormLinkNullable<TMajorRet>(link.FormKeyNullable);
+        }
     }
 }
