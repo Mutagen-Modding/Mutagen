@@ -15,6 +15,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly ModKey Workshop2 = new ModKey("DLCworkshop02", type: ModType.Master);
         public static readonly ModKey Workshop3 = new ModKey("DLCworkshop03", type: ModType.Master);
         public static readonly ModKey NukaWorld = new ModKey("DLCNukaWorld", type: ModType.Master);
-        public static readonly FormKey Player = new FormKey(Fallout4, id: 0x14);
+        public static readonly IFormLinkGetter<IFallout4MajorRecordGetter> Player = new FormLink<IFallout4MajorRecordGetter>(new FormKey(Fallout4, id: 0x14));
     }
 }
