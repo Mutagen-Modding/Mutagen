@@ -150,6 +150,22 @@ namespace Mutagen.Bethesda.Generation
                                 fg.AppendLine($"yield return {nameof(FormLinkInformation)}.{nameof(FormLinkInformation.Factory)}(obj.{field.Name});");
                             }
                         }
+                        else if (field is FormKeyType formKey
+                            && obj.Name != "MajorRecord")
+                        {
+                            if (field.Nullable)
+                            {
+                                fg.AppendLine($"if (obj.{field.Name} != null)");
+                                using (new BraceWrapper(fg))
+                                {
+                                    fg.AppendLine($"yield return {nameof(FormLinkInformation)}.{nameof(FormLinkInformation.Factory)}(obj.{field.Name}.AsLink<I{obj.ProtoGen.Protocol.Namespace}MajorRecordGetter>());");
+                                }
+                            }
+                            else
+                            {
+                                fg.AppendLine($"yield return {nameof(FormLinkInformation)}.{nameof(FormLinkInformation.Factory)}(obj.{field.Name}.AsLink<I{obj.ProtoGen.Protocol.Namespace}MajorRecordGetter>());");
+                            }
+                        }
                         else if (field is LoquiType loqui)
                         {
                             LinkCase subLinkCase;
@@ -325,6 +341,11 @@ namespace Mutagen.Bethesda.Generation
                             && formLink.FormIDType == FormLinkType.FormIDTypeEnum.Normal)
                         {
                             fg.AppendLine($"obj.{field.Name}.Relink(mapping);");
+                        }
+                        else if (field is FormKeyType formKey
+                            && obj.Name != "MajorRecord")
+                        {
+                            fg.AppendLine($"obj.{field.Name} = {nameof(RemappingMixIn)}.Remap(obj.{field.Name}, mapping);");
                         }
                         else if (field is LoquiType loqui)
                         {

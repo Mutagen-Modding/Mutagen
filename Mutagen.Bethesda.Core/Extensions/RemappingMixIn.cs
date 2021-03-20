@@ -87,5 +87,15 @@ namespace Mutagen.Bethesda
                 item.RemapLinks(mapping);
             }
         }
+
+        public static FormKey Remap(FormKey key, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            if (key.IsNull) return key;
+            if (mapping.TryGetValue(key, out var map))
+            {
+                return map;
+            }
+            return key;
+        }
     }
 }
