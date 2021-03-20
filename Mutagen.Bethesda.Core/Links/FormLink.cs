@@ -222,11 +222,6 @@ namespace Mutagen.Bethesda
         {
             return new FormLink<TMajorGetter>(formKey);
         }
-
-        public static implicit operator FormKey(FormLink<TMajorGetter> link)
-        {
-            return link.FormKey;
-        }
     }
 
     public struct FormLink<TMajor, TMajorGetter>
