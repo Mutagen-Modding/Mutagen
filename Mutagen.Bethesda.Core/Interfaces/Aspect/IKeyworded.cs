@@ -11,7 +11,7 @@ namespace Mutagen.Bethesda
     /// An interface implemented by Major Records that have keywords
     /// </summary>
     public interface IKeyworded<TKeyword> : IKeywordedGetter<TKeyword>
-        where TKeyword : IKeywordCommonGetter
+        where TKeyword : class, IKeywordCommonGetter
     {
         new ExtendedList<IFormLinkGetter<TKeyword>>? Keywords { get; set; }
     }
@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda
     /// An interface implemented by Major Records that have keywords
     /// </summary>
     public interface IKeywordedGetter<TKeyword> : IKeywordedGetter
-        where TKeyword : IKeywordCommonGetter
+        where TKeyword : class, IKeywordCommonGetter
     {
         new IReadOnlyList<IFormLinkGetter<TKeyword>>? Keywords { get; }
     }
@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda
         public static bool HasKeyword<TKeyword>(
             this IKeywordedGetter<TKeyword> keyworded,
             FormKey keywordKey)
-            where TKeyword : IKeywordCommonGetter
+            where TKeyword : class, IKeywordCommonGetter
         {
             return keyworded.Keywords?.Any(x => x.FormKey == keywordKey) ?? false;
         }
@@ -88,7 +88,7 @@ namespace Mutagen.Bethesda
         public static bool HasKeyword<TKeyword>(
             this IKeywordedGetter<TKeyword> keyworded,
             IFormLinkGetter<TKeyword> keywordLink)
-            where TKeyword : IKeywordCommonGetter
+            where TKeyword : class, IKeywordCommonGetter
         {
             return keyworded.Keywords?.Any(x => x.FormKey == keywordLink.FormKey) ?? false;
         }
@@ -132,7 +132,7 @@ namespace Mutagen.Bethesda
         public static bool HasKeyword<TKeyword>(
             this IKeywordedGetter<TKeyword> keyworded,
             TKeyword keyword)
-            where TKeyword : IKeywordCommonGetter
+            where TKeyword : class, IKeywordCommonGetter
         {
             return keyworded.HasKeyword(keyword.FormKey);
         }

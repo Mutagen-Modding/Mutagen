@@ -14,13 +14,13 @@ namespace Mutagen.Bethesda
         }
 
         public static FormLinkInformation Factory<TMajorGetter>(IFormLinkGetter<TMajorGetter> link)
-            where TMajorGetter : IMajorRecordCommonGetter
+            where TMajorGetter : class, IMajorRecordCommonGetter
         {
             return new FormLinkInformation(link.FormKey, typeof(TMajorGetter));
         }
 
         public static FormLinkInformation Factory<TMajorGetter>(IFormLinkNullableGetter<TMajorGetter> link)
-            where TMajorGetter : IMajorRecordCommonGetter
+            where TMajorGetter : class, IMajorRecordCommonGetter
         {
             return new FormLinkInformation(link.FormKey, typeof(TMajorGetter));
         }

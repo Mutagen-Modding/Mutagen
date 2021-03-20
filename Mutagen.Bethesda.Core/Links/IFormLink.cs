@@ -38,12 +38,12 @@ namespace Mutagen.Bethesda
     /// </summary>
     /// <typeparam name="TMajorGetter">The type of Major Record the Link is allowed to connect with</typeparam>
     public interface IFormLinkGetter<out TMajorGetter> : ILink<TMajorGetter>, IFormLinkGetter
-       where TMajorGetter : IMajorRecordCommonGetter
+       where TMajorGetter : class, IMajorRecordCommonGetter
     {
     }
 
     public interface IFormLink<out TMajorGetter> : IFormLinkGetter<TMajorGetter>, IClearable
-       where TMajorGetter : IMajorRecordCommonGetter
+       where TMajorGetter : class, IMajorRecordCommonGetter
     {
         /// <summary>
         /// FormKey to link against
@@ -64,12 +64,12 @@ namespace Mutagen.Bethesda
     /// </summary>
     /// <typeparam name="TMajorGetter">The type of Major Record the Link is allowed to connect with</typeparam>
     public interface IFormLinkNullableGetter<out TMajorGetter> : ILink<TMajorGetter>, IFormLinkGetter, IFormLinkGetter<TMajorGetter>
-       where TMajorGetter : IMajorRecordCommonGetter
+       where TMajorGetter : class, IMajorRecordCommonGetter
     {
     }
 
     public interface IFormLinkNullable<out TMajorGetter> : IFormLink<TMajorGetter>, IFormLinkNullableGetter<TMajorGetter>
-       where TMajorGetter : IMajorRecordCommonGetter
+       where TMajorGetter : class, IMajorRecordCommonGetter
     {
     }
 
@@ -494,22 +494,22 @@ namespace Mutagen.Bethesda
         }
 
         public static void SetTo<TMajorLhs, TMajorRhs>(this IFormLink<TMajorLhs> link, TMajorRhs? record)
-            where TMajorLhs : IMajorRecordCommonGetter
-            where TMajorRhs : TMajorLhs
+            where TMajorLhs : class, IMajorRecordCommonGetter
+            where TMajorRhs : class, TMajorLhs
         {
             link.SetTo(record?.FormKey);
         }
 
         public static void SetTo<TMajor, TMajorGetter>(this IFormLink<TMajor> link, IFormLinkGetter<TMajorGetter> rhs)
-            where TMajor : IMajorRecordCommonGetter
-            where TMajorGetter : TMajor
+            where TMajor : class, IMajorRecordCommonGetter
+            where TMajorGetter : class, TMajor
         {
             link.SetTo(rhs.FormKeyNullable);
         }
 
         public static void SetToGetter<TMajor, TMajorGetter>(this IFormLink<TMajor> link, IFormLinkGetter<TMajorGetter> rhs)
-            where TMajor : IMapsToGetter<TMajorGetter>
-            where TMajorGetter : IMajorRecordCommonGetter
+            where TMajor : class, IMapsToGetter<TMajorGetter>
+            where TMajorGetter : class, IMajorRecordCommonGetter
         {
             link.SetTo(rhs.FormKeyNullable);
         }
