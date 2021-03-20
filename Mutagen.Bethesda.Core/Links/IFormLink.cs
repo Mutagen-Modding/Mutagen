@@ -40,6 +40,14 @@ namespace Mutagen.Bethesda
     public interface IFormLinkGetter<out TMajorGetter> : ILink<TMajorGetter>, IFormLinkGetter
        where TMajorGetter : class, IMajorRecordCommonGetter
     {
+        /// <summary>
+        /// Creates a new FormLink with the given type, with the same FormKey.
+        /// Does no safety checking to make sure the new target type is appropriate
+        /// </summary>
+        /// <typeparam name="TMajorRet">Type to cast FormLink to</typeparam>
+        /// <returns>new FormLink with the given type, with the same FormKey</returns>
+        IFormLink<TMajorRet> Cast<TMajorRet>()
+            where TMajorRet : class, IMajorRecordCommonGetter;
     }
 
     public interface IFormLink<out TMajorGetter> : IFormLinkGetter<TMajorGetter>, IClearable
@@ -66,6 +74,14 @@ namespace Mutagen.Bethesda
     public interface IFormLinkNullableGetter<out TMajorGetter> : ILink<TMajorGetter>, IFormLinkGetter, IFormLinkGetter<TMajorGetter>
        where TMajorGetter : class, IMajorRecordCommonGetter
     {
+        /// <summary>
+        /// Creates a new FormLink with the given type, with the same FormKey.
+        /// Does no safety checking to make sure the new target type is appropriate
+        /// </summary>
+        /// <typeparam name="TMajorRet">Type to cast FormLink to</typeparam>
+        /// <returns>new FormLink with the given type, with the same FormKey</returns>
+        new IFormLinkNullable<TMajorRet> Cast<TMajorRet>()
+            where TMajorRet : class, IMajorRecordCommonGetter;
     }
 
     public interface IFormLinkNullable<out TMajorGetter> : IFormLink<TMajorGetter>, IFormLinkNullableGetter<TMajorGetter>
@@ -530,20 +546,6 @@ namespace Mutagen.Bethesda
             where TMajor : class, IMajorRecordCommonGetter
         {
             return new FormLink<TMajor>(link.FormKey);
-        }
-
-        public static IFormLink<TMajorRet> Cast<TMajor, TMajorRet>(this IFormLinkGetter<TMajor> link)
-            where TMajor : class, IMajorRecordCommonGetter
-            where TMajorRet : class, IMajorRecordCommonGetter
-        {
-            return new FormLink<TMajorRet>(link.FormKey);
-        }
-
-        public static IFormLinkNullable<TMajorRet> Cast<TMajor, TMajorRet>(this IFormLinkNullableGetter<TMajor> link)
-            where TMajor : class, IMajorRecordCommonGetter
-            where TMajorRet : class, IMajorRecordCommonGetter
-        {
-            return new FormLinkNullable<TMajorRet>(link.FormKeyNullable);
         }
     }
 }

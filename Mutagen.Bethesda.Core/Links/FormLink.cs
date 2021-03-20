@@ -134,6 +134,12 @@ namespace Mutagen.Bethesda
             return IFormLinkExt.EqualsWithInheritanceConsideration(this, other);
         }
 
+        public IFormLink<TMajorRet> Cast<TMajorRet>() 
+            where TMajorRet : class, IMajorRecordCommonGetter
+        {
+            return new FormLink<TMajorRet>(this.FormKey);
+        }
+
         public static IEqualityComparer<IFormLinkGetter<TMajorGetter>> TypelessComparer => FormLinkTypelessComparer<TMajorGetter>.Instance;
     }
 

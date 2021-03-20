@@ -154,6 +154,16 @@ namespace Mutagen.Bethesda
             }
             return default;
         }
+
+        IFormLinkNullable<TMajorRet> IFormLinkNullableGetter<TMajorGetter>.Cast<TMajorRet>()
+        {
+            return new FormLinkNullable<TMajorRet>(this.FormKeyNullable);
+        }
+
+        IFormLink<TMajorRet> IFormLinkGetter<TMajorGetter>.Cast<TMajorRet>()
+        {
+            return new FormLinkNullable<TMajorRet>(this.FormKeyNullable);
+        }
     }
 
     public class FormLinkNullable<TMajorGetter> : FormLinkNullableGetter<TMajorGetter>, IFormLinkNullable<TMajorGetter>
