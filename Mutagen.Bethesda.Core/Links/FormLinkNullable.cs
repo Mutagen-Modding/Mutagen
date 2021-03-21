@@ -211,15 +211,7 @@ namespace Mutagen.Bethesda
         /// <param name="formKey">Target FormKey to link to</param>
         public void SetTo(FormKey? formKey)
         {
-            if (formKey == null
-                || formKey.Value.IsNull)
-            {
-                this._formKey = null;
-            }
-            else
-            {
-                this._formKey = formKey;
-            }
+            this._formKey = formKey;
         }
 
         /// <summary>
