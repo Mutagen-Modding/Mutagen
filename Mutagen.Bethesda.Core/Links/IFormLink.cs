@@ -64,6 +64,8 @@ namespace Mutagen.Bethesda
         new FormKey FormKey { get; set; }
 
         void SetTo(FormKey? formKey);
+
+        void SetToNull();
     }
 
     /// <summary>

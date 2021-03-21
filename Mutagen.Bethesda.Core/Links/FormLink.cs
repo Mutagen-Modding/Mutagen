@@ -214,6 +214,11 @@ namespace Mutagen.Bethesda
             FormKey = link.FormKey;
         }
 
+        public void SetToNull()
+        {
+            this._formKey = FormKey.Null;
+        }
+
         public void Clear()
         {
             this.FormKey = FormKey.Null;

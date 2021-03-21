@@ -239,6 +239,11 @@ namespace Mutagen.Bethesda
             this._formKey = null;
         }
 
+        public void SetToNull()
+        {
+            this._formKey = null;
+        }
+
         public static implicit operator FormLinkNullable<TMajorGetter>(TMajorGetter? major)
         {
             return new FormLinkNullable<TMajorGetter>(major?.FormKey);
