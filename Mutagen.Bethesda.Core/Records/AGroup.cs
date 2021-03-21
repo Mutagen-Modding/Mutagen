@@ -9,6 +9,7 @@ using System.Buffers.Binary;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 
@@ -161,6 +162,26 @@ namespace Mutagen.Bethesda
                         throw RecordException.Factory(ex, key, edid: null);
                     }
                 }
+            }
+
+            public bool TryGetValue(FormKey key, [MaybeNullWhen(false)] out T value)
+            {
+                if (_locs.TryGetValue(key, out var loc))
+                {
+                    value = ConstructWrapper(loc);
+                    return true;
+                }
+                value = default;
+                return false;
+            }
+
+            public T? TryGetValue(FormKey key)
+            {
+                if (_locs.TryGetValue(key, out var loc))
+                {
+                    return ConstructWrapper(loc);
+                }
+                return default;
             }
 
             public int Count => this._locs.Count;
