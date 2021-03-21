@@ -1,9 +1,39 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Armor" baseClass="AClothing" objType="Record" recordType="ARMO" GUID="484e38f3-afde-4661-9c39-a8bc1e92eb99" ID="67">
+  <Object name="Armor" baseClass="OblivionMajorRecord" objType="Record" recordType="ARMO" GUID="484e38f3-afde-4661-9c39-a8bc1e92eb99" ID="67">
     <Fields>
+      <String name="Name" recordType="FULL" />
+      <FormLink name="Script" refName="Script" recordType="SCRI" />
+      <FormLink name="Enchantment" refName="Enchantment" recordType="ENAM" />
+      <UInt16 name="EnchantmentPoints" recordType="ANAM" />
+      <RefDirect name="ClothingFlags" refName="ClothingFlags" />
+      <RefDirect name="MaleBipedModel" refName="Model" />
+      <RefDirect name="MaleWorldModel" refName="Model">
+        <RecordTypeOverrides>
+          <Mapping From="MODL" To="MOD2" />
+          <Mapping From="MODB" To="MO2B" />
+          <Mapping From="MODT" To="MO2T" />
+        </RecordTypeOverrides>
+      </RefDirect>
+      <String name="MaleIcon" recordType="ICON" />
+      <RefDirect name="FemaleBipedModel" refName="Model">
+        <RecordTypeOverrides>
+          <Mapping From="MODL" To="MOD3" />
+          <Mapping From="MODB" To="MO3B" />
+          <Mapping From="MODT" To="MO3T" />
+        </RecordTypeOverrides>
+      </RefDirect>
+      <RefDirect name="FemaleWorldModel" refName="Model">
+        <RecordTypeOverrides>
+          <Mapping From="MODL" To="MOD4" />
+          <Mapping From="MODB" To="MO4B" />
+          <Mapping From="MODT" To="MO4T" />
+        </RecordTypeOverrides>
+      </RefDirect>
+      <String name="FemaleIcon" recordType="ICO2" />
       <RefDirect name="Data" refName="ArmorData" />
     </Fields>
+    <LinkInterface>IItem</LinkInterface>
   </Object>
   <Object name="ArmorData" recordType="DATA" objType="Subrecord" GUID="71b5ef4b-2567-4534-9a54-b8fd5a40d323" ID="176">
     <Fields>

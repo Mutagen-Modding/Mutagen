@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -6,7 +6,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class PlacedHazardBinaryOverlay
         {
-            public FormLink<IHazardGetter> Hazard { get; internal set; } = FormLink<IHazardGetter>.Null;
+            public IFormLinkGetter<IHazardGetter> Hazard { get; internal set; } = FormLink<IHazardGetter>.Null;
         }
     }
 }

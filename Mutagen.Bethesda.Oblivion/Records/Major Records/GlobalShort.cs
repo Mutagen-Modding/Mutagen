@@ -32,11 +32,6 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
         }
-
-        internal static GlobalShort Factory()
-        {
-            return new GlobalShort();
-        }
     }
 
     namespace Internals

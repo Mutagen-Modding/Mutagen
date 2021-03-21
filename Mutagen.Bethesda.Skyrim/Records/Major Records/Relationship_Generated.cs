@@ -43,10 +43,24 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Parent
-        public FormLink<INpcGetter> Parent { get; set; } = new FormLink<INpcGetter>();
+        private IFormLink<INpcGetter> _Parent = new FormLink<INpcGetter>();
+        public IFormLink<INpcGetter> Parent
+        {
+            get => _Parent;
+            set => _Parent = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<INpcGetter> IRelationshipGetter.Parent => this.Parent;
         #endregion
         #region Child
-        public FormLink<INpcGetter> Child { get; set; } = new FormLink<INpcGetter>();
+        private IFormLink<INpcGetter> _Child = new FormLink<INpcGetter>();
+        public IFormLink<INpcGetter> Child
+        {
+            get => _Child;
+            set => _Child = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<INpcGetter> IRelationshipGetter.Child => this.Child;
         #endregion
         #region Rank
         public Relationship.RankType Rank { get; set; } = default;
@@ -58,7 +72,14 @@ namespace Mutagen.Bethesda.Skyrim
         public Relationship.Flag Flags { get; set; } = default;
         #endregion
         #region AssociationType
-        public FormLink<IAssociationTypeGetter> AssociationType { get; set; } = new FormLink<IAssociationTypeGetter>();
+        private IFormLink<IAssociationTypeGetter> _AssociationType = new FormLink<IAssociationTypeGetter>();
+        public IFormLink<IAssociationTypeGetter> AssociationType
+        {
+            get => _AssociationType;
+            set => _AssociationType = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IAssociationTypeGetter> IRelationshipGetter.AssociationType => this.AssociationType;
         #endregion
         #region DATADataTypeState
         public Relationship.DATADataType DATADataTypeState { get; set; } = default;
@@ -74,22 +95,6 @@ namespace Mutagen.Bethesda.Skyrim
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IRelationshipGetter rhs)) return false;
-            return ((RelationshipCommon)((IRelationshipGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IRelationshipGetter? obj)
-        {
-            return ((RelationshipCommon)((IRelationshipGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((RelationshipCommon)((IRelationshipGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -595,6 +600,26 @@ namespace Mutagen.Bethesda.Skyrim
         public enum DATADataType
         {
         }
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IRelationshipGetter rhs) return false;
+            return ((RelationshipCommon)((IRelationshipGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IRelationshipGetter? obj)
+        {
+            return ((RelationshipCommon)((IRelationshipGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((RelationshipCommon)((IRelationshipGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -657,12 +682,12 @@ namespace Mutagen.Bethesda.Skyrim
         IRelationshipGetter,
         ISkyrimMajorRecordInternal
     {
-        new FormLink<INpcGetter> Parent { get; set; }
-        new FormLink<INpcGetter> Child { get; set; }
+        new IFormLink<INpcGetter> Parent { get; }
+        new IFormLink<INpcGetter> Child { get; }
         new Relationship.RankType Rank { get; set; }
         new Byte Unknown { get; set; }
         new Relationship.Flag Flags { get; set; }
-        new FormLink<IAssociationTypeGetter> AssociationType { get; set; }
+        new IFormLink<IAssociationTypeGetter> AssociationType { get; }
         new Relationship.DATADataType DATADataTypeState { get; set; }
         #region Mutagen
         new Relationship.MajorFlag MajorFlags { get; set; }
@@ -685,12 +710,12 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IRelationshipGetter>
     {
         static new ILoquiRegistration Registration => Relationship_Registration.Instance;
-        FormLink<INpcGetter> Parent { get; }
-        FormLink<INpcGetter> Child { get; }
+        IFormLinkGetter<INpcGetter> Parent { get; }
+        IFormLinkGetter<INpcGetter> Child { get; }
         Relationship.RankType Rank { get; }
         Byte Unknown { get; }
         Relationship.Flag Flags { get; }
-        FormLink<IAssociationTypeGetter> AssociationType { get; }
+        IFormLinkGetter<IAssociationTypeGetter> AssociationType { get; }
         Relationship.DATADataType DATADataTypeState { get; }
 
         #region Mutagen
@@ -953,12 +978,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IRelationshipInternal item)
         {
             ClearPartial();
-            item.Parent = FormLink<INpcGetter>.Null;
-            item.Child = FormLink<INpcGetter>.Null;
+            item.Parent.Clear();
+            item.Child.Clear();
             item.Rank = default;
             item.Unknown = default;
             item.Flags = default;
-            item.AssociationType = FormLink<IAssociationTypeGetter>.Null;
+            item.AssociationType.Clear();
             item.DATADataTypeState = default;
             base.Clear(item);
         }
@@ -977,9 +1002,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IRelationship obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Parent = obj.Parent.Relink(mapping);
-            obj.Child = obj.Child.Relink(mapping);
-            obj.AssociationType = obj.AssociationType.Relink(mapping);
+            obj.Parent.Relink(mapping);
+            obj.Child.Relink(mapping);
+            obj.AssociationType.Relink(mapping);
         }
         
         #endregion
@@ -1261,7 +1286,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Relationship(formKey, default(SkyrimRelease));
+            var newRec = new Relationship(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1272,7 +1297,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IRelationship)item,
+                item: (IRelationshipGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1283,7 +1308,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IRelationship)item,
+                item: (IRelationshipGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1328,11 +1353,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)Relationship_FieldIndex.Parent) ?? true))
             {
-                item.Parent = new FormLink<INpcGetter>(rhs.Parent.FormKey);
+                item.Parent.SetTo(rhs.Parent.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Relationship_FieldIndex.Child) ?? true))
             {
-                item.Child = new FormLink<INpcGetter>(rhs.Child.FormKey);
+                item.Child.SetTo(rhs.Child.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Relationship_FieldIndex.Rank) ?? true))
             {
@@ -1348,7 +1373,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Relationship_FieldIndex.AssociationType) ?? true))
             {
-                item.AssociationType = new FormLink<IAssociationTypeGetter>(rhs.AssociationType.FormKey);
+                item.AssociationType.SetTo(rhs.AssociationType.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Relationship_FieldIndex.DATADataTypeState) ?? true))
             {
@@ -1636,18 +1661,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.Parent = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
-                    item.Child = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
+                    item.Parent.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
+                    item.Child.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     item.Rank = EnumBinaryTranslation<Relationship.RankType>.Instance.Parse(frame: dataFrame.SpawnWithLength(2));
                     item.Unknown = dataFrame.ReadUInt8();
                     item.Flags = EnumBinaryTranslation<Relationship.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
-                    item.AssociationType = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
+                    item.AssociationType.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Relationship_FieldIndex.AssociationType;
                 }
                 default:
@@ -1711,12 +1739,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Parent
         private int _ParentLocation => _DATALocation!.Value;
         private bool _Parent_IsSet => _DATALocation.HasValue;
-        public FormLink<INpcGetter> Parent => _Parent_IsSet ? new FormLink<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ParentLocation, 0x4)))) : FormLink<INpcGetter>.Null;
+        public IFormLinkGetter<INpcGetter> Parent => _Parent_IsSet ? new FormLink<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ParentLocation, 0x4)))) : FormLink<INpcGetter>.Null;
         #endregion
         #region Child
         private int _ChildLocation => _DATALocation!.Value + 0x4;
         private bool _Child_IsSet => _DATALocation.HasValue;
-        public FormLink<INpcGetter> Child => _Child_IsSet ? new FormLink<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ChildLocation, 0x4)))) : FormLink<INpcGetter>.Null;
+        public IFormLinkGetter<INpcGetter> Child => _Child_IsSet ? new FormLink<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ChildLocation, 0x4)))) : FormLink<INpcGetter>.Null;
         #endregion
         #region Rank
         private int _RankLocation => _DATALocation!.Value + 0x8;
@@ -1736,7 +1764,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region AssociationType
         private int _AssociationTypeLocation => _DATALocation!.Value + 0xC;
         private bool _AssociationType_IsSet => _DATALocation.HasValue;
-        public FormLink<IAssociationTypeGetter> AssociationType => _AssociationType_IsSet ? new FormLink<IAssociationTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_AssociationTypeLocation, 0x4)))) : FormLink<IAssociationTypeGetter>.Null;
+        public IFormLinkGetter<IAssociationTypeGetter> AssociationType => _AssociationType_IsSet ? new FormLink<IAssociationTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_AssociationTypeLocation, 0x4)))) : FormLink<IAssociationTypeGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1835,7 +1863,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IRelationshipGetter rhs)) return false;
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IRelationshipGetter rhs) return false;
             return ((RelationshipCommon)((IRelationshipGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 

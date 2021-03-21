@@ -45,6 +45,8 @@ namespace Mutagen.Bethesda.Generation
             this.SubModules.Add(new InterfaceDocumentationModule());
             this.SubModules.Add(new MapsToGetterModule());
             this.SubModules.Add(new GameEnvironmentStateModule());
+            this.SubModules.Add(new MajorRecordLinkEqualityModule());
+            this.SubModules.Add(new ImplicitsModule());
         }
 
         public bool FieldFilter(TypeGeneration field)

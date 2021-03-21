@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Shout" objType="Record" baseClass="ASpell" recordType="SHOU" majorFlag="true" GUID="61a903b0-ef7c-4014-a0b3-ed1fbc0c4a81" ID="147">
+  <Object name="Shout" objType="Record" baseClass="SkyrimMajorRecord" recordType="SHOU" majorFlag="true" GUID="61a903b0-ef7c-4014-a0b3-ed1fbc0c4a81" ID="147">
     <Fields>
       <String name="Name" recordType="FULL" translated="Normal" />
       <FormLink name="MenuDisplayObject" refName="Static" recordType="MDOB" />
@@ -8,6 +8,7 @@
       <RefList name="WordsOfPower" refName="ShoutWord" />
     </Fields>
     <LinkInterface>IObjectId</LinkInterface>
+    <LinkInterface>ISpellRecord</LinkInterface>
   </Object>
   <Object name="ShoutWord" objType="Subrecord" recordType="SNAM" GUID="82a57854-bbc8-49ab-b134-0da4b2c9a661" ID="461">
     <Fields>

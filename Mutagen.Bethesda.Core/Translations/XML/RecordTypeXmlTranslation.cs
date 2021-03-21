@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Xml
 
         public bool Parse<T>(
             XElement node,
-            out IEDIDLink<T> item,
+            out IEDIDLinkGetter<T> item,
             ErrorMaskBuilder? errorMask)
             where T : class, IMajorRecordCommonGetter
         {
@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Xml
 
         public bool Parse<T>(
             XElement node,
-            out IEDIDLink<T> item,
+            out IEDIDLinkGetter<T> item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
             where T : class, IMajorRecordCommonGetter

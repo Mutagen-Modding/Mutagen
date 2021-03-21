@@ -87,24 +87,31 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region MenuDisplayObject
-        public FormLinkNullable<IStaticGetter> MenuDisplayObject { get; set; } = new FormLinkNullable<IStaticGetter>();
+        private IFormLinkNullable<IStaticGetter> _MenuDisplayObject = new FormLinkNullable<IStaticGetter>();
+        public IFormLinkNullable<IStaticGetter> MenuDisplayObject
+        {
+            get => _MenuDisplayObject;
+            set => _MenuDisplayObject = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IStaticGetter> IMagicEffectGetter.MenuDisplayObject => this.MenuDisplayObject;
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IKeywordGetter>>? _Keywords;
-        public ExtendedList<IFormLink<IKeywordGetter>>? Keywords
+        private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Keywords;
+        public ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IKeywordGetter>>? IMagicEffectGetter.Keywords => _Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IMagicEffectGetter.Keywords => _Keywords;
         #endregion
 
         #region Aspects
-        IReadOnlyList<IFormLink<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
-        IReadOnlyList<IFormLink<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
         #endregion
         #region Flags
@@ -128,16 +135,37 @@ namespace Mutagen.Bethesda.Skyrim
         public UInt16 Unknown1 { get; set; } = default;
         #endregion
         #region CastingLight
-        public FormLink<ILightGetter> CastingLight { get; set; } = new FormLink<ILightGetter>();
+        private IFormLink<ILightGetter> _CastingLight = new FormLink<ILightGetter>();
+        public IFormLink<ILightGetter> CastingLight
+        {
+            get => _CastingLight;
+            set => _CastingLight = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ILightGetter> IMagicEffectGetter.CastingLight => this.CastingLight;
         #endregion
         #region TaperWeight
         public Single TaperWeight { get; set; } = default;
         #endregion
         #region HitShader
-        public FormLink<IEffectShaderGetter> HitShader { get; set; } = new FormLink<IEffectShaderGetter>();
+        private IFormLink<IEffectShaderGetter> _HitShader = new FormLink<IEffectShaderGetter>();
+        public IFormLink<IEffectShaderGetter> HitShader
+        {
+            get => _HitShader;
+            set => _HitShader = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IEffectShaderGetter> IMagicEffectGetter.HitShader => this.HitShader;
         #endregion
         #region EnchantShader
-        public FormLink<IEffectShaderGetter> EnchantShader { get; set; } = new FormLink<IEffectShaderGetter>();
+        private IFormLink<IEffectShaderGetter> _EnchantShader = new FormLink<IEffectShaderGetter>();
+        public IFormLink<IEffectShaderGetter> EnchantShader
+        {
+            get => _EnchantShader;
+            set => _EnchantShader = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IEffectShaderGetter> IMagicEffectGetter.EnchantShader => this.EnchantShader;
         #endregion
         #region MinimumSkillLevel
         public UInt32 MinimumSkillLevel { get; set; } = default;
@@ -163,10 +191,24 @@ namespace Mutagen.Bethesda.Skyrim
         IMagicEffectArchetypeGetter IMagicEffectGetter.Archetype => Archetype;
         #endregion
         #region Projectile
-        public FormLink<IProjectileGetter> Projectile { get; set; } = new FormLink<IProjectileGetter>();
+        private IFormLink<IProjectileGetter> _Projectile = new FormLink<IProjectileGetter>();
+        public IFormLink<IProjectileGetter> Projectile
+        {
+            get => _Projectile;
+            set => _Projectile = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IProjectileGetter> IMagicEffectGetter.Projectile => this.Projectile;
         #endregion
         #region Explosion
-        public FormLink<IExplosionGetter> Explosion { get; set; } = new FormLink<IExplosionGetter>();
+        private IFormLink<IExplosionGetter> _Explosion = new FormLink<IExplosionGetter>();
+        public IFormLink<IExplosionGetter> Explosion
+        {
+            get => _Explosion;
+            set => _Explosion = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IExplosionGetter> IMagicEffectGetter.Explosion => this.Explosion;
         #endregion
         #region CastType
         public CastType CastType { get; set; } = default;
@@ -179,40 +221,110 @@ namespace Mutagen.Bethesda.Skyrim
         public ActorValue SecondActorValue { get; set; } = _SecondActorValue_Default;
         #endregion
         #region CastingArt
-        public FormLink<IArtObjectGetter> CastingArt { get; set; } = new FormLink<IArtObjectGetter>();
+        private IFormLink<IArtObjectGetter> _CastingArt = new FormLink<IArtObjectGetter>();
+        public IFormLink<IArtObjectGetter> CastingArt
+        {
+            get => _CastingArt;
+            set => _CastingArt = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IArtObjectGetter> IMagicEffectGetter.CastingArt => this.CastingArt;
         #endregion
         #region HitEffectArt
-        public FormLink<IArtObjectGetter> HitEffectArt { get; set; } = new FormLink<IArtObjectGetter>();
+        private IFormLink<IArtObjectGetter> _HitEffectArt = new FormLink<IArtObjectGetter>();
+        public IFormLink<IArtObjectGetter> HitEffectArt
+        {
+            get => _HitEffectArt;
+            set => _HitEffectArt = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IArtObjectGetter> IMagicEffectGetter.HitEffectArt => this.HitEffectArt;
         #endregion
         #region ImpactData
-        public FormLink<IImpactDataSetGetter> ImpactData { get; set; } = new FormLink<IImpactDataSetGetter>();
+        private IFormLink<IImpactDataSetGetter> _ImpactData = new FormLink<IImpactDataSetGetter>();
+        public IFormLink<IImpactDataSetGetter> ImpactData
+        {
+            get => _ImpactData;
+            set => _ImpactData = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IImpactDataSetGetter> IMagicEffectGetter.ImpactData => this.ImpactData;
         #endregion
         #region SkillUsageMultiplier
         public Single SkillUsageMultiplier { get; set; } = default;
         #endregion
         #region DualCastArt
-        public FormLink<IDualCastDataGetter> DualCastArt { get; set; } = new FormLink<IDualCastDataGetter>();
+        private IFormLink<IDualCastDataGetter> _DualCastArt = new FormLink<IDualCastDataGetter>();
+        public IFormLink<IDualCastDataGetter> DualCastArt
+        {
+            get => _DualCastArt;
+            set => _DualCastArt = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IDualCastDataGetter> IMagicEffectGetter.DualCastArt => this.DualCastArt;
         #endregion
         #region DualCastScale
         public Single DualCastScale { get; set; } = default;
         #endregion
         #region EnchantArt
-        public FormLink<IArtObjectGetter> EnchantArt { get; set; } = new FormLink<IArtObjectGetter>();
+        private IFormLink<IArtObjectGetter> _EnchantArt = new FormLink<IArtObjectGetter>();
+        public IFormLink<IArtObjectGetter> EnchantArt
+        {
+            get => _EnchantArt;
+            set => _EnchantArt = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IArtObjectGetter> IMagicEffectGetter.EnchantArt => this.EnchantArt;
         #endregion
         #region Unknown2
-        public FormLink<ISkyrimMajorRecordGetter> Unknown2 { get; set; } = new FormLink<ISkyrimMajorRecordGetter>();
+        private IFormLink<ISkyrimMajorRecordGetter> _Unknown2 = new FormLink<ISkyrimMajorRecordGetter>();
+        public IFormLink<ISkyrimMajorRecordGetter> Unknown2
+        {
+            get => _Unknown2;
+            set => _Unknown2 = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ISkyrimMajorRecordGetter> IMagicEffectGetter.Unknown2 => this.Unknown2;
         #endregion
         #region Unknown3
-        public FormLink<ISkyrimMajorRecordGetter> Unknown3 { get; set; } = new FormLink<ISkyrimMajorRecordGetter>();
+        private IFormLink<ISkyrimMajorRecordGetter> _Unknown3 = new FormLink<ISkyrimMajorRecordGetter>();
+        public IFormLink<ISkyrimMajorRecordGetter> Unknown3
+        {
+            get => _Unknown3;
+            set => _Unknown3 = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ISkyrimMajorRecordGetter> IMagicEffectGetter.Unknown3 => this.Unknown3;
         #endregion
         #region EquipAbility
-        public FormLink<ISpellGetter> EquipAbility { get; set; } = new FormLink<ISpellGetter>();
+        private IFormLink<ISpellGetter> _EquipAbility = new FormLink<ISpellGetter>();
+        public IFormLink<ISpellGetter> EquipAbility
+        {
+            get => _EquipAbility;
+            set => _EquipAbility = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ISpellGetter> IMagicEffectGetter.EquipAbility => this.EquipAbility;
         #endregion
         #region ImageSpaceModifier
-        public FormLink<IImageSpaceAdapterGetter> ImageSpaceModifier { get; set; } = new FormLink<IImageSpaceAdapterGetter>();
+        private IFormLink<IImageSpaceAdapterGetter> _ImageSpaceModifier = new FormLink<IImageSpaceAdapterGetter>();
+        public IFormLink<IImageSpaceAdapterGetter> ImageSpaceModifier
+        {
+            get => _ImageSpaceModifier;
+            set => _ImageSpaceModifier = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IImageSpaceAdapterGetter> IMagicEffectGetter.ImageSpaceModifier => this.ImageSpaceModifier;
         #endregion
         #region PerkToApply
-        public FormLink<IPerkGetter> PerkToApply { get; set; } = new FormLink<IPerkGetter>();
+        private IFormLink<IPerkGetter> _PerkToApply = new FormLink<IPerkGetter>();
+        public IFormLink<IPerkGetter> PerkToApply
+        {
+            get => _PerkToApply;
+            set => _PerkToApply = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IPerkGetter> IMagicEffectGetter.PerkToApply => this.PerkToApply;
         #endregion
         #region CastingSoundLevel
         public SoundLevel CastingSoundLevel { get; set; } = default;
@@ -225,15 +337,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region CounterEffects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IMagicEffectGetter>> _CounterEffects = new ExtendedList<IFormLink<IMagicEffectGetter>>();
-        public ExtendedList<IFormLink<IMagicEffectGetter>> CounterEffects
+        private ExtendedList<IFormLinkGetter<IMagicEffectGetter>> _CounterEffects = new ExtendedList<IFormLinkGetter<IMagicEffectGetter>>();
+        public ExtendedList<IFormLinkGetter<IMagicEffectGetter>> CounterEffects
         {
             get => this._CounterEffects;
             protected set => this._CounterEffects = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IMagicEffectGetter>> IMagicEffectGetter.CounterEffects => _CounterEffects;
+        IReadOnlyList<IFormLinkGetter<IMagicEffectGetter>> IMagicEffectGetter.CounterEffects => _CounterEffects;
         #endregion
 
         #endregion
@@ -284,22 +396,6 @@ namespace Mutagen.Bethesda.Skyrim
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IMagicEffectGetter rhs)) return false;
-            return ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IMagicEffectGetter? obj)
-        {
-            return ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -2202,6 +2298,26 @@ namespace Mutagen.Bethesda.Skyrim
         public enum DATADataType
         {
         }
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IMagicEffectGetter rhs) return false;
+            return ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IMagicEffectGetter? obj)
+        {
+            return ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -2271,18 +2387,18 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new TranslatedString? Name { get; set; }
-        new FormLinkNullable<IStaticGetter> MenuDisplayObject { get; set; }
-        new ExtendedList<IFormLink<IKeywordGetter>>? Keywords { get; set; }
+        new IFormLinkNullable<IStaticGetter> MenuDisplayObject { get; }
+        new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
         new MagicEffect.Flag Flags { get; set; }
         new Single BaseCost { get; set; }
         new ActorValue MagicSkill { get; set; }
         new ActorValue ResistValue { get; set; }
         new UInt16 CounterEffectCount { get; set; }
         new UInt16 Unknown1 { get; set; }
-        new FormLink<ILightGetter> CastingLight { get; set; }
+        new IFormLink<ILightGetter> CastingLight { get; }
         new Single TaperWeight { get; set; }
-        new FormLink<IEffectShaderGetter> HitShader { get; set; }
-        new FormLink<IEffectShaderGetter> EnchantShader { get; set; }
+        new IFormLink<IEffectShaderGetter> HitShader { get; }
+        new IFormLink<IEffectShaderGetter> EnchantShader { get; }
         new UInt32 MinimumSkillLevel { get; set; }
         new UInt32 SpellmakingArea { get; set; }
         new Single SpellmakingCastingTime { get; set; }
@@ -2290,27 +2406,27 @@ namespace Mutagen.Bethesda.Skyrim
         new Single TaperDuration { get; set; }
         new Single SecondActorValueWeight { get; set; }
         new MagicEffectArchetype Archetype { get; set; }
-        new FormLink<IProjectileGetter> Projectile { get; set; }
-        new FormLink<IExplosionGetter> Explosion { get; set; }
+        new IFormLink<IProjectileGetter> Projectile { get; }
+        new IFormLink<IExplosionGetter> Explosion { get; }
         new CastType CastType { get; set; }
         new TargetType TargetType { get; set; }
         new ActorValue SecondActorValue { get; set; }
-        new FormLink<IArtObjectGetter> CastingArt { get; set; }
-        new FormLink<IArtObjectGetter> HitEffectArt { get; set; }
-        new FormLink<IImpactDataSetGetter> ImpactData { get; set; }
+        new IFormLink<IArtObjectGetter> CastingArt { get; }
+        new IFormLink<IArtObjectGetter> HitEffectArt { get; }
+        new IFormLink<IImpactDataSetGetter> ImpactData { get; }
         new Single SkillUsageMultiplier { get; set; }
-        new FormLink<IDualCastDataGetter> DualCastArt { get; set; }
+        new IFormLink<IDualCastDataGetter> DualCastArt { get; }
         new Single DualCastScale { get; set; }
-        new FormLink<IArtObjectGetter> EnchantArt { get; set; }
-        new FormLink<ISkyrimMajorRecordGetter> Unknown2 { get; set; }
-        new FormLink<ISkyrimMajorRecordGetter> Unknown3 { get; set; }
-        new FormLink<ISpellGetter> EquipAbility { get; set; }
-        new FormLink<IImageSpaceAdapterGetter> ImageSpaceModifier { get; set; }
-        new FormLink<IPerkGetter> PerkToApply { get; set; }
+        new IFormLink<IArtObjectGetter> EnchantArt { get; }
+        new IFormLink<ISkyrimMajorRecordGetter> Unknown2 { get; }
+        new IFormLink<ISkyrimMajorRecordGetter> Unknown3 { get; }
+        new IFormLink<ISpellGetter> EquipAbility { get; }
+        new IFormLink<IImageSpaceAdapterGetter> ImageSpaceModifier { get; }
+        new IFormLink<IPerkGetter> PerkToApply { get; }
         new SoundLevel CastingSoundLevel { get; set; }
         new Single ScriptEffectAIScore { get; set; }
         new Single ScriptEffectAIDelayTime { get; set; }
-        new ExtendedList<IFormLink<IMagicEffectGetter>> CounterEffects { get; }
+        new ExtendedList<IFormLinkGetter<IMagicEffectGetter>> CounterEffects { get; }
         new ExtendedList<MagicEffectSound>? Sounds { get; set; }
         new TranslatedString? Description { get; set; }
         new ExtendedList<Condition> Conditions { get; }
@@ -2339,18 +2455,18 @@ namespace Mutagen.Bethesda.Skyrim
         static new ILoquiRegistration Registration => MagicEffect_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
         ITranslatedStringGetter? Name { get; }
-        FormLinkNullable<IStaticGetter> MenuDisplayObject { get; }
-        IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; }
+        IFormLinkNullableGetter<IStaticGetter> MenuDisplayObject { get; }
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
         MagicEffect.Flag Flags { get; }
         Single BaseCost { get; }
         ActorValue MagicSkill { get; }
         ActorValue ResistValue { get; }
         UInt16 CounterEffectCount { get; }
         UInt16 Unknown1 { get; }
-        FormLink<ILightGetter> CastingLight { get; }
+        IFormLinkGetter<ILightGetter> CastingLight { get; }
         Single TaperWeight { get; }
-        FormLink<IEffectShaderGetter> HitShader { get; }
-        FormLink<IEffectShaderGetter> EnchantShader { get; }
+        IFormLinkGetter<IEffectShaderGetter> HitShader { get; }
+        IFormLinkGetter<IEffectShaderGetter> EnchantShader { get; }
         UInt32 MinimumSkillLevel { get; }
         UInt32 SpellmakingArea { get; }
         Single SpellmakingCastingTime { get; }
@@ -2358,27 +2474,27 @@ namespace Mutagen.Bethesda.Skyrim
         Single TaperDuration { get; }
         Single SecondActorValueWeight { get; }
         IMagicEffectArchetypeGetter Archetype { get; }
-        FormLink<IProjectileGetter> Projectile { get; }
-        FormLink<IExplosionGetter> Explosion { get; }
+        IFormLinkGetter<IProjectileGetter> Projectile { get; }
+        IFormLinkGetter<IExplosionGetter> Explosion { get; }
         CastType CastType { get; }
         TargetType TargetType { get; }
         ActorValue SecondActorValue { get; }
-        FormLink<IArtObjectGetter> CastingArt { get; }
-        FormLink<IArtObjectGetter> HitEffectArt { get; }
-        FormLink<IImpactDataSetGetter> ImpactData { get; }
+        IFormLinkGetter<IArtObjectGetter> CastingArt { get; }
+        IFormLinkGetter<IArtObjectGetter> HitEffectArt { get; }
+        IFormLinkGetter<IImpactDataSetGetter> ImpactData { get; }
         Single SkillUsageMultiplier { get; }
-        FormLink<IDualCastDataGetter> DualCastArt { get; }
+        IFormLinkGetter<IDualCastDataGetter> DualCastArt { get; }
         Single DualCastScale { get; }
-        FormLink<IArtObjectGetter> EnchantArt { get; }
-        FormLink<ISkyrimMajorRecordGetter> Unknown2 { get; }
-        FormLink<ISkyrimMajorRecordGetter> Unknown3 { get; }
-        FormLink<ISpellGetter> EquipAbility { get; }
-        FormLink<IImageSpaceAdapterGetter> ImageSpaceModifier { get; }
-        FormLink<IPerkGetter> PerkToApply { get; }
+        IFormLinkGetter<IArtObjectGetter> EnchantArt { get; }
+        IFormLinkGetter<ISkyrimMajorRecordGetter> Unknown2 { get; }
+        IFormLinkGetter<ISkyrimMajorRecordGetter> Unknown3 { get; }
+        IFormLinkGetter<ISpellGetter> EquipAbility { get; }
+        IFormLinkGetter<IImageSpaceAdapterGetter> ImageSpaceModifier { get; }
+        IFormLinkGetter<IPerkGetter> PerkToApply { get; }
         SoundLevel CastingSoundLevel { get; }
         Single ScriptEffectAIScore { get; }
         Single ScriptEffectAIDelayTime { get; }
-        IReadOnlyList<IFormLink<IMagicEffectGetter>> CounterEffects { get; }
+        IReadOnlyList<IFormLinkGetter<IMagicEffectGetter>> CounterEffects { get; }
         IReadOnlyList<IMagicEffectSoundGetter>? Sounds { get; }
         ITranslatedStringGetter? Description { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
@@ -2681,7 +2797,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.VirtualMachineAdapter = null;
             item.Name = default;
-            item.MenuDisplayObject = FormLinkNullable<IStaticGetter>.Null;
+            item.MenuDisplayObject.Clear();
             item.Keywords = null;
             item.Flags = default;
             item.BaseCost = default;
@@ -2689,10 +2805,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ResistValue = MagicEffect._ResistValue_Default;
             item.CounterEffectCount = default;
             item.Unknown1 = default;
-            item.CastingLight = FormLink<ILightGetter>.Null;
+            item.CastingLight.Clear();
             item.TaperWeight = default;
-            item.HitShader = FormLink<IEffectShaderGetter>.Null;
-            item.EnchantShader = FormLink<IEffectShaderGetter>.Null;
+            item.HitShader.Clear();
+            item.EnchantShader.Clear();
             item.MinimumSkillLevel = default;
             item.SpellmakingArea = default;
             item.SpellmakingCastingTime = default;
@@ -2700,23 +2816,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.TaperDuration = default;
             item.SecondActorValueWeight = default;
             item.Archetype.Clear();
-            item.Projectile = FormLink<IProjectileGetter>.Null;
-            item.Explosion = FormLink<IExplosionGetter>.Null;
+            item.Projectile.Clear();
+            item.Explosion.Clear();
             item.CastType = default;
             item.TargetType = default;
             item.SecondActorValue = MagicEffect._SecondActorValue_Default;
-            item.CastingArt = FormLink<IArtObjectGetter>.Null;
-            item.HitEffectArt = FormLink<IArtObjectGetter>.Null;
-            item.ImpactData = FormLink<IImpactDataSetGetter>.Null;
+            item.CastingArt.Clear();
+            item.HitEffectArt.Clear();
+            item.ImpactData.Clear();
             item.SkillUsageMultiplier = default;
-            item.DualCastArt = FormLink<IDualCastDataGetter>.Null;
+            item.DualCastArt.Clear();
             item.DualCastScale = default;
-            item.EnchantArt = FormLink<IArtObjectGetter>.Null;
-            item.Unknown2 = FormLink<ISkyrimMajorRecordGetter>.Null;
-            item.Unknown3 = FormLink<ISkyrimMajorRecordGetter>.Null;
-            item.EquipAbility = FormLink<ISpellGetter>.Null;
-            item.ImageSpaceModifier = FormLink<IImageSpaceAdapterGetter>.Null;
-            item.PerkToApply = FormLink<IPerkGetter>.Null;
+            item.EnchantArt.Clear();
+            item.Unknown2.Clear();
+            item.Unknown3.Clear();
+            item.EquipAbility.Clear();
+            item.ImageSpaceModifier.Clear();
+            item.PerkToApply.Clear();
             item.CastingSoundLevel = default;
             item.ScriptEffectAIScore = default;
             item.ScriptEffectAIDelayTime = default;
@@ -2743,23 +2859,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             base.RemapLinks(obj, mapping);
             obj.VirtualMachineAdapter?.RemapLinks(mapping);
-            obj.MenuDisplayObject = obj.MenuDisplayObject.Relink(mapping);
+            obj.MenuDisplayObject.Relink(mapping);
             obj.Keywords?.RemapLinks(mapping);
-            obj.CastingLight = obj.CastingLight.Relink(mapping);
-            obj.HitShader = obj.HitShader.Relink(mapping);
-            obj.EnchantShader = obj.EnchantShader.Relink(mapping);
-            obj.Projectile = obj.Projectile.Relink(mapping);
-            obj.Explosion = obj.Explosion.Relink(mapping);
-            obj.CastingArt = obj.CastingArt.Relink(mapping);
-            obj.HitEffectArt = obj.HitEffectArt.Relink(mapping);
-            obj.ImpactData = obj.ImpactData.Relink(mapping);
-            obj.DualCastArt = obj.DualCastArt.Relink(mapping);
-            obj.EnchantArt = obj.EnchantArt.Relink(mapping);
-            obj.Unknown2 = obj.Unknown2.Relink(mapping);
-            obj.Unknown3 = obj.Unknown3.Relink(mapping);
-            obj.EquipAbility = obj.EquipAbility.Relink(mapping);
-            obj.ImageSpaceModifier = obj.ImageSpaceModifier.Relink(mapping);
-            obj.PerkToApply = obj.PerkToApply.Relink(mapping);
+            obj.CastingLight.Relink(mapping);
+            obj.HitShader.Relink(mapping);
+            obj.EnchantShader.Relink(mapping);
+            obj.Projectile.Relink(mapping);
+            obj.Explosion.Relink(mapping);
+            obj.CastingArt.Relink(mapping);
+            obj.HitEffectArt.Relink(mapping);
+            obj.ImpactData.Relink(mapping);
+            obj.DualCastArt.Relink(mapping);
+            obj.EnchantArt.Relink(mapping);
+            obj.Unknown2.Relink(mapping);
+            obj.Unknown3.Relink(mapping);
+            obj.EquipAbility.Relink(mapping);
+            obj.ImageSpaceModifier.Relink(mapping);
+            obj.PerkToApply.Relink(mapping);
             obj.CounterEffects.RemapLinks(mapping);
             obj.Sounds?.RemapLinks(mapping);
             obj.Conditions.RemapLinks(mapping);
@@ -3449,7 +3565,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new MagicEffect(formKey, default(SkyrimRelease));
+            var newRec = new MagicEffect(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -3460,7 +3576,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IMagicEffect)item,
+                item: (IMagicEffectGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -3471,7 +3587,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IMagicEffect)item,
+                item: (IMagicEffectGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -3546,7 +3662,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.MenuDisplayObject) ?? true))
             {
-                item.MenuDisplayObject = new FormLinkNullable<IStaticGetter>(rhs.MenuDisplayObject.FormKeyNullable);
+                item.MenuDisplayObject.SetTo(rhs.MenuDisplayObject.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Keywords) ?? true))
             {
@@ -3557,8 +3673,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLink<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
-                            .ToExtendedList<IFormLink<IKeywordGetter>>();
+                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
                     {
@@ -3601,7 +3717,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastingLight) ?? true))
             {
-                item.CastingLight = new FormLink<ILightGetter>(rhs.CastingLight.FormKey);
+                item.CastingLight.SetTo(rhs.CastingLight.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.TaperWeight) ?? true))
             {
@@ -3609,11 +3725,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.HitShader) ?? true))
             {
-                item.HitShader = new FormLink<IEffectShaderGetter>(rhs.HitShader.FormKey);
+                item.HitShader.SetTo(rhs.HitShader.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.EnchantShader) ?? true))
             {
-                item.EnchantShader = new FormLink<IEffectShaderGetter>(rhs.EnchantShader.FormKey);
+                item.EnchantShader.SetTo(rhs.EnchantShader.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.MinimumSkillLevel) ?? true))
             {
@@ -3663,11 +3779,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Projectile) ?? true))
             {
-                item.Projectile = new FormLink<IProjectileGetter>(rhs.Projectile.FormKey);
+                item.Projectile.SetTo(rhs.Projectile.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Explosion) ?? true))
             {
-                item.Explosion = new FormLink<IExplosionGetter>(rhs.Explosion.FormKey);
+                item.Explosion.SetTo(rhs.Explosion.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastType) ?? true))
             {
@@ -3683,15 +3799,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastingArt) ?? true))
             {
-                item.CastingArt = new FormLink<IArtObjectGetter>(rhs.CastingArt.FormKey);
+                item.CastingArt.SetTo(rhs.CastingArt.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.HitEffectArt) ?? true))
             {
-                item.HitEffectArt = new FormLink<IArtObjectGetter>(rhs.HitEffectArt.FormKey);
+                item.HitEffectArt.SetTo(rhs.HitEffectArt.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ImpactData) ?? true))
             {
-                item.ImpactData = new FormLink<IImpactDataSetGetter>(rhs.ImpactData.FormKey);
+                item.ImpactData.SetTo(rhs.ImpactData.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SkillUsageMultiplier) ?? true))
             {
@@ -3699,7 +3815,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.DualCastArt) ?? true))
             {
-                item.DualCastArt = new FormLink<IDualCastDataGetter>(rhs.DualCastArt.FormKey);
+                item.DualCastArt.SetTo(rhs.DualCastArt.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.DualCastScale) ?? true))
             {
@@ -3707,27 +3823,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.EnchantArt) ?? true))
             {
-                item.EnchantArt = new FormLink<IArtObjectGetter>(rhs.EnchantArt.FormKey);
+                item.EnchantArt.SetTo(rhs.EnchantArt.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Unknown2) ?? true))
             {
-                item.Unknown2 = new FormLink<ISkyrimMajorRecordGetter>(rhs.Unknown2.FormKey);
+                item.Unknown2.SetTo(rhs.Unknown2.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Unknown3) ?? true))
             {
-                item.Unknown3 = new FormLink<ISkyrimMajorRecordGetter>(rhs.Unknown3.FormKey);
+                item.Unknown3.SetTo(rhs.Unknown3.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.EquipAbility) ?? true))
             {
-                item.EquipAbility = new FormLink<ISpellGetter>(rhs.EquipAbility.FormKey);
+                item.EquipAbility.SetTo(rhs.EquipAbility.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ImageSpaceModifier) ?? true))
             {
-                item.ImageSpaceModifier = new FormLink<IImageSpaceAdapterGetter>(rhs.ImageSpaceModifier.FormKey);
+                item.ImageSpaceModifier.SetTo(rhs.ImageSpaceModifier.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.PerkToApply) ?? true))
             {
-                item.PerkToApply = new FormLink<IPerkGetter>(rhs.PerkToApply.FormKey);
+                item.PerkToApply.SetTo(rhs.PerkToApply.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastingSoundLevel) ?? true))
             {
@@ -3748,7 +3864,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.CounterEffects.SetTo(
                         rhs.CounterEffects
-                        .Select(r => (IFormLink<IMagicEffectGetter>)new FormLink<IMagicEffectGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<IMagicEffectGetter>)new FormLink<IMagicEffectGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4046,13 +4162,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.MenuDisplayObject,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.MDOB));
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.WriteWithCounter(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Keywords,
                 counterType: RecordTypes.KSIZ,
                 counterLength: 4,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
-                transl: (MutagenWriter subWriter, IFormLink<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -4174,10 +4290,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     item: item.ScriptEffectAIDelayTime);
             }
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IMagicEffectGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IMagicEffectGetter>>.Instance.Write(
                 writer: writer,
                 items: item.CounterEffects,
-                transl: (MutagenWriter subWriter, IFormLink<IMagicEffectGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IMagicEffectGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -4313,22 +4429,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.MDOB:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MenuDisplayObject = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.MenuDisplayObject.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)MagicEffect_FieldIndex.MenuDisplayObject;
                 }
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
                 {
                     item.Keywords = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
                             frame: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<IKeywordGetter>>();
+                        .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     return (int)MagicEffect_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.DATA:
@@ -4344,16 +4461,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ResistValue = EnumBinaryTranslation<ActorValue>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     item.CounterEffectCount = dataFrame.ReadUInt16();
                     item.Unknown1 = dataFrame.ReadUInt16();
-                    item.CastingLight = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
+                    item.CastingLight.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     item.TaperWeight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.HitShader = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
-                    item.EnchantShader = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
+                    item.HitShader.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
+                    item.EnchantShader.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     item.MinimumSkillLevel = dataFrame.ReadUInt32();
                     item.SpellmakingArea = dataFrame.ReadUInt32();
                     item.SpellmakingCastingTime = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
@@ -4363,47 +4483,59 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     MagicEffectBinaryCreateTranslation.FillBinaryArchetypeCustom(
                         frame: dataFrame,
                         item: item);
-                    item.Projectile = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
-                    item.Explosion = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
+                    item.Projectile.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
+                    item.Explosion.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     item.CastType = EnumBinaryTranslation<CastType>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     item.TargetType = EnumBinaryTranslation<TargetType>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     item.SecondActorValue = EnumBinaryTranslation<ActorValue>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    item.CastingArt = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
-                    item.HitEffectArt = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
-                    item.ImpactData = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
+                    item.CastingArt.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
+                    item.HitEffectArt.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
+                    item.ImpactData.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     item.SkillUsageMultiplier = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.DualCastArt = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
+                    item.DualCastArt.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     item.DualCastScale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.EnchantArt = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
-                    item.Unknown2 = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
-                    item.Unknown3 = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
-                    item.EquipAbility = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
-                    item.ImageSpaceModifier = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
-                    item.PerkToApply = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
+                    item.EnchantArt.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
+                    item.Unknown2.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
+                    item.Unknown3.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
+                    item.EquipAbility.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
+                    item.ImageSpaceModifier.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
+                    item.PerkToApply.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     item.CastingSoundLevel = EnumBinaryTranslation<SoundLevel>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     item.ScriptEffectAIScore = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.ScriptEffectAIDelayTime = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
@@ -4412,7 +4544,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.ESCE:
                 {
                     item.CounterEffects.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IMagicEffectGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IMagicEffectGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.ESCE),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -4529,11 +4661,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region MenuDisplayObject
         private int? _MenuDisplayObjectLocation;
-        public FormLinkNullable<IStaticGetter> MenuDisplayObject => _MenuDisplayObjectLocation.HasValue ? new FormLinkNullable<IStaticGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MenuDisplayObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticGetter>.Null;
+        public IFormLinkNullableGetter<IStaticGetter> MenuDisplayObject => _MenuDisplayObjectLocation.HasValue ? new FormLinkNullable<IStaticGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MenuDisplayObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticGetter>.Null;
         #endregion
         #region Keywords
-        public IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; private set; }
-        IReadOnlyList<IFormLink<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
         private int? _DATALocation;
         public MagicEffect.DATADataType DATADataTypeState { get; private set; }
@@ -4575,7 +4707,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region CastingLight
         private int _CastingLightLocation => _DATALocation!.Value + 0x18;
         private bool _CastingLight_IsSet => _DATALocation.HasValue;
-        public FormLink<ILightGetter> CastingLight => _CastingLight_IsSet ? new FormLink<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_CastingLightLocation, 0x4)))) : FormLink<ILightGetter>.Null;
+        public IFormLinkGetter<ILightGetter> CastingLight => _CastingLight_IsSet ? new FormLink<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_CastingLightLocation, 0x4)))) : FormLink<ILightGetter>.Null;
         #endregion
         #region TaperWeight
         private int _TaperWeightLocation => _DATALocation!.Value + 0x1C;
@@ -4585,12 +4717,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region HitShader
         private int _HitShaderLocation => _DATALocation!.Value + 0x20;
         private bool _HitShader_IsSet => _DATALocation.HasValue;
-        public FormLink<IEffectShaderGetter> HitShader => _HitShader_IsSet ? new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_HitShaderLocation, 0x4)))) : FormLink<IEffectShaderGetter>.Null;
+        public IFormLinkGetter<IEffectShaderGetter> HitShader => _HitShader_IsSet ? new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_HitShaderLocation, 0x4)))) : FormLink<IEffectShaderGetter>.Null;
         #endregion
         #region EnchantShader
         private int _EnchantShaderLocation => _DATALocation!.Value + 0x24;
         private bool _EnchantShader_IsSet => _DATALocation.HasValue;
-        public FormLink<IEffectShaderGetter> EnchantShader => _EnchantShader_IsSet ? new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_EnchantShaderLocation, 0x4)))) : FormLink<IEffectShaderGetter>.Null;
+        public IFormLinkGetter<IEffectShaderGetter> EnchantShader => _EnchantShader_IsSet ? new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_EnchantShaderLocation, 0x4)))) : FormLink<IEffectShaderGetter>.Null;
         #endregion
         #region MinimumSkillLevel
         private int _MinimumSkillLevelLocation => _DATALocation!.Value + 0x28;
@@ -4629,12 +4761,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Projectile
         private int _ProjectileLocation => _DATALocation!.Value + 0x48;
         private bool _Projectile_IsSet => _DATALocation.HasValue;
-        public FormLink<IProjectileGetter> Projectile => _Projectile_IsSet ? new FormLink<IProjectileGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ProjectileLocation, 0x4)))) : FormLink<IProjectileGetter>.Null;
+        public IFormLinkGetter<IProjectileGetter> Projectile => _Projectile_IsSet ? new FormLink<IProjectileGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ProjectileLocation, 0x4)))) : FormLink<IProjectileGetter>.Null;
         #endregion
         #region Explosion
         private int _ExplosionLocation => _DATALocation!.Value + 0x4C;
         private bool _Explosion_IsSet => _DATALocation.HasValue;
-        public FormLink<IExplosionGetter> Explosion => _Explosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
+        public IFormLinkGetter<IExplosionGetter> Explosion => _Explosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
         #endregion
         #region CastType
         private int _CastTypeLocation => _DATALocation!.Value + 0x50;
@@ -4654,17 +4786,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region CastingArt
         private int _CastingArtLocation => _DATALocation!.Value + 0x5C;
         private bool _CastingArt_IsSet => _DATALocation.HasValue;
-        public FormLink<IArtObjectGetter> CastingArt => _CastingArt_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_CastingArtLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
+        public IFormLinkGetter<IArtObjectGetter> CastingArt => _CastingArt_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_CastingArtLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
         #endregion
         #region HitEffectArt
         private int _HitEffectArtLocation => _DATALocation!.Value + 0x60;
         private bool _HitEffectArt_IsSet => _DATALocation.HasValue;
-        public FormLink<IArtObjectGetter> HitEffectArt => _HitEffectArt_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_HitEffectArtLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
+        public IFormLinkGetter<IArtObjectGetter> HitEffectArt => _HitEffectArt_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_HitEffectArtLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
         #endregion
         #region ImpactData
         private int _ImpactDataLocation => _DATALocation!.Value + 0x64;
         private bool _ImpactData_IsSet => _DATALocation.HasValue;
-        public FormLink<IImpactDataSetGetter> ImpactData => _ImpactData_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ImpactDataLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
+        public IFormLinkGetter<IImpactDataSetGetter> ImpactData => _ImpactData_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ImpactDataLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
         #endregion
         #region SkillUsageMultiplier
         private int _SkillUsageMultiplierLocation => _DATALocation!.Value + 0x68;
@@ -4674,7 +4806,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region DualCastArt
         private int _DualCastArtLocation => _DATALocation!.Value + 0x6C;
         private bool _DualCastArt_IsSet => _DATALocation.HasValue;
-        public FormLink<IDualCastDataGetter> DualCastArt => _DualCastArt_IsSet ? new FormLink<IDualCastDataGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_DualCastArtLocation, 0x4)))) : FormLink<IDualCastDataGetter>.Null;
+        public IFormLinkGetter<IDualCastDataGetter> DualCastArt => _DualCastArt_IsSet ? new FormLink<IDualCastDataGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_DualCastArtLocation, 0x4)))) : FormLink<IDualCastDataGetter>.Null;
         #endregion
         #region DualCastScale
         private int _DualCastScaleLocation => _DATALocation!.Value + 0x70;
@@ -4684,32 +4816,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region EnchantArt
         private int _EnchantArtLocation => _DATALocation!.Value + 0x74;
         private bool _EnchantArt_IsSet => _DATALocation.HasValue;
-        public FormLink<IArtObjectGetter> EnchantArt => _EnchantArt_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_EnchantArtLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
+        public IFormLinkGetter<IArtObjectGetter> EnchantArt => _EnchantArt_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_EnchantArtLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
         #endregion
         #region Unknown2
         private int _Unknown2Location => _DATALocation!.Value + 0x78;
         private bool _Unknown2_IsSet => _DATALocation.HasValue;
-        public FormLink<ISkyrimMajorRecordGetter> Unknown2 => _Unknown2_IsSet ? new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_Unknown2Location, 0x4)))) : FormLink<ISkyrimMajorRecordGetter>.Null;
+        public IFormLinkGetter<ISkyrimMajorRecordGetter> Unknown2 => _Unknown2_IsSet ? new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_Unknown2Location, 0x4)))) : FormLink<ISkyrimMajorRecordGetter>.Null;
         #endregion
         #region Unknown3
         private int _Unknown3Location => _DATALocation!.Value + 0x7C;
         private bool _Unknown3_IsSet => _DATALocation.HasValue;
-        public FormLink<ISkyrimMajorRecordGetter> Unknown3 => _Unknown3_IsSet ? new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_Unknown3Location, 0x4)))) : FormLink<ISkyrimMajorRecordGetter>.Null;
+        public IFormLinkGetter<ISkyrimMajorRecordGetter> Unknown3 => _Unknown3_IsSet ? new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_Unknown3Location, 0x4)))) : FormLink<ISkyrimMajorRecordGetter>.Null;
         #endregion
         #region EquipAbility
         private int _EquipAbilityLocation => _DATALocation!.Value + 0x80;
         private bool _EquipAbility_IsSet => _DATALocation.HasValue;
-        public FormLink<ISpellGetter> EquipAbility => _EquipAbility_IsSet ? new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_EquipAbilityLocation, 0x4)))) : FormLink<ISpellGetter>.Null;
+        public IFormLinkGetter<ISpellGetter> EquipAbility => _EquipAbility_IsSet ? new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_EquipAbilityLocation, 0x4)))) : FormLink<ISpellGetter>.Null;
         #endregion
         #region ImageSpaceModifier
         private int _ImageSpaceModifierLocation => _DATALocation!.Value + 0x84;
         private bool _ImageSpaceModifier_IsSet => _DATALocation.HasValue;
-        public FormLink<IImageSpaceAdapterGetter> ImageSpaceModifier => _ImageSpaceModifier_IsSet ? new FormLink<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ImageSpaceModifierLocation, 0x4)))) : FormLink<IImageSpaceAdapterGetter>.Null;
+        public IFormLinkGetter<IImageSpaceAdapterGetter> ImageSpaceModifier => _ImageSpaceModifier_IsSet ? new FormLink<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ImageSpaceModifierLocation, 0x4)))) : FormLink<IImageSpaceAdapterGetter>.Null;
         #endregion
         #region PerkToApply
         private int _PerkToApplyLocation => _DATALocation!.Value + 0x88;
         private bool _PerkToApply_IsSet => _DATALocation.HasValue;
-        public FormLink<IPerkGetter> PerkToApply => _PerkToApply_IsSet ? new FormLink<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_PerkToApplyLocation, 0x4)))) : FormLink<IPerkGetter>.Null;
+        public IFormLinkGetter<IPerkGetter> PerkToApply => _PerkToApply_IsSet ? new FormLink<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_PerkToApplyLocation, 0x4)))) : FormLink<IPerkGetter>.Null;
         #endregion
         #region CastingSoundLevel
         private int _CastingSoundLevelLocation => _DATALocation!.Value + 0x8C;
@@ -4726,7 +4858,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private bool _ScriptEffectAIDelayTime_IsSet => _DATALocation.HasValue;
         public Single ScriptEffectAIDelayTime => _ScriptEffectAIDelayTime_IsSet ? _data.Slice(_ScriptEffectAIDelayTimeLocation, 4).Float() : default;
         #endregion
-        public IReadOnlyList<IFormLink<IMagicEffectGetter>> CounterEffects { get; private set; } = ListExt.Empty<IFormLink<IMagicEffectGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IMagicEffectGetter>> CounterEffects { get; private set; } = ListExt.Empty<IFormLinkGetter<IMagicEffectGetter>>();
         public IReadOnlyList<IMagicEffectSoundGetter>? Sounds { get; private set; }
         #region Description
         private int? _DescriptionLocation;
@@ -4824,7 +4956,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
                 {
-                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLink<IKeywordGetter>>(
+                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLinkGetter<IKeywordGetter>>(
                         stream: stream,
                         package: _package,
                         itemLength: 0x4,
@@ -4841,7 +4973,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.ESCE:
                 {
-                    this.CounterEffects = BinaryOverlayList.FactoryByArray<IFormLink<IMagicEffectGetter>>(
+                    this.CounterEffects = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IMagicEffectGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IMagicEffectGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -4906,7 +5038,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IMagicEffectGetter rhs)) return false;
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IMagicEffectGetter rhs) return false;
             return ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 

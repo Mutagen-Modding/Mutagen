@@ -76,7 +76,14 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region LoadingScreenNif
-        public FormLink<IStaticGetter> LoadingScreenNif { get; set; } = new FormLink<IStaticGetter>();
+        private IFormLink<IStaticGetter> _LoadingScreenNif = new FormLink<IStaticGetter>();
+        public IFormLink<IStaticGetter> LoadingScreenNif
+        {
+            get => _LoadingScreenNif;
+            set => _LoadingScreenNif = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IStaticGetter> ILoadScreenGetter.LoadingScreenNif => this.LoadingScreenNif;
         #endregion
         #region InitialScale
         public Single? InitialScale { get; set; }
@@ -120,22 +127,6 @@ namespace Mutagen.Bethesda.Skyrim
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is ILoadScreenGetter rhs)) return false;
-            return ((LoadScreenCommon)((ILoadScreenGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(ILoadScreenGetter? obj)
-        {
-            return ((LoadScreenCommon)((ILoadScreenGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((LoadScreenCommon)((ILoadScreenGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -782,6 +773,26 @@ namespace Mutagen.Bethesda.Skyrim
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
         }
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not ILoadScreenGetter rhs) return false;
+            return ((LoadScreenCommon)((ILoadScreenGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ILoadScreenGetter? obj)
+        {
+            return ((LoadScreenCommon)((ILoadScreenGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((LoadScreenCommon)((ILoadScreenGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -848,7 +859,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Icons? Icons { get; set; }
         new TranslatedString Description { get; set; }
         new ExtendedList<Condition> Conditions { get; }
-        new FormLink<IStaticGetter> LoadingScreenNif { get; set; }
+        new IFormLink<IStaticGetter> LoadingScreenNif { get; }
         new Single? InitialScale { get; set; }
         new P3Int16? InitialRotation { get; set; }
         new Int16MinMax? RotationOffsetConstraints { get; set; }
@@ -879,7 +890,7 @@ namespace Mutagen.Bethesda.Skyrim
         IIconsGetter? Icons { get; }
         ITranslatedStringGetter Description { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
-        FormLink<IStaticGetter> LoadingScreenNif { get; }
+        IFormLinkGetter<IStaticGetter> LoadingScreenNif { get; }
         Single? InitialScale { get; }
         P3Int16? InitialRotation { get; }
         IInt16MinMaxGetter? RotationOffsetConstraints { get; }
@@ -1151,7 +1162,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Icons = null;
             item.Description.Clear();
             item.Conditions.Clear();
-            item.LoadingScreenNif = FormLink<IStaticGetter>.Null;
+            item.LoadingScreenNif.Clear();
             item.InitialScale = default;
             item.InitialRotation = default;
             item.RotationOffsetConstraints = null;
@@ -1175,7 +1186,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             base.RemapLinks(obj, mapping);
             obj.Conditions.RemapLinks(mapping);
-            obj.LoadingScreenNif = obj.LoadingScreenNif.Relink(mapping);
+            obj.LoadingScreenNif.Relink(mapping);
         }
         
         #endregion
@@ -1523,7 +1534,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new LoadScreen(formKey, default(SkyrimRelease));
+            var newRec = new LoadScreen(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1534,7 +1545,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ILoadScreen)item,
+                item: (ILoadScreenGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1545,7 +1556,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ILoadScreen)item,
+                item: (ILoadScreenGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1644,7 +1655,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LoadScreen_FieldIndex.LoadingScreenNif) ?? true))
             {
-                item.LoadingScreenNif = new FormLink<IStaticGetter>(rhs.LoadingScreenNif.FormKey);
+                item.LoadingScreenNif.SetTo(rhs.LoadingScreenNif.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LoadScreen_FieldIndex.InitialScale) ?? true))
             {
@@ -2022,9 +2033,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.NNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LoadingScreenNif = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.LoadingScreenNif.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)LoadScreen_FieldIndex.LoadingScreenNif;
                 }
                 case RecordTypeInts.SNAM:
@@ -2134,7 +2146,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region LoadingScreenNif
         private int? _LoadingScreenNifLocation;
-        public FormLink<IStaticGetter> LoadingScreenNif => _LoadingScreenNifLocation.HasValue ? new FormLink<IStaticGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LoadingScreenNifLocation.Value, _package.MetaData.Constants)))) : FormLink<IStaticGetter>.Null;
+        public IFormLinkGetter<IStaticGetter> LoadingScreenNif => _LoadingScreenNifLocation.HasValue ? new FormLink<IStaticGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LoadingScreenNifLocation.Value, _package.MetaData.Constants)))) : FormLink<IStaticGetter>.Null;
         #endregion
         #region InitialScale
         private int? _InitialScaleLocation;
@@ -2302,7 +2314,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILoadScreenGetter rhs)) return false;
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not ILoadScreenGetter rhs) return false;
             return ((LoadScreenCommon)((ILoadScreenGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 

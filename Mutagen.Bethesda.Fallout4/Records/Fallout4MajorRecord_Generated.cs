@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
     /// <summary>
-    /// Implemented by: [GameSetting, Keyword]
+    /// Implemented by: [ActionRecord, ActorValueInformation, AttractionRule, Component, ADamageType, GameSetting, Global, Keyword, LocationReferenceType, MiscItem, SoundDescriptor, TextureSet, Transform]
     /// </summary>
     public abstract partial class Fallout4MajorRecord :
         MajorRecord,
@@ -61,22 +61,6 @@ namespace Mutagen.Bethesda.Fallout4
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IFallout4MajorRecordGetter rhs)) return false;
-            return ((Fallout4MajorRecordCommon)((IFallout4MajorRecordGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IFallout4MajorRecordGetter? obj)
-        {
-            return ((Fallout4MajorRecordCommon)((IFallout4MajorRecordGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((Fallout4MajorRecordCommon)((IFallout4MajorRecordGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -384,6 +368,8 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => Fallout4MajorRecordCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => Fallout4MajorRecordSetterCommon.Instance.RemapLinks(this, mapping);
         public Fallout4MajorRecord(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -419,6 +405,26 @@ namespace Mutagen.Bethesda.Fallout4
             this.EditorID = editorID;
         }
 
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IFallout4MajorRecordGetter rhs) return false;
+            return ((Fallout4MajorRecordCommon)((IFallout4MajorRecordGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IFallout4MajorRecordGetter? obj)
+        {
+            return ((Fallout4MajorRecordCommon)((IFallout4MajorRecordGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((Fallout4MajorRecordCommon)((IFallout4MajorRecordGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -452,10 +458,11 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     /// <summary>
-    /// Implemented by: [GameSetting, Keyword]
+    /// Implemented by: [ActionRecord, ActorValueInformation, AttractionRule, Component, ADamageType, GameSetting, Global, Keyword, LocationReferenceType, MiscItem, SoundDescriptor, TextureSet, Transform]
     /// </summary>
     public partial interface IFallout4MajorRecord :
         IFallout4MajorRecordGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IFallout4MajorRecordInternal>,
         IMajorRecordInternal
     {
@@ -471,11 +478,12 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [GameSetting, Keyword]
+    /// Implemented by: [ActionRecord, ActorValueInformation, AttractionRule, Component, ADamageType, GameSetting, Global, Keyword, LocationReferenceType, MiscItem, SoundDescriptor, TextureSet, Transform]
     /// </summary>
     public partial interface IFallout4MajorRecordGetter :
         IMajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IFallout4MajorRecordGetter>
     {
         static new ILoquiRegistration Registration => Fallout4MajorRecord_Registration.Instance;
@@ -944,7 +952,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IFallout4MajorRecord)item,
+                item: (IFallout4MajorRecordGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1217,6 +1225,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => Fallout4MajorRecordCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => Fallout4MajorRecordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1264,7 +1273,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IFallout4MajorRecordGetter rhs)) return false;
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IFallout4MajorRecordGetter rhs) return false;
             return ((Fallout4MajorRecordCommon)((IFallout4MajorRecordGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 

@@ -7,7 +7,17 @@ namespace Mutagen.Bethesda
 {
     public static class RemappingMixIn
     {
-        public static FormLink<TMajorGetter> Relink<TMajorGetter>(this FormLink<TMajorGetter> link, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public static void Relink<TMajorGetter>(this IFormLink<TMajorGetter> link, IReadOnlyDictionary<FormKey, FormKey> mapping)
+            where TMajorGetter : class, IMajorRecordCommonGetter
+        {
+            if (!link.IsNull
+                && mapping.TryGetValue(link.FormKey, out var replacement))
+            {
+                link.SetTo(replacement);
+            }
+        }
+
+        private static IFormLinkGetter<TMajorGetter> RelinkToNew<TMajorGetter>(this IFormLinkGetter<TMajorGetter> link, IReadOnlyDictionary<FormKey, FormKey> mapping)
             where TMajorGetter : class, IMajorRecordCommonGetter
         {
             if (!link.IsNull
@@ -18,7 +28,7 @@ namespace Mutagen.Bethesda
             return link;
         }
 
-        public static FormLinkNullable<TMajorGetter> Relink<TMajorGetter>(this FormLinkNullable<TMajorGetter> link, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        private static IFormLinkNullableGetter<TMajorGetter> RelinkToNew<TMajorGetter>(this IFormLinkNullableGetter<TMajorGetter> link, IReadOnlyDictionary<FormKey, FormKey> mapping)
             where TMajorGetter : class, IMajorRecordCommonGetter
         {
             if (link.FormKeyNullable.HasValue
@@ -30,35 +40,12 @@ namespace Mutagen.Bethesda
             return link;
         }
 
-        public static IFormLink<TMajorGetter> Relink<TMajorGetter>(this IFormLink<TMajorGetter> link, IReadOnlyDictionary<FormKey, FormKey> mapping)
-            where TMajorGetter : class, IMajorRecordCommonGetter
-        {
-            if (!link.IsNull
-                && mapping.TryGetValue(link.FormKey, out var replacement))
-            {
-                return new FormLink<TMajorGetter>(replacement);
-            }
-            return link;
-        }
-
-        public static IFormLinkNullable<TMajorGetter> Relink<TMajorGetter>(this IFormLinkNullable<TMajorGetter> link, IReadOnlyDictionary<FormKey, FormKey> mapping)
-            where TMajorGetter : class, IMajorRecordCommonGetter
-        {
-            if (link.FormKeyNullable.HasValue
-                && !link.IsNull
-                && mapping.TryGetValue(link.FormKey, out var replacement))
-            {
-                return new FormLinkNullable<TMajorGetter>(replacement);
-            }
-            return link;
-        }
-
-        public static void RemapLinks<TMajorGetter>(this IList<IFormLink<TMajorGetter>> linkList, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public static void RemapLinks<TMajorGetter>(this IList<IFormLinkGetter<TMajorGetter>> linkList, IReadOnlyDictionary<FormKey, FormKey> mapping)
             where TMajorGetter : class, IMajorRecordCommonGetter
         {
             for (int i = 0; i < linkList.Count; i++)
             {
-                linkList[i] = linkList[i].Relink(mapping);
+                linkList[i] = linkList[i].RelinkToNew(mapping);
             }
         }
 
@@ -78,18 +65,18 @@ namespace Mutagen.Bethesda
             gendered.Female?.RemapLinks(mapping);
         }
 
-        public static void RemapLinks<TMajorGetter>(this IGenderedItem<IFormLink<TMajorGetter>> gendered, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public static void RemapLinks<TMajorGetter>(this IGenderedItem<IFormLinkGetter<TMajorGetter>> gendered, IReadOnlyDictionary<FormKey, FormKey> mapping)
             where TMajorGetter : class, IMajorRecordCommonGetter
         {
-            gendered.Male = gendered.Male.Relink(mapping);
-            gendered.Female = gendered.Female.Relink(mapping);
+            gendered.Male = gendered.Male.RelinkToNew(mapping);
+            gendered.Female = gendered.Female.RelinkToNew(mapping);
         }
 
-        public static void RemapLinks<TMajorGetter>(this IGenderedItem<IFormLinkNullable<TMajorGetter>> gendered, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public static void RemapLinks<TMajorGetter>(this IGenderedItem<IFormLinkNullableGetter<TMajorGetter>> gendered, IReadOnlyDictionary<FormKey, FormKey> mapping)
             where TMajorGetter : class, IMajorRecordCommonGetter
         {
-            gendered.Male = gendered.Male.Relink(mapping);
-            gendered.Female = gendered.Female.Relink(mapping);
+            gendered.Male = gendered.Male.RelinkToNew(mapping);
+            gendered.Female = gendered.Female.RelinkToNew(mapping);
         }
 
         public static void RemapLinks<TMajorGetter>(this IReadOnlyCache<TMajorGetter, FormKey> cache, IReadOnlyDictionary<FormKey, FormKey> mapping)
@@ -99,6 +86,16 @@ namespace Mutagen.Bethesda
             {
                 item.RemapLinks(mapping);
             }
+        }
+
+        public static FormKey Remap(FormKey key, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        {
+            if (key.IsNull) return key;
+            if (mapping.TryGetValue(key, out var map))
+            {
+                return map;
+            }
+            return key;
         }
     }
 }

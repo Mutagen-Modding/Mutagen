@@ -40,7 +40,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Quest
-        public FormLinkNullable<IQuestGetter> Quest { get; set; } = new FormLinkNullable<IQuestGetter>();
+        private IFormLinkNullable<IQuestGetter> _Quest = new FormLinkNullable<IQuestGetter>();
+        public IFormLinkNullable<IQuestGetter> Quest
+        {
+            get => _Quest;
+            set => _Quest = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IQuestGetter> IExternalAliasReferenceGetter.Quest => this.Quest;
         #endregion
         #region AliasIndex
         public Int32? AliasIndex { get; set; }
@@ -450,7 +457,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILoquiObjectSetter<IExternalAliasReference>
     {
-        new FormLinkNullable<IQuestGetter> Quest { get; set; }
+        new IFormLinkNullable<IQuestGetter> Quest { get; }
         new Int32? AliasIndex { get; set; }
     }
 
@@ -467,7 +474,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => ExternalAliasReference_Registration.Instance;
-        FormLinkNullable<IQuestGetter> Quest { get; }
+        IFormLinkNullableGetter<IQuestGetter> Quest { get; }
         Int32? AliasIndex { get; }
 
     }
@@ -737,14 +744,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IExternalAliasReference item)
         {
             ClearPartial();
-            item.Quest = FormLinkNullable<IQuestGetter>.Null;
+            item.Quest.Clear();
             item.AliasIndex = default;
         }
         
         #region Mutagen
         public void RemapLinks(IExternalAliasReference obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Quest = obj.Quest.Relink(mapping);
+            obj.Quest.Relink(mapping);
         }
         
         #endregion
@@ -908,7 +915,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)ExternalAliasReference_FieldIndex.Quest) ?? true))
             {
-                item.Quest = new FormLinkNullable<IQuestGetter>(rhs.Quest.FormKeyNullable);
+                item.Quest.SetTo(rhs.Quest.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)ExternalAliasReference_FieldIndex.AliasIndex) ?? true))
             {
@@ -1071,9 +1078,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ExternalAliasReference_FieldIndex.Quest) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Quest = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Quest.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)ExternalAliasReference_FieldIndex.Quest;
                 }
                 case RecordTypeInts.ALEA:
@@ -1154,7 +1162,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Quest
         private int? _QuestLocation;
-        public FormLinkNullable<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
+        public IFormLinkNullableGetter<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
         #endregion
         #region AliasIndex
         private int? _AliasIndexLocation;

@@ -59,22 +59,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IGameSettingGetter rhs)) return false;
-            return ((GameSettingCommon)((IGameSettingGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IGameSettingGetter? obj)
-        {
-            return ((GameSettingCommon)((IGameSettingGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((GameSettingCommon)((IGameSettingGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             Fallout4MajorRecord.Mask<TItem>,
@@ -348,6 +332,26 @@ namespace Mutagen.Bethesda.Fallout4
         {
             this.EditorID = editorID;
         }
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IGameSettingGetter rhs) return false;
+            return ((GameSettingCommon)((IGameSettingGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IGameSettingGetter? obj)
+        {
+            return ((GameSettingCommon)((IGameSettingGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((GameSettingCommon)((IGameSettingGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
 
         #endregion
 
@@ -906,7 +910,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IGameSetting)item,
+                item: (IGameSettingGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -917,7 +921,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IGameSetting)item,
+                item: (IGameSettingGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1252,7 +1256,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IGameSettingGetter rhs)) return false;
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IGameSettingGetter rhs) return false;
             return ((GameSettingCommon)((IGameSettingGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 

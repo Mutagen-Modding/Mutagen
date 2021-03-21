@@ -42,7 +42,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Music
-        public FormLinkNullable<IMusicTypeGetter> Music { get; set; } = new FormLinkNullable<IMusicTypeGetter>();
+        private IFormLinkNullable<IMusicTypeGetter> _Music = new FormLinkNullable<IMusicTypeGetter>();
+        public IFormLinkNullable<IMusicTypeGetter> Music
+        {
+            get => _Music;
+            set => _Music = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IMusicTypeGetter> IRegionSoundsGetter.Music => this.Music;
         #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -527,7 +534,7 @@ namespace Mutagen.Bethesda.Skyrim
         IRegionData,
         IRegionSoundsGetter
     {
-        new FormLinkNullable<IMusicTypeGetter> Music { get; set; }
+        new IFormLinkNullable<IMusicTypeGetter> Music { get; }
         new ExtendedList<RegionSound>? Sounds { get; set; }
     }
 
@@ -538,7 +545,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IRegionSoundsGetter>
     {
         static new ILoquiRegistration Registration => RegionSounds_Registration.Instance;
-        FormLinkNullable<IMusicTypeGetter> Music { get; }
+        IFormLinkNullableGetter<IMusicTypeGetter> Music { get; }
         IReadOnlyList<IRegionSoundGetter>? Sounds { get; }
 
     }
@@ -785,7 +792,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IRegionSounds item)
         {
             ClearPartial();
-            item.Music = FormLinkNullable<IMusicTypeGetter>.Null;
+            item.Music.Clear();
             item.Sounds = null;
             base.Clear(item);
         }
@@ -799,7 +806,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IRegionSounds obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Music = obj.Music.Relink(mapping);
+            obj.Music.Relink(mapping);
             obj.Sounds?.RemapLinks(mapping);
         }
         
@@ -1040,7 +1047,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)RegionSounds_FieldIndex.Music) ?? true))
             {
-                item.Music = new FormLinkNullable<IMusicTypeGetter>(rhs.Music.FormKeyNullable);
+                item.Music.SetTo(rhs.Music.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)RegionSounds_FieldIndex.Sounds) ?? true))
             {
@@ -1265,9 +1272,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.RDMO:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Music = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Music.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)RegionSounds_FieldIndex.Music;
                 }
                 case RecordTypeInts.RDSA:
@@ -1338,7 +1346,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Music
         private int? _MusicLocation;
-        public FormLinkNullable<IMusicTypeGetter> Music => _MusicLocation.HasValue ? new FormLinkNullable<IMusicTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MusicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMusicTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMusicTypeGetter> Music => _MusicLocation.HasValue ? new FormLinkNullable<IMusicTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MusicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMusicTypeGetter>.Null;
         #endregion
         public IReadOnlyList<IRegionSoundGetter>? Sounds { get; private set; }
         partial void CustomFactoryEnd(

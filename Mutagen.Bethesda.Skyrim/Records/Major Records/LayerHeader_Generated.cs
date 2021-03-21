@@ -40,7 +40,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Texture
-        public FormLink<ILandscapeTextureGetter> Texture { get; set; } = new FormLink<ILandscapeTextureGetter>();
+        private IFormLink<ILandscapeTextureGetter> _Texture = new FormLink<ILandscapeTextureGetter>();
+        public IFormLink<ILandscapeTextureGetter> Texture
+        {
+            get => _Texture;
+            set => _Texture = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ILandscapeTextureGetter> ILayerHeaderGetter.Texture => this.Texture;
         #endregion
         #region Quadrant
         public Quadrant Quadrant { get; set; } = default;
@@ -480,7 +487,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILayerHeaderGetter,
         ILoquiObjectSetter<ILayerHeader>
     {
-        new FormLink<ILandscapeTextureGetter> Texture { get; set; }
+        new IFormLink<ILandscapeTextureGetter> Texture { get; }
         new Quadrant Quadrant { get; set; }
         new UInt16 LayerNumber { get; set; }
     }
@@ -498,7 +505,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => LayerHeader_Registration.Instance;
-        FormLink<ILandscapeTextureGetter> Texture { get; }
+        IFormLinkGetter<ILandscapeTextureGetter> Texture { get; }
         Quadrant Quadrant { get; }
         UInt16 LayerNumber { get; }
 
@@ -759,7 +766,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ILayerHeader item)
         {
             ClearPartial();
-            item.Texture = FormLink<ILandscapeTextureGetter>.Null;
+            item.Texture.Clear();
             item.Quadrant = default;
             item.LayerNumber = default;
         }
@@ -767,7 +774,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public void RemapLinks(ILayerHeader obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Texture = obj.Texture.Relink(mapping);
+            obj.Texture.Relink(mapping);
         }
         
         #endregion
@@ -933,7 +940,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)LayerHeader_FieldIndex.Texture) ?? true))
             {
-                item.Texture = new FormLink<ILandscapeTextureGetter>(rhs.Texture.FormKey);
+                item.Texture.SetTo(rhs.Texture.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LayerHeader_FieldIndex.Quadrant) ?? true))
             {
@@ -1086,9 +1093,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILayerHeader item,
             MutagenFrame frame)
         {
-            item.Texture = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Texture.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             item.Quadrant = EnumBinaryTranslation<Quadrant>.Instance.Parse(frame: frame.SpawnWithLength(2));
             item.LayerNumber = frame.ReadUInt16();
         }
@@ -1157,7 +1165,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<ILandscapeTextureGetter> Texture => new FormLink<ILandscapeTextureGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<ILandscapeTextureGetter> Texture => new FormLink<ILandscapeTextureGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public Quadrant Quadrant => (Quadrant)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x4, 0x2));
         public UInt16 LayerNumber => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x6, 0x2));
         partial void CustomFactoryEnd(

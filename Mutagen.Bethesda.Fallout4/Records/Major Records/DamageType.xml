@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ADamageType" recordType="DMGT" objType="Record" abstract="true" baseClass="Fallout4MajorRecord" GUID="94b35fef-7da4-4b61-9590-aac89dd64319" ID="49">
+    <Fields>
+      <CustomLogic name="CustomLogic" />
+    </Fields>
+  </Object>
+  <Object name="DamageType" baseClass="ADamageType" recordType="DMGT" objType="Record" GUID="45750e51-5f60-4b9c-b3c6-88b683b58304" ID="50">
+    <Fields>
+      <List name="DamageTypes" recordType="DNAM" >
+        <FormLink>
+          <Interface>IDamageTypeTarget</Interface>
+        </FormLink>
+      </List>
+    </Fields>
+  </Object>
+  <Object name="DamageTypeIndexed" baseClass="ADamageType" recordType="DMGT" objType="Record" GUID="b48ff572-3859-42f9-9772-a63352dc73c2" ID="51">
+    <Fields>
+      <List name="DamageTypes" recordType="DNAM" >
+        <UInt32 />
+      </List>
+    </Fields>
+  </Object>
+</Loqui>

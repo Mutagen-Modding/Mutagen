@@ -43,7 +43,14 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Base
-        public FormLinkNullable<IOblivionMajorRecordGetter> Base { get; set; } = new FormLinkNullable<IOblivionMajorRecordGetter>();
+        private IFormLinkNullable<IOblivionMajorRecordGetter> _Base = new FormLinkNullable<IOblivionMajorRecordGetter>();
+        public IFormLinkNullable<IOblivionMajorRecordGetter> Base
+        {
+            get => _Base;
+            set => _Base = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IOblivionMajorRecordGetter> IPlacedObjectGetter.Base => this.Base;
         #endregion
         #region XPCIFluff
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -90,7 +97,14 @@ namespace Mutagen.Bethesda.Oblivion
         ILockInformationGetter? IPlacedObjectGetter.Lock => this.Lock;
         #endregion
         #region Owner
-        public FormLinkNullable<IOwnerGetter> Owner { get; set; } = new FormLinkNullable<IOwnerGetter>();
+        private IFormLinkNullable<IOwnerGetter> _Owner = new FormLinkNullable<IOwnerGetter>();
+        public IFormLinkNullable<IOwnerGetter> Owner
+        {
+            get => _Owner;
+            set => _Owner = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IOwnerGetter> IPlacedObjectGetter.Owner => this.Owner;
         #endregion
         #region FactionRank
         public Int32? FactionRank { get; set; }
@@ -98,7 +112,14 @@ namespace Mutagen.Bethesda.Oblivion
         Int32? IPlacedObjectGetter.FactionRank => this.FactionRank;
         #endregion
         #region GlobalVariable
-        public FormLinkNullable<IGlobalGetter> GlobalVariable { get; set; } = new FormLinkNullable<IGlobalGetter>();
+        private IFormLinkNullable<IGlobalGetter> _GlobalVariable = new FormLinkNullable<IGlobalGetter>();
+        public IFormLinkNullable<IGlobalGetter> GlobalVariable
+        {
+            get => _GlobalVariable;
+            set => _GlobalVariable = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IGlobalGetter> IPlacedObjectGetter.GlobalVariable => this.GlobalVariable;
         #endregion
         #region EnableParent
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -112,7 +133,14 @@ namespace Mutagen.Bethesda.Oblivion
         IEnableParentGetter? IPlacedObjectGetter.EnableParent => this.EnableParent;
         #endregion
         #region Target
-        public FormLinkNullable<IPlacedGetter> Target { get; set; } = new FormLinkNullable<IPlacedGetter>();
+        private IFormLinkNullable<IPlacedGetter> _Target = new FormLinkNullable<IPlacedGetter>();
+        public IFormLinkNullable<IPlacedGetter> Target
+        {
+            get => _Target;
+            set => _Target = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IPlacedGetter> IPlacedObjectGetter.Target => this.Target;
         #endregion
         #region SpeedTreeSeed
         public Byte? SpeedTreeSeed { get; set; }
@@ -146,7 +174,14 @@ namespace Mutagen.Bethesda.Oblivion
         Int32? IPlacedObjectGetter.LevelModifier => this.LevelModifier;
         #endregion
         #region XRTM
-        public FormLinkNullable<IOblivionMajorRecordGetter> XRTM { get; set; } = new FormLinkNullable<IOblivionMajorRecordGetter>();
+        private IFormLinkNullable<IOblivionMajorRecordGetter> _XRTM = new FormLinkNullable<IOblivionMajorRecordGetter>();
+        public IFormLinkNullable<IOblivionMajorRecordGetter> XRTM
+        {
+            get => _XRTM;
+            set => _XRTM = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IOblivionMajorRecordGetter> IPlacedObjectGetter.XRTM => this.XRTM;
         #endregion
         #region ActionFlags
         public PlacedObject.ActionFlag? ActionFlags { get; set; }
@@ -189,7 +224,14 @@ namespace Mutagen.Bethesda.Oblivion
         Single? IPlacedObjectGetter.Scale => this.Scale;
         #endregion
         #region ContainedSoul
-        public FormLinkNullable<ISoulGemGetter> ContainedSoul { get; set; } = new FormLinkNullable<ISoulGemGetter>();
+        private IFormLinkNullable<ISoulGemGetter> _ContainedSoul = new FormLinkNullable<ISoulGemGetter>();
+        public IFormLinkNullable<ISoulGemGetter> ContainedSoul
+        {
+            get => _ContainedSoul;
+            set => _ContainedSoul = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoulGemGetter> IPlacedObjectGetter.ContainedSoul => this.ContainedSoul;
         #endregion
         #region Location
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -213,22 +255,6 @@ namespace Mutagen.Bethesda.Oblivion
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IPlacedObjectGetter rhs)) return false;
-            return ((PlacedObjectCommon)((IPlacedObjectGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IPlacedObjectGetter? obj)
-        {
-            return ((PlacedObjectCommon)((IPlacedObjectGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((PlacedObjectCommon)((IPlacedObjectGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -1224,6 +1250,26 @@ namespace Mutagen.Bethesda.Oblivion
             this.EditorID = editorID;
         }
 
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IPlacedObjectGetter rhs) return false;
+            return ((PlacedObjectCommon)((IPlacedObjectGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPlacedObjectGetter? obj)
+        {
+            return ((PlacedObjectCommon)((IPlacedObjectGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PlacedObjectCommon)((IPlacedObjectGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -1287,29 +1333,29 @@ namespace Mutagen.Bethesda.Oblivion
         IPlaced,
         IPlacedObjectGetter
     {
-        new FormLinkNullable<IOblivionMajorRecordGetter> Base { get; set; }
+        new IFormLinkNullable<IOblivionMajorRecordGetter> Base { get; }
         new MemorySlice<Byte>? XPCIFluff { get; set; }
         new MemorySlice<Byte>? FULLFluff { get; set; }
         new TeleportDestination? TeleportDestination { get; set; }
         new LockInformation? Lock { get; set; }
-        new FormLinkNullable<IOwnerGetter> Owner { get; set; }
+        new IFormLinkNullable<IOwnerGetter> Owner { get; }
         new Int32? FactionRank { get; set; }
-        new FormLinkNullable<IGlobalGetter> GlobalVariable { get; set; }
+        new IFormLinkNullable<IGlobalGetter> GlobalVariable { get; }
         new EnableParent? EnableParent { get; set; }
-        new FormLinkNullable<IPlacedGetter> Target { get; set; }
+        new IFormLinkNullable<IPlacedGetter> Target { get; }
         new Byte? SpeedTreeSeed { get; set; }
         new DistantLODData? DistantLODData { get; set; }
         new Single? Charge { get; set; }
         new Int32? Health { get; set; }
         new Int32? LevelModifier { get; set; }
-        new FormLinkNullable<IOblivionMajorRecordGetter> XRTM { get; set; }
+        new IFormLinkNullable<IOblivionMajorRecordGetter> XRTM { get; }
         new PlacedObject.ActionFlag? ActionFlags { get; set; }
         new Int32? Count { get; set; }
         new MapMarker? MapMarker { get; set; }
         new Boolean OpenByDefault { get; set; }
         new MemorySlice<Byte>? RagdollData { get; set; }
         new Single? Scale { get; set; }
-        new FormLinkNullable<ISoulGemGetter> ContainedSoul { get; set; }
+        new IFormLinkNullable<ISoulGemGetter> ContainedSoul { get; }
         new Location? Location { get; set; }
     }
 
@@ -1329,29 +1375,29 @@ namespace Mutagen.Bethesda.Oblivion
         IPlacedGetter
     {
         static new ILoquiRegistration Registration => PlacedObject_Registration.Instance;
-        FormLinkNullable<IOblivionMajorRecordGetter> Base { get; }
+        IFormLinkNullableGetter<IOblivionMajorRecordGetter> Base { get; }
         ReadOnlyMemorySlice<Byte>? XPCIFluff { get; }
         ReadOnlyMemorySlice<Byte>? FULLFluff { get; }
         ITeleportDestinationGetter? TeleportDestination { get; }
         ILockInformationGetter? Lock { get; }
-        FormLinkNullable<IOwnerGetter> Owner { get; }
+        IFormLinkNullableGetter<IOwnerGetter> Owner { get; }
         Int32? FactionRank { get; }
-        FormLinkNullable<IGlobalGetter> GlobalVariable { get; }
+        IFormLinkNullableGetter<IGlobalGetter> GlobalVariable { get; }
         IEnableParentGetter? EnableParent { get; }
-        FormLinkNullable<IPlacedGetter> Target { get; }
+        IFormLinkNullableGetter<IPlacedGetter> Target { get; }
         Byte? SpeedTreeSeed { get; }
         IDistantLODDataGetter? DistantLODData { get; }
         Single? Charge { get; }
         Int32? Health { get; }
         Int32? LevelModifier { get; }
-        FormLinkNullable<IOblivionMajorRecordGetter> XRTM { get; }
+        IFormLinkNullableGetter<IOblivionMajorRecordGetter> XRTM { get; }
         PlacedObject.ActionFlag? ActionFlags { get; }
         Int32? Count { get; }
         IMapMarkerGetter? MapMarker { get; }
         Boolean OpenByDefault { get; }
         ReadOnlyMemorySlice<Byte>? RagdollData { get; }
         Single? Scale { get; }
-        FormLinkNullable<ISoulGemGetter> ContainedSoul { get; }
+        IFormLinkNullableGetter<ISoulGemGetter> ContainedSoul { get; }
         ILocationGetter? Location { get; }
 
     }
@@ -1626,29 +1672,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IPlacedObjectInternal item)
         {
             ClearPartial();
-            item.Base = FormLinkNullable<IOblivionMajorRecordGetter>.Null;
+            item.Base.Clear();
             item.XPCIFluff = default;
             item.FULLFluff = default;
             item.TeleportDestination = null;
             item.Lock = null;
-            item.Owner = FormLinkNullable<IOwnerGetter>.Null;
+            item.Owner.Clear();
             item.FactionRank = default;
-            item.GlobalVariable = FormLinkNullable<IGlobalGetter>.Null;
+            item.GlobalVariable.Clear();
             item.EnableParent = null;
-            item.Target = FormLinkNullable<IPlacedGetter>.Null;
+            item.Target.Clear();
             item.SpeedTreeSeed = default;
             item.DistantLODData = null;
             item.Charge = default;
             item.Health = default;
             item.LevelModifier = default;
-            item.XRTM = FormLinkNullable<IOblivionMajorRecordGetter>.Null;
+            item.XRTM.Clear();
             item.ActionFlags = default;
             item.Count = default;
             item.MapMarker = null;
             item.OpenByDefault = default;
             item.RagdollData = default;
             item.Scale = default;
-            item.ContainedSoul = FormLinkNullable<ISoulGemGetter>.Null;
+            item.ContainedSoul.Clear();
             item.Location = null;
             base.Clear(item);
         }
@@ -1667,15 +1713,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void RemapLinks(IPlacedObject obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Base = obj.Base.Relink(mapping);
+            obj.Base.Relink(mapping);
             obj.TeleportDestination?.RemapLinks(mapping);
             obj.Lock?.RemapLinks(mapping);
-            obj.Owner = obj.Owner.Relink(mapping);
-            obj.GlobalVariable = obj.GlobalVariable.Relink(mapping);
+            obj.Owner.Relink(mapping);
+            obj.GlobalVariable.Relink(mapping);
             obj.EnableParent?.RemapLinks(mapping);
-            obj.Target = obj.Target.Relink(mapping);
-            obj.XRTM = obj.XRTM.Relink(mapping);
-            obj.ContainedSoul = obj.ContainedSoul.Relink(mapping);
+            obj.Target.Relink(mapping);
+            obj.XRTM.Relink(mapping);
+            obj.ContainedSoul.Relink(mapping);
         }
         
         #endregion
@@ -2219,7 +2265,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IPlacedObject)item,
+                item: (IPlacedObjectGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -2230,7 +2276,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IPlacedObject)item,
+                item: (IPlacedObjectGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -2275,7 +2321,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Base) ?? true))
             {
-                item.Base = new FormLinkNullable<IOblivionMajorRecordGetter>(rhs.Base.FormKeyNullable);
+                item.Base.SetTo(rhs.Base.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XPCIFluff) ?? true))
             {
@@ -2353,7 +2399,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Owner) ?? true))
             {
-                item.Owner = new FormLinkNullable<IOwnerGetter>(rhs.Owner.FormKeyNullable);
+                item.Owner.SetTo(rhs.Owner.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.FactionRank) ?? true))
             {
@@ -2361,7 +2407,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.GlobalVariable) ?? true))
             {
-                item.GlobalVariable = new FormLinkNullable<IGlobalGetter>(rhs.GlobalVariable.FormKeyNullable);
+                item.GlobalVariable.SetTo(rhs.GlobalVariable.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.EnableParent) ?? true))
             {
@@ -2391,7 +2437,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Target) ?? true))
             {
-                item.Target = new FormLinkNullable<IPlacedGetter>(rhs.Target.FormKeyNullable);
+                item.Target.SetTo(rhs.Target.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.SpeedTreeSeed) ?? true))
             {
@@ -2437,7 +2483,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XRTM) ?? true))
             {
-                item.XRTM = new FormLinkNullable<IOblivionMajorRecordGetter>(rhs.XRTM.FormKeyNullable);
+                item.XRTM.SetTo(rhs.XRTM.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.ActionFlags) ?? true))
             {
@@ -2494,7 +2540,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.ContainedSoul) ?? true))
             {
-                item.ContainedSoul = new FormLinkNullable<ISoulGemGetter>(rhs.ContainedSoul.FormKeyNullable);
+                item.ContainedSoul.SetTo(rhs.ContainedSoul.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Location) ?? true))
             {
@@ -2904,9 +2950,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.NAME:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Base = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Base.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)PlacedObject_FieldIndex.Base;
                 }
                 case RecordTypeInts.XPCI:
@@ -2934,9 +2981,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.XOWN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Owner = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Owner.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)PlacedObject_FieldIndex.Owner;
                 }
                 case RecordTypeInts.XRNK:
@@ -2948,9 +2996,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.XGLB:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.GlobalVariable = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.GlobalVariable.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)PlacedObject_FieldIndex.GlobalVariable;
                 }
                 case RecordTypeInts.XESP:
@@ -2961,9 +3010,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.XTRG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Target = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Target.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)PlacedObject_FieldIndex.Target;
                 }
                 case RecordTypeInts.XSED:
@@ -2998,9 +3048,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.XRTM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.XRTM = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.XRTM.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)PlacedObject_FieldIndex.XRTM;
                 }
                 case RecordTypeInts.XACT:
@@ -3045,9 +3096,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.XSOL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ContainedSoul = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.ContainedSoul.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)PlacedObject_FieldIndex.ContainedSoul;
                 }
                 case RecordTypeInts.DATA:
@@ -3117,7 +3169,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Base
         private int? _BaseLocation;
-        public FormLinkNullable<IOblivionMajorRecordGetter> Base => _BaseLocation.HasValue ? new FormLinkNullable<IOblivionMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BaseLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOblivionMajorRecordGetter>.Null;
+        public IFormLinkNullableGetter<IOblivionMajorRecordGetter> Base => _BaseLocation.HasValue ? new FormLinkNullable<IOblivionMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BaseLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOblivionMajorRecordGetter>.Null;
         #endregion
         #region XPCIFluff
         private int? _XPCIFluffLocation;
@@ -3137,7 +3189,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Owner
         private int? _OwnerLocation;
-        public FormLinkNullable<IOwnerGetter> Owner => _OwnerLocation.HasValue ? new FormLinkNullable<IOwnerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _OwnerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOwnerGetter>.Null;
+        public IFormLinkNullableGetter<IOwnerGetter> Owner => _OwnerLocation.HasValue ? new FormLinkNullable<IOwnerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _OwnerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOwnerGetter>.Null;
         #endregion
         #region FactionRank
         private int? _FactionRankLocation;
@@ -3145,7 +3197,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region GlobalVariable
         private int? _GlobalVariableLocation;
-        public FormLinkNullable<IGlobalGetter> GlobalVariable => _GlobalVariableLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _GlobalVariableLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        public IFormLinkNullableGetter<IGlobalGetter> GlobalVariable => _GlobalVariableLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _GlobalVariableLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
         #endregion
         #region EnableParent
         private RangeInt32? _EnableParentLocation;
@@ -3153,7 +3205,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Target
         private int? _TargetLocation;
-        public FormLinkNullable<IPlacedGetter> Target => _TargetLocation.HasValue ? new FormLinkNullable<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TargetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedGetter>.Null;
+        public IFormLinkNullableGetter<IPlacedGetter> Target => _TargetLocation.HasValue ? new FormLinkNullable<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TargetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedGetter>.Null;
         #endregion
         #region SpeedTreeSeed
         private int? _SpeedTreeSeedLocation;
@@ -3177,7 +3229,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region XRTM
         private int? _XRTMLocation;
-        public FormLinkNullable<IOblivionMajorRecordGetter> XRTM => _XRTMLocation.HasValue ? new FormLinkNullable<IOblivionMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _XRTMLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOblivionMajorRecordGetter>.Null;
+        public IFormLinkNullableGetter<IOblivionMajorRecordGetter> XRTM => _XRTMLocation.HasValue ? new FormLinkNullable<IOblivionMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _XRTMLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOblivionMajorRecordGetter>.Null;
         #endregion
         #region ActionFlags
         private int? _ActionFlagsLocation;
@@ -3205,7 +3257,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region ContainedSoul
         private int? _ContainedSoulLocation;
-        public FormLinkNullable<ISoulGemGetter> ContainedSoul => _ContainedSoulLocation.HasValue ? new FormLinkNullable<ISoulGemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ContainedSoulLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoulGemGetter>.Null;
+        public IFormLinkNullableGetter<ISoulGemGetter> ContainedSoul => _ContainedSoulLocation.HasValue ? new FormLinkNullable<ISoulGemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ContainedSoulLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoulGemGetter>.Null;
         #endregion
         public ILocationGetter? Location { get; private set; }
         partial void CustomFactoryEnd(
@@ -3431,7 +3483,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPlacedObjectGetter rhs)) return false;
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IPlacedObjectGetter rhs) return false;
             return ((PlacedObjectCommon)((IPlacedObjectGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 

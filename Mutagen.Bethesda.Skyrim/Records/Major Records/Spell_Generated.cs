@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class Spell :
-        ASpell,
+        SkyrimMajorRecord,
         IEquatable<ISpellGetter>,
         ILoquiObjectSetter<Spell>,
         ISpellInternal
@@ -94,27 +94,41 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IKeywordGetter>>? _Keywords;
-        public ExtendedList<IFormLink<IKeywordGetter>>? Keywords
+        private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Keywords;
+        public ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IKeywordGetter>>? ISpellGetter.Keywords => _Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? ISpellGetter.Keywords => _Keywords;
         #endregion
 
         #region Aspects
-        IReadOnlyList<IFormLink<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
-        IReadOnlyList<IFormLink<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
         #endregion
         #region MenuDisplayObject
-        public FormLinkNullable<IStaticGetter> MenuDisplayObject { get; set; } = new FormLinkNullable<IStaticGetter>();
+        private IFormLinkNullable<IStaticGetter> _MenuDisplayObject = new FormLinkNullable<IStaticGetter>();
+        public IFormLinkNullable<IStaticGetter> MenuDisplayObject
+        {
+            get => _MenuDisplayObject;
+            set => _MenuDisplayObject = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IStaticGetter> ISpellGetter.MenuDisplayObject => this.MenuDisplayObject;
         #endregion
         #region EquipmentType
-        public FormLinkNullable<IEquipTypeGetter> EquipmentType { get; set; } = new FormLinkNullable<IEquipTypeGetter>();
+        private IFormLinkNullable<IEquipTypeGetter> _EquipmentType = new FormLinkNullable<IEquipTypeGetter>();
+        public IFormLinkNullable<IEquipTypeGetter> EquipmentType
+        {
+            get => _EquipmentType;
+            set => _EquipmentType = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IEquipTypeGetter> ISpellGetter.EquipmentType => this.EquipmentType;
         #endregion
         #region Description
         public TranslatedString Description { get; set; } = string.Empty;
@@ -145,7 +159,14 @@ namespace Mutagen.Bethesda.Skyrim
         public Single Range { get; set; } = default;
         #endregion
         #region HalfCostPerk
-        public FormLink<IPerkGetter> HalfCostPerk { get; set; } = new FormLink<IPerkGetter>();
+        private IFormLink<IPerkGetter> _HalfCostPerk = new FormLink<IPerkGetter>();
+        public IFormLink<IPerkGetter> HalfCostPerk
+        {
+            get => _HalfCostPerk;
+            set => _HalfCostPerk = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IPerkGetter> ISpellGetter.HalfCostPerk => this.HalfCostPerk;
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -178,25 +199,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is ISpellGetter rhs)) return false;
-            return ((SpellCommon)((ISpellGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(ISpellGetter? obj)
-        {
-            return ((SpellCommon)((ISpellGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((SpellCommon)((ISpellGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
-            ASpell.Mask<TItem>,
+            SkyrimMajorRecord.Mask<TItem>,
             IEquatable<Mask<TItem>>,
             IMask<TItem>
         {
@@ -649,7 +654,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public new class ErrorMask :
-            ASpell.ErrorMask,
+            SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
@@ -998,7 +1003,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         }
         public new class TranslationMask :
-            ASpell.TranslationMask,
+            SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
             #region Members
@@ -1126,6 +1131,26 @@ namespace Mutagen.Bethesda.Skyrim
         public enum SPITDataType
         {
         }
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not ISpellGetter rhs) return false;
+            return ((SpellCommon)((ISpellGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ISpellGetter? obj)
+        {
+            return ((SpellCommon)((ISpellGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((SpellCommon)((ISpellGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -1183,7 +1208,6 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ISpell :
-        IASpellInternal,
         IEffectRecord,
         IFormLinkContainer,
         IKeyworded<IKeywordGetter>,
@@ -1193,16 +1217,17 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBounded,
         IObjectBoundedOptional,
         IObjectId,
+        ISkyrimMajorRecordInternal,
         ISpellGetter,
-        ISpellSpawn,
+        ISpellRecord,
         ITranslatedNamed,
         ITranslatedNamedRequired
     {
         new ObjectBounds ObjectBounds { get; set; }
         new TranslatedString? Name { get; set; }
-        new ExtendedList<IFormLink<IKeywordGetter>>? Keywords { get; set; }
-        new FormLinkNullable<IStaticGetter> MenuDisplayObject { get; set; }
-        new FormLinkNullable<IEquipTypeGetter> EquipmentType { get; set; }
+        new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
+        new IFormLinkNullable<IStaticGetter> MenuDisplayObject { get; }
+        new IFormLinkNullable<IEquipTypeGetter> EquipmentType { get; }
         new TranslatedString Description { get; set; }
         new UInt32 BaseCost { get; set; }
         new SpellDataFlag Flags { get; set; }
@@ -1212,20 +1237,20 @@ namespace Mutagen.Bethesda.Skyrim
         new TargetType TargetType { get; set; }
         new Single CastDuration { get; set; }
         new Single Range { get; set; }
-        new FormLink<IPerkGetter> HalfCostPerk { get; set; }
+        new IFormLink<IPerkGetter> HalfCostPerk { get; }
         new ExtendedList<Effect> Effects { get; }
         new Spell.SPITDataType SPITDataTypeState { get; set; }
     }
 
     public partial interface ISpellInternal :
-        IASpellInternal,
+        ISkyrimMajorRecordInternal,
         ISpell,
         ISpellGetter
     {
     }
 
     public partial interface ISpellGetter :
-        IASpellGetter,
+        ISkyrimMajorRecordGetter,
         IBinaryItem,
         IEffectRecordGetter,
         IFormLinkContainerGetter,
@@ -1237,16 +1262,16 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundedGetter,
         IObjectBoundedOptionalGetter,
         IObjectIdGetter,
-        ISpellSpawnGetter,
+        ISpellRecordGetter,
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Spell_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }
         ITranslatedStringGetter? Name { get; }
-        IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; }
-        FormLinkNullable<IStaticGetter> MenuDisplayObject { get; }
-        FormLinkNullable<IEquipTypeGetter> EquipmentType { get; }
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
+        IFormLinkNullableGetter<IStaticGetter> MenuDisplayObject { get; }
+        IFormLinkNullableGetter<IEquipTypeGetter> EquipmentType { get; }
         ITranslatedStringGetter Description { get; }
         UInt32 BaseCost { get; }
         SpellDataFlag Flags { get; }
@@ -1256,7 +1281,7 @@ namespace Mutagen.Bethesda.Skyrim
         TargetType TargetType { get; }
         Single CastDuration { get; }
         Single Range { get; }
-        FormLink<IPerkGetter> HalfCostPerk { get; }
+        IFormLinkGetter<IPerkGetter> HalfCostPerk { get; }
         IReadOnlyList<IEffectGetter> Effects { get; }
         Spell.SPITDataType SPITDataTypeState { get; }
 
@@ -1517,7 +1542,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class SpellSetterCommon : ASpellSetterCommon
+    public partial class SpellSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly SpellSetterCommon Instance = new SpellSetterCommon();
 
@@ -1529,8 +1554,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ObjectBounds.Clear();
             item.Name = default;
             item.Keywords = null;
-            item.MenuDisplayObject = FormLinkNullable<IStaticGetter>.Null;
-            item.EquipmentType = FormLinkNullable<IEquipTypeGetter>.Null;
+            item.MenuDisplayObject.Clear();
+            item.EquipmentType.Clear();
             item.Description.Clear();
             item.BaseCost = default;
             item.Flags = default;
@@ -1540,15 +1565,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.TargetType = default;
             item.CastDuration = default;
             item.Range = default;
-            item.HalfCostPerk = FormLink<IPerkGetter>.Null;
+            item.HalfCostPerk.Clear();
             item.Effects.Clear();
             item.SPITDataTypeState = default;
             base.Clear(item);
-        }
-        
-        public override void Clear(IASpellInternal item)
-        {
-            Clear(item: (ISpellInternal)item);
         }
         
         public override void Clear(ISkyrimMajorRecordInternal item)
@@ -1566,9 +1586,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             base.RemapLinks(obj, mapping);
             obj.Keywords?.RemapLinks(mapping);
-            obj.MenuDisplayObject = obj.MenuDisplayObject.Relink(mapping);
-            obj.EquipmentType = obj.EquipmentType.Relink(mapping);
-            obj.HalfCostPerk = obj.HalfCostPerk.Relink(mapping);
+            obj.MenuDisplayObject.Relink(mapping);
+            obj.EquipmentType.Relink(mapping);
+            obj.HalfCostPerk.Relink(mapping);
             obj.Effects.RemapLinks(mapping);
         }
         
@@ -1586,17 +1606,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: SpellBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: SpellBinaryCreateTranslation.FillBinaryRecordTypes);
-        }
-        
-        public override void CopyInFromBinary(
-            IASpellInternal item,
-            MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            CopyInFromBinary(
-                item: (Spell)item,
-                frame: frame,
-                recordTypeConverter: recordTypeConverter);
         }
         
         public override void CopyInFromBinary(
@@ -1624,7 +1633,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SpellCommon : ASpellCommon
+    public partial class SpellCommon : SkyrimMajorRecordCommon
     {
         public new static readonly SpellCommon Instance = new SpellCommon();
 
@@ -1719,7 +1728,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             Spell.Mask<bool>? printMask = null)
         {
-            ASpellCommon.ToStringFields(
+            SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
                 fg: fg,
                 printMask: printMask);
@@ -1823,28 +1832,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public static Spell_FieldIndex ConvertFieldIndex(ASpell_FieldIndex index)
-        {
-            switch (index)
-            {
-                case ASpell_FieldIndex.MajorRecordFlagsRaw:
-                    return (Spell_FieldIndex)((int)index);
-                case ASpell_FieldIndex.FormKey:
-                    return (Spell_FieldIndex)((int)index);
-                case ASpell_FieldIndex.VersionControl:
-                    return (Spell_FieldIndex)((int)index);
-                case ASpell_FieldIndex.EditorID:
-                    return (Spell_FieldIndex)((int)index);
-                case ASpell_FieldIndex.FormVersion:
-                    return (Spell_FieldIndex)((int)index);
-                case ASpell_FieldIndex.Version2:
-                    return (Spell_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-        
-        public static new Spell_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
+        public static Spell_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -1889,7 +1877,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IASpellGetter)lhs, (IASpellGetter)rhs)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
             if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
             if (!object.Equals(lhs.Name, rhs.Name)) return false;
             if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
@@ -1908,15 +1896,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.Effects.SequenceEqualNullable(rhs.Effects)) return false;
             if (lhs.SPITDataTypeState != rhs.SPITDataTypeState) return false;
             return true;
-        }
-        
-        public override bool Equals(
-            IASpellGetter? lhs,
-            IASpellGetter? rhs)
-        {
-            return Equals(
-                lhs: (ISpellGetter?)lhs,
-                rhs: rhs as ISpellGetter);
         }
         
         public override bool Equals(
@@ -1962,11 +1941,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.SPITDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
-        }
-        
-        public override int GetHashCode(IASpellGetter item)
-        {
-            return GetHashCode(item: (ISpellGetter)item);
         }
         
         public override int GetHashCode(ISkyrimMajorRecordGetter item)
@@ -2023,20 +1997,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Spell(formKey, default(SkyrimRelease));
+            var newRec = new Spell(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
-        }
-        
-        public override ASpell Duplicate(
-            IASpellGetter item,
-            FormKey formKey,
-            TranslationCrystal? copyMask)
-        {
-            return this.Duplicate(
-                item: (ISpell)item,
-                formKey: formKey,
-                copyMask: copyMask);
         }
         
         public override SkyrimMajorRecord Duplicate(
@@ -2045,7 +2008,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ISpell)item,
+                item: (ISpellGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -2056,7 +2019,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ISpell)item,
+                item: (ISpellGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -2066,7 +2029,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SpellSetterTranslationCommon : ASpellSetterTranslationCommon
+    public partial class SpellSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly SpellSetterTranslationCommon Instance = new SpellSetterTranslationCommon();
 
@@ -2094,8 +2057,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             bool deepCopy)
         {
             base.DeepCopyIn(
-                (IASpell)item,
-                (IASpellGetter)rhs,
+                (ISkyrimMajorRecord)item,
+                (ISkyrimMajorRecordGetter)rhs,
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
@@ -2134,8 +2097,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLink<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
-                            .ToExtendedList<IFormLink<IKeywordGetter>>();
+                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
                     {
@@ -2154,11 +2117,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.MenuDisplayObject) ?? true))
             {
-                item.MenuDisplayObject = new FormLinkNullable<IStaticGetter>(rhs.MenuDisplayObject.FormKeyNullable);
+                item.MenuDisplayObject.SetTo(rhs.MenuDisplayObject.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.EquipmentType) ?? true))
             {
-                item.EquipmentType = new FormLinkNullable<IEquipTypeGetter>(rhs.EquipmentType.FormKeyNullable);
+                item.EquipmentType.SetTo(rhs.EquipmentType.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.Description) ?? true))
             {
@@ -2198,7 +2161,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.HalfCostPerk) ?? true))
             {
-                item.HalfCostPerk = new FormLink<IPerkGetter>(rhs.HalfCostPerk.FormKey);
+                item.HalfCostPerk.SetTo(rhs.HalfCostPerk.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.Effects) ?? true))
             {
@@ -2228,36 +2191,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.SPITDataTypeState = rhs.SPITDataTypeState;
             }
-        }
-        
-        public override void DeepCopyIn(
-            IASpellInternal item,
-            IASpellGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (ISpellInternal)item,
-                rhs: (ISpellGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
-            IASpell item,
-            IASpellGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (ISpell)item,
-                rhs: (ISpellGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
         }
         
         public override void DeepCopyIn(
@@ -2401,7 +2334,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class SpellBinaryWriteTranslation :
-        ASpellBinaryWriteTranslation,
+        SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
         public new readonly static SpellBinaryWriteTranslation Instance = new SpellBinaryWriteTranslation();
@@ -2435,13 +2368,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.WriteWithCounter(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Keywords,
                 counterType: RecordTypes.KSIZ,
                 counterLength: 4,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
-                transl: (MutagenWriter subWriter, IFormLink<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2548,17 +2481,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public override void Write(
             MutagenWriter writer,
-            IASpellGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            Write(
-                item: (ISpellGetter)item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
-        }
-
-        public override void Write(
-            MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2581,7 +2503,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class SpellBinaryCreateTranslation : ASpellBinaryCreateTranslation
+    public partial class SpellBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static SpellBinaryCreateTranslation Instance = new SpellBinaryCreateTranslation();
 
@@ -2590,7 +2512,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISpellInternal item,
             MutagenFrame frame)
         {
-            ASpellBinaryCreateTranslation.FillBinaryStructs(
+            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
         }
@@ -2624,29 +2546,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.KSIZ:
                 {
                     item.Keywords = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
                             frame: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<IKeywordGetter>>();
+                        .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     return (int)Spell_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.MDOB:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MenuDisplayObject = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.MenuDisplayObject.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Spell_FieldIndex.MenuDisplayObject;
                 }
                 case RecordTypeInts.ETYP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EquipmentType = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.EquipmentType.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Spell_FieldIndex.EquipmentType;
                 }
                 case RecordTypeInts.DESC:
@@ -2670,9 +2594,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.TargetType = EnumBinaryTranslation<TargetType>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     item.CastDuration = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.Range = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.HalfCostPerk = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
+                    item.HalfCostPerk.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Spell_FieldIndex.HalfCostPerk;
                 }
                 case RecordTypeInts.EFID:
@@ -2688,7 +2613,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (int)Spell_FieldIndex.Effects;
                 }
                 default:
-                    return ASpellBinaryCreateTranslation.FillBinaryRecordTypes(
+                    return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         recordParseCount: recordParseCount,
@@ -2713,7 +2638,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class SpellBinaryOverlay :
-        ASpellBinaryOverlay,
+        SkyrimMajorRecordBinaryOverlay,
         ISpellGetter
     {
         #region Common Routing
@@ -2760,16 +2685,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #endregion
         #region Keywords
-        public IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; private set; }
-        IReadOnlyList<IFormLink<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
         #region MenuDisplayObject
         private int? _MenuDisplayObjectLocation;
-        public FormLinkNullable<IStaticGetter> MenuDisplayObject => _MenuDisplayObjectLocation.HasValue ? new FormLinkNullable<IStaticGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MenuDisplayObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticGetter>.Null;
+        public IFormLinkNullableGetter<IStaticGetter> MenuDisplayObject => _MenuDisplayObjectLocation.HasValue ? new FormLinkNullable<IStaticGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MenuDisplayObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticGetter>.Null;
         #endregion
         #region EquipmentType
         private int? _EquipmentTypeLocation;
-        public FormLinkNullable<IEquipTypeGetter> EquipmentType => _EquipmentTypeLocation.HasValue ? new FormLinkNullable<IEquipTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EquipmentTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEquipTypeGetter>.Null;
+        public IFormLinkNullableGetter<IEquipTypeGetter> EquipmentType => _EquipmentTypeLocation.HasValue ? new FormLinkNullable<IEquipTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EquipmentTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEquipTypeGetter>.Null;
         #endregion
         #region Description
         private int? _DescriptionLocation;
@@ -2820,7 +2745,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region HalfCostPerk
         private int _HalfCostPerkLocation => _SPITLocation!.Value + 0x20;
         private bool _HalfCostPerk_IsSet => _SPITLocation.HasValue;
-        public FormLink<IPerkGetter> HalfCostPerk => _HalfCostPerk_IsSet ? new FormLink<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_HalfCostPerkLocation, 0x4)))) : FormLink<IPerkGetter>.Null;
+        public IFormLinkGetter<IPerkGetter> HalfCostPerk => _HalfCostPerk_IsSet ? new FormLink<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_HalfCostPerkLocation, 0x4)))) : FormLink<IPerkGetter>.Null;
         #endregion
         public IReadOnlyList<IEffectGetter> Effects { get; private set; } = ListExt.Empty<EffectBinaryOverlay>();
         partial void CustomFactoryEnd(
@@ -2902,7 +2827,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
                 {
-                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLink<IKeywordGetter>>(
+                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLinkGetter<IKeywordGetter>>(
                         stream: stream,
                         package: _package,
                         itemLength: 0x4,
@@ -2969,7 +2894,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ISpellGetter rhs)) return false;
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not ISpellGetter rhs) return false;
             return ((SpellCommon)((ISpellGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 

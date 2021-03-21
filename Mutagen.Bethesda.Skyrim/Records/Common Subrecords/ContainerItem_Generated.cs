@@ -40,7 +40,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Item
-        public FormLink<IItemGetter> Item { get; set; } = new FormLink<IItemGetter>();
+        private IFormLink<IItemGetter> _Item = new FormLink<IItemGetter>();
+        public IFormLink<IItemGetter> Item
+        {
+            get => _Item;
+            set => _Item = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IItemGetter> IContainerItemGetter.Item => this.Item;
         #endregion
         #region Count
         public Int32 Count { get; set; } = default;
@@ -449,7 +456,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILoquiObjectSetter<IContainerItem>
     {
-        new FormLink<IItemGetter> Item { get; set; }
+        new IFormLink<IItemGetter> Item { get; }
         new Int32 Count { get; set; }
     }
 
@@ -466,7 +473,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => ContainerItem_Registration.Instance;
-        FormLink<IItemGetter> Item { get; }
+        IFormLinkGetter<IItemGetter> Item { get; }
         Int32 Count { get; }
 
     }
@@ -725,14 +732,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IContainerItem item)
         {
             ClearPartial();
-            item.Item = FormLink<IItemGetter>.Null;
+            item.Item.Clear();
             item.Count = default;
         }
         
         #region Mutagen
         public void RemapLinks(IContainerItem obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Item = obj.Item.Relink(mapping);
+            obj.Item.Relink(mapping);
         }
         
         #endregion
@@ -891,7 +898,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)ContainerItem_FieldIndex.Item) ?? true))
             {
-                item.Item = new FormLink<IItemGetter>(rhs.Item.FormKey);
+                item.Item.SetTo(rhs.Item.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ContainerItem_FieldIndex.Count) ?? true))
             {
@@ -1036,9 +1043,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IContainerItem item,
             MutagenFrame frame)
         {
-            item.Item = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Item.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             item.Count = frame.ReadInt32();
         }
 
@@ -1106,7 +1114,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<IItemGetter> Item => new FormLink<IItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IItemGetter> Item => new FormLink<IItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public Int32 Count => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

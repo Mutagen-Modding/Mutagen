@@ -13,7 +13,9 @@
       </FormLink>
       <FormLink name="Race" refName="Race" recordType="RNAM" nullable="False" />
       <List name="ActorEffect" counterRecType="SPCT" >
-        <FormLink refName="ASpell" recordType="SPLO" />
+        <FormLink recordType="SPLO" >
+          <Interface>ISpellRecord</Interface>
+        </FormLink>
       </List>
       <RefDirect name="Destructible" refName="Destructible" />
       <FormLink name="WornArmor" refName="Armor" recordType="WNAM" />

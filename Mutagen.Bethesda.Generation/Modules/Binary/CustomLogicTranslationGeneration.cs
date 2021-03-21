@@ -201,7 +201,7 @@ namespace Mutagen.Bethesda.Generation
                 loc = passedLenAccessor;
             }
             using (var args = new ArgsWrapper(fg,
-                $"public {typeGen.TypeName(getter: true)}{(typeGen.IsNullable ? "?" : null)} {typeGen.Name} => Get{typeGen.Name}Custom"))
+                $"public {typeGen.OverrideStr}{typeGen.TypeName(getter: true)}{(typeGen.IsNullable ? "?" : null)} {typeGen.Name} => Get{typeGen.Name}Custom"))
             {
                 if (!fieldData.HasTrigger && dataType == null)
                 {

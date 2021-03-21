@@ -42,7 +42,14 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Reference
-        public FormLink<IOblivionMajorRecordGetter> Reference { get; set; } = new FormLink<IOblivionMajorRecordGetter>();
+        private IFormLink<IOblivionMajorRecordGetter> _Reference = new FormLink<IOblivionMajorRecordGetter>();
+        public IFormLink<IOblivionMajorRecordGetter> Reference
+        {
+            get => _Reference;
+            set => _Reference = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IOblivionMajorRecordGetter> IScriptObjectReferenceGetter.Reference => this.Reference;
         #endregion
 
         #region To String
@@ -400,7 +407,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IScriptObjectReference>,
         IScriptObjectReferenceGetter
     {
-        new FormLink<IOblivionMajorRecordGetter> Reference { get; set; }
+        new IFormLink<IOblivionMajorRecordGetter> Reference { get; }
     }
 
     public partial interface IScriptObjectReferenceGetter :
@@ -410,7 +417,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<IScriptObjectReferenceGetter>
     {
         static new ILoquiRegistration Registration => ScriptObjectReference_Registration.Instance;
-        FormLink<IOblivionMajorRecordGetter> Reference { get; }
+        IFormLinkGetter<IOblivionMajorRecordGetter> Reference { get; }
 
     }
 
@@ -642,7 +649,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IScriptObjectReference item)
         {
             ClearPartial();
-            item.Reference = FormLink<IOblivionMajorRecordGetter>.Null;
+            item.Reference.Clear();
             base.Clear(item);
         }
         
@@ -655,7 +662,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void RemapLinks(IScriptObjectReference obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Reference = obj.Reference.Relink(mapping);
+            obj.Reference.Relink(mapping);
         }
         
         #endregion
@@ -856,7 +863,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)ScriptObjectReference_FieldIndex.Reference) ?? true))
             {
-                item.Reference = new FormLink<IOblivionMajorRecordGetter>(rhs.Reference.FormKey);
+                item.Reference.SetTo(rhs.Reference.FormKey);
             }
         }
         
@@ -1034,9 +1041,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptObjectReference_FieldIndex.Reference) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Reference = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Reference.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)ScriptObjectReference_FieldIndex.Reference;
                 }
                 default:
@@ -1091,7 +1099,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Reference
         private int? _ReferenceLocation;
-        public FormLink<IOblivionMajorRecordGetter> Reference => _ReferenceLocation.HasValue ? new FormLink<IOblivionMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ReferenceLocation.Value, _package.MetaData.Constants)))) : FormLink<IOblivionMajorRecordGetter>.Null;
+        public IFormLinkGetter<IOblivionMajorRecordGetter> Reference => _ReferenceLocation.HasValue ? new FormLink<IOblivionMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ReferenceLocation.Value, _package.MetaData.Constants)))) : FormLink<IOblivionMajorRecordGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

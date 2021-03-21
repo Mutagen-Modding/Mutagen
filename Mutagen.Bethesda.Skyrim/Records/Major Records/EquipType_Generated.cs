@@ -44,15 +44,15 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region SlotParents
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IEquipTypeGetter>>? _SlotParents;
-        public ExtendedList<IFormLink<IEquipTypeGetter>>? SlotParents
+        private ExtendedList<IFormLinkGetter<IEquipTypeGetter>>? _SlotParents;
+        public ExtendedList<IFormLinkGetter<IEquipTypeGetter>>? SlotParents
         {
             get => this._SlotParents;
             set => this._SlotParents = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IEquipTypeGetter>>? IEquipTypeGetter.SlotParents => _SlotParents;
+        IReadOnlyList<IFormLinkGetter<IEquipTypeGetter>>? IEquipTypeGetter.SlotParents => _SlotParents;
         #endregion
 
         #endregion
@@ -72,22 +72,6 @@ namespace Mutagen.Bethesda.Skyrim
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IEquipTypeGetter rhs)) return false;
-            return ((EquipTypeCommon)((IEquipTypeGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IEquipTypeGetter? obj)
-        {
-            return ((EquipTypeCommon)((IEquipTypeGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((EquipTypeCommon)((IEquipTypeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -517,6 +501,26 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IEquipTypeGetter rhs) return false;
+            return ((EquipTypeCommon)((IEquipTypeGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IEquipTypeGetter? obj)
+        {
+            return ((EquipTypeCommon)((IEquipTypeGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((EquipTypeCommon)((IEquipTypeGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -579,7 +583,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IEquipTypeInternal>,
         ISkyrimMajorRecordInternal
     {
-        new ExtendedList<IFormLink<IEquipTypeGetter>>? SlotParents { get; set; }
+        new ExtendedList<IFormLinkGetter<IEquipTypeGetter>>? SlotParents { get; set; }
         new Boolean? UseAllParents { get; set; }
     }
 
@@ -598,7 +602,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IEquipTypeGetter>
     {
         static new ILoquiRegistration Registration => EquipType_Registration.Instance;
-        IReadOnlyList<IFormLink<IEquipTypeGetter>>? SlotParents { get; }
+        IReadOnlyList<IFormLinkGetter<IEquipTypeGetter>>? SlotParents { get; }
         Boolean? UseAllParents { get; }
 
     }
@@ -1144,7 +1148,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new EquipType(formKey, default(SkyrimRelease));
+            var newRec = new EquipType(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1155,7 +1159,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IEquipType)item,
+                item: (IEquipTypeGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1166,7 +1170,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IEquipType)item,
+                item: (IEquipTypeGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1218,8 +1222,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.SlotParents = 
                             rhs.SlotParents
-                            .Select(r => (IFormLink<IEquipTypeGetter>)new FormLink<IEquipTypeGetter>(r.FormKey))
-                            .ToExtendedList<IFormLink<IEquipTypeGetter>>();
+                            .Select(r => (IFormLinkGetter<IEquipTypeGetter>)new FormLink<IEquipTypeGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IEquipTypeGetter>>();
                     }
                     else
                     {
@@ -1397,11 +1401,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IEquipTypeGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IEquipTypeGetter>>.Instance.Write(
                 writer: writer,
                 items: item.SlotParents,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM),
-                transl: (MutagenWriter subWriter, IFormLink<IEquipTypeGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IEquipTypeGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -1507,10 +1511,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SlotParents = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IEquipTypeGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IEquipTypeGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<IEquipTypeGetter>>();
+                        .CastExtendedList<IFormLinkGetter<IEquipTypeGetter>>();
                     return (int)EquipType_FieldIndex.SlotParents;
                 }
                 case RecordTypeInts.DATA:
@@ -1576,7 +1580,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IReadOnlyList<IFormLink<IEquipTypeGetter>>? SlotParents { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<IEquipTypeGetter>>? SlotParents { get; private set; }
         #region UseAllParents
         private int? _UseAllParentsLocation;
         public Boolean? UseAllParents => _UseAllParentsLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _UseAllParentsLocation.Value, _package.MetaData.Constants)[0] == 1 : default(Boolean?);
@@ -1651,7 +1655,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.SlotParents = BinaryOverlayList.FactoryByStartIndex<IFormLink<IEquipTypeGetter>>(
+                    this.SlotParents = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IEquipTypeGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
@@ -1690,7 +1694,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IEquipTypeGetter rhs)) return false;
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IEquipTypeGetter rhs) return false;
             return ((EquipTypeCommon)((IEquipTypeGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 

@@ -40,7 +40,14 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Sound
-        public FormLink<ISoundGetter> Sound { get; set; } = new FormLink<ISoundGetter>();
+        private IFormLink<ISoundGetter> _Sound = new FormLink<ISoundGetter>();
+        public IFormLink<ISoundGetter> Sound
+        {
+            get => _Sound;
+            set => _Sound = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ISoundGetter> IRegionSoundGetter.Sound => this.Sound;
         #endregion
         #region Flags
         public RegionSound.Flag Flags { get; set; } = default;
@@ -480,7 +487,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IRegionSound>,
         IRegionSoundGetter
     {
-        new FormLink<ISoundGetter> Sound { get; set; }
+        new IFormLink<ISoundGetter> Sound { get; }
         new RegionSound.Flag Flags { get; set; }
         new Single Chance { get; set; }
     }
@@ -498,7 +505,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => RegionSound_Registration.Instance;
-        FormLink<ISoundGetter> Sound { get; }
+        IFormLinkGetter<ISoundGetter> Sound { get; }
         RegionSound.Flag Flags { get; }
         Single Chance { get; }
 
@@ -758,7 +765,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IRegionSound item)
         {
             ClearPartial();
-            item.Sound = FormLink<ISoundGetter>.Null;
+            item.Sound.Clear();
             item.Flags = default;
             item.Chance = default;
         }
@@ -766,7 +773,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Mutagen
         public void RemapLinks(IRegionSound obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Sound = obj.Sound.Relink(mapping);
+            obj.Sound.Relink(mapping);
         }
         
         #endregion
@@ -929,7 +936,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)RegionSound_FieldIndex.Sound) ?? true))
             {
-                item.Sound = new FormLink<ISoundGetter>(rhs.Sound.FormKey);
+                item.Sound.SetTo(rhs.Sound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)RegionSound_FieldIndex.Flags) ?? true))
             {
@@ -1078,9 +1085,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionSound item,
             MutagenFrame frame)
         {
-            item.Sound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Sound.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             item.Flags = EnumBinaryTranslation<RegionSound.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.Chance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
         }
@@ -1149,7 +1157,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<ISoundGetter> Sound => new FormLink<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<ISoundGetter> Sound => new FormLink<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public RegionSound.Flag Flags => (RegionSound.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
         public Single Chance => _data.Slice(0x8, 0x4).Float();
         partial void CustomFactoryEnd(

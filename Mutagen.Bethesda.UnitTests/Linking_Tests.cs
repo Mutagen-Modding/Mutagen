@@ -1423,7 +1423,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var formLink = new FormLink<INpcGetter>(UnusedFormKey);
             var (style, package) = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
-            Assert.Null(formLink.Resolve(package));
+            Assert.Null(formLink.TryResolve(package));
         }
 
         [Theory]
@@ -1437,7 +1437,7 @@ namespace Mutagen.Bethesda.UnitTests
             FormLink<INpc> formLink = new FormLink<INpc>(npc.FormKey);
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.Same(npc, formLink.Resolve(package));
+                Assert.Same(npc, formLink.TryResolve(package));
             });
         }
 
@@ -1448,7 +1448,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var formLink = new FormLink<IPlacedNpcGetter>(UnusedFormKey);
             var (style, package) = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
-            Assert.Null(formLink.Resolve(package));
+            Assert.Null(formLink.TryResolve(package));
         }
 
         [Theory]
@@ -1470,17 +1470,17 @@ namespace Mutagen.Bethesda.UnitTests
             var placedFormLink = new FormLink<IPlacedNpcGetter>(placedNpc.FormKey);
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.Same(placedNpc, placedFormLink.Resolve(package));
+                Assert.Same(placedNpc, placedFormLink.TryResolve(package));
             });
             var cellFormLink = new FormLink<ICellGetter>(cell.FormKey);
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.Same(cell, cellFormLink.Resolve(package));
+                Assert.Same(cell, cellFormLink.TryResolve(package));
             });
             var worldspaceFormLink = new FormLink<IWorldspaceGetter>(worldspace.FormKey);
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.Same(worldspace, worldspaceFormLink.Resolve(package));
+                Assert.Same(worldspace, worldspaceFormLink.TryResolve(package));
             });
         }
 
@@ -1567,7 +1567,7 @@ namespace Mutagen.Bethesda.UnitTests
             var formLink = new FormLink<IEffectRecordGetter>(spell.FormKey);
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.Same(spell, formLink.Resolve(package));
+                Assert.Same(spell, formLink.TryResolve(package));
             });
         }
 
@@ -1578,7 +1578,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var formLink = new FormLink<IEffectRecordGetter>(UnusedFormKey);
             var (style, package) = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
-            Assert.Null(formLink.Resolve(package));
+            Assert.Null(formLink.TryResolve(package));
         }
 
         [Theory]
@@ -1588,7 +1588,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var formLink = new FormLink<IPlacedGetter>(UnusedFormKey);
             var (style, package) = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
-            Assert.Null(formLink.Resolve(package));
+            Assert.Null(formLink.TryResolve(package));
         }
 
         [Theory]
@@ -1610,17 +1610,17 @@ namespace Mutagen.Bethesda.UnitTests
             var placedFormLink = new FormLink<IPlacedGetter>(placedNpc.FormKey);
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.Same(placedNpc, placedFormLink.Resolve(package));
+                Assert.Same(placedNpc, placedFormLink.TryResolve(package));
             });
             var cellFormLink = new FormLink<ICellGetter>(cell.FormKey);
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.Same(cell, cellFormLink.Resolve(package));
+                Assert.Same(cell, cellFormLink.TryResolve(package));
             });
             var worldspaceFormLink = new FormLink<IWorldspaceGetter>(worldspace.FormKey);
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.Same(worldspace, worldspaceFormLink.Resolve(package));
+                Assert.Same(worldspace, worldspaceFormLink.TryResolve(package));
             });
         }
         #endregion
@@ -1718,7 +1718,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var package = TypicalLoadOrder().ToImmutableLinkCache();
             FormLink<INpc> formLink = new FormLink<INpc>(UnusedFormKey);
-            Assert.Null(formLink.Resolve(package));
+            Assert.Null(formLink.TryResolve(package));
         }
 
         [Theory]
@@ -1737,7 +1737,7 @@ namespace Mutagen.Bethesda.UnitTests
             FormLink<INpc> formLink = new FormLink<INpc>(npc.FormKey);
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.Same(npc, formLink.Resolve(package));
+                Assert.Same(npc, formLink.TryResolve(package));
             });
         }
 
@@ -1746,7 +1746,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             FormLink<IPlacedNpc> formLink = new FormLink<IPlacedNpc>(UnusedFormKey);
             var package = TypicalLoadOrder().ToImmutableLinkCache();
-            Assert.Null(formLink.Resolve(package));
+            Assert.Null(formLink.TryResolve(package));
         }
 
         [Theory]
@@ -1773,17 +1773,17 @@ namespace Mutagen.Bethesda.UnitTests
             FormLink<IPlacedNpc> placedFormLink = new FormLink<IPlacedNpc>(placedNpc.FormKey);
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.Same(placedNpc, placedFormLink.Resolve(package));
+                Assert.Same(placedNpc, placedFormLink.TryResolve(package));
             });
             FormLink<ICell> cellFormLink = new FormLink<ICell>(cell.FormKey);
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.Same(cell, cellFormLink.Resolve(package));
+                Assert.Same(cell, cellFormLink.TryResolve(package));
             });
             FormLink<IWorldspace> worldspaceFormLink = new FormLink<IWorldspace>(worldspace.FormKey);
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.Same(worldspace, worldspaceFormLink.Resolve(package));
+                Assert.Same(worldspace, worldspaceFormLink.TryResolve(package));
             });
         }
 
@@ -1881,7 +1881,7 @@ namespace Mutagen.Bethesda.UnitTests
             FormLink<IEffectRecord> formLink = new FormLink<IEffectRecord>(spell.FormKey);
             WrapPotentialThrow(cacheType, style, () =>
             {
-                Assert.Same(spell, formLink.Resolve(package));
+                Assert.Same(spell, formLink.TryResolve(package));
             });
         }
 
@@ -1890,7 +1890,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             FormLink<IEffectRecord> formLink = new FormLink<IEffectRecord>(UnusedFormKey);
             var package = TypicalLoadOrder().ToImmutableLinkCache();
-            Assert.Null(formLink.Resolve(package));
+            Assert.Null(formLink.TryResolve(package));
         }
 
         [Fact]
@@ -1898,7 +1898,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             FormLink<IPlaced> formLink = new FormLink<IPlaced>(UnusedFormKey);
             var package = TypicalLoadOrder().ToImmutableLinkCache();
-            Assert.Null(formLink.Resolve(package));
+            Assert.Null(formLink.TryResolve(package));
         }
 
         [Theory]
@@ -1948,7 +1948,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var formLink = new FormLink<INpcGetter>(UnusedFormKey);
             var (style, package) = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
-            Assert.False(formLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, INpc>(package, out var _));
+            Assert.False(formLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, INpc, INpcGetter>(package, out var _));
         }
 
         [Theory]
@@ -1960,7 +1960,7 @@ namespace Mutagen.Bethesda.UnitTests
             var npc = mod.Npcs.AddNew();
             var (style, package) = GetLinkCache(mod, cacheType);
             var formLink = new FormLink<INpcGetter>(npc.FormKey);
-            Assert.True(formLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, INpc>(package, out var linkedRec));
+            Assert.True(formLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, INpc, INpcGetter>(package, out var linkedRec));
             linkedRec.Record.Should().BeSameAs(npc);
             linkedRec.ModKey.Should().Be(Utility.PluginModKey);
             linkedRec.Parent.Should().BeNull();
@@ -1973,7 +1973,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var formLink = new FormLink<IPlacedNpcGetter>(UnusedFormKey);
             var (style, package) = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
-            Assert.False(formLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, IPlacedNpc>(package, out var _));
+            Assert.False(formLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, IPlacedNpc, IPlacedNpcGetter>(package, out var _));
         }
 
         [Theory]
@@ -1993,17 +1993,17 @@ namespace Mutagen.Bethesda.UnitTests
             worldspace.SubCells.Add(block);
             var (style, package) = GetLinkCache(mod, cacheType);
             var placedFormLink = new FormLink<IPlacedNpcGetter>(placedNpc.FormKey);
-            Assert.True(placedFormLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, IPlacedNpc>(package, out var linkedPlacedNpc));
+            Assert.True(placedFormLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, IPlacedNpc, IPlacedNpcGetter>(package, out var linkedPlacedNpc));
             linkedPlacedNpc.Record.Should().BeSameAs(placedNpc);
             linkedPlacedNpc.ModKey.Should().Be(Utility.PluginModKey);
             linkedPlacedNpc.Parent.Record.Should().Be(cell);
             var cellFormLink = new FormLink<ICellGetter>(cell.FormKey);
-            Assert.True(cellFormLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, ICell>(package, out var linkedCell));
+            Assert.True(cellFormLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, ICell, ICellGetter>(package, out var linkedCell));
             linkedCell.Record.Should().BeSameAs(cell);
             linkedCell.ModKey.Should().Be(Utility.PluginModKey);
             linkedCell.Parent.Record.Should().Be(subBlock);
             var worldspaceFormLink = new FormLink<IWorldspaceGetter>(worldspace.FormKey);
-            Assert.True(worldspaceFormLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, IWorldspace>(package, out var linkedWorldspace));
+            Assert.True(worldspaceFormLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, IWorldspace, IWorldspaceGetter>(package, out var linkedWorldspace));
             linkedWorldspace.Record.Should().BeSameAs(worldspace);
             linkedWorldspace.ModKey.Should().Be(Utility.PluginModKey);
             linkedWorldspace.Parent.Should().BeNull();
@@ -2016,7 +2016,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var formLink = new FormLink<INpcGetter>(UnusedFormKey);
             var (style, package) = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
-            Assert.Null(formLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, INpc>(package));
+            Assert.Null(formLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, INpc, INpcGetter>(package));
         }
 
         [Theory]
@@ -2028,7 +2028,7 @@ namespace Mutagen.Bethesda.UnitTests
             var npc = mod.Npcs.AddNew();
             var (style, package) = GetLinkCache(mod, cacheType);
             var formLink = new FormLink<INpcGetter>(npc.FormKey);
-            var resolvedNpc = formLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, INpc>(package);
+            var resolvedNpc = formLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, INpc, INpcGetter>(package);
             resolvedNpc.Record.Should().BeSameAs(npc);
             resolvedNpc.ModKey.Should().Be(Utility.PluginModKey);
             resolvedNpc.Parent.Should().BeNull();
@@ -2041,7 +2041,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var formLink = new FormLink<IPlacedNpcGetter>(UnusedFormKey);
             var (style, package) = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
-            Assert.Null(formLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, IPlacedNpc>(package));
+            Assert.Null(formLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, IPlacedNpc, IPlacedNpcGetter>(package));
         }
 
         [Theory]
@@ -2061,17 +2061,17 @@ namespace Mutagen.Bethesda.UnitTests
             worldspace.SubCells.Add(block);
             var (style, package) = GetLinkCache(mod, cacheType);
             var placedFormLink = new FormLink<IPlacedNpc>(placedNpc.FormKey);
-            var linkedPlacedNpc = placedFormLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, IPlacedNpc>(package);
+            var linkedPlacedNpc = placedFormLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, IPlacedNpc, IPlacedNpcGetter>(package);
             linkedPlacedNpc.Record.Should().BeSameAs(placedNpc);
             linkedPlacedNpc.ModKey.Should().Be(Utility.PluginModKey);
             linkedPlacedNpc.Parent.Record.Should().BeSameAs(cell);
             var cellFormLink = new FormLink<ICell>(cell.FormKey);
-            var linkedCell = cellFormLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, ICell>(package);
+            var linkedCell = cellFormLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, ICell, ICellGetter>(package);
             linkedCell.Record.Should().BeSameAs(cell);
             linkedCell.ModKey.Should().Be(Utility.PluginModKey);
             linkedCell.Parent.Record.Should().BeSameAs(subBlock);
             var worldspaceFormLink = new FormLink<IWorldspace>(worldspace.FormKey);
-            var linkedWorldspace = worldspaceFormLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, IWorldspace>(package);
+            var linkedWorldspace = worldspaceFormLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, IWorldspace, IWorldspaceGetter>(package);
             linkedWorldspace.Record.Should().BeSameAs(worldspace);
             linkedWorldspace.ModKey.Should().Be(Utility.PluginModKey);
             linkedWorldspace.Parent.Should().BeNull();
@@ -2086,7 +2086,7 @@ namespace Mutagen.Bethesda.UnitTests
             var spell = mod.Spells.AddNew();
             var (style, package) = GetLinkCache(mod, cacheType);
             var formLink = new FormLink<IEffectRecordGetter>(spell.FormKey);
-            Assert.True(formLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, IEffectRecord>(package, out var linkedRec));
+            Assert.True(formLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, IEffectRecord, IEffectRecordGetter>(package, out var linkedRec));
             linkedRec.Record.Should().BeSameAs(spell);
             linkedRec.ModKey.Should().Be(Utility.PluginModKey);
             linkedRec.Parent.Should().BeNull();
@@ -2129,17 +2129,17 @@ namespace Mutagen.Bethesda.UnitTests
             worldspace.SubCells.Add(block);
             var (style, package) = GetLinkCache(mod, cacheType);
             var placedFormLink = new FormLink<IPlacedGetter>(placedNpc.FormKey);
-            Assert.True(placedFormLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, IPlaced>(package, out var linkedPlacedNpc));
+            Assert.True(placedFormLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, IPlaced, IPlacedGetter>(package, out var linkedPlacedNpc));
             linkedPlacedNpc.Record.Should().BeSameAs(placedNpc);
             linkedPlacedNpc.ModKey.Should().Be(Utility.PluginModKey);
             linkedPlacedNpc.Parent.Record.Should().BeSameAs(cell);
             var cellFormLink = new FormLink<ICellGetter>(cell.FormKey);
-            Assert.True(cellFormLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, ICell>(package, out var linkedCell));
+            Assert.True(cellFormLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, ICell, ICellGetter>(package, out var linkedCell));
             linkedCell.Record.Should().BeSameAs(cell);
             linkedCell.ModKey.Should().Be(Utility.PluginModKey);
             linkedCell.Parent.Record.Should().BeSameAs(subBlock);
             var worldspaceFormLink = new FormLink<IWorldspaceGetter>(worldspace.FormKey);
-            Assert.True(worldspaceFormLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, IWorldspace>(package, out var linkedWorldspace));
+            Assert.True(worldspaceFormLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, IWorldspace, IWorldspaceGetter>(package, out var linkedWorldspace));
             linkedWorldspace.Record.Should().BeSameAs(worldspace);
             linkedWorldspace.ModKey.Should().Be(Utility.PluginModKey);
             linkedWorldspace.Parent.Should().BeNull();
@@ -2154,7 +2154,7 @@ namespace Mutagen.Bethesda.UnitTests
             var spell = mod.Spells.AddNew();
             var (style, package) = GetLinkCache(mod, cacheType);
             var formLink = new FormLink<IEffectRecordGetter>(spell.FormKey);
-            var resolved = formLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, IEffectRecord>(package);
+            var resolved = formLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, IEffectRecord, IEffectRecordGetter>(package);
             resolved.Record.Should().BeSameAs(spell);
             resolved.ModKey.Should().Be(Utility.PluginModKey);
             resolved.Parent.Should().BeNull();
@@ -2167,7 +2167,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var formLink = new FormLink<IEffectRecordGetter>(UnusedFormKey);
             var (style, package) = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
-            var resolved = formLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, IEffectRecord>(package);
+            var resolved = formLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, IEffectRecord, IEffectRecordGetter>(package);
             Assert.Null(resolved);
         }
 
@@ -2178,7 +2178,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var formLink = new FormLink<IPlacedGetter>(UnusedFormKey);
             var (style, package) = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
-            var resolved = formLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, IPlaced>(package);
+            var resolved = formLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, IPlaced, IPlacedGetter>(package);
             Assert.Null(resolved);
         }
 
@@ -2199,17 +2199,17 @@ namespace Mutagen.Bethesda.UnitTests
             worldspace.SubCells.Add(block);
             var (style, package) = GetLinkCache(mod, cacheType);
             var placedFormLink = new FormLink<IPlacedGetter>(placedNpc.FormKey);
-            var resolvedPlaced = placedFormLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, IPlaced>(package);
+            var resolvedPlaced = placedFormLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, IPlaced, IPlacedGetter>(package);
             resolvedPlaced.Record.Should().BeSameAs(placedNpc);
             resolvedPlaced.ModKey.Should().Be(Utility.PluginModKey);
             resolvedPlaced.Parent.Record.Should().BeSameAs(cell);
             var cellFormLink = new FormLink<ICellGetter>(cell.FormKey);
-            var resolvedCell = cellFormLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, ICell>(package);
+            var resolvedCell = cellFormLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, ICell, ICellGetter>(package);
             resolvedCell.Record.Should().BeSameAs(cell);
             resolvedCell.ModKey.Should().Be(Utility.PluginModKey);
             resolvedCell.Parent.Record.Should().BeSameAs(subBlock);
             var worldspaceFormLink = new FormLink<IWorldspaceGetter>(worldspace.FormKey);
-            var resolvedWorldspace = worldspaceFormLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, IWorldspace>(package);
+            var resolvedWorldspace = worldspaceFormLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, IWorldspace, IWorldspaceGetter>(package);
             resolvedWorldspace.Record.Should().BeSameAs(worldspace);
             resolvedWorldspace.ModKey.Should().Be(Utility.PluginModKey);
             resolvedWorldspace.Parent.Should().BeNull();
@@ -2234,7 +2234,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var formLink = new FormLink<IPlacedGetter>(UnusedFormKey);
             var (style, package) = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
-            formLink.ResolveAll<IPlacedNpcGetter>(package).Should().BeEmpty();
+            formLink.ResolveAll<IPlacedGetter, IPlacedNpcGetter>(package).Should().BeEmpty();
         }
 
         [Theory]
@@ -2412,7 +2412,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var formLink = new FormLink<IEffectRecordGetter>(UnusedFormKey);
             var (style, package) = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
-            formLink.ResolveAllContexts<ISkyrimMod, ISkyrimModGetter, IEffectRecord>(package).Should().BeEmpty();
+            formLink.ResolveAllContexts<ISkyrimMod, ISkyrimModGetter, IEffectRecord, IEffectRecordGetter>(package).Should().BeEmpty();
         }
 
         [Theory]
@@ -2422,7 +2422,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var formLink = new FormLink<IPlacedGetter>(UnusedFormKey);
             var (style, package) = GetLinkCache(new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
-            formLink.ResolveAllContexts<ISkyrimMod, ISkyrimModGetter, IPlacedNpc, IPlacedNpcGetter>(package).Should().BeEmpty();
+            formLink.ResolveAllContexts<ISkyrimMod, ISkyrimModGetter, IPlacedGetter, IPlacedNpc, IPlacedNpcGetter>(package).Should().BeEmpty();
         }
 
         [Theory]
@@ -2434,7 +2434,7 @@ namespace Mutagen.Bethesda.UnitTests
             var npc = mod.Npcs.AddNew();
             var (style, package) = GetLinkCache(mod, cacheType);
             var formLink = new FormLink<INpcGetter>(npc.FormKey);
-            var resolved = formLink.ResolveAllContexts<ISkyrimMod, ISkyrimModGetter, INpc>(package).ToArray();
+            var resolved = formLink.ResolveAllContexts<ISkyrimMod, ISkyrimModGetter, INpc, INpcGetter>(package).ToArray();
             resolved.Should().HaveCount(1);
             resolved.First().Record.Should().BeSameAs(npc);
             resolved.First().ModKey.Should().Be(Utility.PluginModKey);
@@ -2448,7 +2448,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var package = TypicalLoadOrder().ToImmutableLinkCache();
             var formLink = new FormLink<INpcGetter>(UnusedFormKey);
-            formLink.ResolveAllContexts<ISkyrimMod, ISkyrimModGetter, INpc>(package).Should().BeEmpty();
+            formLink.ResolveAllContexts<ISkyrimMod, ISkyrimModGetter, INpc, INpcGetter>(package).Should().BeEmpty();
         }
 
         [Theory]
@@ -2465,7 +2465,7 @@ namespace Mutagen.Bethesda.UnitTests
             };
             var (style, package) = GetLinkCache(loadOrder, cacheType);
             var formLink = new FormLink<INpcGetter>(npc.FormKey);
-            var resolved = formLink.ResolveAllContexts<ISkyrimMod, ISkyrimModGetter, INpc>(package).ToArray();
+            var resolved = formLink.ResolveAllContexts<ISkyrimMod, ISkyrimModGetter, INpc, INpcGetter>(package).ToArray();
             resolved.Should().HaveCount(1);
             resolved.First().Record.Should().BeSameAs(npc);
             resolved.First().ModKey.Should().Be(Utility.PluginModKey);
@@ -2490,7 +2490,7 @@ namespace Mutagen.Bethesda.UnitTests
             };
             var (style, package) = GetLinkCache(loadOrder, cacheType);
             var formLink = new FormLink<INpcGetter>(npc.FormKey);
-            var resolved = formLink.ResolveAllContexts<ISkyrimMod, ISkyrimModGetter, INpc>(package).ToArray();
+            var resolved = formLink.ResolveAllContexts<ISkyrimMod, ISkyrimModGetter, INpc, INpcGetter>(package).ToArray();
             resolved.Should().HaveCount(2);
             resolved.First().Record.Should().BeSameAs(npcOverride);
             resolved.First().ModKey.Should().Be(Utility.PluginModKey3);
@@ -2518,8 +2518,8 @@ namespace Mutagen.Bethesda.UnitTests
             };
             var (style, package) = GetLinkCache(loadOrder, cacheType);
             var formLink = new FormLink<INpcGetter>(npc.FormKey);
-            var resolved = formLink.ResolveAllContexts<ISkyrimMod, ISkyrimModGetter, INpc>(package).ToArray();
-            resolved = formLink.ResolveAllContexts<ISkyrimMod, ISkyrimModGetter, INpc>(package).ToArray();
+            var resolved = formLink.ResolveAllContexts<ISkyrimMod, ISkyrimModGetter, INpc, INpcGetter>(package).ToArray();
+            resolved = formLink.ResolveAllContexts<ISkyrimMod, ISkyrimModGetter, INpc, INpcGetter>(package).ToArray();
             resolved.Should().HaveCount(2);
             resolved.First().Record.Should().BeSameAs(npcOverride);
             resolved.First().ModKey.Should().Be(Utility.PluginModKey3);
@@ -2548,7 +2548,7 @@ namespace Mutagen.Bethesda.UnitTests
             };
             var (style, package) = GetLinkCache(loadOrder, cacheType);
             var formLink = new FormLink<INpcGetter>(npc.FormKey);
-            var resolved = formLink.ResolveAllContexts<ISkyrimMod, ISkyrimModGetter, INpc>(package).ToArray();
+            var resolved = formLink.ResolveAllContexts<ISkyrimMod, ISkyrimModGetter, INpc, INpcGetter>(package).ToArray();
             resolved.Should().HaveCount(2);
             resolved.First().Record.Should().BeSameAs(npcOverride);
             resolved.First().ModKey.Should().Be(Utility.PluginModKey3);
@@ -2577,7 +2577,7 @@ namespace Mutagen.Bethesda.UnitTests
             };
             var (style, package) = GetLinkCache(loadOrder, cacheType);
             var formLink = new FormLink<INpcGetter>(npc.FormKey);
-            var resolved = formLink.ResolveAllContexts<ISkyrimMod, ISkyrimModGetter, INpc>(package).ToArray();
+            var resolved = formLink.ResolveAllContexts<ISkyrimMod, ISkyrimModGetter, INpc, INpcGetter>(package).ToArray();
             resolved.Should().HaveCount(2);
             resolved.First().Record.Should().BeSameAs(npcOverride);
             resolved.First().ModKey.Should().Be(Utility.PluginModKey3);
@@ -2586,7 +2586,7 @@ namespace Mutagen.Bethesda.UnitTests
             resolved.Last().ModKey.Should().Be(Utility.PluginModKey);
             resolved.Last().Parent.Should().BeNull();
             formLink = new FormLink<INpcGetter>(unrelatedNpc.FormKey);
-            resolved = formLink.ResolveAllContexts<ISkyrimMod, ISkyrimModGetter, INpc>(package).ToArray();
+            resolved = formLink.ResolveAllContexts<ISkyrimMod, ISkyrimModGetter, INpc, INpcGetter>(package).ToArray();
             resolved.Should().HaveCount(1);
             resolved.First().Record.Should().BeSameAs(unrelatedNpc);
             resolved.First().ModKey.Should().Be(Utility.PluginModKey);
@@ -2632,7 +2632,7 @@ namespace Mutagen.Bethesda.UnitTests
             effect.EditorID = "NULL";
             EDIDLink<IMagicEffect> link = new EDIDLink<IMagicEffect>(new RecordType("LINK"));
             var (style, package) = GetLinkCache(mod, cacheType);
-            Assert.Null(link.TryResolve(package).Value);
+            Assert.Null(link.TryResolve(package));
         }
 
         [Theory]
@@ -2645,7 +2645,7 @@ namespace Mutagen.Bethesda.UnitTests
             effect.EditorID = "LINK";
             var (style, package) = GetLinkCache(mod, cacheType);
             EDIDLink<IMagicEffect> link = new EDIDLink<IMagicEffect>(new RecordType("LINK"));
-            Assert.Same(effect, link.TryResolve(package).Value);
+            Assert.Same(effect, link.TryResolve(package));
         }
         #endregion
 
@@ -2664,7 +2664,7 @@ namespace Mutagen.Bethesda.UnitTests
                 {
                     Data = new LeveledItemEntryData()
                     {
-                        Reference = armor.FormKey
+                        Reference = armor.AsLink()
                     }
                 }
             };

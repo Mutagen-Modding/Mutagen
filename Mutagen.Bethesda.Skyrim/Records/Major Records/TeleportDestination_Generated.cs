@@ -40,7 +40,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Door
-        public FormLink<IPlacedObjectGetter> Door { get; set; } = new FormLink<IPlacedObjectGetter>();
+        private IFormLink<IPlacedObjectGetter> _Door = new FormLink<IPlacedObjectGetter>();
+        public IFormLink<IPlacedObjectGetter> Door
+        {
+            get => _Door;
+            set => _Door = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IPlacedObjectGetter> ITeleportDestinationGetter.Door => this.Door;
         #endregion
         #region Position
         public P3Float Position { get; set; } = default;
@@ -512,7 +519,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPositionRotation,
         ITeleportDestinationGetter
     {
-        new FormLink<IPlacedObjectGetter> Door { get; set; }
+        new IFormLink<IPlacedObjectGetter> Door { get; }
         new P3Float Position { get; set; }
         new P3Float Rotation { get; set; }
         new TeleportDestination.Flag Flags { get; set; }
@@ -532,7 +539,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => TeleportDestination_Registration.Instance;
-        FormLink<IPlacedObjectGetter> Door { get; }
+        IFormLinkGetter<IPlacedObjectGetter> Door { get; }
         P3Float Position { get; }
         P3Float Rotation { get; }
         TeleportDestination.Flag Flags { get; }
@@ -795,7 +802,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ITeleportDestination item)
         {
             ClearPartial();
-            item.Door = FormLink<IPlacedObjectGetter>.Null;
+            item.Door.Clear();
             item.Position = default;
             item.Rotation = default;
             item.Flags = default;
@@ -804,7 +811,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public void RemapLinks(ITeleportDestination obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Door = obj.Door.Relink(mapping);
+            obj.Door.Relink(mapping);
         }
         
         #endregion
@@ -977,7 +984,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.Door) ?? true))
             {
-                item.Door = new FormLink<IPlacedObjectGetter>(rhs.Door.FormKey);
+                item.Door.SetTo(rhs.Door.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.Position) ?? true))
             {
@@ -1139,9 +1146,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ITeleportDestination item,
             MutagenFrame frame)
         {
-            item.Door = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Door.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             item.Position = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.Rotation = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.Flags = EnumBinaryTranslation<TeleportDestination.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
@@ -1211,7 +1219,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<IPlacedObjectGetter> Door => new FormLink<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IPlacedObjectGetter> Door => new FormLink<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public P3Float Position => P3FloatBinaryTranslation.Read(_data.Slice(0x4, 0xC));
         public P3Float Rotation => P3FloatBinaryTranslation.Read(_data.Slice(0x10, 0xC));
         public TeleportDestination.Flag Flags => (TeleportDestination.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x1C, 0x4));

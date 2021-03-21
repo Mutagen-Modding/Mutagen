@@ -21,12 +21,12 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects
             {
                 (LoquiInterfaceType.Direct, "Keywords", (o, fg) =>
                 {
-                    fg.AppendLine("IReadOnlyList<IFormLink<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;");
-                    fg.AppendLine("IReadOnlyList<IFormLink<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;");
+                    fg.AppendLine("IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;");
+                    fg.AppendLine("IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;");
                 }),
                 (LoquiInterfaceType.IGetter, "Keywords", (o, fg) =>
                 {
-                    fg.AppendLine("IReadOnlyList<IFormLink<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;");
+                    fg.AppendLine("IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;");
                 })
             };
         }

@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.Teaches = new BookSpell()
                     {
-                        Spell = FormLinkBinaryTranslation.Instance.Parse(frame)
+                        Spell = new FormLink<ISpellGetter>(FormLinkBinaryTranslation.Instance.Parse(frame))
                     };
                 }
                 else if ((((int)item.Flags) & SkillFlag) > 0)
@@ -126,7 +126,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     return new BookSpell()
                     {
-                        Spell = FormKeyBinaryTranslation.Instance.Parse(_data.Slice(_TeachesLocation, 4), _package.MetaData.MasterReferences!)
+                        Spell = new FormLink<ISpellGetter>(FormKeyBinaryTranslation.Instance.Parse(_data.Slice(_TeachesLocation, 4), _package.MetaData.MasterReferences!))
                     };
                 }
                 else if ((flags & BookBinaryCreateTranslation.SkillFlag) > 0)

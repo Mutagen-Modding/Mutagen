@@ -30,13 +30,13 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="frame">Frame to retrieve from</param>
         /// <returns>Character representing data type</returns>
         /// <exception cref="ArgumentException">If FNAM not present or malformed</exception>
-        public static char GetGlobalChar(MajorRecordFrame frame)
+        public static char? GetGlobalChar(MajorRecordFrame frame)
         {
             var subrecordSpan = frame.Content;
             var fnamLocation = UtilityTranslation.FindFirstSubrecord(subrecordSpan, frame.Meta, FNAM);
             if (fnamLocation == null)
             {
-                throw new ArgumentException($"Could not find FNAM.");
+                return null;
             }
             var fnamMeta = frame.Meta.SubrecordFrame(subrecordSpan.Slice(fnamLocation.Value));
             if (fnamMeta.Content.Length != 1)
@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Binary
         /// <exception cref="ArgumentException">If frame aligned to a malformed Global record</exception>
         public static T Create<T>(
             MutagenFrame frame,
-            Func<MutagenFrame, char, T> getter)
+            Func<MutagenFrame, char?, T> getter)
             where T : IMajorRecordCommon, IGlobalCommon
         {
             var initialPos = frame.Position;

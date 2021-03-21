@@ -1314,15 +1314,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
-                case "APlaced":
-                case "IAPlacedGetter":
-                case "IAPlaced":
-                case "IAPlacedInternal":
-                    foreach (var subItem in obj.Items)
-                    {
-                        subItem.Remove(keys, type, throwIfUnknown: false);
-                    }
-                    break;
                 case "APlacedTrap":
                 case "IAPlacedTrapGetter":
                 case "IAPlacedTrap":
@@ -1693,22 +1684,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlacedObjectGetter":
                 case "IPlacedObject":
                 case "IPlacedObjectInternal":
-                    foreach (var subItem in obj.Items)
-                    {
-                        if (type.IsAssignableFrom(subItem.GetType()))
-                        {
-                            yield return subItem;
-                        }
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                case "APlaced":
-                case "IAPlacedGetter":
-                case "IAPlaced":
-                case "IAPlacedInternal":
                     foreach (var subItem in obj.Items)
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))

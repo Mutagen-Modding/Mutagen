@@ -42,7 +42,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Link
-        public FormLink<ILocationTargetableGetter> Link { get; set; } = new FormLink<ILocationTargetableGetter>();
+        private IFormLink<ILocationTargetableGetter> _Link = new FormLink<ILocationTargetableGetter>();
+        public IFormLink<ILocationTargetableGetter> Link
+        {
+            get => _Link;
+            set => _Link = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ILocationTargetableGetter> ILocationTargetGetter.Link => this.Link;
         #endregion
 
         #region To String
@@ -399,7 +406,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILocationTargetGetter,
         ILoquiObjectSetter<ILocationTarget>
     {
-        new FormLink<ILocationTargetableGetter> Link { get; set; }
+        new IFormLink<ILocationTargetableGetter> Link { get; }
     }
 
     public partial interface ILocationTargetGetter :
@@ -409,7 +416,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<ILocationTargetGetter>
     {
         static new ILoquiRegistration Registration => LocationTarget_Registration.Instance;
-        FormLink<ILocationTargetableGetter> Link { get; }
+        IFormLinkGetter<ILocationTargetableGetter> Link { get; }
 
     }
 
@@ -640,7 +647,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ILocationTarget item)
         {
             ClearPartial();
-            item.Link = FormLink<ILocationTargetableGetter>.Null;
+            item.Link.Clear();
             base.Clear(item);
         }
         
@@ -653,7 +660,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(ILocationTarget obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Link = obj.Link.Relink(mapping);
+            obj.Link.Relink(mapping);
         }
         
         #endregion
@@ -853,7 +860,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)LocationTarget_FieldIndex.Link) ?? true))
             {
-                item.Link = new FormLink<ILocationTargetableGetter>(rhs.Link.FormKey);
+                item.Link.SetTo(rhs.Link.FormKey);
             }
         }
         
@@ -1010,9 +1017,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILocationTarget item,
             MutagenFrame frame)
         {
-            item.Link = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Link.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
         }
 
     }
@@ -1060,7 +1068,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<ILocationTargetableGetter> Link => new FormLink<ILocationTargetableGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<ILocationTargetableGetter> Link => new FormLink<ILocationTargetableGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

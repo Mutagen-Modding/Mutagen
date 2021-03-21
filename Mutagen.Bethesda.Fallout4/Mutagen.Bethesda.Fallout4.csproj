@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net5.0;netstandard2.1</TargetFrameworks>
+    <TargetFramework>net5.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <Authors>Noggog</Authors>
@@ -16,6 +16,7 @@
     <IsPackable>true</IsPackable>
     <WarningsAsErrors>nullable</WarningsAsErrors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <LangVersion>preview</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>Mutagen.Bethesda.Fallout4.xml</DocumentationFile>
@@ -25,8 +26,20 @@
   <ItemGroup>
     <Compile Include="Constants.cs" />
     <Compile Include="Enums\GroupTypeEnum.cs" />
+    <Compile Include="IsExternalInit.cs" />
+    <Compile Include="Interfaces\IObjectBounded.cs" />
+    <Compile Include="Interfaces\IPositionRotation.cs" />
+    <Compile Include="Records\Common Subrecords\Decal.cs">
+      <DependentUpon>Decal.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Group.cs">
       <DependentUpon>Group.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ActionRecord.cs">
+      <DependentUpon>ActionRecord.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ADamageType.cs">
+      <DependentUpon>DamageType.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\GameSetting.cs">
       <DependentUpon>GameSetting.xml</DependentUpon>
@@ -48,6 +61,30 @@
     </Compile>
     <Compile Include="Records\Major Records\GameSettingUInt.cs">
       <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Global.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GlobalBool.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GlobalFloat.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GlobalInt.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GlobalShort.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Keyword.cs">
+      <DependentUpon>Keyword.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\TextureSet.cs">
+      <DependentUpon>TextureSet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Transform.cs">
+      <DependentUpon>Transform.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\ProtocolDefinition_Fallout4.cs" />
     <Compile Include="Records\Fallout4MajorRecord.cs">
@@ -102,14 +139,76 @@
     <Compile Include="Records\TransientType_Generated.cs">
       <DependentUpon>Fallout4ModHeader.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\Decal_Generated.cs">
+      <DependentUpon>Decal.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ObjectBounds_Generated.cs">
+      <DependentUpon>ObjectBounds.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ActionRecord_Generated.cs">
+      <DependentUpon>ActionRecord.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AttractionRule_Generated.cs">
+      <DependentUpon>AttractionRule.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Component_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Global_Generated.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GlobalInt_Generated.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GlobalShort_Generated.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GlobalFloat_Generated.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LocationReferenceType_Generated.cs">
+      <DependentUpon>LocationReferenceType.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MiscItem_Generated.cs">
+      <DependentUpon>MiscItem.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SoundDescriptor_Generated.cs">
+      <DependentUpon>SoundDescriptor.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\TextureSet_Generated.cs">
+      <DependentUpon>TextureSet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Transform_Generated.cs">
+      <DependentUpon>Transform.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\IIdleRelation_Generated.cs" />
+    <Compile Include="Interfaces\ILocationRecord_Generated.cs" />
+    <Compile Include="Interfaces\IObjectId_Generated.cs" />
+    <Compile Include="Records\Major Records\GlobalBool_Generated.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ActorValueInformation_Generated.cs">
+      <DependentUpon>ActorValueInformation.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ADamageType_Generated.cs">
+      <DependentUpon>DamageType.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\DamageTypeIndexed_Generated.cs">
+      <DependentUpon>DamageType.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\IDamageTypeTarget_Generated.cs" />
+    <Compile Include="Records\Major Records\DamageType_Generated.cs">
+      <DependentUpon>DamageType.xml</DependentUpon>
+    </Compile>
+    <Compile Include="ImplicitsMixIn_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.1.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Loqui" Version="2.7" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.7" />
+    <PackageReference Include="Loqui" Version="2.10.0" />
+    <PackageReference Include="Noggog.CSharpExt" Version="2.10.0" />
     <PackageReference Include="NuGetizer" Version="0.6.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

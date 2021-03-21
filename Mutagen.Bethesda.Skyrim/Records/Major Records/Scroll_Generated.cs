@@ -94,27 +94,41 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IKeywordGetter>>? _Keywords;
-        public ExtendedList<IFormLink<IKeywordGetter>>? Keywords
+        private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Keywords;
+        public ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IKeywordGetter>>? IScrollGetter.Keywords => _Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IScrollGetter.Keywords => _Keywords;
         #endregion
 
         #region Aspects
-        IReadOnlyList<IFormLink<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
-        IReadOnlyList<IFormLink<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
         #endregion
         #region MenuDisplayObject
-        public FormLinkNullable<IStaticGetter> MenuDisplayObject { get; set; } = new FormLinkNullable<IStaticGetter>();
+        private IFormLinkNullable<IStaticGetter> _MenuDisplayObject = new FormLinkNullable<IStaticGetter>();
+        public IFormLinkNullable<IStaticGetter> MenuDisplayObject
+        {
+            get => _MenuDisplayObject;
+            set => _MenuDisplayObject = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IStaticGetter> IScrollGetter.MenuDisplayObject => this.MenuDisplayObject;
         #endregion
         #region EquipmentType
-        public FormLinkNullable<IEquipTypeGetter> EquipmentType { get; set; } = new FormLinkNullable<IEquipTypeGetter>();
+        private IFormLinkNullable<IEquipTypeGetter> _EquipmentType = new FormLinkNullable<IEquipTypeGetter>();
+        public IFormLinkNullable<IEquipTypeGetter> EquipmentType
+        {
+            get => _EquipmentType;
+            set => _EquipmentType = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IEquipTypeGetter> IScrollGetter.EquipmentType => this.EquipmentType;
         #endregion
         #region Description
         public TranslatedString? Description { get; set; }
@@ -148,10 +162,24 @@ namespace Mutagen.Bethesda.Skyrim
         IDestructibleGetter? IScrollGetter.Destructible => this.Destructible;
         #endregion
         #region PickUpSound
-        public FormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
+        private IFormLinkNullable<ISoundDescriptorGetter> _PickUpSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        public IFormLinkNullable<ISoundDescriptorGetter> PickUpSound
+        {
+            get => _PickUpSound;
+            set => _PickUpSound = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundDescriptorGetter> IScrollGetter.PickUpSound => this.PickUpSound;
         #endregion
         #region PutDownSound
-        public FormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
+        private IFormLinkNullable<ISoundDescriptorGetter> _PutDownSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        public IFormLinkNullable<ISoundDescriptorGetter> PutDownSound
+        {
+            get => _PutDownSound;
+            set => _PutDownSound = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundDescriptorGetter> IScrollGetter.PutDownSound => this.PutDownSound;
         #endregion
         #region Value
         public UInt32 Value { get; set; } = default;
@@ -184,7 +212,14 @@ namespace Mutagen.Bethesda.Skyrim
         public Single Range { get; set; } = default;
         #endregion
         #region HalfCostPerk
-        public FormLink<IPerkGetter> HalfCostPerk { get; set; } = new FormLink<IPerkGetter>();
+        private IFormLink<IPerkGetter> _HalfCostPerk = new FormLink<IPerkGetter>();
+        public IFormLink<IPerkGetter> HalfCostPerk
+        {
+            get => _HalfCostPerk;
+            set => _HalfCostPerk = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IPerkGetter> IScrollGetter.HalfCostPerk => this.HalfCostPerk;
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -217,22 +252,6 @@ namespace Mutagen.Bethesda.Skyrim
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IScrollGetter rhs)) return false;
-            return ((ScrollCommon)((IScrollGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IScrollGetter? obj)
-        {
-            return ((ScrollCommon)((IScrollGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((ScrollCommon)((IScrollGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -1382,6 +1401,26 @@ namespace Mutagen.Bethesda.Skyrim
         public enum SPITDataType
         {
         }
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IScrollGetter rhs) return false;
+            return ((ScrollCommon)((IScrollGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IScrollGetter? obj)
+        {
+            return ((ScrollCommon)((IScrollGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ScrollCommon)((IScrollGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -1458,14 +1497,14 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new ObjectBounds ObjectBounds { get; set; }
         new TranslatedString? Name { get; set; }
-        new ExtendedList<IFormLink<IKeywordGetter>>? Keywords { get; set; }
-        new FormLinkNullable<IStaticGetter> MenuDisplayObject { get; set; }
-        new FormLinkNullable<IEquipTypeGetter> EquipmentType { get; set; }
+        new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
+        new IFormLinkNullable<IStaticGetter> MenuDisplayObject { get; }
+        new IFormLinkNullable<IEquipTypeGetter> EquipmentType { get; }
         new TranslatedString? Description { get; set; }
         new Model? Model { get; set; }
         new Destructible? Destructible { get; set; }
-        new FormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; set; }
-        new FormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; }
+        new IFormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; }
         new UInt32 Value { get; set; }
         new Single Weight { get; set; }
         new UInt32 BaseCost { get; set; }
@@ -1476,7 +1515,7 @@ namespace Mutagen.Bethesda.Skyrim
         new TargetType TargetType { get; set; }
         new Single CastDuration { get; set; }
         new Single Range { get; set; }
-        new FormLink<IPerkGetter> HalfCostPerk { get; set; }
+        new IFormLink<IPerkGetter> HalfCostPerk { get; }
         new ExtendedList<Effect> Effects { get; }
         new Scroll.DATADataType DATADataTypeState { get; set; }
         new Scroll.SPITDataType SPITDataTypeState { get; set; }
@@ -1511,14 +1550,14 @@ namespace Mutagen.Bethesda.Skyrim
         static new ILoquiRegistration Registration => Scroll_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }
         ITranslatedStringGetter? Name { get; }
-        IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; }
-        FormLinkNullable<IStaticGetter> MenuDisplayObject { get; }
-        FormLinkNullable<IEquipTypeGetter> EquipmentType { get; }
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
+        IFormLinkNullableGetter<IStaticGetter> MenuDisplayObject { get; }
+        IFormLinkNullableGetter<IEquipTypeGetter> EquipmentType { get; }
         ITranslatedStringGetter? Description { get; }
         IModelGetter? Model { get; }
         IDestructibleGetter? Destructible { get; }
-        FormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; }
-        FormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; }
+        IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound { get; }
+        IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound { get; }
         UInt32 Value { get; }
         Single Weight { get; }
         UInt32 BaseCost { get; }
@@ -1529,7 +1568,7 @@ namespace Mutagen.Bethesda.Skyrim
         TargetType TargetType { get; }
         Single CastDuration { get; }
         Single Range { get; }
-        FormLink<IPerkGetter> HalfCostPerk { get; }
+        IFormLinkGetter<IPerkGetter> HalfCostPerk { get; }
         IReadOnlyList<IEffectGetter> Effects { get; }
         Scroll.DATADataType DATADataTypeState { get; }
         Scroll.SPITDataType SPITDataTypeState { get; }
@@ -1810,13 +1849,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ObjectBounds.Clear();
             item.Name = default;
             item.Keywords = null;
-            item.MenuDisplayObject = FormLinkNullable<IStaticGetter>.Null;
-            item.EquipmentType = FormLinkNullable<IEquipTypeGetter>.Null;
+            item.MenuDisplayObject.Clear();
+            item.EquipmentType.Clear();
             item.Description = default;
             item.Model = null;
             item.Destructible = null;
-            item.PickUpSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
-            item.PutDownSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
+            item.PickUpSound.Clear();
+            item.PutDownSound.Clear();
             item.Value = default;
             item.Weight = default;
             item.BaseCost = default;
@@ -1827,7 +1866,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.TargetType = default;
             item.CastDuration = default;
             item.Range = default;
-            item.HalfCostPerk = FormLink<IPerkGetter>.Null;
+            item.HalfCostPerk.Clear();
             item.Effects.Clear();
             item.DATADataTypeState = default;
             item.SPITDataTypeState = default;
@@ -1849,13 +1888,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             base.RemapLinks(obj, mapping);
             obj.Keywords?.RemapLinks(mapping);
-            obj.MenuDisplayObject = obj.MenuDisplayObject.Relink(mapping);
-            obj.EquipmentType = obj.EquipmentType.Relink(mapping);
+            obj.MenuDisplayObject.Relink(mapping);
+            obj.EquipmentType.Relink(mapping);
             obj.Model?.RemapLinks(mapping);
             obj.Destructible?.RemapLinks(mapping);
-            obj.PickUpSound = obj.PickUpSound.Relink(mapping);
-            obj.PutDownSound = obj.PutDownSound.Relink(mapping);
-            obj.HalfCostPerk = obj.HalfCostPerk.Relink(mapping);
+            obj.PickUpSound.Relink(mapping);
+            obj.PutDownSound.Relink(mapping);
+            obj.HalfCostPerk.Relink(mapping);
             obj.Effects.RemapLinks(mapping);
         }
         
@@ -2355,7 +2394,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Scroll(formKey, default(SkyrimRelease));
+            var newRec = new Scroll(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -2366,7 +2405,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IScroll)item,
+                item: (IScrollGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -2377,7 +2416,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IScroll)item,
+                item: (IScrollGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -2455,8 +2494,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLink<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
-                            .ToExtendedList<IFormLink<IKeywordGetter>>();
+                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
                     {
@@ -2475,11 +2514,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.MenuDisplayObject) ?? true))
             {
-                item.MenuDisplayObject = new FormLinkNullable<IStaticGetter>(rhs.MenuDisplayObject.FormKeyNullable);
+                item.MenuDisplayObject.SetTo(rhs.MenuDisplayObject.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.EquipmentType) ?? true))
             {
-                item.EquipmentType = new FormLinkNullable<IEquipTypeGetter>(rhs.EquipmentType.FormKeyNullable);
+                item.EquipmentType.SetTo(rhs.EquipmentType.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.Description) ?? true))
             {
@@ -2539,11 +2578,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.PickUpSound) ?? true))
             {
-                item.PickUpSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.PickUpSound.FormKeyNullable);
+                item.PickUpSound.SetTo(rhs.PickUpSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.PutDownSound) ?? true))
             {
-                item.PutDownSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.PutDownSound.FormKeyNullable);
+                item.PutDownSound.SetTo(rhs.PutDownSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.Value) ?? true))
             {
@@ -2587,7 +2626,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.HalfCostPerk) ?? true))
             {
-                item.HalfCostPerk = new FormLink<IPerkGetter>(rhs.HalfCostPerk.FormKey);
+                item.HalfCostPerk.SetTo(rhs.HalfCostPerk.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.Effects) ?? true))
             {
@@ -2798,13 +2837,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.WriteWithCounter(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Keywords,
                 counterType: RecordTypes.KSIZ,
                 counterLength: 4,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
-                transl: (MutagenWriter subWriter, IFormLink<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -3005,29 +3044,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.KSIZ:
                 {
                     item.Keywords = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
                             frame: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<IKeywordGetter>>();
+                        .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     return (int)Scroll_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.MDOB:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MenuDisplayObject = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.MenuDisplayObject.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Scroll_FieldIndex.MenuDisplayObject;
                 }
                 case RecordTypeInts.ETYP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EquipmentType = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.EquipmentType.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Scroll_FieldIndex.EquipmentType;
                 }
                 case RecordTypeInts.DESC:
@@ -3058,17 +3099,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.YNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PickUpSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.PickUpSound.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Scroll_FieldIndex.PickUpSound;
                 }
                 case RecordTypeInts.ZNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PutDownSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.PutDownSound.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Scroll_FieldIndex.PutDownSound;
                 }
                 case RecordTypeInts.DATA:
@@ -3091,9 +3134,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.TargetType = EnumBinaryTranslation<TargetType>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     item.CastDuration = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.Range = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.HalfCostPerk = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
+                    item.HalfCostPerk.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Scroll_FieldIndex.HalfCostPerk;
                 }
                 case RecordTypeInts.EFID:
@@ -3181,16 +3225,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #endregion
         #region Keywords
-        public IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; private set; }
-        IReadOnlyList<IFormLink<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
         #region MenuDisplayObject
         private int? _MenuDisplayObjectLocation;
-        public FormLinkNullable<IStaticGetter> MenuDisplayObject => _MenuDisplayObjectLocation.HasValue ? new FormLinkNullable<IStaticGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MenuDisplayObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticGetter>.Null;
+        public IFormLinkNullableGetter<IStaticGetter> MenuDisplayObject => _MenuDisplayObjectLocation.HasValue ? new FormLinkNullable<IStaticGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MenuDisplayObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticGetter>.Null;
         #endregion
         #region EquipmentType
         private int? _EquipmentTypeLocation;
-        public FormLinkNullable<IEquipTypeGetter> EquipmentType => _EquipmentTypeLocation.HasValue ? new FormLinkNullable<IEquipTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EquipmentTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEquipTypeGetter>.Null;
+        public IFormLinkNullableGetter<IEquipTypeGetter> EquipmentType => _EquipmentTypeLocation.HasValue ? new FormLinkNullable<IEquipTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EquipmentTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEquipTypeGetter>.Null;
         #endregion
         #region Description
         private int? _DescriptionLocation;
@@ -3200,11 +3244,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IDestructibleGetter? Destructible { get; private set; }
         #region PickUpSound
         private int? _PickUpSoundLocation;
-        public FormLinkNullable<ISoundDescriptorGetter> PickUpSound => _PickUpSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PickUpSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound => _PickUpSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PickUpSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region PutDownSound
         private int? _PutDownSoundLocation;
-        public FormLinkNullable<ISoundDescriptorGetter> PutDownSound => _PutDownSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PutDownSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound => _PutDownSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PutDownSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         private int? _DATALocation;
         public Scroll.DATADataType DATADataTypeState { get; private set; }
@@ -3263,7 +3307,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region HalfCostPerk
         private int _HalfCostPerkLocation => _SPITLocation!.Value + 0x20;
         private bool _HalfCostPerk_IsSet => _SPITLocation.HasValue;
-        public FormLink<IPerkGetter> HalfCostPerk => _HalfCostPerk_IsSet ? new FormLink<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_HalfCostPerkLocation, 0x4)))) : FormLink<IPerkGetter>.Null;
+        public IFormLinkGetter<IPerkGetter> HalfCostPerk => _HalfCostPerk_IsSet ? new FormLink<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_HalfCostPerkLocation, 0x4)))) : FormLink<IPerkGetter>.Null;
         #endregion
         public IReadOnlyList<IEffectGetter> Effects { get; private set; } = ListExt.Empty<EffectBinaryOverlay>();
         partial void CustomFactoryEnd(
@@ -3345,7 +3389,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
                 {
-                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLink<IKeywordGetter>>(
+                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLinkGetter<IKeywordGetter>>(
                         stream: stream,
                         package: _package,
                         itemLength: 0x4,
@@ -3445,7 +3489,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IScrollGetter rhs)) return false;
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IScrollGetter rhs) return false;
             return ((ScrollCommon)((IScrollGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 

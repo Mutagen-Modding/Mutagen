@@ -106,15 +106,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Tracks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IMusicTrackGetter>>? _Tracks;
-        public ExtendedList<IFormLink<IMusicTrackGetter>>? Tracks
+        private ExtendedList<IFormLinkGetter<IMusicTrackGetter>>? _Tracks;
+        public ExtendedList<IFormLinkGetter<IMusicTrackGetter>>? Tracks
         {
             get => this._Tracks;
             set => this._Tracks = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IMusicTrackGetter>>? IMusicTrackGetter.Tracks => _Tracks;
+        IReadOnlyList<IFormLinkGetter<IMusicTrackGetter>>? IMusicTrackGetter.Tracks => _Tracks;
         #endregion
 
         #endregion
@@ -129,22 +129,6 @@ namespace Mutagen.Bethesda.Skyrim
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IMusicTrackGetter rhs)) return false;
-            return ((MusicTrackCommon)((IMusicTrackGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IMusicTrackGetter? obj)
-        {
-            return ((MusicTrackCommon)((IMusicTrackGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((MusicTrackCommon)((IMusicTrackGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -925,6 +909,26 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IMusicTrackGetter rhs) return false;
+            return ((MusicTrackCommon)((IMusicTrackGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IMusicTrackGetter? obj)
+        {
+            return ((MusicTrackCommon)((IMusicTrackGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((MusicTrackCommon)((IMusicTrackGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -995,7 +999,7 @@ namespace Mutagen.Bethesda.Skyrim
         new MusicTrackLoopData? LoopData { get; set; }
         new ExtendedList<Single>? CuePoints { get; set; }
         new ExtendedList<Condition>? Conditions { get; set; }
-        new ExtendedList<IFormLink<IMusicTrackGetter>>? Tracks { get; set; }
+        new ExtendedList<IFormLinkGetter<IMusicTrackGetter>>? Tracks { get; set; }
     }
 
     public partial interface IMusicTrackInternal :
@@ -1021,7 +1025,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMusicTrackLoopDataGetter? LoopData { get; }
         IReadOnlyList<Single>? CuePoints { get; }
         IReadOnlyList<IConditionGetter>? Conditions { get; }
-        IReadOnlyList<IFormLink<IMusicTrackGetter>>? Tracks { get; }
+        IReadOnlyList<IFormLinkGetter<IMusicTrackGetter>>? Tracks { get; }
 
     }
 
@@ -1694,7 +1698,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new MusicTrack(formKey, default(SkyrimRelease));
+            var newRec = new MusicTrack(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1705,7 +1709,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IMusicTrack)item,
+                item: (IMusicTrackGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1716,7 +1720,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IMusicTrack)item,
+                item: (IMusicTrackGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1872,8 +1876,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Tracks = 
                             rhs.Tracks
-                            .Select(r => (IFormLink<IMusicTrackGetter>)new FormLink<IMusicTrackGetter>(r.FormKey))
-                            .ToExtendedList<IFormLink<IMusicTrackGetter>>();
+                            .Select(r => (IFormLinkGetter<IMusicTrackGetter>)new FormLink<IMusicTrackGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IMusicTrackGetter>>();
                     }
                     else
                     {
@@ -2098,11 +2102,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MusicTrackBinaryWriteTranslation.WriteBinaryConditions(
                 writer: writer,
                 item: item);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IMusicTrackGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IMusicTrackGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Tracks,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM),
-                transl: (MutagenWriter subWriter, IFormLink<IMusicTrackGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IMusicTrackGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2260,10 +2264,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Tracks = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IMusicTrackGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IMusicTrackGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<IMusicTrackGetter>>();
+                        .CastExtendedList<IFormLinkGetter<IMusicTrackGetter>>();
                     return (int)MusicTrack_FieldIndex.Tracks;
                 }
                 default:
@@ -2358,7 +2362,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             int? lastParsed);
         #endregion
-        public IReadOnlyList<IFormLink<IMusicTrackGetter>>? Tracks { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<IMusicTrackGetter>>? Tracks { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2482,7 +2486,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Tracks = BinaryOverlayList.FactoryByStartIndex<IFormLink<IMusicTrackGetter>>(
+                    this.Tracks = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IMusicTrackGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
@@ -2516,7 +2520,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IMusicTrackGetter rhs)) return false;
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IMusicTrackGetter rhs) return false;
             return ((MusicTrackCommon)((IMusicTrackGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 

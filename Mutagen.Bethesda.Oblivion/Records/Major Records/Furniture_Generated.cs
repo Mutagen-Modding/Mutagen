@@ -73,7 +73,14 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #endregion
         #region Script
-        public FormLinkNullable<IScriptGetter> Script { get; set; } = new FormLinkNullable<IScriptGetter>();
+        private IFormLinkNullable<IScriptGetter> _Script = new FormLinkNullable<IScriptGetter>();
+        public IFormLinkNullable<IScriptGetter> Script
+        {
+            get => _Script;
+            set => _Script = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IScriptGetter> IFurnitureGetter.Script => this.Script;
         #endregion
         #region MarkerFlags
         public Int32? MarkerFlags { get; set; }
@@ -91,22 +98,6 @@ namespace Mutagen.Bethesda.Oblivion
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IFurnitureGetter rhs)) return false;
-            return ((FurnitureCommon)((IFurnitureGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IFurnitureGetter? obj)
-        {
-            return ((FurnitureCommon)((IFurnitureGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((FurnitureCommon)((IFurnitureGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -507,6 +498,26 @@ namespace Mutagen.Bethesda.Oblivion
             this.EditorID = editorID;
         }
 
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IFurnitureGetter rhs) return false;
+            return ((FurnitureCommon)((IFurnitureGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IFurnitureGetter? obj)
+        {
+            return ((FurnitureCommon)((IFurnitureGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((FurnitureCommon)((IFurnitureGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -574,7 +585,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
-        new FormLinkNullable<IScriptGetter> Script { get; set; }
+        new IFormLinkNullable<IScriptGetter> Script { get; }
         new Int32? MarkerFlags { get; set; }
     }
 
@@ -598,7 +609,7 @@ namespace Mutagen.Bethesda.Oblivion
         static new ILoquiRegistration Registration => Furniture_Registration.Instance;
         String? Name { get; }
         IModelGetter? Model { get; }
-        FormLinkNullable<IScriptGetter> Script { get; }
+        IFormLinkNullableGetter<IScriptGetter> Script { get; }
         Int32? MarkerFlags { get; }
 
     }
@@ -855,7 +866,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
             item.Name = default;
             item.Model = null;
-            item.Script = FormLinkNullable<IScriptGetter>.Null;
+            item.Script.Clear();
             item.MarkerFlags = default;
             base.Clear(item);
         }
@@ -874,7 +885,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void RemapLinks(IFurniture obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Script = obj.Script.Relink(mapping);
+            obj.Script.Relink(mapping);
         }
         
         #endregion
@@ -1161,7 +1172,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IFurniture)item,
+                item: (IFurnitureGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1172,7 +1183,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IFurniture)item,
+                item: (IFurnitureGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1247,7 +1258,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.Script) ?? true))
             {
-                item.Script = new FormLinkNullable<IScriptGetter>(rhs.Script.FormKeyNullable);
+                item.Script.SetTo(rhs.Script.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.MarkerFlags) ?? true))
             {
@@ -1539,9 +1550,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.SCRI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Script = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Script.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Furniture_FieldIndex.Script;
                 }
                 case RecordTypeInts.MNAM:
@@ -1616,7 +1628,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IModelGetter? Model { get; private set; }
         #region Script
         private int? _ScriptLocation;
-        public FormLinkNullable<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
+        public IFormLinkNullableGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
         #endregion
         #region MarkerFlags
         private int? _MarkerFlagsLocation;
@@ -1737,7 +1749,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IFurnitureGetter rhs)) return false;
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IFurnitureGetter rhs) return false;
             return ((FurnitureCommon)((IFurnitureGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 

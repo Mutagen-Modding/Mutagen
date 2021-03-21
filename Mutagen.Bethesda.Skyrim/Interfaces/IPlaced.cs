@@ -27,22 +27,18 @@ namespace Mutagen.Bethesda.Skyrim
             /// </summary>
             JustInitiallyDisabled
         }
-        public Placement? Placement { get; set; }
 
-        public EnableParent? EnableParent { get; set; }
+        public new Placement? Placement { get; set; }
+
+        public new EnableParent? EnableParent { get; set; }
 
         public int MajorRecordFlagsRaw { get; set; }
-
-        /// <summary>
-        /// Allows to easily disable placed records. Specify <paramref name="disableType"/> to further designate
-        /// how the record should be disabled.
-        /// </summary>
-        /// <param name="disableType">How the record should be disabled</param>
-        /// <returns>Returns true if the disable operation has succeeded, false otherwise.</returns>
-        public bool Disable(DisableType disableType);
     }
 
     public partial interface IPlacedGetter : IPlacedThingGetter, IPlacedSimpleGetter
     {
+        public IPlacementGetter? Placement { get; }
+
+        public IEnableParentGetter? EnableParent { get; }
     }
 }

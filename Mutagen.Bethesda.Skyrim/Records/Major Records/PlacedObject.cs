@@ -3,6 +3,7 @@ using Noggog;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
@@ -158,6 +159,11 @@ namespace Mutagen.Bethesda.Skyrim
             NoRespawn = 0x4000_0000,
             Multibound = 0x8000_0000,
         }
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPlacementGetter? IPlacedGetter.Placement => this.Placement;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnableParentGetter? IPlacedGetter.EnableParent => this.EnableParent;
     }
 
     namespace Internals
@@ -180,10 +186,10 @@ namespace Mutagen.Bethesda.Skyrim
                     switch (subHeader.RecordTypeInt)
                     {
                         case RecordTypeInts.LNAM:
-                            item.LightingTemplate = FormKeyBinaryTranslation.Instance.Parse(frame);
+                            item.LightingTemplate.SetTo(FormKeyBinaryTranslation.Instance.Parse(frame));
                             break;
                         case RecordTypeInts.INAM:
-                            item.ImageSpace = FormKeyBinaryTranslation.Instance.Parse(frame);
+                            item.ImageSpace.SetTo(FormKeyBinaryTranslation.Instance.Parse(frame));
                             break;
                         case RecordTypeInts.XLRM:
                             item.LinkedRooms.Add(new FormLink<PlacedObject>(FormKeyBinaryTranslation.Instance.Parse(frame)));
@@ -247,13 +253,13 @@ namespace Mutagen.Bethesda.Skyrim
 
             public short Unknown => _boundDataLoc.HasValue ? BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(_boundDataLoc.Value + 8)) : default(short);
 
-            public IReadOnlyList<IFormLink<IPlacedObjectGetter>> LinkedRooms { get; private set; } = ListExt.Empty<IFormLink<IPlacedObjectGetter>>();
+            public IReadOnlyList<IFormLinkGetter<IPlacedObjectGetter>> LinkedRooms { get; private set; } = ListExt.Empty<IFormLinkGetter<IPlacedObjectGetter>>();
 
             int? _lightingTemplateLoc;
-            public FormLinkNullable<ILightGetter> LightingTemplate => _lightingTemplateLoc.HasValue ? new FormLinkNullable<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _lightingTemplateLoc.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILightGetter>.Null;
+            public IFormLinkNullableGetter<ILightGetter> LightingTemplate => _lightingTemplateLoc.HasValue ? new FormLinkNullable<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _lightingTemplateLoc.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILightGetter>.Null;
 
             int? _imageSpaceLoc;
-            public FormLinkNullable<IImageSpaceAdapterGetter> ImageSpace => _imageSpaceLoc.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _imageSpaceLoc.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
+            public IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpace => _imageSpaceLoc.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _imageSpaceLoc.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
 
             partial void BoundDataCustomParse(OverlayStream stream, int offset)
             {
@@ -278,7 +284,7 @@ namespace Mutagen.Bethesda.Skyrim
                             stream.Position += subHeader.TotalLength;
                             break;
                         case RecordTypeInts.XLRM:
-                            LinkedRooms = BinaryOverlayList.FactoryByArray<IFormLink<IPlacedObjectGetter>>(
+                            LinkedRooms = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IPlacedObjectGetter>>(
                                 stream.RemainingMemory,
                                 _package,
                                 (s, p) => new FormLink<IPlacedObjectGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),

@@ -40,7 +40,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region NavMesh
-        public FormLink<IANavigationMeshGetter> NavMesh { get; set; } = new FormLink<IANavigationMeshGetter>();
+        private IFormLink<IANavigationMeshGetter> _NavMesh = new FormLink<IANavigationMeshGetter>();
+        public IFormLink<IANavigationMeshGetter> NavMesh
+        {
+            get => _NavMesh;
+            set => _NavMesh = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IANavigationMeshGetter> INavigationDoorLinkGetter.NavMesh => this.NavMesh;
         #endregion
         #region NavMeshTriangleIndex
         public Int16 NavMeshTriangleIndex { get; set; } = default;
@@ -480,7 +487,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<INavigationDoorLink>,
         INavigationDoorLinkGetter
     {
-        new FormLink<IANavigationMeshGetter> NavMesh { get; set; }
+        new IFormLink<IANavigationMeshGetter> NavMesh { get; }
         new Int16 NavMeshTriangleIndex { get; set; }
         new Int16 Unused { get; set; }
     }
@@ -498,7 +505,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => NavigationDoorLink_Registration.Instance;
-        FormLink<IANavigationMeshGetter> NavMesh { get; }
+        IFormLinkGetter<IANavigationMeshGetter> NavMesh { get; }
         Int16 NavMeshTriangleIndex { get; }
         Int16 Unused { get; }
 
@@ -759,7 +766,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(INavigationDoorLink item)
         {
             ClearPartial();
-            item.NavMesh = FormLink<IANavigationMeshGetter>.Null;
+            item.NavMesh.Clear();
             item.NavMeshTriangleIndex = default;
             item.Unused = default;
         }
@@ -767,7 +774,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public void RemapLinks(INavigationDoorLink obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.NavMesh = obj.NavMesh.Relink(mapping);
+            obj.NavMesh.Relink(mapping);
         }
         
         #endregion
@@ -933,7 +940,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)NavigationDoorLink_FieldIndex.NavMesh) ?? true))
             {
-                item.NavMesh = new FormLink<IANavigationMeshGetter>(rhs.NavMesh.FormKey);
+                item.NavMesh.SetTo(rhs.NavMesh.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)NavigationDoorLink_FieldIndex.NavMeshTriangleIndex) ?? true))
             {
@@ -1083,9 +1090,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             INavigationDoorLink item,
             MutagenFrame frame)
         {
-            item.NavMesh = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.NavMesh.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             item.NavMeshTriangleIndex = frame.ReadInt16();
             item.Unused = frame.ReadInt16();
         }
@@ -1154,7 +1162,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<IANavigationMeshGetter> NavMesh => new FormLink<IANavigationMeshGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IANavigationMeshGetter> NavMesh => new FormLink<IANavigationMeshGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public Int16 NavMeshTriangleIndex => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x4, 0x2));
         public Int16 Unused => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x6, 0x2));
         partial void CustomFactoryEnd(

@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda.UnitTests
             var modToExtract = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimSE);
             var npc = modToExtract.Npcs.AddNew();
             var race = modToExtract.Races.AddNew();
-            race.CloseLootSound = modToExtract.SoundDescriptors.AddNew();
+            race.CloseLootSound.SetTo(modToExtract.SoundDescriptors.AddNew());
             var unneededRace = modToExtract.Races.AddNew();
 
             var targetMod = new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimSE);
@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.UnitTests
             var modToExtract = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimSE);
             var npc = modToExtract.Npcs.AddNew();
             var race = modToExtract.Races.AddNew();
-            race.CloseLootSound = modToExtract.SoundDescriptors.AddNew();
+            race.CloseLootSound.SetTo(modToExtract.SoundDescriptors.AddNew());
             var unneededRace = modToExtract.Races.AddNew();
 
             var targetMod = new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimSE);
@@ -97,7 +97,7 @@ namespace Mutagen.Bethesda.UnitTests
             var modToExtract = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimSE);
             var npc = modToExtract.Npcs.AddNew();
             var race = modToExtract.Races.AddNew();
-            race.CloseLootSound = modToExtract.SoundDescriptors.AddNew();
+            race.CloseLootSound.SetTo(modToExtract.SoundDescriptors.AddNew());
             var unneededRace = modToExtract.Races.AddNew();
 
             var targetMod = new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimSE);
@@ -125,7 +125,7 @@ namespace Mutagen.Bethesda.UnitTests
             var modToExtract = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimSE);
             var npc = modToExtract.Npcs.AddNew();
             var race = modToExtract.Races.AddNew();
-            race.CloseLootSound = modToExtract.SoundDescriptors.AddNew();
+            race.CloseLootSound.SetTo(modToExtract.SoundDescriptors.AddNew());
             var unneededRace = modToExtract.Races.AddNew();
 
             var targetMod = new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimSE);

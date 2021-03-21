@@ -158,7 +158,8 @@ namespace Mutagen.Bethesda
             {
                 listings = PluginListings.ListingsFromPath(pluginsFilePath, game, dataPath, throwOnMissingMods);
             }
-            var implicitListings = ImplicitListings.GetListings(game, dataPath)
+            var implicitListings = Implicits.Get(game).Listings
+                .Where(x => File.Exists(Path.Combine(dataPath.Path, x.FileName)))
                 .Select(x => new LoadOrderListing(x, enabled: true));
             var ccListings = Enumerable.Empty<LoadOrderListing>();
             if (creationClubFilePath != null && creationClubFilePath.Value.Exists)
@@ -255,7 +256,7 @@ namespace Mutagen.Bethesda
             FilePath? cccLoadOrderFilePath = null,
             bool throwOnMissingMods = true)
         {
-            var listings = ImplicitListings.GetListings(game)
+            var listings = Implicits.Get(game).Listings
                 .Select(x => new LoadOrderListing(x, enabled: true))
                 .ToArray();
             var listingsChanged = PluginListings.GetLoadOrderChanged(loadOrderFilePath);
@@ -437,7 +438,7 @@ namespace Mutagen.Bethesda
             var loadOrderList = loadOrder.ToList();
             if (removeImplicitMods)
             {
-                foreach (var implicitMod in ImplicitListings.GetListings(release))
+                foreach (var implicitMod in Implicits.Get(release).Listings)
                 {
                     if (loadOrderList.Count > 0
                         && loadOrderList[0].ModKey == implicitMod

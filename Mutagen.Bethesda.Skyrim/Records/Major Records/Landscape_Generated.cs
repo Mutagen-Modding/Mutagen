@@ -102,15 +102,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Textures
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<ILandscapeTextureGetter>>? _Textures;
-        public ExtendedList<IFormLink<ILandscapeTextureGetter>>? Textures
+        private ExtendedList<IFormLinkGetter<ILandscapeTextureGetter>>? _Textures;
+        public ExtendedList<IFormLinkGetter<ILandscapeTextureGetter>>? Textures
         {
             get => this._Textures;
             set => this._Textures = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<ILandscapeTextureGetter>>? ILandscapeGetter.Textures => _Textures;
+        IReadOnlyList<IFormLinkGetter<ILandscapeTextureGetter>>? ILandscapeGetter.Textures => _Textures;
         #endregion
 
         #endregion
@@ -125,22 +125,6 @@ namespace Mutagen.Bethesda.Skyrim
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is ILandscapeGetter rhs)) return false;
-            return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(ILandscapeGetter? obj)
-        {
-            return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -757,6 +741,26 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not ILandscapeGetter rhs) return false;
+            return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ILandscapeGetter? obj)
+        {
+            return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -824,7 +828,7 @@ namespace Mutagen.Bethesda.Skyrim
         new MemorySlice<Byte>? VertexHeightMap { get; set; }
         new MemorySlice<Byte>? VertexColors { get; set; }
         new ExtendedList<BaseLayer> Layers { get; }
-        new ExtendedList<IFormLink<ILandscapeTextureGetter>>? Textures { get; set; }
+        new ExtendedList<IFormLinkGetter<ILandscapeTextureGetter>>? Textures { get; set; }
     }
 
     public partial interface ILandscapeInternal :
@@ -847,7 +851,7 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? VertexHeightMap { get; }
         ReadOnlyMemorySlice<Byte>? VertexColors { get; }
         IReadOnlyList<IBaseLayerGetter> Layers { get; }
-        IReadOnlyList<IFormLink<ILandscapeTextureGetter>>? Textures { get; }
+        IReadOnlyList<IFormLinkGetter<ILandscapeTextureGetter>>? Textures { get; }
 
     }
 
@@ -1462,7 +1466,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Landscape(formKey, default(SkyrimRelease));
+            var newRec = new Landscape(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1473,7 +1477,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ILandscape)item,
+                item: (ILandscapeGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1484,7 +1488,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ILandscape)item,
+                item: (ILandscapeGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1604,8 +1608,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Textures = 
                             rhs.Textures
-                            .Select(r => (IFormLink<ILandscapeTextureGetter>)new FormLink<ILandscapeTextureGetter>(r.FormKey))
-                            .ToExtendedList<IFormLink<ILandscapeTextureGetter>>();
+                            .Select(r => (IFormLinkGetter<ILandscapeTextureGetter>)new FormLink<ILandscapeTextureGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<ILandscapeTextureGetter>>();
                     }
                     else
                     {
@@ -1806,11 +1810,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ILandscapeTextureGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ILandscapeTextureGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Textures,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.VTEX),
-                transl: (MutagenWriter subWriter, IFormLink<ILandscapeTextureGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ILandscapeTextureGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -1965,10 +1969,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Textures = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ILandscapeTextureGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ILandscapeTextureGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<ILandscapeTextureGetter>>();
+                        .CastExtendedList<IFormLinkGetter<ILandscapeTextureGetter>>();
                     return (int)Landscape_FieldIndex.Textures;
                 }
                 default:
@@ -2043,7 +2047,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public ReadOnlyMemorySlice<Byte>? VertexColors => _VertexColorsLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _VertexColorsLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         public IReadOnlyList<IBaseLayerGetter> Layers { get; private set; } = ListExt.Empty<BaseLayerBinaryOverlay>();
-        public IReadOnlyList<IFormLink<ILandscapeTextureGetter>>? Textures { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<ILandscapeTextureGetter>>? Textures { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2155,7 +2159,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Textures = BinaryOverlayList.FactoryByStartIndex<IFormLink<ILandscapeTextureGetter>>(
+                    this.Textures = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ILandscapeTextureGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
@@ -2189,7 +2193,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILandscapeGetter rhs)) return false;
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not ILandscapeGetter rhs) return false;
             return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 

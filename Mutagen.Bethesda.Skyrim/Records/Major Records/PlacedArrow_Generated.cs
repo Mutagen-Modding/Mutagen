@@ -43,7 +43,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Projectile
-        public FormLink<IProjectileGetter> Projectile { get; set; } = new FormLink<IProjectileGetter>();
+        private IFormLink<IProjectileGetter> _Projectile = new FormLink<IProjectileGetter>();
+        public IFormLink<IProjectileGetter> Projectile
+        {
+            get => _Projectile;
+            set => _Projectile = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IProjectileGetter> IPlacedArrowGetter.Projectile => this.Projectile;
         #endregion
 
         #region To String
@@ -56,22 +63,6 @@ namespace Mutagen.Bethesda.Skyrim
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IPlacedArrowGetter rhs)) return false;
-            return ((PlacedArrowCommon)((IPlacedArrowGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IPlacedArrowGetter? obj)
-        {
-            return ((PlacedArrowCommon)((IPlacedArrowGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((PlacedArrowCommon)((IPlacedArrowGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -389,7 +380,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = PlacedArrow_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = PlacedArrow_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => PlacedArrowCommon.Instance.GetContainedFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedArrowSetterCommon.Instance.RemapLinks(this, mapping);
         public PlacedArrow(
@@ -433,6 +424,26 @@ namespace Mutagen.Bethesda.Skyrim
         {
             this.EditorID = editorID;
         }
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IPlacedArrowGetter rhs) return false;
+            return ((PlacedArrowCommon)((IPlacedArrowGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPlacedArrowGetter? obj)
+        {
+            return ((PlacedArrowCommon)((IPlacedArrowGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PlacedArrowCommon)((IPlacedArrowGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
 
         #endregion
 
@@ -496,7 +507,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPlacedArrowInternal>,
         IPlacedArrowGetter
     {
-        new FormLink<IProjectileGetter> Projectile { get; set; }
+        new IFormLink<IProjectileGetter> Projectile { get; }
     }
 
     public partial interface IPlacedArrowInternal :
@@ -514,7 +525,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IPlacedArrowGetter>
     {
         static new ILoquiRegistration Registration => PlacedArrow_Registration.Instance;
-        FormLink<IProjectileGetter> Projectile { get; }
+        IFormLinkGetter<IProjectileGetter> Projectile { get; }
 
     }
 
@@ -783,16 +794,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IPlacedArrowInternal item)
         {
             ClearPartial();
-            item.Projectile = FormLink<IProjectileGetter>.Null;
+            item.Projectile.Clear();
             base.Clear(item);
         }
         
         public override void Clear(IAPlacedTrapInternal item)
-        {
-            Clear(item: (IPlacedArrowInternal)item);
-        }
-        
-        public override void Clear(IAPlacedInternal item)
         {
             Clear(item: (IPlacedArrowInternal)item);
         }
@@ -811,7 +817,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IPlacedArrow obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Projectile = obj.Projectile.Relink(mapping);
+            obj.Projectile.Relink(mapping);
         }
         
         #endregion
@@ -832,17 +838,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override void CopyInFromBinary(
             IAPlacedTrapInternal item,
-            MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            CopyInFromBinary(
-                item: (PlacedArrow)item,
-                frame: frame,
-                recordTypeConverter: recordTypeConverter);
-        }
-        
-        public override void CopyInFromBinary(
-            IAPlacedInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1015,27 +1010,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public static new PlacedArrow_FieldIndex ConvertFieldIndex(APlaced_FieldIndex index)
-        {
-            switch (index)
-            {
-                case APlaced_FieldIndex.MajorRecordFlagsRaw:
-                    return (PlacedArrow_FieldIndex)((int)index);
-                case APlaced_FieldIndex.FormKey:
-                    return (PlacedArrow_FieldIndex)((int)index);
-                case APlaced_FieldIndex.VersionControl:
-                    return (PlacedArrow_FieldIndex)((int)index);
-                case APlaced_FieldIndex.EditorID:
-                    return (PlacedArrow_FieldIndex)((int)index);
-                case APlaced_FieldIndex.FormVersion:
-                    return (PlacedArrow_FieldIndex)((int)index);
-                case APlaced_FieldIndex.Version2:
-                    return (PlacedArrow_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-        
         public static new PlacedArrow_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -1096,15 +1070,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public override bool Equals(
-            IAPlacedGetter? lhs,
-            IAPlacedGetter? rhs)
-        {
-            return Equals(
-                lhs: (IPlacedArrowGetter?)lhs,
-                rhs: rhs as IPlacedArrowGetter);
-        }
-        
-        public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
             ISkyrimMajorRecordGetter? rhs)
         {
@@ -1131,11 +1096,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public override int GetHashCode(IAPlacedTrapGetter item)
-        {
-            return GetHashCode(item: (IPlacedArrowGetter)item);
-        }
-        
-        public override int GetHashCode(IAPlacedGetter item)
         {
             return GetHashCode(item: (IPlacedArrowGetter)item);
         }
@@ -1175,7 +1135,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new PlacedArrow(formKey, default(SkyrimRelease));
+            var newRec = new PlacedArrow(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1186,18 +1146,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IPlacedArrow)item,
-                formKey: formKey,
-                copyMask: copyMask);
-        }
-        
-        public override APlaced Duplicate(
-            IAPlacedGetter item,
-            FormKey formKey,
-            TranslationCrystal? copyMask)
-        {
-            return this.Duplicate(
-                item: (IPlacedArrow)item,
+                item: (IPlacedArrowGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1208,7 +1157,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IPlacedArrow)item,
+                item: (IPlacedArrowGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1219,7 +1168,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IPlacedArrow)item,
+                item: (IPlacedArrowGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1264,7 +1213,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PlacedArrow_FieldIndex.Projectile) ?? true))
             {
-                item.Projectile = new FormLink<IProjectileGetter>(rhs.Projectile.FormKey);
+                item.Projectile.SetTo(rhs.Projectile.FormKey);
             }
         }
         
@@ -1286,36 +1235,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void DeepCopyIn(
             IAPlacedTrap item,
             IAPlacedTrapGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (IPlacedArrow)item,
-                rhs: (IPlacedArrowGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
-            IAPlacedInternal item,
-            IAPlacedGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (IPlacedArrowInternal)item,
-                rhs: (IPlacedArrowGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
-            IAPlaced item,
-            IAPlacedGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1534,17 +1453,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public override void Write(
             MutagenWriter writer,
-            IAPlacedGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            Write(
-                item: (IPlacedArrowGetter)item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
-        }
-
-        public override void Write(
-            MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1696,7 +1604,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPlacedArrowGetter rhs)) return false;
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IPlacedArrowGetter rhs) return false;
             return ((PlacedArrowCommon)((IPlacedArrowGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 

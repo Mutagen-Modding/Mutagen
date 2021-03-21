@@ -8526,17 +8526,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         type: type,
                         keys: keys);
                     break;
-                case "APlaced":
-                case "IAPlacedGetter":
-                case "IAPlaced":
-                case "IAPlacedInternal":
-                    obj.Cells.Remove(
-                        type: type,
-                        keys: keys);
-                    obj.Worldspaces.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
                 case "APlacedTrap":
                 case "IAPlacedTrapGetter":
                 case "IAPlacedTrap":
@@ -8705,9 +8694,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     Remove(obj, keys, typeof(ILeveledNpcGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(INpcGetter), throwIfUnknown: throwIfUnknown);
                     break;
-                case "ISpellSpawn":
-                case "ISpellSpawnGetter":
+                case "ISpellRecord":
+                case "ISpellRecordGetter":
                     Remove(obj, keys, typeof(ILeveledSpellGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IShoutGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ISpellGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "IEmittance":
@@ -12809,19 +12799,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return item;
                     }
                     yield break;
-                case "APlaced":
-                case "IAPlacedGetter":
-                case "IAPlaced":
-                case "IAPlacedInternal":
-                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
                 case "APlacedTrap":
                 case "IAPlacedTrapGetter":
                 case "IAPlacedTrap":
@@ -13669,10 +13646,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     yield break;
                 }
-                case "ISpellSpawn":
+                case "ISpellRecord":
                 {
                     if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
                     foreach (var item in EnumerateMajorRecords(obj, typeof(ILeveledSpellGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IShoutGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13682,9 +13663,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     yield break;
                 }
-                case "ISpellSpawnGetter":
+                case "ISpellRecordGetter":
                 {
                     foreach (var item in EnumerateMajorRecords(obj, typeof(ILeveledSpellGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IShoutGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -16466,35 +16451,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         }
                     }
                     yield break;
-                case "APlaced":
-                case "IAPlacedGetter":
-                case "IAPlaced":
-                case "IAPlacedInternal":
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
-                        linkCache: linkCache,
-                        type: type,
-                        throwIfUnknown: throwIfUnknown,
-                        modKey: obj.ModKey,
-                        parent: null))
-                    {
-                        yield return item;
-                    }
-                    foreach (var groupItem in obj.Worldspaces)
-                    {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
-                            groupItem,
-                            linkCache: linkCache,
-                            type: type,
-                            throwIfUnknown: throwIfUnknown,
-                            modKey: obj.ModKey,
-                            parent: null,
-                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
-                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
                 case "APlacedTrap":
                 case "IAPlacedTrapGetter":
                 case "IAPlacedTrap":
@@ -17326,13 +17282,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     yield break;
                 }
-                case "ISpellSpawn":
-                case "ISpellSpawnGetter":
+                case "ISpellRecord":
+                case "ISpellRecordGetter":
                 {
                     foreach (var item in EnumerateMajorRecordContexts(
                         obj,
                         linkCache: linkCache,
                         type: typeof(ILeveledSpellGetter),
+                        throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IShoutGetter),
                         throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
@@ -23166,7 +23130,8 @@ namespace Mutagen.Bethesda.Skyrim
             var stringsWriter = param.StringsWriter ?? (EnumExt.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter(item.SkyrimRelease.ToGameRelease(), modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings")) : null);
             var bundle = new WritingBundle(item.SkyrimRelease.ToGameRelease())
             {
-                StringsWriter = stringsWriter
+                StringsWriter = stringsWriter,
+                CleanNulls = param.CleanNulls
             };
             using var memStream = new MemoryTributary();
             using (var writer = new MutagenWriter(

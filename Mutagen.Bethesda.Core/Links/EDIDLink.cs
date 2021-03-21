@@ -13,13 +13,13 @@ namespace Mutagen.Bethesda
     /// This class stores the target EDID as RecordType, as that is a convenient 4 character struct
     /// </summary>
     /// <typeparam name="TMajor">The type of Major Record the Link is allowed to connect with</typeparam>
-    public struct EDIDLink<TMajor> : IEDIDLink<TMajor>, IEquatable<IEDIDLink<TMajor>>
+    public class EDIDLink<TMajor> : IEDIDLink<TMajor>, IEquatable<IEDIDLink<TMajor>>
        where TMajor : class, IMajorRecordCommonGetter
     {
         /// <summary>
         /// A readonly singleton representing an unlinked EDIDLink
         /// </summary>
-        public static readonly IEDIDLink<TMajor> Empty = new EDIDLink<TMajor>();
+        public static readonly IEDIDLinkGetter<TMajor> Empty = new EDIDLink<TMajor>();
         
         /// <summary>
         /// A readonly singleton representing a "null" record type
@@ -29,9 +29,14 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// Record type representing the target EditorID to link against
         /// </summary>
-        public RecordType EDID { get; }
+        public RecordType EDID { get; set; }
         
-        Type ILink.TargetType => typeof(TMajor);
+        Type ILink.Type => typeof(TMajor);
+
+        public EDIDLink()
+        {
+            this.EDID = Null;
+        }
 
         /// <summary>
         /// Default constructor that creates an EDIDLink linked to the target EditorID
@@ -149,19 +154,34 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="cache">Link Cache to resolve against</param>
         /// <returns>TryGet object with located record if successful</returns>
-        public ITryGetter<TMajor> TryResolve(ILinkCache cache) 
+        public TMajor? TryResolve(ILinkCache cache) 
         {
             if (TryResolve(cache, out TMajor rec))
             {
-                return TryGet<TMajor>.Succeed(rec);
+                return rec;
             }
-            return TryGet<TMajor>.Failure;
+            return null;
         }
 
         bool ILink.TryGetModKey([MaybeNullWhen(false)] out ModKey modKey)
         {
             modKey = default!;
             return false;
+        }
+
+        public void SetTo(RecordType type)
+        {
+            this.EDID = type;
+        }
+
+        public void SetTo(IEDIDLinkGetter<TMajor> link)
+        {
+            this.EDID = link.EDID;
+        }
+
+        public void Clear()
+        {
+            this.EDID = Null;
         }
 
         public static implicit operator EDIDLink<TMajor>(RecordType recordType)

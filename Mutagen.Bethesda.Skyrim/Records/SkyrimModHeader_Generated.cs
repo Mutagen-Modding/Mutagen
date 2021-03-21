@@ -109,15 +109,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region OverriddenForms
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<ISkyrimMajorRecordGetter>>? _OverriddenForms;
-        public ExtendedList<IFormLink<ISkyrimMajorRecordGetter>>? OverriddenForms
+        private ExtendedList<IFormLinkGetter<ISkyrimMajorRecordGetter>>? _OverriddenForms;
+        public ExtendedList<IFormLinkGetter<ISkyrimMajorRecordGetter>>? OverriddenForms
         {
             get => this._OverriddenForms;
             set => this._OverriddenForms = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<ISkyrimMajorRecordGetter>>? ISkyrimModHeaderGetter.OverriddenForms => _OverriddenForms;
+        IReadOnlyList<IFormLinkGetter<ISkyrimMajorRecordGetter>>? ISkyrimModHeaderGetter.OverriddenForms => _OverriddenForms;
         #endregion
 
         #endregion
@@ -1037,7 +1037,7 @@ namespace Mutagen.Bethesda.Skyrim
         new String? Author { get; set; }
         new String? Description { get; set; }
         new ExtendedList<MasterReference> MasterReferences { get; }
-        new ExtendedList<IFormLink<ISkyrimMajorRecordGetter>>? OverriddenForms { get; set; }
+        new ExtendedList<IFormLinkGetter<ISkyrimMajorRecordGetter>>? OverriddenForms { get; set; }
         new Int32? INTV { get; set; }
         new Int32? INCC { get; set; }
     }
@@ -1066,7 +1066,7 @@ namespace Mutagen.Bethesda.Skyrim
         String? Author { get; }
         String? Description { get; }
         IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; }
-        IReadOnlyList<IFormLink<ISkyrimMajorRecordGetter>>? OverriddenForms { get; }
+        IReadOnlyList<IFormLinkGetter<ISkyrimMajorRecordGetter>>? OverriddenForms { get; }
         Int32? INTV { get; }
         Int32? INCC { get; }
 
@@ -1769,8 +1769,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.OverriddenForms = 
                             rhs.OverriddenForms
-                            .Select(r => (IFormLink<ISkyrimMajorRecordGetter>)new FormLink<ISkyrimMajorRecordGetter>(r.FormKey))
-                            .ToExtendedList<IFormLink<ISkyrimMajorRecordGetter>>();
+                            .Select(r => (IFormLinkGetter<ISkyrimMajorRecordGetter>)new FormLink<ISkyrimMajorRecordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<ISkyrimMajorRecordGetter>>();
                     }
                     else
                     {
@@ -1945,12 +1945,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             SkyrimModHeaderBinaryWriteTranslation.WriteBinaryMasterReferences(
                 writer: writer,
                 item: item);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ISkyrimMajorRecordGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ISkyrimMajorRecordGetter>>.Instance.Write(
                 writer: writer,
                 items: item.OverriddenForms,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.ONAM),
                 overflowRecord: RecordTypes.XXXX,
-                transl: (MutagenWriter subWriter, IFormLink<ISkyrimMajorRecordGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ISkyrimMajorRecordGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2075,10 +2075,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.OverriddenForms = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ISkyrimMajorRecordGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ISkyrimMajorRecordGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<ISkyrimMajorRecordGetter>>();
+                        .CastExtendedList<IFormLinkGetter<ISkyrimMajorRecordGetter>>();
                     return (int)SkyrimModHeader_FieldIndex.OverriddenForms;
                 }
                 case RecordTypeInts.INTV:
@@ -2194,7 +2194,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants)) : default(string?);
         #endregion
         public IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; private set; } = ListExt.Empty<MasterReferenceBinaryOverlay>();
-        public IReadOnlyList<IFormLink<ISkyrimMajorRecordGetter>>? OverriddenForms { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<ISkyrimMajorRecordGetter>>? OverriddenForms { get; private set; }
         #region INTV
         private int? _INTVLocation;
         public Int32? INTV => _INTVLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _INTVLocation.Value, _package.MetaData.Constants)) : default(Int32?);
@@ -2314,7 +2314,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         subLen = subMeta.ContentLength;
                     }
-                    this.OverriddenForms = BinaryOverlayList.FactoryByStartIndex<IFormLink<ISkyrimMajorRecordGetter>>(
+                    this.OverriddenForms = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ISkyrimMajorRecordGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,

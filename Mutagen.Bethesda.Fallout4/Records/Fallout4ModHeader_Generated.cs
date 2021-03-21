@@ -109,15 +109,15 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region OverriddenForms
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IFallout4MajorRecordGetter>>? _OverriddenForms;
-        public ExtendedList<IFormLink<IFallout4MajorRecordGetter>>? OverriddenForms
+        private ExtendedList<IFormLinkGetter<IFallout4MajorRecordGetter>>? _OverriddenForms;
+        public ExtendedList<IFormLinkGetter<IFallout4MajorRecordGetter>>? OverriddenForms
         {
             get => this._OverriddenForms;
             set => this._OverriddenForms = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IFallout4MajorRecordGetter>>? IFallout4ModHeaderGetter.OverriddenForms => _OverriddenForms;
+        IReadOnlyList<IFormLinkGetter<IFallout4MajorRecordGetter>>? IFallout4ModHeaderGetter.OverriddenForms => _OverriddenForms;
         #endregion
 
         #endregion
@@ -1199,7 +1199,7 @@ namespace Mutagen.Bethesda.Fallout4
         new String? Author { get; set; }
         new String? Description { get; set; }
         new ExtendedList<MasterReference> MasterReferences { get; }
-        new ExtendedList<IFormLink<IFallout4MajorRecordGetter>>? OverriddenForms { get; set; }
+        new ExtendedList<IFormLinkGetter<IFallout4MajorRecordGetter>>? OverriddenForms { get; set; }
         new MemorySlice<Byte>? Screenshot { get; set; }
         new ExtendedList<TransientType> TransientTypes { get; }
         new MemorySlice<Byte>? INTV { get; set; }
@@ -1230,7 +1230,7 @@ namespace Mutagen.Bethesda.Fallout4
         String? Author { get; }
         String? Description { get; }
         IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; }
-        IReadOnlyList<IFormLink<IFallout4MajorRecordGetter>>? OverriddenForms { get; }
+        IReadOnlyList<IFormLinkGetter<IFallout4MajorRecordGetter>>? OverriddenForms { get; }
         ReadOnlyMemorySlice<Byte>? Screenshot { get; }
         IReadOnlyList<ITransientTypeGetter> TransientTypes { get; }
         ReadOnlyMemorySlice<Byte>? INTV { get; }
@@ -1979,8 +1979,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     {
                         item.OverriddenForms = 
                             rhs.OverriddenForms
-                            .Select(r => (IFormLink<IFallout4MajorRecordGetter>)new FormLink<IFallout4MajorRecordGetter>(r.FormKey))
-                            .ToExtendedList<IFormLink<IFallout4MajorRecordGetter>>();
+                            .Select(r => (IFormLinkGetter<IFallout4MajorRecordGetter>)new FormLink<IFallout4MajorRecordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IFallout4MajorRecordGetter>>();
                     }
                     else
                     {
@@ -2197,12 +2197,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             Fallout4ModHeaderBinaryWriteTranslation.WriteBinaryMasterReferences(
                 writer: writer,
                 item: item);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IFallout4MajorRecordGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IFallout4MajorRecordGetter>>.Instance.Write(
                 writer: writer,
                 items: item.OverriddenForms,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.ONAM),
                 overflowRecord: RecordTypes.XXXX,
-                transl: (MutagenWriter subWriter, IFormLink<IFallout4MajorRecordGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IFallout4MajorRecordGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2342,10 +2342,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     }
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.OverriddenForms = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IFallout4MajorRecordGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IFallout4MajorRecordGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<IFallout4MajorRecordGetter>>();
+                        .CastExtendedList<IFormLinkGetter<IFallout4MajorRecordGetter>>();
                     return (int)Fallout4ModHeader_FieldIndex.OverriddenForms;
                 }
                 case RecordTypeInts.SCRN:
@@ -2477,7 +2477,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants)) : default(string?);
         #endregion
         public IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; private set; } = ListExt.Empty<MasterReferenceBinaryOverlay>();
-        public IReadOnlyList<IFormLink<IFallout4MajorRecordGetter>>? OverriddenForms { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<IFallout4MajorRecordGetter>>? OverriddenForms { get; private set; }
         #region Screenshot
         private int? _ScreenshotLocation;
         public ReadOnlyMemorySlice<Byte>? Screenshot => _ScreenshotLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ScreenshotLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
@@ -2602,7 +2602,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     {
                         subLen = subMeta.ContentLength;
                     }
-                    this.OverriddenForms = BinaryOverlayList.FactoryByStartIndex<IFormLink<IFallout4MajorRecordGetter>>(
+                    this.OverriddenForms = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IFallout4MajorRecordGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,

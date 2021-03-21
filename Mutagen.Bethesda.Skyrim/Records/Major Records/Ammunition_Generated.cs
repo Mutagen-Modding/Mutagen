@@ -134,10 +134,24 @@ namespace Mutagen.Bethesda.Skyrim
         IDestructibleGetter? IAmmunitionGetter.Destructible => this.Destructible;
         #endregion
         #region PickUpSound
-        public FormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
+        private IFormLinkNullable<ISoundDescriptorGetter> _PickUpSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        public IFormLinkNullable<ISoundDescriptorGetter> PickUpSound
+        {
+            get => _PickUpSound;
+            set => _PickUpSound = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundDescriptorGetter> IAmmunitionGetter.PickUpSound => this.PickUpSound;
         #endregion
         #region PutDownSound
-        public FormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
+        private IFormLinkNullable<ISoundDescriptorGetter> _PutDownSound = new FormLinkNullable<ISoundDescriptorGetter>();
+        public IFormLinkNullable<ISoundDescriptorGetter> PutDownSound
+        {
+            get => _PutDownSound;
+            set => _PutDownSound = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundDescriptorGetter> IAmmunitionGetter.PutDownSound => this.PutDownSound;
         #endregion
         #region Description
         public TranslatedString? Description { get; set; }
@@ -146,24 +160,31 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IKeywordGetter>>? _Keywords;
-        public ExtendedList<IFormLink<IKeywordGetter>>? Keywords
+        private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Keywords;
+        public ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IKeywordGetter>>? IAmmunitionGetter.Keywords => _Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IAmmunitionGetter.Keywords => _Keywords;
         #endregion
 
         #region Aspects
-        IReadOnlyList<IFormLink<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
-        IReadOnlyList<IFormLink<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
         #endregion
         #region Projectile
-        public FormLink<IProjectileGetter> Projectile { get; set; } = new FormLink<IProjectileGetter>();
+        private IFormLink<IProjectileGetter> _Projectile = new FormLink<IProjectileGetter>();
+        public IFormLink<IProjectileGetter> Projectile
+        {
+            get => _Projectile;
+            set => _Projectile = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IProjectileGetter> IAmmunitionGetter.Projectile => this.Projectile;
         #endregion
         #region Flags
         public Ammunition.Flag Flags { get; set; } = default;
@@ -206,22 +227,6 @@ namespace Mutagen.Bethesda.Skyrim
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IAmmunitionGetter rhs)) return false;
-            return ((AmmunitionCommon)((IAmmunitionGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IAmmunitionGetter? obj)
-        {
-            return ((AmmunitionCommon)((IAmmunitionGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((AmmunitionCommon)((IAmmunitionGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -1081,6 +1086,26 @@ namespace Mutagen.Bethesda.Skyrim
         {
             Break0 = 1
         }
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IAmmunitionGetter rhs) return false;
+            return ((AmmunitionCommon)((IAmmunitionGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IAmmunitionGetter? obj)
+        {
+            return ((AmmunitionCommon)((IAmmunitionGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((AmmunitionCommon)((IAmmunitionGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -1161,11 +1186,11 @@ namespace Mutagen.Bethesda.Skyrim
         new Model? Model { get; set; }
         new Icons? Icons { get; set; }
         new Destructible? Destructible { get; set; }
-        new FormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; set; }
-        new FormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; }
+        new IFormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; }
         new TranslatedString? Description { get; set; }
-        new ExtendedList<IFormLink<IKeywordGetter>>? Keywords { get; set; }
-        new FormLink<IProjectileGetter> Projectile { get; set; }
+        new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
+        new IFormLink<IProjectileGetter> Projectile { get; }
         new Ammunition.Flag Flags { get; set; }
         new Single Damage { get; set; }
         new UInt32 Value { get; set; }
@@ -1211,11 +1236,11 @@ namespace Mutagen.Bethesda.Skyrim
         IModelGetter? Model { get; }
         IIconsGetter? Icons { get; }
         IDestructibleGetter? Destructible { get; }
-        FormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; }
-        FormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; }
+        IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound { get; }
+        IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound { get; }
         ITranslatedStringGetter? Description { get; }
-        IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; }
-        FormLink<IProjectileGetter> Projectile { get; }
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
+        IFormLinkGetter<IProjectileGetter> Projectile { get; }
         Ammunition.Flag Flags { get; }
         Single Damage { get; }
         UInt32 Value { get; }
@@ -1497,11 +1522,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Model = null;
             item.Icons = null;
             item.Destructible = null;
-            item.PickUpSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
-            item.PutDownSound = FormLinkNullable<ISoundDescriptorGetter>.Null;
+            item.PickUpSound.Clear();
+            item.PutDownSound.Clear();
             item.Description = default;
             item.Keywords = null;
-            item.Projectile = FormLink<IProjectileGetter>.Null;
+            item.Projectile.Clear();
             item.Flags = default;
             item.Damage = default;
             item.Value = default;
@@ -1527,10 +1552,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.RemapLinks(obj, mapping);
             obj.Model?.RemapLinks(mapping);
             obj.Destructible?.RemapLinks(mapping);
-            obj.PickUpSound = obj.PickUpSound.Relink(mapping);
-            obj.PutDownSound = obj.PutDownSound.Relink(mapping);
+            obj.PickUpSound.Relink(mapping);
+            obj.PutDownSound.Relink(mapping);
             obj.Keywords?.RemapLinks(mapping);
-            obj.Projectile = obj.Projectile.Relink(mapping);
+            obj.Projectile.Relink(mapping);
         }
         
         #endregion
@@ -1956,7 +1981,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Ammunition(formKey, default(SkyrimRelease));
+            var newRec = new Ammunition(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1967,7 +1992,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IAmmunition)item,
+                item: (IAmmunitionGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1978,7 +2003,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IAmmunition)item,
+                item: (IAmmunitionGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -2127,11 +2152,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.PickUpSound) ?? true))
             {
-                item.PickUpSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.PickUpSound.FormKeyNullable);
+                item.PickUpSound.SetTo(rhs.PickUpSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.PutDownSound) ?? true))
             {
-                item.PutDownSound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.PutDownSound.FormKeyNullable);
+                item.PutDownSound.SetTo(rhs.PutDownSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Description) ?? true))
             {
@@ -2146,8 +2171,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLink<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
-                            .ToExtendedList<IFormLink<IKeywordGetter>>();
+                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
                     {
@@ -2166,7 +2191,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Projectile) ?? true))
             {
-                item.Projectile = new FormLink<IProjectileGetter>(rhs.Projectile.FormKey);
+                item.Projectile.SetTo(rhs.Projectile.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Flags) ?? true))
             {
@@ -2404,13 +2429,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DESC),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.DL);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.WriteWithCounter(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Keywords,
                 counterType: RecordTypes.KSIZ,
                 counterLength: 4,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
-                transl: (MutagenWriter subWriter, IFormLink<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2575,17 +2600,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.YNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PickUpSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.PickUpSound.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Ammunition_FieldIndex.PickUpSound;
                 }
                 case RecordTypeInts.ZNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PutDownSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.PutDownSound.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Ammunition_FieldIndex.PutDownSound;
                 }
                 case RecordTypeInts.DESC:
@@ -2601,22 +2628,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.KSIZ:
                 {
                     item.Keywords = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
                             frame: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<IKeywordGetter>>();
+                        .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     return (int)Ammunition_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.Projectile = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
+                    item.Projectile.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     item.Flags = EnumBinaryTranslation<Ammunition.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     item.Damage = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.Value = dataFrame.ReadUInt32();
@@ -2717,26 +2745,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IDestructibleGetter? Destructible { get; private set; }
         #region PickUpSound
         private int? _PickUpSoundLocation;
-        public FormLinkNullable<ISoundDescriptorGetter> PickUpSound => _PickUpSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PickUpSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound => _PickUpSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PickUpSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region PutDownSound
         private int? _PutDownSoundLocation;
-        public FormLinkNullable<ISoundDescriptorGetter> PutDownSound => _PutDownSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PutDownSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound => _PutDownSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PutDownSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region Description
         private int? _DescriptionLocation;
         public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
         #region Keywords
-        public IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; private set; }
-        IReadOnlyList<IFormLink<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
         private int? _DATALocation;
         public Ammunition.DATADataType DATADataTypeState { get; private set; }
         #region Projectile
         private int _ProjectileLocation => _DATALocation!.Value;
         private bool _Projectile_IsSet => _DATALocation.HasValue;
-        public FormLink<IProjectileGetter> Projectile => _Projectile_IsSet ? new FormLink<IProjectileGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ProjectileLocation, 0x4)))) : FormLink<IProjectileGetter>.Null;
+        public IFormLinkGetter<IProjectileGetter> Projectile => _Projectile_IsSet ? new FormLink<IProjectileGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ProjectileLocation, 0x4)))) : FormLink<IProjectileGetter>.Null;
         #endregion
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value + 0x4;
@@ -2883,7 +2911,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
                 {
-                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLink<IKeywordGetter>>(
+                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLinkGetter<IKeywordGetter>>(
                         stream: stream,
                         package: _package,
                         itemLength: 0x4,
@@ -2934,7 +2962,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAmmunitionGetter rhs)) return false;
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IAmmunitionGetter rhs) return false;
             return ((AmmunitionCommon)((IAmmunitionGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 

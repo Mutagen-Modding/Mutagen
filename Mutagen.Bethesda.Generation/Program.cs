@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "RecordEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnkn";
+            string testString = "public IFormLink<IAItemGetter> Item";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>
@@ -82,6 +82,7 @@ namespace Mutagen.Bethesda.Generation
                     new DirectoryInfo("../../../../Mutagen.Bethesda.Core/Records"))
                 {
                     DefaultNamespace = "Mutagen.Bethesda",
+                    DoGeneration = ShouldRun("All")
                 });
             bethesdaProto.AddProjectToModify(
                 new FileInfo(Path.Combine(bethesdaProto.GenerationFolder.FullName, "../Mutagen.Bethesda.Core.csproj")));

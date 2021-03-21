@@ -10,7 +10,9 @@
     <Fields>
       <Float name="DamageMult" />
       <Float name="Chance" />
-      <FormLink name="Spell" refName="ASpell" />
+      <FormLink name="Spell" >
+        <Interface>ISpellRecord</Interface>
+      </FormLink>
       <Enum name="Flags" enumName="AttackData.Flag" byteLength="4" />
       <Float name="AttackAngle" />
       <Float name="StrikeAngle" />

@@ -42,7 +42,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Quest
-        public FormLink<IQuestGetter> Quest { get; set; } = new FormLink<IQuestGetter>();
+        private IFormLink<IQuestGetter> _Quest = new FormLink<IQuestGetter>();
+        public IFormLink<IQuestGetter> Quest
+        {
+            get => _Quest;
+            set => _Quest = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IQuestGetter> IPerkQuestEffectGetter.Quest => this.Quest;
         #endregion
         #region Stage
         public Byte Stage { get; set; } = default;
@@ -485,7 +492,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPerkQuestEffect>,
         IPerkQuestEffectGetter
     {
-        new FormLink<IQuestGetter> Quest { get; set; }
+        new IFormLink<IQuestGetter> Quest { get; }
         new Byte Stage { get; set; }
         new MemorySlice<Byte> Unknown { get; set; }
     }
@@ -497,7 +504,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IPerkQuestEffectGetter>
     {
         static new ILoquiRegistration Registration => PerkQuestEffect_Registration.Instance;
-        FormLink<IQuestGetter> Quest { get; }
+        IFormLinkGetter<IQuestGetter> Quest { get; }
         Byte Stage { get; }
         ReadOnlyMemorySlice<Byte> Unknown { get; }
 
@@ -737,7 +744,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IPerkQuestEffect item)
         {
             ClearPartial();
-            item.Quest = FormLink<IQuestGetter>.Null;
+            item.Quest.Clear();
             item.Stage = default;
             item.Unknown = new byte[3];
             base.Clear(item);
@@ -752,7 +759,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IPerkQuestEffect obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Quest = obj.Quest.Relink(mapping);
+            obj.Quest.Relink(mapping);
         }
         
         #endregion
@@ -975,7 +982,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PerkQuestEffect_FieldIndex.Quest) ?? true))
             {
-                item.Quest = new FormLink<IQuestGetter>(rhs.Quest.FormKey);
+                item.Quest.SetTo(rhs.Quest.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PerkQuestEffect_FieldIndex.Stage) ?? true))
             {
@@ -1154,9 +1161,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             APerkEffectBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.Quest = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Quest.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             item.Stage = frame.ReadUInt8();
             item.Unknown = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
         }
@@ -1206,7 +1214,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<IQuestGetter> Quest => new FormLink<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IQuestGetter> Quest => new FormLink<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public Byte Stage => _data.Span[0x4];
         public ReadOnlyMemorySlice<Byte> Unknown => _data.Span.Slice(0x5, 0x3).ToArray();
         partial void CustomFactoryEnd(

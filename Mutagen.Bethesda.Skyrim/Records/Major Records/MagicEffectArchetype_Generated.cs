@@ -764,6 +764,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public void RemapLinks(IMagicEffectArchetype obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
+            obj.AssociationKey = RemappingMixIn.Remap(obj.AssociationKey, mapping);
         }
         
         #endregion
@@ -905,6 +906,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<FormLinkInformation> GetContainedFormLinks(IMagicEffectArchetypeGetter obj)
         {
+            yield return FormLinkInformation.Factory(obj.AssociationKey.AsLink<ISkyrimMajorRecordGetter>());
             yield break;
         }
         

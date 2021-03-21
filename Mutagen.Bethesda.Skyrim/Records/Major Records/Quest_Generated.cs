@@ -109,15 +109,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region TextDisplayGlobals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IGlobalGetter>> _TextDisplayGlobals = new ExtendedList<IFormLink<IGlobalGetter>>();
-        public ExtendedList<IFormLink<IGlobalGetter>> TextDisplayGlobals
+        private ExtendedList<IFormLinkGetter<IGlobalGetter>> _TextDisplayGlobals = new ExtendedList<IFormLinkGetter<IGlobalGetter>>();
+        public ExtendedList<IFormLinkGetter<IGlobalGetter>> TextDisplayGlobals
         {
             get => this._TextDisplayGlobals;
             protected set => this._TextDisplayGlobals = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IGlobalGetter>> IQuestGetter.TextDisplayGlobals => _TextDisplayGlobals;
+        IReadOnlyList<IFormLinkGetter<IGlobalGetter>> IQuestGetter.TextDisplayGlobals => _TextDisplayGlobals;
         #endregion
 
         #endregion
@@ -215,22 +215,6 @@ namespace Mutagen.Bethesda.Skyrim
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IQuestGetter rhs)) return false;
-            return ((QuestCommon)((IQuestGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IQuestGetter? obj)
-        {
-            return ((QuestCommon)((IQuestGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((QuestCommon)((IQuestGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -1466,6 +1450,26 @@ namespace Mutagen.Bethesda.Skyrim
         public enum DNAMDataType
         {
         }
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IQuestGetter rhs) return false;
+            return ((QuestCommon)((IQuestGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IQuestGetter? obj)
+        {
+            return ((QuestCommon)((IQuestGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((QuestCommon)((IQuestGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -1540,7 +1544,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Int32 Unknown { get; set; }
         new Quest.TypeEnum Type { get; set; }
         new RecordType? Event { get; set; }
-        new ExtendedList<IFormLink<IGlobalGetter>> TextDisplayGlobals { get; }
+        new ExtendedList<IFormLinkGetter<IGlobalGetter>> TextDisplayGlobals { get; }
         new String? ObjectWindowFilter { get; set; }
         new ExtendedList<Condition> DialogConditions { get; }
         new ExtendedList<Condition> UnusedConditions { get; }
@@ -1578,7 +1582,7 @@ namespace Mutagen.Bethesda.Skyrim
         Int32 Unknown { get; }
         Quest.TypeEnum Type { get; }
         RecordType? Event { get; }
-        IReadOnlyList<IFormLink<IGlobalGetter>> TextDisplayGlobals { get; }
+        IReadOnlyList<IFormLinkGetter<IGlobalGetter>> TextDisplayGlobals { get; }
         String? ObjectWindowFilter { get; }
         IReadOnlyList<IConditionGetter> DialogConditions { get; }
         IReadOnlyList<IConditionGetter> UnusedConditions { get; }
@@ -2403,7 +2407,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Quest(formKey, default(SkyrimRelease));
+            var newRec = new Quest(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -2414,7 +2418,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IQuest)item,
+                item: (IQuestGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -2425,7 +2429,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IQuest)item,
+                item: (IQuestGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -2529,7 +2533,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.TextDisplayGlobals.SetTo(
                         rhs.TextDisplayGlobals
-                        .Select(r => (IFormLink<IGlobalGetter>)new FormLink<IGlobalGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<IGlobalGetter>)new FormLink<IGlobalGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2909,10 +2913,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Event,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ENAM));
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IGlobalGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IGlobalGetter>>.Instance.Write(
                 writer: writer,
                 items: item.TextDisplayGlobals,
-                transl: (MutagenWriter subWriter, IFormLink<IGlobalGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IGlobalGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -3097,7 +3101,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.QTGL:
                 {
                     item.TextDisplayGlobals.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IGlobalGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IGlobalGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.QTGL),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -3286,7 +3290,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _EventLocation;
         public RecordType? Event => _EventLocation.HasValue ? new RecordType(BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EventLocation.Value, _package.MetaData.Constants))) : default(RecordType?);
         #endregion
-        public IReadOnlyList<IFormLink<IGlobalGetter>> TextDisplayGlobals { get; private set; } = ListExt.Empty<IFormLink<IGlobalGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IGlobalGetter>> TextDisplayGlobals { get; private set; } = ListExt.Empty<IFormLinkGetter<IGlobalGetter>>();
         #region ObjectWindowFilter
         private int? _ObjectWindowFilterLocation;
         public String? ObjectWindowFilter => _ObjectWindowFilterLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _ObjectWindowFilterLocation.Value, _package.MetaData.Constants)) : default(string?);
@@ -3404,7 +3408,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.QTGL:
                 {
-                    this.TextDisplayGlobals = BinaryOverlayList.FactoryByArray<IFormLink<IGlobalGetter>>(
+                    this.TextDisplayGlobals = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IGlobalGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IGlobalGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -3504,7 +3508,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IQuestGetter rhs)) return false;
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IQuestGetter rhs) return false;
             return ((QuestCommon)((IQuestGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
