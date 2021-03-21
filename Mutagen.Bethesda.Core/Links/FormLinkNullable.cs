@@ -37,8 +37,6 @@ namespace Mutagen.Bethesda
         /// </summary>o
         public FormKey FormKey => _formKey ?? FormKey.Null;
 
-        Type ILink.TargetType => typeof(TMajorGetter);
-
         /// <inheritdoc />
         public Type Type => typeof(TMajorGetter);
 

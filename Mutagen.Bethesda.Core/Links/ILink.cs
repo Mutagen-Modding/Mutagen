@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// The MajorRecord Type that the link is associated with
         /// </summary>
-        Type TargetType { get; }
+        Type Type { get; }
         
         /// <summary>
         /// Attempts to locate an associated ModKey from the link

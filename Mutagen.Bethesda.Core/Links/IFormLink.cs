@@ -26,11 +26,6 @@ namespace Mutagen.Bethesda
         /// FormKey to link against
         /// </summary>
         FormKey FormKey { get; }
-
-        /// <summary>
-        /// Type that the FormLink points to
-        /// </summary>
-        Type Type { get; }
     }
 
     /// <summary>
@@ -497,7 +492,7 @@ namespace Mutagen.Bethesda
                 return link.FormKey == rhs.FormKey;
             }
             else if (obj is IFormLinkGetter rhsLink
-                && rhsLink.TargetType.IsAssignableFrom(typeof(TMajorGetter)))
+                && rhsLink.Type.IsAssignableFrom(typeof(TMajorGetter)))
             {
                 return link.FormKey == rhsLink.FormKey;
             }

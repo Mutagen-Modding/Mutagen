@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda
         /// </summary>
         public RecordType EDID { get; set; }
         
-        Type ILink.TargetType => typeof(TMajor);
+        Type ILink.Type => typeof(TMajor);
 
         public EDIDLink()
         {

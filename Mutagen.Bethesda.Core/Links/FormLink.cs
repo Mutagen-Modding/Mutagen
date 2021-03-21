@@ -30,8 +30,6 @@ namespace Mutagen.Bethesda
         /// </summary>
         public FormKey FormKey => _formKey;
 
-        Type ILink.TargetType => typeof(TMajorGetter);
-
         /// <summary>
         /// True if unlinked and ID points to Null
         /// </summary>
