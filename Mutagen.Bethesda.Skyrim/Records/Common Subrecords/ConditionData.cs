@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using static Mutagen.Bethesda.Skyrim.ConditionData;
@@ -476,9 +476,9 @@ namespace Mutagen.Bethesda.Skyrim
             String
         }
 
-        public static (ParameterType First, ParameterType Second) GetParameterTypes(ushort function)
+        public static (ParameterType First, ParameterType Second) GetParameterTypes(Function function)
         {
-            return function switch
+            return ((ushort)function) switch
             {
                 1 => (ParameterType.ObjectReference, ParameterType.None),
                 6 => (ParameterType.Axis, ParameterType.None),
