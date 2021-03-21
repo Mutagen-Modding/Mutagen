@@ -199,13 +199,13 @@ namespace Mutagen.Bethesda
         /// Retrieves the record that matches the FormKey relative to the source the cache was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
-        /// the function will throw a KeyNotFoundException.<br />
+        /// the function will throw a MissingRecordException.<br />
         /// <br/>
         /// NOTE:  This call is much slower than the alternative that uses generics, as all records in the entire mod must be
         /// processed, rather than being able to scope the search to a specific area.
         /// </summary>
         /// <param name="formKey">FormKey to look for</param>
-        /// <exception cref="KeyNotFoundException">
+        /// <exception cref="MissingRecordException">
         /// When the FormKey cannot be found under the attached cache.<br/>
         /// </exception>
         /// <returns>Matching record</returns>
@@ -216,13 +216,13 @@ namespace Mutagen.Bethesda
         /// Retrieves the record that matches the EditorID relative to the source the cache was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will not be returned, and 
-        /// the function will throw a KeyNotFoundException.<br />
+        /// the function will throw a MissingRecordException.<br />
         /// <br/>
         /// NOTE:  This call is much slower than the alternative that uses generics, as all records in the entire mod must be
         /// processed, rather than being able to scope the search to a specific area.
         /// </summary>
         /// <param name="editorId">EditorID to look for</param>
-        /// <exception cref="KeyNotFoundException">
+        /// <exception cref="MissingRecordException">
         /// When the EditorID cannot be found under the attached cache.<br/>
         /// </exception>
         /// <returns>Matching record</returns>
@@ -243,7 +243,7 @@ namespace Mutagen.Bethesda
         ///   - A setter type is requested from a getter only object.
         /// </exception>
         /// <returns>Matching record</returns>
-        /// <exception cref="KeyNotFoundException">
+        /// <exception cref="MissingRecordException">
         /// When the FormKey having the specified Major Record type cannot be found under the attached cache.<br/>
         /// </exception>
         IMajorRecordCommonGetter Resolve(FormKey formKey, Type type);
@@ -262,7 +262,7 @@ namespace Mutagen.Bethesda
         ///   - A setter type is requested from a getter only object.
         /// </exception>
         /// <returns>Matching record</returns>
-        /// <exception cref="KeyNotFoundException">
+        /// <exception cref="MissingRecordException">
         /// When the EditorID having the specified Major Record type cannot be found under the attached cache.<br/>
         /// </exception>
         IMajorRecordCommonGetter Resolve(string editorId, Type type);
@@ -284,7 +284,7 @@ namespace Mutagen.Bethesda
         ///   - A setter type is requested from a getter only object.
         /// </exception>
         /// <returns>Matching record</returns>
-        /// <exception cref="KeyNotFoundException">
+        /// <exception cref="MissingRecordException">
         /// When the FormKey having the specified Major Record type cannot be found under the attached cache.<br/>
         /// </exception>
         IMajorRecordCommonGetter Resolve(FormKey formKey, params Type[] types);
@@ -306,7 +306,7 @@ namespace Mutagen.Bethesda
         ///   - A setter type is requested from a getter only object.
         /// </exception>
         /// <returns>Matching record</returns>
-        /// <exception cref="KeyNotFoundException">
+        /// <exception cref="MissingRecordException">
         /// When the EditorID having the specified Major Record type cannot be found under the attached cache.<br/>
         /// </exception>
         IMajorRecordCommonGetter Resolve(string editorId, params Type[] types);
@@ -328,7 +328,7 @@ namespace Mutagen.Bethesda
         ///   - A setter type is requested from a getter only object.
         /// </exception>
         /// <returns>Matching record</returns>
-        /// <exception cref="KeyNotFoundException">
+        /// <exception cref="MissingRecordException">
         /// When the FormKey having the specified Major Record type cannot be found under the attached cache.<br/>
         /// </exception>
         IMajorRecordCommonGetter Resolve(FormKey formKey, IEnumerable<Type> types);
@@ -350,7 +350,7 @@ namespace Mutagen.Bethesda
         ///   - A setter type is requested from a getter only object.
         /// </exception>
         /// <returns>Matching record</returns>
-        /// <exception cref="KeyNotFoundException">
+        /// <exception cref="MissingRecordException">
         /// When the EditorID having the specified Major Record type cannot be found under the attached cache.<br/>
         /// </exception>
         IMajorRecordCommonGetter Resolve(string editorId, IEnumerable<Type> types);
@@ -369,7 +369,7 @@ namespace Mutagen.Bethesda
         ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
         ///   - A setter type is requested from a getter only object.
         /// </exception>
-        /// <exception cref="KeyNotFoundException">
+        /// <exception cref="MissingRecordException">
         /// When the FormKey having the specified Major Record type cannot be found under the attached cache.<br/>
         /// </exception>
         TMajor Resolve<TMajor>(FormKey formKey)
@@ -389,7 +389,7 @@ namespace Mutagen.Bethesda
         ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
         ///   - A setter type is requested from a getter only object.
         /// </exception>
-        /// <exception cref="KeyNotFoundException">
+        /// <exception cref="MissingRecordException">
         /// When the EditorID having the specified Major Record type cannot be found under the attached cache.<br/>
         /// </exception>
         TMajor Resolve<TMajor>(string editorId)
@@ -743,13 +743,13 @@ namespace Mutagen.Bethesda
         /// Retrieves the record that matches the FormKey relative to the source the cache was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
-        /// the function will throw a KeyNotFoundException.<br />
+        /// the function will throw a MissingRecordException.<br />
         /// <br/>
         /// NOTE:  This call is much slower than the alternative that uses generics, as all records in the entire mod must be
         /// processed, rather than being able to scope the search to a specific area.
         /// </summary>
         /// <param name="formKey">FormKey to look for</param>
-        /// <exception cref="KeyNotFoundException">
+        /// <exception cref="MissingRecordException">
         /// When the FormKey cannot be found under the attached cache.<br/>
         /// </exception>
         /// <returns>Matching record with context</returns>
@@ -760,13 +760,13 @@ namespace Mutagen.Bethesda
         /// Retrieves the record that matches the EditorID relative to the source the cache was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will not be returned, and 
-        /// the function will throw a KeyNotFoundException.<br />
+        /// the function will throw a MissingRecordException.<br />
         /// <br/>
         /// NOTE:  This call is much slower than the alternative that uses generics, as all records in the entire mod must be
         /// processed, rather than being able to scope the search to a specific area.
         /// </summary>
         /// <param name="editorId">EditorID to look for</param>
-        /// <exception cref="KeyNotFoundException">
+        /// <exception cref="MissingRecordException">
         /// When the EditorID cannot be found under the attached cache.<br/>
         /// </exception>
         /// <returns>Matching record with context</returns>
@@ -787,7 +787,7 @@ namespace Mutagen.Bethesda
         ///   - A setter type is requested from a getter only object.
         /// </exception>
         /// <returns>Matching record with context</returns>
-        /// <exception cref="KeyNotFoundException">
+        /// <exception cref="MissingRecordException">
         /// When the FormKey having the specified Major Record type cannot be found under the attached cache.<br/>
         /// </exception>
         IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(FormKey formKey, Type type);
@@ -806,7 +806,7 @@ namespace Mutagen.Bethesda
         ///   - A setter type is requested from a getter only object.
         /// </exception>
         /// <returns>Matching record with context</returns>
-        /// <exception cref="KeyNotFoundException">
+        /// <exception cref="MissingRecordException">
         /// When the EditorID having the specified Major Record type cannot be found under the attached cache.<br/>
         /// </exception>
         IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(string editorId, Type type);
@@ -826,7 +826,7 @@ namespace Mutagen.Bethesda
         ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
         ///   - A setter type is requested from a getter only object.
         /// </exception>
-        /// <exception cref="KeyNotFoundException">
+        /// <exception cref="MissingRecordException">
         /// When the FormKey having the specified Major Record type cannot be found under the attached cache.<br/>
         /// </exception>
         IModContext<TMod, TModGetter, TMajor, TMajorGetter> ResolveContext<TMajor, TMajorGetter>(FormKey formKey)
@@ -848,7 +848,7 @@ namespace Mutagen.Bethesda
         ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
         ///   - A setter type is requested from a getter only object.
         /// </exception>
-        /// <exception cref="KeyNotFoundException">
+        /// <exception cref="MissingRecordException">
         /// When the EditorID having the specified Major Record type cannot be found under the attached cache.<br/>
         /// </exception>
         IModContext<TMod, TModGetter, TMajor, TMajorGetter> ResolveContext<TMajor, TMajorGetter>(string editorId)

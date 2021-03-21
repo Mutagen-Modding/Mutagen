@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda
             {
                 if (!linkCache.TryResolveContext(identifiedRec.FormKey, identifiedRec.Type, out var rec))
                 {
-                    throw new KeyNotFoundException($"Coult not locate record to make self contained: {identifiedRec}");
+                    throw new KeyNotFoundException($"Could not locate record to make self contained: {identifiedRec}");
                 }
 
                 var dup = rec.DuplicateIntoAsNewRecord(modToDuplicateInto, rec.Record.EditorID);
