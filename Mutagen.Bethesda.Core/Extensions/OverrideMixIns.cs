@@ -433,7 +433,7 @@ namespace Mutagen.Bethesda
         /// <param name="cache">Cache to query link against</param>
         /// <param name="rec">Retrieved record if successful</param>
         /// <returns>True if a record was retrieved</returns>
-        public static bool TryGetOrAddAsOverride<TMajor, TMajorGetter>(this IGroupCommon<TMajor> group, IFormLink<TMajorGetter> link, ILinkCache cache, [MaybeNullWhen(false)] out TMajor rec)
+        public static bool TryGetOrAddAsOverride<TMajor, TMajorGetter>(this IGroupCommon<TMajor> group, IFormLinkGetter<TMajorGetter> link, ILinkCache cache, [MaybeNullWhen(false)] out TMajor rec)
             where TMajor : class, IMajorRecordInternal, TMajorGetter
             where TMajorGetter : class, IMajorRecordGetter, IBinaryItem
         {
@@ -455,6 +455,26 @@ namespace Mutagen.Bethesda
             {
                 throw RecordException.Factory(ex, link.FormKey, edid: null);
             }
+        }
+
+        /// <summary>
+        /// Takes in a FormLink, and either returns the existing override definition
+        /// from the Group, or attempts to link and copy the given record, inserting it, and then returning it as an override.
+        /// </summary>
+        /// <param name="group">Group to retrieve and/or insert from</param>
+        /// <param name="link">Link to query and add</param>
+        /// <param name="cache">Cache to query link against</param>
+        /// <param name="rec">Retrieved record if successful</param>
+        /// <returns>True if a record was retrieved</returns>
+        public static TMajor GetOrAddAsOverride<TMajor, TMajorGetter>(this IGroupCommon<TMajor> group, IFormLinkGetter<TMajorGetter> link, ILinkCache cache)
+            where TMajor : class, IMajorRecordInternal, TMajorGetter
+            where TMajorGetter : class, IMajorRecordGetter, IBinaryItem
+        {
+            if (TryGetOrAddAsOverride(group, link, cache, out var rec))
+            {
+                return rec;
+            }
+            throw new MissingRecordException(link.FormKey, link.Type);
         }
     }
 }

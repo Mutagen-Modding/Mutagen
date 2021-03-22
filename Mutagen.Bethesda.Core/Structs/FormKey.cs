@@ -237,6 +237,18 @@ namespace Mutagen.Bethesda
             return hash.ToHashCode();
         }
 
+        public FormLink<TMajorGetter> AsLink<TMajorGetter>()
+            where TMajorGetter : class, IMajorRecordCommonGetter
+        {
+            return new FormLink<TMajorGetter>(this);
+        }
+
+        public IFormLinkGetter<TMajorGetter> AsLinkGetter<TMajorGetter>()
+            where TMajorGetter : class, IMajorRecordCommonGetter
+        {
+            return new FormLink<TMajorGetter>(this);
+        }
+
         public static bool operator ==(FormKey? a, FormKey? b)
         {
             return EqualityComparer<FormKey?>.Default.Equals(a, b);

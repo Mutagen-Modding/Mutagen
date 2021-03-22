@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda.Skyrim
                         if (count == null)
                         {
                             item.Animations.SetTo(
-                                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IdleAnimation>>.Instance.Parse(
+                                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IdleAnimation>>.Instance.Parse(
                                     frame: frame,
                                     triggeringRecord: RecordTypes.IDLA,
                                     transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Skyrim
                         else
                         {
                             item.Animations.SetTo(
-                                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IdleAnimation>>.Instance.Parse(
+                                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IdleAnimation>>.Instance.Parse(
                                     frame: frame,
                                     amount: count.Value,
                                     triggeringRecord: RecordTypes.IDLA,
@@ -109,7 +109,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class PackageIdlesBinaryOverlay
         {
-            public IReadOnlyList<IFormLink<IIdleAnimationGetter>> Animations { get; private set; } = ListExt.Empty<IFormLink<IIdleAnimationGetter>>();
+            public IReadOnlyList<IFormLinkGetter<IIdleAnimationGetter>> Animations { get; private set; } = ListExt.Empty<IFormLinkGetter<IIdleAnimationGetter>>();
 
             private float _timerSetting;
             public Single GetTimerSettingCustom() => _timerSetting;
@@ -139,7 +139,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         if (count == null)
                         {
-                            this.Animations = BinaryOverlayList.FactoryByArray<IFormLink<IIdleAnimationGetter>>(
+                            this.Animations = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IIdleAnimationGetter>>(
                                 mem: stream.RemainingMemory,
                                 package: _package,
                                 getter: (s, p) => new FormLink<IIdleAnimationGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -153,7 +153,7 @@ namespace Mutagen.Bethesda.Skyrim
                         {
                             var subMeta = stream.ReadSubrecord();
                             var subLen = subMeta.ContentLength;
-                            this.Animations = BinaryOverlayList.FactoryByStartIndex<IFormLink<IIdleAnimationGetter>>(
+                            this.Animations = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IIdleAnimationGetter>>(
                                 mem: stream.RemainingMemory.Slice(0, subLen),
                                 package: _package,
                                 itemLength: 4,

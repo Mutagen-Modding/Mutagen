@@ -132,7 +132,9 @@ namespace Mutagen.Bethesda.UnitTests
         #region FormLink
         class FormLinkClass
         {
-            public FormLink<INpcGetter> Member { get; set; } = new FormLink<INpcGetter>(Utility.Form1);
+            public FormLink<INpcGetter> Direct { get; set; } = new FormLink<INpcGetter>(Utility.Form1);
+            public IFormLink<INpcGetter> Setter { get; set; } = new FormLink<INpcGetter>(Utility.Form1);
+            public IFormLinkGetter<INpcGetter> Getter { get; set; } = new FormLink<INpcGetter>(Utility.Form1);
         }
 
         [Fact]
@@ -142,10 +144,12 @@ namespace Mutagen.Bethesda.UnitTests
             settings.Converters.Add(new FormKeyJsonConverter());
             var toSerialize = new FormLinkClass()
             {
-                Member = new FormLink<INpcGetter>(Utility.Form2)
+                Direct = new FormLink<INpcGetter>(Utility.Form2),
+                Setter = new FormLink<INpcGetter>(Utility.Form2),
+                Getter = new FormLink<INpcGetter>(Utility.Form2)
             };
             JsonConvert.SerializeObject(toSerialize, settings)
-                .Should().Be($"{{\"Member\":\"{toSerialize.Member.FormKey}\"}}");
+                .Should().Be($"{{\"Direct\":\"{toSerialize.Direct.FormKey}\",\"Setter\":\"{toSerialize.Direct.FormKey}\",\"Getter\":\"{toSerialize.Direct.FormKey}\"}}");
         }
 
         [Fact]
@@ -155,14 +159,15 @@ namespace Mutagen.Bethesda.UnitTests
             settings.Converters.Add(new FormKeyJsonConverter());
             var target = new FormLinkClass()
             {
-                Member = new FormLink<INpcGetter>(Utility.Form2)
+                Direct = new FormLink<INpcGetter>(Utility.Form2),
+                Setter = new FormLink<INpcGetter>(Utility.Form2),
+                Getter = new FormLink<INpcGetter>(Utility.Form2)
             };
-            var toDeserialize = $"{{\"Member\":\"{target.Member.FormKey}\"}}";
+            var toDeserialize = $"{{\"Direct\":\"{target.Direct.FormKey}\",\"Setter\":\"{target.Direct.FormKey}\",\"Getter\":\"{target.Direct.FormKey}\"}}";
             JsonConvert.DeserializeObject<FormLinkClass>(toDeserialize, settings)!
-                .Member
-                .Should().Be(target.Member);
+                .Direct
+                .Should().Be(target.Direct);
         }
-
 
         [Fact]
         public void FormKeyConverter_FormLink_Deserialize_Missing()
@@ -172,8 +177,8 @@ namespace Mutagen.Bethesda.UnitTests
             var target = new FormLinkClass();
             var toDeserialize = $"{{}}";
             JsonConvert.DeserializeObject<FormLinkClass>(toDeserialize, settings)!
-                .Member
-                .Should().Be(target.Member);
+                .Direct
+                .Should().Be(target.Direct);
         }
 
         // ToDo

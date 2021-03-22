@@ -78,15 +78,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region RelatedIdleAnimations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IIdleAnimationGetter>>? _RelatedIdleAnimations;
-        public ExtendedList<IFormLink<IIdleAnimationGetter>>? RelatedIdleAnimations
+        private ExtendedList<IFormLinkGetter<IIdleAnimationGetter>>? _RelatedIdleAnimations;
+        public ExtendedList<IFormLinkGetter<IIdleAnimationGetter>>? RelatedIdleAnimations
         {
             get => this._RelatedIdleAnimations;
             set => this._RelatedIdleAnimations = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IIdleAnimationGetter>>? IIdleAnimationGetter.RelatedIdleAnimations => _RelatedIdleAnimations;
+        IReadOnlyList<IFormLinkGetter<IIdleAnimationGetter>>? IIdleAnimationGetter.RelatedIdleAnimations => _RelatedIdleAnimations;
         #endregion
 
         #endregion
@@ -101,22 +101,6 @@ namespace Mutagen.Bethesda.Oblivion
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IIdleAnimationGetter rhs)) return false;
-            return ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IIdleAnimationGetter? obj)
-        {
-            return ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -665,6 +649,26 @@ namespace Mutagen.Bethesda.Oblivion
             this.EditorID = editorID;
         }
 
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IIdleAnimationGetter rhs) return false;
+            return ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IIdleAnimationGetter? obj)
+        {
+            return ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -731,7 +735,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Model? Model { get; set; }
         new ExtendedList<Condition> Conditions { get; }
         new IdleAnimation.AnimationGroupSectionEnum? AnimationGroupSection { get; set; }
-        new ExtendedList<IFormLink<IIdleAnimationGetter>>? RelatedIdleAnimations { get; set; }
+        new ExtendedList<IFormLinkGetter<IIdleAnimationGetter>>? RelatedIdleAnimations { get; set; }
     }
 
     public partial interface IIdleAnimationInternal :
@@ -753,7 +757,7 @@ namespace Mutagen.Bethesda.Oblivion
         IModelGetter? Model { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
         IdleAnimation.AnimationGroupSectionEnum? AnimationGroupSection { get; }
-        IReadOnlyList<IFormLink<IIdleAnimationGetter>>? RelatedIdleAnimations { get; }
+        IReadOnlyList<IFormLinkGetter<IIdleAnimationGetter>>? RelatedIdleAnimations { get; }
 
     }
 
@@ -1349,7 +1353,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IIdleAnimation)item,
+                item: (IIdleAnimationGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1360,7 +1364,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IIdleAnimation)item,
+                item: (IIdleAnimationGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1466,8 +1470,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.RelatedIdleAnimations = 
                             rhs.RelatedIdleAnimations
-                            .Select(r => (IFormLink<IIdleAnimationGetter>)new FormLink<IIdleAnimationGetter>(r.FormKey))
-                            .ToExtendedList<IFormLink<IIdleAnimationGetter>>();
+                            .Select(r => (IFormLinkGetter<IIdleAnimationGetter>)new FormLink<IIdleAnimationGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IIdleAnimationGetter>>();
                     }
                     else
                     {
@@ -1664,11 +1668,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item.AnimationGroupSection,
                 length: 1,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ANAM));
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IIdleAnimationGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IIdleAnimationGetter>>.Instance.Write(
                 writer: writer,
                 items: item.RelatedIdleAnimations,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.DATA),
-                transl: (MutagenWriter subWriter, IFormLink<IIdleAnimationGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IIdleAnimationGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -1793,10 +1797,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RelatedIdleAnimations = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IIdleAnimationGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IIdleAnimationGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<IIdleAnimationGetter>>();
+                        .CastExtendedList<IFormLinkGetter<IIdleAnimationGetter>>();
                     return (int)IdleAnimation_FieldIndex.RelatedIdleAnimations;
                 }
                 default:
@@ -1860,7 +1864,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _AnimationGroupSectionLocation;
         public IdleAnimation.AnimationGroupSectionEnum? AnimationGroupSection => _AnimationGroupSectionLocation.HasValue ? (IdleAnimation.AnimationGroupSectionEnum)HeaderTranslation.ExtractSubrecordMemory(_data, _AnimationGroupSectionLocation!.Value, _package.MetaData.Constants)[0] : default(IdleAnimation.AnimationGroupSectionEnum?);
         #endregion
-        public IReadOnlyList<IFormLink<IIdleAnimationGetter>>? RelatedIdleAnimations { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<IIdleAnimationGetter>>? RelatedIdleAnimations { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1959,7 +1963,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.RelatedIdleAnimations = BinaryOverlayList.FactoryByStartIndex<IFormLink<IIdleAnimationGetter>>(
+                    this.RelatedIdleAnimations = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IIdleAnimationGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
@@ -1993,7 +1997,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IIdleAnimationGetter rhs)) return false;
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IIdleAnimationGetter rhs) return false;
             return ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 

@@ -61,15 +61,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region CollidesWith
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<ICollisionLayerGetter>>? _CollidesWith;
-        public ExtendedList<IFormLink<ICollisionLayerGetter>>? CollidesWith
+        private ExtendedList<IFormLinkGetter<ICollisionLayerGetter>>? _CollidesWith;
+        public ExtendedList<IFormLinkGetter<ICollisionLayerGetter>>? CollidesWith
         {
             get => this._CollidesWith;
             set => this._CollidesWith = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<ICollisionLayerGetter>>? ICollisionLayerGetter.CollidesWith => _CollidesWith;
+        IReadOnlyList<IFormLinkGetter<ICollisionLayerGetter>>? ICollisionLayerGetter.CollidesWith => _CollidesWith;
         #endregion
 
         #endregion
@@ -84,22 +84,6 @@ namespace Mutagen.Bethesda.Skyrim
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is ICollisionLayerGetter rhs)) return false;
-            return ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(ICollisionLayerGetter? obj)
-        {
-            return ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -641,6 +625,26 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not ICollisionLayerGetter rhs) return false;
+            return ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ICollisionLayerGetter? obj)
+        {
+            return ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -709,7 +713,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Color DebugColor { get; set; }
         new CollisionLayer.Flag Flags { get; set; }
         new String Name { get; set; }
-        new ExtendedList<IFormLink<ICollisionLayerGetter>>? CollidesWith { get; set; }
+        new ExtendedList<IFormLinkGetter<ICollisionLayerGetter>>? CollidesWith { get; set; }
     }
 
     public partial interface ICollisionLayerInternal :
@@ -733,7 +737,7 @@ namespace Mutagen.Bethesda.Skyrim
         Color DebugColor { get; }
         CollisionLayer.Flag Flags { get; }
         String Name { get; }
-        IReadOnlyList<IFormLink<ICollisionLayerGetter>>? CollidesWith { get; }
+        IReadOnlyList<IFormLinkGetter<ICollisionLayerGetter>>? CollidesWith { get; }
 
     }
 
@@ -1310,7 +1314,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new CollisionLayer(formKey, default(SkyrimRelease));
+            var newRec = new CollisionLayer(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1321,7 +1325,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ICollisionLayer)item,
+                item: (ICollisionLayerGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1332,7 +1336,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ICollisionLayer)item,
+                item: (ICollisionLayerGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1404,8 +1408,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.CollidesWith = 
                             rhs.CollidesWith
-                            .Select(r => (IFormLink<ICollisionLayerGetter>)new FormLink<ICollisionLayerGetter>(r.FormKey))
-                            .ToExtendedList<IFormLink<ICollisionLayerGetter>>();
+                            .Select(r => (IFormLinkGetter<ICollisionLayerGetter>)new FormLink<ICollisionLayerGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<ICollisionLayerGetter>>();
                     }
                     else
                     {
@@ -1603,14 +1607,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.MNAM),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ICollisionLayerGetter>>.Instance.WriteWithCounter(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ICollisionLayerGetter>>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.CollidesWith,
                 counterType: RecordTypes.INTV,
                 counterLength: 4,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM),
                 writeCounterIfNull: true,
-                transl: (MutagenWriter subWriter, IFormLink<ICollisionLayerGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ICollisionLayerGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -1746,14 +1750,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.INTV:
                 {
                     item.CollidesWith = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ICollisionLayerGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ICollisionLayerGetter>>.Instance.Parse(
                             frame: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.INTV),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM),
                             nullIfZero: true,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedListIfAny<IFormLink<ICollisionLayerGetter>>();
+                        .CastExtendedListIfAny<IFormLinkGetter<ICollisionLayerGetter>>();
                     return (int)CollisionLayer_FieldIndex.CollidesWith;
                 }
                 default:
@@ -1831,7 +1835,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _NameLocation;
         public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants)) : string.Empty;
         #endregion
-        public IReadOnlyList<IFormLink<ICollisionLayerGetter>>? CollidesWith { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<ICollisionLayerGetter>>? CollidesWith { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1926,7 +1930,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.CNAM:
                 case RecordTypeInts.INTV:
                 {
-                    this.CollidesWith = BinaryOverlayList.FactoryByCountNullIfZero<IFormLink<ICollisionLayerGetter>>(
+                    this.CollidesWith = BinaryOverlayList.FactoryByCountNullIfZero<IFormLinkGetter<ICollisionLayerGetter>>(
                         stream: stream,
                         package: _package,
                         itemLength: 0x4,
@@ -1962,7 +1966,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ICollisionLayerGetter rhs)) return false;
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not ICollisionLayerGetter rhs) return false;
             return ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 

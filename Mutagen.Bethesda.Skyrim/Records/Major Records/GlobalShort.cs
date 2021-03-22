@@ -31,11 +31,6 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
         }
-
-        internal static GlobalShort Factory()
-        {
-            return new GlobalShort();
-        }
     }
 
     namespace Internals

@@ -41,6 +41,11 @@ namespace Mutagen.Bethesda.Generation
             {
                 fg.AppendLine($"{accessorPrefix} = null;");
             }
+            else if (SubTypeGeneration is FormLinkType linkType)
+            {
+                fg.AppendLine($"{accessorPrefix}.Male = {linkType.DirectTypeName(getter: false)}.Null;");
+                fg.AppendLine($"{accessorPrefix}.Female = {linkType.DirectTypeName(getter: false)}.Null;");
+            }
             else
             {
                 SubTypeGeneration.GenerateClear(fg, $"{accessorPrefix}.Male");

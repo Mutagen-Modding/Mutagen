@@ -80,7 +80,14 @@ namespace Mutagen.Bethesda.Skyrim
         public static RangeFloat MaxAngle_Range = new RangeFloat(30f, 120f);
         #endregion
         #region Material
-        public FormLink<IMaterialObjectGetter> Material { get; set; } = new FormLink<IMaterialObjectGetter>();
+        private IFormLink<IMaterialObjectGetter> _Material = new FormLink<IMaterialObjectGetter>();
+        public IFormLink<IMaterialObjectGetter> Material
+        {
+            get => _Material;
+            set => _Material = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IMaterialObjectGetter> IStaticGetter.Material => this.Material;
         #endregion
         #region Flags
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -131,22 +138,6 @@ namespace Mutagen.Bethesda.Skyrim
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IStaticGetter rhs)) return false;
-            return ((StaticCommon)((IStaticGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IStaticGetter? obj)
-        {
-            return ((StaticCommon)((IStaticGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((StaticCommon)((IStaticGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -702,6 +693,26 @@ namespace Mutagen.Bethesda.Skyrim
         {
             Break0 = 1
         }
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IStaticGetter rhs) return false;
+            return ((StaticCommon)((IStaticGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IStaticGetter? obj)
+        {
+            return ((StaticCommon)((IStaticGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((StaticCommon)((IStaticGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -772,7 +783,7 @@ namespace Mutagen.Bethesda.Skyrim
         new ObjectBounds ObjectBounds { get; set; }
         new Model? Model { get; set; }
         new Single MaxAngle { get; set; }
-        new FormLink<IMaterialObjectGetter> Material { get; set; }
+        new IFormLink<IMaterialObjectGetter> Material { get; }
         new Static.Flag Flags { get; set; }
         new MemorySlice<Byte> Unused { get; set; }
         new Lod? Lod { get; set; }
@@ -806,7 +817,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundsGetter ObjectBounds { get; }
         IModelGetter? Model { get; }
         Single MaxAngle { get; }
-        FormLink<IMaterialObjectGetter> Material { get; }
+        IFormLinkGetter<IMaterialObjectGetter> Material { get; }
         Static.Flag Flags { get; }
         ReadOnlyMemorySlice<Byte> Unused { get; }
         ILodGetter? Lod { get; }
@@ -1076,7 +1087,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ObjectBounds.Clear();
             item.Model = null;
             item.MaxAngle = Static._MaxAngle_Default;
-            item.Material = FormLink<IMaterialObjectGetter>.Null;
+            item.Material.Clear();
             item.Flags = default;
             item.Unused = new byte[3];
             item.Lod = null;
@@ -1099,7 +1110,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             base.RemapLinks(obj, mapping);
             obj.Model?.RemapLinks(mapping);
-            obj.Material = obj.Material.Relink(mapping);
+            obj.Material.Relink(mapping);
         }
         
         #endregion
@@ -1409,7 +1420,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Static(formKey, default(SkyrimRelease));
+            var newRec = new Static(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1420,7 +1431,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IStatic)item,
+                item: (IStaticGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1431,7 +1442,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IStatic)item,
+                item: (IStaticGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1528,7 +1539,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.Material) ?? true))
             {
-                item.Material = new FormLink<IMaterialObjectGetter>(rhs.Material.FormKey);
+                item.Material.SetTo(rhs.Material.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.Flags) ?? true))
             {
@@ -1756,19 +1767,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item: item.Material);
                 if (!item.DNAMDataTypeState.HasFlag(Static.DNAMDataType.Break0))
                 {
-                    if (writer.MetaData.FormVersion!.Value >= 44)
-                    {
-                        Mutagen.Bethesda.Binary.EnumBinaryTranslation<Static.Flag>.Instance.Write(
-                            writer,
-                            item.Flags,
-                            length: 1);
-                    }
-                    if (writer.MetaData.FormVersion!.Value >= 44)
-                    {
-                        Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.Unused);
-                    }
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Static.Flag>.Instance.Write(
+                        writer,
+                        item.Flags,
+                        length: 1);
+                    Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Unused);
                 }
             }
             if (item.Lod.TryGet(out var LodItem))
@@ -1886,22 +1891,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.MaxAngle = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.Material = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
+                    item.Material.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     if (dataFrame.Complete)
                     {
                         item.DNAMDataTypeState |= Static.DNAMDataType.Break0;
                         return (int)Static_FieldIndex.Material;
                     }
-                    if (frame.MetaData.FormVersion!.Value >= 44)
-                    {
-                        item.Flags = EnumBinaryTranslation<Static.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
-                    }
-                    if (frame.MetaData.FormVersion!.Value >= 44)
-                    {
-                        item.Unused = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: dataFrame.SpawnWithLength(3));
-                    }
+                    item.Flags = EnumBinaryTranslation<Static.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
+                    item.Unused = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: dataFrame.SpawnWithLength(3));
                     return (int)Static_FieldIndex.Unused;
                 }
                 case RecordTypeInts.MNAM:
@@ -1981,19 +1981,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Material
         private int _MaterialLocation => _DNAMLocation!.Value + 0x4;
         private bool _Material_IsSet => _DNAMLocation.HasValue;
-        public FormLink<IMaterialObjectGetter> Material => _Material_IsSet ? new FormLink<IMaterialObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_MaterialLocation, 0x4)))) : FormLink<IMaterialObjectGetter>.Null;
+        public IFormLinkGetter<IMaterialObjectGetter> Material => _Material_IsSet ? new FormLink<IMaterialObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_MaterialLocation, 0x4)))) : FormLink<IMaterialObjectGetter>.Null;
         #endregion
         #region Flags
         private int _FlagsLocation => _DNAMLocation!.Value + 0x8;
-        private bool _Flags_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(Static.DNAMDataType.Break0) && _package.FormVersion!.FormVersion!.Value >= 44;
+        private bool _Flags_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(Static.DNAMDataType.Break0);
         public Static.Flag Flags => _Flags_IsSet ? (Static.Flag)_data.Span.Slice(_FlagsLocation, 0x1)[0] : default;
-        int FlagsVersioningOffset => _package.FormVersion!.FormVersion!.Value < 44 ? -1 : 0;
         #endregion
         #region Unused
-        private int _UnusedLocation => _DNAMLocation!.Value + FlagsVersioningOffset + 0x9;
-        private bool _Unused_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(Static.DNAMDataType.Break0) && _package.FormVersion!.FormVersion!.Value >= 44;
+        private int _UnusedLocation => _DNAMLocation!.Value + 0x9;
+        private bool _Unused_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(Static.DNAMDataType.Break0);
         public ReadOnlyMemorySlice<Byte> Unused => _Unused_IsSet ? _data.Span.Slice(_UnusedLocation, 3).ToArray() : default(ReadOnlyMemorySlice<byte>);
-        int UnusedVersioningOffset => FlagsVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 44 ? -3 : 0);
         #endregion
         #region Lod
         private RangeInt32? _LodLocation;
@@ -2119,7 +2117,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IStaticGetter rhs)) return false;
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IStaticGetter rhs) return false;
             return ((StaticCommon)((IStaticGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 

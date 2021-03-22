@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Oblivion
 {
-    // Keep non-static so users can extend to add their own ModKeys cleanly.  No harm no foul
     public class Constants
     {
         public static readonly ModKey Oblivion = new ModKey("Oblivion", type: ModType.Master);
@@ -20,23 +19,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly ModKey MehrunesRazor = new ModKey("DLCMehrunesRazor", type: ModType.Plugin);
         public static readonly ModKey VileLair = new ModKey("DLCVileLair", type: ModType.Plugin);
         public static readonly ModKey SpellTomes = new ModKey("DLCSpellTomes", type: ModType.Plugin);
-        public static IEnumerable<ModKey> BaseGameModKeys => EnumerateBaseGameModKeys();
-
-        public static readonly FormKey Player = new FormKey(Oblivion, id: 0x14);
-
-        private static IEnumerable<ModKey> EnumerateBaseGameModKeys()
-        {
-            yield return Oblivion;
-            yield return Knights;
-            yield return ShiveringIsles;
-            yield return BattlehornCastle;
-            yield return HorseArmor;
-            yield return Orrery;
-            yield return Frostcrag;
-            yield return ThievesDen;
-            yield return MehrunesRazor;
-            yield return VileLair;
-            yield return SpellTomes;
-        }
+        public static readonly IFormLinkGetter<IOblivionMajorRecordGetter> Player = new FormLink<IOblivionMajorRecordGetter>(new FormKey(Oblivion, id: 0x14));
     }
 }

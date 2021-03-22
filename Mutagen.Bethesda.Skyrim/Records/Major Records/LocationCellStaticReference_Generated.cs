@@ -40,13 +40,34 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region LocationRefType
-        public FormLink<ILocationReferenceTypeGetter> LocationRefType { get; set; } = new FormLink<ILocationReferenceTypeGetter>();
+        private IFormLink<ILocationReferenceTypeGetter> _LocationRefType = new FormLink<ILocationReferenceTypeGetter>();
+        public IFormLink<ILocationReferenceTypeGetter> LocationRefType
+        {
+            get => _LocationRefType;
+            set => _LocationRefType = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ILocationReferenceTypeGetter> ILocationCellStaticReferenceGetter.LocationRefType => this.LocationRefType;
         #endregion
         #region Marker
-        public FormLink<ILinkedReferenceGetter> Marker { get; set; } = new FormLink<ILinkedReferenceGetter>();
+        private IFormLink<ILinkedReferenceGetter> _Marker = new FormLink<ILinkedReferenceGetter>();
+        public IFormLink<ILinkedReferenceGetter> Marker
+        {
+            get => _Marker;
+            set => _Marker = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ILinkedReferenceGetter> ILocationCellStaticReferenceGetter.Marker => this.Marker;
         #endregion
         #region Location
-        public FormLink<IComplexLocationGetter> Location { get; set; } = new FormLink<IComplexLocationGetter>();
+        private IFormLink<IComplexLocationGetter> _Location = new FormLink<IComplexLocationGetter>();
+        public IFormLink<IComplexLocationGetter> Location
+        {
+            get => _Location;
+            set => _Location = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IComplexLocationGetter> ILocationCellStaticReferenceGetter.Location => this.Location;
         #endregion
         #region Grid
         public P2Int16 Grid { get; set; } = default;
@@ -510,9 +531,9 @@ namespace Mutagen.Bethesda.Skyrim
         ILocationCellStaticReferenceGetter,
         ILoquiObjectSetter<ILocationCellStaticReference>
     {
-        new FormLink<ILocationReferenceTypeGetter> LocationRefType { get; set; }
-        new FormLink<ILinkedReferenceGetter> Marker { get; set; }
-        new FormLink<IComplexLocationGetter> Location { get; set; }
+        new IFormLink<ILocationReferenceTypeGetter> LocationRefType { get; }
+        new IFormLink<ILinkedReferenceGetter> Marker { get; }
+        new IFormLink<IComplexLocationGetter> Location { get; }
         new P2Int16 Grid { get; set; }
     }
 
@@ -529,9 +550,9 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => LocationCellStaticReference_Registration.Instance;
-        FormLink<ILocationReferenceTypeGetter> LocationRefType { get; }
-        FormLink<ILinkedReferenceGetter> Marker { get; }
-        FormLink<IComplexLocationGetter> Location { get; }
+        IFormLinkGetter<ILocationReferenceTypeGetter> LocationRefType { get; }
+        IFormLinkGetter<ILinkedReferenceGetter> Marker { get; }
+        IFormLinkGetter<IComplexLocationGetter> Location { get; }
         P2Int16 Grid { get; }
 
     }
@@ -791,18 +812,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ILocationCellStaticReference item)
         {
             ClearPartial();
-            item.LocationRefType = FormLink<ILocationReferenceTypeGetter>.Null;
-            item.Marker = FormLink<ILinkedReferenceGetter>.Null;
-            item.Location = FormLink<IComplexLocationGetter>.Null;
+            item.LocationRefType.Clear();
+            item.Marker.Clear();
+            item.Location.Clear();
             item.Grid = default;
         }
         
         #region Mutagen
         public void RemapLinks(ILocationCellStaticReference obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.LocationRefType = obj.LocationRefType.Relink(mapping);
-            obj.Marker = obj.Marker.Relink(mapping);
-            obj.Location = obj.Location.Relink(mapping);
+            obj.LocationRefType.Relink(mapping);
+            obj.Marker.Relink(mapping);
+            obj.Location.Relink(mapping);
         }
         
         #endregion
@@ -974,15 +995,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)LocationCellStaticReference_FieldIndex.LocationRefType) ?? true))
             {
-                item.LocationRefType = new FormLink<ILocationReferenceTypeGetter>(rhs.LocationRefType.FormKey);
+                item.LocationRefType.SetTo(rhs.LocationRefType.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LocationCellStaticReference_FieldIndex.Marker) ?? true))
             {
-                item.Marker = new FormLink<ILinkedReferenceGetter>(rhs.Marker.FormKey);
+                item.Marker.SetTo(rhs.Marker.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LocationCellStaticReference_FieldIndex.Location) ?? true))
             {
-                item.Location = new FormLink<IComplexLocationGetter>(rhs.Location.FormKey);
+                item.Location.SetTo(rhs.Location.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LocationCellStaticReference_FieldIndex.Grid) ?? true))
             {
@@ -1130,15 +1151,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILocationCellStaticReference item,
             MutagenFrame frame)
         {
-            item.LocationRefType = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            item.Marker = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            item.Location = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.LocationRefType.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
+            item.Marker.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
+            item.Location.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             item.Grid = Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(
                 frame: frame,
                 swapCoords: true);
@@ -1208,9 +1232,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<ILocationReferenceTypeGetter> LocationRefType => new FormLink<ILocationReferenceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public FormLink<ILinkedReferenceGetter> Marker => new FormLink<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
-        public FormLink<IComplexLocationGetter> Location => new FormLink<IComplexLocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
+        public IFormLinkGetter<ILocationReferenceTypeGetter> LocationRefType => new FormLink<ILocationReferenceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<ILinkedReferenceGetter> Marker => new FormLink<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<IComplexLocationGetter> Location => new FormLink<IComplexLocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
         public P2Int16 Grid => P2Int16BinaryTranslation.Read(_data.Slice(0xC, 0x4), swapCoords: true);
         partial void CustomFactoryEnd(
             OverlayStream stream,

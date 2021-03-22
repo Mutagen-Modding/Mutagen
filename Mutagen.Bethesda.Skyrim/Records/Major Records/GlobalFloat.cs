@@ -16,11 +16,6 @@ namespace Mutagen.Bethesda.Skyrim
             get => this.Data;
             set => this.Data = value;
         }
-
-        internal static GlobalFloat Factory()
-        {
-            return new GlobalFloat();
-        }
     }
 
     namespace Internals

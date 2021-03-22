@@ -1,13 +1,14 @@
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Diagnostics.Tracing.Parsers.FrameworkEventSource;
 using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda;
 using Noggog;
 using Xunit;
 using Xunit.Abstractions;
 using Constants = Mutagen.Bethesda.Internals.Constants;
+using Mutagen.Bethesda.UnitTests;
 
-namespace Mutagen.Bethesda.UnitTests
+namespace Api
 {
     /// <summary>
     /// Some tests that are less about testing correct functionality, and more confirming
@@ -35,7 +36,7 @@ namespace Mutagen.Bethesda.UnitTests
             var cache = sourceModGetter.ToImmutableLinkCache();
             var otherMod = new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimSE);
             var npc = otherMod.Npcs.AddNew();
-            npc.Race = race;
+            npc.Race.SetTo(race);
             Assert.True(npc.Race.TryResolve(cache, out var _));
         }
 
@@ -45,11 +46,11 @@ namespace Mutagen.Bethesda.UnitTests
             SkyrimMod sourceMod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimSE);
             Armor armor = sourceMod.Armors.AddNew();
 
-            void Tester(IReadOnlyList<IFormLink<IKeywordGetter>> tester)
+            void Tester(IReadOnlyList<IFormLinkGetter<IKeywordGetter>> tester)
             {
             }
 
-            armor.Keywords = new ExtendedList<IFormLink<IKeywordGetter>>();
+            armor.Keywords = new ExtendedList<IFormLinkGetter<IKeywordGetter>>();
             Tester(armor.Keywords);
         }
 
@@ -64,7 +65,7 @@ namespace Mutagen.Bethesda.UnitTests
             FormKey key = sourceMod.GetNextFormKey();
             Keyword keyword = sourceMod.Keywords.AddNew();
             Armor armor = sourceMod.Armors.AddNew();
-            armor.Keywords = new ExtendedList<IFormLink<IKeywordGetter>>();
+            armor.Keywords = new ExtendedList<IFormLinkGetter<IKeywordGetter>>();
             var test = armor.Keywords;
             test.Add(key);
             test.Add(keyword);
@@ -74,8 +75,8 @@ namespace Mutagen.Bethesda.UnitTests
         public static void FormLinkSetToNull()
         {
             var cameraShot = new CameraShot(Utility.Form1, SkyrimRelease.SkyrimSE);
-            cameraShot.ImageSpaceModifier = default;
-            cameraShot.ImageSpaceModifier = FormKey.Null;
+            cameraShot.ImageSpaceModifier.Clear();
+            cameraShot.ImageSpaceModifier.SetTo(FormKey.Null);
         }
 
         [Fact]
@@ -138,7 +139,7 @@ namespace Mutagen.Bethesda.UnitTests
             placedTrap.Disable(IPlaced.DisableType.DisableWithoutZOffset);
             interfacePlaced = placedTrap;
             interfacePlaced.Disable(IPlaced.DisableType.JustInitiallyDisabled);
-            APlaced abstractPlaced = placedTrap;
+            IPlaced abstractPlaced = placedTrap;
             abstractPlaced.Disable();
             abstractPlaced.Disable(IPlaced.DisableType.SafeDisable);
 
@@ -158,18 +159,18 @@ namespace Mutagen.Bethesda.UnitTests
 
             var link = new FormLink<ISkyrimMajorRecordGetter>(light.FormKey);
             var nullableLink = new FormLinkNullable<ISkyrimMajorRecordGetter>(light.FormKey);
-            IFormLink<ISkyrimMajorRecordGetter> iLink = link;
+            IFormLinkGetter<ISkyrimMajorRecordGetter> iLink = link;
 
             // Normal resolution
             link.TryResolve(cache, out var _);
-            link.TryResolve(cache, out ISkyrimMajorRecordGetter _);
+            link.TryResolve<ISkyrimMajorRecordGetter>(cache, out var _);
             link.Resolve(cache);
             link.TryResolve<ILightGetter>(cache, out var _);
             link.TryResolve(cache, out ILightGetter _);
             link.Resolve<ILightGetter>(cache);
 
             nullableLink.TryResolve(cache, out var _);
-            nullableLink.TryResolve(cache, out ISkyrimMajorRecordGetter _);
+            nullableLink.TryResolve<ISkyrimMajorRecordGetter>(cache, out var _);
             nullableLink.Resolve(cache);
             nullableLink.TryResolve<ILightGetter>(cache, out var _);
             nullableLink.TryResolve(cache, out ILightGetter _);
@@ -182,19 +183,19 @@ namespace Mutagen.Bethesda.UnitTests
             iLink.Resolve<ISkyrimMajorRecordGetter, ILightGetter>(cache);
 
             // Context resolution
-            link.TryResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord>(cache, out var _);
-            link.TryResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord>(cache, out IModContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord, ISkyrimMajorRecordGetter> _);
-            link.ResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord>(cache);
-            link.TryResolveContext<ISkyrimMod, ISkyrimModGetter, ILight, ILightGetter>(cache, out var _);
+            link.TryResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(cache, out var _);
+            link.TryResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(cache, out IModContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord, ISkyrimMajorRecordGetter> _);
+            link.ResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(cache);
+            link.TryResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecordGetter, ILight, ILightGetter>(cache, out var _);
             link.TryResolveContext(cache, out IModContext<ISkyrimMod, ISkyrimModGetter, ILight, ILightGetter> _);
-            link.ResolveContext<ISkyrimMod, ISkyrimModGetter, ILight, ILightGetter>(cache);
+            link.ResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecordGetter, ILight, ILightGetter>(cache);
 
-            nullableLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord>(cache, out var _);
-            nullableLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord>(cache, out IModContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord, ISkyrimMajorRecordGetter> _);
-            nullableLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord>(cache);
-            nullableLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, ILight, ILightGetter>(cache, out var _);
+            nullableLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(cache, out var _);
+            nullableLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(cache, out IModContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord, ISkyrimMajorRecordGetter> _);
+            nullableLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(cache);
+            nullableLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecordGetter, ILight, ILightGetter>(cache, out var _);
             nullableLink.TryResolveContext(cache, out IModContext<ISkyrimMod, ISkyrimModGetter, ILight, ILightGetter> _);
-            nullableLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, ILight, ILightGetter>(cache);
+            nullableLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecordGetter, ILight, ILightGetter>(cache);
 
             iLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(cache, out var _);
             iLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(cache);
@@ -206,14 +207,23 @@ namespace Mutagen.Bethesda.UnitTests
             IPerkGetter getter = new Perk(Utility.Form1, SkyrimRelease.SkyrimLE);
             Perk direct = new Perk(Utility.Form2, SkyrimRelease.SkyrimLE);
             IPerk setter = new Perk(Utility.Form2, SkyrimRelease.SkyrimLE);
-            FormLink<IPerkGetter> formLink = new FormLink<IPerkGetter>();
-            formLink = direct;
+            IFormLink<IPerkGetter> formLink = new FormLink<IPerkGetter>();
             formLink = getter.AsLink();
             formLink = direct.AsLink();
             formLink = setter.AsLink();
+            formLink.SetTo(direct);
+            formLink.SetTo(getter);
+            formLink.SetTo(setter);
+            formLink.SetTo(formLink);
 
-            // This fails, due to C# not wanting to implicit convert interfaces
-            //formLink = p;
+            IObjectEffectGetter objGetter = null!;
+            IFormLink<IEffectRecordGetter> aLink = new FormLink<IEffectRecordGetter>();
+            aLink.SetTo(objGetter);
+
+            IFormLink<ISkyrimMajorRecordGetter> majRecordLink = new FormLink<ISkyrimMajorRecordGetter>();
+            IFormLink<IKeywordGetter> keywordLink = new FormLink<IKeywordGetter>();
+            majRecordLink.SetTo(keywordLink);
+            majRecordLink.TryResolve<IKeywordGetter>(cache, out var keyw);
         }
 
         [Fact]
@@ -231,6 +241,12 @@ namespace Mutagen.Bethesda.UnitTests
             if (group.TryGetValue(Utility.Form1, out var npc))
             {
             }
+        }
+
+        [Fact]
+        public static void ImplicitsApi()
+        {
+            Implicits.Listings.Skyrim(SkyrimRelease.SkyrimSE).Contains(Utility.PluginModKey);
         }
     }
 }

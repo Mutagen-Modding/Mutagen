@@ -42,7 +42,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Parent
-        public FormLink<IWorldspaceGetter> Parent { get; set; } = new FormLink<IWorldspaceGetter>();
+        private IFormLink<IWorldspaceGetter> _Parent = new FormLink<IWorldspaceGetter>();
+        public IFormLink<IWorldspaceGetter> Parent
+        {
+            get => _Parent;
+            set => _Parent = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IWorldspaceGetter> IWorldspaceNavigationMeshDataGetter.Parent => this.Parent;
         #endregion
         #region Coordinates
         public P2Int16 Coordinates { get; set; } = default;
@@ -461,7 +468,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IWorldspaceNavigationMeshData>,
         IWorldspaceNavigationMeshDataGetter
     {
-        new FormLink<IWorldspaceGetter> Parent { get; set; }
+        new IFormLink<IWorldspaceGetter> Parent { get; }
         new P2Int16 Coordinates { get; set; }
     }
 
@@ -472,7 +479,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IWorldspaceNavigationMeshDataGetter>
     {
         static new ILoquiRegistration Registration => WorldspaceNavigationMeshData_Registration.Instance;
-        FormLink<IWorldspaceGetter> Parent { get; }
+        IFormLinkGetter<IWorldspaceGetter> Parent { get; }
         P2Int16 Coordinates { get; }
 
     }
@@ -717,7 +724,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IWorldspaceNavigationMeshData item)
         {
             ClearPartial();
-            item.Parent = FormLink<IWorldspaceGetter>.Null;
+            item.Parent.Clear();
             item.Coordinates = default;
             base.Clear(item);
         }
@@ -731,7 +738,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IWorldspaceNavigationMeshData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Parent = obj.Parent.Relink(mapping);
+            obj.Parent.Relink(mapping);
         }
         
         #endregion
@@ -962,7 +969,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)WorldspaceNavigationMeshData_FieldIndex.Parent) ?? true))
             {
-                item.Parent = new FormLink<IWorldspaceGetter>(rhs.Parent.FormKey);
+                item.Parent.SetTo(rhs.Parent.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)WorldspaceNavigationMeshData_FieldIndex.Coordinates) ?? true))
             {

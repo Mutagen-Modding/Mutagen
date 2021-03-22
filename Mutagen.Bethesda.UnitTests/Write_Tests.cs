@@ -192,7 +192,7 @@ namespace Mutagen.Bethesda.UnitTests
             var mod = new SkyrimMod(WriteKey, SkyrimRelease.SkyrimLE);
             var armor = mod.Armors.AddNew();
             mod.WriteToBinaryParallel(tmp.File.Path, param);
-            armor.Keywords = new ExtendedList<IFormLink<IKeywordGetter>>();
+            armor.Keywords = new ExtendedList<IFormLinkGetter<IKeywordGetter>>();
             mod.WriteToBinaryParallel(tmp.File.Path, param);
             armor.Keywords.Add(FormKey.Null);
             mod.WriteToBinaryParallel(tmp.File.Path, param);

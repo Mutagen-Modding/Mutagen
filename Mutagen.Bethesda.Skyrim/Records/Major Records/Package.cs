@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.Skyrim
                     throw new ArgumentException();
                 }
                 var dataCount = checked((int)BinaryPrimitives.ReadUInt32LittleEndian(pkcuRecord.Content));
-                item.PackageTemplate = FormKeyBinaryTranslation.Instance.Parse(pkcuRecord.Content.Slice(4, 4), frame.MetaData.MasterReferences!);
+                item.PackageTemplate.FormKey = FormKeyBinaryTranslation.Instance.Parse(pkcuRecord.Content.Slice(4, 4), frame.MetaData.MasterReferences!);
                 item.DataInputVersion = BinaryPrimitives.ReadInt32LittleEndian(pkcuRecord.Content.Slice(8));
 
                 FillPackageData(frame.Reader, dataCount, item.Data);
@@ -534,7 +534,7 @@ namespace Mutagen.Bethesda.Skyrim
             ReadOnlyMemorySlice<Byte> _xnam;
             public ReadOnlyMemorySlice<Byte> GetXnamMarkerCustom() => _xnam;
 
-            FormLink<IPackageGetter> _packageTemplate;
+            FormLink<IPackageGetter> _packageTemplate = null!;
             public FormLink<IPackageGetter> GetPackageTemplateCustom() => _packageTemplate;
 
             private void PackageTemplateCustomParse(

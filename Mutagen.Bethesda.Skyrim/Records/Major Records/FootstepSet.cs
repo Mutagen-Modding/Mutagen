@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 var counts = GetListCounts(frame);
 
-                IEnumerable<IFormLink<Footstep>> ReadIn(int count)
+                IEnumerable<IFormLinkGetter<Footstep>> ReadIn(int count)
                 {
                     for (int i = 0; i < count; i++)
                     {
@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Skyrim
                     writer.Write(item.WalkForwardAlternateFootsteps2.Count);
                 }
 
-                void WriteListOfFormKeys(IReadOnlyList<IFormLink<IFootstepGetter>> formKeys)
+                void WriteListOfFormKeys(IReadOnlyList<IFormLinkGetter<IFootstepGetter>> formKeys)
                 {
                     foreach (var link in formKeys)
                     {
@@ -92,23 +92,23 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class FootstepSetBinaryOverlay
         {
-            public IReadOnlyList<IFormLink<IFootstepGetter>> WalkForwardFootsteps { get; private set; } = ListExt.Empty<IFormLink<IFootstepGetter>>();
+            public IReadOnlyList<IFormLinkGetter<IFootstepGetter>> WalkForwardFootsteps { get; private set; } = ListExt.Empty<IFormLinkGetter<IFootstepGetter>>();
 
-            public IReadOnlyList<IFormLink<IFootstepGetter>> RunForwardFootsteps { get; private set; } = ListExt.Empty<IFormLink<IFootstepGetter>>();
+            public IReadOnlyList<IFormLinkGetter<IFootstepGetter>> RunForwardFootsteps { get; private set; } = ListExt.Empty<IFormLinkGetter<IFootstepGetter>>();
 
-            public IReadOnlyList<IFormLink<IFootstepGetter>> WalkForwardAlternateFootsteps { get; private set; } = ListExt.Empty<IFormLink<IFootstepGetter>>();
+            public IReadOnlyList<IFormLinkGetter<IFootstepGetter>> WalkForwardAlternateFootsteps { get; private set; } = ListExt.Empty<IFormLinkGetter<IFootstepGetter>>();
 
-            public IReadOnlyList<IFormLink<IFootstepGetter>> RunForwardAlternateFootsteps { get; private set; } = ListExt.Empty<IFormLink<IFootstepGetter>>();
+            public IReadOnlyList<IFormLinkGetter<IFootstepGetter>> RunForwardAlternateFootsteps { get; private set; } = ListExt.Empty<IFormLinkGetter<IFootstepGetter>>();
 
-            public IReadOnlyList<IFormLink<IFootstepGetter>> WalkForwardAlternateFootsteps2 { get; private set; } = ListExt.Empty<IFormLink<IFootstepGetter>>();
+            public IReadOnlyList<IFormLinkGetter<IFootstepGetter>> WalkForwardAlternateFootsteps2 { get; private set; } = ListExt.Empty<IFormLinkGetter<IFootstepGetter>>();
 
             partial void CountCustomParse(OverlayStream stream, int offset)
             {
                 int[] counts = FootstepSetBinaryCreateTranslation.GetListCounts(stream);
 
-                IReadOnlyList<IFormLink<IFootstepGetter>> Get(int index)
+                IReadOnlyList<IFormLinkGetter<IFootstepGetter>> Get(int index)
                 {
-                    var ret =  BinaryOverlayList.FactoryByCount<IFormLink<IFootstepGetter>>(
+                    var ret =  BinaryOverlayList.FactoryByCount<IFormLinkGetter<IFootstepGetter>>(
                         _data.Slice(stream.Position - offset, 4 * counts[index]),
                         _package,
                         itemLength: 4,

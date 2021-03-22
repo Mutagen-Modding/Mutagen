@@ -38,6 +38,10 @@ namespace Mutagen.Bethesda.Binary
             FormKey item,
             bool nullable = false)
         {
+            if (writer.MetaData.CleanNulls && item.IsNull)
+            {
+                item = FormKey.Null;
+            }
             UInt32BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: writer.MetaData.MasterReferences!.GetFormID(item).Raw);

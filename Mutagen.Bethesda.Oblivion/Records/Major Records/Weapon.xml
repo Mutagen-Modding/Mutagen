@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Weapon" baseClass="AItem" objType="Record" recordType="WEAP" GUID="7251519c-a94a-44f1-a46c-c9a659b6e36c" ID="82">
+  <Object name="Weapon" baseClass="OblivionMajorRecord" objType="Record" recordType="WEAP" GUID="7251519c-a94a-44f1-a46c-c9a659b6e36c" ID="82">
     <Fields>
       <String name="Name" recordType="FULL" />
       <RefDirect name="Model" refName="Model" />
@@ -10,6 +10,7 @@
       <UInt16 name="EnchantmentPoints" recordType="ANAM" />
       <RefDirect name="Data" refName="WeaponData" />
     </Fields>
+    <LinkInterface>IItem</LinkInterface>
   </Object>
   <Object name="WeaponData" recordType="DATA" objType="Subrecord" GUID="950914fc-ecc6-459d-8cda-edd66842e652" ID="215">
     <Fields>

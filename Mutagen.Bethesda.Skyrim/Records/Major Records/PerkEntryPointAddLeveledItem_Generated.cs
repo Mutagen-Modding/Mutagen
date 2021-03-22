@@ -42,7 +42,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Item
-        public FormLink<ILeveledItemGetter> Item { get; set; } = new FormLink<ILeveledItemGetter>();
+        private IFormLink<ILeveledItemGetter> _Item = new FormLink<ILeveledItemGetter>();
+        public IFormLink<ILeveledItemGetter> Item
+        {
+            get => _Item;
+            set => _Item = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ILeveledItemGetter> IPerkEntryPointAddLeveledItemGetter.Item => this.Item;
         #endregion
 
         #region To String
@@ -419,7 +426,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPerkEntryPointAddLeveledItem>,
         IPerkEntryPointAddLeveledItemGetter
     {
-        new FormLink<ILeveledItemGetter> Item { get; set; }
+        new IFormLink<ILeveledItemGetter> Item { get; }
     }
 
     public partial interface IPerkEntryPointAddLeveledItemGetter :
@@ -429,7 +436,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IPerkEntryPointAddLeveledItemGetter>
     {
         static new ILoquiRegistration Registration => PerkEntryPointAddLeveledItem_Registration.Instance;
-        FormLink<ILeveledItemGetter> Item { get; }
+        IFormLinkGetter<ILeveledItemGetter> Item { get; }
 
     }
 
@@ -667,7 +674,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IPerkEntryPointAddLeveledItem item)
         {
             ClearPartial();
-            item.Item = FormLink<ILeveledItemGetter>.Null;
+            item.Item.Clear();
             base.Clear(item);
         }
         
@@ -685,7 +692,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IPerkEntryPointAddLeveledItem obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Item = obj.Item.Relink(mapping);
+            obj.Item.Relink(mapping);
         }
         
         #endregion
@@ -940,7 +947,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PerkEntryPointAddLeveledItem_FieldIndex.Item) ?? true))
             {
-                item.Item = new FormLink<ILeveledItemGetter>(rhs.Item.FormKey);
+                item.Item.SetTo(rhs.Item.FormKey);
             }
         }
         
@@ -1134,9 +1141,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             APerkEntryPointEffectBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.Item = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Item.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
         }
 
     }
@@ -1184,7 +1192,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<ILeveledItemGetter> Item => new FormLink<ILeveledItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x2, 0x4))));
+        public IFormLinkGetter<ILeveledItemGetter> Item => new FormLink<ILeveledItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x2, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

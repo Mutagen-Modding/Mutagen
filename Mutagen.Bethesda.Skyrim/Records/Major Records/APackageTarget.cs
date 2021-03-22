@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Binary;
 using Noggog;
 using System;
 using System.Collections.Generic;
@@ -25,11 +25,11 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 APackageTarget.Type.SpecificReference => new PackageTargetSpecificReference()
                 {
-                    Reference = FormKeyBinaryTranslation.Instance.Parse(frame)
+                    Reference = new FormLink<ILinkedReferenceGetter>(FormKeyBinaryTranslation.Instance.Parse(frame))
                 },
                 APackageTarget.Type.ObjectID => new PackageTargetObjectID()
                 {
-                    Reference = FormKeyBinaryTranslation.Instance.Parse(frame)
+                    Reference = new FormLink<IObjectIdGetter>(FormKeyBinaryTranslation.Instance.Parse(frame))
                 },
                 APackageTarget.Type.ObjectType => new PackageTargetObjectType()
                 {
@@ -37,7 +37,7 @@ namespace Mutagen.Bethesda.Skyrim
                 },
                 APackageTarget.Type.LinkedReference => new PackageTargetReference()
                 {
-                    Reference = FormKeyBinaryTranslation.Instance.Parse(frame)
+                    Reference = new FormLink<ISkyrimMajorRecordGetter>(FormKeyBinaryTranslation.Instance.Parse(frame))
                 },
                 APackageTarget.Type.RefAlias => new PackageTargetAlias()
                 {

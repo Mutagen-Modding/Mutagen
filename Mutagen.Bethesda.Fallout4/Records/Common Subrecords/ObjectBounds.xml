@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ObjectBounds" objType="Subrecord" recordType="OBND" GUID="61bd404f-769a-4b9a-89b5-b0e02ef67487" ID="36">
+    <Fields>
+      <P3Int16 name="First" />
+      <P3Int16 name="Second" />
+    </Fields>
+  </Object>
+</Loqui>

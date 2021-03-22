@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Keyword" recordType="KYWD" objType="Record" baseClass="Fallout4MajorRecord" GUID="fa5a0ae9-a530-4240-96f4-13f919309178" ID="28">
+  <Object name="Keyword" recordType="KYWD" objType="Record" baseClass="Fallout4MajorRecord" GUID="05cd2ea7-db59-4fd0-8b00-d45eb284e754" ID="32">
     <Fields>
       <Color name="Color" recordType="CNAM" binaryType="Alpha" />
+      <String name="Notes" recordType="DNAM" />
+      <Enum name="Type" enumName="Keyword.TypeEnum" byteLength="4" recordType="TNAM" />
+      <FormLink name="AttractionRule" refName="AttractionRule" recordType="DATA" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <String name="DisplayName" recordType="NNAM"/>
     </Fields>
     <LinkInterface>IKeywordLinkedReference</LinkInterface>
   </Object>

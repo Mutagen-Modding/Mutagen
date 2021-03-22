@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -11,7 +11,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class WorldspaceNavigationMeshDataBinaryOverlay
         {
-            public FormLink<IWorldspaceGetter> Parent =>
+            public IFormLinkGetter<IWorldspaceGetter> Parent =>
                 new FormLink<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(8))));
 
             public P2Int16 Coordinates => new P2Int16(

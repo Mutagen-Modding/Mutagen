@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="LocationReferenceType" recordType="LCRT" objType="Record" baseClass="Fallout4MajorRecord" GUID="c5ecd244-8303-4cd2-8eb5-007a988a3842" ID="33">
+    <Fields>
+      <Color name="Color" recordType="CNAM" binaryType="Alpha" />
+      <String name="TNAM" recordType="TNAM" />
+    </Fields>
+    <LinkInterface>ILocationRecord</LinkInterface>
+  </Object>
+</Loqui>

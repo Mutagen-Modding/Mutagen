@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="us-ascii"?>
-<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ASpell" abstract="true" objType="Record" baseClass="SkyrimMajorRecord" GUID="cef2b193-aa35-4417-afd6-a3bf0f7824f8" ID="145">
-    <Fields>
-    </Fields>
-  </Object>
-</Loqui>

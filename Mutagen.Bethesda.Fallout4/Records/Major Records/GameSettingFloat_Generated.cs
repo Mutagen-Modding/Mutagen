@@ -61,22 +61,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IGameSettingFloatGetter rhs)) return false;
-            return ((GameSettingFloatCommon)((IGameSettingFloatGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IGameSettingFloatGetter? obj)
-        {
-            return ((GameSettingFloatCommon)((IGameSettingFloatGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((GameSettingFloatCommon)((IGameSettingFloatGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             GameSetting.Mask<TItem>,
@@ -392,6 +376,26 @@ namespace Mutagen.Bethesda.Fallout4
         {
             this.EditorID = editorID;
         }
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IGameSettingFloatGetter rhs) return false;
+            return ((GameSettingFloatCommon)((IGameSettingFloatGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IGameSettingFloatGetter? obj)
+        {
+            return ((GameSettingFloatCommon)((IGameSettingFloatGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((GameSettingFloatCommon)((IGameSettingFloatGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
 
         #endregion
 
@@ -1043,7 +1047,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IGameSettingFloat)item,
+                item: (IGameSettingFloatGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1054,7 +1058,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IGameSettingFloat)item,
+                item: (IGameSettingFloatGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1065,7 +1069,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IGameSettingFloat)item,
+                item: (IGameSettingFloatGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1566,7 +1570,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IGameSettingFloatGetter rhs)) return false;
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IGameSettingFloatGetter rhs) return false;
             return ((GameSettingFloatCommon)((IGameSettingFloatGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 

@@ -43,7 +43,14 @@ namespace Mutagen.Bethesda.Skyrim
         public Int32 Unknown { get; set; } = default;
         #endregion
         #region Door
-        public FormLink<IPlacedObjectGetter> Door { get; set; } = new FormLink<IPlacedObjectGetter>();
+        private IFormLink<IPlacedObjectGetter> _Door = new FormLink<IPlacedObjectGetter>();
+        public IFormLink<IPlacedObjectGetter> Door
+        {
+            get => _Door;
+            set => _Door = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IPlacedObjectGetter> ILinkedDoorGetter.Door => this.Door;
         #endregion
 
         #region To String
@@ -449,7 +456,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ILinkedDoor>
     {
         new Int32 Unknown { get; set; }
-        new FormLink<IPlacedObjectGetter> Door { get; set; }
+        new IFormLink<IPlacedObjectGetter> Door { get; }
     }
 
     public partial interface ILinkedDoorGetter :
@@ -466,7 +473,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => LinkedDoor_Registration.Instance;
         Int32 Unknown { get; }
-        FormLink<IPlacedObjectGetter> Door { get; }
+        IFormLinkGetter<IPlacedObjectGetter> Door { get; }
 
     }
 
@@ -724,13 +731,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Unknown = default;
-            item.Door = FormLink<IPlacedObjectGetter>.Null;
+            item.Door.Clear();
         }
         
         #region Mutagen
         public void RemapLinks(ILinkedDoor obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Door = obj.Door.Relink(mapping);
+            obj.Door.Relink(mapping);
         }
         
         #endregion
@@ -890,7 +897,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LinkedDoor_FieldIndex.Door) ?? true))
             {
-                item.Door = new FormLink<IPlacedObjectGetter>(rhs.Door.FormKey);
+                item.Door.SetTo(rhs.Door.FormKey);
             }
         }
         
@@ -1026,9 +1033,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame)
         {
             item.Unknown = frame.ReadInt32();
-            item.Door = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Door.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
         }
 
     }
@@ -1096,7 +1104,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
-        public FormLink<IPlacedObjectGetter> Door => new FormLink<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<IPlacedObjectGetter> Door => new FormLink<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

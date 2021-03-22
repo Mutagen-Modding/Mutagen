@@ -135,7 +135,14 @@ namespace Mutagen.Bethesda.Skyrim
         public Boolean Hidden { get; set; } = default;
         #endregion
         #region NextPerk
-        public FormLinkNullable<IPerkGetter> NextPerk { get; set; } = new FormLinkNullable<IPerkGetter>();
+        private IFormLinkNullable<IPerkGetter> _NextPerk = new FormLinkNullable<IPerkGetter>();
+        public IFormLinkNullable<IPerkGetter> NextPerk
+        {
+            get => _NextPerk;
+            set => _NextPerk = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IPerkGetter> IPerkGetter.NextPerk => this.NextPerk;
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -165,22 +172,6 @@ namespace Mutagen.Bethesda.Skyrim
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IPerkGetter rhs)) return false;
-            return ((PerkCommon)((IPerkGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IPerkGetter? obj)
-        {
-            return ((PerkCommon)((IPerkGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((PerkCommon)((IPerkGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -1018,6 +1009,26 @@ namespace Mutagen.Bethesda.Skyrim
         public enum DATADataType
         {
         }
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IPerkGetter rhs) return false;
+            return ((PerkCommon)((IPerkGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IPerkGetter? obj)
+        {
+            return ((PerkCommon)((IPerkGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((PerkCommon)((IPerkGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -1095,7 +1106,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Byte NumRanks { get; set; }
         new Boolean Playable { get; set; }
         new Boolean Hidden { get; set; }
-        new FormLinkNullable<IPerkGetter> NextPerk { get; set; }
+        new IFormLinkNullable<IPerkGetter> NextPerk { get; }
         new ExtendedList<APerkEffect> Effects { get; }
         new Perk.DATADataType DATADataTypeState { get; set; }
         #region Mutagen
@@ -1134,7 +1145,7 @@ namespace Mutagen.Bethesda.Skyrim
         Byte NumRanks { get; }
         Boolean Playable { get; }
         Boolean Hidden { get; }
-        FormLinkNullable<IPerkGetter> NextPerk { get; }
+        IFormLinkNullableGetter<IPerkGetter> NextPerk { get; }
         IReadOnlyList<IAPerkEffectGetter> Effects { get; }
         Perk.DATADataType DATADataTypeState { get; }
 
@@ -1414,7 +1425,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.NumRanks = default;
             item.Playable = default;
             item.Hidden = default;
-            item.NextPerk = FormLinkNullable<IPerkGetter>.Null;
+            item.NextPerk.Clear();
             item.Effects.Clear();
             item.DATADataTypeState = default;
             base.Clear(item);
@@ -1436,7 +1447,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.RemapLinks(obj, mapping);
             obj.VirtualMachineAdapter?.RemapLinks(mapping);
             obj.Conditions.RemapLinks(mapping);
-            obj.NextPerk = obj.NextPerk.Relink(mapping);
+            obj.NextPerk.Relink(mapping);
             obj.Effects.RemapLinks(mapping);
         }
         
@@ -1833,7 +1844,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Perk(formKey, default(SkyrimRelease));
+            var newRec = new Perk(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1844,7 +1855,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IPerk)item,
+                item: (IPerkGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1855,7 +1866,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IPerk)item,
+                item: (IPerkGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -2004,7 +2015,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.NextPerk) ?? true))
             {
-                item.NextPerk = new FormLinkNullable<IPerkGetter>(rhs.NextPerk.FormKeyNullable);
+                item.NextPerk.SetTo(rhs.NextPerk.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.Effects) ?? true))
             {
@@ -2412,9 +2423,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.NNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NextPerk = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.NextPerk.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Perk_FieldIndex.NextPerk;
                 }
                 case RecordTypeInts.PRKE:
@@ -2546,7 +2558,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region NextPerk
         private int? _NextPerkLocation;
-        public FormLinkNullable<IPerkGetter> NextPerk => _NextPerkLocation.HasValue ? new FormLinkNullable<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _NextPerkLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPerkGetter>.Null;
+        public IFormLinkNullableGetter<IPerkGetter> NextPerk => _NextPerkLocation.HasValue ? new FormLinkNullable<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _NextPerkLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPerkGetter>.Null;
         #endregion
         #region Effects
         partial void EffectsCustomParse(
@@ -2701,7 +2713,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPerkGetter rhs)) return false;
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IPerkGetter rhs) return false;
             return ((PerkCommon)((IPerkGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 

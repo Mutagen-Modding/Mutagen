@@ -40,7 +40,14 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Sound
-        public FormLink<ISoundGetter> Sound { get; set; } = new FormLink<ISoundGetter>();
+        private IFormLink<ISoundGetter> _Sound = new FormLink<ISoundGetter>();
+        public IFormLink<ISoundGetter> Sound
+        {
+            get => _Sound;
+            set => _Sound = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ISoundGetter> IWeatherSoundGetter.Sound => this.Sound;
         #endregion
         #region Type
         public WeatherSound.SoundType Type { get; set; } = default;
@@ -449,7 +456,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IWeatherSound>,
         IWeatherSoundGetter
     {
-        new FormLink<ISoundGetter> Sound { get; set; }
+        new IFormLink<ISoundGetter> Sound { get; }
         new WeatherSound.SoundType Type { get; set; }
     }
 
@@ -466,7 +473,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => WeatherSound_Registration.Instance;
-        FormLink<ISoundGetter> Sound { get; }
+        IFormLinkGetter<ISoundGetter> Sound { get; }
         WeatherSound.SoundType Type { get; }
 
     }
@@ -725,14 +732,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IWeatherSound item)
         {
             ClearPartial();
-            item.Sound = FormLink<ISoundGetter>.Null;
+            item.Sound.Clear();
             item.Type = default;
         }
         
         #region Mutagen
         public void RemapLinks(IWeatherSound obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Sound = obj.Sound.Relink(mapping);
+            obj.Sound.Relink(mapping);
         }
         
         #endregion
@@ -891,7 +898,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)WeatherSound_FieldIndex.Sound) ?? true))
             {
-                item.Sound = new FormLink<ISoundGetter>(rhs.Sound.FormKey);
+                item.Sound.SetTo(rhs.Sound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)WeatherSound_FieldIndex.Type) ?? true))
             {
@@ -1039,9 +1046,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWeatherSound item,
             MutagenFrame frame)
         {
-            item.Sound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Sound.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             item.Type = EnumBinaryTranslation<WeatherSound.SoundType>.Instance.Parse(frame: frame.SpawnWithLength(4));
         }
 
@@ -1109,7 +1117,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<ISoundGetter> Sound => new FormLink<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<ISoundGetter> Sound => new FormLink<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public WeatherSound.SoundType Type => (WeatherSound.SoundType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

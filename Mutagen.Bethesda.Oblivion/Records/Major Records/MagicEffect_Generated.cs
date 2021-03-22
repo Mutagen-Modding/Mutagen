@@ -95,15 +95,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region CounterEffects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IEDIDLink<IMagicEffectGetter>>? _CounterEffects;
-        public ExtendedList<IEDIDLink<IMagicEffectGetter>>? CounterEffects
+        private ExtendedList<IEDIDLinkGetter<IMagicEffectGetter>>? _CounterEffects;
+        public ExtendedList<IEDIDLinkGetter<IMagicEffectGetter>>? CounterEffects
         {
             get => this._CounterEffects;
             set => this._CounterEffects = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IEDIDLink<IMagicEffectGetter>>? IMagicEffectGetter.CounterEffects => _CounterEffects;
+        IReadOnlyList<IEDIDLinkGetter<IMagicEffectGetter>>? IMagicEffectGetter.CounterEffects => _CounterEffects;
         #endregion
 
         #endregion
@@ -118,22 +118,6 @@ namespace Mutagen.Bethesda.Oblivion
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IMagicEffectGetter rhs)) return false;
-            return ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IMagicEffectGetter? obj)
-        {
-            return ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -670,6 +654,26 @@ namespace Mutagen.Bethesda.Oblivion
             this.EditorID = editorID;
         }
 
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IMagicEffectGetter rhs) return false;
+            return ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IMagicEffectGetter? obj)
+        {
+            return ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -740,7 +744,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Icon { get; set; }
         new Model? Model { get; set; }
         new MagicEffectData? Data { get; set; }
-        new ExtendedList<IEDIDLink<IMagicEffectGetter>>? CounterEffects { get; set; }
+        new ExtendedList<IEDIDLinkGetter<IMagicEffectGetter>>? CounterEffects { get; set; }
     }
 
     public partial interface IMagicEffectInternal :
@@ -766,7 +770,7 @@ namespace Mutagen.Bethesda.Oblivion
         String? Icon { get; }
         IModelGetter? Model { get; }
         IMagicEffectDataGetter? Data { get; }
-        IReadOnlyList<IEDIDLink<IMagicEffectGetter>>? CounterEffects { get; }
+        IReadOnlyList<IEDIDLinkGetter<IMagicEffectGetter>>? CounterEffects { get; }
 
     }
 
@@ -1379,7 +1383,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IMagicEffect)item,
+                item: (IMagicEffectGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1390,7 +1394,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IMagicEffect)item,
+                item: (IMagicEffectGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1506,8 +1510,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.CounterEffects = 
                             rhs.CounterEffects
-                            .Select(r => (IEDIDLink<IMagicEffectGetter>)new EDIDLink<IMagicEffectGetter>(r.EDID))
-                            .ToExtendedList<IEDIDLink<IMagicEffectGetter>>();
+                            .Select(r => (IEDIDLinkGetter<IMagicEffectGetter>)new EDIDLink<IMagicEffectGetter>(r.EDID))
+                            .ToExtendedList<IEDIDLinkGetter<IMagicEffectGetter>>();
                     }
                     else
                     {
@@ -1710,11 +1714,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IEDIDLink<IMagicEffectGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IEDIDLinkGetter<IMagicEffectGetter>>.Instance.Write(
                 writer: writer,
                 items: item.CounterEffects,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.ESCE),
-                transl: (MutagenWriter subWriter, IEDIDLink<IMagicEffectGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IEDIDLinkGetter<IMagicEffectGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -1851,10 +1855,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.CounterEffects = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IEDIDLink<IMagicEffectGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IEDIDLinkGetter<IMagicEffectGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: RecordTypeBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IEDIDLink<IMagicEffectGetter>>();
+                        .CastExtendedList<IEDIDLinkGetter<IMagicEffectGetter>>();
                     return (int)MagicEffect_FieldIndex.CounterEffects;
                 }
                 default:
@@ -1933,7 +1937,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private RangeInt32? _DataLocation;
         public IMagicEffectDataGetter? Data => _DataLocation.HasValue ? MagicEffectDataBinaryOverlay.MagicEffectDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
         #endregion
-        public IReadOnlyList<IEDIDLink<IMagicEffectGetter>>? CounterEffects { get; private set; }
+        public IReadOnlyList<IEDIDLinkGetter<IMagicEffectGetter>>? CounterEffects { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2032,7 +2036,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.CounterEffects = BinaryOverlayList.FactoryByStartIndex<IEDIDLink<IMagicEffectGetter>>(
+                    this.CounterEffects = BinaryOverlayList.FactoryByStartIndex<IEDIDLinkGetter<IMagicEffectGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
@@ -2066,7 +2070,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IMagicEffectGetter rhs)) return false;
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IMagicEffectGetter rhs) return false;
             return ((MagicEffectCommon)((IMagicEffectGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 

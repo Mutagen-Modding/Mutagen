@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Skyrim.Internals;
 using System;
 using System.Buffers.Binary;
@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
                         case ATopicReference.TopicType.Ref:
                             yield return new TopicReference()
                             {
-                                Reference = FormLinkBinaryTranslation.Instance.Parse(frame)
+                                Reference = new FormLink<IDialogTopicGetter>(FormLinkBinaryTranslation.Instance.Parse(frame))
                             };
                             break;
                         case ATopicReference.TopicType.Subtype:

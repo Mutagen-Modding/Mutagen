@@ -63,7 +63,14 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte> IDialogResponseGetter.Unknown2 => this.Unknown2;
         #endregion
         #region Sound
-        public FormLink<ISoundDescriptorGetter> Sound { get; set; } = new FormLink<ISoundDescriptorGetter>();
+        private IFormLink<ISoundDescriptorGetter> _Sound = new FormLink<ISoundDescriptorGetter>();
+        public IFormLink<ISoundDescriptorGetter> Sound
+        {
+            get => _Sound;
+            set => _Sound = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ISoundDescriptorGetter> IDialogResponseGetter.Sound => this.Sound;
         #endregion
         #region Flags
         public DialogResponse.Flag Flags { get; set; } = default;
@@ -90,10 +97,24 @@ namespace Mutagen.Bethesda.Skyrim
         public String Edits { get; set; } = string.Empty;
         #endregion
         #region SpeakerIdleAnimation
-        public FormLinkNullable<IIdleAnimationGetter> SpeakerIdleAnimation { get; set; } = new FormLinkNullable<IIdleAnimationGetter>();
+        private IFormLinkNullable<IIdleAnimationGetter> _SpeakerIdleAnimation = new FormLinkNullable<IIdleAnimationGetter>();
+        public IFormLinkNullable<IIdleAnimationGetter> SpeakerIdleAnimation
+        {
+            get => _SpeakerIdleAnimation;
+            set => _SpeakerIdleAnimation = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IIdleAnimationGetter> IDialogResponseGetter.SpeakerIdleAnimation => this.SpeakerIdleAnimation;
         #endregion
         #region ListenerIdleAnimation
-        public FormLinkNullable<IIdleAnimationGetter> ListenerIdleAnimation { get; set; } = new FormLinkNullable<IIdleAnimationGetter>();
+        private IFormLinkNullable<IIdleAnimationGetter> _ListenerIdleAnimation = new FormLinkNullable<IIdleAnimationGetter>();
+        public IFormLinkNullable<IIdleAnimationGetter> ListenerIdleAnimation
+        {
+            get => _ListenerIdleAnimation;
+            set => _ListenerIdleAnimation = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IIdleAnimationGetter> IDialogResponseGetter.ListenerIdleAnimation => this.ListenerIdleAnimation;
         #endregion
         #region TRDTDataTypeState
         public DialogResponse.TRDTDataType TRDTDataTypeState { get; set; } = default;
@@ -847,14 +868,14 @@ namespace Mutagen.Bethesda.Skyrim
         new Int32 Unknown { get; set; }
         new Byte ResponseNumber { get; set; }
         new MemorySlice<Byte> Unknown2 { get; set; }
-        new FormLink<ISoundDescriptorGetter> Sound { get; set; }
+        new IFormLink<ISoundDescriptorGetter> Sound { get; }
         new DialogResponse.Flag Flags { get; set; }
         new MemorySlice<Byte> Unknown3 { get; set; }
         new TranslatedString Text { get; set; }
         new String ScriptNotes { get; set; }
         new String Edits { get; set; }
-        new FormLinkNullable<IIdleAnimationGetter> SpeakerIdleAnimation { get; set; }
-        new FormLinkNullable<IIdleAnimationGetter> ListenerIdleAnimation { get; set; }
+        new IFormLinkNullable<IIdleAnimationGetter> SpeakerIdleAnimation { get; }
+        new IFormLinkNullable<IIdleAnimationGetter> ListenerIdleAnimation { get; }
         new DialogResponse.TRDTDataType TRDTDataTypeState { get; set; }
     }
 
@@ -876,14 +897,14 @@ namespace Mutagen.Bethesda.Skyrim
         Int32 Unknown { get; }
         Byte ResponseNumber { get; }
         ReadOnlyMemorySlice<Byte> Unknown2 { get; }
-        FormLink<ISoundDescriptorGetter> Sound { get; }
+        IFormLinkGetter<ISoundDescriptorGetter> Sound { get; }
         DialogResponse.Flag Flags { get; }
         ReadOnlyMemorySlice<Byte> Unknown3 { get; }
         ITranslatedStringGetter Text { get; }
         String ScriptNotes { get; }
         String Edits { get; }
-        FormLinkNullable<IIdleAnimationGetter> SpeakerIdleAnimation { get; }
-        FormLinkNullable<IIdleAnimationGetter> ListenerIdleAnimation { get; }
+        IFormLinkNullableGetter<IIdleAnimationGetter> SpeakerIdleAnimation { get; }
+        IFormLinkNullableGetter<IIdleAnimationGetter> ListenerIdleAnimation { get; }
         DialogResponse.TRDTDataType TRDTDataTypeState { get; }
 
     }
@@ -1159,23 +1180,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Unknown = default;
             item.ResponseNumber = default;
             item.Unknown2 = new byte[3];
-            item.Sound = FormLink<ISoundDescriptorGetter>.Null;
+            item.Sound.Clear();
             item.Flags = default;
             item.Unknown3 = new byte[3];
             item.Text.Clear();
             item.ScriptNotes = string.Empty;
             item.Edits = string.Empty;
-            item.SpeakerIdleAnimation = FormLinkNullable<IIdleAnimationGetter>.Null;
-            item.ListenerIdleAnimation = FormLinkNullable<IIdleAnimationGetter>.Null;
+            item.SpeakerIdleAnimation.Clear();
+            item.ListenerIdleAnimation.Clear();
             item.TRDTDataTypeState = default;
         }
         
         #region Mutagen
         public void RemapLinks(IDialogResponse obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Sound = obj.Sound.Relink(mapping);
-            obj.SpeakerIdleAnimation = obj.SpeakerIdleAnimation.Relink(mapping);
-            obj.ListenerIdleAnimation = obj.ListenerIdleAnimation.Relink(mapping);
+            obj.Sound.Relink(mapping);
+            obj.SpeakerIdleAnimation.Relink(mapping);
+            obj.ListenerIdleAnimation.Relink(mapping);
         }
         
         #endregion
@@ -1444,7 +1465,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Sound) ?? true))
             {
-                item.Sound = new FormLink<ISoundDescriptorGetter>(rhs.Sound.FormKey);
+                item.Sound.SetTo(rhs.Sound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Flags) ?? true))
             {
@@ -1468,11 +1489,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.SpeakerIdleAnimation) ?? true))
             {
-                item.SpeakerIdleAnimation = new FormLinkNullable<IIdleAnimationGetter>(rhs.SpeakerIdleAnimation.FormKeyNullable);
+                item.SpeakerIdleAnimation.SetTo(rhs.SpeakerIdleAnimation.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.ListenerIdleAnimation) ?? true))
             {
-                item.ListenerIdleAnimation = new FormLinkNullable<IIdleAnimationGetter>(rhs.ListenerIdleAnimation.FormKeyNullable);
+                item.ListenerIdleAnimation.SetTo(rhs.ListenerIdleAnimation.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.TRDTDataTypeState) ?? true))
             {
@@ -1689,9 +1710,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Unknown = dataFrame.ReadInt32();
                     item.ResponseNumber = dataFrame.ReadUInt8();
                     item.Unknown2 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: dataFrame.SpawnWithLength(3));
-                    item.Sound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
+                    item.Sound.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     item.Flags = EnumBinaryTranslation<DialogResponse.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
                     item.Unknown3 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: dataFrame.SpawnWithLength(3));
                     return (int)DialogResponse_FieldIndex.Unknown3;
@@ -1724,17 +1746,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SpeakerIdleAnimation = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.SpeakerIdleAnimation.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)DialogResponse_FieldIndex.SpeakerIdleAnimation;
                 }
                 case RecordTypeInts.LNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ListenerIdleAnimation = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.ListenerIdleAnimation.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)DialogResponse_FieldIndex.ListenerIdleAnimation;
                 }
                 default:
@@ -1836,7 +1860,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Sound
         private int _SoundLocation => _TRDTLocation!.Value + 0x10;
         private bool _Sound_IsSet => _TRDTLocation.HasValue;
-        public FormLink<ISoundDescriptorGetter> Sound => _Sound_IsSet ? new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_SoundLocation, 0x4)))) : FormLink<ISoundDescriptorGetter>.Null;
+        public IFormLinkGetter<ISoundDescriptorGetter> Sound => _Sound_IsSet ? new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_SoundLocation, 0x4)))) : FormLink<ISoundDescriptorGetter>.Null;
         #endregion
         #region Flags
         private int _FlagsLocation => _TRDTLocation!.Value + 0x14;
@@ -1862,11 +1886,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region SpeakerIdleAnimation
         private int? _SpeakerIdleAnimationLocation;
-        public FormLinkNullable<IIdleAnimationGetter> SpeakerIdleAnimation => _SpeakerIdleAnimationLocation.HasValue ? new FormLinkNullable<IIdleAnimationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SpeakerIdleAnimationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IIdleAnimationGetter>.Null;
+        public IFormLinkNullableGetter<IIdleAnimationGetter> SpeakerIdleAnimation => _SpeakerIdleAnimationLocation.HasValue ? new FormLinkNullable<IIdleAnimationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SpeakerIdleAnimationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IIdleAnimationGetter>.Null;
         #endregion
         #region ListenerIdleAnimation
         private int? _ListenerIdleAnimationLocation;
-        public FormLinkNullable<IIdleAnimationGetter> ListenerIdleAnimation => _ListenerIdleAnimationLocation.HasValue ? new FormLinkNullable<IIdleAnimationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ListenerIdleAnimationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IIdleAnimationGetter>.Null;
+        public IFormLinkNullableGetter<IIdleAnimationGetter> ListenerIdleAnimation => _ListenerIdleAnimationLocation.HasValue ? new FormLinkNullable<IIdleAnimationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ListenerIdleAnimationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IIdleAnimationGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

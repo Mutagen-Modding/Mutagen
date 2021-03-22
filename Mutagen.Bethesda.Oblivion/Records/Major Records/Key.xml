@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Key" baseClass="AItem" recordType="KEYM" objType="Record" GUID="1eca627f-f4df-487b-ad18-a02862d90658" ID="97">
+  <Object name="Key" baseClass="OblivionMajorRecord" recordType="KEYM" objType="Record" GUID="1eca627f-f4df-487b-ad18-a02862d90658" ID="97">
     <Fields>
       <String name="Name" recordType="FULL" />
       <RefDirect name="Model" refName="Model" />
@@ -8,6 +8,7 @@
       <FormLink name="Script" refName="Script" recordType="SCRI" />
       <RefDirect name="Data" refName="KeyData" />
     </Fields>
+    <LinkInterface>IItem</LinkInterface>
   </Object>
   <Object name="KeyData" recordType="DATA" objType="Subrecord" GUID="01f6df94-7cf4-41f7-9a02-1996484507a7" ID="193">
     <Fields>

@@ -45,10 +45,24 @@ namespace Mutagen.Bethesda.Skyrim
         Int32? ILocationAliasReferenceGetter.AliasIndex => this.AliasIndex;
         #endregion
         #region Keyword
-        public FormLinkNullable<IKeywordGetter> Keyword { get; set; } = new FormLinkNullable<IKeywordGetter>();
+        private IFormLinkNullable<IKeywordGetter> _Keyword = new FormLinkNullable<IKeywordGetter>();
+        public IFormLinkNullable<IKeywordGetter> Keyword
+        {
+            get => _Keyword;
+            set => _Keyword = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IKeywordGetter> ILocationAliasReferenceGetter.Keyword => this.Keyword;
         #endregion
         #region RefType
-        public FormLinkNullable<ILocationReferenceTypeGetter> RefType { get; set; } = new FormLinkNullable<ILocationReferenceTypeGetter>();
+        private IFormLinkNullable<ILocationReferenceTypeGetter> _RefType = new FormLinkNullable<ILocationReferenceTypeGetter>();
+        public IFormLinkNullable<ILocationReferenceTypeGetter> RefType
+        {
+            get => _RefType;
+            set => _RefType = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ILocationReferenceTypeGetter> ILocationAliasReferenceGetter.RefType => this.RefType;
         #endregion
 
         #region To String
@@ -482,8 +496,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ILocationAliasReference>
     {
         new Int32? AliasIndex { get; set; }
-        new FormLinkNullable<IKeywordGetter> Keyword { get; set; }
-        new FormLinkNullable<ILocationReferenceTypeGetter> RefType { get; set; }
+        new IFormLinkNullable<IKeywordGetter> Keyword { get; }
+        new IFormLinkNullable<ILocationReferenceTypeGetter> RefType { get; }
     }
 
     public partial interface ILocationAliasReferenceGetter :
@@ -500,8 +514,8 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => LocationAliasReference_Registration.Instance;
         Int32? AliasIndex { get; }
-        FormLinkNullable<IKeywordGetter> Keyword { get; }
-        FormLinkNullable<ILocationReferenceTypeGetter> RefType { get; }
+        IFormLinkNullableGetter<IKeywordGetter> Keyword { get; }
+        IFormLinkNullableGetter<ILocationReferenceTypeGetter> RefType { get; }
 
     }
 
@@ -773,15 +787,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.AliasIndex = default;
-            item.Keyword = FormLinkNullable<IKeywordGetter>.Null;
-            item.RefType = FormLinkNullable<ILocationReferenceTypeGetter>.Null;
+            item.Keyword.Clear();
+            item.RefType.Clear();
         }
         
         #region Mutagen
         public void RemapLinks(ILocationAliasReference obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Keyword = obj.Keyword.Relink(mapping);
-            obj.RefType = obj.RefType.Relink(mapping);
+            obj.Keyword.Relink(mapping);
+            obj.RefType.Relink(mapping);
         }
         
         #endregion
@@ -960,11 +974,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LocationAliasReference_FieldIndex.Keyword) ?? true))
             {
-                item.Keyword = new FormLinkNullable<IKeywordGetter>(rhs.Keyword.FormKeyNullable);
+                item.Keyword.SetTo(rhs.Keyword.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)LocationAliasReference_FieldIndex.RefType) ?? true))
             {
-                item.RefType = new FormLinkNullable<ILocationReferenceTypeGetter>(rhs.RefType.FormKeyNullable);
+                item.RefType.SetTo(rhs.RefType.FormKeyNullable);
             }
         }
         
@@ -1134,18 +1148,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)LocationAliasReference_FieldIndex.Keyword) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Keyword = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Keyword.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)LocationAliasReference_FieldIndex.Keyword;
                 }
                 case RecordTypeInts.ALRT:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)LocationAliasReference_FieldIndex.RefType) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.RefType = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.RefType.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)LocationAliasReference_FieldIndex.RefType;
                 }
                 default:
@@ -1223,11 +1239,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Keyword
         private int? _KeywordLocation;
-        public FormLinkNullable<IKeywordGetter> Keyword => _KeywordLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _KeywordLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        public IFormLinkNullableGetter<IKeywordGetter> Keyword => _KeywordLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _KeywordLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
         #endregion
         #region RefType
         private int? _RefTypeLocation;
-        public FormLinkNullable<ILocationReferenceTypeGetter> RefType => _RefTypeLocation.HasValue ? new FormLinkNullable<ILocationReferenceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _RefTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationReferenceTypeGetter>.Null;
+        public IFormLinkNullableGetter<ILocationReferenceTypeGetter> RefType => _RefTypeLocation.HasValue ? new FormLinkNullable<ILocationReferenceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _RefTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationReferenceTypeGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

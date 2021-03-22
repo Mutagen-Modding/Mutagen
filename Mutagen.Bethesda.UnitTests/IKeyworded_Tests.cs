@@ -21,7 +21,7 @@ namespace Mutagen.Bethesda.UnitTests
         public void HasKeyword_ByFormKey_NotFound()
         {
             Npc npc = new Npc(Utility.Form1, SkyrimRelease.SkyrimSE);
-            npc.Keywords = new ExtendedList<IFormLink<IKeywordGetter>>();
+            npc.Keywords = new ExtendedList<IFormLinkGetter<IKeywordGetter>>();
             npc.Keywords.Add(Utility.Form3);
             npc.HasKeyword(Utility.Form2).Should().BeFalse();
         }
@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.UnitTests
         public void HasKeyword_ByFormKey_Found()
         {
             Npc npc = new Npc(Utility.Form1, SkyrimRelease.SkyrimSE);
-            npc.Keywords = new ExtendedList<IFormLink<IKeywordGetter>>();
+            npc.Keywords = new ExtendedList<IFormLinkGetter<IKeywordGetter>>();
             npc.Keywords.Add(Utility.Form2);
             npc.HasKeyword(Utility.Form2).Should().BeTrue();
         }
@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             Npc npc = new Npc(Utility.Form1, SkyrimRelease.SkyrimSE);
             Keyword keyword = new Keyword(Utility.Form4, SkyrimRelease.SkyrimSE);
-            npc.Keywords = new ExtendedList<IFormLink<IKeywordGetter>>();
+            npc.Keywords = new ExtendedList<IFormLinkGetter<IKeywordGetter>>();
             npc.Keywords.Add(Utility.Form3);
             npc.HasKeyword(keyword).Should().BeFalse();
         }
@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             Npc npc = new Npc(Utility.Form1, SkyrimRelease.SkyrimSE);
             Keyword keyword = new Keyword(Utility.Form4, SkyrimRelease.SkyrimSE);
-            npc.Keywords = new ExtendedList<IFormLink<IKeywordGetter>>();
+            npc.Keywords = new ExtendedList<IFormLinkGetter<IKeywordGetter>>();
             npc.Keywords.Add(keyword);
             npc.HasKeyword(keyword).Should().BeTrue();
         }
@@ -80,7 +80,7 @@ namespace Mutagen.Bethesda.UnitTests
             var cache = mod.ToImmutableLinkCache();
             Keyword keyword = mod.Keywords.AddNew();
             keyword.EditorID = Utility.Edid2;
-            npc.Keywords = new ExtendedList<IFormLink<IKeywordGetter>>();
+            npc.Keywords = new ExtendedList<IFormLinkGetter<IKeywordGetter>>();
             npc.Keywords.Add(keyword);
             npc.HasKeyword(Utility.Edid1, cache).Should().BeFalse();
         }
@@ -93,7 +93,7 @@ namespace Mutagen.Bethesda.UnitTests
             var cache = mod.ToImmutableLinkCache();
             Keyword keyword = mod.Keywords.AddNew();
             keyword.EditorID = Utility.Edid1;
-            npc.Keywords = new ExtendedList<IFormLink<IKeywordGetter>>();
+            npc.Keywords = new ExtendedList<IFormLinkGetter<IKeywordGetter>>();
             npc.Keywords.Add(keyword);
             npc.HasKeyword(Utility.Edid1, cache).Should().BeTrue();
         }
@@ -106,7 +106,7 @@ namespace Mutagen.Bethesda.UnitTests
             var cache = mod.ToImmutableLinkCache();
             Keyword keyword = mod.Keywords.AddNew();
             keyword.EditorID = Utility.Edid1;
-            npc.Keywords = new ExtendedList<IFormLink<IKeywordGetter>>();
+            npc.Keywords = new ExtendedList<IFormLinkGetter<IKeywordGetter>>();
             npc.Keywords.Add(keyword);
             npc.TryResolveKeyword(keyword.FormKey, cache, out var kw).Should().BeTrue();
             kw.Should().Be(keyword);
@@ -120,7 +120,7 @@ namespace Mutagen.Bethesda.UnitTests
             var cache = mod.ToImmutableLinkCache();
             Keyword keyword = mod.Keywords.AddNew();
             keyword.EditorID = Utility.Edid1;
-            npc.Keywords = new ExtendedList<IFormLink<IKeywordGetter>>();
+            npc.Keywords = new ExtendedList<IFormLinkGetter<IKeywordGetter>>();
             npc.Keywords.Add(keyword);
             npc.TryResolveKeyword(Utility.Edid1, cache, out var kw).Should().BeTrue();
             kw.Should().Be(keyword);

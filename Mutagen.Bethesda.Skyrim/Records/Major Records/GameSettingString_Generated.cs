@@ -61,22 +61,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IGameSettingStringGetter rhs)) return false;
-            return ((GameSettingStringCommon)((IGameSettingStringGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IGameSettingStringGetter? obj)
-        {
-            return ((GameSettingStringCommon)((IGameSettingStringGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((GameSettingStringCommon)((IGameSettingStringGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             GameSetting.Mask<TItem>,
@@ -399,6 +383,26 @@ namespace Mutagen.Bethesda.Skyrim
         {
             this.EditorID = editorID;
         }
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IGameSettingStringGetter rhs) return false;
+            return ((GameSettingStringCommon)((IGameSettingStringGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IGameSettingStringGetter? obj)
+        {
+            return ((GameSettingStringCommon)((IGameSettingStringGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((GameSettingStringCommon)((IGameSettingStringGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
 
         #endregion
 
@@ -1039,7 +1043,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new GameSettingString(formKey, default(SkyrimRelease));
+            var newRec = new GameSettingString(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1050,7 +1054,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IGameSettingString)item,
+                item: (IGameSettingStringGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1061,7 +1065,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IGameSettingString)item,
+                item: (IGameSettingStringGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1072,7 +1076,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IGameSettingString)item,
+                item: (IGameSettingStringGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1578,7 +1582,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IGameSettingStringGetter rhs)) return false;
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IGameSettingStringGetter rhs) return false;
             return ((GameSettingStringCommon)((IGameSettingStringGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 

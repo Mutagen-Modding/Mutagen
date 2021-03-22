@@ -171,12 +171,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 typeof(Npc),
             };
             dict[typeof(INpcSpawnGetter)] = dict[typeof(INpcSpawn)];
-            dict[typeof(ISpellSpawn)] = new Type[]
+            dict[typeof(ISpellRecord)] = new Type[]
             {
                 typeof(LeveledSpell),
+                typeof(Shout),
                 typeof(Spell),
             };
-            dict[typeof(ISpellSpawnGetter)] = dict[typeof(ISpellSpawn)];
+            dict[typeof(ISpellRecordGetter)] = dict[typeof(ISpellRecord)];
             dict[typeof(IEmittance)] = new Type[]
             {
                 typeof(Light),
@@ -206,7 +207,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 typeof(PlacedNpc),
                 typeof(PlacedObject),
-                typeof(APlaced),
                 typeof(APlacedTrap),
             };
             dict[typeof(IPlacedGetter)] = dict[typeof(IPlaced)];

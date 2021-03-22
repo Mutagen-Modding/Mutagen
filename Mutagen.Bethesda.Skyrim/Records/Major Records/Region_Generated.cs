@@ -49,7 +49,14 @@ namespace Mutagen.Bethesda.Skyrim
         Color? IRegionGetter.MapColor => this.MapColor;
         #endregion
         #region Worldspace
-        public FormLinkNullable<IWorldspaceGetter> Worldspace { get; set; } = new FormLinkNullable<IWorldspaceGetter>();
+        private IFormLinkNullable<IWorldspaceGetter> _Worldspace = new FormLinkNullable<IWorldspaceGetter>();
+        public IFormLinkNullable<IWorldspaceGetter> Worldspace
+        {
+            get => _Worldspace;
+            set => _Worldspace = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IWorldspaceGetter> IRegionGetter.Worldspace => this.Worldspace;
         #endregion
         #region RegionAreas
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -142,22 +149,6 @@ namespace Mutagen.Bethesda.Skyrim
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IRegionGetter rhs)) return false;
-            return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IRegionGetter? obj)
-        {
-            return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((RegionCommon)((IRegionGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -832,6 +823,26 @@ namespace Mutagen.Bethesda.Skyrim
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
         }
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IRegionGetter rhs) return false;
+            return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IRegionGetter? obj)
+        {
+            return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((RegionCommon)((IRegionGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -896,7 +907,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordInternal
     {
         new Color? MapColor { get; set; }
-        new FormLinkNullable<IWorldspaceGetter> Worldspace { get; set; }
+        new IFormLinkNullable<IWorldspaceGetter> Worldspace { get; }
         new ExtendedList<RegionArea> RegionAreas { get; }
         new RegionObjects? Objects { get; set; }
         new RegionWeather? Weather { get; set; }
@@ -927,7 +938,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         static new ILoquiRegistration Registration => Region_Registration.Instance;
         Color? MapColor { get; }
-        FormLinkNullable<IWorldspaceGetter> Worldspace { get; }
+        IFormLinkNullableGetter<IWorldspaceGetter> Worldspace { get; }
         IReadOnlyList<IRegionAreaGetter> RegionAreas { get; }
         IRegionObjectsGetter? Objects { get; }
         IRegionWeatherGetter? Weather { get; }
@@ -1199,7 +1210,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.MapColor = default;
-            item.Worldspace = FormLinkNullable<IWorldspaceGetter>.Null;
+            item.Worldspace.Clear();
             item.RegionAreas.Clear();
             item.Objects = null;
             item.Weather = null;
@@ -1224,7 +1235,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IRegion obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Worldspace = obj.Worldspace.Relink(mapping);
+            obj.Worldspace.Relink(mapping);
             obj.Objects?.RemapLinks(mapping);
             obj.Weather?.RemapLinks(mapping);
             obj.Grasses?.RemapLinks(mapping);
@@ -1622,7 +1633,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Region(formKey, default(SkyrimRelease));
+            var newRec = new Region(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1633,7 +1644,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IRegion)item,
+                item: (IRegionGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1644,7 +1655,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IRegion)item,
+                item: (IRegionGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1693,7 +1704,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.Worldspace) ?? true))
             {
-                item.Worldspace = new FormLinkNullable<IWorldspaceGetter>(rhs.Worldspace.FormKeyNullable);
+                item.Worldspace.SetTo(rhs.Worldspace.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.RegionAreas) ?? true))
             {
@@ -2167,9 +2178,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.WNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Worldspace = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Worldspace.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Region_FieldIndex.Worldspace;
                 }
                 case RecordTypeInts.RPLI:
@@ -2256,7 +2268,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Worldspace
         private int? _WorldspaceLocation;
-        public FormLinkNullable<IWorldspaceGetter> Worldspace => _WorldspaceLocation.HasValue ? new FormLinkNullable<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WorldspaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWorldspaceGetter>.Null;
+        public IFormLinkNullableGetter<IWorldspaceGetter> Worldspace => _WorldspaceLocation.HasValue ? new FormLinkNullable<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WorldspaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWorldspaceGetter>.Null;
         #endregion
         public IReadOnlyList<IRegionAreaGetter> RegionAreas { get; private set; } = ListExt.Empty<RegionAreaBinaryOverlay>();
         #region RegionAreaLogic
@@ -2383,7 +2395,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IRegionGetter rhs)) return false;
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IRegionGetter rhs) return false;
             return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 

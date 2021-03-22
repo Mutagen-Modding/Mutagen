@@ -82,7 +82,14 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? ISoundMarkerGetter.SNDD => this.SNDD;
         #endregion
         #region SoundDescriptor
-        public FormLinkNullable<ISoundDescriptorGetter> SoundDescriptor { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
+        private IFormLinkNullable<ISoundDescriptorGetter> _SoundDescriptor = new FormLinkNullable<ISoundDescriptorGetter>();
+        public IFormLinkNullable<ISoundDescriptorGetter> SoundDescriptor
+        {
+            get => _SoundDescriptor;
+            set => _SoundDescriptor = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundDescriptorGetter> ISoundMarkerGetter.SoundDescriptor => this.SoundDescriptor;
         #endregion
 
         #region To String
@@ -95,22 +102,6 @@ namespace Mutagen.Bethesda.Skyrim
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is ISoundMarkerGetter rhs)) return false;
-            return ((SoundMarkerCommon)((ISoundMarkerGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(ISoundMarkerGetter? obj)
-        {
-            return ((SoundMarkerCommon)((ISoundMarkerGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((SoundMarkerCommon)((ISoundMarkerGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -530,6 +521,26 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not ISoundMarkerGetter rhs) return false;
+            return ((SoundMarkerCommon)((ISoundMarkerGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(ISoundMarkerGetter? obj)
+        {
+            return ((SoundMarkerCommon)((ISoundMarkerGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((SoundMarkerCommon)((ISoundMarkerGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -599,7 +610,7 @@ namespace Mutagen.Bethesda.Skyrim
         new ObjectBounds ObjectBounds { get; set; }
         new MemorySlice<Byte>? FNAM { get; set; }
         new MemorySlice<Byte>? SNDD { get; set; }
-        new FormLinkNullable<ISoundDescriptorGetter> SoundDescriptor { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> SoundDescriptor { get; }
     }
 
     public partial interface ISoundMarkerInternal :
@@ -624,7 +635,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundsGetter ObjectBounds { get; }
         ReadOnlyMemorySlice<Byte>? FNAM { get; }
         ReadOnlyMemorySlice<Byte>? SNDD { get; }
-        FormLinkNullable<ISoundDescriptorGetter> SoundDescriptor { get; }
+        IFormLinkNullableGetter<ISoundDescriptorGetter> SoundDescriptor { get; }
 
     }
 
@@ -882,7 +893,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ObjectBounds.Clear();
             item.FNAM = default;
             item.SNDD = default;
-            item.SoundDescriptor = FormLinkNullable<ISoundDescriptorGetter>.Null;
+            item.SoundDescriptor.Clear();
             base.Clear(item);
         }
         
@@ -900,7 +911,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(ISoundMarker obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.SoundDescriptor = obj.SoundDescriptor.Relink(mapping);
+            obj.SoundDescriptor.Relink(mapping);
         }
         
         #endregion
@@ -1170,7 +1181,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new SoundMarker(formKey, default(SkyrimRelease));
+            var newRec = new SoundMarker(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1181,7 +1192,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ISoundMarker)item,
+                item: (ISoundMarkerGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1192,7 +1203,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ISoundMarker)item,
+                item: (ISoundMarkerGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1281,7 +1292,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SoundMarker_FieldIndex.SoundDescriptor) ?? true))
             {
-                item.SoundDescriptor = new FormLinkNullable<ISoundDescriptorGetter>(rhs.SoundDescriptor.FormKeyNullable);
+                item.SoundDescriptor.SetTo(rhs.SoundDescriptor.FormKeyNullable);
             }
         }
         
@@ -1568,9 +1579,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.SDSC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SoundDescriptor = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.SoundDescriptor.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)SoundMarker_FieldIndex.SoundDescriptor;
                 }
                 default:
@@ -1643,7 +1655,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region SoundDescriptor
         private int? _SoundDescriptorLocation;
-        public FormLinkNullable<ISoundDescriptorGetter> SoundDescriptor => _SoundDescriptorLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SoundDescriptorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> SoundDescriptor => _SoundDescriptorLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SoundDescriptorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1757,7 +1769,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ISoundMarkerGetter rhs)) return false;
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not ISoundMarkerGetter rhs) return false;
             return ((SoundMarkerCommon)((ISoundMarkerGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 

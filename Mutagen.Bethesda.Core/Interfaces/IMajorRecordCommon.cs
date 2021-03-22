@@ -36,7 +36,12 @@ namespace Mutagen.Bethesda
     /// <summary>
     /// An interface that Major Record objects implement to hook into the common getter systems
     /// </summary>
-    public interface IMajorRecordCommonGetter : IFormVersionGetter, IFormLinkContainerGetter, ILoquiObject, IMajorRecordIdentifier
+    public interface IMajorRecordCommonGetter : 
+        IFormVersionGetter, 
+        IFormLinkContainerGetter,
+        IEquatable<IFormLinkGetter>,
+        ILoquiObject,
+        IMajorRecordIdentifier
     {
         /// <summary>
         /// Marker of whether the content is compressed

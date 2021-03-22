@@ -71,15 +71,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Animations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IIdleAnimationGetter>>? _Animations;
-        public ExtendedList<IFormLink<IIdleAnimationGetter>>? Animations
+        private ExtendedList<IFormLinkGetter<IIdleAnimationGetter>>? _Animations;
+        public ExtendedList<IFormLinkGetter<IIdleAnimationGetter>>? Animations
         {
             get => this._Animations;
             set => this._Animations = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IIdleAnimationGetter>>? IIdleMarkerGetter.Animations => _Animations;
+        IReadOnlyList<IFormLinkGetter<IIdleAnimationGetter>>? IIdleMarkerGetter.Animations => _Animations;
         #endregion
 
         #endregion
@@ -109,22 +109,6 @@ namespace Mutagen.Bethesda.Skyrim
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IIdleMarkerGetter rhs)) return false;
-            return ((IdleMarkerCommon)((IIdleMarkerGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IIdleMarkerGetter? obj)
-        {
-            return ((IdleMarkerCommon)((IIdleMarkerGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((IdleMarkerCommon)((IIdleMarkerGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -657,6 +641,26 @@ namespace Mutagen.Bethesda.Skyrim
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
         }
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IIdleMarkerGetter rhs) return false;
+            return ((IdleMarkerCommon)((IIdleMarkerGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IIdleMarkerGetter? obj)
+        {
+            return ((IdleMarkerCommon)((IIdleMarkerGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((IdleMarkerCommon)((IIdleMarkerGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -726,7 +730,7 @@ namespace Mutagen.Bethesda.Skyrim
         new ObjectBounds ObjectBounds { get; set; }
         new IdleMarker.Flag? Flags { get; set; }
         new Single? IdleTimer { get; set; }
-        new ExtendedList<IFormLink<IIdleAnimationGetter>>? Animations { get; set; }
+        new ExtendedList<IFormLinkGetter<IIdleAnimationGetter>>? Animations { get; set; }
         new Model? Model { get; set; }
         #region Mutagen
         new IdleMarker.MajorFlag MajorFlags { get; set; }
@@ -756,7 +760,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundsGetter ObjectBounds { get; }
         IdleMarker.Flag? Flags { get; }
         Single? IdleTimer { get; }
-        IReadOnlyList<IFormLink<IIdleAnimationGetter>>? Animations { get; }
+        IReadOnlyList<IFormLinkGetter<IIdleAnimationGetter>>? Animations { get; }
         IModelGetter? Model { get; }
 
         #region Mutagen
@@ -1353,7 +1357,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new IdleMarker(formKey, default(SkyrimRelease));
+            var newRec = new IdleMarker(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1364,7 +1368,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IIdleMarker)item,
+                item: (IIdleMarkerGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1375,7 +1379,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IIdleMarker)item,
+                item: (IIdleMarkerGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1457,8 +1461,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Animations = 
                             rhs.Animations
-                            .Select(r => (IFormLink<IIdleAnimationGetter>)new FormLink<IIdleAnimationGetter>(r.FormKey))
-                            .ToExtendedList<IFormLink<IIdleAnimationGetter>>();
+                            .Select(r => (IFormLinkGetter<IIdleAnimationGetter>)new FormLink<IIdleAnimationGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IIdleAnimationGetter>>();
                     }
                     else
                     {
@@ -2063,7 +2067,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IIdleMarkerGetter rhs)) return false;
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IIdleMarkerGetter rhs) return false;
             return ((IdleMarkerCommon)((IIdleMarkerGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 

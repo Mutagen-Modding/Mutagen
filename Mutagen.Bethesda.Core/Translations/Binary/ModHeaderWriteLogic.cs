@@ -73,11 +73,11 @@ namespace Mutagen.Bethesda.Internals
                     {
                         majAction(maj);
                     }
-                    foreach (var formKey in maj.ContainedFormLinks)
+                    foreach (var linkInfo in maj.ContainedFormLinks)
                     {
                         foreach (var formLinkAction in _formLinkIterationActions)
                         {
-                            formLinkAction(maj.FormKey, formKey);
+                            formLinkAction(maj.FormKey, linkInfo);
                         }
                     }
                 }
@@ -129,8 +129,19 @@ namespace Mutagen.Bethesda.Internals
                     _modKeys.Set(mod.MasterReferences.Select(m => new KeyValuePair<ModKey, FormKey>(m.Master, FormKey.Null)));
                     break;
                 case BinaryWriteParameters.MastersListContentOption.Iterate:
-                    _recordIterationActions.Add(maj => _modKeys[maj.FormKey.ModKey] = maj.FormKey);
-                    _formLinkIterationActions.Add((maj, formLink) => _modKeys[formLink.FormKey.ModKey] = maj);
+                    _recordIterationActions.Add(maj =>
+                    {
+                        var formKey = maj.FormKey;
+                        if (mod.ModKey == formKey.ModKey) return;
+                        if (_params.CleanNulls && formKey.IsNull) return;
+                        _modKeys[formKey.ModKey] = formKey;
+                    });
+                    _formLinkIterationActions.Add((maj, formLink) =>
+                    {
+                        if (mod.ModKey == formLink.FormKey.ModKey) return;
+                        if (_params.CleanNulls && formLink.FormKey.IsNull) return;
+                        _modKeys[formLink.FormKey.ModKey] = maj;
+                    });
                     break;
                 default:
                     throw new NotImplementedException();

@@ -109,22 +109,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IFactionGetter rhs)) return false;
-            return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IFactionGetter? obj)
-        {
-            return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((FactionCommon)((IFactionGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
@@ -692,6 +676,26 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.EditorID = editorID;
         }
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IFactionGetter rhs) return false;
+            return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IFactionGetter? obj)
+        {
+            return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((FactionCommon)((IFactionGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
 
         #endregion
 
@@ -1388,7 +1392,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IFaction)item,
+                item: (IFactionGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1399,7 +1403,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IFaction)item,
+                item: (IFactionGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -2035,7 +2039,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IFactionGetter rhs)) return false;
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IFactionGetter rhs) return false;
             return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 

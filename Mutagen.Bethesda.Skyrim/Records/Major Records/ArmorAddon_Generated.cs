@@ -54,7 +54,14 @@ namespace Mutagen.Bethesda.Skyrim
         IBodyTemplateGetter? IArmorAddonGetter.BodyTemplate => this.BodyTemplate;
         #endregion
         #region Race
-        public FormLinkNullable<IRaceGetter> Race { get; set; } = new FormLinkNullable<IRaceGetter>();
+        private IFormLinkNullable<IRaceGetter> _Race = new FormLinkNullable<IRaceGetter>();
+        public IFormLinkNullable<IRaceGetter> Race
+        {
+            get => _Race;
+            set => _Race = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IRaceGetter> IArmorAddonGetter.Race => this.Race;
         #endregion
         #region Priority
         public IGenderedItem<Byte> Priority { get; set; } = new GenderedItem<Byte>(default, default);
@@ -81,32 +88,46 @@ namespace Mutagen.Bethesda.Skyrim
         IGenderedItemGetter<IModelGetter?>? IArmorAddonGetter.FirstPersonModel => this.FirstPersonModel;
         #endregion
         #region SkinTexture
-        public IGenderedItem<IFormLinkNullable<ITextureSetGetter>>? SkinTexture { get; set; }
-        IGenderedItemGetter<IFormLinkNullable<ITextureSetGetter>>? IArmorAddonGetter.SkinTexture => this.SkinTexture;
+        public IGenderedItem<IFormLinkNullableGetter<ITextureSetGetter>>? SkinTexture { get; set; }
+        IGenderedItemGetter<IFormLinkNullableGetter<ITextureSetGetter>>? IArmorAddonGetter.SkinTexture => this.SkinTexture;
         #endregion
         #region TextureSwapList
-        public IGenderedItem<IFormLinkNullable<IFormListGetter>>? TextureSwapList { get; set; }
-        IGenderedItemGetter<IFormLinkNullable<IFormListGetter>>? IArmorAddonGetter.TextureSwapList => this.TextureSwapList;
+        public IGenderedItem<IFormLinkNullableGetter<IFormListGetter>>? TextureSwapList { get; set; }
+        IGenderedItemGetter<IFormLinkNullableGetter<IFormListGetter>>? IArmorAddonGetter.TextureSwapList => this.TextureSwapList;
         #endregion
         #region AdditionalRaces
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IRaceGetter>> _AdditionalRaces = new ExtendedList<IFormLink<IRaceGetter>>();
-        public ExtendedList<IFormLink<IRaceGetter>> AdditionalRaces
+        private ExtendedList<IFormLinkGetter<IRaceGetter>> _AdditionalRaces = new ExtendedList<IFormLinkGetter<IRaceGetter>>();
+        public ExtendedList<IFormLinkGetter<IRaceGetter>> AdditionalRaces
         {
             get => this._AdditionalRaces;
             protected set => this._AdditionalRaces = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IRaceGetter>> IArmorAddonGetter.AdditionalRaces => _AdditionalRaces;
+        IReadOnlyList<IFormLinkGetter<IRaceGetter>> IArmorAddonGetter.AdditionalRaces => _AdditionalRaces;
         #endregion
 
         #endregion
         #region FootstepSound
-        public FormLinkNullable<IFootstepSetGetter> FootstepSound { get; set; } = new FormLinkNullable<IFootstepSetGetter>();
+        private IFormLinkNullable<IFootstepSetGetter> _FootstepSound = new FormLinkNullable<IFootstepSetGetter>();
+        public IFormLinkNullable<IFootstepSetGetter> FootstepSound
+        {
+            get => _FootstepSound;
+            set => _FootstepSound = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IFootstepSetGetter> IArmorAddonGetter.FootstepSound => this.FootstepSound;
         #endregion
         #region ArtObject
-        public FormLinkNullable<IArtObjectGetter> ArtObject { get; set; } = new FormLinkNullable<IArtObjectGetter>();
+        private IFormLinkNullable<IArtObjectGetter> _ArtObject = new FormLinkNullable<IArtObjectGetter>();
+        public IFormLinkNullable<IArtObjectGetter> ArtObject
+        {
+            get => _ArtObject;
+            set => _ArtObject = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IArtObjectGetter> IArmorAddonGetter.ArtObject => this.ArtObject;
         #endregion
         #region DNAMDataTypeState
         public ArmorAddon.DNAMDataType DNAMDataTypeState { get; set; } = default;
@@ -122,22 +143,6 @@ namespace Mutagen.Bethesda.Skyrim
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IArmorAddonGetter rhs)) return false;
-            return ((ArmorAddonCommon)((IArmorAddonGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IArmorAddonGetter? obj)
-        {
-            return ((ArmorAddonCommon)((IArmorAddonGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((ArmorAddonCommon)((IArmorAddonGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -1010,6 +1015,26 @@ namespace Mutagen.Bethesda.Skyrim
         public enum DNAMDataType
         {
         }
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IArmorAddonGetter rhs) return false;
+            return ((ArmorAddonCommon)((IArmorAddonGetter)this).CommonInstance()!).Equals(this, rhs);
+        }
+
+        public bool Equals(IArmorAddonGetter? obj)
+        {
+            return ((ArmorAddonCommon)((IArmorAddonGetter)this).CommonInstance()!).Equals(this, obj);
+        }
+
+        public override int GetHashCode() => ((ArmorAddonCommon)((IArmorAddonGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -1073,7 +1098,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordInternal
     {
         new BodyTemplate? BodyTemplate { get; set; }
-        new FormLinkNullable<IRaceGetter> Race { get; set; }
+        new IFormLinkNullable<IRaceGetter> Race { get; }
         new IGenderedItem<Byte> Priority { get; set; }
         new IGenderedItem<Boolean> WeightSliderEnabled { get; set; }
         new UInt16 Unknown { get; set; }
@@ -1082,11 +1107,11 @@ namespace Mutagen.Bethesda.Skyrim
         new Single WeaponAdjust { get; set; }
         new IGenderedItem<Model?>? WorldModel { get; set; }
         new IGenderedItem<Model?>? FirstPersonModel { get; set; }
-        new IGenderedItem<IFormLinkNullable<ITextureSetGetter>>? SkinTexture { get; set; }
-        new IGenderedItem<IFormLinkNullable<IFormListGetter>>? TextureSwapList { get; set; }
-        new ExtendedList<IFormLink<IRaceGetter>> AdditionalRaces { get; }
-        new FormLinkNullable<IFootstepSetGetter> FootstepSound { get; set; }
-        new FormLinkNullable<IArtObjectGetter> ArtObject { get; set; }
+        new IGenderedItem<IFormLinkNullableGetter<ITextureSetGetter>>? SkinTexture { get; set; }
+        new IGenderedItem<IFormLinkNullableGetter<IFormListGetter>>? TextureSwapList { get; set; }
+        new ExtendedList<IFormLinkGetter<IRaceGetter>> AdditionalRaces { get; }
+        new IFormLinkNullable<IFootstepSetGetter> FootstepSound { get; }
+        new IFormLinkNullable<IArtObjectGetter> ArtObject { get; }
         new ArmorAddon.DNAMDataType DNAMDataTypeState { get; set; }
     }
 
@@ -1099,8 +1124,8 @@ namespace Mutagen.Bethesda.Skyrim
         new IGenderedItem<Boolean> WeightSliderEnabled { get; set; }
         new IGenderedItem<Model?>? WorldModel { get; set; }
         new IGenderedItem<Model?>? FirstPersonModel { get; set; }
-        new IGenderedItem<IFormLinkNullable<ITextureSetGetter>>? SkinTexture { get; set; }
-        new IGenderedItem<IFormLinkNullable<IFormListGetter>>? TextureSwapList { get; set; }
+        new IGenderedItem<IFormLinkNullableGetter<ITextureSetGetter>>? SkinTexture { get; set; }
+        new IGenderedItem<IFormLinkNullableGetter<IFormListGetter>>? TextureSwapList { get; set; }
     }
 
     public partial interface IArmorAddonGetter :
@@ -1112,7 +1137,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         static new ILoquiRegistration Registration => ArmorAddon_Registration.Instance;
         IBodyTemplateGetter? BodyTemplate { get; }
-        FormLinkNullable<IRaceGetter> Race { get; }
+        IFormLinkNullableGetter<IRaceGetter> Race { get; }
         IGenderedItemGetter<Byte> Priority { get; }
         IGenderedItemGetter<Boolean> WeightSliderEnabled { get; }
         UInt16 Unknown { get; }
@@ -1121,11 +1146,11 @@ namespace Mutagen.Bethesda.Skyrim
         Single WeaponAdjust { get; }
         IGenderedItemGetter<IModelGetter?>? WorldModel { get; }
         IGenderedItemGetter<IModelGetter?>? FirstPersonModel { get; }
-        IGenderedItemGetter<IFormLinkNullable<ITextureSetGetter>>? SkinTexture { get; }
-        IGenderedItemGetter<IFormLinkNullable<IFormListGetter>>? TextureSwapList { get; }
-        IReadOnlyList<IFormLink<IRaceGetter>> AdditionalRaces { get; }
-        FormLinkNullable<IFootstepSetGetter> FootstepSound { get; }
-        FormLinkNullable<IArtObjectGetter> ArtObject { get; }
+        IGenderedItemGetter<IFormLinkNullableGetter<ITextureSetGetter>>? SkinTexture { get; }
+        IGenderedItemGetter<IFormLinkNullableGetter<IFormListGetter>>? TextureSwapList { get; }
+        IReadOnlyList<IFormLinkGetter<IRaceGetter>> AdditionalRaces { get; }
+        IFormLinkNullableGetter<IFootstepSetGetter> FootstepSound { get; }
+        IFormLinkNullableGetter<IArtObjectGetter> ArtObject { get; }
         ArmorAddon.DNAMDataType DNAMDataTypeState { get; }
 
     }
@@ -1434,7 +1459,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.BodyTemplate = null;
-            item.Race = FormLinkNullable<IRaceGetter>.Null;
+            item.Race.Clear();
             item.Priority.Male = default;
             item.Priority.Female = default;
             item.WeightSliderEnabled.Male = default;
@@ -1448,8 +1473,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.SkinTexture = null;
             item.TextureSwapList = null;
             item.AdditionalRaces.Clear();
-            item.FootstepSound = FormLinkNullable<IFootstepSetGetter>.Null;
-            item.ArtObject = FormLinkNullable<IArtObjectGetter>.Null;
+            item.FootstepSound.Clear();
+            item.ArtObject.Clear();
             item.DNAMDataTypeState = default;
             base.Clear(item);
         }
@@ -1468,14 +1493,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IArmorAddon obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Race = obj.Race.Relink(mapping);
+            obj.Race.Relink(mapping);
             obj.WorldModel?.RemapLinks(mapping);
             obj.FirstPersonModel?.RemapLinks(mapping);
             obj.SkinTexture?.RemapLinks(mapping);
             obj.TextureSwapList?.RemapLinks(mapping);
             obj.AdditionalRaces.RemapLinks(mapping);
-            obj.FootstepSound = obj.FootstepSound.Relink(mapping);
-            obj.ArtObject = obj.ArtObject.Relink(mapping);
+            obj.FootstepSound.Relink(mapping);
+            obj.ArtObject.Relink(mapping);
         }
         
         #endregion
@@ -1573,12 +1598,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.SkinTexture = GenderedItem.EqualityMaskHelper(
                 lhs: item.SkinTexture,
                 rhs: rhs.SkinTexture,
-                maskGetter: (l, r, i) => EqualityComparer<IFormLinkNullable<ITextureSetGetter>>.Default.Equals(l, r),
+                maskGetter: (l, r, i) => EqualityComparer<IFormLinkNullableGetter<ITextureSetGetter>>.Default.Equals(l, r),
                 include: include);
             ret.TextureSwapList = GenderedItem.EqualityMaskHelper(
                 lhs: item.TextureSwapList,
                 rhs: rhs.TextureSwapList,
-                maskGetter: (l, r, i) => EqualityComparer<IFormLinkNullable<IFormListGetter>>.Default.Equals(l, r),
+                maskGetter: (l, r, i) => EqualityComparer<IFormLinkNullableGetter<IFormListGetter>>.Default.Equals(l, r),
                 include: include);
             ret.AdditionalRaces = item.AdditionalRaces.CollectionEqualsHelper(
                 rhs.AdditionalRaces,
@@ -1922,7 +1947,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new ArmorAddon(formKey, default(SkyrimRelease));
+            var newRec = new ArmorAddon(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1933,7 +1958,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IArmorAddon)item,
+                item: (IArmorAddonGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1944,7 +1969,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IArmorAddon)item,
+                item: (IArmorAddonGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -2015,7 +2040,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Race) ?? true))
             {
-                item.Race = new FormLinkNullable<IRaceGetter>(rhs.Race.FormKeyNullable);
+                item.Race.SetTo(rhs.Race.FormKeyNullable);
             }
             item.Priority = new GenderedItem<Byte>(
                 male: rhs.Priority.Male,
@@ -2073,7 +2098,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             else
             {
-                item.SkinTexture = new GenderedItem<IFormLinkNullable<ITextureSetGetter>>(
+                item.SkinTexture = new GenderedItem<IFormLinkNullableGetter<ITextureSetGetter>>(
                     male: new FormLinkNullable<ITextureSetGetter>(rhsSkinTextureitem.Male.FormKeyNullable),
                     female: new FormLinkNullable<ITextureSetGetter>(rhsSkinTextureitem.Female.FormKeyNullable));
             }
@@ -2083,7 +2108,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             else
             {
-                item.TextureSwapList = new GenderedItem<IFormLinkNullable<IFormListGetter>>(
+                item.TextureSwapList = new GenderedItem<IFormLinkNullableGetter<IFormListGetter>>(
                     male: new FormLinkNullable<IFormListGetter>(rhsTextureSwapListitem.Male.FormKeyNullable),
                     female: new FormLinkNullable<IFormListGetter>(rhsTextureSwapListitem.Female.FormKeyNullable));
             }
@@ -2094,7 +2119,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.AdditionalRaces.SetTo(
                         rhs.AdditionalRaces
-                        .Select(r => (IFormLink<IRaceGetter>)new FormLink<IRaceGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<IRaceGetter>)new FormLink<IRaceGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2108,11 +2133,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.FootstepSound) ?? true))
             {
-                item.FootstepSound = new FormLinkNullable<IFootstepSetGetter>(rhs.FootstepSound.FormKeyNullable);
+                item.FootstepSound.SetTo(rhs.FootstepSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.ArtObject) ?? true))
             {
-                item.ArtObject = new FormLinkNullable<IArtObjectGetter>(rhs.ArtObject.FormKeyNullable);
+                item.ArtObject.SetTo(rhs.ArtObject.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.DNAMDataTypeState) ?? true))
             {
@@ -2368,7 +2393,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.SkinTexture,
                 maleMarker: RecordTypes.NAM0,
                 femaleMarker: RecordTypes.NAM1,
-                transl: (MutagenWriter subWriter, IFormLinkNullable<ITextureSetGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkNullableGetter<ITextureSetGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                         writer: subWriter,
@@ -2379,16 +2404,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.TextureSwapList,
                 maleMarker: RecordTypes.NAM2,
                 femaleMarker: RecordTypes.NAM3,
-                transl: (MutagenWriter subWriter, IFormLinkNullable<IFormListGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkNullableGetter<IFormListGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                         writer: subWriter,
                         item: subItem);
                 });
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IRaceGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IRaceGetter>>.Instance.Write(
                 writer: writer,
                 items: item.AdditionalRaces,
-                transl: (MutagenWriter subWriter, IFormLink<IRaceGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IRaceGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2505,9 +2530,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.RNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Race = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Race.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)ArmorAddon_FieldIndex.Race;
                 }
                 case RecordTypeInts.DNAM:
@@ -2549,7 +2575,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.NAM0:
                 case RecordTypeInts.NAM1:
                 {
-                    item.SkinTexture = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<IFormLinkNullable<ITextureSetGetter>>(
+                    item.SkinTexture = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<IFormLinkNullableGetter<ITextureSetGetter>>(
                         frame: frame,
                         maleMarker: RecordTypes.NAM0,
                         femaleMarker: RecordTypes.NAM1,
@@ -2561,7 +2587,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.NAM2:
                 case RecordTypeInts.NAM3:
                 {
-                    item.TextureSwapList = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<IFormLinkNullable<IFormListGetter>>(
+                    item.TextureSwapList = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<IFormLinkNullableGetter<IFormListGetter>>(
                         frame: frame,
                         maleMarker: RecordTypes.NAM2,
                         femaleMarker: RecordTypes.NAM3,
@@ -2573,7 +2599,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.MODL:
                 {
                     item.AdditionalRaces.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IRaceGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IRaceGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.MODL),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -2582,17 +2608,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.SNDD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FootstepSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.FootstepSound.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)ArmorAddon_FieldIndex.FootstepSound;
                 }
                 case RecordTypeInts.ONAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ArtObject = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.ArtObject.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)ArmorAddon_FieldIndex.ArtObject;
                 }
                 default:
@@ -2667,7 +2695,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Race
         private int? _RaceLocation;
-        public FormLinkNullable<IRaceGetter> Race => _RaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _RaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
+        public IFormLinkNullableGetter<IRaceGetter> Race => _RaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _RaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
         #endregion
         private int? _DNAMLocation;
         public ArmorAddon.DNAMDataType DNAMDataTypeState { get; private set; }
@@ -2719,21 +2747,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IGenderedItemGetter<IModelGetter?>? FirstPersonModel => _FirstPersonModelOverlay;
         #endregion
         #region SkinTexture
-        private IGenderedItemGetter<IFormLinkNullable<ITextureSetGetter>>? _SkinTextureOverlay;
-        public IGenderedItemGetter<IFormLinkNullable<ITextureSetGetter>>? SkinTexture => _SkinTextureOverlay;
+        private IGenderedItemGetter<IFormLinkNullableGetter<ITextureSetGetter>>? _SkinTextureOverlay;
+        public IGenderedItemGetter<IFormLinkNullableGetter<ITextureSetGetter>>? SkinTexture => _SkinTextureOverlay;
         #endregion
         #region TextureSwapList
-        private IGenderedItemGetter<IFormLinkNullable<IFormListGetter>>? _TextureSwapListOverlay;
-        public IGenderedItemGetter<IFormLinkNullable<IFormListGetter>>? TextureSwapList => _TextureSwapListOverlay;
+        private IGenderedItemGetter<IFormLinkNullableGetter<IFormListGetter>>? _TextureSwapListOverlay;
+        public IGenderedItemGetter<IFormLinkNullableGetter<IFormListGetter>>? TextureSwapList => _TextureSwapListOverlay;
         #endregion
-        public IReadOnlyList<IFormLink<IRaceGetter>> AdditionalRaces { get; private set; } = ListExt.Empty<IFormLink<IRaceGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IRaceGetter>> AdditionalRaces { get; private set; } = ListExt.Empty<IFormLinkGetter<IRaceGetter>>();
         #region FootstepSound
         private int? _FootstepSoundLocation;
-        public FormLinkNullable<IFootstepSetGetter> FootstepSound => _FootstepSoundLocation.HasValue ? new FormLinkNullable<IFootstepSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FootstepSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFootstepSetGetter>.Null;
+        public IFormLinkNullableGetter<IFootstepSetGetter> FootstepSound => _FootstepSoundLocation.HasValue ? new FormLinkNullable<IFootstepSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FootstepSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFootstepSetGetter>.Null;
         #endregion
         #region ArtObject
         private int? _ArtObjectLocation;
-        public FormLinkNullable<IArtObjectGetter> ArtObject => _ArtObjectLocation.HasValue ? new FormLinkNullable<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ArtObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArtObjectGetter>.Null;
+        public IFormLinkNullableGetter<IArtObjectGetter> ArtObject => _ArtObjectLocation.HasValue ? new FormLinkNullable<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ArtObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArtObjectGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2845,7 +2873,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.NAM0:
                 case RecordTypeInts.NAM1:
                 {
-                    _SkinTextureOverlay = GenderedItemBinaryOverlay.Factory<IFormLinkNullable<ITextureSetGetter>>(
+                    _SkinTextureOverlay = GenderedItemBinaryOverlay.Factory<IFormLinkNullableGetter<ITextureSetGetter>>(
                         package: _package,
                         male: RecordTypes.NAM0,
                         female: RecordTypes.NAM1,
@@ -2857,7 +2885,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.NAM2:
                 case RecordTypeInts.NAM3:
                 {
-                    _TextureSwapListOverlay = GenderedItemBinaryOverlay.Factory<IFormLinkNullable<IFormListGetter>>(
+                    _TextureSwapListOverlay = GenderedItemBinaryOverlay.Factory<IFormLinkNullableGetter<IFormListGetter>>(
                         package: _package,
                         male: RecordTypes.NAM2,
                         female: RecordTypes.NAM3,
@@ -2868,7 +2896,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.MODL:
                 {
-                    this.AdditionalRaces = BinaryOverlayList.FactoryByArray<IFormLink<IRaceGetter>>(
+                    this.AdditionalRaces = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IRaceGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IRaceGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -2916,7 +2944,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IArmorAddonGetter rhs)) return false;
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IArmorAddonGetter rhs) return false;
             return ((ArmorAddonCommon)((IArmorAddonGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 

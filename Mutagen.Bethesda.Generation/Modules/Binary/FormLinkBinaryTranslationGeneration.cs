@@ -115,23 +115,19 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
             }
 
-            TranslationGeneration.WrapParseCall(
-                new TranslationWrapParseArgs()
+            using (var args = new ArgsWrapper(fg,
+                $"{itemAccessor}.SetTo"))
+            {
+                args.Add(subFg =>
                 {
-                    FG = fg,
-                    TypeGen = typeGen,
-                    TranslatorLine = $"{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance",
-                    MaskAccessor = errorMaskAccessor,
-                    ItemAccessor = $"{itemAccessor}",
-                    TranslationMaskAccessor = null,
-                    IndexAccessor = typeGen.HasIndex ? typeGen.IndexEnumInt : null,
-                    TypeOverride = linkType.FormIDType == FormLinkType.FormIDTypeEnum.Normal ? "FormKey" : "RecordType",
-                    DefaultOverride = linkType.FormIDType == FormLinkType.FormIDTypeEnum.Normal ? "FormKey.Null" : "RecordType.Null",
-                    ExtraArgs = $"frame: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : "")}"
-                        .AsEnumerable()
-                        .ToArray(),
-                    SkipErrorMask = !this.DoErrorMasks,
+                    using (var args2 = new FunctionWrapper(subFg,
+                        $"{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance.Parse"))
+                    {
+                        args2.AddPassArg("frame");
+                        args2.Add($"defaultVal: {(linkType.FormIDType == FormLinkType.FormIDTypeEnum.Normal ? "FormKey.Null" : "RecordType.Null")}");
+                    }
                 });
+            }
         }
 
         public override async Task GenerateWrite(

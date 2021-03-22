@@ -60,6 +60,20 @@ namespace Mutagen.Bethesda.Binary
 
         public bool Parse<T>(
             MutagenFrame frame,
+            [MaybeNullWhen(false)] out IFormLinkGetter<T> item)
+            where T : class, IMajorRecordCommonGetter
+        {
+            if (FormKeyBinaryTranslation.Instance.Parse(frame, out FormKey id))
+            {
+                item = new FormLink<T>(id);
+                return true;
+            }
+            item = new FormLink<T>();
+            return false;
+        }
+
+        public bool Parse<T>(
+            MutagenFrame frame,
             [MaybeNullWhen(false)] out IFormLink<T> item)
             where T : class, IMajorRecordCommonGetter
         {
@@ -69,6 +83,20 @@ namespace Mutagen.Bethesda.Binary
                 return true;
             }
             item = new FormLink<T>();
+            return false;
+        }
+
+        public bool Parse<T>(
+            MutagenFrame frame,
+            [MaybeNullWhen(false)] out IFormLinkNullableGetter<T> item)
+            where T : class, IMajorRecordCommonGetter
+        {
+            if (FormKeyBinaryTranslation.Instance.Parse(frame, out FormKey id))
+            {
+                item = new FormLinkNullable<T>(id);
+                return true;
+            }
+            item = new FormLinkNullable<T>();
             return false;
         }
 
@@ -88,24 +116,12 @@ namespace Mutagen.Bethesda.Binary
 
         public void Write<T>(
             MutagenWriter writer,
-            IFormLink<T> item)
+            IFormLinkGetter<T> item)
             where T : class, IMajorRecordCommonGetter
         {
             FormKeyBinaryTranslation.Instance.Write(
                 writer,
                 item.FormKey);
-        }
-
-        public void Write<T>(
-            MutagenWriter writer,
-            IEDIDLink<T> item,
-            MasterReferenceReader masterReferences)
-            where T : class, IMajorRecordCommonGetter
-        {
-            this.Write(
-                writer,
-                item,
-                masterReferences);
         }
 
         public void Write<T>(
@@ -129,7 +145,7 @@ namespace Mutagen.Bethesda.Binary
 
         public void Write<T>(
             MutagenWriter writer,
-            IFormLink<T> item,
+            IFormLinkGetter<T> item,
             RecordType header)
             where T : class, IMajorRecordCommonGetter
         {
@@ -154,7 +170,7 @@ namespace Mutagen.Bethesda.Binary
 
         public void WriteNullable<T>(
             MutagenWriter writer,
-            IFormLinkNullable<T> item,
+            IFormLinkNullableGetter<T> item,
             RecordType header)
             where T : class, IMajorRecordCommonGetter
         {
@@ -178,7 +194,7 @@ namespace Mutagen.Bethesda.Binary
 
         public void WriteNullable<T>(
             MutagenWriter writer,
-            IFormLinkNullable<T> item)
+            IFormLinkNullableGetter<T> item)
             where T : class, IMajorRecordCommonGetter
         {
             if (item.FormKeyNullable == null) return;

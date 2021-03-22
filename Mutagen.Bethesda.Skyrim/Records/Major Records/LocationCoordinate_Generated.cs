@@ -40,7 +40,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Location
-        public FormLink<IComplexLocationGetter> Location { get; set; } = new FormLink<IComplexLocationGetter>();
+        private IFormLink<IComplexLocationGetter> _Location = new FormLink<IComplexLocationGetter>();
+        public IFormLink<IComplexLocationGetter> Location
+        {
+            get => _Location;
+            set => _Location = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IComplexLocationGetter> ILocationCoordinateGetter.Location => this.Location;
         #endregion
         #region Coordinates
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -532,7 +539,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILocationCoordinateGetter,
         ILoquiObjectSetter<ILocationCoordinate>
     {
-        new FormLink<IComplexLocationGetter> Location { get; set; }
+        new IFormLink<IComplexLocationGetter> Location { get; }
         new ExtendedList<P2Int16> Coordinates { get; }
     }
 
@@ -549,7 +556,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => LocationCoordinate_Registration.Instance;
-        FormLink<IComplexLocationGetter> Location { get; }
+        IFormLinkGetter<IComplexLocationGetter> Location { get; }
         IReadOnlyList<P2Int16> Coordinates { get; }
 
     }
@@ -807,14 +814,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ILocationCoordinate item)
         {
             ClearPartial();
-            item.Location = FormLink<IComplexLocationGetter>.Null;
+            item.Location.Clear();
             item.Coordinates.Clear();
         }
         
         #region Mutagen
         public void RemapLinks(ILocationCoordinate obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Location = obj.Location.Relink(mapping);
+            obj.Location.Relink(mapping);
         }
         
         #endregion
@@ -987,7 +994,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)LocationCoordinate_FieldIndex.Location) ?? true))
             {
-                item.Location = new FormLink<IComplexLocationGetter>(rhs.Location.FormKey);
+                item.Location.SetTo(rhs.Location.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LocationCoordinate_FieldIndex.Coordinates) ?? true))
             {
@@ -1148,9 +1155,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILocationCoordinate item,
             MutagenFrame frame)
         {
-            item.Location = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Location.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             item.Coordinates.SetTo(
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<P2Int16>.Instance.Parse(
                     frame: frame,
@@ -1227,7 +1235,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<IComplexLocationGetter> Location => new FormLink<IComplexLocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IComplexLocationGetter> Location => new FormLink<IComplexLocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         #region Coordinates
         public IReadOnlyList<P2Int16> Coordinates => BinaryOverlayList.FactoryByStartIndex<P2Int16>(_data.Slice(0x4), _package, 4, (s, p) => P2Int16BinaryTranslation.Read(s, swapCoords: true));
         protected int CoordinatesEndingPos;

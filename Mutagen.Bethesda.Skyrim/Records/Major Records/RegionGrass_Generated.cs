@@ -40,7 +40,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Grass
-        public FormLink<IGrassGetter> Grass { get; set; } = new FormLink<IGrassGetter>();
+        private IFormLink<IGrassGetter> _Grass = new FormLink<IGrassGetter>();
+        public IFormLink<IGrassGetter> Grass
+        {
+            get => _Grass;
+            set => _Grass = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IGrassGetter> IRegionGrassGetter.Grass => this.Grass;
         #endregion
         #region Unknown
         public Int32 Unknown { get; set; } = default;
@@ -448,7 +455,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IRegionGrass>,
         IRegionGrassGetter
     {
-        new FormLink<IGrassGetter> Grass { get; set; }
+        new IFormLink<IGrassGetter> Grass { get; }
         new Int32 Unknown { get; set; }
     }
 
@@ -465,7 +472,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => RegionGrass_Registration.Instance;
-        FormLink<IGrassGetter> Grass { get; }
+        IFormLinkGetter<IGrassGetter> Grass { get; }
         Int32 Unknown { get; }
 
     }
@@ -723,14 +730,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IRegionGrass item)
         {
             ClearPartial();
-            item.Grass = FormLink<IGrassGetter>.Null;
+            item.Grass.Clear();
             item.Unknown = default;
         }
         
         #region Mutagen
         public void RemapLinks(IRegionGrass obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Grass = obj.Grass.Relink(mapping);
+            obj.Grass.Relink(mapping);
         }
         
         #endregion
@@ -886,7 +893,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)RegionGrass_FieldIndex.Grass) ?? true))
             {
-                item.Grass = new FormLink<IGrassGetter>(rhs.Grass.FormKey);
+                item.Grass.SetTo(rhs.Grass.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)RegionGrass_FieldIndex.Unknown) ?? true))
             {
@@ -1025,9 +1032,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IRegionGrass item,
             MutagenFrame frame)
         {
-            item.Grass = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Grass.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             item.Unknown = frame.ReadInt32();
         }
 
@@ -1095,7 +1103,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<IGrassGetter> Grass => new FormLink<IGrassGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IGrassGetter> Grass => new FormLink<IGrassGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

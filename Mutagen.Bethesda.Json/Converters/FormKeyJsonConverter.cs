@@ -16,8 +16,7 @@ namespace Mutagen.Bethesda.Json
             if (objectType == typeof(FormKey?)) return true;
             if (!objectType.IsGenericType) return false;
             var genDef = objectType.GetGenericTypeDefinition();
-            if (genDef == typeof(FormLink<>)) return true;
-            if (genDef == typeof(FormLinkNullable<>)) return true;
+            if (typeof(IFormLinkGetter).IsAssignableFrom(objectType)) return true;
             return false;
         }
 
@@ -71,7 +70,7 @@ namespace Mutagen.Bethesda.Json
                 case FormKey fk:
                     writer.WriteValue(fk.ToString());
                     break;
-                case IFormLink fl:
+                case IFormLinkGetter fl:
                     writer.WriteValue(fl.FormKey.ToString());
                     break;
                 default:
