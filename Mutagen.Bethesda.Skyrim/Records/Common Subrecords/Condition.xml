@@ -28,7 +28,7 @@
   </Object>
   <Object name="FunctionConditionData" objType="Subrecord" baseClass="ConditionData" GUID="c7686727-e470-4c34-80ce-423cf65c7b92" ID="39">
     <Fields>
-      <Enum name="Function" enumName="ConditionData.Function" byteLength="2" />
+      <Enum name="Function" enumName="Condition.Function" byteLength="2" />
       <UInt16 name="Unknown2" />
       <CustomLogic name="ParameterParsing" />
       <FormLink name="ParameterOneRecord" refName="SkyrimMajorRecord" binary="NoGeneration" />
