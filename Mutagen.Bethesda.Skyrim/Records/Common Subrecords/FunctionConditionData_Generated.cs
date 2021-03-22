@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Function
-        public ConditionData.Function Function { get; set; } = default;
+        public Condition.Function Function { get; set; } = default;
         #endregion
         #region Unknown2
         public UInt16 Unknown2 { get; set; } = default;
@@ -647,7 +647,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFunctionConditionDataGetter,
         ILoquiObjectSetter<IFunctionConditionData>
     {
-        new ConditionData.Function Function { get; set; }
+        new Condition.Function Function { get; set; }
         new UInt16 Unknown2 { get; set; }
         new IFormLink<ISkyrimMajorRecordGetter> ParameterOneRecord { get; }
         new Int32 ParameterOneNumber { get; set; }
@@ -664,7 +664,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IFunctionConditionDataGetter>
     {
         static new ILoquiRegistration Registration => FunctionConditionData_Registration.Instance;
-        ConditionData.Function Function { get; }
+        Condition.Function Function { get; }
         UInt16 Unknown2 { get; }
         IFormLinkGetter<ISkyrimMajorRecordGetter> ParameterOneRecord { get; }
         Int32 ParameterOneNumber { get; }
@@ -1351,7 +1351,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ConditionDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<ConditionData.Function>.Instance.Write(
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Condition.Function>.Instance.Write(
                 writer,
                 item.Function,
                 length: 2);
@@ -1406,7 +1406,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ConditionDataBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.Function = EnumBinaryTranslation<ConditionData.Function>.Instance.Parse(frame: frame.SpawnWithLength(2));
+            item.Function = EnumBinaryTranslation<Condition.Function>.Instance.Parse(frame: frame.SpawnWithLength(2));
             item.Unknown2 = frame.ReadUInt16();
             FunctionConditionDataBinaryCreateTranslation.FillBinaryParameterParsingCustom(
                 frame: frame,
@@ -1462,7 +1462,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public ConditionData.Function Function => (ConditionData.Function)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x0, 0x2));
+        public Condition.Function Function => (Condition.Function)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x0, 0x2));
         public UInt16 Unknown2 => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x2, 0x2));
         #region ParameterParsing
         partial void ParameterParsingCustomParse(
