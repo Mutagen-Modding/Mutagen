@@ -27,7 +27,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             static partial void FillBinaryFlagsCustom(MutagenFrame frame, IMaterialObjectInternal item)
             {
-                if (item.FormVersion >= 44 || (frame.Remaining >= 8 && item.FormVersion == 43 && frame.MetaData.Constants.Release == GameRelease.SkyrimVR))
+                if (item.FormVersion >= 43)
                 {
                     item.Flags = (MaterialObject.Flag)frame.ReadUInt64();
                 }
@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             static partial void WriteBinaryFlagsCustom(MutagenWriter writer, IMaterialObjectGetter item)
             {
-                if (item.FormVersion >= 44 || (item.FormVersion == 43 && writer.MetaData.Constants.Release == GameRelease.SkyrimVR))
+                if (item.FormVersion >= 43)
                 {
                     writer.Write((ulong)item.Flags);
                 }
@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (_data.Length < (_FlagsLocation + 4)) return default;
                 var slice = _data.Slice(_FlagsLocation);
-                if (this.FormVersion >= 44 || (slice.Length >= 8 && this.FormVersion == 43 && this._package.MetaData.Constants.Release == GameRelease.SkyrimVR))
+                if (this.FormVersion >= 43)
                 {
                     return (MaterialObject.Flag)BinaryPrimitives.ReadUInt64LittleEndian(slice);
                 }
