@@ -13,12 +13,12 @@ namespace Mutagen.Bethesda.Pex.DataTypes
     public class PexObject : IPexObject
     {
         public ushort NameIndex { get; set; } = ushort.MaxValue;
-
         public ushort ParentClassNameIndex { get; set; } = ushort.MaxValue;
         public ushort DocStringIndex { get; set; } = ushort.MaxValue;
+        public bool IsConst { get; set; }
         public uint UserFlags { get; set; } = uint.MaxValue;
-        
         public ushort AutoStateNameIndex { get; set; } = ushort.MaxValue;
+        public List<IPexObjectStructInfo> StructInfos { get; set; } = new();
         public List<IPexObjectVariable> Variables { get; set; } = new();
         public List<IPexObjectProperty> Properties { get; set; } = new();
         public List<IPexObjectState> States { get; set; } = new();
@@ -32,9 +32,15 @@ namespace Mutagen.Bethesda.Pex.DataTypes
         public string GetName(IStringTable stringTable) => stringTable.GetFromIndex(NameIndex);
         
         public List<IUserFlag> GetUserFlags(IUserFlagsTable userFlagsTable) => userFlagsTable.GetUserFlags(UserFlags);
+
+        private readonly GameCategory _gameCategory;
         
-        public PexObject() { }
-        public PexObject(BinaryReader br) { Read(br); }
+        public PexObject(GameCategory gameCategory)
+        {
+            _gameCategory = gameCategory;
+        }
+        
+        public PexObject(BinaryReader br, GameCategory gameCategory) : this(gameCategory) { Read(br); }
         
         public void Read(BinaryReader br)
         {
@@ -49,9 +55,21 @@ namespace Mutagen.Bethesda.Pex.DataTypes
             
             ParentClassNameIndex = br.ReadUInt16();
             DocStringIndex = br.ReadUInt16();
+            if (_gameCategory == GameCategory.Fallout4)
+                IsConst = br.ReadBoolean();
             UserFlags = br.ReadUInt32();
             AutoStateNameIndex = br.ReadUInt16();
 
+            if (_gameCategory == GameCategory.Fallout4)
+            {
+                var infoCount = br.ReadUInt16();
+                for (var i = 0; i < infoCount; i++)
+                {
+                    var structInfo = new PexObjectStructInfo(br);
+                    StructInfos.Add(structInfo);
+                }
+            }
+            
             var variables = br.ReadUInt16();
             for (var i = 0; i < variables; i++)
             {
@@ -89,8 +107,24 @@ namespace Mutagen.Bethesda.Pex.DataTypes
 
             bw.Write(ParentClassNameIndex);
             bw.Write(DocStringIndex);
+            
+            if (_gameCategory == GameCategory.Fallout4) {
+                // ReSharper disable RedundantCast
+                bw.Write(IsConst ? (byte) 1 : (byte) 0);
+                // ReSharper restore RedundantCast
+            }
+            
             bw.Write(UserFlags);
             bw.Write(AutoStateNameIndex);
+
+            if (_gameCategory == GameCategory.Fallout4)
+            {
+                bw.Write((ushort) StructInfos.Count);
+                foreach (var structInfo in StructInfos)
+                {
+                    structInfo.Write(bw);
+                }
+            }
             
             bw.Write((ushort) Variables.Count);
             foreach (var objectVariable in Variables)
@@ -121,6 +155,82 @@ namespace Mutagen.Bethesda.Pex.DataTypes
         }
     }
 
+    [PublicAPI]
+    public class PexObjectStructInfo : IPexObjectStructInfo
+    {
+        public ushort NameIndex { get; set; } = ushort.MaxValue;
+        public List<IPexObjectStructInfoMember> Members { get; set; } = new();
+        
+        public PexObjectStructInfo() { }
+        public PexObjectStructInfo(BinaryReader br) { Read(br); }
+        
+        public void Read(BinaryReader br)
+        {
+            NameIndex = br.ReadUInt16();
+
+            var count = br.ReadUInt16();
+            for (var i = 0; i < count; i++)
+            {
+                var member = new PexObjectStructInfoMember(br);
+                Members.Add(member);
+            }
+        }
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(NameIndex);
+            bw.Write((ushort) Members.Count);
+            foreach (var infoMember in Members)
+            {
+                infoMember.Write(bw);
+            }
+        }
+
+        public string GetName(IStringTable stringTable) => stringTable.GetFromIndex(NameIndex);
+    }
+
+    [PublicAPI]
+    public class PexObjectStructInfoMember : IPexObjectStructInfoMember
+    {
+        public ushort NameIndex { get; set; } = ushort.MaxValue;
+        public ushort TypeNameIndex { get; set; } = ushort.MaxValue;
+        public uint UserFlags { get; set; } = ushort.MaxValue;
+        public IPexObjectVariableData? Value { get; set; }
+        public bool IsConst { get; set; }
+        public ushort DocStringIndex { get; set; } = ushort.MaxValue;
+        
+        public PexObjectStructInfoMember() { }
+        public PexObjectStructInfoMember(BinaryReader br) { Read(br); }
+        
+        public void Read(BinaryReader br)
+        {
+            NameIndex = br.ReadUInt16();
+            TypeNameIndex = br.ReadUInt16();
+            UserFlags = br.ReadUInt32();
+            Value = new PexObjectVariableData(br);
+            IsConst = br.ReadBoolean();
+            DocStringIndex = br.ReadUInt16();
+        }
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(NameIndex);
+            bw.Write(TypeNameIndex);
+            bw.Write(UserFlags);
+            Value?.Write(bw);
+            bw.Write(IsConst);
+            bw.Write(DocStringIndex);
+        }
+
+        public List<IUserFlag> GetUserFlags(IUserFlagsTable userFlagsTable) => userFlagsTable.GetUserFlags(UserFlags);
+
+        public string GetName(IStringTable stringTable) => stringTable.GetFromIndex(NameIndex);
+
+        public string GetTypeName(IStringTable stringTable) => stringTable.GetFromIndex(TypeNameIndex);
+
+        public string GetDocString(IStringTable stringTable) => stringTable.GetFromIndex(DocStringIndex);
+    }
+    
     [PublicAPI]
     public class PexObjectVariable : IPexObjectVariable
     {

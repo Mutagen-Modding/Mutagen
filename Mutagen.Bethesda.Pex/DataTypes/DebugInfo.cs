@@ -147,8 +147,8 @@ namespace Mutagen.Bethesda.Pex.DataTypes
     [PublicAPI]
     public class DebugPropertyGroup : IDebugPropertyGroup
     {
-        public ushort ObjectNameIndex { get; set; }
-        public ushort GroupNameIndex { get; set; }
+        public ushort ObjectNameIndex { get; set; } = ushort.MaxValue;
+        public ushort GroupNameIndex { get; set; } = ushort.MaxValue;
         public List<ushort> PropertyNameIndices { get; set; } = new();
         
         public DebugPropertyGroup() { }
@@ -191,8 +191,8 @@ namespace Mutagen.Bethesda.Pex.DataTypes
     [PublicAPI]
     public class DebugStructOrder : IDebugStructOrder
     {
-        public ushort ObjectNameIndex { get; set; }
-        public ushort OrderNameIndex { get; set; }
+        public ushort ObjectNameIndex { get; set; } = ushort.MaxValue;
+        public ushort OrderNameIndex { get; set; } = ushort.MaxValue;
         public List<ushort> NameIndices { get; set; } = new();
         
         public DebugStructOrder() { }

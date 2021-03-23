@@ -12,8 +12,12 @@ namespace Mutagen.Bethesda.Pex.Interfaces
         public ushort ParentClassNameIndex { get; set; }
         
         public ushort DocStringIndex { get; set; }
+        
+        public bool IsConst { get; set; }
 
         public ushort AutoStateNameIndex { get; set; }
+        
+        public List<IPexObjectStructInfo> StructInfos { get; set; }
         
         public List<IPexObjectVariable> Variables { get; set; }
         
@@ -27,6 +31,34 @@ namespace Mutagen.Bethesda.Pex.Interfaces
         public string GetName(IStringTable stringTable);
     }
 
+    [PublicAPI]
+    public interface IPexObjectStructInfo : IBinaryObject
+    {
+        public ushort NameIndex { get; set; }
+        
+        public List<IPexObjectStructInfoMember> Members { get; set; }
+        
+        public string GetName(IStringTable stringTable);
+    }
+
+    [PublicAPI]
+    public interface IPexObjectStructInfoMember : IBinaryObject, IHasUserFlags
+    {
+        public ushort NameIndex { get; set; }
+        
+        public ushort TypeNameIndex { get; set; }
+        
+        public IPexObjectVariableData? Value { get; set; }
+        
+        public bool IsConst { get; set; }
+        
+        public ushort DocStringIndex { get; set; }
+        
+        public string GetName(IStringTable stringTable);
+        public string GetTypeName(IStringTable stringTable);
+        public string GetDocString(IStringTable stringTable);
+    }
+    
     [PublicAPI]
     public interface IPexObjectVariable : IBinaryObject, IHasUserFlags
     {

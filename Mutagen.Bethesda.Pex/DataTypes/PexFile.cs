@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Pex.DataTypes
             var objectCount = br.ReadUInt16();
             for (var i = 0; i < objectCount; i++)
             {
-                var pexObject = new PexObject(br);
+                var pexObject = new PexObject(br, _gameCategory);
                 Objects.Add(pexObject);
             }
         }
