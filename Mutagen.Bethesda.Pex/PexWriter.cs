@@ -63,5 +63,13 @@ namespace Mutagen.Bethesda.Pex
             else
                 base.Write(value);
         }
+
+        public override void Write(string value)
+        {
+            if (_isBigEndian)
+                this.WriteWStringBE(value);
+            else
+                this.WriteWStringLE(value);
+        }
     }
 }

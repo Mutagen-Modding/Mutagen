@@ -7,7 +7,14 @@ namespace Mutagen.Bethesda.Pex.Extensions
 {
     internal static class BinaryWriterExtensions
     {
-        internal static void WriteWString(this BinaryWriter bw, string s)
+        internal static void WriteWStringLE(this BinaryWriter bw, string s)
+        {
+            var bytes = Encoding.UTF8.GetBytes(s);
+            bw.Write((ushort) s.Length);
+            bw.Write(bytes);
+        }
+        
+        internal static void WriteWStringBE(this BinaryWriter bw, string s)
         {
             var bytes = Encoding.UTF8.GetBytes(s);
             bw.WriteUInt16BE((ushort) s.Length);

@@ -6,14 +6,19 @@ namespace Mutagen.Bethesda.Pex.Extensions
 {
     internal static class BinaryReaderExtensions
     {
-        internal static string ReadWString(this BinaryReader br)
+        internal static string ReadWStringLE(this BinaryReader br)
         {
-            return br.ReadWStringAsSpan().ToString();
+            return br.ReadWStringAsSpan(false).ToString();
         }
 
-        internal static ReadOnlySpan<char> ReadWStringAsSpan(this BinaryReader br)
+        internal static string ReadWStringBE(this BinaryReader br)
         {
-            var length = br.ReadUInt16BE();
+            return br.ReadWStringAsSpan(true).ToString();
+        }
+        
+        internal static ReadOnlySpan<char> ReadWStringAsSpan(this BinaryReader br, bool isBigEndian)
+        {
+            var length = isBigEndian ? br.ReadUInt16BE() : br.ReadUInt16();
             if (length == 0) return ReadOnlySpan<char>.Empty;
             var chars = br.ReadChars(length);
             return chars.AsSpan();

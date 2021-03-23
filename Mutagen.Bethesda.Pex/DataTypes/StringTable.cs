@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Pex.DataTypes
             
             for (var i = 0; i < count; i++)
             {
-                Strings[i] = br.ReadWString();
+                Strings[i] = br.ReadString();
             }
         }
 
@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Pex.DataTypes
             bw.Write((ushort) Strings.Length);
             foreach (var s in Strings)
             {
-                bw.WriteWString(s);
+                bw.Write(s);
             }
         }
 

@@ -48,5 +48,10 @@ namespace Mutagen.Bethesda.Pex
         {
             return _isBigEndian ? this.ReadSingleBE() : base.ReadSingle();
         }
+
+        public override string ReadString()
+        {
+            return _isBigEndian ? this.ReadWStringBE() : this.ReadWStringLE();
+        }
     }
 }

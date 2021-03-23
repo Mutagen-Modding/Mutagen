@@ -10,12 +10,22 @@ namespace Mutagen.Bethesda.Pex.Tests
     {
         [Theory]
         [InlineData("Hello World")]
-        public void TestWString(string expected)
+        public void TestWStringLE(string expected)
         {
             var bytes = Encoding.UTF8.GetBytes(expected);
             DoTest(bytes.Length + sizeof(uint), expected,
-                bw => bw.WriteWString(expected),
-                br => br.ReadWString());
+                bw => bw.WriteWStringLE(expected),
+                br => br.ReadWStringLE());
+        }
+        
+        [Theory]
+        [InlineData("Hello World")]
+        public void TestWStringBE(string expected)
+        {
+            var bytes = Encoding.UTF8.GetBytes(expected);
+            DoTest(bytes.Length + sizeof(uint), expected,
+                bw => bw.WriteWStringBE(expected),
+                br => br.ReadWStringBE());
         }
 
         [Theory]

@@ -50,9 +50,9 @@ namespace Mutagen.Bethesda.Pex.DataTypes
             MinorVersion = br.ReadByte();
             GameId = br.ReadUInt16();
             CompilationTime = br.ReadUInt64().ToDateTime();
-            SourceFileName = br.ReadWString();
-            Username = br.ReadWString();
-            MachineName = br.ReadWString();
+            SourceFileName = br.ReadString();
+            Username = br.ReadString();
+            MachineName = br.ReadString();
 
             StringTable = new StringTable(br);
             DebugInfo = new DebugInfo(br);
@@ -73,9 +73,9 @@ namespace Mutagen.Bethesda.Pex.DataTypes
             bw.Write(MinorVersion);
             bw.Write(GameId);
             bw.Write(CompilationTime.ToUInt64());
-            bw.WriteWString(SourceFileName);
-            bw.WriteWString(Username);
-            bw.WriteWString(MachineName);
+            bw.Write(SourceFileName);
+            bw.Write(Username);
+            bw.Write(MachineName);
             
             StringTable?.Write(bw);
             DebugInfo?.Write(bw);
