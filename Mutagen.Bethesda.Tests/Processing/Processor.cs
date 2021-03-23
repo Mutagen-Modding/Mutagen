@@ -647,12 +647,17 @@ namespace Mutagen.Bethesda.Tests
             Language language,
             StringsSource source,
             bool strict,
+            HashSet<uint> knownDeadKeys,
+            IEnumerable<string> bsaOrder,
             IReadOnlyList<KeyValuePair<uint, uint>> reindexing)
         {
             if (reindexing.Count == 0) return;
 
             var outFolder = Path.Combine(this.TempFolder.Dir.Path, "Strings/Processed");
-            var stringsOverlay = StringsFolderLookupOverlay.TypicalFactory(release, modKey, dataFolder.FullName, null);
+            var stringsOverlay = StringsFolderLookupOverlay.TypicalFactory(release, modKey, dataFolder.FullName, new StringsReadParameters()
+            {
+                BsaOrdering = bsaOrder
+            });
             using var writer = new StringsWriter(this.GameRelease, ModKey.FromNameAndExtension(Path.GetFileName(this.SourcePath)), outFolder);
             var dict = stringsOverlay.Get(source);
             foreach (var lang in dict)
@@ -660,6 +665,10 @@ namespace Mutagen.Bethesda.Tests
                 if (lang.Key != language) continue;
                 var overlay = lang.Value.Value;
                 var overlayDict = strict ? overlay.ToDictionary() : null;
+                if (knownDeadKeys != null)
+                {
+                    overlayDict?.Remove(knownDeadKeys);
+                }
                 foreach (var item in reindexing)
                 {
                     if (!overlay.TryLookup(item.Key, out var str))
@@ -726,7 +735,7 @@ namespace Mutagen.Bethesda.Tests
                     }
                     stream.Position = subBlockGroupPos + subBlockGroup.TotalLength;
                 }
-                Break:
+            Break:
 
                 // Check to see if removed subgroups left parent empty
                 if (amountRemoved > 0

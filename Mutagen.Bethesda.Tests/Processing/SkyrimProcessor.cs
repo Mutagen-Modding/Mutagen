@@ -800,11 +800,20 @@ namespace Mutagen.Bethesda.Tests
             {
                 yield return t;
             }
+            var bsaOrder = Archive.GetTypicalOrder(GameRelease).ToList();
             foreach (var source in EnumExt.GetValues<StringsSource>())
             {
                 yield return TaskExt.Run(DoMultithreading, () =>
                 {
-                    return ProcessStringsFilesIndices(streamGetter, new DirectoryInfo(Path.GetDirectoryName(this.SourcePath)), Language.English, source, ModKey.FromNameAndExtension(Path.GetFileName(this.SourcePath)));
+                    var modKey = ModKey.FromNameAndExtension(Path.GetFileName(this.SourcePath));
+                    return ProcessStringsFilesIndices(
+                        streamGetter, 
+                        new DirectoryInfo(Path.GetDirectoryName(this.SourcePath)),
+                        Language.English, 
+                        source,
+                        modKey,
+                        _knownDeadKeys.GetOrDefault((modKey, source)),
+                        bsaOrder);
                 });
             }
         }
@@ -866,7 +875,14 @@ namespace Mutagen.Bethesda.Tests
             AStringsAlignment.ProcessStringLink(stream, instr, processedStrings, overlay, ref newIndex);
         }
 
-        private async Task ProcessStringsFilesIndices(Func<IMutagenReadStream> streamGetter, DirectoryInfo dataFolder, Language language, StringsSource source, ModKey modKey)
+        private async Task ProcessStringsFilesIndices(
+            Func<IMutagenReadStream> streamGetter,
+            DirectoryInfo dataFolder,
+            Language language, 
+            StringsSource source, 
+            ModKey modKey,
+            HashSet<uint> knownDeadKeys,
+            IEnumerable<string> bsaOrder)
         {
             using var stream = streamGetter();
             switch (source)
@@ -879,6 +895,8 @@ namespace Mutagen.Bethesda.Tests
                         language,
                         StringsSource.Normal,
                         strict: true,
+                        knownDeadKeys: knownDeadKeys,
+                        bsaOrder: bsaOrder,
                         RenumberStringsFileEntries(
                             GameRelease,
                             modKey,
@@ -947,6 +965,8 @@ namespace Mutagen.Bethesda.Tests
                         language,
                         StringsSource.DL,
                         strict: true,
+                        knownDeadKeys: knownDeadKeys,
+                        bsaOrder: bsaOrder,
                         RenumberStringsFileEntries(
                             GameRelease,
                             modKey,
@@ -979,6 +999,8 @@ namespace Mutagen.Bethesda.Tests
                         language,
                         StringsSource.IL,
                         strict: true,
+                        knownDeadKeys: knownDeadKeys,
+                        bsaOrder: bsaOrder,
                         RenumberStringsFileEntries(
                             GameRelease,
                             modKey,
