@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda.Pex.DataTypes
 
         public void Write(BinaryWriter bw)
         {
-            bw.WriteUInt16BE(NameIndex);
+            bw.Write(NameIndex);
             bw.Write(FlagIndex);
         }
     }

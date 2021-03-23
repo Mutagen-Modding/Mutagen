@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda.Pex.DataTypes
 
             for (var i = 0; i < InstructionCount; i++)
             {
-                var lineNumber = br.ReadUInt16BE();
+                var lineNumber = br.ReadUInt16();
                 LineNumbers.Add(lineNumber);
             }
         }

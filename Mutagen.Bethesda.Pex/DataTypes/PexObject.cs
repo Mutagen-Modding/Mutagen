@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda.Pex.DataTypes
         
         public void Read(BinaryReader br)
         {
-            NameIndex = br.ReadUInt16BE();
+            NameIndex = br.ReadUInt16();
             
             /*
              * This is the size of the entire object in bytes not some count variable for a loop. This also includes
