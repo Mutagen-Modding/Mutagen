@@ -47,7 +47,21 @@ namespace Mutagen.Bethesda.Pex.DataTypes
             "SSI", // 20
             "SIA",
             "SSII",
-            "SSII"
+            "SSII",
+            
+            //F04
+            //TODO: find the right argument types, only length is correct
+            "SSS", // 24
+            "S",
+            "SS",
+            "SSS",
+            "SSSSS", // 28
+            "SSSSS",
+            "SSS",
+            "SSS",
+            "S", // 2C
+            "SSS",
+            "S"
         };
 
         public static string GetArguments(InstructionOpcode opcode)

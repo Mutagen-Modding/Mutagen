@@ -574,7 +574,7 @@ namespace Mutagen.Bethesda.Pex.DataTypes
     [PublicAPI]
     public class PexObjectFunctionInstruction : IPexObjectFunctionInstruction
     {
-        public InstructionOpcode OpCode { get; set; } = InstructionOpcode.nop;
+        public InstructionOpcode OpCode { get; set; } = InstructionOpcode.NOP;
         public List<IPexObjectVariableData> Arguments { get; set; } = new();
         
         public PexObjectFunctionInstruction() { }
@@ -590,27 +590,26 @@ namespace Mutagen.Bethesda.Pex.DataTypes
                 var argument = new PexObjectVariableData(br);
                 Arguments.Add(argument);
 
-                if (current == '*')
+                switch (current)
                 {
-                    if (argument.VariableType != VariableType.Integer || !argument.IntValue.HasValue)
+                    case '*' when argument.VariableType != VariableType.Integer || !argument.IntValue.HasValue:
                         throw new PexParsingException($"Variable-Length Arguments require an Integer Argument! Argument is {argument.VariableType}");
-                    for (var i = 0; i < argument.IntValue.Value; i++)
+                    case '*':
                     {
-                        var anotherArgument = new PexObjectVariableData(br);
-                        Arguments.Add(anotherArgument);
-                    }
-                }
+                        for (var i = 0; i < argument.IntValue.Value; i++)
+                        {
+                            var anotherArgument = new PexObjectVariableData(br);
+                            Arguments.Add(anotherArgument);
+                        }
 
-                if (current == 'u')
-                {
+                        break;
+                    }
                     //TODO: figure out what do to with this
-                    
                     /*
                      * u apparently means unsigned integer and indicates that the integer value we get should be
                      * interpreted as an unsigned integer.
                      */
-                    
-                    if (argument.VariableType != VariableType.Integer)
+                    case 'u' when argument.VariableType != VariableType.Integer:
                         throw new PexParsingException($"Argument is unsigned integer but Variable Type is not integer: {argument.VariableType}");
                 }
             }
