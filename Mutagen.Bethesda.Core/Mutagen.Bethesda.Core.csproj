@@ -29,6 +29,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="ini-parser-netstandard" Version="2.5.2" />
     <PackageReference Include="K4os.Compression.LZ4.Streams" Version="1.2.6" />
     <PackageReference Include="Loqui" Version="2.10.0" />
     <PackageReference Include="Noggog.CSharpExt" Version="2.10.0" />
@@ -102,6 +103,7 @@
     <Compile Include="Implicits\ImplicitRecordFormKeys.cs" />
     <Compile Include="Implicits\ImplicitListings.cs" />
     <Compile Include="Implicits\ImplicitBaseMasters.cs" />
+    <Compile Include="Ini\Ini.cs" />
     <Compile Include="Interfaces\Aspect\IKeywordCommon.cs" />
     <Compile Include="Interfaces\IGameSettingCommon.cs" />
     <Compile Include="Interfaces\IGroup.cs" />
