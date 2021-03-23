@@ -10,48 +10,51 @@ namespace Mutagen.Bethesda.Pex.Tests
     {
         public static readonly IEnumerable<object[]> TestDataFiles = new List<object[]>
         {
-            //from SKSE https://skse.silverlock.org/
-            new object[]{ "Actor.pex", true },
-            new object[]{ "Art.pex", true },
-            new object[]{ "FormType.pex", true },
-            new object[]{ "Game.pex", true },
-            new object[]{ "ObjectReference.pex", true },
-            new object[]{ "Outfit.pex", true },
-            new object[]{ "SoulGem.pex", true },
+            //from SKSE https://skse.silverlock.org
+            new object[]{ "Actor.pex", GameCategory.Skyrim },
+            new object[]{ "Art.pex", GameCategory.Skyrim },
+            new object[]{ "FormType.pex", GameCategory.Skyrim },
+            new object[]{ "Game.pex", GameCategory.Skyrim },
+            new object[]{ "ObjectReference.pex", GameCategory.Skyrim },
+            new object[]{ "Outfit.pex", GameCategory.Skyrim },
+            new object[]{ "SoulGem.pex", GameCategory.Skyrim },
+            
+            //from F4SE https://f4se.silverlock.org
+            new object[]{ "ActorBase-F04.pex", GameCategory.Fallout4 },
             
             //from https://github.com/mwilsnd/SkyrimSE-SmoothCam/blob/master/CodeGen/MCM/SmoothCamMCM.pex
-            new object[]{ "SmoothCamMCM.pex", true },
+            new object[]{ "SmoothCamMCM.pex", GameCategory.Skyrim },
             
             //from https://www.nexusmods.com/skyrimspecialedition/mods/18076
-            new object[]{ "nwsFollowerMCMExScript.pex", true },
-            new object[]{ "nwsFollowerMCMScript.pex", true },
+            new object[]{ "nwsFollowerMCMExScript.pex", GameCategory.Skyrim },
+            new object[]{ "nwsFollowerMCMScript.pex", GameCategory.Skyrim },
     };
         
         [Theory]
         [MemberData(nameof(TestDataFiles))]
-        public void TestPexParsing(string file, bool isBigEndian)
+        public void TestPexParsing(string file, GameCategory gameCategory)
         {
             var path = Path.Combine("files", file);
             Assert.True(File.Exists(path));
 
-            var pex = PexParser.ParsePexFile(path, isBigEndian);
+            var pex = PexParser.ParsePexFile(path, gameCategory);
             Assert.NotNull(pex);
         }
 
         [Theory]
         [MemberData(nameof(TestDataFiles))]
-        public void TestPexWriting(string file, bool isBigEndian)
+        public void TestPexWriting(string file, GameCategory gameCategory)
         {
             var inputFile = Path.Combine("files", file);
             Assert.True(File.Exists(inputFile));
 
-            var inputPex = PexParser.ParsePexFile(inputFile, isBigEndian);
+            var inputPex = PexParser.ParsePexFile(inputFile, gameCategory);
 
             var outputFile = Path.Combine("output", file);
-            inputPex.WritePexFile(outputFile, isBigEndian);
+            inputPex.WritePexFile(outputFile, gameCategory);
             Assert.True(File.Exists(outputFile));
 
-            var outputPex = PexParser.ParsePexFile(outputFile, isBigEndian);
+            var outputPex = PexParser.ParsePexFile(outputFile, gameCategory);
             Assert.NotNull(outputPex);
             
             var inputFi = new FileInfo(inputFile);
@@ -66,7 +69,7 @@ namespace Mutagen.Bethesda.Pex.Tests
             var path = Path.Combine("files", "Art.pex");
             Assert.True(File.Exists(path));
 
-            var pex = PexParser.ParsePexFile(path, true);
+            var pex = PexParser.ParsePexFile(path, GameCategory.Skyrim);
             
             Assert.Equal(0xFA57C0DE, pex.Magic);
             Assert.Equal(3, pex.MajorVersion);

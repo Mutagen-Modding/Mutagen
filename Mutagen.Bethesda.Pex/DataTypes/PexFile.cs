@@ -11,6 +11,8 @@ namespace Mutagen.Bethesda.Pex.DataTypes
     [PublicAPI]
     public class PexFile : IPexFile
     {
+        private readonly GameCategory _gameCategory;
+        
         public uint Magic { get; set; }
         
         public byte MajorVersion { get; set; }
@@ -35,8 +37,15 @@ namespace Mutagen.Bethesda.Pex.DataTypes
 
         public List<IPexObject> Objects { get; set; } = new();
 
-        public PexFile() { }
-        public PexFile(BinaryReader br) { Read(br); }
+        public PexFile(GameCategory gameCategory)
+        {
+            _gameCategory = gameCategory;
+        }
+
+        public PexFile(BinaryReader br, GameCategory gameCategory) : this(gameCategory)
+        {
+            Read(br);
+        }
 
         private const uint PexMagic = 0xFA57C0DE;
         
@@ -55,7 +64,7 @@ namespace Mutagen.Bethesda.Pex.DataTypes
             MachineName = br.ReadString();
 
             StringTable = new StringTable(br);
-            DebugInfo = new DebugInfo(br);
+            DebugInfo = new DebugInfo(br, _gameCategory);
             UserFlags = new UserFlagsTable(br);
 
             var objectCount = br.ReadUInt16();
