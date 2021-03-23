@@ -42,14 +42,14 @@ namespace Mutagen.Bethesda.Pex.DataTypes
         
         public void Read(BinaryReader br)
         {
-            Magic = br.ReadUInt32BE();
+            Magic = br.ReadUInt32();
             if (Magic != PexMagic)
                 throw new PexParsingException($"File does not have fast code! Magic does not match {PexMagic:x8} is {Magic:x8}");
             
             MajorVersion = br.ReadByte();
             MinorVersion = br.ReadByte();
-            GameId = br.ReadUInt16BE();
-            CompilationTime = br.ReadUInt64BE().ToDateTime();
+            GameId = br.ReadUInt16();
+            CompilationTime = br.ReadUInt64().ToDateTime();
             SourceFileName = br.ReadWString();
             Username = br.ReadWString();
             MachineName = br.ReadWString();
@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Pex.DataTypes
             DebugInfo = new DebugInfo(br);
             UserFlags = new UserFlagsTable(br);
 
-            var objectCount = br.ReadUInt16BE();
+            var objectCount = br.ReadUInt16();
             for (var i = 0; i < objectCount; i++)
             {
                 var pexObject = new PexObject(br);
@@ -68,11 +68,11 @@ namespace Mutagen.Bethesda.Pex.DataTypes
 
         public void Write(BinaryWriter bw)
         {
-            bw.WriteUInt32BE(PexMagic);
+            bw.Write(PexMagic);
             bw.Write(MajorVersion);
             bw.Write(MinorVersion);
-            bw.WriteUInt16BE(GameId);
-            bw.WriteUInt64BE(CompilationTime.ToUInt64());
+            bw.Write(GameId);
+            bw.Write(CompilationTime.ToUInt64());
             bw.WriteWString(SourceFileName);
             bw.WriteWString(Username);
             bw.WriteWString(MachineName);
@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Pex.DataTypes
             DebugInfo?.Write(bw);
             UserFlags?.Write(bw);
 
-            bw.WriteUInt16BE((ushort) Objects.Count);
+            bw.Write((ushort) Objects.Count);
             foreach (var pexObject in Objects)
             {
                 pexObject.Write(bw);

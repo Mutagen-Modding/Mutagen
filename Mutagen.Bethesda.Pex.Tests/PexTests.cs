@@ -11,47 +11,47 @@ namespace Mutagen.Bethesda.Pex.Tests
         public static readonly IEnumerable<object[]> TestDataFiles = new List<object[]>
         {
             //from SKSE https://skse.silverlock.org/
-            new object[]{ "Actor.pex" },
-            new object[]{ "Art.pex" },
-            new object[]{ "FormType.pex" },
-            new object[]{ "Game.pex" },
-            new object[]{ "ObjectReference.pex" },
-            new object[]{ "Outfit.pex" },
-            new object[]{ "SoulGem.pex" },
+            new object[]{ "Actor.pex", true },
+            new object[]{ "Art.pex", true },
+            new object[]{ "FormType.pex", true },
+            new object[]{ "Game.pex", true },
+            new object[]{ "ObjectReference.pex", true },
+            new object[]{ "Outfit.pex", true },
+            new object[]{ "SoulGem.pex", true },
             
             //from https://github.com/mwilsnd/SkyrimSE-SmoothCam/blob/master/CodeGen/MCM/SmoothCamMCM.pex
-            new object[]{ "SmoothCamMCM.pex" },
+            new object[]{ "SmoothCamMCM.pex", true },
             
             //from https://www.nexusmods.com/skyrimspecialedition/mods/18076
-            new object[]{ "nwsFollowerMCMExScript.pex" },
-            new object[]{ "nwsFollowerMCMScript.pex" },
+            new object[]{ "nwsFollowerMCMExScript.pex", true },
+            new object[]{ "nwsFollowerMCMScript.pex", true },
     };
         
         [Theory]
         [MemberData(nameof(TestDataFiles))]
-        public void TestPexParsing(string file)
+        public void TestPexParsing(string file, bool isBigEndian)
         {
             var path = Path.Combine("files", file);
             Assert.True(File.Exists(path));
 
-            var pex = PexParser.ParsePexFile(path);
+            var pex = PexParser.ParsePexFile(path, isBigEndian);
             Assert.NotNull(pex);
         }
 
         [Theory]
         [MemberData(nameof(TestDataFiles))]
-        public void TestPexWriting(string file)
+        public void TestPexWriting(string file, bool isBigEndian)
         {
             var inputFile = Path.Combine("files", file);
             Assert.True(File.Exists(inputFile));
 
-            var inputPex = PexParser.ParsePexFile(inputFile);
+            var inputPex = PexParser.ParsePexFile(inputFile, isBigEndian);
 
             var outputFile = Path.Combine("output", file);
-            inputPex.WritePexFile(outputFile);
+            inputPex.WritePexFile(outputFile, isBigEndian);
             Assert.True(File.Exists(outputFile));
 
-            var outputPex = PexParser.ParsePexFile(outputFile);
+            var outputPex = PexParser.ParsePexFile(outputFile, isBigEndian);
             Assert.NotNull(outputPex);
             
             var inputFi = new FileInfo(inputFile);
@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Pex.Tests
             var path = Path.Combine("files", "Art.pex");
             Assert.True(File.Exists(path));
 
-            var pex = PexParser.ParsePexFile(path);
+            var pex = PexParser.ParsePexFile(path, true);
             
             Assert.Equal(0xFA57C0DE, pex.Magic);
             Assert.Equal(3, pex.MajorVersion);

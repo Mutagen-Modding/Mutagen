@@ -26,8 +26,8 @@ namespace Mutagen.Bethesda.Pex.DataTypes
             HasDebugInfo = hasDebugInfo == 1;
             if (!HasDebugInfo) return;
 
-            ModificationTime = br.ReadUInt64BE().ToDateTime();
-            var functionCount = br.ReadUInt16BE();
+            ModificationTime = br.ReadUInt64().ToDateTime();
+            var functionCount = br.ReadUInt16();
             
             for (var i = 0; i < functionCount; i++)
             {
@@ -43,8 +43,8 @@ namespace Mutagen.Bethesda.Pex.DataTypes
             // ReSharper restore RedundantCast
             if (!HasDebugInfo) return;
             
-            bw.WriteUInt64BE(ModificationTime.ToUInt64());
-            bw.WriteUInt16BE((ushort) Functions.Count);
+            bw.Write(ModificationTime.ToUInt64());
+            bw.Write((ushort) Functions.Count);
             foreach (var debugFunction in Functions)
             {
                 debugFunction.Write(bw);
@@ -67,11 +67,11 @@ namespace Mutagen.Bethesda.Pex.DataTypes
         
         public void Read(BinaryReader br)
         {
-            ObjectNameIndex = br.ReadUInt16BE();
-            StateNameIndex = br.ReadUInt16BE();
-            FunctionNameIndex = br.ReadUInt16BE();
+            ObjectNameIndex = br.ReadUInt16();
+            StateNameIndex = br.ReadUInt16();
+            FunctionNameIndex = br.ReadUInt16();
             FunctionType = (DebugFunctionType) br.ReadByte();
-            InstructionCount = br.ReadUInt16BE();
+            InstructionCount = br.ReadUInt16();
 
             for (var i = 0; i < InstructionCount; i++)
             {
@@ -82,15 +82,15 @@ namespace Mutagen.Bethesda.Pex.DataTypes
 
         public void Write(BinaryWriter bw)
         {
-            bw.WriteUInt16BE(ObjectNameIndex);
-            bw.WriteUInt16BE(StateNameIndex);
-            bw.WriteUInt16BE(FunctionNameIndex);
+            bw.Write(ObjectNameIndex);
+            bw.Write(StateNameIndex);
+            bw.Write(FunctionNameIndex);
             bw.Write((byte) FunctionType);
-            bw.WriteUInt16BE(InstructionCount);
+            bw.Write(InstructionCount);
             
             foreach (var lineNumber in LineNumbers)
             {
-                bw.WriteUInt16BE(lineNumber);
+                bw.Write(lineNumber);
             }
         }
 

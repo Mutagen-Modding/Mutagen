@@ -44,29 +44,29 @@ namespace Mutagen.Bethesda.Pex.DataTypes
              * This is the size of the entire object in bytes not some count variable for a loop. This also includes
              * the size of itself thus the - sizeof(uint)
              */
-            var size = br.ReadUInt32BE() - sizeof(uint);
+            var size = br.ReadUInt32() - sizeof(uint);
             var currentPos = br.BaseStream.Position;
             
-            ParentClassNameIndex = br.ReadUInt16BE();
-            DocStringIndex = br.ReadUInt16BE();
-            UserFlags = br.ReadUInt32BE();
-            AutoStateNameIndex = br.ReadUInt16BE();
+            ParentClassNameIndex = br.ReadUInt16();
+            DocStringIndex = br.ReadUInt16();
+            UserFlags = br.ReadUInt32();
+            AutoStateNameIndex = br.ReadUInt16();
 
-            var variables = br.ReadUInt16BE();
+            var variables = br.ReadUInt16();
             for (var i = 0; i < variables; i++)
             {
                 var variable = new PexObjectVariable(br);
                 Variables.Add(variable);
             }
 
-            var properties = br.ReadUInt16BE();
+            var properties = br.ReadUInt16();
             for (var i = 0; i < properties; i++)
             {
                 var property = new PexObjectProperty(br);
                 Properties.Add(property);
             }
 
-            var states = br.ReadUInt16BE();
+            var states = br.ReadUInt16();
             for (var i = 0; i < states; i++)
             {
                 var state = new PexObjectState(br);
@@ -81,30 +81,30 @@ namespace Mutagen.Bethesda.Pex.DataTypes
 
         public void Write(BinaryWriter bw)
         {
-            bw.WriteUInt16BE(NameIndex);
+            bw.Write(NameIndex);
 
             //needed for later changing
             var currentPos = bw.BaseStream.Position;
-            bw.WriteUInt32BE(sizeof(uint));
+            bw.Write(sizeof(uint));
 
-            bw.WriteUInt16BE(ParentClassNameIndex);
-            bw.WriteUInt16BE(DocStringIndex);
-            bw.WriteUInt32BE(UserFlags);
-            bw.WriteUInt16BE(AutoStateNameIndex);
+            bw.Write(ParentClassNameIndex);
+            bw.Write(DocStringIndex);
+            bw.Write(UserFlags);
+            bw.Write(AutoStateNameIndex);
             
-            bw.WriteUInt16BE((ushort) Variables.Count);
+            bw.Write((ushort) Variables.Count);
             foreach (var objectVariable in Variables)
             {
                 objectVariable.Write(bw);
             }
             
-            bw.WriteUInt16BE((ushort) Properties.Count);
+            bw.Write((ushort) Properties.Count);
             foreach (var objectProperty in Properties)
             {
                 objectProperty.Write(bw);
             }
             
-            bw.WriteUInt16BE((ushort) States.Count);
+            bw.Write((ushort) States.Count);
             foreach (var objectState in States)
             {
                 objectState.Write(bw);
@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda.Pex.DataTypes
             bw.BaseStream.Position = currentPos;
 
             var objectSize = newPos - currentPos;
-            bw.WriteUInt32BE((uint) objectSize);
+            bw.Write((uint) objectSize);
 
             bw.BaseStream.Position = newPos;
         }
@@ -140,18 +140,18 @@ namespace Mutagen.Bethesda.Pex.DataTypes
         
         public void Read(BinaryReader br)
         {
-            NameIndex = br.ReadUInt16BE();
-            TypeNameIndex = br.ReadUInt16BE();
-            UserFlags = br.ReadUInt32BE();
+            NameIndex = br.ReadUInt16();
+            TypeNameIndex = br.ReadUInt16();
+            UserFlags = br.ReadUInt32();
 
             VariableData = new PexObjectVariableData(br);
         }
 
         public void Write(BinaryWriter bw)
         {
-            bw.WriteUInt16BE(NameIndex);
-            bw.WriteUInt16BE(TypeNameIndex);
-            bw.WriteUInt32BE(UserFlags);
+            bw.Write(NameIndex);
+            bw.Write(TypeNameIndex);
+            bw.Write(UserFlags);
             
             VariableData?.Write(bw);
         }
@@ -181,13 +181,13 @@ namespace Mutagen.Bethesda.Pex.DataTypes
                     break;
                 case VariableType.Identifier:
                 case VariableType.String:
-                    StringValueIndex = br.ReadUInt16BE();
+                    StringValueIndex = br.ReadUInt16();
                     break;
                 case VariableType.Integer:
-                    IntValue = br.ReadInt32BE();
+                    IntValue = br.ReadInt32();
                     break;
                 case VariableType.Float:
-                    FloatValue = br.ReadSingleBE();
+                    FloatValue = br.ReadSingle();
                     break;
                 case VariableType.Bool:
                     //TODO: use ReadByte instead?
@@ -207,13 +207,13 @@ namespace Mutagen.Bethesda.Pex.DataTypes
                     break;
                 case VariableType.Identifier:
                 case VariableType.String:
-                    bw.WriteUInt16BE(StringValueIndex ?? ushort.MaxValue);
+                    bw.Write(StringValueIndex ?? ushort.MaxValue);
                     break;
                 case VariableType.Integer:
-                    bw.WriteInt32BE(IntValue ?? int.MaxValue);
+                    bw.Write(IntValue ?? int.MaxValue);
                     break;
                 case VariableType.Float:
-                    bw.WriteSingleBE(FloatValue ?? float.MaxValue);
+                    bw.Write(FloatValue ?? float.MaxValue);
                     break;
                 case VariableType.Bool:
                     bw.Write(BoolValue ?? false);
@@ -250,17 +250,17 @@ namespace Mutagen.Bethesda.Pex.DataTypes
         
         public void Read(BinaryReader br)
         {
-            NameIndex = br.ReadUInt16BE();
-            TypeNameIndex = br.ReadUInt16BE();
-            DocStringIndex = br.ReadUInt16BE();
-            UserFlags = br.ReadUInt32BE();
+            NameIndex = br.ReadUInt16();
+            TypeNameIndex = br.ReadUInt16();
+            DocStringIndex = br.ReadUInt16();
+            UserFlags = br.ReadUInt32();
 
             var flags = br.ReadByte();
             Flags = (PropertyFlags) flags;
             
             if ((flags & 4) != 0)
             {
-                AutoVarNameIndex = br.ReadUInt16BE();
+                AutoVarNameIndex = br.ReadUInt16();
             }
 
             if ((flags & 5) == 1)
@@ -276,17 +276,17 @@ namespace Mutagen.Bethesda.Pex.DataTypes
 
         public void Write(BinaryWriter bw)
         {
-            bw.WriteUInt16BE(NameIndex);
-            bw.WriteUInt16BE(TypeNameIndex);
-            bw.WriteUInt16BE(DocStringIndex);
-            bw.WriteUInt32BE(UserFlags);
+            bw.Write(NameIndex);
+            bw.Write(TypeNameIndex);
+            bw.Write(DocStringIndex);
+            bw.Write(UserFlags);
 
             var flags = (byte) Flags;
             bw.Write(flags);
             
             if ((flags & 4) != 0)
             {
-                bw.WriteUInt16BE(AutoVarNameIndex ?? ushort.MaxValue);
+                bw.Write(AutoVarNameIndex ?? ushort.MaxValue);
             }
 
             if ((flags & 5) == 1)
@@ -315,9 +315,9 @@ namespace Mutagen.Bethesda.Pex.DataTypes
         
         public void Read(BinaryReader br)
         {
-            NameIndex = br.ReadUInt16BE();
+            NameIndex = br.ReadUInt16();
 
-            var functions = br.ReadUInt16BE();
+            var functions = br.ReadUInt16();
             for (var i = 0; i < functions; i++)
             {
                 var namedFunction = new PexObjectNamedFunction(br);
@@ -327,8 +327,8 @@ namespace Mutagen.Bethesda.Pex.DataTypes
 
         public void Write(BinaryWriter bw)
         {
-            bw.WriteUInt16BE(NameIndex);
-            bw.WriteUInt16BE((ushort) Functions.Count);
+            bw.Write(NameIndex);
+            bw.Write((ushort) Functions.Count);
             foreach (var namedFunction in Functions)
             {
                 namedFunction.Write(bw);
@@ -350,13 +350,13 @@ namespace Mutagen.Bethesda.Pex.DataTypes
         
         public void Read(BinaryReader br)
         {
-            FunctionNameIndex = br.ReadUInt16BE();
+            FunctionNameIndex = br.ReadUInt16();
             Function = new PexObjectFunction(br);
         }
 
         public void Write(BinaryWriter bw)
         {
-            bw.WriteUInt16BE(FunctionNameIndex);
+            bw.Write(FunctionNameIndex);
             Function?.Write(bw);
         }
     }
@@ -381,26 +381,26 @@ namespace Mutagen.Bethesda.Pex.DataTypes
         
         public void Read(BinaryReader br)
         {
-            ReturnTypeNameIndex = br.ReadUInt16BE();
-            DocStringIndex = br.ReadUInt16BE();
-            UserFlags = br.ReadUInt32BE();
+            ReturnTypeNameIndex = br.ReadUInt16();
+            DocStringIndex = br.ReadUInt16();
+            UserFlags = br.ReadUInt32();
             Flags = (FunctionFlags) br.ReadByte();
 
-            var parameters = br.ReadUInt16BE();
+            var parameters = br.ReadUInt16();
             for (var i = 0; i < parameters; i++)
             {
                 var parameter = new PexObjectFunctionVariable(br);
                 Parameters.Add(parameter);
             }
             
-            var locals = br.ReadUInt16BE();
+            var locals = br.ReadUInt16();
             for (var i = 0; i < locals; i++)
             {
                 var local = new PexObjectFunctionVariable(br);
                 Locals.Add(local);
             }
             
-            var instructions = br.ReadUInt16BE();
+            var instructions = br.ReadUInt16();
             for (var i = 0; i < instructions; i++)
             {
                 var instruction = new PexObjectFunctionInstruction(br);
@@ -410,24 +410,24 @@ namespace Mutagen.Bethesda.Pex.DataTypes
 
         public void Write(BinaryWriter bw)
         {
-            bw.WriteUInt16BE(ReturnTypeNameIndex);
-            bw.WriteUInt16BE(DocStringIndex);
-            bw.WriteUInt32BE(UserFlags);
+            bw.Write(ReturnTypeNameIndex);
+            bw.Write(DocStringIndex);
+            bw.Write(UserFlags);
             bw.Write((byte) Flags);
             
-            bw.WriteUInt16BE((ushort) Parameters.Count);
+            bw.Write((ushort) Parameters.Count);
             foreach (var parameter in Parameters)
             {
                 parameter.Write(bw);
             }
             
-            bw.WriteUInt16BE((ushort) Locals.Count);
+            bw.Write((ushort) Locals.Count);
             foreach (var local in Locals)
             {
                 local.Write(bw);
             }
             
-            bw.WriteUInt16BE((ushort) Instructions.Count);
+            bw.Write((ushort) Instructions.Count);
             foreach (var instruction in Instructions)
             {
                 instruction.Write(bw);
@@ -450,14 +450,14 @@ namespace Mutagen.Bethesda.Pex.DataTypes
         
         public void Read(BinaryReader br)
         {
-            NameIndex = br.ReadUInt16BE();
-            TypeNameIndex = br.ReadUInt16BE();
+            NameIndex = br.ReadUInt16();
+            TypeNameIndex = br.ReadUInt16();
         }
 
         public void Write(BinaryWriter bw)
         {
-            bw.WriteUInt16BE(NameIndex);
-            bw.WriteUInt16BE(TypeNameIndex);
+            bw.Write(NameIndex);
+            bw.Write(TypeNameIndex);
         }
     }
 

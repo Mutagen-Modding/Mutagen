@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Pex.DataTypes
         
         public void Read(BinaryReader br)
         {
-            var count = br.ReadUInt16BE();
+            var count = br.ReadUInt16();
             Strings = new string[count];
             
             for (var i = 0; i < count; i++)
@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda.Pex.DataTypes
 
         public void Write(BinaryWriter bw)
         {
-            bw.WriteUInt16BE((ushort) Strings.Length);
+            bw.Write((ushort) Strings.Length);
             foreach (var s in Strings)
             {
                 bw.WriteWString(s);

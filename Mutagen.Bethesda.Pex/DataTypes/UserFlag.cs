@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Pex.DataTypes
         
         public void Read(BinaryReader br)
         {
-            NameIndex = br.ReadUInt16BE();
+            NameIndex = br.ReadUInt16();
             FlagIndex = br.ReadByte();
         }
 
@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Pex.DataTypes
         
         public void Read(BinaryReader br)
         {
-            var userFlagCount = br.ReadUInt16BE();
+            var userFlagCount = br.ReadUInt16();
             for (var i = 0; i < userFlagCount; i++)
             {
                 var userFlag = new UserFlag(br);
@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Pex.DataTypes
 
         public void Write(BinaryWriter bw)
         {
-            bw.WriteUInt16BE((ushort) _userFlags.Count);
+            bw.Write((ushort) _userFlags.Count);
             foreach (var userFlag in _userFlags)
             {
                 userFlag.Write(bw);
