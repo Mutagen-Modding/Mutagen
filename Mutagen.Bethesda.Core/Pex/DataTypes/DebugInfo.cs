@@ -102,8 +102,7 @@ namespace Mutagen.Bethesda.Core.Pex.DataTypes
         public ushort StateNameIndex { get; set; } = ushort.MaxValue;
         public ushort FunctionNameIndex { get; set; } = ushort.MaxValue;
         public DebugFunctionType FunctionType { get; set; }
-        public ushort InstructionCount { get; set; } = ushort.MaxValue;
-        public List<ushort> LineNumbers { get; set; } = new();
+        public List<ushort> Instructions { get; set; } = new();
 
         public DebugFunction() { }
         public DebugFunction(BinaryReader br) { Read(br); }
@@ -114,12 +113,12 @@ namespace Mutagen.Bethesda.Core.Pex.DataTypes
             StateNameIndex = br.ReadUInt16();
             FunctionNameIndex = br.ReadUInt16();
             FunctionType = (DebugFunctionType) br.ReadByte();
-            InstructionCount = br.ReadUInt16();
-
-            for (var i = 0; i < InstructionCount; i++)
+            
+            var instructionCount = br.ReadUInt16();
+            for (var i = 0; i < instructionCount; i++)
             {
                 var lineNumber = br.ReadUInt16();
-                LineNumbers.Add(lineNumber);
+                Instructions.Add(lineNumber);
             }
         }
 
@@ -129,9 +128,9 @@ namespace Mutagen.Bethesda.Core.Pex.DataTypes
             bw.Write(StateNameIndex);
             bw.Write(FunctionNameIndex);
             bw.Write((byte) FunctionType);
-            bw.Write(InstructionCount);
             
-            foreach (var lineNumber in LineNumbers)
+            bw.Write((ushort) Instructions.Count);
+            foreach (var lineNumber in Instructions)
             {
                 bw.Write(lineNumber);
             }

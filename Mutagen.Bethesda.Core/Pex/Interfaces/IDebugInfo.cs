@@ -30,9 +30,7 @@ namespace Mutagen.Bethesda.Core.Pex.Interfaces
         
         public DebugFunctionType FunctionType { get; set; }
         
-        public ushort InstructionCount { get; set; }
-        
-        public List<ushort> LineNumbers { get; set; }
+        public List<ushort> Instructions { get; set; }
 
         public string GetObjectName(IStringTable stringTable);
         public string GetStateName(IStringTable stringTable);
