@@ -53,5 +53,16 @@ namespace Mutagen.Bethesda.UnitTests
             }
         }
         #endregion
+
+        #region MyDocumentsString
+        [Fact]
+        public void MyDocumentsString()
+        {
+            foreach (var release in EnumExt.GetValues<GameRelease>())
+            {
+                Ini.ToMyDocumentsString(release);
+            }
+        }
+        #endregion
     }
 }
