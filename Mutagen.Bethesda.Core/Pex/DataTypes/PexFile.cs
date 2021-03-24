@@ -35,7 +35,7 @@ namespace Mutagen.Bethesda.Core.Pex.DataTypes
 
         public List<IPexObject> Objects { get; set; } = new();
 
-        private string[] _strings = Array.Empty<string>();
+        private Dictionary<ushort, string> _strings = new();
         private List<IUserFlag> _userFlags = new();
         
         public PexFile(GameCategory gameCategory)
@@ -48,12 +48,18 @@ namespace Mutagen.Bethesda.Core.Pex.DataTypes
             Read(br);
         }
 
-        internal string GetStringFromIndex(ushort index) => _strings[index];
+        internal string GetStringFromIndex(ushort index)
+        {
+            if(_strings.TryGetValue(index, out var value))
+                return value;
+            throw new PexParsingException($"Unable to find string in table at index {index}");
+        }
 
         internal ushort GetIndexFromString(string? value)
         {
             if (value == null) return ushort.MaxValue;
-            return (ushort) _strings.IndexOf(value, (s1, s2) => s1.Equals(s2, StringComparison.OrdinalIgnoreCase));
+            var pair = _strings.First(x => x.Value.Equals(value));
+            return pair.Key;
         }
         
         internal IEnumerable<IUserFlag> GetUserFlags(uint userFlags) => _userFlags.Where(x => (userFlags & x.FlagMask) == 1);
@@ -80,11 +86,10 @@ namespace Mutagen.Bethesda.Core.Pex.DataTypes
             MachineName = br.ReadString();
 
             var stringsCount = br.ReadUInt16();
-            _strings = new string[stringsCount];
             
             for (var i = 0; i < stringsCount; i++)
             {
-                _strings[i] = br.ReadString();
+                _strings.Add((ushort) i, br.ReadString());
             }
             
             DebugInfo = new DebugInfo(br, _gameCategory, this);
@@ -115,10 +120,10 @@ namespace Mutagen.Bethesda.Core.Pex.DataTypes
             bw.Write(Username);
             bw.Write(MachineName);
             
-            bw.Write((ushort) _strings.Length);
-            foreach (var s in _strings)
+            bw.Write((ushort) _strings.Count);
+            foreach (var pair in _strings)
             {
-                bw.Write(s);
+                bw.Write(pair.Value);
             }
             
             DebugInfo?.Write(bw);
