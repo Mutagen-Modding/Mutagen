@@ -22,46 +22,28 @@ namespace Mutagen.Bethesda.Core.Pex.Interfaces
     [PublicAPI]
     public interface IDebugFunction : IBinaryObject
     {
-        public ushort ObjectNameIndex { get; set; }
-        
-        public ushort StateNameIndex { get; set; }
-        
-        public ushort FunctionNameIndex { get; set; }
+        public string? ObjectName { get; set; }
+        public string? StateName { get; set; }
+        public string? FunctionName { get; set; }
         
         public DebugFunctionType FunctionType { get; set; }
         
         public List<ushort> Instructions { get; set; }
-
-        public string GetObjectName(IStringTable stringTable);
-        public string GetStateName(IStringTable stringTable);
-        public string GetFunctionName(IStringTable stringTable);
     }
 
     [PublicAPI]
     public interface IDebugPropertyGroup : IBinaryObject
     {
-        public ushort ObjectNameIndex { get; set; }
-        
-        public ushort GroupNameIndex { get; set; }
-
-        public List<ushort> PropertyNameIndices { get; set; }
-        
-        public string GetObjectName(IStringTable stringTable);
-        public string GetGroupName(IStringTable stringTable);
-        public List<string> GetPropertyNames(IStringTable stringTable);
+        public string? ObjectName { get; set; }
+        public string? GroupName { get; set; }
+        public List<string> PropertyNames { get; set; }
     }
 
     [PublicAPI]
     public interface IDebugStructOrder : IBinaryObject
     {
-        public ushort ObjectNameIndex { get; set; }
-        
-        public ushort OrderNameIndex { get; set; }
-        
-        public List<ushort> NameIndices { get; set; }
-        
-        public string GetObjectName(IStringTable stringTable);
-        public string GetOrderName(IStringTable stringTable);
-        public List<string> GetNames(IStringTable stringTable);
+        public string? ObjectName { get; set; }
+        public string? OrderName { get; set; }
+        public List<string> Names { get; set; }
     }
 }

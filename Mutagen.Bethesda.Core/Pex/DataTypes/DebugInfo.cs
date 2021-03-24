@@ -23,12 +23,16 @@ namespace Mutagen.Bethesda.Core.Pex.DataTypes
 
         public List<IDebugStructOrder> StructOrders { get; set; } = new();
 
-        public DebugInfo(GameCategory gameCategory)
+        private readonly PexFile _pexFile;
+        
+        public DebugInfo(GameCategory gameCategory, PexFile pexFile)
         {
             _gameCategory = gameCategory;
+            _pexFile = pexFile;
         }
         
-        public DebugInfo(BinaryReader br, GameCategory gameCategory) : this(gameCategory) { Read(br); }
+        public DebugInfo(BinaryReader br, GameCategory gameCategory, PexFile pexFile)
+            : this(gameCategory, pexFile) { Read(br); }
         
         public void Read(BinaryReader br)
         {
@@ -41,7 +45,7 @@ namespace Mutagen.Bethesda.Core.Pex.DataTypes
             var functionCount = br.ReadUInt16();
             for (var i = 0; i < functionCount; i++)
             {
-                var function = new DebugFunction(br);
+                var function = new DebugFunction(br, _pexFile);
                 Functions.Add(function);
             }
 
@@ -51,14 +55,14 @@ namespace Mutagen.Bethesda.Core.Pex.DataTypes
             var propertyGroupsCount = br.ReadUInt16();
             for (var i = 0; i < propertyGroupsCount; i++)
             {
-                var propertyGroup = new DebugPropertyGroup(br);
+                var propertyGroup = new DebugPropertyGroup(br, _pexFile);
                 PropertyGroups.Add(propertyGroup);
             }
             
             var structOrderCount = br.ReadUInt16();
             for (var i = 0; i < structOrderCount; i++)
             {
-                var structOrder = new DebugStructOrder(br);
+                var structOrder = new DebugStructOrder(br, _pexFile);
                 StructOrders.Add(structOrder);
             }
         }
@@ -98,20 +102,34 @@ namespace Mutagen.Bethesda.Core.Pex.DataTypes
     [PublicAPI]
     public class DebugFunction : IDebugFunction
     {
-        public ushort ObjectNameIndex { get; set; } = ushort.MaxValue;
-        public ushort StateNameIndex { get; set; } = ushort.MaxValue;
-        public ushort FunctionNameIndex { get; set; } = ushort.MaxValue;
+        public string? ObjectName { get; set; }
+        
+        public string? StateName { get; set; }
+        
+        public string? FunctionName { get; set; }
+        
         public DebugFunctionType FunctionType { get; set; }
+        
         public List<ushort> Instructions { get; set; } = new();
 
-        public DebugFunction() { }
-        public DebugFunction(BinaryReader br) { Read(br); }
+        private readonly PexFile _pexFile;
+        
+        public DebugFunction(PexFile pexFile)
+        {
+            _pexFile = pexFile;
+        }
+
+        public DebugFunction(BinaryReader br, PexFile pexFile) : this(pexFile)
+        {
+            Read(br);
+        }
         
         public void Read(BinaryReader br)
         {
-            ObjectNameIndex = br.ReadUInt16();
-            StateNameIndex = br.ReadUInt16();
-            FunctionNameIndex = br.ReadUInt16();
+            ObjectName = _pexFile.GetStringFromIndex(br.ReadUInt16());
+            StateName = _pexFile.GetStringFromIndex(br.ReadUInt16());
+            FunctionName = _pexFile.GetStringFromIndex(br.ReadUInt16());
+            
             FunctionType = (DebugFunctionType) br.ReadByte();
             
             var instructionCount = br.ReadUInt16();
@@ -124,9 +142,9 @@ namespace Mutagen.Bethesda.Core.Pex.DataTypes
 
         public void Write(BinaryWriter bw)
         {
-            bw.Write(ObjectNameIndex);
-            bw.Write(StateNameIndex);
-            bw.Write(FunctionNameIndex);
+            bw.Write(_pexFile.GetIndexFromString(ObjectName));
+            bw.Write(_pexFile.GetIndexFromString(StateName));
+            bw.Write(_pexFile.GetIndexFromString(FunctionName));
             bw.Write((byte) FunctionType);
             
             bw.Write((ushort) Instructions.Count);
@@ -135,99 +153,87 @@ namespace Mutagen.Bethesda.Core.Pex.DataTypes
                 bw.Write(lineNumber);
             }
         }
-
-        public string GetObjectName(IStringTable stringTable) => stringTable.GetFromIndex(ObjectNameIndex);
-
-        public string GetStateName(IStringTable stringTable) => stringTable.GetFromIndex(StateNameIndex);
-
-        public string GetFunctionName(IStringTable stringTable) => stringTable.GetFromIndex(FunctionNameIndex);
     }
 
     [PublicAPI]
     public class DebugPropertyGroup : IDebugPropertyGroup
     {
-        public ushort ObjectNameIndex { get; set; } = ushort.MaxValue;
-        public ushort GroupNameIndex { get; set; } = ushort.MaxValue;
-        public List<ushort> PropertyNameIndices { get; set; } = new();
+        public string? ObjectName { get; set; }
+        public string? GroupName{ get; set; }
+        public List<string> PropertyNames { get; set; } = new();
+
+        private readonly PexFile _pexFile;
+
+        public DebugPropertyGroup(PexFile pexFile)
+        {
+            _pexFile = pexFile;
+        }
         
-        public DebugPropertyGroup() { }
-        public DebugPropertyGroup(BinaryReader br) { Read(br); }
+        public DebugPropertyGroup(BinaryReader br, PexFile pexFile) : this(pexFile) { Read(br); }
         
         public void Read(BinaryReader br)
         {
-            ObjectNameIndex = br.ReadUInt16();
-            GroupNameIndex = br.ReadUInt16();
+            ObjectName = _pexFile.GetStringFromIndex(br.ReadUInt16());
+            GroupName = _pexFile.GetStringFromIndex(br.ReadUInt16());
 
             var count = br.ReadUInt16();
             for (var i = 0; i < count; i++)
             {
-                PropertyNameIndices.Add(br.ReadUInt16());
+                PropertyNames.Add(_pexFile.GetStringFromIndex(br.ReadUInt16()));
             }
         }
 
         public void Write(BinaryWriter bw)
         {
-            bw.Write(ObjectNameIndex);
-            bw.Write(GroupNameIndex);
-            bw.Write((ushort) PropertyNameIndices.Count);
+            bw.Write(_pexFile.GetIndexFromString(ObjectName));
+            bw.Write(_pexFile.GetIndexFromString(GroupName));
+            bw.Write((ushort) PropertyNames.Count);
             
-            foreach (var nameIndex in PropertyNameIndices)
+            foreach (var name in PropertyNames)
             {
-                bw.Write(nameIndex);
+                bw.Write(_pexFile.GetIndexFromString(name));
             }
-        }
-
-        public string GetObjectName(IStringTable stringTable) => stringTable.GetFromIndex(ObjectNameIndex);
-
-        public string GetGroupName(IStringTable stringTable) => stringTable.GetFromIndex(GroupNameIndex);
-
-        public List<string> GetPropertyNames(IStringTable stringTable)
-        {
-            return PropertyNameIndices.Select(stringTable.GetFromIndex).ToList();
         }
     }
 
     [PublicAPI]
     public class DebugStructOrder : IDebugStructOrder
     {
-        public ushort ObjectNameIndex { get; set; } = ushort.MaxValue;
-        public ushort OrderNameIndex { get; set; } = ushort.MaxValue;
-        public List<ushort> NameIndices { get; set; } = new();
+        public string? ObjectName { get; set; }
+        public string? OrderName { get; set; }
+        public List<string> Names { get; set; } = new();
+
+        private readonly PexFile _pexFile;
         
-        public DebugStructOrder() { }
-        public DebugStructOrder(BinaryReader br) { Read(br); }
+        public DebugStructOrder(PexFile pexFile)
+        {
+            _pexFile = pexFile;
+        }
+        
+        public DebugStructOrder(BinaryReader br, PexFile pexFile) : this(pexFile) { Read(br); }
         
         public void Read(BinaryReader br)
         {
-            ObjectNameIndex = br.ReadUInt16();
-            OrderNameIndex = br.ReadUInt16();
+            ObjectName = _pexFile.GetStringFromIndex(br.ReadUInt16());
+            OrderName = _pexFile.GetStringFromIndex(br.ReadUInt16());
 
             var count = br.ReadUInt16();
             for (var i = 0; i < count; i++)
             {
-                NameIndices.Add(br.ReadUInt16());
+                Names.Add(_pexFile.GetStringFromIndex(br.ReadUInt16()));
             }
         }
 
         public void Write(BinaryWriter bw)
         {
-            bw.Write(ObjectNameIndex);
-            bw.Write(OrderNameIndex);
-            bw.Write((ushort) NameIndices.Count);
+            bw.Write(_pexFile.GetIndexFromString(ObjectName));
+            bw.Write(_pexFile.GetIndexFromString(OrderName));
+            bw.Write((ushort) Names.Count);
             
-            foreach (var nameIndex in NameIndices)
+            foreach (var name in Names)
             {
-                bw.Write(nameIndex);
+                bw.Write(_pexFile.GetIndexFromString(name));
             }
-        }
-
-        public string GetObjectName(IStringTable stringTable) => stringTable.GetFromIndex(ObjectNameIndex);
-
-        public string GetOrderName(IStringTable stringTable) => stringTable.GetFromIndex(OrderNameIndex);
-
-        public List<string> GetNames(IStringTable stringTable)
-        {
-            return NameIndices.Select(stringTable.GetFromIndex).ToList();
         }
     }
 }

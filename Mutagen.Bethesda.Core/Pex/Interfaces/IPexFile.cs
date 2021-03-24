@@ -22,13 +22,9 @@ namespace Mutagen.Bethesda.Core.Pex.Interfaces
         public string Username { get; set; }
         
         public string MachineName { get; set; }
-        
-        public IStringTable? StringTable { get; set; }
-        
+
         public IDebugInfo? DebugInfo { get; set; }
-        
-        public IUserFlagsTable? UserFlags { get; set; }
-        
+
         public List<IPexObject> Objects { get; set; }
     }
 }

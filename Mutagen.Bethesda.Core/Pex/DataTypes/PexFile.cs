@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using JetBrains.Annotations;
 using Mutagen.Bethesda.Core.Pex.Exceptions;
 using Mutagen.Bethesda.Core.Pex.Extensions;
 using Mutagen.Bethesda.Core.Pex.Interfaces;
+using Noggog;
 
 namespace Mutagen.Bethesda.Core.Pex.DataTypes
 {
@@ -29,14 +31,13 @@ namespace Mutagen.Bethesda.Core.Pex.DataTypes
         
         public string MachineName { get; set; } = string.Empty;
         
-        public IStringTable? StringTable { get; set; }
-        
         public IDebugInfo? DebugInfo { get; set; }
-
-        public IUserFlagsTable? UserFlags { get; set; }
 
         public List<IPexObject> Objects { get; set; } = new();
 
+        private string[] _strings = Array.Empty<string>();
+        private List<IUserFlag> _userFlags = new();
+        
         public PexFile(GameCategory gameCategory)
         {
             _gameCategory = gameCategory;
@@ -47,6 +48,21 @@ namespace Mutagen.Bethesda.Core.Pex.DataTypes
             Read(br);
         }
 
+        internal string GetStringFromIndex(ushort index) => _strings[index];
+
+        internal ushort GetIndexFromString(string? value)
+        {
+            if (value == null) return ushort.MaxValue;
+            return (ushort) _strings.IndexOf(value, (s1, s2) => s1.Equals(s2, StringComparison.OrdinalIgnoreCase));
+        }
+        
+        internal IEnumerable<IUserFlag> GetUserFlags(uint userFlags) => _userFlags.Where(x => (userFlags & x.FlagMask) == 1);
+
+        internal uint GetUserFlags(IEnumerable<IUserFlag> userFlags)
+        {
+            return userFlags.Aggregate<IUserFlag, uint>(0, (current, userFlag) => current | userFlag.FlagMask);
+        }
+        
         private const uint PexMagic = 0xFA57C0DE;
         
         public void Read(BinaryReader br)
@@ -63,14 +79,27 @@ namespace Mutagen.Bethesda.Core.Pex.DataTypes
             Username = br.ReadString();
             MachineName = br.ReadString();
 
-            StringTable = new StringTable(br);
-            DebugInfo = new DebugInfo(br, _gameCategory);
-            UserFlags = new UserFlagsTable(br);
+            var stringsCount = br.ReadUInt16();
+            _strings = new string[stringsCount];
+            
+            for (var i = 0; i < stringsCount; i++)
+            {
+                _strings[i] = br.ReadString();
+            }
+            
+            DebugInfo = new DebugInfo(br, _gameCategory, this);
+            
+            var userFlagCount = br.ReadUInt16();
+            for (var i = 0; i < userFlagCount; i++)
+            {
+                var userFlag = new UserFlag(br, this);
+                _userFlags.Add(userFlag);
+            }
 
             var objectCount = br.ReadUInt16();
             for (var i = 0; i < objectCount; i++)
             {
-                var pexObject = new PexObject(br, _gameCategory);
+                var pexObject = new PexObject(br, _gameCategory, this);
                 Objects.Add(pexObject);
             }
         }
@@ -86,9 +115,19 @@ namespace Mutagen.Bethesda.Core.Pex.DataTypes
             bw.Write(Username);
             bw.Write(MachineName);
             
-            StringTable?.Write(bw);
+            bw.Write((ushort) _strings.Length);
+            foreach (var s in _strings)
+            {
+                bw.Write(s);
+            }
+            
             DebugInfo?.Write(bw);
-            UserFlags?.Write(bw);
+            
+            bw.Write((ushort) _userFlags.Count);
+            foreach (var userFlag in _userFlags)
+            {
+                userFlag.Write(bw);
+            }
 
             bw.Write((ushort) Objects.Count);
             foreach (var pexObject in Objects)

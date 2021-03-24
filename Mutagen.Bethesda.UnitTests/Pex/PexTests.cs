@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using Mutagen.Bethesda.Core.Pex;
 using Mutagen.Bethesda.Core.Pex.Extensions;
 
@@ -63,6 +64,11 @@ namespace Mutagen.Bethesda.UnitTests.Pex
             var outputFi = new FileInfo(outputFile);
             
             Assert.Equal(inputFi.Length, outputFi.Length);
+
+            var inputHash = SHA256.HashData(File.ReadAllBytes(inputFile));
+            var outputHash = SHA256.HashData(File.ReadAllBytes(outputFile));
+            
+            Assert.Equal(inputHash, outputHash);
         }
 
         [Fact]
@@ -82,13 +88,8 @@ namespace Mutagen.Bethesda.UnitTests.Pex
             Assert.Equal(string.Empty, pex.Username);
             Assert.Equal(string.Empty, pex.MachineName);
 
-            var stringTable = pex.StringTable;
             var debugInfo = pex.DebugInfo;
-            var userFlagsTable = pex.UserFlags;
-            
-            Assert.NotNull(stringTable);
             Assert.NotNull(debugInfo);
-            Assert.NotNull(userFlagsTable);
 
             {
                 Assert.True(debugInfo!.HasDebugInfo);
@@ -100,17 +101,17 @@ namespace Mutagen.Bethesda.UnitTests.Pex
 
             var mainObject = objects.First();
             
-            Assert.Equal("Art", mainObject.GetName(stringTable!));
-            Assert.Equal("Form", mainObject.GetParentClassName(stringTable!));
-            Assert.Equal(string.Empty, mainObject.GetDocString(stringTable!));
-            Assert.Equal(string.Empty, mainObject.GetAutoStateName(stringTable!));
+            Assert.Equal("Art", mainObject.Name);
+            Assert.Equal("Form", mainObject.ParentClassName);
+            Assert.Equal(string.Empty, mainObject.DocString);
+            Assert.Equal(string.Empty, mainObject.AutoStateName);
             
             Assert.Empty(mainObject.Properties);
             Assert.Empty(mainObject.Variables);
             Assert.Single(mainObject.States);
 
             var state = mainObject.States.First();
-            Assert.Equal(string.Empty, state.GetName(stringTable!));
+            Assert.Equal(string.Empty, state.Name);
             Assert.Equal(4, state.Functions.Count);
         }
     }
