@@ -38,4 +38,14 @@
     <ProjectReference Include="..\Mutagen.Bethesda\Mutagen.Bethesda.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Pex" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Content Include="Pex\files\**">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

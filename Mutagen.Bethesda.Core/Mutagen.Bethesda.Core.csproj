@@ -30,6 +30,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="ini-parser-netstandard" Version="2.5.2" />
+    <PackageReference Include="JetBrains.Annotations" Version="2020.3.0" PrivateAssets="all" />
     <PackageReference Include="K4os.Compression.LZ4.Streams" Version="1.2.6" />
     <PackageReference Include="Loqui" Version="2.10.0" />
     <PackageReference Include="Noggog.CSharpExt" Version="2.10.0" />
@@ -148,6 +149,7 @@
     <Compile Include="Persistance\ISharedFormKeyAllocator.cs" />
     <Compile Include="Persistance\TextFileSharedFormKeyAllocator.cs" />
     <Compile Include="Implicits\Implicits.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Records\RecordTypeInts.cs" />
     <Compile Include="Records\RecordTypes.cs" />
     <Compile Include="Streams\WritingBundle.cs" />
@@ -292,7 +294,13 @@
     <Compile Include="Extensions\GameCategoryHelper_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Pex\**\*.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Mutagen.Bethesda.Kernel\Mutagen.Bethesda.Kernel.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Pex" />
   </ItemGroup>
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Exec Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\mutagen.bethesda.core&quot;" />
