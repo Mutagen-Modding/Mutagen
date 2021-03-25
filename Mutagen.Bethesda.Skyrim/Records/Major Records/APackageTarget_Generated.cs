@@ -930,7 +930,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             APackageTargetBinaryWriteTranslation.WriteBinaryDataParse(
                 writer: writer,
                 item: item);
-            writer.Write(item.CountOrDistance);
+            writer.Write(item.CountOrDistance, length: 4);
         }
 
         public virtual void Write(
