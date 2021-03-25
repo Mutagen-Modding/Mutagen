@@ -9,9 +9,9 @@ namespace Mutagen.Bethesda
 {
     public record ImplicitRegistration(
         GameRelease GameRelease,
-        ICollection<ModKey> BaseMasters,
-        ICollection<ModKey> Listings,
-        ICollection<FormKey> RecordFormKeys);
+        IReadOnlyCollection<ModKey> BaseMasters,
+        IReadOnlyCollection<ModKey> Listings,
+        IReadOnlyCollection<FormKey> RecordFormKeys);
 
     public static class Implicits
     {
