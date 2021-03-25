@@ -6,7 +6,7 @@
       <String name="Name" recordType="FULL" translated="Normal" />
       <String name="Description" recordType="DESC" translated="DL" nullable="False" />
       <RefDirect name="Icons" refName="Icons" />
-      <RefList name="Conditions" refName="Condition" binary="Custom" />
+      <RefList name="Conditions" refName="Condition" binaryOverlay="Custom" />
       <Data>
         <Fields>
           <Bool name="Trait" />
@@ -104,7 +104,7 @@
   <Object name="PerkCondition" objType="Subrecord" GUID="7285d8f7-190a-41a1-886f-476554337e90" ID="416">
     <Fields>
       <UInt8 name="RunOnTabIndex" nullable="False" recordType="PRKC" />
-      <RefList name="Conditions" refName="Condition" binary="Custom" />
+      <RefList name="Conditions" refName="Condition" binaryOverlay="Custom" />
     </Fields>
   </Object>
   <Object name="PerkScriptFlag" objType="Subrecord" recordType="EPF3" GUID="2eef81ee-00f4-466e-9b42-aab9ab42b981" ID="426">

@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -20,17 +20,6 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class PackageBranchBinaryCreateTranslation
         {
-            static partial void FillBinaryConditionsCustom(MutagenFrame frame, IPackageBranch item)
-            {
-                if (!frame.TryReadSubrecordFrame(RecordTypes.CITC, out var countMeta)
-                    || countMeta.Content.Length != 4)
-                {
-                    throw new ArgumentException();
-                }
-                var count = BinaryPrimitives.ReadInt32LittleEndian(countMeta.Content);
-                ConditionBinaryCreateTranslation.FillConditionsList(item.Conditions, frame, count);
-            }
-
             static partial void FillBinaryFlagsOverrideCustom(MutagenFrame frame, IPackageBranch item)
             {
                 item.FlagsOverride = PackageFlagsOverride.CreateFromBinary(frame);
@@ -43,16 +32,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class PackageBranchBinaryWriteTranslation
         {
-            static partial void WriteBinaryConditionsCustom(MutagenWriter writer, IPackageBranchGetter item)
-            {
-                var conditions = item.Conditions;
-                using (HeaderExport.Subrecord(writer, RecordTypes.CITC))
-                {
-                    writer.Write(conditions.Count);
-                }
-                ConditionBinaryWriteTranslation.WriteConditionsList(conditions, writer);
-            }
-
             static partial void WriteBinaryFlagsOverrideCustom(MutagenWriter writer, IPackageBranchGetter item)
             {
                 item.FlagsOverride?.WriteToBinary(writer);

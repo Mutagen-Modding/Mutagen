@@ -1814,19 +1814,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static PackageBranchBinaryWriteTranslation Instance = new PackageBranchBinaryWriteTranslation();
 
-        static partial void WriteBinaryConditionsCustom(
-            MutagenWriter writer,
-            IPackageBranchGetter item);
-
-        public static void WriteBinaryConditions(
-            MutagenWriter writer,
-            IPackageBranchGetter item)
-        {
-            WriteBinaryConditionsCustom(
-                writer: writer,
-                item: item);
-        }
-
         static partial void WriteBinaryFlagsOverrideCustom(
             MutagenWriter writer,
             IPackageBranchGetter item);
@@ -1850,9 +1837,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.BranchType,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ANAM),
                 binaryType: StringBinaryType.NullTerminate);
-            PackageBranchBinaryWriteTranslation.WriteBinaryConditions(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IConditionGetter>.Instance.WriteWithCounter(
                 writer: writer,
-                item: item);
+                items: item.Conditions,
+                counterType: RecordTypes.CITC,
+                counterLength: 4,
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
             if (item.Root.TryGet(out var RootItem))
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.PRCB))
@@ -1946,9 +1943,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CITC:
                 {
-                    PackageBranchBinaryCreateTranslation.FillBinaryConditionsCustom(
-                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                    item.Conditions.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.ParsePerItem(
+                            frame: frame,
+                            countLengthLength: 4,
+                            countRecord: RecordTypes.CITC,
+                            triggeringRecord: Condition_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: Condition.TryCreateFromBinary));
                     return (int)PackageBranch_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.PRCB:
@@ -2000,10 +2002,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return ParseResult.Stop;
             }
         }
-
-        static partial void FillBinaryConditionsCustom(
-            MutagenFrame frame,
-            IPackageBranch item);
 
         static partial void FillBinaryFlagsOverrideCustom(
             MutagenFrame frame,

@@ -728,6 +728,15 @@ namespace Mutagen.Bethesda.Skyrim
                 return ConditionFloat.CreateFromBinary(frame.SpawnWithLength(subRecMeta.ContentLength, checkFraming: false));
             }
         }
+
+        public static bool TryCreateFromBinary(
+            MutagenFrame frame,
+            out Condition condition,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            condition = CreateFromBinary(frame, recordTypeConverter);
+            return true;
+        }
     }
 
     public partial interface ICondition
@@ -818,6 +827,16 @@ namespace Mutagen.Bethesda.Skyrim
         {
             public static readonly RecordType CIS1 = new RecordType("CIS1");
             public static readonly RecordType CIS2 = new RecordType("CIS2");
+            public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
+            private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+            {
+                return new CollectionGetterWrapper<RecordType>(
+                    new RecordType[]
+                    {
+                        RecordTypes.CTDA,
+                    }
+                );
+            });
         }
 
         public partial class ConditionBinaryCreateTranslation
@@ -939,6 +958,24 @@ namespace Mutagen.Bethesda.Skyrim
             public CompareOperator CompareOperator => ConditionBinaryCreateTranslation.GetCompareOperator(_data.Span[0]);
 
             public static ConditionBinaryOverlay ConditionFactory(OverlayStream stream, BinaryOverlayFactoryPackage package)
+            {
+                var subRecMeta = stream.GetSubrecordFrame();
+                if (subRecMeta.RecordType != RecordTypes.CTDA)
+                {
+                    throw new ArgumentException();
+                }
+                Condition.Flag flag = ConditionBinaryCreateTranslation.GetFlag(subRecMeta.Content[0]);
+                if (flag.HasFlag(Condition.Flag.UseGlobal))
+                {
+                    return ConditionGlobalBinaryOverlay.ConditionGlobalFactory(stream, package);
+                }
+                else
+                {
+                    return ConditionFloatBinaryOverlay.ConditionFloatFactory(stream, package);
+                }
+            }
+
+            public static ConditionBinaryOverlay ConditionFactory(OverlayStream stream, BinaryOverlayFactoryPackage package, RecordTypeConverter? _)
             {
                 var subRecMeta = stream.GetSubrecordFrame();
                 if (subRecMeta.RecordType != RecordTypes.CTDA)

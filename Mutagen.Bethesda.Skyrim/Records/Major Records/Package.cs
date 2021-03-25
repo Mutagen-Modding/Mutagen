@@ -356,11 +356,6 @@ namespace Mutagen.Bethesda.Skyrim
                     stream.Position += subRecord.TotalLength;
                 }
             }
-
-            static partial void FillBinaryConditionsCustom(MutagenFrame frame, IPackageInternal item)
-            {
-                ConditionBinaryCreateTranslation.FillConditionsList(item.Conditions, frame);
-            }
         }
 
         public partial class PackageBinaryWriteTranslation
@@ -473,11 +468,6 @@ namespace Mutagen.Bethesda.Skyrim
                         writer.Write(k);
                     }
                 }
-            }
-
-            static partial void WriteBinaryConditionsCustom(MutagenWriter writer, IPackageGetter item)
-            {
-                ConditionBinaryWriteTranslation.WriteConditionsList(item.Conditions, writer);
             }
 
             static partial void WriteBinaryXnamMarkerCustom(MutagenWriter writer, IPackageGetter item)

@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class PerkBinaryCreateTranslation
         {
-            static partial void FillBinaryConditionsCustom(MutagenFrame frame, IPerkInternal item)
+            static void FillBinaryConditionsCustom(MutagenFrame frame, IPerkInternal item)
             {
                 ConditionBinaryCreateTranslation.FillConditionsList(item.Conditions, frame);
             }
@@ -304,7 +304,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class PerkBinaryWriteTranslation
         {
-            static partial void WriteBinaryConditionsCustom(MutagenWriter writer, IPerkGetter item)
+            static void WriteBinaryConditionsCustom(MutagenWriter writer, IPerkGetter item)
             {
                 ConditionBinaryWriteTranslation.WriteConditionsList(item.Conditions, writer);
             }

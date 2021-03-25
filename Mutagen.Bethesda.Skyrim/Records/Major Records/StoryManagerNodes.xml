@@ -4,7 +4,7 @@
     <Fields>
       <FormLink name="Parent" recordType="PNAM" refName="AStoryManagerNode" />
       <FormLink name="PreviousSibling" recordType="SNAM" refName="AStoryManagerNode" />
-      <RefList name="Conditions" refName="Condition" counterRecType="CITC" binary="Custom" nullable="False" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" binaryOverlay="Custom" nullable="False" />
     </Fields>
   </Object>
   <Object name="StoryManagerBranchNode" recordType="SMBN" baseClass="AStoryManagerNode" objType="Record" GUID="d5eb571d-6f2f-4286-9efa-0a5fab8eddb6" ID="453">
