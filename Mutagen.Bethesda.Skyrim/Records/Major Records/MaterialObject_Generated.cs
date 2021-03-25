@@ -128,6 +128,21 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
         #endregion
+        #region HasSnow
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Boolean _HasSnow;
+        public Boolean HasSnow
+        {
+            get => this._HasSnow;
+            set
+            {
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.DATADataTypeState &= ~DATADataType.Break1;
+                this.DATADataTypeState &= ~DATADataType.Break2;
+                this._HasSnow = value;
+            }
+        }
+        #endregion
         #region DATADataTypeState
         public MaterialObject.DATADataType DATADataTypeState { get; set; } = default;
         #endregion
@@ -165,6 +180,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.NormalDampener = initialValue;
                 this.SinglePassColor = initialValue;
                 this.Flags = initialValue;
+                this.HasSnow = initialValue;
                 this.DATADataTypeState = initialValue;
             }
 
@@ -185,6 +201,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem NormalDampener,
                 TItem SinglePassColor,
                 TItem Flags,
+                TItem HasSnow,
                 TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -204,6 +221,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.NormalDampener = NormalDampener;
                 this.SinglePassColor = SinglePassColor;
                 this.Flags = Flags;
+                this.HasSnow = HasSnow;
                 this.DATADataTypeState = DATADataTypeState;
             }
 
@@ -226,6 +244,7 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem NormalDampener;
             public TItem SinglePassColor;
             public TItem Flags;
+            public TItem HasSnow;
             public TItem DATADataTypeState;
             #endregion
 
@@ -250,6 +269,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.NormalDampener, rhs.NormalDampener)) return false;
                 if (!object.Equals(this.SinglePassColor, rhs.SinglePassColor)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.HasSnow, rhs.HasSnow)) return false;
                 if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
@@ -266,6 +286,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.NormalDampener);
                 hash.Add(this.SinglePassColor);
                 hash.Add(this.Flags);
+                hash.Add(this.HasSnow);
                 hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -301,6 +322,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.NormalDampener)) return false;
                 if (!eval(this.SinglePassColor)) return false;
                 if (!eval(this.Flags)) return false;
+                if (!eval(this.HasSnow)) return false;
                 if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
@@ -334,6 +356,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.NormalDampener)) return true;
                 if (eval(this.SinglePassColor)) return true;
                 if (eval(this.Flags)) return true;
+                if (eval(this.HasSnow)) return true;
                 if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
@@ -373,6 +396,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.NormalDampener = eval(this.NormalDampener);
                 obj.SinglePassColor = eval(this.SinglePassColor);
                 obj.Flags = eval(this.Flags);
+                obj.HasSnow = eval(this.HasSnow);
                 obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
@@ -455,6 +479,10 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(Flags, "Flags");
                     }
+                    if (printMask?.HasSnow ?? true)
+                    {
+                        fg.AppendItem(HasSnow, "HasSnow");
+                    }
                     if (printMask?.DATADataTypeState ?? true)
                     {
                         fg.AppendItem(DATADataTypeState, "DATADataTypeState");
@@ -481,6 +509,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? NormalDampener;
             public Exception? SinglePassColor;
             public Exception? Flags;
+            public Exception? HasSnow;
             public Exception? DATADataTypeState;
             #endregion
 
@@ -510,6 +539,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return SinglePassColor;
                     case MaterialObject_FieldIndex.Flags:
                         return Flags;
+                    case MaterialObject_FieldIndex.HasSnow:
+                        return HasSnow;
                     case MaterialObject_FieldIndex.DATADataTypeState:
                         return DATADataTypeState;
                     default:
@@ -551,6 +582,9 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case MaterialObject_FieldIndex.Flags:
                         this.Flags = ex;
+                        break;
+                    case MaterialObject_FieldIndex.HasSnow:
+                        this.HasSnow = ex;
                         break;
                     case MaterialObject_FieldIndex.DATADataTypeState:
                         this.DATADataTypeState = ex;
@@ -596,6 +630,9 @@ namespace Mutagen.Bethesda.Skyrim
                     case MaterialObject_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
                         break;
+                    case MaterialObject_FieldIndex.HasSnow:
+                        this.HasSnow = (Exception?)obj;
+                        break;
                     case MaterialObject_FieldIndex.DATADataTypeState:
                         this.DATADataTypeState = (Exception?)obj;
                         break;
@@ -618,6 +655,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (NormalDampener != null) return true;
                 if (SinglePassColor != null) return true;
                 if (Flags != null) return true;
+                if (HasSnow != null) return true;
                 if (DATADataTypeState != null) return true;
                 return false;
             }
@@ -685,6 +723,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(NormalDampener, "NormalDampener");
                 fg.AppendItem(SinglePassColor, "SinglePassColor");
                 fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(HasSnow, "HasSnow");
                 fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
@@ -704,6 +743,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.NormalDampener = this.NormalDampener.Combine(rhs.NormalDampener);
                 ret.SinglePassColor = this.SinglePassColor.Combine(rhs.SinglePassColor);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.HasSnow = this.HasSnow.Combine(rhs.HasSnow);
                 ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
@@ -737,6 +777,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool NormalDampener;
             public bool SinglePassColor;
             public bool Flags;
+            public bool HasSnow;
             public bool DATADataTypeState;
             #endregion
 
@@ -755,6 +796,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.NormalDampener = defaultOn;
                 this.SinglePassColor = defaultOn;
                 this.Flags = defaultOn;
+                this.HasSnow = defaultOn;
                 this.DATADataTypeState = defaultOn;
             }
 
@@ -773,6 +815,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((NormalDampener, null));
                 ret.Add((SinglePassColor, null));
                 ret.Add((Flags, null));
+                ret.Add((HasSnow, null));
                 ret.Add((DATADataTypeState, null));
             }
 
@@ -834,7 +877,8 @@ namespace Mutagen.Bethesda.Skyrim
         public enum DATADataType
         {
             Break0 = 1,
-            Break1 = 2
+            Break1 = 2,
+            Break2 = 4
         }
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -929,6 +973,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single NormalDampener { get; set; }
         new Color SinglePassColor { get; set; }
         new MaterialObject.Flag Flags { get; set; }
+        new Boolean HasSnow { get; set; }
         new MaterialObject.DATADataType DATADataTypeState { get; set; }
     }
 
@@ -958,6 +1003,7 @@ namespace Mutagen.Bethesda.Skyrim
         Single NormalDampener { get; }
         Color SinglePassColor { get; }
         MaterialObject.Flag Flags { get; }
+        Boolean HasSnow { get; }
         MaterialObject.DATADataType DATADataTypeState { get; }
 
     }
@@ -1131,7 +1177,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         NormalDampener = 13,
         SinglePassColor = 14,
         Flags = 15,
-        DATADataTypeState = 16,
+        HasSnow = 16,
+        DATADataTypeState = 17,
     }
     #endregion
 
@@ -1149,9 +1196,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "5902e694-f48d-4a53-8531-3f763fcf5f27";
 
-        public const ushort AdditionalFieldCount = 11;
+        public const ushort AdditionalFieldCount = 12;
 
-        public const ushort FieldCount = 17;
+        public const ushort FieldCount = 18;
 
         public static readonly Type MaskType = typeof(MaterialObject.Mask<>);
 
@@ -1230,6 +1277,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.NormalDampener = default;
             item.SinglePassColor = default;
             item.Flags = default;
+            item.HasSnow = default;
             item.DATADataTypeState = default;
             base.Clear(item);
         }
@@ -1334,6 +1382,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.NormalDampener = item.NormalDampener.EqualsWithin(rhs.NormalDampener);
             ret.SinglePassColor = item.SinglePassColor.ColorOnlyEquals(rhs.SinglePassColor);
             ret.Flags = item.Flags == rhs.Flags;
+            ret.HasSnow = item.HasSnow == rhs.HasSnow;
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -1441,6 +1490,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.Flags, "Flags");
             }
+            if (printMask?.HasSnow ?? true)
+            {
+                fg.AppendItem(item.HasSnow, "HasSnow");
+            }
             if (printMask?.DATADataTypeState ?? true)
             {
                 fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
@@ -1503,6 +1556,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.NormalDampener.EqualsWithin(rhs.NormalDampener)) return false;
             if (!lhs.SinglePassColor.ColorOnlyEquals(rhs.SinglePassColor)) return false;
             if (lhs.Flags != rhs.Flags) return false;
+            if (lhs.HasSnow != rhs.HasSnow) return false;
             if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
         }
@@ -1541,6 +1595,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.NormalDampener);
             hash.Add(item.SinglePassColor);
             hash.Add(item.Flags);
+            hash.Add(item.HasSnow);
             hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -1729,6 +1784,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Flags = rhs.Flags;
             }
+            if ((copyMask?.GetShouldTranslate((int)MaterialObject_FieldIndex.HasSnow) ?? true))
+            {
+                item.HasSnow = rhs.HasSnow;
+            }
             if ((copyMask?.GetShouldTranslate((int)MaterialObject_FieldIndex.DATADataTypeState) ?? true))
             {
                 item.DATADataTypeState = rhs.DATADataTypeState;
@@ -1881,19 +1940,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static MaterialObjectBinaryWriteTranslation Instance = new MaterialObjectBinaryWriteTranslation();
 
-        static partial void WriteBinaryFlagsCustom(
-            MutagenWriter writer,
-            IMaterialObjectGetter item);
-
-        public static void WriteBinaryFlags(
-            MutagenWriter writer,
-            IMaterialObjectGetter item)
-        {
-            WriteBinaryFlagsCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             IMaterialObjectGetter item,
             MutagenWriter writer)
@@ -1952,9 +1998,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             writer: writer,
                             item: item.SinglePassColor,
                             binaryType: ColorBinaryType.NoAlphaFloat);
-                        MaterialObjectBinaryWriteTranslation.WriteBinaryFlags(
-                            writer: writer,
-                            item: item);
+                        Mutagen.Bethesda.Binary.EnumBinaryTranslation<MaterialObject.Flag>.Instance.Write(
+                            writer,
+                            item.Flags,
+                            length: 4);
+                        if (!item.DATADataTypeState.HasFlag(MaterialObject.DATADataType.Break2))
+                        {
+                            writer.Write(item.HasSnow, length: 4);
+                        }
                     }
                 }
             }
@@ -2086,10 +2137,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         return (int)MaterialObject_FieldIndex.NormalDampener;
                     }
                     item.SinglePassColor = dataFrame.ReadColor(ColorBinaryType.NoAlphaFloat);
-                    MaterialObjectBinaryCreateTranslation.FillBinaryFlagsCustom(
+                    item.Flags = EnumBinaryTranslation<MaterialObject.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    if (dataFrame.Complete)
+                    {
+                        item.DATADataTypeState |= MaterialObject.DATADataType.Break2;
+                        return (int)MaterialObject_FieldIndex.Flags;
+                    }
+                    item.HasSnow = Mutagen.Bethesda.Binary.BooleanBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
-                        item: item);
-                    return (int)MaterialObject_FieldIndex.Flags;
+                        byteLength: 4);
+                    return (int)MaterialObject_FieldIndex.HasSnow;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2100,10 +2157,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         contentLength: contentLength);
             }
         }
-
-        static partial void FillBinaryFlagsCustom(
-            MutagenFrame frame,
-            IMaterialObjectInternal item);
 
     }
 
@@ -2191,7 +2244,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value + 0x2C;
-        public MaterialObject.Flag Flags => GetFlagsCustom();
+        private bool _Flags_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(MaterialObject.DATADataType.Break1);
+        public MaterialObject.Flag Flags => _Flags_IsSet ? (MaterialObject.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 0x4)) : default;
+        #endregion
+        #region HasSnow
+        private int _HasSnowLocation => _DATALocation!.Value + 0x30;
+        private bool _HasSnow_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(MaterialObject.DATADataType.Break2);
+        public Boolean HasSnow => _HasSnow_IsSet ? _data.Slice(_HasSnowLocation, 4)[0] == 1 : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2293,7 +2352,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         this.DATADataTypeState |= MaterialObject.DATADataType.Break1;
                     }
-                    return (int)MaterialObject_FieldIndex.Flags;
+                    if (subLen <= 0x30)
+                    {
+                        this.DATADataTypeState |= MaterialObject.DATADataType.Break2;
+                    }
+                    return (int)MaterialObject_FieldIndex.HasSnow;
                 }
                 default:
                     return base.FillRecordType(
