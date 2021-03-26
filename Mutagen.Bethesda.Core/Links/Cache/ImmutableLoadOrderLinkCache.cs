@@ -73,6 +73,7 @@ namespace Mutagen.Bethesda
         {
             if (cache.Depth >= modCount)
             {
+                cache.Done = true;
                 return true;
             }
 
@@ -597,6 +598,13 @@ namespace Mutagen.Bethesda
 
             DepthCache<K, LinkCacheItem> cache = GetTypeCache(type);
 
+            // If we're done, we can just query without locking
+            if (cache.Done)
+            {
+                return cache.TryGetValue(key, out majorRec);
+            }
+
+            // Potentially more to query, need to lock
             lock (cache)
             {
                 // Check for record 
@@ -641,6 +649,19 @@ namespace Mutagen.Bethesda
             lock (_allRecords)
             {
                 cache = _allRecords.GetOrAdd(type);
+            }
+
+            // If we're done, we can just query without locking
+            if (cache.Done)
+            {
+                if (cache.TryGetValue(key, out var doneList))
+                {
+                    foreach (var val in doneList)
+                    {
+                        yield return val;
+                    }
+                }
+                yield break;
             }
 
             // Grab the formkey's list
@@ -740,6 +761,13 @@ namespace Mutagen.Bethesda
                 return Enumerable.Empty<LinkCacheItem>();
             }
 
+            // If we're done, we can just query without locking
+            if (cache.Done)
+            {
+                return cache.Values;
+            }
+
+            // Potentially more to query, need to lock
             lock (cache)
             {
                 // Fill all
@@ -1057,6 +1085,13 @@ namespace Mutagen.Bethesda
                 }
             }
 
+            // If we're done, we can just query without locking
+            if (cache.Done)
+            {
+                return cache.TryGetValue(key, out majorRec);
+            }
+
+            // Potentially more to query, need to lock
             lock (cache)
             {
                 // Check for record
@@ -1218,6 +1253,7 @@ namespace Mutagen.Bethesda
         private readonly Dictionary<K, T> _dictionary = new Dictionary<K, T>();
         public HashSet<ModKey> PassedMods = new HashSet<ModKey>();
         public int Depth;
+        public bool Done;
 
         public IReadOnlyCollection<T> Values => _dictionary.Values;
 
