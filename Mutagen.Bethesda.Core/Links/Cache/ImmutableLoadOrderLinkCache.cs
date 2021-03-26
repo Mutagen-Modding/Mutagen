@@ -493,10 +493,8 @@ namespace Mutagen.Bethesda
         private readonly ImmutableLoadOrderLinkCache _parent;
         private readonly Func<IMajorRecordCommonGetter, TryGet<K>> _keyGetter;
         private readonly Func<K, bool> _shortCircuit;
-        private readonly Dictionary<Type, DepthCache<K, LinkCacheItem>> _winningRecords
-            = new Dictionary<Type, DepthCache<K, LinkCacheItem>>();
-        private readonly Dictionary<Type, DepthCache<K, ImmutableList<LinkCacheItem>>> _allRecords
-            = new Dictionary<Type, DepthCache<K, ImmutableList<LinkCacheItem>>>();
+        private readonly Dictionary<Type, DepthCache<K, LinkCacheItem>> _winningRecords = new();
+        private readonly Dictionary<Type, DepthCache<K, ImmutableList<LinkCacheItem>>> _allRecords = new();
 
         public ImmutableLoadOrderLinkCacheCategory(
             ImmutableLoadOrderLinkCache parent,
@@ -614,7 +612,7 @@ namespace Mutagen.Bethesda
                 }
                 if (ImmutableLoadOrderLinkCache.ShouldStopQuery(modKey, _parent.ListedOrder.Count, cache))
                 {
-                    majorRec = default!;
+                    majorRec = default;
                     return false;
                 }
 
@@ -816,7 +814,7 @@ namespace Mutagen.Bethesda
         where TMod : class, IContextMod<TMod, TModGetter>, TModGetter
         where TModGetter : class, IContextGetterMod<TMod, TModGetter>
     {
-        public static readonly ImmutableLoadOrderLinkCache<TMod, TModGetter> Empty = new ImmutableLoadOrderLinkCache<TMod, TModGetter>(Enumerable.Empty<TModGetter>(), LinkCachePreferences.Default);
+        public static readonly ImmutableLoadOrderLinkCache<TMod, TModGetter> Empty = new(Enumerable.Empty<TModGetter>(), LinkCachePreferences.Default);
 
         private readonly ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGetter, FormKey> _formKeyContextCache;
         private readonly ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGetter, string> _editorIdContextCache;
