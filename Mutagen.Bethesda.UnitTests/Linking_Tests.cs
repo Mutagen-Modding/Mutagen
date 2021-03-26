@@ -2676,6 +2676,31 @@ namespace Mutagen.Bethesda.UnitTests
             });
         }
         #endregion
+
+        #region Resolve Identifiers
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void ResolveLinkIdentifiers(LinkCacheTestTypes cacheType)
+        {
+            var prototype = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
+            var armor = prototype.Armors.AddNew();
+            var llist = prototype.LeveledItems.AddNew();
+            llist.Entries = new ExtendedList<LeveledItemEntry>()
+            {
+                new LeveledItemEntry()
+                {
+                    Data = new LeveledItemEntryData()
+                    {
+                        Reference = armor.AsLink()
+                    }
+                }
+            };
+            using var disp = ConvertMod(prototype, out var mod);
+            var (style, package) = GetLinkCache(mod, cacheType);
+            Assert.True(package.TryResolveIdentifier(mod.LeveledItems.First().Entries[0].Data.Reference.FormKey, out _));
+        }
+        #endregion
     }
 
     public class Linking_ImmutableDirect_Tests : Linking_Abstract_Tests

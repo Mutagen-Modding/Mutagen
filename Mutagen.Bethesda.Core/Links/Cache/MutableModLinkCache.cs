@@ -641,7 +641,7 @@ namespace Mutagen.Bethesda
             if (TryResolve(formKey, out var rec))
             {
                 editorId = rec.EditorID;
-                return false;
+                return true;
             }
             editorId = default;
             return false;
@@ -653,7 +653,7 @@ namespace Mutagen.Bethesda
             if (TryResolve(editorId, out var rec))
             {
                 formKey = rec.FormKey;
-                return false;
+                return true;
             }
             formKey = default;
             return false;
@@ -665,7 +665,7 @@ namespace Mutagen.Bethesda
             if (TryResolve(formKey, type, out var rec))
             {
                 editorId = rec.EditorID;
-                return false;
+                return true;
             }
             editorId = default;
             return false;
@@ -677,7 +677,7 @@ namespace Mutagen.Bethesda
             if (TryResolve(editorId, type, out var rec))
             {
                 formKey = rec.FormKey;
-                return false;
+                return true;
             }
             formKey = default;
             return false;
@@ -690,7 +690,7 @@ namespace Mutagen.Bethesda
             if (TryResolve<TMajor>(formKey, out var rec))
             {
                 editorId = rec.EditorID;
-                return false;
+                return true;
             }
             editorId = default;
             return false;
@@ -703,7 +703,7 @@ namespace Mutagen.Bethesda
             if (TryResolve<TMajor>(editorId, out var rec))
             {
                 formKey = rec.FormKey;
-                return false;
+                return true;
             }
             formKey = default;
             return false;
@@ -715,7 +715,7 @@ namespace Mutagen.Bethesda
             if (TryResolve(formKey, out var rec, types))
             {
                 editorId = rec.EditorID;
-                return false;
+                return true;
             }
             editorId = default;
             return false;
@@ -727,7 +727,7 @@ namespace Mutagen.Bethesda
             if (TryResolve(editorId, out var rec, types))
             {
                 formKey = rec.FormKey;
-                return false;
+                return true;
             }
             formKey = default;
             return false;
@@ -739,7 +739,7 @@ namespace Mutagen.Bethesda
             if (TryResolve(formKey, types, out var rec))
             {
                 editorId = rec.EditorID;
-                return false;
+                return true;
             }
             editorId = default;
             return false;
@@ -751,7 +751,7 @@ namespace Mutagen.Bethesda
             if (TryResolve(editorId, types, out var rec))
             {
                 formKey = rec.FormKey;
-                return false;
+                return true;
             }
             formKey = default;
             return false;
